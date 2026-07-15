@@ -50,7 +50,24 @@ def document_manager(parameters: dict, player=None) -> str:
 
         elif action == "read" or action == "view":
             ext = file_path.suffix.lower()
-            if ext in [".txt", ".md", ".json", ".csv", ".py", ".js", ".html", ".log"]:
+            if ext == ".pdf":
+                try:
+                    from PyPDF2 import PdfReader
+                    reader = PdfReader(str(file_path))
+                    text_parts = []
+                    for i, page in enumerate(reader.pages):
+                        page_text = page.extract_text()
+                        if page_text:
+                            text_parts.append(f"--- Pagina {i+1} ---\n{page_text}")
+                    full_text = "\n\n".join(text_parts)
+                    summary = f"PDF: '{file_path.name}' ({len(reader.pages)} paginas)\n\n{full_text[:3000]}"
+                    if len(full_text) > 3000:
+                        summary += f"\n\n(Texto truncado - {len(full_text)} caracteres totales)"
+                    return summary
+                except ImportError:
+                    os.startfile(str(file_path))
+                    return f"Abriendo PDF '{file_path.name}' en el visor (PyPDF2 no disponible)."
+            elif ext in [".txt", ".md", ".json", ".csv", ".py", ".js", ".html", ".log"]:
                 text = file_path.read_text(encoding="utf-8", errors="replace")
                 # Return the first 2000 chars to avoid overflowing LLM context if too large
                 return f"Contenido de '{file_path.name}':\n\n{text[:2000]}"

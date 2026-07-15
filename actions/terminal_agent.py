@@ -5,7 +5,7 @@ import os
 def terminal_agent(parameters: dict, player=None) -> str:
     """
     Ejecuta cualquier comando en la terminal de Windows (PowerShell o CMD).
-    JARVIS puede usar esto para cualquier tarea del sistema operativo:
+    ERIS puede usar esto para cualquier tarea del sistema operativo:
     instalar/desinstalar programas, consultar información, ejecutar scripts,
     manejar archivos, redes, configuraciones, etc.
     """
@@ -52,7 +52,7 @@ def terminal_agent(parameters: dict, player=None) -> str:
 
         if result.returncode == 0:
             if output:
-                # Salida hasta 3000 chars para que JARVIS tenga contexto suficiente
+                # Salida hasta 3000 chars para que ERIS tenga contexto suficiente
                 if len(output) > 3000:
                     output = output[:3000] + "\n...[Salida truncada]"
                 return f"Comando ejecutado exitosamente:\n{output}"

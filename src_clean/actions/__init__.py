@@ -1,1 +1,1 @@
-"""JARVIS Actions package."""
+"""ERIS Actions package."""

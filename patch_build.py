@@ -2,7 +2,7 @@ import zipfile
 import os
 import shutil
 
-build_dir = r"C:\Users\Leguion T\Desktop\JARVIS-IA-main (7)\JARVIS-IA-main\build\exe.win-amd64-3.12"
+build_dir = r"C:\Users\Leguion T\Desktop\ERIS-IA-main (7)\ERIS-IA-main\build\exe.win-amd64-3.12"
 lib_dir = os.path.join(build_dir, "lib")
 library_zip = os.path.join(lib_dir, "library.zip")
 temp_zip_dir = os.path.join(build_dir, "temp_zip")
@@ -38,7 +38,7 @@ shutil.rmtree(temp_zip_dir)
 print("library.zip purgado de código byte. Listo para inyección C.")
 
 # 4. Copiar archivos .pyd a la carpeta lib
-src_clean = r"C:\Users\Leguion T\Desktop\JARVIS-IA-main (7)\JARVIS-IA-main\src_clean"
+src_clean = r"C:\Users\Leguion T\Desktop\ERIS-IA-main (7)\ERIS-IA-main\src_clean"
 for root, _, files in os.walk(src_clean):
     for file in files:
         if file.endswith(".pyd"):

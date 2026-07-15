@@ -1,39 +1,36 @@
-# Environments
-.venv/
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Byte-compiled / optimized / DLL files
+# Python cache
 __pycache__/
-*$py.class
-# Config and Sensitive Files
+*.pyc
+*.pyo
+*.pyc
+
+# Build output
+build/
+_Eris_NEW/
+
+# Config with secrets
 config/api_keys.json
-config/rules.json
-custom_tools.json
+config/spotify_token.json
+
+# User data
+memory/emotional_state.json
+memory/emotional_growth.json
+memory/long_term.json
+memory/recovery_count.json
+memory/recovery_mode.json
+memory/known_apps.json
+memory/opencode/
 
 # Logs
 *.log
-jarvis.log
+build.log
 
-# Scratch scripts
-patch_main.py
+# OS
+Thumbs.db
+.DS_Store
 
-# IDE / OS files
+# IDE
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
-
-# Build artifacts
-build/
-dist/
-build_jarvis/
-dist_obfuscated/
-*.spec
-*.xml
-*.egg-info/
-*.bak
-
+*.swp
+*.swo

@@ -29,8 +29,8 @@ def openrouter_agent(query: str, model: str = "google/gemini-2.5-flash") -> str:
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com/jarvis-beta",
-        "X-Title": "JARVIS AI Assistant",
+        "HTTP-Referer": "https://github.com/eris-beta",
+        "X-Title": "ERIS AI Assistant",
         "Content-Type": "application/json"
     }
     
@@ -38,7 +38,7 @@ def openrouter_agent(query: str, model: str = "google/gemini-2.5-flash") -> str:
         "model": model,
         "max_tokens": 1500,
         "messages": [
-            {"role": "system", "content": "Eres un Agente Especialista delegado por JARVIS. Responde de forma clara y directa en español."},
+            {"role": "system", "content": "Eres un Agente Especialista delegado por ERIS. Responde de forma clara y directa en español."},
             {"role": "user", "content": query}
         ]
     }

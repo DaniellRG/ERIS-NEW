@@ -27,7 +27,7 @@ except Exception as e:
     sys.exit(1)
 """
     try:
-        # Asegurarse de que el PYTHONPATH incluya el directorio de JARVIS
+        # Asegurarse de que el PYTHONPATH incluya el directorio de ERIS
         import os
         env = os.environ.copy()
         env["PYTHONPATH"] = str(Path(__file__).resolve().parent.parent)
@@ -65,6 +65,44 @@ def auto_programmer(parameters: dict, player=None) -> str:
     parameters_schema_str = parameters.get("parameters_schema", "{}")
     python_code = parameters.get("python_code", "")
     test_params = parameters.get("test_parameters", {})
+    reference_file = parameters.get("reference_file", "")
+
+    if action == "plan_code":
+        if not tool_name:
+            return "tool_name requerido."
+        actions_dir = Path(__file__).resolve().parent
+        result_lines = [f"## Plan para {tool_name}"]
+        # Leer archivos de referencia si se pide
+        if reference_file:
+            ref_path = actions_dir / reference_file
+            if ref_path.exists():
+                code = ref_path.read_text("utf-8")
+                result_lines.append(f"\nReferencia ({reference_file}):")
+                for line in code.splitlines():
+                    if line.strip() and not line.strip().startswith("#"):
+                        result_lines.append(line)
+            else:
+                result_lines.append(f"\n⚠️ {reference_file} no existe.")
+        
+        # Leer herramientas similares existentes
+        similar = []
+        if not reference_file:
+            similar = list(actions_dir.glob(f"*.py"))
+            result_lines.append(f"\nHerramientas disponibles ({len(similar)}):")
+            for f in sorted(similar):
+                if f.name in ("__init__.py", "custom_tools.json"):
+                    continue
+                code = f.read_text("utf-8")
+                imports = [l for l in code.splitlines() if l.strip().startswith(("import ", "from "))]
+                result_lines.append(f"\n--- {f.name} ---")
+                # Primeros 3 imports + función principal
+                for imp in imports[:5]:
+                    result_lines.append(f"  {imp}")
+                if "def " in code:
+                    func_name = [l for l in code.splitlines() if l.strip().startswith("def ")][:2]
+                    for fn in func_name:
+                        result_lines.append(f"  {fn.strip()}")
+        return "\n".join(result_lines)
 
     if not tool_name:
         return "Error: Se requiere especificar 'tool_name' para cualquier acción de auto-programación."
@@ -143,7 +181,7 @@ def auto_programmer(parameters: dict, player=None) -> str:
             main_module.TOOL_DECLARATIONS = [t for t in main_module.TOOL_DECLARATIONS if t.get("name") != tool_name]
             main_module.TOOL_DECLARATIONS.append(new_tool_def)
 
-        # 6. Forzar la reconexión de sesión cognitiva de JARVIS
+        # 6. Forzar la reconexión de sesión cognitiva de ERIS
         reload_msg = ""
         if player and hasattr(player, "on_config_saved"):
             from threading import Timer

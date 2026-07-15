@@ -28,7 +28,7 @@ If Not IsAdmin() Then
     WScript.Quit 0
 End If
 
-' ── Ya somos Admin: lanzar JARVIS ─────────────────────────────────────────────
+' ── Ya somos Admin: lanzar ERIS ─────────────────────────────────────────────
 Dim ws, fso, d, py, cmd
 Set ws  = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
@@ -42,7 +42,7 @@ If Not fso.FileExists(py) Then
     py = d & ".venv\Scripts\python.exe"
 End If
 If Not fso.FileExists(py) Then
-    MsgBox "JARVIS: ejecuta el archivo Instalar_JARVIS.bat primero para configurar el entorno.", 16, "JARVIS"
+    MsgBox "ERIS: ejecuta el archivo Instalar_ERIS.bat primero para configurar el entorno.", 16, "ERIS"
     WScript.Quit 1
 End If
 

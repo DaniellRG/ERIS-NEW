@@ -1,0 +1,145 @@
+{
+  "patterns": {
+    "busqueda_web_diaria": {
+      "type": "routine",
+      "count": 10,
+      "first_seen": "2026-06-17T13:36:31.418516",
+      "last_seen": "2026-06-17T13:36:31.486692"
+    },
+    "youtube_vespertino": {
+      "type": "routine",
+      "count": 10,
+      "first_seen": "2026-06-17T13:36:31.424603",
+      "last_seen": "2026-06-17T13:36:31.539888"
+    },
+    "investigacion_matutina": {
+      "type": "routine",
+      "count": 1,
+      "first_seen": "2026-06-17T13:36:31.431627",
+      "last_seen": "2026-06-17T13:36:31.431627"
+    },
+    "monitoreo_sistema_diario": {
+      "type": "task",
+      "count": 10,
+      "first_seen": "2026-06-17T13:49:17.142465",
+      "last_seen": "2026-06-17T13:49:17.204035"
+    },
+    "sandbox_testing_rutina": {
+      "type": "task",
+      "count": 10,
+      "first_seen": "2026-06-17T13:49:17.212680",
+      "last_seen": "2026-06-17T13:49:17.276526"
+    }
+  },
+  "skills": {
+    "obsidian_writing": 50,
+    "concept_linking": 50,
+    "knowledge_organization": 15,
+    "spanish_communication": 15,
+    "task_prioritization": 60,
+    "app_opening": 55,
+    "web_navigation": 75,
+    "youtube_control": 80,
+    "desktop_automation": 55,
+    "information_synthesis": 65,
+    "research_workflow": 60,
+    "browser_multitab": 70,
+    "video_transcript": 15,
+    "keyboard_shortcuts": 70,
+    "window_management": 75,
+    "busqueda_web_diaria": 50,
+    "youtube_vespertino": 50,
+    "file_management": 45,
+    "document_creation": 60,
+    "error_diagnosis": 35,
+    "memory_retrieval": 45,
+    "spanish_fluency": 50,
+    "task_chaining": 45,
+    "pattern_recognition": 40,
+    "autonomous_workflow": 85,
+    "context_switching": 50,
+    "time_management": 35,
+    "sandbox_testing": 25,
+    "system_monitoring": 50,
+    "emotional_intelligence": 20,
+    "self_improvement": 25,
+    "monitoreo_sistema_diario": 50,
+    "sandbox_testing_rutina": 50,
+    "tab_management": 25,
+    "video_control": 20,
+    "text_editing": 30,
+    "clipboard_operations": 25,
+    "script_execution": 25,
+    "multi_step_workflows": 30,
+    "real_time_operations": 35,
+    "volume_control": 30,
+    "screenshot_capture": 25,
+    "maps_navigation": 20,
+    "multi_app_switching": 30,
+    "report_writing": 25,
+    "formatted_text": 20,
+    "system_audio_control": 25,
+    "desktop_organization": 20,
+    "simultaneous_operations": 35,
+    "rapid_app_launch": 30,
+    "whatsapp_web": 15,
+    "translation_es_en": 25,
+    "weather_api": 20,
+    "multi_source_research": 30,
+    "data_processing_json": 25,
+    "image_generation": 20,
+    "reminder_system": 25,
+    "calendar_integration": 20,
+    "session_cleanup": 30,
+    "cross_app_workflow": 35,
+    "autonomous_documentation": 25,
+    "rapid_app_switching": 30,
+    "error_recovery": 35,
+    "fluid_operations": 40,
+    "chained_workflows": 35,
+    "automatic_retry": 30,
+    "speed_optimization": 35,
+    "multi_app_mastery": 40,
+    "seamless_transitions": 35,
+    "youtube_mastery": 30,
+    "deep_research": 35,
+    "knowledge_synthesis": 30,
+    "rapid_cleanup": 30,
+    "ad_handling": 20,
+    "multi_tab_research": 35,
+    "end_to_end_automation": 45,
+    "complete_session_mastery": 50
+  },
+  "sessions": [
+    {
+      "start": "2026-06-17T13:34:29.931924",
+      "tasks": 0,
+      "learned": 0
+    }
+  ],
+  "total_learning_time": 0,
+  "current_session_start": "2026-06-17T13:34:29.931924",
+  "mistakes": [],
+  "achievements": [
+    {
+      "name": "Maestría en busqueda_web_diaria",
+      "unlocked_at": "2026-06-17T13:36:31.486692",
+      "description": "Patrón 'busqueda_web_diaria' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en youtube_vespertino",
+      "unlocked_at": "2026-06-17T13:36:31.539888",
+      "description": "Patrón 'youtube_vespertino' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en monitoreo_sistema_diario",
+      "unlocked_at": "2026-06-17T13:49:17.204035",
+      "description": "Patrón 'monitoreo_sistema_diario' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en sandbox_testing_rutina",
+      "unlocked_at": "2026-06-17T13:49:17.276526",
+      "description": "Patrón 'sandbox_testing_rutina' dominado (10 repeticiones)"
+    }
+  ]
+}

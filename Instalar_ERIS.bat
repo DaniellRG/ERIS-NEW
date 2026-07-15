@@ -1,5 +1,5 @@
 @echo off
-title Instalador de JARVIS AI
+title Instalador de ERIS AI
 
 :: ── Solicitar permisos de Administrador ──────────────────────────────────────
 net session >nul 2>&1

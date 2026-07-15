@@ -21,7 +21,7 @@ def _capture_screen_base64() -> str:
     Captura la pantalla principal, la redimensiona/comprime y la devuelve en base64.
     """
     with mss() as sct:
-        monitor = sct.monitors[1] # Monitor principal
+        monitor = sct.monitors[0] # All monitors combined
         screenshot = sct.grab(monitor)
         
         # Convertir a imagen de Pillow
@@ -64,8 +64,8 @@ def screen_vision(parameters: dict, player=None) -> str:
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com/jarvis-beta",
-        "X-Title": "JARVIS AI Assistant",
+        "HTTP-Referer": "https://github.com/eris-beta",
+        "X-Title": "ERIS AI Assistant",
         "Content-Type": "application/json"
     }
     

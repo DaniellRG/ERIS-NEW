@@ -12,9 +12,9 @@ if sys.platform == "win32":
     base = "Win32GUI"
 
 setup(
-    name="JARVIS",
+    name="ERIS",
     version="1.0",
-    description="JARVIS AI Assistant",
+    description="ERIS AI Assistant",
     options={"build_exe": build_exe_options},
-    executables=[Executable("main.py", base=base, icon="assets/jarvis_icono.ico", target_name="JARVIS.exe")]
+    executables=[Executable("main.py", base=base, icon="assets/eris_icono.ico", target_name="ERIS.exe")]
 )

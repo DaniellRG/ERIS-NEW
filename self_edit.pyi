@@ -9,8 +9,8 @@ import difflib
 import os
 import shutil
 
-JARVIS_ROOT = Path(__file__).resolve().parent.parent
-BACKUP_DIR = JARVIS_ROOT / 'backups'
+ERIS_ROOT = Path(__file__).resolve().parent.parent
+BACKUP_DIR = ERIS_ROOT / 'backups'
 def _ensure_backup_dir() -> Any:
     ...
 

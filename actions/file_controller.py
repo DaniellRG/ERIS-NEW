@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-file_controller.py — Basic file and directory operations manager for JARVIS.
+file_controller.py — Basic file and directory operations manager for ERIS.
 """
 import os
 import shutil
@@ -108,7 +108,7 @@ def file_controller(parameters: dict, player=None) -> str:
             return "Archivo guardado."
 
         else:
-            return f"Acción '{action}' limitada o no soportada en esta versión de JARVIS."
+            return f"Acción '{action}' limitada o no soportada en esta versión de ERIS."
 
     except Exception as e:
         traceback.print_exc()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-open_app.py — Intelligent application finder and launcher with Windows protocol support for JARVIS.
+open_app.py — Intelligent application finder and launcher with Windows protocol support for ERIS.
 """
 import os
 import subprocess

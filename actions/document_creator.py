@@ -59,26 +59,45 @@ def document_creator(parameters: dict, player=None) -> str:
                 from docx import Document
                 doc = Document()
                 doc.add_heading(title, 0)
-                
-                # Procesamiento simple de markdown a Word
                 lines = content.split('\n')
                 for line in lines:
                     line = line.strip()
-                    if not line:
-                        continue
-                    if line.startswith('## '):
-                        doc.add_heading(line[3:], level=2)
-                    elif line.startswith('# '):
-                        doc.add_heading(line[2:], level=1)
-                    elif line.startswith('- '):
-                        doc.add_paragraph(line[2:], style='List Bullet')
-                    else:
-                        doc.add_paragraph(line)
-                        
+                    if not line: continue
+                    if line.startswith('## '): doc.add_heading(line[3:], level=2)
+                    elif line.startswith('# '): doc.add_heading(line[2:], level=1)
+                    elif line.startswith('- '): doc.add_paragraph(line[2:], style='List Bullet')
+                    else: doc.add_paragraph(line)
                 doc.save(file_path)
-                return f"Documento Word creado exitosamente en: '{file_path}'."
+                return f"Documento Word creado: '{file_path}'."
             except ImportError:
-                return "Error: Faltan librerías para crear Word. (python-docx)"
+                return "Error: Falta python-docx."
+
+        elif action == "powerpoint" or action == "pptx":
+            try:
+                from pptx import Presentation
+                from pptx.util import Inches
+                prs = Presentation()
+                prs.slide_width = Inches(13.333)
+                prs.slide_height = Inches(7.5)
+                slides_data = parameters.get("slides", [])
+                if not slides_data and content:
+                    slides_data = [{"title": title, "content": content}]
+                if not slides_data:
+                    slide = prs.slides.add_slide(prs.slide_layouts[0])
+                    slide.shapes.title.text = title
+                    if content:
+                        slide.placeholders[1].text = content
+                else:
+                    for sd in slides_data:
+                        slide = prs.slides.add_slide(prs.slide_layouts[1])
+                        if "title" in sd:
+                            slide.shapes.title.text = sd["title"]
+                        if "content" in sd and len(slide.placeholders) > 1:
+                            slide.placeholders[1].text = sd["content"]
+                prs.save(file_path)
+                return f"Presentacion PowerPoint creada: '{file_path}' con {len(prs.slides)} diapositivas."
+            except ImportError:
+                return "Error: Falta python-pptx."
                 
         elif action == "excel" or action == "google_sheet":
             try:
