@@ -1,0 +1,109 @@
+{
+  "current_topic": null,
+  "recent_entities": [
+    {
+      "name": "Resultados",
+      "type": "entity",
+      "added_at": 1785209017.3838665
+    },
+    {
+      "name": "Release",
+      "type": "entity",
+      "added_at": 1785209017.384396
+    },
+    {
+      "name": "Notes**",
+      "type": "entity",
+      "added_at": 1785209017.3846734
+    },
+    {
+      "name": "Find",
+      "type": "entity",
+      "added_at": 1785209017.3849328
+    },
+    {
+      "name": "NoSQL.",
+      "type": "entity",
+      "added_at": 1785209019.8016539
+    },
+    {
+      "name": "NoSQL'",
+      "type": "entity",
+      "added_at": 1785209019.8022091
+    },
+    {
+      "name": "Bases",
+      "type": "entity",
+      "added_at": 1785209019.802475
+    },
+    {
+      "name": "Datos:",
+      "type": "entity",
+      "added_at": 1785209019.8027515
+    },
+    {
+      "name": "NoSQL,",
+      "type": "entity",
+      "added_at": 1785209019.8030078
+    },
+    {
+      "name": "Nube",
+      "type": "entity",
+      "added_at": 1785209019.8032796
+    },
+    {
+      "name": "Híbrida**",
+      "type": "entity",
+      "added_at": 1785209019.8035438
+    },
+    {
+      "name": "Tendenciasclave",
+      "type": "entity",
+      "added_at": 1785209019.8038247
+    },
+    {
+      "name": "Inteligencia",
+      "type": "entity",
+      "added_at": 1785209019.8040833
+    },
+    {
+      "name": "Artificial",
+      "type": "entity",
+      "added_at": 1785209019.8043597
+    },
+    {
+      "name": "Machine",
+      "type": "entity",
+      "added_at": 1785209859.8313968
+    },
+    {
+      "name": "Learning",
+      "type": "entity",
+      "added_at": 1785209859.8317235
+    },
+    {
+      "name": "Innovaciones",
+      "type": "entity",
+      "added_at": 1785209859.8320343
+    },
+    {
+      "name": "Conclusión:2026llegó",
+      "type": "entity",
+      "added_at": 1785209859.8323185
+    },
+    {
+      "name": "Aprendi",
+      "type": "entity",
+      "added_at": 1785209862.335636
+    },
+    {
+      "name": "El6Gtraerá",
+      "type": "entity",
+      "added_at": 1785209862.3361886
+    }
+  ],
+  "active_goals": [],
+  "conversation_turns": [],
+  "user_intent": null,
+  "last_updated": 1784916076.4263458
+}

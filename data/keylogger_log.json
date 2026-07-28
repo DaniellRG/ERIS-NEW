@@ -1,0 +1,62 @@
+{
+  "detections": [
+    {
+      "type": "process",
+      "details": [
+        "brave.exe (PID: 2460)",
+        "brave.exe (PID: 2736)",
+        "brave.exe (PID: 6804)",
+        "powershell.exe (PID: 8492)",
+        "brave.exe (PID: 9028)",
+        "brave.exe (PID: 9936)",
+        "msedgewebview2.exe (PID: 10456)",
+        "brave.exe (PID: 12312)",
+        "brave.exe (PID: 12364)",
+        "brave.exe (PID: 13508)",
+        "brave.exe (PID: 14104)",
+        "NVIDIA Overlay.exe (PID: 14788)",
+        "brave.exe (PID: 16592)",
+        "brave.exe (PID: 17280)",
+        "brave.exe (PID: 19488)",
+        "brave.exe (PID: 19720)",
+        "brave.exe (PID: 20336)",
+        "brave.exe (PID: 20432)",
+        "python.exe (PID: 22360)"
+      ],
+      "timestamp": "2026-07-25T11:04:22.705983"
+    },
+    {
+      "type": "process",
+      "details": [
+        "brave.exe (PID: 1728)",
+        "brave.exe (PID: 2804)",
+        "brave.exe (PID: 4760)",
+        "brave.exe (PID: 7084)",
+        "brave.exe (PID: 7128)",
+        "brave.exe (PID: 7512)",
+        "brave.exe (PID: 7652)",
+        "brave.exe (PID: 7704)",
+        "brave.exe (PID: 7772)",
+        "brave.exe (PID: 9544)",
+        "msedgewebview2.exe (PID: 10304)",
+        "brave.exe (PID: 10576)",
+        "powershell.exe (PID: 11984)",
+        "brave.exe (PID: 12180)",
+        "brave.exe (PID: 12292)",
+        "brave.exe (PID: 12636)",
+        "brave.exe (PID: 13172)",
+        "brave.exe (PID: 13756)",
+        "NVIDIA Overlay.exe (PID: 14708)",
+        "python.exe (PID: 15676)",
+        "brave.exe (PID: 17612)",
+        "brave.exe (PID: 17724)",
+        "brave.exe (PID: 18460)",
+        "brave.exe (PID: 18640)",
+        "brave.exe (PID: 18972)",
+        "brave.exe (PID: 19432)"
+      ],
+      "timestamp": "2026-07-27T21:46:03.623943"
+    }
+  ],
+  "protected": false
+}

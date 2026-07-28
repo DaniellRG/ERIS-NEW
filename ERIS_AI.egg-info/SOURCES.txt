@@ -1,7 +1,0 @@
-README.md
-setup.py
-setup_cx.py
-ERIS_AI.egg-info/PKG-INFO
-ERIS_AI.egg-info/SOURCES.txt
-ERIS_AI.egg-info/dependency_links.txt
-ERIS_AI.egg-info/top_level.txt

@@ -1,0 +1,14 @@
+[
+  {
+    "time": "2026-07-23T20:37:16.631864",
+    "type": "defender",
+    "severity": "CRITICAL",
+    "message": "Windows Defender real-time protection is OFF"
+  },
+  {
+    "time": "2026-07-23T21:45:42.981771",
+    "type": "defender",
+    "severity": "CRITICAL",
+    "message": "Windows Defender real-time protection is OFF"
+  }
+]

@@ -1,0 +1,422 @@
+[
+  {
+    "lang": "python",
+    "code": "print(sum(range(100)))",
+    "returncode": 0,
+    "output": "4950\n",
+    "timestamp": "2026-07-26T11:54:50.374676"
+  },
+  {
+    "lang": "python",
+    "code": "x = [i**2 for i in range(1000)]; print(len(x))",
+    "returncode": 0,
+    "output": "1000\n",
+    "timestamp": "2026-07-26T11:54:50.414180"
+  },
+  {
+    "lang": "python",
+    "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\nprint([fib(i) for i in range(20)])",
+    "returncode": 0,
+    "output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]\n",
+    "timestamp": "2026-07-26T11:54:50.454019"
+  },
+  {
+    "lang": "python",
+    "code": "data = [64, 34, 25, 12, 22, 11, 90]\nsorted_data = sorted(data)\nprint(f'Original: {data}')\nprint(f'Ordenado: {sorted_data}')",
+    "returncode": 0,
+    "output": "Original: [64, 34, 25, 12, 22, 11, 90]\nOrdenado: [11, 12, 22, 25, 34, 64, 90]\n",
+    "timestamp": "2026-07-26T11:54:50.494126"
+  },
+  {
+    "lang": "python",
+    "code": "import hashlib\nmsg = 'Hello ERIS'\nprint(f'MD5:    {hashlib.md5(msg.encode()).hexdigest()}')\nprint(f'SHA256: {hashlib.sha256(msg.encode()).hexdigest()}')",
+    "returncode": 0,
+    "output": "MD5:    09db6425d3eb6ce388790fd807a36d1a\nSHA256: c4fa6bfae6ad84267feb42b509137a06f99b8c740b4ad069d34a936d88a8f2ec\n",
+    "timestamp": "2026-07-26T11:54:50.539463"
+  },
+  {
+    "lang": "python",
+    "code": "def matrix_mult(a, b):\n    return [[sum(x*y for x,y in zip(r, c)) for c in zip(*b)] for r in a]\n\nA = [[1,2],[3,4]]\nB = [[5,6],[7,8]]\nprint('A × B =', matrix_mult(A, B))",
+    "returncode": 0,
+    "output": "A Ã— B = [[19, 22], [43, 50]]\n",
+    "timestamp": "2026-07-26T11:54:50.580271"
+  },
+  {
+    "lang": "python",
+    "code": "import re\ntext = 'Email: test@example.com, Phone: +57-300-1234567'\nemails = re.findall(r'[\\w.-]+@[\\w.-]+\\.\\w+', text)\nphones = re.findall(r'\\+?\\d[\\d-]+', text)\nprint(f'Emails: {emails}')\nprint(f'Phones: {phones}')",
+    "returncode": 0,
+    "output": "Emails: ['test@example.com']\nPhones: ['+57-300-1234567']\n",
+    "timestamp": "2026-07-26T11:54:50.631750"
+  },
+  {
+    "lang": "python",
+    "code": "print(sum(range(100)))",
+    "returncode": 0,
+    "output": "4950\n",
+    "timestamp": "2026-07-26T11:55:44.567333"
+  },
+  {
+    "lang": "python",
+    "code": "x = [i**2 for i in range(100)]; print(len(x))",
+    "returncode": 0,
+    "output": "100\n",
+    "timestamp": "2026-07-26T11:55:44.609530"
+  },
+  {
+    "lang": "python",
+    "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\nprint([fib(i) for i in range(20)])",
+    "returncode": 0,
+    "output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]\n",
+    "timestamp": "2026-07-26T11:55:44.662922"
+  },
+  {
+    "lang": "python",
+    "code": "data = [64, 34, 25, 12, 22, 11, 90]\nsorted_data = sorted(data)\nprint(f'Original: {data}')\nprint(f'Ordenado: {sorted_data}')",
+    "returncode": 0,
+    "output": "Original: [64, 34, 25, 12, 22, 11, 90]\nOrdenado: [11, 12, 22, 25, 34, 64, 90]\n",
+    "timestamp": "2026-07-26T11:55:44.706969"
+  },
+  {
+    "lang": "python",
+    "code": "import hashlib\nmsg = 'Hello ERIS'\nprint(f'MD5:    {hashlib.md5(msg.encode()).hexdigest()}')\nprint(f'SHA256: {hashlib.sha256(msg.encode()).hexdigest()}')",
+    "returncode": 0,
+    "output": "MD5:    09db6425d3eb6ce388790fd807a36d1a\nSHA256: c4fa6bfae6ad84267feb42b509137a06f99b8c740b4ad069d34a936d88a8f2ec\n",
+    "timestamp": "2026-07-26T11:55:44.758276"
+  },
+  {
+    "lang": "python",
+    "code": "def matrix_mult(a, b):\n    return [[sum(x*y for x,y in zip(r, c)) for c in zip(*b)] for r in a]\n\nA = [[1,2],[3,4]]\nB = [[5,6],[7,8]]\nprint('A × B =', matrix_mult(A, B))",
+    "returncode": 0,
+    "output": "A Ã— B = [[19, 22], [43, 50]]\n",
+    "timestamp": "2026-07-26T11:55:44.801139"
+  },
+  {
+    "lang": "python",
+    "code": "import re\ntext = 'Email: test@example.com, Phone: +57-300-1234567'\nemails = re.findall(r'[\\w.-]+@[\\w.-]+\\.\\w+', text)\nphones = re.findall(r'\\+?\\d[\\d-]+', text)\nprint(f'Emails: {emails}')\nprint(f'Phones: {phones}')",
+    "returncode": 0,
+    "output": "Emails: ['test@example.com']\nPhones: ['+57-300-1234567']\n",
+    "timestamp": "2026-07-26T11:55:44.857276"
+  },
+  {
+    "lang": "python",
+    "code": "print(sum(range(100)))",
+    "returncode": 0,
+    "output": "4950\n",
+    "timestamp": "2026-07-26T12:00:25.971353"
+  },
+  {
+    "lang": "python",
+    "code": "x = [i**2 for i in range(100)]; print(len(x))",
+    "returncode": 0,
+    "output": "100\n",
+    "timestamp": "2026-07-26T12:00:26.011614"
+  },
+  {
+    "lang": "python",
+    "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\nprint([fib(i) for i in range(20)])",
+    "returncode": 0,
+    "output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]\n",
+    "timestamp": "2026-07-26T12:00:26.052659"
+  },
+  {
+    "lang": "python",
+    "code": "data = [64, 34, 25, 12, 22, 11, 90]\nsorted_data = sorted(data)\nprint(f'Original: {data}')\nprint(f'Ordenado: {sorted_data}')",
+    "returncode": 0,
+    "output": "Original: [64, 34, 25, 12, 22, 11, 90]\nOrdenado: [11, 12, 22, 25, 34, 64, 90]\n",
+    "timestamp": "2026-07-26T12:00:26.093823"
+  },
+  {
+    "lang": "python",
+    "code": "import hashlib\nmsg = 'Hello ERIS'\nprint(f'MD5:    {hashlib.md5(msg.encode()).hexdigest()}')\nprint(f'SHA256: {hashlib.sha256(msg.encode()).hexdigest()}')",
+    "returncode": 0,
+    "output": "MD5:    09db6425d3eb6ce388790fd807a36d1a\nSHA256: c4fa6bfae6ad84267feb42b509137a06f99b8c740b4ad069d34a936d88a8f2ec\n",
+    "timestamp": "2026-07-26T12:00:26.139063"
+  },
+  {
+    "lang": "python",
+    "code": "def matrix_mult(a, b):\n    return [[sum(x*y for x,y in zip(r, c)) for c in zip(*b)] for r in a]\n\nA = [[1,2],[3,4]]\nB = [[5,6],[7,8]]\nprint('A × B =', matrix_mult(A, B))",
+    "returncode": 0,
+    "output": "A Ã— B = [[19, 22], [43, 50]]\n",
+    "timestamp": "2026-07-26T12:00:26.180597"
+  },
+  {
+    "lang": "python",
+    "code": "import re\ntext = 'Email: test@example.com, Phone: +57-300-1234567'\nemails = re.findall(r'[\\w.-]+@[\\w.-]+\\.\\w+', text)\nphones = re.findall(r'\\+?\\d[\\d-]+', text)\nprint(f'Emails: {emails}')\nprint(f'Phones: {phones}')",
+    "returncode": 0,
+    "output": "Emails: ['test@example.com']\nPhones: ['+57-300-1234567']\n",
+    "timestamp": "2026-07-26T12:00:26.230215"
+  },
+  {
+    "lang": "python",
+    "code": "print(sum(range(100)))",
+    "returncode": 0,
+    "output": "4950\n",
+    "timestamp": "2026-07-26T12:03:57.012325"
+  },
+  {
+    "lang": "python",
+    "code": "x=[i**2 for i in range(100)]; print(len(x))",
+    "returncode": 0,
+    "output": "100\n",
+    "timestamp": "2026-07-26T12:03:57.053403"
+  },
+  {
+    "lang": "python",
+    "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\nprint([fib(i) for i in range(20)])",
+    "returncode": 0,
+    "output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]\n",
+    "timestamp": "2026-07-26T12:03:57.094238"
+  },
+  {
+    "lang": "python",
+    "code": "data = [64, 34, 25, 12, 22, 11, 90]\nsorted_data = sorted(data)\nprint(f'Original: {data}')\nprint(f'Ordenado: {sorted_data}')",
+    "returncode": 0,
+    "output": "Original: [64, 34, 25, 12, 22, 11, 90]\nOrdenado: [11, 12, 22, 25, 34, 64, 90]\n",
+    "timestamp": "2026-07-26T12:03:57.135085"
+  },
+  {
+    "lang": "python",
+    "code": "import hashlib\nmsg = 'Hello ERIS'\nprint(f'MD5:    {hashlib.md5(msg.encode()).hexdigest()}')\nprint(f'SHA256: {hashlib.sha256(msg.encode()).hexdigest()}')",
+    "returncode": 0,
+    "output": "MD5:    09db6425d3eb6ce388790fd807a36d1a\nSHA256: c4fa6bfae6ad84267feb42b509137a06f99b8c740b4ad069d34a936d88a8f2ec\n",
+    "timestamp": "2026-07-26T12:03:57.182303"
+  },
+  {
+    "lang": "python",
+    "code": "def matrix_mult(a, b):\n    return [[sum(x*y for x,y in zip(r, c)) for c in zip(*b)] for r in a]\n\nA = [[1,2],[3,4]]\nB = [[5,6],[7,8]]\nprint('A × B =', matrix_mult(A, B))",
+    "returncode": 0,
+    "output": "A Ã— B = [[19, 22], [43, 50]]\n",
+    "timestamp": "2026-07-26T12:03:57.222816"
+  },
+  {
+    "lang": "python",
+    "code": "import re\ntext = 'Email: test@example.com, Phone: +57-300-1234567'\nemails = re.findall(r'[\\w.-]+@[\\w.-]+\\.\\w+', text)\nphones = re.findall(r'\\+?\\d[\\d-]+', text)\nprint(f'Emails: {emails}')\nprint(f'Phones: {phones}')",
+    "returncode": 0,
+    "output": "Emails: ['test@example.com']\nPhones: ['+57-300-1234567']\n",
+    "timestamp": "2026-07-26T12:03:57.273144"
+  },
+  {
+    "lang": "python",
+    "code": "print(0)",
+    "returncode": 0,
+    "output": "0\n",
+    "timestamp": "2026-07-26T12:06:50.043408"
+  },
+  {
+    "lang": "python",
+    "code": "print(1)",
+    "returncode": 0,
+    "output": "1\n",
+    "timestamp": "2026-07-26T12:06:50.088372"
+  },
+  {
+    "lang": "python",
+    "code": "print(2)",
+    "returncode": 0,
+    "output": "2\n",
+    "timestamp": "2026-07-26T12:06:50.131112"
+  },
+  {
+    "lang": "python",
+    "code": "print(3)",
+    "returncode": 0,
+    "output": "3\n",
+    "timestamp": "2026-07-26T12:06:50.181296"
+  },
+  {
+    "lang": "python",
+    "code": "print(4)",
+    "returncode": 0,
+    "output": "4\n",
+    "timestamp": "2026-07-26T12:06:50.225173"
+  },
+  {
+    "lang": "python",
+    "code": "print(5)",
+    "returncode": 0,
+    "output": "5\n",
+    "timestamp": "2026-07-26T12:06:50.268097"
+  },
+  {
+    "lang": "python",
+    "code": "print(6)",
+    "returncode": 0,
+    "output": "6\n",
+    "timestamp": "2026-07-26T12:06:50.311947"
+  },
+  {
+    "lang": "python",
+    "code": "print(7)",
+    "returncode": 0,
+    "output": "7\n",
+    "timestamp": "2026-07-26T12:06:50.359119"
+  },
+  {
+    "lang": "python",
+    "code": "print(8)",
+    "returncode": 0,
+    "output": "8\n",
+    "timestamp": "2026-07-26T12:06:50.408091"
+  },
+  {
+    "lang": "python",
+    "code": "print(9)",
+    "returncode": 0,
+    "output": "9\n",
+    "timestamp": "2026-07-26T12:06:50.452878"
+  },
+  {
+    "lang": "python",
+    "code": "print(10)",
+    "returncode": 0,
+    "output": "10\n",
+    "timestamp": "2026-07-26T12:06:50.498395"
+  },
+  {
+    "lang": "python",
+    "code": "print(11)",
+    "returncode": 0,
+    "output": "11\n",
+    "timestamp": "2026-07-26T12:06:50.545182"
+  },
+  {
+    "lang": "python",
+    "code": "print(12)",
+    "returncode": 0,
+    "output": "12\n",
+    "timestamp": "2026-07-26T12:06:50.591534"
+  },
+  {
+    "lang": "python",
+    "code": "print(13)",
+    "returncode": 0,
+    "output": "13\n",
+    "timestamp": "2026-07-26T12:06:50.641003"
+  },
+  {
+    "lang": "python",
+    "code": "print(14)",
+    "returncode": 0,
+    "output": "14\n",
+    "timestamp": "2026-07-26T12:06:50.684103"
+  },
+  {
+    "lang": "python",
+    "code": "print(15)",
+    "returncode": 0,
+    "output": "15\n",
+    "timestamp": "2026-07-26T12:06:50.726690"
+  },
+  {
+    "lang": "python",
+    "code": "print(16)",
+    "returncode": 0,
+    "output": "16\n",
+    "timestamp": "2026-07-26T12:06:50.770266"
+  },
+  {
+    "lang": "python",
+    "code": "print(17)",
+    "returncode": 0,
+    "output": "17\n",
+    "timestamp": "2026-07-26T12:06:50.814906"
+  },
+  {
+    "lang": "python",
+    "code": "print(18)",
+    "returncode": 0,
+    "output": "18\n",
+    "timestamp": "2026-07-26T12:06:50.862722"
+  },
+  {
+    "lang": "python",
+    "code": "print(19)",
+    "returncode": 0,
+    "output": "19\n",
+    "timestamp": "2026-07-26T12:06:50.906871"
+  },
+  {
+    "lang": "python",
+    "code": "print(20)",
+    "returncode": 0,
+    "output": "20\n",
+    "timestamp": "2026-07-26T12:06:50.949593"
+  },
+  {
+    "lang": "python",
+    "code": "print(21)",
+    "returncode": 0,
+    "output": "21\n",
+    "timestamp": "2026-07-26T12:06:50.994212"
+  },
+  {
+    "lang": "python",
+    "code": "print(22)",
+    "returncode": 0,
+    "output": "22\n",
+    "timestamp": "2026-07-26T12:06:51.039080"
+  },
+  {
+    "lang": "python",
+    "code": "print(23)",
+    "returncode": 0,
+    "output": "23\n",
+    "timestamp": "2026-07-26T12:06:51.082934"
+  },
+  {
+    "lang": "python",
+    "code": "print(24)",
+    "returncode": 0,
+    "output": "24\n",
+    "timestamp": "2026-07-26T12:06:51.126790"
+  },
+  {
+    "lang": "python",
+    "code": "print(25)",
+    "returncode": 0,
+    "output": "25\n",
+    "timestamp": "2026-07-26T12:06:51.169542"
+  },
+  {
+    "lang": "python",
+    "code": "print(26)",
+    "returncode": 0,
+    "output": "26\n",
+    "timestamp": "2026-07-26T12:06:51.215061"
+  },
+  {
+    "lang": "python",
+    "code": "print(27)",
+    "returncode": 0,
+    "output": "27\n",
+    "timestamp": "2026-07-26T12:06:51.259821"
+  },
+  {
+    "lang": "python",
+    "code": "print(28)",
+    "returncode": 0,
+    "output": "28\n",
+    "timestamp": "2026-07-26T12:06:51.301448"
+  },
+  {
+    "lang": "python",
+    "code": "print(29)",
+    "returncode": 0,
+    "output": "29\n",
+    "timestamp": "2026-07-26T12:06:51.342330"
+  },
+  {
+    "lang": "python",
+    "code": "print(sum(range(100)))",
+    "returncode": 0,
+    "output": "4950\n",
+    "timestamp": "2026-07-26T12:07:35.336906"
+  },
+  {
+    "lang": "python",
+    "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\nprint([fib(i) for i in range(20)])",
+    "returncode": 0,
+    "output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]\n",
+    "timestamp": "2026-07-26T12:07:35.378713"
+  }
+]

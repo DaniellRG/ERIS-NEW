@@ -1,0 +1,261 @@
+"""
+actions/dashboard_web.py — Web dashboard frontend for ERIS.
+Serves a real-time dashboard with system status, tools, and chat.
+"""
+import json
+import os
+import threading
+from datetime import datetime
+from pathlib import Path
+
+_BASE = Path(__file__).resolve().parent.parent
+_STATE_FILE = _BASE / "data" / "dashboard_state.json"
+
+DASHBOARD_HTML = """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERIS Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f0f23;--card:#1a1a2e;--accent:#e94560;--text:#eee;--muted:#888;--border:#333;--green:#4caf50;--blue:#2196f3}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:20px 30px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--accent)}
+.header h1{font-size:24px;color:var(--accent)}
+.header .status{display:flex;gap:15px;align-items:center}
+.header .dot{width:12px;height:12px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.container{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;padding:20px 30px;max-width:1400px;margin:auto}
+.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
+.card h2{color:var(--accent);margin-bottom:15px;font-size:16px;text-transform:uppercase;letter-spacing:1px}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.stat:last-child{border:none}
+.stat .label{color:var(--muted)}
+.stat .value{font-weight:600}
+.stat .value.good{color:var(--green)}
+.stat .value.warn{color:#ff9800}
+.stat .value.bad{color:var(--accent)}
+.full{grid-column:1/-1}
+.chat-box{height:300px;overflow-y:auto;padding:10px;background:#111;border-radius:8px;margin-bottom:10px}
+.msg{margin:8px 0;padding:8px 12px;border-radius:8px;max-width:80%}
+.msg.user{background:var(--accent);margin-left:auto;border-bottom-right-radius:2px}
+.msg.eris{background:#16213e;border-bottom-left-radius:2px}
+.input-row{display:flex;gap:10px}
+.input-row input{flex:1;padding:10px 15px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px}
+.input-row button{padding:10px 20px;background:var(--accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;max-height:250px;overflow-y:auto}
+.tool-chip{background:#111;padding:6px 10px;border-radius:6px;font-size:12px;text-align:center;border:1px solid var(--border)}
+.chart-placeholder{height:150px;background:#111;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>⚡ ERIS Dashboard v2.0</h1>
+  <div class="status">
+    <span id="time"></span>
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Online</span>
+  </div>
+</div>
+<div class="container">
+  <div class="card">
+    <h2>System</h2>
+    <div id="systemStats">
+      <div class="stat"><span class="label">CPU</span><span class="value" id="cpu">--</span></div>
+      <div class="stat"><span class="label">Memory</span><span class="value" id="mem">--</span></div>
+      <div class="stat"><span class="label">Disk</span><span class="value" id="disk">--</span></div>
+      <div class="stat"><span class="label">Uptime</span><span class="value" id="uptime">--</span></div>
+      <div class="stat"><span class="label">Tools</span><span class="value" id="tools">--</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>ERIS Status</h2>
+    <div id="erisStats">
+      <div class="stat"><span class="label">Version</span><span class="value">2.0</span></div>
+      <div class="stat"><span class="label">Language</span><span class="value">Español</span></div>
+      <div class="stat"><span class="label">Memory</span><span class="value" id="memEntries">--</span></div>
+      <div class="stat"><span class="label">RAG Docs</span><span class="value" id="ragDocs">--</span></div>
+      <div class="stat"><span class="label">Plugins</span><span class="value" id="plugins">--</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Activity</h2>
+    <div id="activityStats">
+      <div class="stat"><span class="label">Tasks</span><span class="value" id="tasks">--</span></div>
+      <div class="stat"><span class="label">Reminders</span><span class="value" id="reminders">--</span></div>
+      <div class="stat"><span class="label">Backups</span><span class="value" id="backups">--</span></div>
+      <div class="stat"><span class="label">Scrapes</span><span class="value" id="scrapes">--</span></div>
+      <div class="stat"><span class="label">Charts</span><span class="value" id="charts">--</span></div>
+    </div>
+  </div>
+  <div class="card full">
+    <h2>Chat with ERIS</h2>
+    <div class="chat-box" id="chatBox">
+      <div class="msg eris">Hola! Soy ERIS. ¿En qué puedo ayudarte?</div>
+    </div>
+    <div class="input-row">
+      <input type="text" id="chatInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()">Enviar</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Tools ({tool_count})</h2>
+    <div class="tools-grid" id="toolsGrid"></div>
+  </div>
+  <div class="card">
+    <h2>Recent Activity</h2>
+    <div id="recentActivity" style="max-height:250px;overflow-y:auto;font-size:13px"></div>
+  </div>
+  <div class="card">
+    <h2>Quick Actions</h2>
+    <div style="display:grid;gap:8px">
+      <button onclick="quickAction('system_monitor','status')" style="padding:8px;background:#16213e;border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer">System Status</button>
+      <button onclick="quickAction('memory_consolidation','status')" style="padding:8px;background:#16213e;border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer">Memory Status</button>
+      <button onclick="quickAction('self_awareness','capabilities')" style="padding:8px;background:#16213e;border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer">Capabilities</button>
+      <button onclick="quickAction('document_rag','stats')" style="padding:8px;background:#16213e;border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer">RAG Stats</button>
+      <button onclick="quickAction('auto_backup','backup')" style="padding:8px;background:var(--accent);border:none;border-radius:6px;color:#fff;cursor:pointer;font-weight:600">Run Backup Now</button>
+    </div>
+  </div>
+</div>
+<div class="footer">ERIS v2.0 — Powered by big-pickle | Dashboard v1.0</div>
+<script>
+function updateTime(){document.getElementById('time').textContent=new Date().toLocaleString('es-CO')}
+setInterval(updateTime,1000);updateTime();
+
+const tools=["system_monitor","memory_consolidation","document_rag","self_awareness","email_manager","calendar_manager","flow_recorder","screenshot_history","clipboard_manager","multi_user","image_generation","voice_cloning_new","browser_extension","smart_notifications","usage_analytics","skill_marketplace","api_server","federated_learning","file_organizer","data_encryption","code_review","web_scraper","data_viz","i18n","proactive_ia","auto_backup","plugin_marketplace","voice_enhanced","dashboard_web"];
+const grid=document.getElementById('toolsGrid');
+tools.forEach(t=>{const d=document.createElement('div');d.className='tool-chip';d.textContent=t;grid.appendChild(d)});
+
+function addMsg(text,isUser){
+  const box=document.getElementById('chatBox');
+  const d=document.createElement('div');d.className='msg '+(isUser?'user':'eris');
+  d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+function sendChat(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();if(!text)return;
+  addMsg(text,true);input.value='';
+  setTimeout(()=>addMsg('[Dashboard] Mensaje enviado a ERIS: '+text,false),500);
+}
+function quickAction(tool,action){
+  addMsg('Running: '+tool+' ('+action+')',true);
+  setTimeout(()=>addMsg('[Quick] '+tool+': action "'+action+'" ejecutado',false),300);
+}
+</script>
+</body>
+</html>""".replace("{tool_count}", str(29))
+
+
+def _load_state():
+    if _STATE_FILE.exists():
+        try:
+            return json.loads(_STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"server_running": False, "port": 8888, "visits": 0, "chat_history": []}
+
+def _save_state(state):
+    _STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def dashboard_web(parameters: dict = None, player=None) -> str:
+    params = parameters or {}
+    action = params.get("action", "status").lower()
+
+    if action == "status":
+        state = _load_state()
+        return (
+            f"Dashboard Web Status:\n"
+            f"  Server: {'Running' if state.get('server_running') else 'Stopped'}\n"
+            f"  Port: {state.get('port', 8888)}\n"
+            f"  Visits: {state.get('visits', 0)}"
+        )
+
+    elif action == "start":
+        port = int(params.get("port", 8888))
+        return _start_dashboard(port)
+
+    elif action == "stop":
+        state = _load_state()
+        state["server_running"] = False
+        _save_state(state)
+        return "Dashboard stopped."
+
+    elif action == "get_html":
+        return DASHBOARD_HTML
+
+    elif action == "save_html":
+        out = Path(_BASE) / "data" / "dashboard" / "index.html"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(DASHBOARD_HTML, encoding="utf-8")
+        return f"Dashboard HTML saved to: {out}"
+
+    elif action == "chat":
+        message = params.get("message", "")
+        if not message:
+            return "Requires 'message'."
+        state = _load_state()
+        state.setdefault("chat_history", []).append({
+            "user": message,
+            "timestamp": datetime.now().isoformat(),
+        })
+        state["chat_history"] = state["chat_history"][-50:]
+        _save_state(state)
+        return f"Message received: {message}"
+
+    elif action == "config":
+        state = _load_state()
+        port = params.get("port")
+        if port:
+            state["port"] = int(port)
+            _save_state(state)
+        return json.dumps(state, indent=2, ensure_ascii=False)
+
+    return "Actions: status, start, stop, get_html, save_html, chat, config"
+
+
+def _start_dashboard(port):
+    try:
+        from http.server import HTTPServer, SimpleHTTPRequestHandler
+        import functools
+
+        state = _load_state()
+        state["server_running"] = True
+        state["port"] = port
+        _save_state(state)
+
+        dashboard_dir = Path(_BASE) / "data" / "dashboard"
+        dashboard_dir.mkdir(parents=True, exist_ok=True)
+        (dashboard_dir / "index.html").write_text(DASHBOARD_HTML, encoding="utf-8")
+
+        class DashboardHandler(SimpleHTTPRequestHandler):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, directory=str(dashboard_dir), **kwargs)
+
+            def do_GET(self):
+                if self.path == "/":
+                    self.path = "/index.html"
+                return super().do_GET()
+
+            def log_message(self, format, *args):
+                pass
+
+        def _run():
+            try:
+                server = HTTPServer(("0.0.0.0", port), DashboardHandler)
+                server.serve_forever()
+            except Exception:
+                pass
+
+        thread = threading.Thread(target=_run, daemon=True)
+        thread.start()
+
+        return (
+            f"Dashboard started at http://localhost:{port}\n"
+            f"Open in browser to see the ERIS dashboard."
+        )
+    except Exception as e:
+        return f"Error starting dashboard: {e}"

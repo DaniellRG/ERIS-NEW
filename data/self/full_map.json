@@ -1,0 +1,475 @@
+{
+  "name": "ERIS",
+  "version": "2.0",
+  "root": "D:\\Eris_Source",
+  "description": "Asistente de IA local con auto-conciencia, aprendizaje autónomo, y control total del sistema",
+  "entry_points": {
+    "main.py": {
+      "desc": "Punto de entrada principal — inicializa UI PyQt6, Gemini Live, voice loop, tool dispatcher",
+      "lines": 1374,
+      "key_functions": [
+        "main()",
+        "ErisApp",
+        "VoiceThread",
+        "ToolThread",
+        "ProactiveThread"
+      ]
+    },
+    "run.py": {
+      "desc": "Launcher simple — llama main.main()"
+    },
+    "run_debug.py": {
+      "desc": "Hot-reload para desarrollo — watch files + auto-restart"
+    }
+  },
+  "core": {
+    "action_imports.py": {
+      "desc": "Imports centralizados para 120+ action modules",
+      "lines": 500
+    },
+    "agent_router.py": {
+      "desc": "Ruteo multi-agente — clasifica intención y despacha",
+      "key": "weighted scoring + penalty keywords"
+    },
+    "audio_config.py": {
+      "desc": "Config de audio Gemini Native Audio, sample rates, dispositivos"
+    },
+    "autonomous_learner.py": {
+      "desc": "CEREBRO DE APRENDIZAJE — detecta gaps, investiga, ingesta en RAG, auto-evalúa",
+      "key": "learn_topic, detect_gaps, auto_expand, assess"
+    },
+    "emotional_state.py": {
+      "desc": "Estado emocional persistente — happy, sad, curious, etc.",
+      "recently_fixed": "dead code + disk write"
+    },
+    "gpu_config.py": {
+      "desc": "Config GPU — QtWebEngine Chromium flags"
+    },
+    "idle_learning_loop.py": {
+      "desc": "APRENDIZAJE AUTÓNOMO — aprende SOLO cuando idle, guarda en Obsidian+RAG+semantic",
+      "recently_created": true
+    },
+    "llm_bridge.py": {
+      "desc": "Puente Ollama embeddings — nomic-embed-text 768-dim, hash fallback",
+      "recently_created": true
+    },
+    "logging_setup.py": {
+      "desc": "Config logging — paths, TeeStream stdout/stderr"
+    },
+    "model_router.py": {
+      "desc": "Routing de modelos — Gemini/Groq/OpenRouter/Ollama por tipo de tarea"
+    },
+    "personality_engine.py": {
+      "desc": "Personalidad dinámica — adapta tono de mood, contexto, interacciones"
+    },
+    "platform.py": {
+      "desc": "Abstracción multi-plataforma — Windows/Linux/macOS"
+    },
+    "plugin_manager.py": {
+      "desc": "Hot-load plugins — escanea plugins/, live reload"
+    },
+    "prompt_loader.py": {
+      "desc": "Carga prompt.txt con fallback"
+    },
+    "prompt.txt": {
+      "desc": "PROMPT DE ERIS — identidad, reglas, comportamiento, acceso a sí misma",
+      "recently_updated": true
+    },
+    "rag_pipeline.py": {
+      "desc": "RAG — ChromaDB vector store, indexa PDF/DOCX/TXT/MD, query semántico",
+      "recently_fixed": "usa llm_bridge"
+    },
+    "reasoning_engine.py": {
+      "desc": "Razonamiento AGI — Chain of Thought, verificación de hechos, contrafactuales"
+    },
+    "self_improvement.py": {
+      "desc": "Auto-mejora — evaluación, corrección, optimización de prompts"
+    },
+    "semantic_memory.py": {
+      "desc": "Memoria semántica — episódica/semántica/working + knowledge graph"
+    },
+    "task_planner.py": {
+      "desc": "Planificador multi-paso — descompone metas, retry, persistencia"
+    },
+    "time_utils.py": {
+      "desc": "Timezone colombiana, contexto de hora del día"
+    },
+    "tool_declarations.py": {
+      "desc": "Schema de 192 herramientas para Gemini function calling",
+      "lines": 3505
+    },
+    "tool_dispatcher.py": {
+      "desc": "Despachador — rutea tool calls a actions via ThreadPoolExecutor",
+      "lines": 838
+    },
+    "tool_registry.py": {
+      "desc": "Registro lazy-loading — 226 tools, imports bajo demanda"
+    },
+    "training_pipeline.py": {
+      "desc": "Entrenamiento continuo — auto-evaluación, detección de fallos, corrección"
+    },
+    "tts_engine.py": {
+      "desc": "Text-to-speech — Edge TTS, cache de audio"
+    },
+    "updater.py": {
+      "desc": "Auto-updater — GitHub Releases, backup, apply"
+    },
+    "voice_recognition.py": {
+      "desc": "Verificación de voz — MFCC + cosine similarity"
+    },
+    "connectivity.py": {
+      "desc": "Auto-detección internet + cambio online/offline (ConnectivityMonitor)",
+      "recently_created": true
+    },
+    "offline_voice.py": {
+      "desc": "Pipeline offline — Vosk STT + Ollama + Kokoro TTS (100% offline)",
+      "recently_created": true
+    },
+    "self_healing.py": {
+      "desc": "Auto-healing, auto-learning, health check cada 5 min, syntax fix, error log",
+      "recently_created": true
+    }
+  },
+  "actions": {
+    "system_monitor.py": {
+      "desc": "Monitor completo — CPU, RAM, disco, red, GPU, batería, procesos",
+      "recently_rewritten": true
+    },
+    "computer_control.py": {
+      "desc": "Control nativo — click, type, hotkeys, scroll, screenshot, window mgmt",
+      "recently_rewritten": true
+    },
+    "file_controller.py": {
+      "desc": "Archivos — crear, renombrar, editar, buscar, info, disco",
+      "recently_rewritten": true
+    },
+    "browser_control.py": {
+      "desc": "Navegador — navigate, search, click, read pages",
+      "recently_rewritten": true
+    },
+    "screen_vision.py": {
+      "desc": "Visión — screenshot + análisis por Gemini/Ollama minicpm-v",
+      "recently_added_local_vision": true
+    },
+    "obsidian_brain.py": {
+      "desc": "Segundo cerebro — leer/escribir/buscar/link notas Obsidian"
+    },
+    "knowledge_base.py": {
+      "desc": "Knowledge base local — ChromaDB + Ollama embeddings"
+    },
+    "knowledge_ingestor.py": {
+      "desc": "Ingesta masiva — archivos, URLs, texto, batch",
+      "recently_created": true
+    },
+    "document_rag.py": {
+      "desc": "RAG tool — index, query, list, stats, delete, clear",
+      "recently_created": true
+    },
+    "data_connectors.py": {
+      "desc": "Conectores — HuggingFace, Wikidata, GitHub, data.gov",
+      "recently_created": true
+    },
+    "self_awareness.py": {
+      "desc": "AUTO-CONCIENCIA — introspect, analyze, log, metacognition",
+      "recently_enhanced": true
+    },
+    "self_edit.py": {
+      "desc": "AUTO-EDICIÓN — read/edit/create archivos propios con backup"
+    },
+    "self_heal.py": {
+      "desc": "AUTO-REPARACIÓN — escanea bugs, auto-fix con validación",
+      "lines": 639
+    },
+    "web_search.py": {
+      "desc": "Búsqueda web — DuckDuckGo + scraping"
+    },
+    "openrouter_agent.py": {
+      "desc": "Chat AI — OpenRouter + Ollama fallback"
+    },
+    "research_agent.py": {
+      "desc": "Investigación autónoma — curiosity-driven web research"
+    },
+    "autonomous_agent.py": {
+      "desc": "Agente autónomo — ve pantalla, entiende contexto, trabaja solo"
+    },
+    "auto_programmer.py": {
+      "desc": "Auto-programador — genera y testea tools en sandbox"
+    },
+    "emotional_growth.py": {
+      "desc": "Desarrollo emocional — etapas, memoria emocional, ciclos",
+      "lines": 514
+    },
+    "personality.py": {
+      "desc": "Personalidad proactiva — humor, opiniones, sugerencias"
+    },
+    "security_scanner.py": {
+      "desc": "Scanner seguridad — Defender, PowerShell, heurística"
+    },
+    "osint_agent.py": {
+      "desc": "OSINT — inteligencia de fuentes abiertas"
+    },
+    "game_agent.py": {
+      "desc": "Jugador — controla personaje via visión, explora, pelea"
+    },
+    "spotify_control.py": {
+      "desc": "Spotify completo — play, pause, next, search, playlists"
+    },
+    "window_manager.py": {
+      "desc": "Multi-monitor — mover, resize, snap, tile ventanas"
+    },
+    "proactive_automation.py": {
+      "desc": "Automatización proactiva — reglas basadas en hábitos"
+    },
+    "predict_engine.py": {
+      "desc": "Motor predictivo — anticipa necesidades por patrones"
+    },
+    "memory_consolidation.py": {
+      "desc": "Consolidación de memorias — limpieza, merge, optimización",
+      "recently_created": true
+    },
+    "email_manager.py": {
+      "desc": "Email — IMAP/SMTP, leer, enviar, organizar, buscar",
+      "recently_created": true
+    },
+    "calendar_manager.py": {
+      "desc": "Calendario — crear eventos, Google Calendar sync",
+      "recently_created": true
+    },
+    "flow_recorder.py": {
+      "desc": "Grabador de flujos — macros, grabar/repetir acciones",
+      "recently_created": true
+    },
+    "screenshot_history.py": {
+      "desc": "Historial de screenshots — capturar, buscar, comparar",
+      "recently_created": true
+    },
+    "clipboard_manager.py": {
+      "desc": "Portapapeles — historial, monitoreo, fijar textos",
+      "recently_created": true
+    },
+    "multi_user.py": {
+      "desc": "Multi-usuario — perfiles diferentes con personalizaciones",
+      "recently_created": true
+    },
+    "voice_cloning.py": {
+      "desc": "Clonación de voz — entrenar, sintetizar, comparar",
+      "recently_created": true
+    },
+    "browser_extension.py": {
+      "desc": "Extensión de navegador — WebSocket server para Chrome/Firefox",
+      "recently_created": true
+    },
+    "smart_notifications.py": {
+      "desc": "Notificaciones inteligentes — contextuales, no molestas",
+      "recently_created": true
+    },
+    "usage_analytics.py": {
+      "desc": "Analytics de uso — stats de tools, errores, timeline",
+      "recently_created": true
+    },
+    "skill_marketplace.py": {
+      "desc": "Marketplace — publicar, descargar, instalar skills",
+      "recently_created": true
+    },
+    "api_server.py": {
+      "desc": "API Server — REST API para que otras apps hablen con ERIS",
+      "recently_created": true
+    },
+    "federated_learning.py": {
+      "desc": "Aprendizaje federado — patrones locales sin nube",
+      "recently_created": true
+    },
+    "file_organizer.py": {
+      "desc": "Organizador de archivos — auto-clasificar downloads/escritorio",
+      "recently_created": true
+    },
+    "data_encryption.py": {
+      "desc": "Cifrado de datos — AES-256 para memorias sensibles",
+      "recently_created": true
+    },
+    "auto_backup.py": {
+      "desc": "Auto-backup — backup automático de config, memoria, knowledge",
+      "recently_created": true
+    },
+    "plugin_marketplace.py": {
+      "desc": "Plugin marketplace — instalar, buscar, gestionar plugins",
+      "recently_created": true
+    },
+    "proactive_ia.py": {
+      "desc": "IA proactiva — recordar tareas, sugerir acciones, monitorear patrones",
+      "recently_created": true
+    },
+    "voice_enhanced.py": {
+      "desc": "Voz mejorada — wake word, perfiles de voz, TTS",
+      "recently_created": true
+    },
+    "data_viz.py": {
+      "desc": "Data visualization — charts con matplotlib/plotly",
+      "recently_created": true
+    },
+    "i18n.py": {
+      "desc": "Internacionalización — traducir mensajes, gestionar idiomas",
+      "recently_created": true
+    },
+    "code_review.py": {
+      "desc": "Code review — detectar issues, seguridad, estilo",
+      "recently_created": true
+    },
+    "web_scraper.py": {
+      "desc": "Web scraper — scraping avanzado con requests/bs4/playwright",
+      "recently_created": true
+    },
+    "dashboard_web.py": {
+      "desc": "Dashboard web — frontend real para api_server",
+      "recently_created": true
+    },
+    "docker_deploy.py": {
+      "desc": "Docker deploy — container para ERIS server",
+      "recently_created": true
+    },
+    "ci_cd.py": {
+      "desc": "CI/CD — tests automáticos, lint, typecheck",
+      "recently_created": true
+    },
+    "i18n_ui.py": {
+      "desc": "i18n UI — traducir interfaz completa",
+      "recently_created": true
+    },
+    "voice_cloning_real.py": {
+      "desc": "Voice cloning real — sintetizar voz con edge-tts",
+      "recently_created": true
+    }
+  },
+  "agents": {
+    "vision_agent.py": {
+      "desc": "Agente visión — screenshots, guardian, análisis imágenes"
+    },
+    "search_agent.py": {
+      "desc": "Agente búsqueda — historial, archivos, super search, web"
+    },
+    "security_agent.py": {
+      "desc": "Agente seguridad — scanning, gestión programas, safety gates"
+    },
+    "system_agent.py": {
+      "desc": "Agente sistema — CPU/RAM/disk, desktop, Windows settings"
+    },
+    "media_agent.py": {
+      "desc": "Agente media — Spotify, YouTube, image gen, TikTok"
+    },
+    "productivity_agent.py": {
+      "desc": "Agente productividad — calendar, email, drive, docs"
+    },
+    "dev_agent.py": {
+      "desc": "Agente dev — code help, git, codebase, knowledge base"
+    },
+    "opencode_bridge.py": {
+      "desc": "Puente opencode — conecta ERIS con opencode CLI"
+    }
+  },
+  "bios": {
+    "boot.py": {
+      "desc": "Boot sequence — BIOS-style, rule loading, crash tracking"
+    },
+    "watchdog.py": {
+      "desc": "Watchdog — heartbeat, crash detection, auto-recovery"
+    },
+    "recovery.py": {
+      "desc": "Recovery mode — estado, degradación graceful"
+    },
+    "post.py": {
+      "desc": "POST — checksum, verificación integridad"
+    }
+  },
+  "skills": {
+    "skill_registry.py": {
+      "desc": "Skills auto-mejorables con progressive disclosure",
+      "lines": 527
+    },
+    "superpowers.py": {
+      "desc": "Metodología Superpowers SDLC como skills"
+    },
+    "builtin/": {
+      "desc": "11 skills built-in (brainstorming, TDD, debugging, threat-hunting, etc.)"
+    }
+  },
+  "memory": {
+    "memory_manager.py": {
+      "desc": "Gestor largo plazo — notes, habits, preferences, context"
+    },
+    "working.json": {
+      "desc": "Memoria de trabajo — contexto conversación activa"
+    },
+    "semantic.json": {
+      "desc": "Memoria semántica — hechos, conceptos, relaciones"
+    },
+    "episodic.json": {
+      "desc": "Memoria episódica — qué pasó, cuándo, contexto"
+    },
+    "long_term.json": {
+      "desc": "Memoria largo plazo — notas, hábitos, preferencias"
+    },
+    "knowledge_graph.json": {
+      "desc": "Grafo de entidades y relaciones"
+    },
+    "emotional_state.json": {
+      "desc": "Estado emocional actual"
+    }
+  },
+  "data": {
+    "knowledge/": {
+      "desc": "12+ archivos de conocimiento (.md) — CS, AI, idle learning",
+      "count": "12+ files"
+    },
+    "chroma_db/": {
+      "desc": "ChromaDB vector store — 36 chunks, 10 documentos"
+    },
+    "self/": {
+      "desc": "Auto-conciencia — identity.json, self_log.json, metacognition.json, full_map.json"
+    },
+    "idle_learning.json": {
+      "desc": "Estado aprendizaje idle — ciclos, temas, pool"
+    },
+    "autonomous_learn.json": {
+      "desc": "Estado aprendizaje autónomo"
+    }
+  },
+  "config": {
+    "api_keys.json": {
+      "desc": "API keys — Gemini, OpenRouter, Spotify"
+    },
+    "user_profile.json": {
+      "desc": "Perfil de usuario"
+    },
+    "eris_state.json": {
+      "desc": "Estado runtime ERIS"
+    }
+  },
+  "context": {
+    "AGENTS.md": {
+      "desc": "Definición comportamiento — identidad, principios, capacidades"
+    }
+  },
+  "tests": {
+    "test_agent_router.py": {
+      "desc": "Tests routing de agentes"
+    },
+    "test_emotional_state.py": {
+      "desc": "Tests estado emocional"
+    },
+    "test_tool_registry.py": {
+      "desc": "Tests registro herramientas"
+    },
+    "test_tool_declarations.py": {
+      "desc": "Tests schemas herramientas"
+    },
+    "test_time_utils.py": {
+      "desc": "Tests timezone"
+    },
+    "test_prompt_loader.py": {
+      "desc": "Tests carga prompt"
+    },
+    "test_gpu_config.py": {
+      "desc": "Tests config GPU"
+    }
+  }
+}

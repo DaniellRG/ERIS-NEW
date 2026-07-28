@@ -1,0 +1,302 @@
+[
+  {
+    "time": "2026-07-23T21:01:34.503341",
+    "type": "protect",
+    "message": "Saved 16 integrity baselines"
+  },
+  {
+    "time": "2026-07-23T21:02:15.822243",
+    "type": "protect",
+    "message": "Saved 16 integrity baselines"
+  },
+  {
+    "time": "2026-07-23T21:02:57.755381",
+    "type": "tampered",
+    "message": "File modified: actions/self_protection.py"
+  },
+  {
+    "time": "2026-07-23T21:03:04.590149",
+    "type": "protect",
+    "message": "Saved 16 integrity baselines"
+  },
+  {
+    "time": "2026-07-23T21:06:01.079332",
+    "type": "ALERT",
+    "message": "1 files appear tampered!"
+  },
+  {
+    "time": "2026-07-23T21:06:47.871109",
+    "type": "heal",
+    "message": "Healed memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-23T21:23:27.565003",
+    "type": "ALERT",
+    "message": "8 files appear tampered!"
+  },
+  {
+    "time": "2026-07-23T21:24:27.849071",
+    "type": "ALERT",
+    "message": "8 files appear tampered!"
+  },
+  {
+    "time": "2026-07-23T21:24:27.857323",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-23T21:24:27.865071",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-23T21:24:27.873413",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-23T21:24:27.881396",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-23T21:24:27.890598",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-23T21:24:27.898607",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-23T21:24:27.907070",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-23T21:24:27.915561",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-23T21:24:50.405047",
+    "type": "ALERT",
+    "message": "8 files appear tampered!"
+  },
+  {
+    "time": "2026-07-23T21:24:50.413837",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-23T21:24:50.422155",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-23T21:24:50.431729",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-23T21:24:50.440872",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-23T21:24:50.449760",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-23T21:24:50.458315",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-23T21:24:50.467313",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-23T21:24:50.476750",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-23T21:45:43.056450",
+    "type": "ALERT",
+    "message": "8 files appear tampered!"
+  },
+  {
+    "time": "2026-07-23T21:45:43.064841",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-23T21:45:43.073446",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-23T21:45:43.082658",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-23T21:45:43.090995",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-23T21:45:43.101305",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-23T21:45:43.110233",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-23T21:45:43.118789",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-23T21:45:43.130771",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-23T21:54:47.302781",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-23T21:54:47.311269",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-23T21:54:47.338105",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-23T21:54:47.350818",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-23T21:54:47.368214",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-23T21:54:47.385473",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-23T21:54:47.399029",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-23T21:54:47.431492",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-26T14:24:34.720000",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-26T14:24:34.734420",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-26T14:24:34.750254",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-26T14:24:34.759018",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-26T14:24:34.774698",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-26T14:24:34.791053",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-26T14:24:34.806992",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-26T14:24:34.831076",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  },
+  {
+    "time": "2026-07-27T09:44:55.394940",
+    "type": "ALERT",
+    "message": "9 files appear tampered!"
+  },
+  {
+    "time": "2026-07-27T11:58:11.781794",
+    "type": "tampered",
+    "message": "File modified: core/prompt.txt"
+  },
+  {
+    "time": "2026-07-27T11:58:11.797792",
+    "type": "tampered",
+    "message": "File modified: core/tool_declarations.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.820777",
+    "type": "tampered",
+    "message": "File modified: core/tool_dispatcher.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.829437",
+    "type": "tampered",
+    "message": "File modified: core/action_imports.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.838375",
+    "type": "tampered",
+    "message": "File modified: main.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.853425",
+    "type": "tampered",
+    "message": "File modified: config/api_keys.json"
+  },
+  {
+    "time": "2026-07-27T11:58:11.869036",
+    "type": "tampered",
+    "message": "File modified: actions/cybersecurity.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.885182",
+    "type": "tampered",
+    "message": "File modified: actions/self_heal.py"
+  },
+  {
+    "time": "2026-07-27T11:58:11.894247",
+    "type": "tampered",
+    "message": "File modified: memory/emotional_growth.json"
+  }
+]

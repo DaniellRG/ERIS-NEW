@@ -1,0 +1,56 @@
+[
+  {
+    "id": "sem_08246d78",
+    "subject": "aprendi sobre: automatizacion tareas inteligentes ia. \nwikipedia:\n  - inteligencia artificial: gran",
+    "predicate": "tiene",
+    "object": "una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. la ia lleva esta a",
+    "confidence": 0.7,
+    "timestamp": 1784916418.9175954,
+    "sources": []
+  },
+  {
+    "id": "sem_c0150124",
+    "subject": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**inteligencia artificial explicable (xai): guía completa 2026**\n¿qué",
+    "predicate": "es",
+    "object": "lainteligenciaartificialexplicativao xai? lainteligenciaartificialexplicativa, también conocida como xai (por sus siglas en inglés, explainableartificialintel",
+    "confidence": 0.8,
+    "timestamp": 1785092785.9131918,
+    "sources": []
+  },
+  {
+    "id": "sem_2d8d6063",
+    "subject": "aprendi sobre: machine learning modelos nuevos 2026. resultados para 'machine learning modelos nuevos 2026' (duckduckgo):\n\n**tendencias de machine learning para 2026: innovaciones que ...**\nconclusión:2026llegó antes de lo pensado, ¿estás preparado? las tendencias enmachinelearningpara2026demuestran que la inteligencia artificial no",
+    "predicate": "es",
+    "object": "ciencia ficción",
+    "confidence": 0.8,
+    "timestamp": 1785209859.832629,
+    "sources": []
+  },
+  {
+    "id": "sem_a30e9c94",
+    "subject": "aprendi sobre: energias renovables tecnologia. resultados para 'energias renovables tecnologia' (duckduckgo):\n\n**productos destacados - comprar en ebay**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
+    "predicate": "tiene",
+    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay.com%26ad_p",
+    "confidence": 0.7,
+    "timestamp": 1785204978.4620101,
+    "sources": []
+  },
+  {
+    "id": "sem_8676a71b",
+    "subject": "aprendi sobre: automatizacion tareas inteligentes ia. resultados para 'automatizacion tareas inteligentes ia' (duckduckgo):\n\n**asistente de redacción con ia - herramienta gratis de revisión**\nel 97% de los usuarios de grammarly aseguran que",
+    "predicate": "es",
+    "object": "su herramienta de redacción favorita. crea textos claros, seguros y sin errores con la app de escritoria deiad",
+    "confidence": 0.8,
+    "timestamp": 1785207422.7941217,
+    "sources": []
+  },
+  {
+    "id": "sem_4b24fdf3",
+    "subject": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**rápido, fácil y gratis - herramienta gratis de revisión**\nel 97% de los usuarios de grammarly aseguran que",
+    "predicate": "es",
+    "object": "su herramienta de redacción favorita. crea textos claros, seguros y sin errores con la app de escritoria de ia de gramm",
+    "confidence": 0.8,
+    "timestamp": 1785207425.6176383,
+    "sources": []
+  }
+]

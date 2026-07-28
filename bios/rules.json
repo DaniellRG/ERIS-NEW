@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "max_crash_count": 3,
+    "watchdog_interval_sec": 30,
+    "auto_recovery": true,
+    "post_checks": ["filesystem", "config", "memory"]
+  }
+}

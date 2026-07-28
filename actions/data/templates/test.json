@@ -1,0 +1,6 @@
+{
+  "name": "test",
+  "ext": ".txt",
+  "template": "Hello {{name}}!",
+  "defaults": {}
+}

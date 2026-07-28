@@ -1,0 +1,470 @@
+[
+  {
+    "time": "2026-07-23T10:30:03.925130",
+    "type": "username",
+    "query": "GitHub/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:04.962920",
+    "type": "username",
+    "query": "Twitter/X/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:05.703661",
+    "type": "username",
+    "query": "Instagram/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:06.360214",
+    "type": "username",
+    "query": "Reddit/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:07.006355",
+    "type": "username",
+    "query": "TikTok/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:07.511942",
+    "type": "username",
+    "query": "YouTube/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:08.036832",
+    "type": "username",
+    "query": "Twitch/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:09.397329",
+    "type": "username",
+    "query": "Pinterest/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:09.972176",
+    "type": "username",
+    "query": "Spotify/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:10.577579",
+    "type": "username",
+    "query": "LinkedIn/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:11.168098",
+    "type": "username",
+    "query": "Steam/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:11.891774",
+    "type": "username",
+    "query": "Telegram/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:12.393855",
+    "type": "username",
+    "query": "Keybase/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:13.044590",
+    "type": "username",
+    "query": "Medium/test_user_123456789",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T10:30:13.576679",
+    "type": "username",
+    "query": "DeviantArt/test_user_123456789",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T10:30:14.392559",
+    "type": "whois",
+    "query": "google.com",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:28:58.140432",
+    "type": "username",
+    "query": "GitHub/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:28:59.270022",
+    "type": "username",
+    "query": "Twitter/X/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:29:00.071840",
+    "type": "username",
+    "query": "Instagram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:00.681295",
+    "type": "username",
+    "query": "Reddit/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:01.412976",
+    "type": "username",
+    "query": "TikTok/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:02.061194",
+    "type": "username",
+    "query": "YouTube/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:06.918101",
+    "type": "username",
+    "query": "Pinterest/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:29:07.408962",
+    "type": "username",
+    "query": "Spotify/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:29:08.073067",
+    "type": "username",
+    "query": "LinkedIn/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:29:08.577267",
+    "type": "username",
+    "query": "Steam/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:09.309190",
+    "type": "username",
+    "query": "Telegram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:10.040394",
+    "type": "username",
+    "query": "Keybase/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T20:29:10.942602",
+    "type": "username",
+    "query": "Medium/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:11.898870",
+    "type": "username",
+    "query": "DeviantArt/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:12.452301",
+    "type": "email",
+    "query": "daniellgomezz234@gmail.com",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:19.910248",
+    "type": "whois",
+    "query": "google.com",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T20:29:20.105022",
+    "type": "ip",
+    "query": "8.8.8.8",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:15.566268",
+    "type": "username",
+    "query": "GitHub/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:16.761529",
+    "type": "username",
+    "query": "Twitter/X/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:17.330072",
+    "type": "username",
+    "query": "Instagram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:17.942651",
+    "type": "username",
+    "query": "Reddit/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:18.599178",
+    "type": "username",
+    "query": "TikTok/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:19.263344",
+    "type": "username",
+    "query": "YouTube/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:19.752572",
+    "type": "username",
+    "query": "Twitch/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:21.197142",
+    "type": "username",
+    "query": "Pinterest/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:21.722755",
+    "type": "username",
+    "query": "Spotify/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:22.310813",
+    "type": "username",
+    "query": "LinkedIn/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:22.806506",
+    "type": "username",
+    "query": "Steam/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:23.539258",
+    "type": "username",
+    "query": "Telegram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:24.219283",
+    "type": "username",
+    "query": "Keybase/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:25.086351",
+    "type": "username",
+    "query": "Medium/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:26.075449",
+    "type": "username",
+    "query": "DeviantArt/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:38.161243",
+    "type": "username",
+    "query": "GitHub/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:39.256900",
+    "type": "username",
+    "query": "Twitter/X/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:39.927126",
+    "type": "username",
+    "query": "Instagram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:40.510762",
+    "type": "username",
+    "query": "Reddit/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:41.163473",
+    "type": "username",
+    "query": "TikTok/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:41.815946",
+    "type": "username",
+    "query": "YouTube/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:42.367447",
+    "type": "username",
+    "query": "Twitch/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:43.764220",
+    "type": "username",
+    "query": "Pinterest/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:44.488189",
+    "type": "username",
+    "query": "Spotify/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:45.090198",
+    "type": "username",
+    "query": "LinkedIn/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:45.591788",
+    "type": "username",
+    "query": "Steam/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:46.333159",
+    "type": "username",
+    "query": "Telegram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:46.832034",
+    "type": "username",
+    "query": "Keybase/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:24:47.593186",
+    "type": "username",
+    "query": "Medium/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:24:48.588437",
+    "type": "username",
+    "query": "DeviantArt/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:27.329427",
+    "type": "username",
+    "query": "GitHub/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:28.741296",
+    "type": "username",
+    "query": "Twitter/X/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:29.438405",
+    "type": "username",
+    "query": "Instagram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:30.599797",
+    "type": "username",
+    "query": "Reddit/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:31.249977",
+    "type": "username",
+    "query": "TikTok/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:31.924402",
+    "type": "username",
+    "query": "YouTube/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:32.502183",
+    "type": "username",
+    "query": "Twitch/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:33.861735",
+    "type": "username",
+    "query": "Pinterest/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:34.454118",
+    "type": "username",
+    "query": "Spotify/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:35.069215",
+    "type": "username",
+    "query": "LinkedIn/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:35.664237",
+    "type": "username",
+    "query": "Steam/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:36.432091",
+    "type": "username",
+    "query": "Telegram/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:37.090090",
+    "type": "username",
+    "query": "Keybase/SoulXD2",
+    "results": 0
+  },
+  {
+    "time": "2026-07-23T21:45:37.907717",
+    "type": "username",
+    "query": "Medium/SoulXD2",
+    "results": 1
+  },
+  {
+    "time": "2026-07-23T21:45:39.857004",
+    "type": "username",
+    "query": "DeviantArt/SoulXD2",
+    "results": 1
+  }
+]

@@ -1,0 +1,2644 @@
+{
+  "nodes": [
+    {
+      "id": "auto_Docker_containers_microservicios",
+      "label": "Docker containers microservicios",
+      "file": "auto_Docker_containers_microservicios.md",
+      "size": 477,
+      "word_count": 40
+    },
+    {
+      "id": "auto_Python_async_await_programacion_asincrona",
+      "label": "Python async await programacion asincrona",
+      "file": "auto_Python_async_await_programacion_asincrona.md",
+      "size": 836,
+      "word_count": 69
+    },
+    {
+      "id": "eris_self_knowledge",
+      "label": "ERIS — Auto-Conocimiento Completo",
+      "file": "eris_self_knowledge.md",
+      "size": 3824,
+      "word_count": 352
+    },
+    {
+      "id": "ia_agentica",
+      "label": "Tecnologias de IA Agentic - Guia Completa",
+      "file": "ia_agentica.md",
+      "size": 6478,
+      "word_count": 609
+    },
+    {
+      "id": "idle_automatizacion_tareas_inteligentes_IA",
+      "label": "automatizacion tareas inteligentes IA",
+      "file": "idle_automatizacion_tareas_inteligentes_IA.md",
+      "size": 172,
+      "word_count": 15
+    },
+    {
+      "id": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "label": "bases de datos nuevas tendencias NoSQL",
+      "file": "idle_bases_de_datos_nuevas_tendencias_NoSQL.md",
+      "size": 174,
+      "word_count": 19
+    },
+    {
+      "id": "idle_Big_Data_herramientas_nuevas",
+      "label": "Big Data herramientas nuevas",
+      "file": "idle_Big_Data_herramientas_nuevas.md",
+      "size": 154,
+      "word_count": 16
+    },
+    {
+      "id": "idle_biotecnologia_bioinformatica_avances",
+      "label": "biotecnologia bioinformatica avances",
+      "file": "idle_biotecnologia_bioinformatica_avances.md",
+      "size": 170,
+      "word_count": 15
+    },
+    {
+      "id": "idle_blockchain_aplicaciones_reales_2026",
+      "label": "blockchain aplicaciones reales 2026",
+      "file": "idle_blockchain_aplicaciones_reales_2026.md",
+      "size": 168,
+      "word_count": 17
+    },
+    {
+      "id": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "label": "ciberseguridad vulnerabilidades recientes",
+      "file": "idle_ciberseguridad_vulnerabilidades_recientes.md",
+      "size": 180,
+      "word_count": 15
+    },
+    {
+      "id": "idle_cloud_computing_servicios_nuevos",
+      "label": "cloud computing servicios nuevos",
+      "file": "idle_cloud_computing_servicios_nuevos.md",
+      "size": 167,
+      "word_count": 17
+    },
+    {
+      "id": "idle_computacion_cuantica_avances_recientes",
+      "label": "computacion cuantica avances recientes",
+      "file": "idle_computacion_cuantica_avances_recientes.md",
+      "size": 174,
+      "word_count": 17
+    },
+    {
+      "id": "idle_desarrollo_software_metodologias_agiles",
+      "label": "desarrollo software metodologias agiles",
+      "file": "idle_desarrollo_software_metodologias_agiles.md",
+      "size": 176,
+      "word_count": 17
+    },
+    {
+      "id": "idle_Docker_Kubernetes_mejoras_recientes",
+      "label": "Docker Kubernetes mejoras recientes",
+      "file": "idle_Docker_Kubernetes_mejoras_recientes.md",
+      "size": 168,
+      "word_count": 17
+    },
+    {
+      "id": "idle_energias_renovables_tecnologia",
+      "label": "energias renovables tecnologia",
+      "file": "idle_energias_renovables_tecnologia.md",
+      "size": 158,
+      "word_count": 15
+    },
+    {
+      "id": "idle_inteligencia_artificial_explicativa",
+      "label": "inteligencia artificial explicativa",
+      "file": "idle_inteligencia_artificial_explicativa.md",
+      "size": 168,
+      "word_count": 15
+    },
+    {
+      "id": "idle_machine_learning_modelos_nuevos_2026",
+      "label": "machine learning modelos nuevos 2026",
+      "file": "idle_machine_learning_modelos_nuevos_2026.md",
+      "size": 170,
+      "word_count": 19
+    },
+    {
+      "id": "idle_nuevos_frameworks_programacion_tendencias",
+      "label": "nuevos frameworks programacion tendencias",
+      "file": "idle_nuevos_frameworks_programacion_tendencias.md",
+      "size": 971,
+      "word_count": 85
+    },
+    {
+      "id": "idle_Python_nuevas_caracteristicas_version",
+      "label": "Python nuevas caracteristicas version",
+      "file": "idle_Python_nuevas_caracteristicas_version.md",
+      "size": 172,
+      "word_count": 17
+    },
+    {
+      "id": "idle_redes_5G_6G_tecnologias_nuevas",
+      "label": "redes 5G 6G tecnologias nuevas",
+      "file": "idle_redes_5G_6G_tecnologias_nuevas.md",
+      "size": 158,
+      "word_count": 15
+    },
+    {
+      "id": "idle_robotica_automatizacion_avances",
+      "label": "robotica automatizacion avances",
+      "file": "idle_robotica_automatizacion_avances.md",
+      "size": 160,
+      "word_count": 15
+    },
+    {
+      "id": "idle_seguridad_datos_privacidad_GDPR",
+      "label": "seguridad datos privacidad GDPR",
+      "file": "idle_seguridad_datos_privacidad_GDPR.md",
+      "size": 160,
+      "word_count": 17
+    },
+    {
+      "id": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "label": "ultimos avances inteligencia artificial 2026",
+      "file": "idle_ultimos_avances_inteligencia_artificial_2026.md",
+      "size": 179,
+      "word_count": 18
+    },
+    {
+      "id": "idle_vehiculos_autonomos_avances",
+      "label": "vehiculos autonomos avances",
+      "file": "idle_vehiculos_autonomos_avances.md",
+      "size": 152,
+      "word_count": 15
+    },
+    {
+      "id": "ingenieria_sistemas",
+      "label": "Ingenieria de Sistemas - Plan de Estudios Completo",
+      "file": "ingenieria_sistemas.md",
+      "size": 9513,
+      "word_count": 915
+    }
+  ],
+  "edges": [
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "auto_Python_async_await_programacion_asincrona",
+      "weight": 0.1405,
+      "shared_words": [
+        "wikipedia:",
+        "fecha:",
+        "web_search",
+        "fuente:",
+        "12:53"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_automatizacion_tareas_inteligentes_IA",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "weight": 0.0704,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_Big_Data_herramientas_nuevas",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_biotecnologia_bioinformatica_avances",
+      "weight": 0.058,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_blockchain_aplicaciones_reales_2026",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.0735,
+      "shared_words": [
+        "fecha:",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.0685,
+      "shared_words": [
+        "fecha:",
+        "servicios"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.0725,
+      "shared_words": [
+        "fecha:",
+        "docker"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.0735,
+      "shared_words": [
+        "fecha:",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.0735,
+      "shared_words": [
+        "fecha:",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.0563,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.1064,
+      "shared_words": [
+        "wikipedia:",
+        "fecha:",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.0563,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.058,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.0571,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.0533,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Docker_containers_microservicios",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.058,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Python_async_await_programacion_asincrona",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.0505,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "auto_Python_async_await_programacion_asincrona",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.1166,
+      "shared_words": [
+        "fecha:",
+        "nivel",
+        "2026-07-24",
+        "wikipedia:",
+        "programacion"
+      ]
+    },
+    {
+      "source": "auto_Python_async_await_programacion_asincrona",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.05,
+      "shared_words": [
+        "fecha:"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "weight": 0.4074,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_Big_Data_herramientas_nuevas",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_biotecnologia_bioinformatica_avances",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_blockchain_aplicaciones_reales_2026",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.48,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.1714,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_automatizacion_tareas_inteligentes_IA",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_Big_Data_herramientas_nuevas",
+      "weight": 0.4074,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_biotecnologia_bioinformatica_avances",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_blockchain_aplicaciones_reales_2026",
+      "weight": 0.4074,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.1667,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.4074,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.3571,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.3571,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3929,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0714,
+      "shared_words": [
+        "auto-investigacion",
+        "learning)",
+        "tendencias",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.4074,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3929,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "encontré",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.52,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.1622,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_bases_de_datos_nuevas_tendencias_NoSQL",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_biotecnologia_bioinformatica_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_blockchain_aplicaciones_reales_2026",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.5,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "12:41",
+        "fecha:"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.5,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.5417,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "nuevas'",
+        "fecha:"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Big_Data_herramientas_nuevas",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_blockchain_aplicaciones_reales_2026",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.1818,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.5909,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "10:57"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0541,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.619,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "avances"
+      ]
+    },
+    {
+      "source": "idle_biotecnologia_bioinformatica_avances",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.5455,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.5417,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "11:27"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_blockchain_aplicaciones_reales_2026",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_cloud_computing_servicios_nuevos",
+      "weight": 0.1818,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4783,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4783,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0734,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "recientes"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_ciberseguridad_vulnerabilidades_recientes",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_computacion_cuantica_avances_recientes",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.1818,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.1818,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "nuevos"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0796,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "nuevos"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.1818,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.6667,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "should"
+      ]
+    },
+    {
+      "source": "idle_cloud_computing_servicios_nuevos",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.2188,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_desarrollo_software_metodologias_agiles",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.5,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0631,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "recientes"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "avances"
+      ]
+    },
+    {
+      "source": "idle_computacion_cuantica_avances_recientes",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_Docker_Kubernetes_mejoras_recientes",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_desarrollo_software_metodologias_agiles",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_energias_renovables_tecnologia",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0631,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "recientes"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Docker_Kubernetes_mejoras_recientes",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_inteligencia_artificial_explicativa",
+      "weight": 0.5455,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0636,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.1765,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_energias_renovables_tecnologia",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_machine_learning_modelos_nuevos_2026",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0636,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "2026-07-24"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.25,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "inteligencia"
+      ]
+    },
+    {
+      "source": "idle_inteligencia_artificial_explicativa",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4167,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_nuevos_frameworks_programacion_tendencias",
+      "weight": 0.0625,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "nuevos"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.3571,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "encontré",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4231,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_machine_learning_modelos_nuevos_2026",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_Python_nuevas_caracteristicas_version",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.0531,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.0541,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.0536,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.0696,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_nuevos_frameworks_programacion_tendencias",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.0541,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Python_nuevas_caracteristicas_version",
+      "target": "idle_redes_5G_6G_tecnologias_nuevas",
+      "weight": 0.48,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Python_nuevas_caracteristicas_version",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Python_nuevas_caracteristicas_version",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_Python_nuevas_caracteristicas_version",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2059,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_Python_nuevas_caracteristicas_version",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.5217,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_redes_5G_6G_tecnologias_nuevas",
+      "target": "idle_robotica_automatizacion_avances",
+      "weight": 0.3846,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_redes_5G_6G_tecnologias_nuevas",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.3704,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_redes_5G_6G_tecnologias_nuevas",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_redes_5G_6G_tecnologias_nuevas",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.44,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_robotica_automatizacion_avances",
+      "target": "idle_seguridad_datos_privacidad_GDPR",
+      "weight": 0.4583,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-26",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_robotica_automatizacion_avances",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.2121,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "avances"
+      ]
+    },
+    {
+      "source": "idle_robotica_automatizacion_avances",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.5455,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_seguridad_datos_privacidad_GDPR",
+      "target": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "weight": 0.1714,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle"
+      ]
+    },
+    {
+      "source": "idle_seguridad_datos_privacidad_GDPR",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.4,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "fecha:",
+        "(idle",
+        "encontré"
+      ]
+    },
+    {
+      "source": "idle_ultimos_avances_inteligencia_artificial_2026",
+      "target": "idle_vehiculos_autonomos_avances",
+      "weight": 0.25,
+      "shared_words": [
+        "learning)",
+        "auto-investigacion",
+        "2026-07-25",
+        "fecha:",
+        "(idle"
+      ]
+    }
+  ],
+  "doc_count": 25,
+  "edge_count": 214,
+  "threshold": 0.05,
+  "built_at": "2026-07-26T12:07:35.393723"
+}

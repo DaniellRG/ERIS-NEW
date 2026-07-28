@@ -1,11 +1,11 @@
 {
   "current_emotion": "focused",
-  "energy": 99.5,
-  "tasks_completed": 130,
-  "tasks_failed": 0,
-  "total_errors": 0,
-  "uptime_minutes": 12,
-  "learning_points": 130,
+  "energy": 96.5,
+  "tasks_completed": 131,
+  "tasks_failed": 1,
+  "total_errors": 1,
+  "uptime_minutes": 13,
+  "learning_points": 131,
   "created": "2026-06-17T13:34:30.290338",
   "history": [
     {
@@ -138,6 +138,24 @@
       "timestamp": "2026-06-17T14:11:00.066246",
       "emotion": "focused",
       "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-07-27T21:24:26.025078",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-07-27T21:24:26.034697",
+      "emotion": "error",
+      "previous": "happy",
+      "reason": "Tarea fallida"
+    },
+    {
+      "timestamp": "2026-07-27T21:24:26.543598",
+      "emotion": "focused",
+      "previous": "error",
       "reason": "Múltiples tareas en progreso"
     }
   ]

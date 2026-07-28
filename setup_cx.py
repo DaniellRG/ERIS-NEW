@@ -9,7 +9,7 @@ build_exe_options = {
         "comtypes", "pycaw", "docx", "openpyxl", "qtawesome",
         "win10toast", "PyQt6", "actions", "agent", "memory",
         "core", "google", "flask", "PyPDF2", "pptx", "tzdata",
-        "_sounddevice_data",
+        "chromadb", "_sounddevice_data",
     ],
 
     "include_files": [
@@ -58,9 +58,21 @@ build_exe_options = {
         "actions/subagent_task.py",
         "actions/self_heal.py",
         "actions/emotional_growth.py",
-        # Sounddevice data from system Python 3.12
+        "actions/mobile_server.py",
+        "actions/ollama_provider.py",
+        "actions/screen_recorder.py",
+        "actions/translator.py",
+        "actions/meeting_transcriber.py",
+        "actions/network_monitor.py",
+        "actions/quick_actions.py",
+        "actions/pdf_editor.py",
+        "actions/context_menu.py",
+        "actions/context_menu_handler.py",
+        "actions/sms_manager.py",
+        "actions/dashboard_server.py",
+        # Sounddevice data from system Python 3.14
         (
-            r"C:\Python312\Lib\site-packages\_sounddevice_data",
+            r"C:\Users\danie\AppData\Roaming\Python\Python314\site-packages\_sounddevice_data",
             "lib/_sounddevice_data"
         ),
     ],
@@ -71,12 +83,11 @@ build_exe_options = {
     "zip_exclude_packages": ["_sounddevice_data"],
 
     "excludes": [
-        "tkinter",
         "PySide6"
     ]
 }
 
-base = "Win32GUI" if sys.platform == "win32" else None
+base = "gui" if sys.platform == "win32" else None
 
 setup(
     name="ERIS AI",

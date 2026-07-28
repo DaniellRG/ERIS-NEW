@@ -1,0 +1,416 @@
+[
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T13:57:14.840797"
+  },
+  {
+    "type": "test_error",
+    "message": "This is a test error for validation",
+    "traceback": "",
+    "time": "2026-07-26T13:58:35.416699"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:01:24.400919"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:06:30.456153"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:11:38.343718"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:16:45.911496"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:23:15.184419"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:28:21.403013"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:31:00.199653"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:36:06.984851"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:41:13.143955"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:46:19.307527"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:47:50.638075"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:52:56.815083"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T14:53:32.292884"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T16:06:38.525574"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T16:11:44.619694"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T16:16:55.098474"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-26T16:22:01.163172"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T09:48:18.451819"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T09:53:24.523147"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T09:58:30.604223"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:03:36.714395"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:08:42.906537"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:13:49.131386"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:18:55.244134"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:24:01.341674"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:29:07.530398"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:34:13.579281"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:39:19.627604"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T10:44:25.709454"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:27:51.698890"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:31:34.965119"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:36:41.773711"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:40:49.874172"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:45:56.008763"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:51:02.137057"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T11:55:47.757692"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:00:54.190812"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:06:02.100512"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:11:08.228583"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:16:15.876764"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:18:04.607374"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:23:10.820581"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:28:16.887715"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:33:23.108828"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T12:34:14.746056"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:03:13.347575"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:08:19.509364"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:11:18.988200"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:16:25.356452"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:21:31.548640"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:26:37.805089"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:31:44.237663"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:36:52.734636"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:41:59.037607"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:47:05.452617"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:52:03.138734"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T21:57:09.625769"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:02:16.670299"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:04:58.141700"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:10:04.451903"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:15:12.500564"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:18:38.142399"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:23:44.486939"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:28:50.837271"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:31:49.302142"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:32:40.945317"
+  },
+  {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "traceback": "",
+    "time": "2026-07-27T22:37:47.079899"
+  }
+]

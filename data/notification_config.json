@@ -1,0 +1,9 @@
+{
+  "muted": false,
+  "quiet_hours_start": "22:00",
+  "quiet_hours_end": "08:00",
+  "max_per_hour": 10,
+  "sound_enabled": true,
+  "desktop_enabled": true,
+  "categories_enabled": {}
+}

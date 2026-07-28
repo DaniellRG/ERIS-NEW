@@ -1,0 +1,69 @@
+{
+  "nodes": {
+    "aprendi sobre: automatizacion tareas inteligentes ia. \nwikipedia:\n  - inteligencia artificial: gran importancia de la ia radica en el hecho de que": {
+      "name": "aprendi sobre: automatizacion tareas inteligentes ia. \nwikipedia:\n  - inteligencia artificial: gran importancia de la ia radica en el hecho de que",
+      "type": "entity",
+      "properties": {},
+      "created_at": 1784916418.917889,
+      "connections": 1
+    },
+    "una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. la ia lleva esta au": {
+      "name": "una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. la ia lleva esta au",
+      "type": "concept",
+      "properties": {},
+      "created_at": 1784916418.91819,
+      "connections": 1
+    },
+    "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**inteligencia artificial explicable (xai): guía completa 2026**\n¿qué": {
+      "name": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**inteligencia artificial explicable (xai): guía completa 2026**\n¿qué",
+      "type": "entity",
+      "properties": {},
+      "created_at": 1785092785.913519,
+      "connections": 1
+    },
+    "lainteligenciaartificialexplicativao xai? lainteligenciaartificialexplicativa, también conocida como xai (por sus siglas en inglés, explainableartificialintel": {
+      "name": "lainteligenciaartificialexplicativao xai? lainteligenciaartificialexplicativa, también conocida como xai (por sus siglas en inglés, explainableartificialintel",
+      "type": "concept",
+      "properties": {},
+      "created_at": 1785092785.9138167,
+      "connections": 1
+    },
+    "aprendi sobre: machine learning modelos nuevos 2026. resultados para 'machine learning modelos nuevos 2026' (duckduckgo):\n\n**tendencias de machine learning para 2026: innovaciones que ...**\nconclusión:2026llegó antes de lo pensado, ¿estás preparado? las tendencias enmachinelearningpara2026demuestran que la inteligencia artificial no": {
+      "name": "aprendi sobre: machine learning modelos nuevos 2026. resultados para 'machine learning modelos nuevos 2026' (duckduckgo):\n\n**tendencias de machine learning para 2026: innovaciones que ...**\nconclusión:2026llegó antes de lo pensado, ¿estás preparado? las tendencias enmachinelearningpara2026demuestran que la inteligencia artificial no",
+      "type": "entity",
+      "properties": {},
+      "created_at": 1785163998.7958221,
+      "connections": 1
+    },
+    "ciencia ficción": {
+      "name": "ciencia ficción",
+      "type": "concept",
+      "properties": {},
+      "created_at": 1785163998.7961593,
+      "connections": 1
+    }
+  },
+  "edges": [
+    {
+      "source": "aprendi sobre: automatizacion tareas inteligentes ia. \nwikipedia:\n  - inteligencia artificial: gran importancia de la ia radica en el hecho de que",
+      "target": "una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. la ia lleva esta au",
+      "relation": "tiene",
+      "weight": 1.0,
+      "timestamp": 1784916418.9184692
+    },
+    {
+      "source": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**inteligencia artificial explicable (xai): guía completa 2026**\n¿qué",
+      "target": "lainteligenciaartificialexplicativao xai? lainteligenciaartificialexplicativa, también conocida como xai (por sus siglas en inglés, explainableartificialintel",
+      "relation": "es",
+      "weight": 1.0,
+      "timestamp": 1785092785.9140916
+    },
+    {
+      "source": "aprendi sobre: machine learning modelos nuevos 2026. resultados para 'machine learning modelos nuevos 2026' (duckduckgo):\n\n**tendencias de machine learning para 2026: innovaciones que ...**\nconclusión:2026llegó antes de lo pensado, ¿estás preparado? las tendencias enmachinelearningpara2026demuestran que la inteligencia artificial no",
+      "target": "ciencia ficción",
+      "relation": "es",
+      "weight": 1.0,
+      "timestamp": 1785163998.7964938
+    }
+  ]
+}

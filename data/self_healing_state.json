@@ -1,0 +1,17 @@
+{
+  "total_errors": 69,
+  "total_fixes": 0,
+  "total_restarts": 0,
+  "total_learning": 2,
+  "last_check": "2026-07-27T22:37:47.096186",
+  "last_fix": null,
+  "last_error": {
+    "type": "ollama_down",
+    "message": "Ollama is not responding",
+    "time": "2026-07-27T22:37:47.065373"
+  },
+  "known_errors": {
+    "ollama_down": 68,
+    "test_error": 1
+  }
+}

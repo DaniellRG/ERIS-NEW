@@ -1,0 +1,19 @@
+# Big Data herramientas nuevas
+
+## Auto-investigacion (idle learning)
+
+Fecha: 2026-07-27 12:22
+
+Resultados para 'Big Data herramientas nuevas' (DuckDuckGo):
+
+**Agentic AI in Healthcare - Future of Agentic AI**
+AI agents drive profitability, transforming industries like healthcare and retail. Agentic AI automates tasks, enabling efficiency and reducing human workload.
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fduckduckgo.com%2Fy.js%3Fad_domain%3Dcomputerweekly.com%26ad_provider%3Dbingv7aa%26ad_type%3Dtxad%26click_metadata%3DCK7FWAorBg2DnbUEb_a8UApsPYicZe1zIPO9dj5TRr13t4iV4PqNuPXVMm1h6bfMQtWbJ7%252Dg6OHZahPwwgCTiAY7RIAXysWwgCJZl5lh3Da2XHVFy2vi0IvD4DOOhU9oOcEFgjcZqySnFtZhPKxwmQyQCW18nfB1DUIhTDNkpUs.tJn8qIVQTMem%252D2AI_x5XNQ%26rut%3D2fdb0e3ea216829e5e3ea6585e08f9cca21b88f90fdc918af19b6e065f2ab75c%26u3%3Dhttps%253A%252F%252Fwww.bing.com%252Faclick%253Fld%253De8BVKoxa1fq8AnNTICO2CYiDVUCUxocetXtwGxr4bmaXKy3Lp7ABHiyL1nEpWURkz1YSdWr0DuKyiMpr5PAOPw71OQ5EESv72bK809fjeK0y5nGTdGFemf0DGoQSlmaEgU8vyRWE1QbsZjxRYogIB0uQ0mrNJSJlHzfvowdtikG39lDz_XKTsaiY2hVSBcY3X57nhGae2A5ffBki5d1QA4Auz2f%252DA%2526u%253DaHR0cHMlM2ElMmYlMmZ3d3cuY29tcHV0ZXJ3ZWVrbHkuY29tJTJmYnIlMmZTb2x1Y29lcy1kZS1JQSUyZlRyZXMtdGVuZGVuY2lhcy1wcmluY2lwYWlzLW5vLXVzby1kZS1JQS1hZ2VudGljYS1ub3MlM2Z1dG1fc291cmNlJTNkYmluZyUyNmludCUzZG9mZiUyNnByZSUzZG9mZiUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fdGVybSUzZEdBVyUyNnV0bV9jb250ZW50JTNkc3lfbHAwMzE2MjAyNkdPT0dPVEhSX0dzaWRDb21wdXRlcldlZWtseV9EZWxsX0VtYmVkX0lPMzQ0MzAwJTI2dXRtX2NhbXBhaWduJTNkRGVsbE5WSURJQV9FbWJlZF9DV19MQVRBTSUyNk9mZmVyJTNkc3lfbHAwMzE2MjAyNkdPT0dPVEhSX0dzaWRzQ29tcHV0ZXJXZWVrbHlfRGVsbF9FbWJlZF9JTzM0NDMwMCUyNm1zY2xraWQlM2QxMTI0OTk3ZDY4MTIxOGMwYjRiZGYzMWFmYmM5NGRhZg%2526rlid%253D1124997d681218c0b4bdf31afbc94daf%26vqd%3D4%2D309659463482326557204997212101473253994%26iurl%3D%257B1%257DIG%253D17E3F059C2F04732A38DE233913113E0%2526CID%253D0DF75319494D65AB22B744BA48076420%2526ID%253DDevEx%252C5037.1&rut=911e79a4a6c64975419dcbd6994ed470108e4674f78c027154e479489f2aa5dd
+
+**10 herramientas y software de Big Data (2026) - Guru99**
+El mercado actual está inundado de una variedad deherramientasdeBigData. Aportan rentabilidad y una mejor gestión del tiempo a las tareas de visualización de datos. Aquí está la lista del mejor softwa
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.guru99.com%2Fes%2Fbig%2Ddata%2Dtools.html&rut=a2454698674c4265dec836943b32e32ebbde38d8a05c03d02a6e9abb3f64d70a
+
+**Tecnologías de big data: Herramientas, soluciones y ... - DataCamp**
+Explora lo último en tecnologías debigdata, incluyendo almacenamiento, minería y análisis, y descubre las tendencias emergentes en todos los sectores para 2026.
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.datacamp.com%2Fes%2Fblog%2Fbig%2Ddata%2Dtechnologies&rut=4b274709812a94243c0bf4cf04fe7f62861a900ba2e53ea8f1d0f1ade08c08b1

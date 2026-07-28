@@ -1,0 +1,39 @@
+{
+  "scrapes": [
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T11:38:00.819691"
+    },
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T11:41:10.065154"
+    },
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T11:44:16.826829"
+    },
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T12:00:29.797814"
+    },
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T12:04:00.829257"
+    },
+    {
+      "url": "https://example.com",
+      "status": 200,
+      "timestamp": "2026-07-26T12:07:23.003769"
+    },
+    {
+      "url": "https://httpbin.org/html",
+      "status": 200,
+      "timestamp": "2026-07-27T21:46:52.642128"
+    }
+  ]
+}

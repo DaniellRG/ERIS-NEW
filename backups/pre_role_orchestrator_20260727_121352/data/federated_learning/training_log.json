@@ -1,0 +1,52 @@
+{
+  "entries": [
+    {
+      "action": "train",
+      "count": 2,
+      "category": "general",
+      "timestamp": "2026-07-26T11:41:06.746773"
+    },
+    {
+      "action": "train",
+      "count": 5,
+      "category": "general",
+      "timestamp": "2026-07-26T11:41:06.768372"
+    },
+    {
+      "action": "train",
+      "count": 2,
+      "category": "general",
+      "timestamp": "2026-07-26T11:44:20.325816"
+    },
+    {
+      "action": "train",
+      "count": 1,
+      "category": "general",
+      "timestamp": "2026-07-26T12:00:25.712581"
+    },
+    {
+      "action": "train",
+      "count": 3,
+      "category": "general",
+      "timestamp": "2026-07-26T12:00:25.735911"
+    },
+    {
+      "action": "train",
+      "count": 1,
+      "category": "general",
+      "timestamp": "2026-07-26T12:03:56.791499"
+    },
+    {
+      "action": "train",
+      "count": 3,
+      "category": "general",
+      "timestamp": "2026-07-26T12:03:56.813705"
+    },
+    {
+      "action": "train",
+      "count": 2,
+      "category": "general",
+      "timestamp": "2026-07-26T12:07:26.423746"
+    }
+  ]
+}

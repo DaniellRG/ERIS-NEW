@@ -1,0 +1,98 @@
+[
+ {
+  "title": "Google",
+  "url": "https://www.google.com",
+  "action": "open",
+  "time": "2026-07-26T14:17:17.865717"
+ },
+ {
+  "title": "YouTube",
+  "url": "https://www.youtube.com",
+  "action": "open",
+  "time": "2026-07-26T14:17:17.881261"
+ },
+ {
+  "title": "Google",
+  "url": "",
+  "action": "closed",
+  "time": "2026-07-26T14:17:18.245947"
+ },
+ {
+  "title": "YouTube: inteligencia artificial 2026",
+  "url": "https://www.youtube.com/watch?v=5Izihr4BCbo",
+  "action": "open",
+  "time": "2026-07-26T14:18:15.471612"
+ },
+ {
+  "title": "Wikipedia IA",
+  "url": "https://es.wikipedia.org/wiki/Inteligencia_artificial",
+  "action": "open",
+  "time": "2026-07-26T14:18:54.580508"
+ },
+ {
+  "title": "Wikipedia",
+  "url": "",
+  "action": "closed",
+  "time": "2026-07-26T14:19:05.759919"
+ },
+ {
+  "title": "YouTube",
+  "url": "",
+  "action": "closed",
+  "time": "2026-07-26T14:19:06.081810"
+ },
+ {
+  "title": "YouTube: dQw4w9WgXcQ",
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "action": "open",
+  "time": "2026-07-26T14:21:37.870825"
+ },
+ {
+  "title": "YouTube: https://www.youtube.com/watch?v=nKPbfIU4",
+  "url": "https://www.youtube.com/watch?v=nKPbfIU442g",
+  "action": "open",
+  "time": "2026-07-26T14:21:37.910215"
+ },
+ {
+  "title": "YouTube: rick astley never gonna give you up",
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "action": "open",
+  "time": "2026-07-26T14:21:39.290581"
+ },
+ {
+  "title": "YouTube: python tutorial",
+  "url": "https://www.youtube.com/watch?v=_6N18g3ewnw",
+  "action": "open",
+  "time": "2026-07-26T14:22:20.627123"
+ },
+ {
+  "title": "https://file:///C:\\Users\\danie\\OneDrive\\Desktop\\InformeMejor",
+  "url": "https://file:///C:\\Users\\danie\\OneDrive\\Desktop\\InformeMejoraSelfHealing_20260726_143444.txt",
+  "action": "open",
+  "time": "2026-07-26T14:35:17.030427"
+ },
+ {
+  "title": "YouTube: test",
+  "url": "https://www.youtube.com/results?search_query=test&sp=EgIQAQ%3D%3D",
+  "action": "open",
+  "time": "2026-07-27T21:26:41.083101"
+ },
+ {
+  "title": "YouTube: test",
+  "url": "https://www.youtube.com/results?search_query=test&sp=EgIQAQ%3D%3D",
+  "action": "open",
+  "time": "2026-07-27T21:36:09.805409"
+ },
+ {
+  "title": "YouTube: lofi hip hop",
+  "url": "https://www.youtube.com/watch?v=X4VbdwhkE10",
+  "action": "open",
+  "time": "2026-07-27T21:38:01.005364"
+ },
+ {
+  "title": "YouTube: never gonna give you up",
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "action": "open",
+  "time": "2026-07-27T21:44:13.719194"
+ }
+]

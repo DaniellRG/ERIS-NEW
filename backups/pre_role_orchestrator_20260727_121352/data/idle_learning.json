@@ -1,0 +1,281 @@
+{
+  "total_idle_sessions": 26,
+  "total_topics_learned": 52,
+  "last_session": "2026-07-27T12:00:40.173020",
+  "topics_learned": [
+    "robotica automatizacion avances",
+    "biotecnologia bioinformatica avances",
+    "machine learning modelos nuevos 2026",
+    "automatizacion tareas inteligentes IA",
+    "inteligencia artificial explicativa",
+    "vehiculos autonomos avances",
+    "cloud computing servicios nuevos",
+    "bases de datos nuevas tendencias NoSQL",
+    "desarrollo software metodologias agiles",
+    "redes 5G 6G tecnologias nuevas",
+    "Docker Kubernetes mejoras recientes",
+    "ultimos avances inteligencia artificial 2026"
+  ],
+  "research_history": [
+    {
+      "topic": "ultimos avances inteligencia artificial 2026",
+      "time": "2026-07-24T12:56:22.840583",
+      "result": "Indexado: idle_ultimos_avances_inteligencia_artificial_2026.md (2 fragmentos, 1,120 bytes)"
+    },
+    {
+      "topic": "cloud computing servicios nuevos",
+      "time": "2026-07-24T12:56:28.168735",
+      "result": "Indexado: idle_cloud_computing_servicios_nuevos.md (2 fragmentos, 1,054 bytes)"
+    },
+    {
+      "topic": "bases de datos nuevas tendencias NoSQL",
+      "time": "2026-07-24T12:56:33.549200",
+      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (2 fragmentos, 1,060 bytes)"
+    },
+    {
+      "topic": "machine learning modelos nuevos 2026",
+      "time": "2026-07-24T12:56:38.973567",
+      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (2 fragmentos, 1,099 bytes)"
+    },
+    {
+      "topic": "biotecnologia bioinformatica avances",
+      "time": "2026-07-24T13:01:16.431334",
+      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (2 fragmentos, 1,127 bytes)"
+    },
+    {
+      "topic": "nuevos frameworks programacion tendencias",
+      "time": "2026-07-24T13:01:19.752512",
+      "result": "Indexado: idle_nuevos_frameworks_programacion_tendencias.md (1 fragmentos, 1,002 bytes)"
+    },
+    {
+      "topic": "automatizacion tareas inteligentes IA",
+      "time": "2026-07-24T13:06:58.918748",
+      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (2 fragmentos, 1,146 bytes)"
+    },
+    {
+      "topic": "robotica automatizacion avances",
+      "time": "2026-07-24T13:07:04.374837",
+      "result": "Indexado: idle_robotica_automatizacion_avances.md (2 fragmentos, 1,048 bytes)"
+    },
+    {
+      "topic": "Docker Kubernetes mejoras recientes",
+      "time": "2026-07-24T13:30:50.135372",
+      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (1 fragmentos, 302 bytes)"
+    },
+    {
+      "topic": "seguridad datos privacidad GDPR",
+      "time": "2026-07-24T13:30:55.646525",
+      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (2 fragmentos, 1,068 bytes)"
+    },
+    {
+      "topic": "ciberseguridad vulnerabilidades recientes",
+      "time": "2026-07-24T20:40:41.828601",
+      "result": "Indexado: idle_ciberseguridad_vulnerabilidades_recientes.md (1 fragmentos, 187 bytes)"
+    },
+    {
+      "topic": "Big Data herramientas nuevas",
+      "time": "2026-07-24T20:40:42.621820",
+      "result": "Indexado: idle_Big_Data_herramientas_nuevas.md (1 fragmentos, 161 bytes)"
+    },
+    {
+      "topic": "energias renovables tecnologia",
+      "time": "2026-07-24T21:10:45.456443",
+      "result": "Indexado: idle_energias_renovables_tecnologia.md (1 fragmentos, 165 bytes)"
+    },
+    {
+      "topic": "inteligencia artificial explicativa",
+      "time": "2026-07-24T21:10:46.324503",
+      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (1 fragmentos, 175 bytes)"
+    },
+    {
+      "topic": "vehiculos autonomos avances",
+      "time": "2026-07-25T11:11:16.302524",
+      "result": "Indexado: idle_vehiculos_autonomos_avances.md (1 fragmentos, 159 bytes)"
+    },
+    {
+      "topic": "Python nuevas caracteristicas version",
+      "time": "2026-07-25T11:11:17.009994",
+      "result": "Indexado: idle_Python_nuevas_caracteristicas_version.md (1 fragmentos, 179 bytes)"
+    },
+    {
+      "topic": "desarrollo software metodologias agiles",
+      "time": "2026-07-25T11:41:19.509663",
+      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (1 fragmentos, 183 bytes)"
+    },
+    {
+      "topic": "computacion cuantica avances recientes",
+      "time": "2026-07-25T11:41:20.467988",
+      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (1 fragmentos, 181 bytes)"
+    },
+    {
+      "topic": "redes 5G 6G tecnologias nuevas",
+      "time": "2026-07-25T12:11:22.925887",
+      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (1 fragmentos, 165 bytes)"
+    },
+    {
+      "topic": "blockchain aplicaciones reales 2026",
+      "time": "2026-07-25T12:11:23.941086",
+      "result": "Indexado: idle_blockchain_aplicaciones_reales_2026.md (1 fragmentos, 175 bytes)"
+    },
+    {
+      "topic": "Docker Kubernetes mejoras recientes",
+      "time": "2026-07-25T12:41:26.757385",
+      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (1 fragmentos, 175 bytes)"
+    },
+    {
+      "topic": "Big Data herramientas nuevas",
+      "time": "2026-07-25T12:41:27.732268",
+      "result": "Indexado: idle_Big_Data_herramientas_nuevas.md (1 fragmentos, 161 bytes)"
+    },
+    {
+      "topic": "ultimos avances inteligencia artificial 2026",
+      "time": "2026-07-25T13:11:28.277003",
+      "result": "rag_error: 'NoneType' object is not iterable"
+    },
+    {
+      "topic": "cloud computing servicios nuevos",
+      "time": "2026-07-25T13:11:28.851279",
+      "result": "rag_error: 'NoneType' object is not iterable"
+    },
+    {
+      "topic": "bases de datos nuevas tendencias NoSQL",
+      "time": "2026-07-26T10:13:19.704651",
+      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (1 fragmentos, 181 bytes)"
+    },
+    {
+      "topic": "seguridad datos privacidad GDPR",
+      "time": "2026-07-26T10:13:20.795533",
+      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (1 fragmentos, 167 bytes)"
+    },
+    {
+      "topic": "automatizacion tareas inteligentes IA",
+      "time": "2026-07-26T10:27:50.489100",
+      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (1 fragmentos, 179 bytes)"
+    },
+    {
+      "topic": "machine learning modelos nuevos 2026",
+      "time": "2026-07-26T10:27:51.595807",
+      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (1 fragmentos, 177 bytes)"
+    },
+    {
+      "topic": "biotecnologia bioinformatica avances",
+      "time": "2026-07-26T10:57:54.349350",
+      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (1 fragmentos, 177 bytes)"
+    },
+    {
+      "topic": "computacion cuantica avances recientes",
+      "time": "2026-07-26T10:57:55.422407",
+      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (1 fragmentos, 181 bytes)"
+    },
+    {
+      "topic": "blockchain aplicaciones reales 2026",
+      "time": "2026-07-26T11:27:58.380194",
+      "result": "Indexado: idle_blockchain_aplicaciones_reales_2026.md (1 fragmentos, 175 bytes)"
+    },
+    {
+      "topic": "robotica automatizacion avances",
+      "time": "2026-07-26T11:27:59.308671",
+      "result": "Indexado: idle_robotica_automatizacion_avances.md (1 fragmentos, 167 bytes)"
+    },
+    {
+      "topic": "desarrollo software metodologias agiles",
+      "time": "2026-07-26T14:06:23.421705",
+      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (3 fragmentos, 1,611 bytes)"
+    },
+    {
+      "topic": "inteligencia artificial explicativa",
+      "time": "2026-07-26T14:06:25.914375",
+      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (3 fragmentos, 1,476 bytes)"
+    },
+    {
+      "topic": "vehiculos autonomos avances",
+      "time": "2026-07-26T14:28:14.300864",
+      "result": "Indexado: idle_vehiculos_autonomos_avances.md (3 fragmentos, 1,726 bytes)"
+    },
+    {
+      "topic": "Python nuevas caracteristicas version",
+      "time": "2026-07-26T14:28:16.909281",
+      "result": "Indexado: idle_Python_nuevas_caracteristicas_version.md (4 fragmentos, 2,816 bytes)"
+    },
+    {
+      "topic": "nuevos frameworks programacion tendencias",
+      "time": "2026-07-26T14:35:59.658902",
+      "result": "Indexado: idle_nuevos_frameworks_programacion_tendencias.md (3 fragmentos, 1,564 bytes)"
+    },
+    {
+      "topic": "energias renovables tecnologia",
+      "time": "2026-07-26T14:36:02.678516",
+      "result": "Indexado: idle_energias_renovables_tecnologia.md (2 fragmentos, 1,414 bytes)"
+    },
+    {
+      "topic": "ciberseguridad vulnerabilidades recientes",
+      "time": "2026-07-26T14:52:50.035863",
+      "result": "Indexado: idle_ciberseguridad_vulnerabilidades_recientes.md (6 fragmentos, 4,134 bytes)"
+    },
+    {
+      "topic": "redes 5G 6G tecnologias nuevas",
+      "time": "2026-07-26T14:52:52.383444",
+      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (2 fragmentos, 1,555 bytes)"
+    },
+    {
+      "topic": "robotica automatizacion avances",
+      "time": "2026-07-26T16:11:26.652623",
+      "result": "Indexado: idle_robotica_automatizacion_avances.md (4 fragmentos, 2,911 bytes)"
+    },
+    {
+      "topic": "biotecnologia bioinformatica avances",
+      "time": "2026-07-26T16:11:31.244630",
+      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (3 fragmentos, 1,558 bytes)"
+    },
+    {
+      "topic": "machine learning modelos nuevos 2026",
+      "time": "2026-07-27T09:53:18.796813",
+      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (3 fragmentos, 1,549 bytes)"
+    },
+    {
+      "topic": "automatizacion tareas inteligentes IA",
+      "time": "2026-07-27T09:53:21.435591",
+      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (6 fragmentos, 4,322 bytes)"
+    },
+    {
+      "topic": "inteligencia artificial explicativa",
+      "time": "2026-07-27T10:23:25.983513",
+      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (5 fragmentos, 4,083 bytes)"
+    },
+    {
+      "topic": "vehiculos autonomos avances",
+      "time": "2026-07-27T10:23:28.415889",
+      "result": "Indexado: idle_vehiculos_autonomos_avances.md (3 fragmentos, 1,565 bytes)"
+    },
+    {
+      "topic": "cloud computing servicios nuevos",
+      "time": "2026-07-27T11:36:34.927924",
+      "result": "Indexado: idle_cloud_computing_servicios_nuevos.md (6 fragmentos, 4,290 bytes)"
+    },
+    {
+      "topic": "bases de datos nuevas tendencias NoSQL",
+      "time": "2026-07-27T11:36:37.662836",
+      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (4 fragmentos, 2,809 bytes)"
+    },
+    {
+      "topic": "desarrollo software metodologias agiles",
+      "time": "2026-07-27T11:45:49.114301",
+      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (3 fragmentos, 1,611 bytes)"
+    },
+    {
+      "topic": "redes 5G 6G tecnologias nuevas",
+      "time": "2026-07-27T11:45:51.597169",
+      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (2 fragmentos, 1,503 bytes)"
+    },
+    {
+      "topic": "Docker Kubernetes mejoras recientes",
+      "time": "2026-07-27T12:00:47.297767",
+      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (3 fragmentos, 1,599 bytes)"
+    },
+    {
+      "topic": "ultimos avances inteligencia artificial 2026",
+      "time": "2026-07-27T12:00:49.813562",
+      "result": "Indexado: idle_ultimos_avances_inteligencia_artificial_2026.md (3 fragmentos, 1,634 bytes)"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "current_emotion": "focused",
+  "energy": 99.5,
+  "tasks_completed": 130,
+  "tasks_failed": 0,
+  "total_errors": 0,
+  "uptime_minutes": 12,
+  "learning_points": 130,
+  "created": "2026-06-17T13:34:30.290338",
+  "history": [
+    {
+      "timestamp": "2026-06-17T13:34:30.290338",
+      "emotion": "happy",
+      "previous": "idle",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T13:34:30.837382",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T13:36:31.100526",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T13:36:32.089855",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T13:38:17.047390",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T13:38:18.401250",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T13:44:12.938083",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T13:49:17.783840",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:02:43.073315",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:02:43.700319",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:04:27.499562",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:04:28.175824",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:06:16.775366",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:06:17.546339",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:07:35.300138",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:07:35.970738",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:09:14.810891",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:09:15.489561",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:10:07.589329",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:10:08.193368",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    },
+    {
+      "timestamp": "2026-06-17T14:10:59.495787",
+      "emotion": "happy",
+      "previous": "focused",
+      "reason": "Tarea completada"
+    },
+    {
+      "timestamp": "2026-06-17T14:11:00.066246",
+      "emotion": "focused",
+      "previous": "happy",
+      "reason": "Múltiples tareas en progreso"
+    }
+  ]
+}

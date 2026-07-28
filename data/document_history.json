@@ -1,0 +1,20 @@
+[
+  {
+    "action": "create",
+    "target": "D:\\Eris_Source\\data\\documents\\doc_20260727_212637.docx",
+    "format": "Word",
+    "time": "2026-07-27T21:26:39.068892"
+  },
+  {
+    "action": "create",
+    "target": "D:\\Eris_Source\\data\\documents\\doc_20260727_213609.docx",
+    "format": "Word",
+    "time": "2026-07-27T21:36:09.733907"
+  },
+  {
+    "action": "create",
+    "target": "D:\\Eris_Source\\data\\documents\\doc_20260727_214510.docx",
+    "format": "Word",
+    "time": "2026-07-27T21:45:11.073039"
+  }
+]

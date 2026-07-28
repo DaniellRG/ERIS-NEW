@@ -1,0 +1,370 @@
+[
+  {
+    "id": "ep_1785083279307",
+    "event": "Aprendi sobre: robotica automatizacion avances. No encontré resultados para 'robotica automatizacion avances'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785083279.3079658,
+    "datetime": "2026-07-26T11:27:59.307966"
+  },
+  {
+    "id": "ep_1785083278379",
+    "event": "Aprendi sobre: blockchain aplicaciones reales 2026. No encontré resultados para 'blockchain aplicaciones reales 2026'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785083278.379439,
+    "datetime": "2026-07-26T11:27:58.379440"
+  },
+  {
+    "id": "ep_1785081475421",
+    "event": "Aprendi sobre: computacion cuantica avances recientes. No encontré resultados para 'computacion cuantica avances recientes'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785081475.4217145,
+    "datetime": "2026-07-26T10:57:55.421715"
+  },
+  {
+    "id": "ep_1785081474348",
+    "event": "Aprendi sobre: biotecnologia bioinformatica avances. No encontré resultados para 'biotecnologia bioinformatica avances'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785081474.3486743,
+    "datetime": "2026-07-26T10:57:54.348675"
+  },
+  {
+    "id": "ep_1785079671595",
+    "event": "Aprendi sobre: machine learning modelos nuevos 2026. No encontré resultados para 'machine learning modelos nuevos 2026'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785079671.5950563,
+    "datetime": "2026-07-26T10:27:51.595057"
+  },
+  {
+    "id": "ep_1785079670488",
+    "event": "Aprendi sobre: automatizacion tareas inteligentes IA. No encontré resultados para 'automatizacion tareas inteligentes IA'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785079670.4884264,
+    "datetime": "2026-07-26T10:27:50.488427"
+  },
+  {
+    "id": "ep_1785078800794",
+    "event": "Aprendi sobre: seguridad datos privacidad GDPR. No encontré resultados para 'seguridad datos privacidad GDPR'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785078800.7943187,
+    "datetime": "2026-07-26T10:13:20.794319"
+  },
+  {
+    "id": "ep_1785078799703",
+    "event": "Aprendi sobre: bases de datos nuevas tendencias NoSQL. No encontré resultados para 'bases de datos nuevas tendencias NoSQL'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785078799.7031007,
+    "datetime": "2026-07-26T10:13:19.703102"
+  },
+  {
+    "id": "ep_1785001287730",
+    "event": "Aprendi sobre: Big Data herramientas nuevas. No encontré resultados para 'Big Data herramientas nuevas'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785001287.7309697,
+    "datetime": "2026-07-25T12:41:27.730970"
+  },
+  {
+    "id": "ep_1785001286754",
+    "event": "Aprendi sobre: Docker Kubernetes mejoras recientes. No encontré resultados para 'Docker Kubernetes mejoras recientes'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785001286.7549727,
+    "datetime": "2026-07-25T12:41:26.754974"
+  },
+  {
+    "id": "ep_1784999483940",
+    "event": "Aprendi sobre: blockchain aplicaciones reales 2026. No encontré resultados para 'blockchain aplicaciones reales 2026'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784999483.9404337,
+    "datetime": "2026-07-25T12:11:23.940434"
+  },
+  {
+    "id": "ep_1784999482925",
+    "event": "Aprendi sobre: redes 5G 6G tecnologias nuevas. No encontré resultados para 'redes 5G 6G tecnologias nuevas'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784999482.9251106,
+    "datetime": "2026-07-25T12:11:22.925112"
+  },
+  {
+    "id": "ep_1784997680466",
+    "event": "Aprendi sobre: computacion cuantica avances recientes. No encontré resultados para 'computacion cuantica avances recientes'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784997680.4667468,
+    "datetime": "2026-07-25T11:41:20.466747"
+  },
+  {
+    "id": "ep_1784997679508",
+    "event": "Aprendi sobre: desarrollo software metodologias agiles. No encontré resultados para 'desarrollo software metodologias agiles'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784997679.5089846,
+    "datetime": "2026-07-25T11:41:19.508985"
+  },
+  {
+    "id": "ep_1784995877008",
+    "event": "Aprendi sobre: Python nuevas caracteristicas version. No encontré resultados para 'Python nuevas caracteristicas version'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784995877.0089574,
+    "datetime": "2026-07-25T11:11:17.008958"
+  },
+  {
+    "id": "ep_1784995876301",
+    "event": "Aprendi sobre: vehiculos autonomos avances. No encontré resultados para 'vehiculos autonomos avances'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784995876.3017256,
+    "datetime": "2026-07-25T11:11:16.301727"
+  },
+  {
+    "id": "ep_1784945446323",
+    "event": "Aprendi sobre: inteligencia artificial explicativa. No encontré resultados para 'inteligencia artificial explicativa'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784945446.3233523,
+    "datetime": "2026-07-24T21:10:46.323353"
+  },
+  {
+    "id": "ep_1784945445454",
+    "event": "Aprendi sobre: energias renovables tecnologia. No encontré resultados para 'energias renovables tecnologia'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784945445.4549656,
+    "datetime": "2026-07-24T21:10:45.454967"
+  },
+  {
+    "id": "ep_1784943642613",
+    "event": "Aprendi sobre: Big Data herramientas nuevas. No encontré resultados para 'Big Data herramientas nuevas'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784943642.613259,
+    "datetime": "2026-07-24T20:40:42.613259"
+  },
+  {
+    "id": "ep_1784943641827",
+    "event": "Aprendi sobre: ciberseguridad vulnerabilidades recientes. No encontré resultados para 'ciberseguridad vulnerabilidades recientes'",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784943641.8273299,
+    "datetime": "2026-07-24T20:40:41.827331"
+  },
+  {
+    "id": "ep_1784917855642",
+    "event": "Aprendi sobre: seguridad datos privacidad GDPR. \nWikipedia:\n  - Reglamento General de Protección de Datos: del GDPR y el 71% de las personas ha oído hablar de su autoridad nacional de protección de datos .\"​​ La Comisión también constató que la privacidad se\n  - Privacidad en Internet: gubernamentales que protegen la privacidad y el anonimato de ",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784917855.6429145,
+    "datetime": "2026-07-24T13:30:55.642915"
+  },
+  {
+    "id": "ep_1784917850125",
+    "event": "Aprendi sobre: Docker Kubernetes mejoras recientes. \nWikipedia:\n  - Autoescalado: el ciclo típico de 24 horas.​​ El autoescalado horizontal de pods de Kubernetes escala automáticamente el número de pods en un controlador de replicación",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784917850.1257982,
+    "datetime": "2026-07-24T13:30:50.125800"
+  },
+  {
+    "id": "ep_1784916424363",
+    "event": "Aprendi sobre: robotica automatizacion avances. \nWikipedia:\n  - Robótica: forzados o trabajador, fue traducida al inglés como robot.​ Los avances de la robótica han demostrado que hay aparatos robotizados que pueden moverse e\n  - Centro de Automática y Robótica: tripulados: los avances en robótica que salen de Madrid». www.madridiario.es. Madridi",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784916424.3633738,
+    "datetime": "2026-07-24T13:07:04.363374"
+  },
+  {
+    "id": "ep_1784916418908",
+    "event": "Aprendi sobre: automatizacion tareas inteligentes IA. \nWikipedia:\n  - Inteligencia artificial: gran importancia de la IA radica en el hecho de que tiene una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - Impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. La IA lleva esta au",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784916418.9084344,
+    "datetime": "2026-07-24T13:06:58.908436"
+  },
+  {
+    "id": "ep_1784916079750",
+    "event": "Aprendi sobre: nuevos frameworks programacion tendencias. \nWikipedia:\n  - JavaScript: proliferación de un conjunto de frameworks y bibliotecas de ámbito general, mejorando las prácticas de programación con JavaScript, y aumentado el uso\n  - Expand: función de su nivel de conocimientos. El código generado se basa en los frameworks incluidos en la Plataforma",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784916079.7505379,
+    "datetime": "2026-07-24T13:01:19.750538"
+  },
+  {
+    "id": "ep_1784916076426",
+    "event": "Aprendi sobre: biotecnologia bioinformatica avances. \nWikipedia:\n  - Centro Nacional de Biotecnología: Científicas, el Centro Nacional de Ingeniería Genética y Biotecnología ». «El Centro Nacional de Biotecnología echa a andar con un director cesado». «Página en\n  - Bioinformática: recomendaciones para el diseño de cursos en bioinformatica .​​​​ Porta",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1784916076.4263947,
+    "datetime": "2026-07-24T13:01:16.426395"
+  },
+  {
+    "id": "ep_1785092783420",
+    "event": "Aprendi sobre: desarrollo software metodologias agiles. Resultados para 'desarrollo software metodologias agiles' (DuckDuckGo):\n\n**Metodologías ágiles: ¿Qué son y cuáles son más utilizadas?**\nQué son lasmetodologíaságilesPor definición, lasmetodologíaságilesson aquellas que permiten adaptar la forma de trabajo a las condiciones del proyecto, consiguiendo",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785092783.420602,
+    "datetime": "2026-07-26T14:06:23.420603"
+  },
+  {
+    "id": "ep_1785092785902",
+    "event": "Aprendi sobre: inteligencia artificial explicativa. Resultados para 'inteligencia artificial explicativa' (DuckDuckGo):\n\n**Inteligencia Artificial Explicable (XAI): Guía Completa 2026**\n¿Qué es lainteligenciaartificialexplicativao xAI? Lainteligenciaartificialexplicativa, también conocida como XAI (por sus siglas en inglés, ExplainableArtificialIntel",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785092785.9028468,
+    "datetime": "2026-07-26T14:06:25.902847"
+  },
+  {
+    "id": "ep_1785094094299",
+    "event": "Aprendi sobre: vehiculos autonomos avances. Resultados para 'vehiculos autonomos avances' (DuckDuckGo):\n\n**Avances en vehículos autónomos en 2025: pruebas, regulaciones y nuevas ...**\nEn enero de 2025, la industria devehículosautónomosmostróavancessignificativos con nuevas pruebas y desarrollos tecnológicos por parte de empresas líderes como ",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785094094.2998974,
+    "datetime": "2026-07-26T14:28:14.299898"
+  },
+  {
+    "id": "ep_1785094096907",
+    "event": "Aprendi sobre: Python nuevas caracteristicas version. Resultados para 'Python nuevas caracteristicas version' (DuckDuckGo):\n\n**Python para principiantes**\nAprendePythondesde cero con ejercicios de código y practicas reales. Únete a millones de estudiantes alrededor del mundo aprendiendo en Udemy.\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fduckduckgo.com%2F",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785094096.9071193,
+    "datetime": "2026-07-26T14:28:16.907120"
+  },
+  {
+    "id": "ep_1785094559655",
+    "event": "Aprendi sobre: nuevos frameworks programacion tendencias. Resultados para 'nuevos frameworks programacion tendencias' (DuckDuckGo):\n\n**15 Tecnologías y Frameworks en 2025. - Ingenius Software**\nDescubre las tecnologías yframeworksen 2025. Exploratendenciasrelevantes para el desarrollo de software en IA, cloud, React, Vue y Python.\n//duckduckgo.com/l/?uddg=",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785094559.655395,
+    "datetime": "2026-07-26T14:35:59.655396"
+  },
+  {
+    "id": "ep_1785094562669",
+    "event": "Aprendi sobre: energias renovables tecnologia. Resultados para 'energias renovables tecnologia' (DuckDuckGo):\n\n**Energías renovables: Tecnología impulsando la sostenibilidad**\nLasenergíasrenovablesestán revolucionando la sostenibilidad, y latecnologíadesempeña un papel clave en este cambio.\n//duckduckgo.com/l/?uddg=https%3A%2F%2Ftreelab.mx%2Fene",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785094562.6698189,
+    "datetime": "2026-07-26T14:36:02.669819"
+  },
+  {
+    "id": "ep_1785095570032",
+    "event": "Aprendi sobre: ciberseguridad vulnerabilidades recientes. Resultados para 'ciberseguridad vulnerabilidades recientes' (DuckDuckGo):\n\n**Diplomado en Ciberseguridad - 100% Virtual y Práctico**\nImplementa Auditorías deCiberseguridaddando respuesta rápida a incidentes - Inscríbete. CERTIFÍCATE Seguridad de la Información basado en la Norma ISO 27001:2022 ¡Obté",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785095570.0321107,
+    "datetime": "2026-07-26T14:52:50.032114"
+  },
+  {
+    "id": "ep_1785095572381",
+    "event": "Aprendi sobre: redes 5G 6G tecnologias nuevas. Resultados para 'redes 5G 6G tecnologias nuevas' (DuckDuckGo):\n\n**6G: toda la información, tecnología y diferencias con el 5G**\nEl6Gtraerá consigo ventajas en diferentes sectores de la industria y la economía, como la medicina y la automoción. Hay varios campos que serán potenciados claramente con e",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785095572.3818116,
+    "datetime": "2026-07-26T14:52:52.381813"
+  },
+  {
+    "id": "ep_1785100286650",
+    "event": "Aprendi sobre: robotica automatizacion avances. Resultados para 'robotica automatizacion avances' (DuckDuckGo):\n\n**Agentic AI in Healthcare - Profitability with AI**\nAI agents drive profitability, transforming industries like healthcare and retail. Governance structures ensure secure, scalable deployment of autonomous AI systems.\n//duckduckgo.com",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785100286.6503186,
+    "datetime": "2026-07-26T16:11:26.650320"
+  },
+  {
+    "id": "ep_1785100291234",
+    "event": "Aprendi sobre: biotecnologia bioinformatica avances. Resultados para 'biotecnologia bioinformatica avances' (DuckDuckGo):\n\n**Descubre los últimos avances en bioinformática ... - ComunicaTech**\nLosavancesmás recientes enbioinformática: una aproximación completaLabioinformáticaes un campo en constante evolución que combina la biología, la informática y ",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785100291.2347267,
+    "datetime": "2026-07-26T16:11:31.234727"
+  },
+  {
+    "id": "ep_1785163998786",
+    "event": "Aprendi sobre: machine learning modelos nuevos 2026. Resultados para 'machine learning modelos nuevos 2026' (DuckDuckGo):\n\n**Tendencias de Machine Learning para 2026: Innovaciones que ...**\nConclusión:2026llegó antes de lo pensado, ¿estás preparado? Las tendencias enMachineLearningpara2026demuestran que la inteligencia artificial no es ciencia ficción",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785163998.7863586,
+    "datetime": "2026-07-27T09:53:18.786359"
+  },
+  {
+    "id": "ep_1785164001426",
+    "event": "Aprendi sobre: automatizacion tareas inteligentes IA. Resultados para 'automatizacion tareas inteligentes IA' (DuckDuckGo):\n\n**Scale AI Across Teams - Smart AI Implementation**\nEmpower your teams with the skills and tools needed for successful AI adoption. Create an AI plan that drives measurable business results and scales effectively.\n//duckduckgo.co",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785164001.426222,
+    "datetime": "2026-07-27T09:53:21.426222"
+  },
+  {
+    "id": "ep_1785165805970",
+    "event": "Aprendi sobre: inteligencia artificial explicativa. Resultados para 'inteligencia artificial explicativa' (DuckDuckGo):\n\n**Diplomado en Sistemas de IA - Ingenieros y Desarrolladores**\nDomina arquitecturas de IA, Deep Learning y MLOps. Certifícate como Auditor ISO 42001. Impulsa tu perfil con UdeCataluña. Incluye curso de IA Generativa y certificación",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785165805.9709878,
+    "datetime": "2026-07-27T10:23:25.970988"
+  },
+  {
+    "id": "ep_1785165808414",
+    "event": "Aprendi sobre: vehiculos autonomos avances. Resultados para 'vehiculos autonomos avances' (DuckDuckGo):\n\n**Avances en vehículos autónomos en 2025: pruebas, regulaciones y nuevas ...**\nEn enero de 2025, la industria devehículosautónomosmostróavancessignificativos con nuevas pruebas y desarrollos tecnológicos por parte de empresas líderes como ",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785165808.4147804,
+    "datetime": "2026-07-27T10:23:28.414780"
+  },
+  {
+    "id": "ep_1785170194924",
+    "event": "Aprendi sobre: cloud computing servicios nuevos. Resultados para 'cloud computing servicios nuevos' (DuckDuckGo):\n\n**Smart AI Implementation - Scale AI Across Teams**\nLearn how to select AI use cases that align with your business goals and metrics. Empower your teams with the skills and tools needed for successful AI adoption.\n//duckduckgo.com/l/?",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785170194.9241517,
+    "datetime": "2026-07-27T11:36:34.924153"
+  },
+  {
+    "id": "ep_1785170197651",
+    "event": "Aprendi sobre: bases de datos nuevas tendencias NoSQL. Resultados para 'bases de datos nuevas tendencias NoSQL' (DuckDuckGo):\n\n**Bases de datos SQL y NoSQL con Mysql y MongoDB**\nAprende SQL y conviértete en un experto del manejo, extracción y visualizacióndedatos. Descubre el curso adecuado para alcanzar tus metas profesionales.\n//duckduckgo.com/l/?uddg",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785170197.6511588,
+    "datetime": "2026-07-27T11:36:37.651160"
+  },
+  {
+    "id": "ep_1785170749113",
+    "event": "Aprendi sobre: desarrollo software metodologias agiles. Resultados para 'desarrollo software metodologias agiles' (DuckDuckGo):\n\n**Metodologías ágiles: Qué son y cuáles son las más utilizadas**\nEs en ese momento donde nacen oficialmente lasmetodologíaságilesy decimos oficialmente, porque tenemos un hecho predecesor en 1950 cuando se utilizó un método rep",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785170749.113084,
+    "datetime": "2026-07-27T11:45:49.113085"
+  },
+  {
+    "id": "ep_1785170751595",
+    "event": "Aprendi sobre: redes 5G 6G tecnologias nuevas. Resultados para 'redes 5G 6G tecnologias nuevas' (DuckDuckGo):\n\n**6G: toda la información, tecnología y diferencias con el 5G**\nEl6Gtraerá consigo ventajas en diferentes sectores de la industria y la economía, como la medicina y la automoción. Hay varios campos que serán potenciados claramente con e",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785170751.5956616,
+    "datetime": "2026-07-27T11:45:51.595662"
+  },
+  {
+    "id": "ep_1785171647286",
+    "event": "Aprendi sobre: Docker Kubernetes mejoras recientes. Resultados para 'Docker Kubernetes mejoras recientes' (DuckDuckGo):\n\n**Docker y Kubernetes: Guía Práctica Completa 2025**\nDominaDockeryKubernetesen 2025: containerización, orquestación, CI/CD, seguridad y mejores prácticas. De desarrollo a producción.\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fplustecno",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785171647.286203,
+    "datetime": "2026-07-27T12:00:47.286205"
+  },
+  {
+    "id": "ep_1785171649811",
+    "event": "Aprendi sobre: ultimos avances inteligencia artificial 2026. Resultados para 'ultimos avances inteligencia artificial 2026' (DuckDuckGo):\n\n**Así evolucionará la IA: Siete tendencias a seguir en 2026**\nLaInteligenciaArtificialavanza hacia una nueva fase, con una creciente influencia en nuestra vida cotidiana. Tras varios años de experimentación,2026se perfila ",
+    "context": "idle_learning",
+    "importance": 0.7,
+    "timestamp": 1785171649.811334,
+    "datetime": "2026-07-27T12:00:49.811334"
+  }
+]

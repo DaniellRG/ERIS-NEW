@@ -1,0 +1,39 @@
+{
+  "server_running": false,
+  "port": 8888,
+  "visits": 0,
+  "chat_history": [
+    {
+      "user": "Hello ERIS",
+      "timestamp": "2026-07-26T11:34:27.817743"
+    },
+    {
+      "user": "test",
+      "timestamp": "2026-07-26T11:36:09.260779"
+    },
+    {
+      "user": "Hola ERIS",
+      "timestamp": "2026-07-26T11:37:50.894243"
+    },
+    {
+      "user": "Hola ERIS",
+      "timestamp": "2026-07-26T11:41:00.059929"
+    },
+    {
+      "user": "Integration test from FASE4",
+      "timestamp": "2026-07-26T11:44:29.571702"
+    },
+    {
+      "user": "Hola",
+      "timestamp": "2026-07-26T12:00:18.905704"
+    },
+    {
+      "user": "Hola",
+      "timestamp": "2026-07-26T12:03:50.010213"
+    },
+    {
+      "user": "WF",
+      "timestamp": "2026-07-26T12:07:35.279654"
+    }
+  ]
+}

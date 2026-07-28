@@ -1,0 +1,10 @@
+{
+  "active_voice": "es-female-1",
+  "trained_voices": [],
+  "generated": [],
+  "settings": {
+    "rate": "+15%",
+    "volume": "+10%",
+    "pitch": "+3Hz"
+  }
+}

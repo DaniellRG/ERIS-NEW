@@ -1,0 +1,48 @@
+{
+  "identity": {
+    "name": {
+      "value": "Daniel",
+      "updated": "2026-05-21"
+    },
+    "city": {
+      "value": "Lima, Peru",
+      "updated": "2026-05-17"
+    },
+    "mood": {
+      "value": "festive",
+      "updated": "2026-05-17"
+    },
+    "address_form": {
+      "value": "Daniel"
+    },
+    "user_name": {
+      "value": "Daniel"
+    }
+  },
+  "preferences": {
+    "address_form": {
+      "value": "Daniel",
+      "updated": "2026-05-17"
+    },
+    "current_game": {
+      "value": "AION 2"
+    }
+  },
+  "projects": {
+    "code_project_status": {
+      "value": "User deleted the entire code project.",
+      "updated": "2026-05-17"
+    },
+    "improve_eris": {
+      "value": "User's current project is improving Eris and ensuring all functions work correctly."
+    }
+  },
+  "relationships": {},
+  "wishes": {},
+  "notes": {},
+  "context": {
+    "activity": {
+      "value": "playing AION 2"
+    }
+  }
+}

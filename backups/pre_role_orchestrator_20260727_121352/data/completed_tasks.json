@@ -1,0 +1,255 @@
+{
+  "web_search_30698ae36e57_1785095189": {
+    "id": "web_search_30698ae36e57_1785095189",
+    "tool": "web_search",
+    "result_preview": "Found 10 results for test",
+    "completed": "2026-07-26T14:46:29.423323",
+    "retries": 0
+  },
+  "page_summarizer_39c06d4810fb_1785095189": {
+    "id": "page_summarizer_39c06d4810fb_1785095189",
+    "tool": "page_summarizer",
+    "result_preview": "Summary of the page content",
+    "completed": "2026-07-26T14:46:29.472114",
+    "retries": 0,
+    "delivered": true
+  },
+  "open_app_e66d3df86336_1785095283": {
+    "id": "open_app_e66d3df86336_1785095283",
+    "tool": "open_app",
+    "result_preview": "Aplicación 'Notepad' iniciada correctamente (Ruta: notepad.exe).",
+    "completed": "2026-07-26T14:48:03.410099",
+    "retries": 0
+  },
+  "screen_see_a7616ccd795e_1785095295": {
+    "id": "screen_see_a7616ccd795e_1785095295",
+    "tool": "screen_see",
+    "result_preview": "Error vision: HTTP Error 402: Payment Required",
+    "completed": "2026-07-26T14:48:15.807080",
+    "retries": 0
+  },
+  "native_ui_5effd2bc622c_1785095333": {
+    "id": "native_ui_5effd2bc622c_1785095333",
+    "tool": "native_ui",
+    "result_preview": "No se encontró la ventana: 'Notepad'",
+    "completed": "2026-07-26T14:48:53.422081",
+    "retries": 0
+  },
+  "screen_see_a7616ccd795e_1785095333": {
+    "id": "screen_see_a7616ccd795e_1785095333",
+    "tool": "screen_see",
+    "result_preview": "Error vision: HTTP Error 402: Payment Required",
+    "completed": "2026-07-26T14:48:54.405874",
+    "retries": 0
+  },
+  "eris_ui_control_6caf0095d2b1_1785095629": {
+    "id": "eris_ui_control_6caf0095d2b1_1785095629",
+    "tool": "eris_ui_control",
+    "result_preview": "Widget 'notes' mostrado.",
+    "completed": "2026-07-26T14:53:49.414605",
+    "retries": 0
+  },
+  "screen_vision_8cc89ab81325_1785095651": {
+    "id": "screen_vision_8cc89ab81325_1785095651",
+    "tool": "screen_vision",
+    "result_preview": "Aquí tienes la transcripción exacta y completa de todo el texto visible en la pantalla, organizado por secciones:\n\n---\n\n### **1. Barra Superior de Métricas (OSD / Rendimiento)**\n`FPS N/A` | `N/A` | `G",
+    "completed": "2026-07-26T14:54:31.101125",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785100181": {
+    "id": "morning_brief_7ae579a65508_1785100181",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-26T16:09:43.626376",
+    "retries": 0
+  },
+  "goals_fa0a41f56f4c_1785100184": {
+    "id": "goals_fa0a41f56f4c_1785100184",
+    "tool": "goals",
+    "result_preview": "You have no active goals defined, sir.",
+    "completed": "2026-07-26T16:09:44.761703",
+    "retries": 0
+  },
+  "learn_session_543c00290d1e_1785100184": {
+    "id": "learn_session_543c00290d1e_1785100184",
+    "tool": "learn_session",
+    "result_preview": "[learn_session] Herramienta declarada pero no implementada aun. Pendiente de entrenamiento.",
+    "completed": "2026-07-26T16:09:44.914670",
+    "retries": 0
+  },
+  "system_reader_155e64d5bcaa_1785100185": {
+    "id": "system_reader_155e64d5bcaa_1785100185",
+    "tool": "system_reader",
+    "result_preview": "Sistema activo 0d 0h | CPU 7.8% | RAM 26.6% | Disco 73.8% | Procesos: ",
+    "completed": "2026-07-26T16:09:45.810307",
+    "retries": 0
+  },
+  "open_app_98d8df770431_1785100584": {
+    "id": "open_app_98d8df770431_1785100584",
+    "tool": "open_app",
+    "result_preview": "Aplicación 'Steam' iniciada correctamente (Ruta: steam:).",
+    "completed": "2026-07-26T16:16:39.882355",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785163693": {
+    "id": "morning_brief_7ae579a65508_1785163693",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T09:48:13.471159",
+    "retries": 0
+  },
+  "browser_control_b3eed1f1d72e_1785163748": {
+    "id": "browser_control_b3eed1f1d72e_1785163748",
+    "tool": "browser_control",
+    "result_preview": "No se encontró navegador abierto.",
+    "completed": "2026-07-27T09:49:08.746826",
+    "retries": 0
+  },
+  "open_app_98d8df770431_1785163748": {
+    "id": "open_app_98d8df770431_1785163748",
+    "tool": "open_app",
+    "result_preview": "Aplicación 'Steam' iniciada correctamente (Ruta: steam:).",
+    "completed": "2026-07-27T09:49:23.906670",
+    "retries": 0
+  },
+  "browser_control_ce8cf71726ff_1785164161": {
+    "id": "browser_control_ce8cf71726ff_1785164161",
+    "tool": "browser_control",
+    "result_preview": "No se encontró navegador abierto.",
+    "completed": "2026-07-27T09:56:01.146400",
+    "retries": 0
+  },
+  "browser_control_1af500f8417d_1785164161": {
+    "id": "browser_control_1af500f8417d_1785164161",
+    "tool": "browser_control",
+    "result_preview": "No se encontró navegador abierto.",
+    "completed": "2026-07-27T09:56:01.786975",
+    "retries": 0
+  },
+  "open_app_b78525013d38_1785164183": {
+    "id": "open_app_b78525013d38_1785164183",
+    "tool": "open_app",
+    "result_preview": "Aplicación 'Chrome' iniciada correctamente (Ruta: chrome.exe).",
+    "completed": "2026-07-27T09:56:23.482617",
+    "retries": 0
+  },
+  "youtube_video_a2c15d50a016_1785164206": {
+    "id": "youtube_video_a2c15d50a016_1785164206",
+    "tool": "youtube_video",
+    "result_preview": "═══ YOUTUBE: 'música relajante' ═══\n\n   1. MUSICA ZEN ULTRA RELAJANTE ❈ Relajación Curativa del Es\n      54,620,151 vistas vistas | Musicoterapia \n      ID: 263Vb6xiifo\n   2. Música Relajante Alivia e",
+    "completed": "2026-07-27T09:56:47.610968",
+    "retries": 0
+  },
+  "browser_control_0f73721d7a0b_1785164222": {
+    "id": "browser_control_0f73721d7a0b_1785164222",
+    "tool": "browser_control",
+    "result_preview": "Buscando 'youtube música relajante'.",
+    "completed": "2026-07-27T09:57:02.862656",
+    "retries": 0
+  },
+  "browser_control_05b86b1f97ba_1785164237": {
+    "id": "browser_control_05b86b1f97ba_1785164237",
+    "tool": "browser_control",
+    "result_preview": "Video YouTube #1 clickeado en (960, 302).",
+    "completed": "2026-07-27T09:57:18.475176",
+    "retries": 0
+  },
+  "browser_control_24ef84741636_1785164251": {
+    "id": "browser_control_24ef84741636_1785164251",
+    "tool": "browser_control",
+    "result_preview": "Navegando a https://www.youtube.com.",
+    "completed": "2026-07-27T09:57:32.554263",
+    "retries": 0
+  },
+  "google_calendar_cb410dbba37e_1785164972": {
+    "id": "google_calendar_cb410dbba37e_1785164972",
+    "tool": "google_calendar",
+    "result_preview": "Google Calendar synced and updated.",
+    "completed": "2026-07-27T10:09:32.908362",
+    "retries": 0
+  },
+  "google_calendar_f28ab96862c8_1785165088": {
+    "id": "google_calendar_f28ab96862c8_1785165088",
+    "tool": "google_calendar",
+    "result_preview": "Google Calendar synced and updated.",
+    "completed": "2026-07-27T10:11:28.379514",
+    "retries": 0
+  },
+  "system_monitor_995065286739_1785165220": {
+    "id": "system_monitor_995065286739_1785165220",
+    "tool": "system_monitor",
+    "result_preview": "GPU: NVIDIA GeForce RTX 5060 | VRAM: 780/8151 MB | Temp: 55°C | Uso: 4%",
+    "completed": "2026-07-27T10:13:40.651769",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785169160": {
+    "id": "morning_brief_7ae579a65508_1785169160",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T11:19:20.683054",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785169656": {
+    "id": "morning_brief_7ae579a65508_1785169656",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T11:27:36.149653",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785169890": {
+    "id": "morning_brief_7ae579a65508_1785169890",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T11:31:30.836378",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785170445": {
+    "id": "morning_brief_7ae579a65508_1785170445",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T11:40:45.586476",
+    "retries": 0
+  },
+  "morning_brief_7ae579a65508_1785171343": {
+    "id": "morning_brief_7ae579a65508_1785171343",
+    "tool": "morning_brief",
+    "result_preview": "Good morning, sir. Here is your clean briefing.",
+    "completed": "2026-07-27T11:55:43.549206",
+    "retries": 0
+  },
+  "self_protection_d12607469987_1785171491": {
+    "id": "self_protection_d12607469987_1785171491",
+    "tool": "self_protection",
+    "result_preview": "# Integrity Scan\n\n**9 issues found:**\n  - TAMPERED: core/prompt.txt (System prompt - personality and instructions)\n  - TAMPERED: core/tool_declarations.py (Tool definitions for Gemini)\n  - TAMPERED: c",
+    "completed": "2026-07-27T11:58:11.949080",
+    "retries": 0
+  },
+  "self_awareness_7daa0ebfad9a_1785171517": {
+    "id": "self_awareness_7daa0ebfad9a_1785171517",
+    "tool": "self_awareness",
+    "result_preview": "════════════════════════════════════════════════════════════\n  ERIS SELF-MAP v2.0 — Mapa completo\n════════════════════════════════════════════════════════════\n  Raíz: D:\\Eris_Source\n  Versión: 2.0\n  F",
+    "completed": "2026-07-27T11:58:38.013556",
+    "retries": 0
+  },
+  "self_healing_loop_0ead51b81346_1785171550": {
+    "id": "self_healing_loop_0ead51b81346_1785171550",
+    "tool": "self_healing_loop",
+    "result_preview": "SCAN ALL — 359 files, 285 total issues\n\n🟡 _Eris_NEW\\predict_engine.py: 2 (C:0 E:2 W:0)\n🟢 _Eris_NEW\\sandbox.py: 1 (C:0 E:0 W:1)\n🟢 _Eris_NEW\\web_jobs.py: 1 (C:0 E:0 W:1)\n🟢 actions\\active_firewall.py: 4 ",
+    "completed": "2026-07-27T11:59:49.293187",
+    "retries": 0
+  },
+  "self_healing_loop_8c4026d0dace_1785171622": {
+    "id": "self_healing_loop_8c4026d0dace_1785171622",
+    "tool": "self_healing_loop",
+    "result_preview": "Unknown action: 'auto_fix_all'.\nAvailable: detect, fix_file, test, validate, scan_all, status, rollback, restart",
+    "completed": "2026-07-27T12:00:22.077267",
+    "retries": 0
+  },
+  "self_healing_loop_16a65f8c79ae_1785171642": {
+    "id": "self_healing_loop_16a65f8c79ae_1785171642",
+    "tool": "self_healing_loop",
+    "result_preview": "Error: 'file' required (e.g. 'actions/self_heal.py')",
+    "completed": "2026-07-27T12:00:42.525796",
+    "retries": 0
+  }
+}

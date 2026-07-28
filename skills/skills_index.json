@@ -1,0 +1,90 @@
+[
+  {
+    "name": "brainstorming",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "incident-response",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "malware-analysis",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "subagent-driven",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "systematic-debugging",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "test-driven-development",
+    "description": "Use when implementing any feature or bugfix, before writing implementation code",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "threat-hunting",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "verification",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "vulnerability-scanning",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "writing-plans",
+    "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "writing-skills",
+    "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  }
+]

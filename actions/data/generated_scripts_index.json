@@ -1,0 +1,58 @@
+{
+  "scripts": {
+    "f8d355ba": {
+      "id": "f8d355ba",
+      "filename": "f8d355ba_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\f8d355ba_python.py",
+      "language": "python",
+      "description": "Script que liste los procesos que mas memoria usan",
+      "created_at": "2026-07-25T11:03:58.798955",
+      "run_count": 0
+    },
+    "0ff34656": {
+      "id": "0ff34656",
+      "filename": "0ff34656_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\0ff34656_python.py",
+      "language": "python",
+      "description": "hello world function",
+      "created_at": "2026-07-27T09:44:14.732163",
+      "run_count": 0
+    },
+    "efcdc438": {
+      "id": "efcdc438",
+      "filename": "efcdc438_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\efcdc438_python.py",
+      "language": "python",
+      "description": "Crea una funcion que calcule el factorial de un numero",
+      "created_at": "2026-07-27T21:13:42.282651",
+      "run_count": 0
+    },
+    "1af1f44d": {
+      "id": "1af1f44d",
+      "filename": "1af1f44d_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\1af1f44d_python.py",
+      "language": "python",
+      "description": "Corrige los errores del archivo actions/code_analyzer.py",
+      "created_at": "2026-07-27T21:13:49.442979",
+      "run_count": 0
+    },
+    "0153f3cb": {
+      "id": "0153f3cb",
+      "filename": "0153f3cb_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\0153f3cb_python.py",
+      "language": "python",
+      "description": "hello world function",
+      "created_at": "2026-07-27T21:26:41.595219",
+      "run_count": 0
+    },
+    "c4b8a08f": {
+      "id": "c4b8a08f",
+      "filename": "c4b8a08f_python.py",
+      "filepath": "D:\\Eris_Source\\actions\\data\\generated_scripts\\c4b8a08f_python.py",
+      "language": "python",
+      "description": "hello world",
+      "created_at": "2026-07-27T21:45:12.139583",
+      "run_count": 0
+    }
+  }
+}

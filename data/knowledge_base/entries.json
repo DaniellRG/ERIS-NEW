@@ -1,0 +1,93 @@
+{
+  "e3177e2672a5": {
+    "id": "e3177e2672a5",
+    "title": "Test entry",
+    "content": "Test content for KB",
+    "type": "note",
+    "tags": [],
+    "created": "2026-07-16 09:41:28",
+    "updated": "2026-07-16 09:41:28"
+  },
+  "fcb407994dc2": {
+    "id": "fcb407994dc2",
+    "title": "Research: python programming",
+    "content": "Wikipedia:\n  - Python: Encapsulación en Python « Python GUI Programming With Tkinter». Codelivly. 2022. «Pequeño paseo por la Biblioteca Estándar». Tutorial de Python (y Django!)\n  - Historia de Python: enero de 2015. «Why was Python created in the first place?». Python FAQ. Consultado el 5 de enero de 2015. «The ABC Programming Language». Consultado el\n  - Python Software Foundation: Statement of the Python Software Foundation « Python Software Foundation Wins Computerworld Horizon Award for Popular Python Programming Language». 15 de\n  - Jussi Pekka Kasurinen: Viope Oy as a part of Python 3 programming course. Available at Viope web store. Python – ohjelmointiopas ( Python – programming manual), Lappeenranta\n  - Pillow (biblioteca de código abierto): https://github.com/uploadcare/pillow-simd#pillow-simd https:// python -pillow.org/ Datos: Q2985103 Multimedia: Python ( programming language) / Q2985103",
+    "type": "research",
+    "tags": [
+      "python",
+      "programming"
+    ],
+    "created": "2026-07-16 09:42:17",
+    "updated": "2026-07-16 09:42:17"
+  },
+  "c6ecee87056e": {
+    "id": "c6ecee87056e",
+    "title": "Research: machine learning frameworks",
+    "content": "Wikipedia:\n  - Samy Bengio: inglés). Consultado el 23 de febrero de 2021. «The State of Machine Learning Frameworks in 2019». The Gradient (en inglés). 10 de octubre de 2019. Consultado\n  - PyTorch: (Caffe2), pero los modelos definidos para los dos entornos de trabajo o Frameworks eran incompatibles. El proyecto Open Neural Network Exchange (ONNX​​)\n  - Acelerador de IA: destinados a acelerar el entrenamiento de las redes neuronales.​ Los frameworks de aprendizaje profundo todavía están evolucionando, lo que dificulta\n  - Apache Spark: procesamiento de datos estructurados basada en SQL), MLlib para implementar machine learning , GraphX para el procesamiento de graficos y Spark Streaming. Apache\n  - Número de Betti persistente: Machine learning with persistent homology and chemical word embeddings improves prediction accuracy and interpretability in metal-organic frameworks ,",
+    "type": "research",
+    "tags": [
+      "machine",
+      "learning",
+      "frameworks"
+    ],
+    "created": "2026-07-16 09:45:58",
+    "updated": "2026-07-16 09:45:58"
+  },
+  "b8386e88db66": {
+    "id": "b8386e88db66",
+    "title": "Test KB",
+    "content": "This is a test entry for the knowledge base.",
+    "type": "note",
+    "tags": [],
+    "created": "2026-07-16 09:46:06",
+    "updated": "2026-07-16 09:46:06"
+  },
+  "6960ccaaa5e7": {
+    "id": "6960ccaaa5e7",
+    "title": "Research: computer vision advancements",
+    "content": "Wikipedia:\n  - Richard S. Sutton: Arxiv (en inglés). Consultado el 20 de julio de 2025. «The field of Computer Vision (CV) exemplifies the principles of Sutton’s \"bitter lesson.\" Traditionally\n  - Andrew Barto: also support solutions-oriented research with the potential to produce advancements for the American people.» «Learning dexterity». OpenAI. Consultado el\n  - Historia de los robots: septiembre de 2007. Habib, Maki K., ed. (2015). Handbook of research on advancements in robotics and mechatronics. Advances in computational intelligence\n  - Invasión de plantas leñosas: Philip (31 Marzo 2020). \"Monitoring of Namibian Encroacher Bush Using Computer Vision \". AgriEngineering. 2 (2): 213–225. doi:10.3390/agriengineering2020013",
+    "type": "research",
+    "tags": [
+      "computer",
+      "vision",
+      "advancements"
+    ],
+    "created": "2026-07-16 09:50:17",
+    "updated": "2026-07-16 09:50:17"
+  },
+  "96065bedd4f0": {
+    "id": "96065bedd4f0",
+    "title": "ERIS Test",
+    "content": "Test knowledge entry",
+    "type": "note",
+    "tags": [],
+    "created": "2026-07-27 21:45:16",
+    "updated": "2026-07-27 21:45:16"
+  },
+  "fd9b48f4915e": {
+    "id": "fd9b48f4915e",
+    "title": "Research: tecnologia 6G y comunicaciones",
+    "content": "Resultados para 'tecnologia 6G y comunicaciones' (DuckDuckGo):\n\n**6G - Wikipedia, la enciclopedia libre**\nLas redes6Gse espera que integren capacidades avanzadas de computaciónycomunicación, con un enfoque en la inteligencia artificial para la gestión de red, optimización de protocolosydiseño de arquitect\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fes.wikipedia.org%2Fwiki%2F6G&rut=4d5e1363ff991523c2ba2e06947a4219f15e6b5f69dea7766ad4424e3b9233bd\n\n**6G: toda la información, tecnología y diferencias con el 5G**\nAunque el mejor 5G se está haciendo de rogar, ya llevamos varios años hablando del6Gcon el objetivo de tenerlo preparado para finales de la presente década....\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.xatakamovil.com%2Fnuevo%2F6g%2Dtoda%2Dinformacion&rut=ad836adb4fb926f621d43efc6fe888ee3a84c09e5afdc595b9a2b9e804f76660\n\n**La revolución del 6G: qué hay después del 5G y cómo ... - Telecinco**\nLa sexta generación detecnologíasdecomunicacionesinalámbricas , la que conoceremos como6G, se espera que llegue a partir de 2030ymarque un pu\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.telecinco.es%2Fnoticias%2Fciencia%2Dy%2Dtecnologia%2F20251023%2Frevolucion%2D6g%2Dque%2Dhay%2Ddespues%2D5g%2Dfusion%2Dmundo%2Dfisico%2Ddigital%2Dupp3rs_18_016685560.html&rut=7dae5a73f54344357612fef95dc14699b946171366ae51c4b2014544dc254ce6\n\n**6G: qué es, cómo funciona, aplicaciones, novedades y más**\n6Gserá el caldo de cultivo para el desarrollo de la holografía. Igualmente, con esta generación se pretende determinar los estándares necesarios para que lascomunicacionesentre los diferentes disposit\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.redestelecom.es%2Fespeciales%2F6g%2Dlanzamiento%2Dy%2Dnuevas%2Doportunidades%2Dde%2Desta%2Dtecnologia%2Dde%2Dred%2F&rut=2081941b5fb59c1147eac33d1e9e5d91a0eed08b471c13d652c7756f13581554\n\n**El 6G ya está en marcha: qué cambiará frente al 5G y ... - Infobae**\nLa transición del 4G al 5G supuso un salto tecnológico sin precedentes en la forma en que nos conectamosycons",
+    "type": "research",
+    "tags": [
+      "tecnologia",
+      "comunicaciones"
+    ],
+    "created": "2026-07-27 22:26:16",
+    "updated": "2026-07-27 22:26:16"
+  },
+  "6da5c4af9a4f": {
+    "id": "6da5c4af9a4f",
+    "title": "Research: computacion cuantica avances 2026",
+    "content": "Resultados para 'computacion cuantica avances 2026' (DuckDuckGo):\n\n**Punto de Inflexión Cuántica 2026: De Teoría a Realidad**\n2026marca un punto de transición definitivo donde lacomputacióncuánticapasa de promesa teórica a realidad estratégica. Con industrias preparándose para la disrupción y gobiernos compitiendo por suprem\n//duckduckgo.com/l/?uddg=https%3A%2F%2Finformedclearly.com%2Fes%2Ftecnologia%2F46279%2Fcomputacion%2Dcuantica%2Daplicaciones%2Dindustria%2D2026&rut=9968edf8c8cf7c8c343e37d6ab1e9f4462b2c6bdffc18f1c264274cbf269a2f4\n\n**Computación Cuántica 2026: Avance de IBM Transforma Seguridad y ...**\nIBM prevé2026como el año clave para la ventajacuántica, donde las computadorascuánticassuperan a las clásicas, transformando la seguridad global, finanzas y creando una brecha tecnológica que afecta a\n//duckduckgo.com/l/?uddg=https%3A%2F%2Finformedclearly.com%2Fes%2Ftecnologia%2F49093%2Fcomputacion%2Dcuantica%2Dibm%2Davance%2Dseguridad%2Dfinanzas%2D2026&rut=c0d4c8b04e1216e21e54315b327a8a9100b7179093bfe8a1ed125c5b686c706b\n\n**Computación Cuántica en 2026: De la Promesa a la Realidad Práctica**\nLacomputacióncuánticaha dejado de ser una promesa futurista para convertirse en una realidad tangible que está transformando industrias enteras. En2026, presenciamos un punto de inflexión crucial dond\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fblog.tecsid.com%2Fcomputacion%2Dcuantica%2D2026%2Drealidad%2Dpractica&rut=f853b652a220c3f7ce387f8006e9c39e4e2973791cd9a93951e86d62cdbd2369\n\n**Avances recientes: Computación cuántica y seguridad moderna en 2026**\nEn2026, la transición de la investigación teórica a la aplicación práctica ha alcanzado un punto de ebullición. Comprender los descubrimientos recientes encomputacióncuánticay su impacto en la segurid\n//duckduckgo.com/l/?uddg=https%3A%2F%2Fblog.flaremo.com%2Fes%2Fcomputacion%2Dcuantica%2Dy%2Dseguridad%2Dmoderna%2Den%2D2026%2F&rut=3153a2c3708dd0939d5c692cf7c05f23fa92b17f7693247efbd055b2d9c0be8c\n\n**IBM y su avance en computación cuántic",
+    "type": "research",
+    "tags": [
+      "computacion",
+      "cuantica",
+      "avances",
+      "2026"
+    ],
+    "created": "2026-07-27 22:30:14",
+    "updated": "2026-07-27 22:30:14"
+  }
+}

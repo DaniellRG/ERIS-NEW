@@ -1,0 +1,49 @@
+{
+  "screenshots": [
+    {
+      "name": "screenshot_1785083877",
+      "filename": "screenshot_1785083877.png",
+      "timestamp": "2026-07-26T11:37:57.910779",
+      "size_kb": 342.3,
+      "width": 1920,
+      "height": 1080,
+      "tags": [],
+      "notes": "",
+      "region": null
+    },
+    {
+      "name": "screenshot_1785084066",
+      "filename": "screenshot_1785084066.png",
+      "timestamp": "2026-07-26T11:41:07.140876",
+      "size_kb": 369.7,
+      "width": 1920,
+      "height": 1080,
+      "tags": [],
+      "notes": "",
+      "region": null
+    },
+    {
+      "name": "screenshot_1785085226",
+      "filename": "screenshot_1785085226.png",
+      "timestamp": "2026-07-26T12:00:26.465451",
+      "size_kb": 329.0,
+      "width": 1920,
+      "height": 1080,
+      "tags": [],
+      "notes": "",
+      "region": null
+    },
+    {
+      "name": "screenshot_1785085437",
+      "filename": "screenshot_1785085437.png",
+      "timestamp": "2026-07-26T12:03:57.488981",
+      "size_kb": 139.4,
+      "width": 1920,
+      "height": 1080,
+      "tags": [],
+      "notes": "",
+      "region": null
+    }
+  ],
+  "created": "2026-07-26T10:24:51.215695"
+}

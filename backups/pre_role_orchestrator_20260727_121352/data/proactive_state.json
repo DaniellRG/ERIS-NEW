@@ -1,0 +1,69 @@
+{
+  "pending_tasks": [
+    {
+      "task": "Integration test task",
+      "priority": "high",
+      "deadline": "",
+      "created": "2026-07-26T11:44:29.542019",
+      "status": "pending"
+    },
+    {
+      "task": "T",
+      "priority": "high",
+      "deadline": "",
+      "created": "2026-07-26T12:00:25.855682",
+      "status": "pending"
+    },
+    {
+      "task": "T",
+      "priority": "high",
+      "deadline": "",
+      "created": "2026-07-26T12:03:56.922737",
+      "status": "pending"
+    },
+    {
+      "task": "WF",
+      "priority": "high",
+      "deadline": "",
+      "created": "2026-07-26T12:07:35.259382",
+      "status": "pending"
+    }
+  ],
+  "suggestions": [],
+  "patterns": {},
+  "last_analysis": "2026-07-26T12:07:35.269048",
+  "reminders": [
+    {
+      "text": "Check backup",
+      "when": "2026-07-27T10:00:00",
+      "created": "2026-07-26T11:34:24.256376",
+      "triggered": false
+    },
+    {
+      "text": "Test",
+      "when": "2026-07-27T10:00:00",
+      "created": "2026-07-26T11:36:02.333998",
+      "triggered": false
+    },
+    {
+      "text": "Test reminder",
+      "when": "2026-07-27T10:00:00",
+      "created": "2026-07-26T11:37:57.639033",
+      "triggered": false
+    },
+    {
+      "text": "Test reminder",
+      "when": "2026-07-27T10:00:00",
+      "created": "2026-07-26T11:41:06.865509",
+      "triggered": false
+    },
+    {
+      "text": "R",
+      "when": "2026-07-27T10:00:00",
+      "created": "2026-07-26T12:00:25.872307",
+      "triggered": false
+    }
+  ],
+  "watched_files": [],
+  "streaks": {}
+}

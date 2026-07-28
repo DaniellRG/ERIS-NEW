@@ -81,10 +81,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 10;
+            z-index: 1;
             cursor: pointer;
             filter: drop-shadow(0 0 35px var(--primary-glow));
             transition: transform 0.1s ease-out;
+        }
+
+        /* ERIS Face overlay - ALWAYS on top */
+        #eris-face {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            height: 75%;
+            z-index: 100;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px var(--primary-glow));
         }
 
         /* Ambient glowing halos — centered exactly on orb */
@@ -251,6 +264,7 @@
         <div id="orb-wrapper">
             <!-- Central Neural Sphere -->
             <canvas id="sphere-canvas"></canvas>
+
             <!-- Ambient Halo — rendered AFTER canvas so z-index:1 sits behind canvas z-index:10 -->
             <div class="ambient-glow" id="ambient-halo"></div>
         </div>
@@ -471,6 +485,12 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
+            // ═══ DEBUG: Frame counter — ALWAYS VISIBLE ═══
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 10px monospace';
+            ctx.fillText('FRAME:' + width + 'x' + height, 10, 20);
+
             if (currentState === "SPEAKING") {
                 const voicePulse = 1.0 + currentVolume * 0.22;
                 canvas.style.transform = `scale(${voicePulse})`;
@@ -571,6 +591,23 @@
 
             nodes.sort((a, b) => a.z - b.z);
             nodes.forEach(node => node.draw(ctx, centerX, centerY, intensity));
+
+            // ═══ DEBUG: Red rectangle — MUST BE VISIBLE ═══
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(centerX - 30, centerY - 30, 60, 60);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px monospace';
+            ctx.fillText('ERIS', centerX - 20, centerY + 5);
+
+            // ERIS FACE
+            try {
+                drawPolyFace(ctx, centerX, centerY, currentRadius);
+            } catch(e) {
+                ctx.fillStyle = 'yellow';
+                ctx.font = '12px monospace';
+                ctx.fillText('ERR: ' + e.message, centerX - 50, centerY + 50);
+            }
 
             // Stats
             document.getElementById('stat-sync').textContent = (currentState === "THINKING" ? (99.4 + Math.random() * 0.5) : (98.8 + Math.random() * 0.8)).toFixed(1) + '%';
@@ -726,6 +763,207 @@
 
         init();
         animate();
+
+        // ERIS FACE — Simple guaranteed visible version
+        var _faceBlink = 0;
+        var _faceBlinkD = 0;
+        var _faceMouth = 0;
+        var _faceLog = false;
+
+        function drawPolyFace(ctx, cx, cy, R) {
+            if (!_faceLog) { console.log("drawPolyFace CALLED, R=" + R); _faceLog = true; }
+
+            var s = Math.max(R / 160, 0.5);
+            var col = themeColors.PRI || '#f59e0b';
+            var FY = cy;
+
+            // Blink
+            _faceBlink += _faceBlinkD * 0.15;
+            if (_faceBlinkD > 0 && _faceBlink > 1) _faceBlinkD = -1;
+            if (_faceBlinkD < 0 && _faceBlink < 0) { _faceBlink = 0; _faceBlinkD = 0; }
+            if (_faceBlinkD === 0 && Math.random() < 0.01) _faceBlinkD = 1;
+
+            // Mouth
+            var mTgt = (currentState === 'SPEAKING') ? (currentVolume || 0) * 12 * s : 0;
+            _faceMouth += (mTgt - _faceMouth) * 0.3;
+
+            ctx.save();
+
+            // === SIMPLE FACE: Just draw lines and dots ===
+            var lineA = (currentState === 'MUTED') ? 0.4 : 1.0;
+
+            // -- FACE OUTLINE --
+            ctx.globalAlpha = lineA;
+            ctx.strokeStyle = col;
+            ctx.lineWidth = 2 * s;
+            ctx.shadowBlur = 10 * s;
+            ctx.shadowColor = col;
+
+            // Jaw
+            ctx.beginPath();
+            ctx.moveTo(cx - 50*s, FY - 15*s);
+            ctx.lineTo(cx - 42*s, FY + 25*s);
+            ctx.lineTo(cx - 22*s, FY + 55*s);
+            ctx.lineTo(cx, FY + 65*s);
+            ctx.lineTo(cx + 22*s, FY + 55*s);
+            ctx.lineTo(cx + 42*s, FY + 25*s);
+            ctx.lineTo(cx + 50*s, FY - 15*s);
+            ctx.stroke();
+
+            // Forehead
+            ctx.beginPath();
+            ctx.moveTo(cx - 50*s, FY - 15*s);
+            ctx.lineTo(cx - 35*s, FY - 50*s);
+            ctx.lineTo(cx, FY - 58*s);
+            ctx.lineTo(cx + 35*s, FY - 50*s);
+            ctx.lineTo(cx + 50*s, FY - 15*s);
+            ctx.stroke();
+
+            // -- LEFT EYE --
+            ctx.beginPath();
+            var eLX = cx - 28*s;
+            var eLY = FY - 12*s;
+            var eW = 18*s;
+            var eH = 8*s * (1 - _faceBlink * 0.9);
+            if (eH < 1) eH = 1;
+            ctx.ellipse(eLX, eLY, eW, eH, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Left iris
+            if (_faceBlink < 0.5) {
+                ctx.fillStyle = col;
+                ctx.globalAlpha = lineA * 0.8;
+                ctx.beginPath();
+                ctx.arc(eLX, eLY, 5*s, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = lineA;
+                ctx.beginPath();
+                ctx.arc(eLX, eLY, 2*s, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // -- RIGHT EYE --
+            ctx.globalAlpha = lineA;
+            ctx.beginPath();
+            var eRX = cx + 28*s;
+            ctx.ellipse(eRX, eLY, eW, eH, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Right iris
+            if (_faceBlink < 0.5) {
+                ctx.fillStyle = col;
+                ctx.globalAlpha = lineA * 0.8;
+                ctx.beginPath();
+                ctx.arc(eRX, eLY, 5*s, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = lineA;
+                ctx.beginPath();
+                ctx.arc(eRX, eLY, 2*s, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // -- NOSE --
+            ctx.globalAlpha = lineA * 0.6;
+            ctx.beginPath();
+            ctx.moveTo(cx - 4*s, FY - 5*s);
+            ctx.lineTo(cx - 2*s, FY + 15*s);
+            ctx.lineTo(cx, FY + 22*s);
+            ctx.lineTo(cx + 2*s, FY + 15*s);
+            ctx.lineTo(cx + 4*s, FY - 5*s);
+            ctx.stroke();
+
+            // -- MOUTH --
+            ctx.globalAlpha = lineA * 0.7;
+            var mY = FY + 40*s;
+            if (_faceMouth > 1) {
+                ctx.beginPath();
+                ctx.ellipse(cx, mY, 12*s, _faceMouth, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(cx - 15*s, mY);
+                ctx.quadraticCurveTo(cx, mY + 5*s, cx + 15*s, mY);
+                ctx.stroke();
+            }
+
+            // -- CONNECTING MESH LINES (face structure) --
+            ctx.globalAlpha = lineA * 0.6;
+            ctx.lineWidth = 1.5 * s;
+
+            // Brow to nose
+            ctx.beginPath();
+            ctx.moveTo(cx - 40*s, FY - 25*s); ctx.lineTo(cx - 4*s, FY - 5*s);
+            ctx.moveTo(cx + 40*s, FY - 25*s); ctx.lineTo(cx + 4*s, FY - 5*s);
+            ctx.stroke();
+
+            // Nose to mouth
+            ctx.beginPath();
+            ctx.moveTo(cx, FY + 22*s); ctx.lineTo(cx, mY);
+            ctx.stroke();
+
+            // Eyes to nose
+            ctx.beginPath();
+            ctx.moveTo(eLX + eW, eLY); ctx.lineTo(cx - 4*s, FY - 5*s);
+            ctx.moveTo(eRX - eW, eLY); ctx.lineTo(cx + 4*s, FY - 5*s);
+            ctx.stroke();
+
+            // Cheek lines
+            ctx.beginPath();
+            ctx.moveTo(cx - 50*s, FY - 15*s); ctx.lineTo(cx - 42*s, FY + 25*s);
+            ctx.moveTo(cx + 50*s, FY - 15*s); ctx.lineTo(cx + 42*s, FY + 25*s);
+            ctx.moveTo(cx - 42*s, FY + 25*s); ctx.lineTo(cx - 22*s, FY + 55*s);
+            ctx.moveTo(cx + 42*s, FY + 25*s); ctx.lineTo(cx + 22*s, FY + 55*s);
+            ctx.stroke();
+
+            // Forehead mesh
+            ctx.beginPath();
+            ctx.moveTo(cx - 35*s, FY - 50*s); ctx.lineTo(cx, FY - 12*s);
+            ctx.moveTo(cx + 35*s, FY - 50*s); ctx.lineTo(cx, FY - 12*s);
+            ctx.moveTo(cx - 35*s, FY - 50*s); ctx.lineTo(cx - 28*s, eLY);
+            ctx.moveTo(cx + 35*s, FY - 50*s); ctx.lineTo(cx + 28*s, eLY);
+            ctx.stroke();
+
+            // -- NODES (dots at key points) --
+            var nodePoints = [
+                [0, -58], [-35, -50], [35, -50],
+                [-50, -15], [50, -15],
+                [-42, 25], [42, 25],
+                [-22, 55], [22, 55],
+                [0, 65],
+                [eLX, eLY], [eRX, eLY],
+                [0, 22], [0, mY],
+                [-40, -25], [40, -25],
+                [cx-55*s, FY], [cx+55*s, FY],
+            ];
+
+            ctx.fillStyle = col;
+            ctx.globalAlpha = lineA * 0.9;
+            for (var i = 0; i < nodePoints.length; i++) {
+                var np = nodePoints[i];
+                var nx = np[0], ny = np[1];
+                // Big glow
+                ctx.globalAlpha = lineA * 0.5;
+                ctx.beginPath();
+                ctx.arc(nx, ny, 8*s, 0, Math.PI * 2);
+                ctx.fill();
+                // Core
+                ctx.globalAlpha = lineA;
+                ctx.beginPath();
+                ctx.arc(nx, ny, 3*s, 0, Math.PI * 2);
+                ctx.fill();
+                // Bright center
+                ctx.fillStyle = bright;
+                ctx.globalAlpha = lineA;
+                ctx.beginPath();
+                ctx.arc(nx, ny, 1.5*s, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = col;
+            }
+
+            ctx.restore();
+        }
+
+        console.log("ERIS Face JS loaded!");
     </script>
 </body>
 </html>
