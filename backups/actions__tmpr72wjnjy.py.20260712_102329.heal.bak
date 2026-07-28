@@ -1,6 +1,0 @@
-import sys
-try:
-    print("hello")
-except:
-    pass
-Flask()

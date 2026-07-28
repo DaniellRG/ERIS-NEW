@@ -1,9 +1,0 @@
-{
-  "last_consolidation": "2026-07-26T10:36:07.686556",
-  "action": "full",
-  "results": [
-    "Episodic: 22 → 22 (0 removidos: vacíos, errores, viejos)",
-    "Semantic: 1 → 1 (0 duplicados fusionados)",
-    "Long-term: 10 → 10 entradas (3 categorías vacías marcadas)"
-  ]
-}
