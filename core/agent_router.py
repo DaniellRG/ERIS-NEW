@@ -153,7 +153,9 @@ AGENT_DEFINITIONS = {
         ],
         "tools": [
             "code_helper", "dev_agent", "git_control", "codebase",
-            "knowledge_base", "agent_task"
+            "knowledge_base", "agent_task", "vscode_controller",
+            "todowrite", "subagent_task", "webfetch", "web_search",
+            "code_analyzer", "code_generator", "web_generator"
         ],
     },
 }

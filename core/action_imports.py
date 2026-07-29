@@ -172,6 +172,18 @@ try:
 except ImportError:
     codebase = None
 try:
+    from actions.vscode_controller import vscode_controller
+except ImportError:
+    vscode_controller = None
+try:
+    from actions.web_generator import web_generator
+except ImportError:
+    web_generator = None
+try:
+    from actions.todowrite         import todowrite
+except ImportError:
+    todowrite = None
+try:
     from actions.knowledge_base    import knowledge_base
 except ImportError:
     knowledge_base = None

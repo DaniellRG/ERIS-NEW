@@ -224,6 +224,25 @@ def terminal_agent(parameters: dict, player=None) -> str:
         _save_state(state)
         return "Historial limpiado."
 
+    # ── PREVIEW: abre archivo HTML en el navegador ──
+    if action in ("preview", "vista_previa"):
+        if not target:
+            return "Falta 'command' o 'target' con la ruta del archivo HTML."
+        if not target.endswith((".html", ".htm")):
+            target = target + ".html" if "." not in target else target
+        if not os.path.exists(target):
+            return f"No existe: {target}"
+        if player:
+            player.write_log(f"🌐 Preview: {target}")
+        result = _open_with_start_process(target)
+        state["history"].append({
+            "cmd": f"preview: {target}", "shell": "open", "elevated": False,
+            "output": result, "time": time.strftime("%Y-%m-%d %H:%M:%S")
+        })
+        state["history"] = state["history"][-50:]
+        _save_state(state)
+        return result
+
     # ── OPEN: abre app/carpet URL/archivo ──
     if action == "open":
         if not target:

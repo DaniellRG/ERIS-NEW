@@ -1630,6 +1630,7 @@ class MainWindow(QMainWindow):
         self.on_mute_command = None
         self._muted = False
         self._float_orb = float_orb
+        self._eris_accum = ""
 
         self._setup_window()
         self._setup_ui()
@@ -1716,7 +1717,65 @@ class MainWindow(QMainWindow):
         self._orb.set_state("IDLE")
         layout.addWidget(self._orb, 1)
 
-        # Minimal caption overlay
+        # Chat area (transcript + input)
+        chat_container = QWidget()
+        chat_container.setStyleSheet(f"background: rgba(10,7,3,160); border-top: 1px solid {C.BORDER};")
+        chat_layout = QVBoxLayout(chat_container)
+        chat_layout.setContentsMargins(20, 8, 20, 12)
+        chat_layout.setSpacing(6)
+
+        # Transcript scroll
+        self._transcript = QTextEdit()
+        self._transcript.setReadOnly(True)
+        self._transcript.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._transcript.setFixedHeight(90)
+        self._transcript.setStyleSheet(f"""
+            QTextEdit {{
+                background: transparent; color: {C.TEXT_DIM};
+                border: none; font-size: 12px; font-family: 'Consolas', monospace;
+                selection-background-color: {C.PRI}; selection-color: {C.BG};
+            }}
+        """)
+
+        # Input row
+        input_row = QHBoxLayout()
+        input_row.setSpacing(8)
+
+        self._chat_input = QLineEdit()
+        self._chat_input.setPlaceholderText("Escribele a ERIS...")
+        self._chat_input.setStyleSheet(f"""
+            QLineEdit {{
+                background: {C.BG3}; color: {C.TEXT};
+                border: 1px solid {C.BORDER}; border-radius: 8px;
+                padding: 8px 14px; font-size: 14px; font-family: 'Segoe UI', sans-serif;
+            }}
+            QLineEdit:focus {{ border-color: {C.PRI}; }}
+        """)
+        self._chat_input.returnPressed.connect(self._send_chat)
+        self._chat_input.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, False)
+
+        self._send_btn = QPushButton("Enviar")
+        self._send_btn.setFixedSize(80, 34)
+        self._send_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._send_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C.PRI}; color: {C.BG}; font-weight: bold;
+                border: none; border-radius: 8px; font-size: 13px;
+            }}
+            QPushButton:hover {{ background: {C.PRI_LIGHT}; }}
+            QPushButton:pressed {{ background: {C.PRI_DIM}; }}
+        """)
+        self._send_btn.clicked.connect(self._send_chat)
+
+        input_row.addWidget(self._chat_input)
+        input_row.addWidget(self._send_btn)
+
+        chat_layout.addWidget(self._transcript)
+        chat_layout.addLayout(input_row)
+
+        layout.addWidget(chat_container)
+
+        # Minimal caption overlay (kept for backward compat, hidden by default)
         self._caption = QLabel("")
         self._caption.setStyleSheet(f"""
             QLabel {{
@@ -1727,8 +1786,7 @@ class MainWindow(QMainWindow):
         """)
         self._caption.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignBottom)
         self._caption.setWordWrap(True)
-        self._caption.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
-        layout.addWidget(self._caption)
+        self._caption.hide()
 
     def _setup_shortcuts(self):
         QShortcut(QKeySequence("Ctrl+M"), self).activated.connect(self._toggle_mute)
@@ -1796,14 +1854,51 @@ class MainWindow(QMainWindow):
     def _apply_state(self, state: str):
         self._orb.set_state(state)
 
+    def _send_chat(self):
+        text = self._chat_input.text().strip()
+        if not text:
+            return
+        self._chat_input.clear()
+        # Show in transcript
+        self._append_transcript(f"<b style='color:{C.PRI}'>Tú:</b> {text}")
+        if self.on_text_command:
+            self.on_text_command(text)
+
+    def _append_transcript(self, html: str):
+        self._transcript.append(html)
+        sb = self._transcript.verticalScrollBar()
+        if sb:
+            sb.setValue(sb.maximum())
+
+    def _update_eris_line(self, text: str):
+        """Replace the last ERIS line in transcript with accumulated text."""
+        doc = self._transcript.document()
+        block = doc.lastBlock()
+        if block.isValid() and block.text().startswith("ERIS:"):
+            cursor = self._transcript.textCursor()
+            cursor.movePosition(cursor.MoveOperation.End)
+            cursor.movePosition(cursor.MoveOperation.StartOfBlock)
+            cursor.movePosition(cursor.MoveOperation.EndOfBlock, cursor.MoveMode.KeepAnchor)
+            cursor.insertHtml(f"<span style='color:{C.PRI_LIGHT}'><b>ERIS:</b> {text}</span>")
+        else:
+            self._append_transcript(f"<span style='color:{C.PRI_LIGHT}'><b>ERIS:</b> {text}</span>")
+        sb = self._transcript.verticalScrollBar()
+        if sb:
+            sb.setValue(sb.maximum())
+
     def _on_chunk(self, chunk: str):
         if chunk == "__clear__":
             self._caption.setText("")
+            self._transcript.clear()
+            self._eris_accum = ""
             return
         text = self._caption.text() + chunk
         if len(text) > 200:
             text = text[-200:]
         self._caption.setText(text)
+        # Accumulate and show in transcript
+        self._eris_accum = self._eris_accum + chunk
+        self._update_eris_line(self._eris_accum)
 
     def _quit_app(self):
         self._shutdown_sig.emit()
@@ -1827,6 +1922,17 @@ class MainWindow(QMainWindow):
         if len(current) + len(clean) > 300:
             current = current[-200:]
         self._caption.setText(current + clean)
+        # Also show in transcript
+        parts = text.split(":", 1)
+        if len(parts) >= 2:
+            label = parts[0].strip()
+            msg = parts[1].strip()
+            color = C.TEXT_DIM
+            if label in ("SYS", "ERIS"):
+                color = C.PRI_LIGHT
+            elif label == "ERR":
+                color = C.ERROR
+            self._append_transcript(f"<span style='color:{color}'><b>{label}:</b> {msg}</span>")
 
     def stream_eris_chunk(self, chunk: str):
         self._chunk_sig.emit(chunk)

@@ -32,9 +32,9 @@
     },
     "research_vehiculos": {
       "type": "research",
-      "count": 1,
+      "count": 2,
       "first_seen": "2026-07-16T09:40:22.116299",
-      "last_seen": "2026-07-16T09:40:22.116305"
+      "last_seen": "2026-07-28T22:53:40.401817"
     },
     "research_tecnologia": {
       "type": "research",
@@ -151,7 +151,7 @@
     "multi_tab_research": 35,
     "end_to_end_automation": 45,
     "complete_session_mastery": 50,
-    "investigacion_web": 18
+    "investigacion_web": 20
   },
   "sessions": [
     {

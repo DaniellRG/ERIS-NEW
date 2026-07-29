@@ -45,6 +45,9 @@ _TOOLS = {
     "git_control":           ("actions.git_control", "git_control"),
     "codebase":              ("actions.codebase", "codebase"),
     "dev_agent":             ("actions.dev_agent", "dev_agent"),
+    "todowrite":             ("actions.todowrite", "todowrite"),
+    "vscode_controller":     ("actions.vscode_controller", "vscode_controller"),
+    "web_generator":         ("actions.web_generator", "web_generator"),
 
     # ── Section 14D: Communication ──
     "send_message":          ("actions.send_message", "send_message"),

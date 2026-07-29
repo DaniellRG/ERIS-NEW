@@ -858,6 +858,314 @@ TOOL_DECLARATIONS = [
                 "action"
             ]
         }
+    },
+    {
+        "name": "git_control",
+        "description": "Full Git operations: status, add, commit, push, pull, branch, log, diff, filter-branch, init, remote, tag, GitHub repo creation, credential retrieval",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "status, add, commit, push, pull, branch, checkout, merge, log, diff, remote, init, tag, force_push, push_tags, filter_branch, gc, show, rm, stash, stash_pop, reset, reflog, clean, credential, github_create_repo, github_set_remote"
+                },
+                "message": {
+                    "type": "STRING",
+                    "description": "Commit message"
+                },
+                "branch": {
+                    "type": "STRING",
+                    "description": "Branch or tag name"
+                },
+                "file": {
+                    "type": "STRING",
+                    "description": "File path for git operations"
+                },
+                "url": {
+                    "type": "STRING",
+                    "description": "Remote URL"
+                },
+                "path": {
+                    "type": "STRING",
+                    "description": "Repository path (defaults to project dir)"
+                },
+                "n": {
+                    "type": "INTEGER",
+                    "description": "Number of log entries"
+                },
+                "expression": {
+                    "type": "STRING",
+                    "description": "Expression for filter-branch"
+                },
+                "repo_name": {
+                    "type": "STRING",
+                    "description": "Repository name for GitHub creation"
+                },
+                "token": {
+                    "type": "STRING",
+                    "description": "GitHub token"
+                }
+            },
+            "required": ["action"]
+        }
+    },
+    {
+        "name": "dev_agent",
+        "description": "Autonomous development agent: explore codebase, implement changes, test, compile, git flow, GitHub push, full pipeline, verify all, fix errors, rewrite git history, restart ERIS",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "explore, implement, test, git_flow, github_push, full_pipeline, status, rewrite_git_history, verify_all, fix_errors, restart"
+                },
+                "task": {
+                    "type": "STRING",
+                    "description": "Description of task to implement"
+                },
+                "files": {
+                    "type": "STRING",
+                    "description": "Comma-separated list of files"
+                },
+                "message": {
+                    "type": "STRING",
+                    "description": "Commit message"
+                },
+                "target": {
+                    "type": "STRING",
+                    "description": "Target file or directory for exploration"
+                },
+                "token": {
+                    "type": "STRING",
+                    "description": "GitHub token for push"
+                },
+                "repo_name": {
+                    "type": "STRING",
+                    "description": "GitHub repository name"
+                },
+                "email": {
+                    "type": "STRING",
+                    "description": "Email for git history rewrite"
+                },
+                "name": {
+                    "type": "STRING",
+                    "description": "Name for git history rewrite"
+                },
+                "remove_keys": {
+                    "type": "STRING",
+                    "description": "Comma-separated files to remove from history"
+                }
+            },
+            "required": ["action"]
+        }
+    },
+    {
+        "name": "codebase",
+        "description": "Codebase analysis: stats, tree, functions, classes, imports, search, glob, grep, dependencies, duplicates, structure, unused code, summary",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "stats, tree, functions, classes, imports, search, glob, grep, deps, duplicates, structure, unused, summary"
+                },
+                "target": {
+                    "type": "STRING",
+                    "description": "File or directory to analyze"
+                },
+                "pattern": {
+                    "type": "STRING",
+                    "description": "Search or glob pattern"
+                },
+                "detail": {
+                    "type": "STRING",
+                    "description": "Detail level: summary, full"
+                }
+            },
+            "required": ["action"]
+        }
+    },
+    {
+        "name": "ask_user",
+        "description": "Hace una pregunta estructurada al usuario con opciones para obtener su decision o preferencia",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "question": {
+                    "type": "STRING",
+                    "description": "Pregunta clara al usuario"
+                },
+                "options": {
+                    "type": "STRING",
+                    "description": "Lista de opciones separadas por coma"
+                },
+                "allow_custom": {
+                    "type": "BOOLEAN",
+                    "description": "Permitir respuesta personalizada"
+                },
+                "default": {
+                    "type": "STRING",
+                    "description": "Valor por defecto"
+                }
+            },
+            "required": ["question"]
+        }
+    },
+    {
+        "name": "subagent_task",
+        "description": "Lanza un subagente autonomo via OpenRouter para tareas complejas en segundo plano o sincrono",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "task": {
+                    "type": "STRING",
+                    "description": "Descripcion detallada de la tarea a delegar"
+                },
+                "mode": {
+                    "type": "STRING",
+                    "description": "research, analyze, code, write, general"
+                },
+                "model": {
+                    "type": "STRING",
+                    "description": "Modelo AI (default: google/gemini-2.5-flash)"
+                },
+                "wait": {
+                    "type": "BOOLEAN",
+                    "description": "Esperar resultado (true) o lanzar en background (false)"
+                },
+                "task_id": {
+                    "type": "STRING",
+                    "description": "ID de tarea para recuperar resultados de background"
+                }
+            },
+            "required": ["task"]
+        }
+    },
+    {
+        "name": "vscode_controller",
+        "description": "Controla VS Code desde ERIS: abrir carpetas, archivos, editar, comparar, buscar, live-server con recarga automatica, file watcher para detectar cambios en tiempo real",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "open, open_file, open_folder, diff, install_ext, list_ext, exec_cmd, live_server, stop_server, watch, stop_watch, new_file, search, reopen, status"
+                },
+                "path": {
+                    "type": "STRING",
+                    "description": "Ruta a abrir"
+                },
+                "file": {
+                    "type": "STRING",
+                    "description": "Archivo a abrir/crear"
+                },
+                "folder": {
+                    "type": "STRING",
+                    "description": "Carpeta para servidor/watcher"
+                },
+                "line": {
+                    "type": "INTEGER",
+                    "description": "Numero de linea"
+                },
+                "col": {
+                    "type": "INTEGER",
+                    "description": "Numero de columna"
+                },
+                "port": {
+                    "type": "INTEGER",
+                    "description": "Puerto para live-server"
+                },
+                "command": {
+                    "type": "STRING",
+                    "description": "Comando VS Code o accion al detectar cambio"
+                },
+                "query": {
+                    "type": "STRING",
+                    "description": "Texto a buscar"
+                },
+                "content": {
+                    "type": "STRING",
+                    "description": "Contenido para nuevo archivo"
+                },
+                "extension": {
+                    "type": "STRING",
+                    "description": "ID de extension VS Code"
+                },
+                "file1": {
+                    "type": "STRING",
+                    "description": "Primer archivo para diff"
+                },
+                "file2": {
+                    "type": "STRING",
+                    "description": "Segundo archivo para diff"
+                }
+            },
+            "required": ["action"]
+        }
+    },
+    {
+        "name": "web_generator",
+        "description": "Generador completo de sitios web profesionales: landing pages, dashboards, portafolios, galerias, blogs. Crea HTML+CSS+JS con Bootstrap 5, animaciones, particles, navegacion smooth, formularios con validacion, graficos Chart.js, lightbox, y estructura completa de archivos. Abre automaticamente la pagina en el navegador. Tambien puede lanzar live-server",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "list, create, preview, live"
+                },
+                "template": {
+                    "type": "STRING",
+                    "description": "landing, dashboard, portfolio, galeria, blog"
+                },
+                "title": {
+                    "type": "STRING",
+                    "description": "Titulo del sitio web"
+                },
+                "folder": {
+                    "type": "STRING",
+                    "description": "Carpeta donde crear el sitio (default: Desktop)"
+                },
+                "description": {
+                    "type": "STRING",
+                    "description": "Descripcion personalizada del sitio"
+                },
+                "port": {
+                    "type": "INTEGER",
+                    "description": "Puerto para live-server"
+                }
+            },
+            "required": ["action"]
+        }
+    },
+    {
+        "name": "todowrite",
+        "description": "Crea y gestiona una lista de tareas: agregar, listar, actualizar estado, eliminar, contar pendientes/completados",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {
+                    "type": "STRING",
+                    "description": "add, list, update, delete, clear, in_progress, completed, cancelled, count"
+                },
+                "content": {
+                    "type": "STRING",
+                    "description": "Texto o lista de tareas a agregar"
+                },
+                "item_id": {
+                    "type": "STRING",
+                    "description": "ID del item a actualizar/eliminar"
+                },
+                "status": {
+                    "type": "STRING",
+                    "description": "Nuevo estado: pending, in_progress, completed, cancelled"
+                },
+                "priority": {
+                    "type": "STRING",
+                    "description": "Prioridad: high, medium, low"
+                }
+            },
+            "required": ["action"]
+        }
     }
 ]
 

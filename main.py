@@ -211,12 +211,9 @@ class ErisLive:
 
     def _inject_text(self, text: str):
         """Thread-safe injection of a text message into the current live session."""
-        if self._loop and self.session and not self._is_speaking:
+        if self._loop and self.session:
             asyncio.run_coroutine_threadsafe(
-                self.session.send_client_content(
-                    turns={"parts": [{"text": text}]},
-                    turn_complete=True
-                ),
+                self.session.send_realtime_input(text=text),
                 self._loop
             )
 
@@ -286,10 +283,7 @@ class ErisLive:
             return
 
         asyncio.run_coroutine_threadsafe(
-            self.session.send_client_content(
-                turns={"parts": [{"text": text}]},
-                turn_complete=True
-            ),
+            self.session.send_realtime_input(text=text),
             self._loop
         )
 
@@ -618,33 +612,13 @@ class ErisLive:
 
         cfg_kwargs: dict = dict(
             response_modalities=["AUDIO"],
-            output_audio_transcription=types.AudioTranscriptionConfig(),
-            input_audio_transcription=types.AudioTranscriptionConfig(),
+            speech_config=_speech_cfg,
             system_instruction="\n".join(parts),
             tools=[{"function_declarations": TOOL_DECLARATIONS}],
+            output_audio_transcription=types.AudioTranscriptionConfig(),
+            input_audio_transcription=types.AudioTranscriptionConfig(),
         )
-        if _speech_cfg:
-            cfg_kwargs["speech_config"] = _speech_cfg
 
-        # Speaking rate: try output_audio_config (newer SDK versions)
-        try:
-            cfg_kwargs["output_audio_config"] = types.OutputAudioConfig(
-                audio_encoding="LINEAR16",
-                speaking_rate=0.95,   # slightly slower — clearer articulation
-            )
-        except Exception:
-            pass
-
-        # Temperature directly on LiveConnectConfig (not via deprecated generation_config)
-        # Low value = consistent voice tone across reconnects
-        try:
-            cfg_kwargs["temperature"] = 0.2
-        except Exception:
-            pass
-
-        # ── VAD: faster end-of-speech detection → lower perceived latency ────
-        # Try typed objects first; fall back to raw dict (SDK version resilience)
-        _vad_applied = False
         try:
             cfg_kwargs["realtime_input_config"] = types.RealtimeInputConfig(
                 automatic_activity_detection=types.AutomaticActivityDetection(
@@ -654,49 +628,36 @@ class ErisLive:
                     silence_duration_ms=350,
                 )
             )
-            _vad_applied = True
-            print("[ERIS] VAD config aplicado (typed)")
         except Exception:
-            pass
-
-        if not _vad_applied:
-            try:
-                cfg_kwargs["realtime_input_config"] = {
-                    "automatic_activity_detection": {
-                        "start_of_speech_sensitivity": "START_SENSITIVITY_HIGH",
-                        "end_of_speech_sensitivity": "END_SENSITIVITY_HIGH",
-                        "prefix_padding_ms": 100,
-                        "silence_duration_ms": 500,
-                    }
+            cfg_kwargs["realtime_input_config"] = {
+                "automatic_activity_detection": {
+                    "start_of_speech_sensitivity": "START_SENSITIVITY_HIGH",
+                    "end_of_speech_sensitivity": "END_SENSITIVITY_HIGH",
+                    "prefix_padding_ms": 100,
+                    "silence_duration_ms": 500,
                 }
-                print("[ERIS] VAD config aplicado (dict)")
-            except Exception:
-                print("[ERIS] VAD config no aplicado")
+            }
 
-        # ── Context compression: prevent session degradation over time ────────
         try:
-            cfg_kwargs["context_window_compression"] = types.ContextWindowCompressionConfig(
-                trigger_tokens=12000,
-                sliding_window=types.SlidingWindow(target_tokens=6000),
-            )
-        except Exception:
-            pass
-
-        # ── Thinking budget: disable model reasoning for lowest latency ─────────
-        # Set directly on LiveConnectConfig (generation_config field is deprecated)
-        try:
-            cfg_kwargs["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
+            cfg_kwargs["temperature"] = 0.2
         except Exception:
             pass
 
         return types.LiveConnectConfig(**cfg_kwargs)
 
+
     async def _execute_tool(self, fc) -> types.FunctionResponse:
         return await self._tool_dispatcher.execute(fc)
 
     async def _send_realtime(self):
+        _ready = getattr(self, '_session_ready', None)
+        if _ready is not None:
+            try:
+                await asyncio.wait_for(_ready.wait(), timeout=3.0)
+            except asyncio.TimeoutError:
+                pass
         _batch = []
-        _SEND_EVERY = 4  # send every 4 chunks = 64ms
+        _SEND_EVERY = 4
         try:
             while True:
                 try:
@@ -704,14 +665,13 @@ class ErisLive:
                     _batch.append(msg["data"])
                     if len(_batch) < _SEND_EVERY:
                         continue
-                    # flush batch
-                    t0 = time.time()
                     blob = types.Blob(data=b"".join(_batch), mimeType="audio/pcm;rate=16000")
-                    await self.session.send_realtime_input(media=blob)
+                    try:
+                        await self.session.send_realtime_input(audio=blob)
+                    except Exception as _send_err:
+                        print(f"[ERIS] SEND FAILED: {type(_send_err).__name__}")
+                        raise
                     _batch.clear()
-                    dt = time.time() - t0
-                    if dt > 0.2:
-                        print(f"[TIMING] ⚠️ Slow send: {dt*1000:.0f}ms")
                 except Exception as e:
                     print(f"[ERIS] send_realtime error: {e}")
                     traceback.print_exc()
@@ -719,12 +679,18 @@ class ErisLive:
             if _batch:
                 try:
                     blob = types.Blob(data=b"".join(_batch), mimeType="audio/pcm;rate=16000")
-                    await self.session.send_realtime_input(media=blob)
+                    await self.session.send_realtime_input(audio=blob)
                 except Exception:
                     pass
 
     async def _listen_audio(self):
         print("[ERIS] 🎤 Mic iniciado")
+        _ready = getattr(self, '_session_ready', None)
+        if _ready is not None:
+            try:
+                await asyncio.wait_for(_ready.wait(), timeout=3.0)
+            except asyncio.TimeoutError:
+                pass  # start anyway
         loop = asyncio.get_event_loop()
 
         def callback(indata, frames, time_info, status):
@@ -876,6 +842,19 @@ class ErisLive:
 
     async def _receive_audio(self):
         print("[ERIS] 👂 Recv iniciado")
+        # Signal: session ready once first WS message arrives
+        if not hasattr(self, '_session_ready') or self._session_ready is None:
+            self._session_ready = asyncio.Event()
+        _first_msg = True
+        _orig_recv = self.session._ws.recv
+        async def _patched_recv(*a, **kw):
+            nonlocal _first_msg
+            msg = await _orig_recv(*a, **kw)
+            if _first_msg:
+                _first_msg = False
+                self._session_ready.set()
+            return msg
+        self.session._ws.recv = _patched_recv
         out_buf, in_buf = [], []
         _first_chunk   = True
         _last_tool     = None   # track which tool was executing when error hit
@@ -990,109 +969,105 @@ class ErisLive:
     async def _play_audio(self):
         print("[ERIS] 🔊 Play iniciado")
 
-        speaker_device_idx = None
-        _dev_name = "HAYLOU"
+        # Try WinAudioOutput first (uses Windows Multimedia API, works with BT headsets)
+        _use_win_audio = False
         try:
-            from memory.config_manager import BASE_DIR
-            api_cfg_path = BASE_DIR / "config" / "api_keys.json"
-            if api_cfg_path.exists():
-                c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
-                d = c.get("speaker_device", "")
-                if d != "":
-                    speaker_device_idx = int(d)
-                _dev_name = c.get("speaker_device_name", "HAYLOU")
-        except Exception:
-            pass
-        # Fallback: search by name if numeric index doesn't point to a valid output device
-        if speaker_device_idx is not None:
-            try:
-                _d = sd.query_devices(speaker_device_idx)
-                if _d["max_output_channels"] == 0:
-                    speaker_device_idx = None
-            except Exception:
-                speaker_device_idx = None
-        if speaker_device_idx is None:
-            speaker_device_idx = resolve_device(_dev_name, "output")
+            from core.win_audio_output import WinAudioOutput
+            _win_out = WinAudioOutput(channels=CHANNELS, samplerate=RECEIVE_SAMPLE_RATE, bits_per_sample=16)
+            if _win_out.open():
+                _use_win_audio = True
+                print("[ERIS] 🎧 Usando WinAudioOutput (Windows Multimedia API)")
+            else:
+                _win_out = None
+        except Exception as _we:
+            print(f"[ERIS] ⚠️ WinAudioOutput no disponible: {_we}")
+            _win_out = None
 
-        # Determine actual output channel count for the chosen device
-        _play_channels = CHANNELS
-        if speaker_device_idx is not None:
+        # Fallback: sounddevice
+        if not _use_win_audio:
+            speaker_device_idx = None
+            _dev_name = "HAYLOU"
             try:
-                _d = sd.query_devices(speaker_device_idx)
-                _ch = _d["max_output_channels"]
-                if _ch > 0:
-                    _play_channels = _ch
+                from memory.config_manager import BASE_DIR
+                api_cfg_path = BASE_DIR / "config" / "api_keys.json"
+                if api_cfg_path.exists():
+                    c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
+                    d = c.get("speaker_device", "")
+                    if d != "":
+                        speaker_device_idx = int(d)
+                    _dev_name = c.get("speaker_device_name", "HAYLOU")
             except Exception:
                 pass
-
-        # Try opening the named device; fall back to default (None) on any error
-        _open_kw = dict(
-            samplerate=RECEIVE_SAMPLE_RATE,
-            channels=_play_channels,
-            dtype="int16",
-            blocksize=PLAY_CHUNK_SIZE,
-        )
-        try:
-            stream = sd.RawOutputStream(device=speaker_device_idx, **_open_kw)
-        except Exception:
-            print(f"[ERIS] ⚠️ Fallback: using default speaker device")
+            if speaker_device_idx is not None:
+                try:
+                    _d = sd.query_devices(speaker_device_idx)
+                    if _d["max_output_channels"] == 0:
+                        speaker_device_idx = None
+                except Exception:
+                    speaker_device_idx = None
+            if speaker_device_idx is None:
+                speaker_device_idx = resolve_device(_dev_name, "output")
             _play_channels = CHANNELS
-            stream = sd.RawOutputStream(device=None, channels=CHANNELS,
-                                        samplerate=RECEIVE_SAMPLE_RATE,
-                                        dtype="int16", blocksize=PLAY_CHUNK_SIZE)
-        stream.start()
+            if speaker_device_idx is not None:
+                try:
+                    _d = sd.query_devices(speaker_device_idx)
+                    _ch = _d["max_output_channels"]
+                    if _ch > 0:
+                        _play_channels = _ch
+                except Exception:
+                    pass
+            _open_kw = dict(
+                samplerate=RECEIVE_SAMPLE_RATE,
+                channels=_play_channels,
+                dtype="int16",
+                blocksize=PLAY_CHUNK_SIZE,
+            )
+            try:
+                stream = sd.RawOutputStream(device=speaker_device_idx, **_open_kw)
+            except Exception:
+                print(f"[ERIS] ⚠️ Fallback: using default speaker device")
+                _play_channels = CHANNELS
+                stream = sd.RawOutputStream(device=None, channels=CHANNELS,
+                                            samplerate=RECEIVE_SAMPLE_RATE,
+                                            dtype="int16", blocksize=PLAY_CHUNK_SIZE)
+            stream.start()
 
-        # Jitter buffer: accumulate a few chunks before playback to prevent underruns
-        _jitter_buf: list[bytes] = []
-        _JITTER_TARGET = 1  # ~20ms — start playback ASAP for low latency
+        def _write_audio(data: bytes):
+            if _use_win_audio:
+                _win_out.write(data)
+            else:
+                stream.write(data)
 
         try:
             while True:
                 try:
                     chunk = await asyncio.wait_for(
                         self.audio_in_queue.get(),
-                        timeout=0.05   # 50ms — faster turn-complete detection
+                        timeout=0.05
                     )
                 except asyncio.TimeoutError:
-                    # Must check turn_done + empty BEFORE jitter guard,
-                    # otherwise 1-2 stuck chunks in jitter_buf prevent
-                    # ever reaching the turn_done check → infinite SPEAKING loop.
                     if (
                         self._turn_done_event
                         and self._turn_done_event.is_set()
                         and self.audio_in_queue.empty()
                     ):
-                        # Drain remaining jitter buffer before stopping
-                        for buffered in _jitter_buf:
-                            data = buffered
-                            if _play_channels > CHANNELS:
-                                samples = np.frombuffer(buffered, dtype=np.int16)
-                                data = np.repeat(samples, _play_channels).astype(np.int16).tobytes()
-                            await asyncio.to_thread(stream.write, data)
-                        _jitter_buf.clear()
                         self.set_speaking(False)
                         self._turn_done_event.clear()
                     continue
 
                 self.set_speaking(True)
-                _jitter_buf.append(chunk)
-
-                # Once we have enough chunks buffered, drain them to the output stream
-                if len(_jitter_buf) >= _JITTER_TARGET:
-                    for buffered in _jitter_buf:
-                        data = buffered
-                        if _play_channels > CHANNELS:
-                            samples = np.frombuffer(buffered, dtype=np.int16)
-                            data = np.repeat(samples, _play_channels).astype(np.int16).tobytes()
-                        await asyncio.to_thread(stream.write, data)
-                    _jitter_buf.clear()
+                _write_audio(chunk)
         except Exception as e:
             print(f"[ERIS] ❌ Play: {e}")
             raise
         finally:
             self.set_speaking(False)
-            stream.stop()
-            stream.close()
+            if _use_win_audio:
+                _win_out.flush()
+                _win_out.close()
+            else:
+                stream.stop()
+                stream.close()
 
     async def run(self):
         # ── Check connectivity before attempting Gemini ──
@@ -1133,6 +1108,7 @@ class ErisLive:
                     self.out_queue        = asyncio.Queue(maxsize=500)  # buffer ~8s de audio para evitar drops con Bluetooth
                     self._turn_done_event = asyncio.Event()
                     self._reconnect_event = asyncio.Event()
+                    self._session_ready   = asyncio.Event()
                     # ── CRITICAL: clear stop flag on reconnect so voice works ──
                     if hasattr(self, '_stop_requested') and self._stop_requested:
                         self._stop_requested.clear()
@@ -1210,11 +1186,11 @@ class ErisLive:
                         _hour = __import__("datetime").datetime.now().hour
                         if 6 <= _hour < 12 and not already_briefed_today():
                             async def _auto_brief():
-                                await asyncio.sleep(1)  # let session settle
-                                await self.session.send_client_content(
-                                    turns={"parts": [{"text": "[AUTO] Dame el informe matutino del día."}]},
-                                    turn_complete=True
-                                )
+                                await asyncio.sleep(5)
+                                try:
+                                    await self.session.send_realtime_input(text="[AUTO] Dame el informe matutino del día.")
+                                except Exception as _abe:
+                                    print(f"[ERIS] Auto brief error: {_abe}")
                             tg.create_task(_auto_brief())
 
                     tg.create_task(self._send_realtime())
