@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import queue
+import threading
 import sounddevice as sd
 import numpy as np
 from pathlib import Path
@@ -15,7 +16,7 @@ from core.audio_config import SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE, CHUNK_SIZE,
 
 
 class OfflineVoicePipeline:
-    """Local voice pipeline: Mic → Vosk STT → Ollama → TTS → Speaker."""
+    """Local voice pipeline: Mic → Vosk STT → Cerebro dual → TTS → Speaker."""
 
     def __init__(self, on_text_response: Callable | None = None):
         self._on_text_response = on_text_response
@@ -25,9 +26,10 @@ class OfflineVoicePipeline:
         self._speaker_stream = None
         self._running = False
         self._audio_queue = queue.Queue()
-        self._ollama_model = "minicpm-v"
+        self._poll_thread = None
+        self._ollama_model = "qwen3:8b"
         self._ollama_url = "http://localhost:11434"
-        self._tts_backend = "kokoro"
+        self._tts_backend = "edge"
 
     def configure(self, model: str = None, ollama_url: str = None, tts_backend: str = None):
         if model:
@@ -55,7 +57,8 @@ class OfflineVoicePipeline:
                 for d in model_path.parent.iterdir():
                     if d.is_dir() and d.name.startswith("vosk-model"):
                         d.rename(model_path)
-            model = vosk.KaldiRecognizer(str(model_path), SEND_SAMPLE_RATE)
+            vmodel = vosk.Model(str(model_path))
+            model = vosk.KaldiRecognizer(vmodel, SEND_SAMPLE_RATE)
             self._vosk_recognizer = model
             self._vosk_model = model
             return True
@@ -64,39 +67,21 @@ class OfflineVoicePipeline:
             return False
 
     def _ollama_chat(self, text: str) -> str:
-        """Send text to Ollama and get response."""
+        """Send text to the dual brain (local Ollama + cloud OpenRouter)."""
         try:
-            import urllib.request
-            system_prompt = (
-                "Eres ERIS, una asistente de IA de escritorio. "
-                "Respondes en español de forma natural y conversacional. "
-                "Tienes acceso a herramientas del sistema. "
-                "Sé concisa y útil."
-            )
-            payload = json.dumps({
-                "model": self._ollama_model,
-                "prompt": text,
-                "system": system_prompt,
-                "stream": False,
-            }).encode("utf-8")
-            req = urllib.request.Request(
-                "{}/api/generate".format(self._ollama_url),
-                data=payload,
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            resp = urllib.request.urlopen(req, timeout=120)
-            data = json.loads(resp.read().decode("utf-8"))
-            resp.close()
-            return data.get("response", "No pude generar una respuesta.")
+            from core.local_brain import get_brain, quick_check
+            if not quick_check():
+                return "El respaldo local no está disponible (Ollama apagado)."
+            return get_brain().respond(text)
         except Exception as e:
-            return "Error de Ollama: {}".format(str(e)[:80])
+            return "Error en el cerebro dual: {}".format(str(e)[:80])
 
     def _speak(self, text: str):
         """Convert text to speech and play it."""
         try:
+            import asyncio
             from core.tts_engine import synthesize
-            pcm = synthesize(text, backend=self._tts_backend, voice=None)
+            pcm = asyncio.run(synthesize(text, backend=self._tts_backend, voice=None))
             if pcm and len(pcm) > 0:
                 import io
                 audio = np.frombuffer(pcm, dtype=np.int16)
@@ -118,11 +103,11 @@ class OfflineVoicePipeline:
         """Start the offline voice loop."""
         if self._running:
             return
-        self._running = True
         vosk_ok = self._init_vosk()
         if not vosk_ok:
             print("[offline] No se pudo inicializar Vosk. Modo solo texto.")
             return
+        self._running = True
         try:
             self._mic_stream = sd.InputStream(
                 samplerate=SEND_SAMPLE_RATE,
@@ -132,9 +117,21 @@ class OfflineVoicePipeline:
                 callback=self._mic_callback,
             )
             self._mic_stream.start()
+            self._poll_thread = threading.Thread(target=self._poll_loop, daemon=True)
+            self._poll_thread.start()
             print("[offline] Pipeline offline activo. Hablá cuando quieras.")
         except Exception as e:
             print("[offline] Mic error:", e)
+
+    def _poll_loop(self):
+        """Consume recognized mic text and respond, continuamente."""
+        import time
+        while self._running:
+            try:
+                self.process_once()
+            except Exception:
+                pass
+            time.sleep(0.2)
 
     def process_once(self) -> str | None:
         """Check for recognized text, process it, return response."""
@@ -168,6 +165,8 @@ class OfflineVoicePipeline:
             except Exception:
                 pass
             self._mic_stream = None
+        if self._poll_thread:
+            self._poll_thread = None
 
     def is_active(self) -> bool:
         return self._running

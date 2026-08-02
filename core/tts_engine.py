@@ -79,7 +79,7 @@ async def _synthesize_edge(text: str, voice: str = "") -> bytes:
     """Synthesize with Edge-TTS, return WAV PCM bytes."""
     import edge_tts
 
-    if not voice or voice == "bark":
+    if not voice or voice == "bark" or voice not in _EDGE_VOICES.values():
         voice = _EDGE_VOICES.get("es-ar", "es-AR-ElenaNeural")
 
     communicate = edge_tts.Communicate(text, voice)

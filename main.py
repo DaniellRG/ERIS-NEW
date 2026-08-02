@@ -1548,6 +1548,13 @@ class ErisLive:
                         "SYS: Puedes escribirme mensajes de texto mientras Gemini se recupera."
                     )
                     print("[FALLBACK] Ollama activado como respaldo local.")
+                    # Activar micro local (Vosk → cerebro dual → edge-tts) para poder hablarle
+                    if self._offline_pipeline:
+                        try:
+                            self._offline_pipeline.start()
+                            self.ui.write_log("SYS: 🎤 Micro local activo. Hablame cuando quieras.")
+                        except Exception as _ve:
+                            print(f"[FALLBACK] Voice pipeline start: {_ve}")
                     self._announce(
                         "Modo sin conexión activado. Estoy usando mi respaldo local. "
                         "Puedes hablarme o escribirme por texto."
@@ -1559,6 +1566,11 @@ class ErisLive:
             # ── Desactivar fallback si Gemini se reconectó ────────────────
             if consecutive_fails == 0 and self._fallback_mode:
                 self._fallback_mode = False
+                if self._offline_pipeline:
+                    try:
+                        self._offline_pipeline.stop()
+                    except Exception:
+                        pass
                 self.ui.write_log("SYS: ✅ Gemini reconectado. Modo normal restaurado.")
                 print("[FALLBACK] Gemini recuperado. Modo normal.")
                 self._announce("Gemini reconectado. Modo normal restaurado.")
