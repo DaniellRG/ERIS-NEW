@@ -52,6 +52,38 @@ def _human_click(x, y):
         pyautogui.click()
 
 
+def _read_full_page(max_chars=8000, scrolls=5):
+    """Scroll through page, accumulate text, deduplicate."""
+    all_parts = []
+    for i in range(scrolls):
+        pyautogui.hotkey("ctrl", "a")
+        time.sleep(0.15)
+        pyautogui.hotkey("ctrl", "c")
+        time.sleep(0.3)
+        try:
+            part = pyperclip.paste()
+        except Exception:
+            part = ""
+        if part.strip():
+            all_parts.append(part)
+        if i < scrolls - 1:
+            pyautogui.press("pgdn")
+            time.sleep(0.5)
+    combined = "\n".join(all_parts)
+    seen = set()
+    lines = combined.split("\n")
+    unique_lines = []
+    for line in lines:
+        s = line.strip()
+        if s and s not in seen:
+            seen.add(s)
+            unique_lines.append(line)
+    text = "\n".join(unique_lines)
+    if len(text) > max_chars:
+        text = text[:max_chars] + "\n... [truncado]"
+    return text if text.strip() else "(pagina vacia o no accesible)"
+
+
 def browser_control(parameters: dict, player=None) -> str:
     action = parameters.get("action", "")
     if not action:
@@ -196,6 +228,36 @@ def _do_action(action: str, parameters: dict, player) -> str:
         except Exception:
             text = "(vacío)"
         return f"Texto: {text}"
+
+    elif action == "read_page_full":
+        max_chars = int(parameters.get("max_chars", 8000))
+        scrolls = int(parameters.get("scrolls", 5))
+        return _read_full_page(max_chars, scrolls)
+
+    elif action == "read_and_summarize":
+        return _read_full_page(8000, 5)
+
+    elif action == "search_and_read":
+        query = parameters.get("query", "")
+        index = int(parameters.get("index", 1))
+        if not query:
+            return "Error: Falta query."
+        encoded = query.replace(" ", "+")
+        pyautogui.hotkey("ctrl", "l")
+        time.sleep(0.2)
+        pyautogui.write(f"google.com/search?q={encoded}", interval=0.005)
+        pyautogui.press("enter")
+        time.sleep(2)
+        pyautogui.press("escape")
+        time.sleep(0.5)
+        pyautogui.press("escape")
+        time.sleep(1)
+        result = browser_control({"action": "select_result_smart", "index": index, "site": "google"}, player)
+        time.sleep(2)
+        text = _read_full_page(8000, 5)
+        if not text.strip() or text == "(pagina vacia o no accesible)":
+            return f"Busqueda '{query}' - No se pudo leer contenido tras: {result}"
+        return f"Contenido de '{query}' (resultado #{index}):\n\n{text}"
 
     elif action == "click_element":
         description = parameters.get("description", "")

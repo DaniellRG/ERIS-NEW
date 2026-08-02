@@ -55,7 +55,10 @@ def data_viz(parameters: dict = None, player=None) -> str:
             lines.append(f"  {c.name} ({size_str})")
         return "\n".join(lines)
 
-    return "Actions: status, bar, line, pie, scatter, histogram, table, system_report, usage_report, list_charts"
+    elif action == "plotly" or action == "interactive":
+        return _create_plotly_chart(params)
+
+    return "Actions: status, bar, line, pie, scatter, histogram, table, system_report, usage_report, list_charts, plotly"
 
 
 def _create_bar_chart(params):
@@ -252,6 +255,55 @@ new Chart(document.getElementById('chart'),{{
 
     path.write_text(html, encoding="utf-8")
     return f"HTML chart saved: {path.name} (open in browser)"
+
+
+def _create_plotly_chart(params):
+    """Interactive Plotly charts (bar, line, pie, scatter, histogram, area, box)."""
+    try:
+        import plotly.graph_objects as go
+        import plotly.express as px
+    except ImportError:
+        return "plotly not installed. Install with: pip install plotly"
+
+    chart_type = params.get("chart_type", params.get("action", "bar"))
+    title = params.get("title", "Interactive Chart")
+    _ensure_output()
+
+    labels = params.get("labels", params.get("x", []))
+    values = params.get("values", params.get("y", []))
+    labels_js = json.dumps(labels)
+
+    if chart_type == "bar":
+        fig = go.Figure(data=[go.Bar(x=labels, y=[float(v) for v in values], marker_color="#4CAF50")])
+        fig.update_layout(title=title, xaxis_title=params.get("xlabel", ""), yaxis_title=params.get("ylabel", ""))
+    elif chart_type == "line":
+        fig = go.Figure(data=[go.Scatter(x=labels, y=[float(v) for v in values], mode="lines+markers", line=dict(width=2), marker=dict(size=6))])
+        fig.update_layout(title=title, xaxis_title=params.get("xlabel", ""), yaxis_title=params.get("ylabel", ""))
+    elif chart_type == "pie":
+        fig = go.Figure(data=[go.Pie(labels=labels, values=[float(v) for v in values])])
+        fig.update_layout(title=title)
+    elif chart_type == "scatter":
+        x = params.get("x", [])
+        y = params.get("y", [])
+        fig = go.Figure(data=[go.Scatter(x=[float(v) for v in x], y=[float(v) for v in y], mode="markers", marker=dict(size=8, color="#FF5722"))])
+        fig.update_layout(title=title, xaxis_title=params.get("xlabel", "X"), yaxis_title=params.get("ylabel", "Y"))
+    elif chart_type == "histogram":
+        fig = go.Figure(data=[go.Histogram(x=[float(v) for v in values], nbinsx=int(params.get("bins", 10)))])
+        fig.update_layout(title=title, xaxis_title=params.get("xlabel", "Value"), yaxis_title="Frequency")
+    elif chart_type == "area":
+        fig = go.Figure(data=[go.Scatter(x=labels, y=[float(v) for v in values], fill="tozeroy", mode="lines", line=dict(width=2))])
+        fig.update_layout(title=title)
+    elif chart_type == "box":
+        fig = go.Figure(data=[go.Box(y=[float(v) for v in values], name=title)])
+        fig.update_layout(title=title)
+    else:
+        return f"Unknown plotly chart type: {chart_type}"
+
+    fig.update_layout(template="plotly_dark", paper_bgcolor="#1a1a2e", plot_bgcolor="#1a1a2e", font=dict(color="#fff"))
+    fname = f"plotly_{chart_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+    path = _OUTPUT_DIR / fname
+    fig.write_html(str(path), include_plotlyjs="cdn", full_html=True)
+    return f"Interactive {chart_type} chart saved: {path.name}"
 
 
 def _system_report():

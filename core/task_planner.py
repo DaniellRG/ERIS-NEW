@@ -216,10 +216,25 @@ def _execute_analyze(goal: str) -> str:
 
 def _execute_action(goal: str):
     try:
-        from core.computer_use_agent import computer_use_agent
-        return computer_use_agent(goal, max_steps=8)
+        from actions.auto_agent import auto_agent
+        plan_result = auto_agent({"action": "plan", "goal": goal})
+        if "Error" in str(plan_result):
+            return plan_result
+        result = auto_agent({"action": "execute", "goal": goal, "max_steps": 8})
+        return str(result)[:500]
     except Exception as e:
-        raise Exception(f"computer_use_agent failed: {e}")
+        try:
+            import subprocess, shlex
+            safe_cmds = [
+                "clean temp files", "check disk space", "optimize performance",
+                "scan firewall", "check antivirus", "backup files",
+            ]
+            for cmd in safe_cmds:
+                if cmd in goal.lower() or goal.lower() in cmd:
+                    return auto_agent({"action": "execute", "goal": cmd})
+            return f"No se pudo ejecutar '{goal[:60]}'. Usa auto_agent para tareas automatizadas."
+        except Exception as e2:
+            return f"Error ejecutando accion: {e2}"
 
 
 def _execute_verify(goal: str) -> str:

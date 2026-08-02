@@ -6,6 +6,12 @@ import time
 from pathlib import Path
 from core.platform import safe_print
 
+try:
+    import imageio_ffmpeg
+    _FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
+except Exception:
+    _FFMPEG = "ffmpeg"
+
 BASE_DIR = Path(__file__).parent.parent
 VOICES_DIR = BASE_DIR / "voices"
 API_CFG_PATH = BASE_DIR / "config" / "api_keys.json"
@@ -91,7 +97,7 @@ async def _synthesize_edge(text: str, voice: str = "") -> bytes:
     import subprocess
 
     proc = await asyncio.create_subprocess_exec(
-        "ffmpeg", "-y", "-i", "pipe:0",
+        _FFMPEG, "-y", "-i", "pipe:0",
         "-f", "s16le", "-acodec", "pcm_s16le",
         "-ar", "24000", "-ac", "1",
         "pipe:1",

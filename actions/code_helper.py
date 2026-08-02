@@ -71,10 +71,22 @@ def _generate_and_save(description: str, language: str, output_path: str) -> str
         "markdown": ".md", "md": ".md",
     }
     ext = ext_map.get(language, ".py")
-    if not output_path:
+    if output_path:
+        p = Path(output_path)
+        # If directory (no recognized extension), auto-generate filename
+        if p.suffix not in set(ext_map.values()) | {".sh", ".bat", ".ps1", ".rb", ".php", ".pl", ".r", ".swift", ".kt"}:
+            from datetime import datetime
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_path = str(p / f"code_{ts}{ext}")
+    else:
         from datetime import datetime
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = str(Path.home() / "Documents" / f"code_{ts}{ext}")
+        try:
+            from actions.path_helper import get_desktop_path
+            desk = Path(get_desktop_path())
+        except Exception:
+            desk = Path.home() / "Desktop"
+        output_path = str(desk / "ERIS_Codigo" / f"code_{ts}{ext}")
 
     os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
 

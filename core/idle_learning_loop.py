@@ -3,9 +3,9 @@
 
 Hooks into the existing idle detection in main.py.
 When ERIS has been idle for a while, she:
-  1. Detects knowledge gaps
-  2. Researches weak areas
-  3. Ingests new knowledge
+  1. Generates dynamic learning topics via Gemini
+  2. Researches them on the web
+  3. Ingests new knowledge (RAG, Obsidian, semantic memory)
   4. Logs what she learned
 
 Runs in background thread, never interrupts the user.
@@ -30,29 +30,7 @@ _cycle_count = 0
 _last_learning_time = 0
 _lock = threading.Lock()
 
-# Topics ERIS can research autonomously (curated, high-value)
-RESEARCH_POOL = [
-    "ultimos avances inteligencia artificial 2026",
-    "nuevos frameworks programacion tendencias",
-    "ciberseguridad vulnerabilidades recientes",
-    "Python nuevas caracteristicas version",
-    "Docker Kubernetes mejoras recientes",
-    "machine learning modelos nuevos 2026",
-    "automatizacion tareas inteligentes IA",
-    "bases de datos nuevas tendencias NoSQL",
-    "cloud computing servicios nuevos",
-    "robotica automatizacion avances",
-    "blockchain aplicaciones reales 2026",
-    "Big Data herramientas nuevas",
-    "redes 5G 6G tecnologias nuevas",
-    "computacion cuantica avances recientes",
-    "seguridad datos privacidad GDPR",
-    "desarrollo software metodologias agiles",
-    "inteligencia artificial explicativa",
-    "vehiculos autonomos avances",
-    "biotecnologia bioinformatica avances",
-    "energias renovables tecnologia",
-]
+TOPIC_HISTORY_FILE = _BASE / "data" / "idle_learning_topics.json"
 
 
 def _load_state() -> dict:
@@ -93,6 +71,79 @@ def should_learn(idle_seconds: float) -> bool:
     return True
 
 
+def _generate_topics(num_topics: int = 2) -> list:
+    """Generate dynamic learning topics via Gemini. Returns list of topic strings."""
+    try:
+        from google import genai
+        from core.audio_config import get_api_key
+        api_key = get_api_key()
+        client = genai.Client(api_key=api_key)
+
+        # Load history to avoid repetition
+        history = _load_topic_history()
+        recent = history.get("recent_topics", [])[-20:]
+
+        prompt = (
+            "Eres ERIS, una IA autonoma con curiosidad insaciable. "
+            "Genera {} temas de aprendizaje interesantes y actuales "
+            "que NO hayas investigado antes. "
+            "Los temas deben ser variados: tecnologia, ciencia, historia, "
+            "filosofia, innovacion, cultura digital, etc. "
+            "Evita repetir estos temas ya investigados: {}.\n\n"
+            "Responde SOLO con una lista numerada, un tema por linea. "
+            "Cada tema debe ser una frase corta y concreta (max 10 palabras)."
+        ).format(num_topics, ", ".join(recent[-10:]) if recent else "ninguno")
+
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+        )
+        text = response.text.strip()
+        topics = []
+        for line in text.split("\n"):
+            line = line.strip()
+            line = line.lstrip("0123456789.()-* \t")
+            if line and len(line) > 10:
+                topics.append(line[:80])
+
+        if not topics:
+            raise ValueError("Gemini returned no topics")
+
+        # Save to history
+        history["recent_topics"].extend(topics)
+        history.setdefault("total_generated", 0)
+        history["total_generated"] += len(topics)
+        _save_topic_history(history)
+
+        return topics[:num_topics]
+    except Exception as e:
+        _log("Topic generation failed: {}".format(str(e)[:60]))
+        # Fallback: use curiosity_engine if available
+        try:
+            from actions.curiosity_engine import curiosity_engine
+            fallback = curiosity_engine({"action": "suggest", "count": num_topics})
+            if fallback and isinstance(fallback, str):
+                return [fallback[:80]]
+        except Exception:
+            pass
+        # Last resort fallback
+        return ["ultimas tendencias tecnologia 2026", "descubrimientos cientificos recientes"]
+
+
+def _load_topic_history() -> dict:
+    if TOPIC_HISTORY_FILE.exists():
+        try:
+            return json.loads(TOPIC_HISTORY_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"recent_topics": [], "total_generated": 0}
+
+
+def _save_topic_history(history: dict):
+    TOPIC_HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    TOPIC_HISTORY_FILE.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
 def run_idle_learning() -> str:
     """Execute one idle learning cycle. Returns summary of what was learned."""
     global _cycle_count, _last_learning_time
@@ -105,16 +156,8 @@ def run_idle_learning() -> str:
     state["total_idle_sessions"] += 1
     state["last_session"] = datetime.now().isoformat()
 
-    # Pick a topic not yet learned
-    learned_set = set(state.get("topics_learned", []))
-    available = [t for t in RESEARCH_POOL if t not in learned_set]
-    if not available:
-        # Reset pool if all learned
-        state["topics_learned"] = []
-        available = RESEARCH_POOL[:]
-
-    num_topics = min(MAX_TOPICS_PER_SESSION, len(available))
-    topics_to_learn = random.sample(available, num_topics)
+    # Generate topics dynamically via Gemini
+    topics_to_learn = _generate_topics(MAX_TOPICS_PER_SESSION)
 
     results = []
     for topic in topics_to_learn:
@@ -228,12 +271,13 @@ def _save_to_semantic_memory(topic: str, content: str):
 def get_idle_status() -> str:
     """Get status of idle learning system."""
     state = _load_state()
+    history = _load_topic_history()
     lines = [
         "Idle Learning Status:",
         "  Ciclos totales: {}".format(state.get("total_idle_sessions", 0)),
         "  Temas aprendidos: {}".format(state.get("total_topics_learned", 0)),
         "  Ultima sesion: {}".format(state.get("last_session", "nunca")),
-        "  Pool disponible: {} temas".format(len(RESEARCH_POOL)),
+        "  Temas generados por Gemini: {}".format(history.get("total_generated", 0)),
     ]
     if state.get("topics_learned"):
         recent = state["topics_learned"][-5:]

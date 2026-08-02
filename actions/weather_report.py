@@ -16,7 +16,7 @@ def weather_action(parameters: dict, player=None) -> str:
         
         req = urllib.request.Request(
             url, 
-            headers={"User-Agent": "Mozilla/5.0"}
+            headers={"User-Agent": "curl/8.0"}
         )
         
         with urllib.request.urlopen(req, timeout=5) as response:

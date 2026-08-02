@@ -177,7 +177,10 @@
         "linux_settings",
         "hyprland_control",
         "omarchy_control",
-        "shell_executor"
+        "shell_executor",
+        "file_organizer",
+        "file_monitor",
+        "smart_file_organizer"
       ],
       "enabled": true
     },
@@ -248,6 +251,10 @@
         "gmail_control",
         "google_drive",
         "document_creator",
+        "document_generator",
+        "document_handler",
+        "presentation_generator",
+        "spreadsheet_generator",
         "project_manager",
         "goals",
         "reminder",
@@ -293,7 +300,15 @@
         "git_control",
         "codebase",
         "knowledge_base",
-        "agent_task"
+        "agent_task",
+        "vscode_controller",
+        "todowrite",
+        "subagent_task",
+        "webfetch",
+        "web_search",
+        "code_analyzer",
+        "code_generator",
+        "web_generator"
       ],
       "enabled": true
     }

@@ -258,3 +258,110 @@ def self_edit(parameters: dict, player=None) -> str:
             "- list_backups: Ver backups disponibles\n"
             "- restore_backup: Restaurar un backup anterior"
         )
+
+
+def _verify_syntax(file_path: Path) -> str:
+    if file_path.suffix != ".py":
+        return "Syntax check only for Python files."
+    try:
+        import py_compile
+        py_compile.compile(file_path, doraise=True)
+        return "✅ Syntax OK"
+    except py_compile.PyCompileError as e:
+        return f"❌ Syntax error: {e}"
+
+
+def self_modify(parameters: dict, player=None) -> str:
+    action = parameters.get("action", "").lower()
+    file_ref = parameters.get("file", "")
+    target = parameters.get("target", "")
+    replacement = parameters.get("replacement", "")
+    function_code = parameters.get("function_code", "")
+    after_line = parameters.get("after_line", "")
+    import_line = parameters.get("import_line", "")
+
+    if action == "read_first":
+        return self_edit({"action": "read_file", "file": file_ref}, player)
+
+    elif action == "modify":
+        if not file_ref or not target or not replacement:
+            return "Error: Se requieren file, target y replacement."
+        try:
+            fp = _resolve_path(file_ref)
+            if not fp.exists():
+                return f"Error: '{file_ref}' no existe."
+            content = fp.read_text(encoding="utf-8")
+            if target not in content:
+                return f"Error: Texto target no encontrado en '{file_ref}'."
+            backup = _make_backup(fp)
+            new_content = content.replace(target, replacement, 1)
+            fp.write_text(new_content, encoding="utf-8")
+            syntax = _verify_syntax(fp) if fp.suffix == ".py" else ""
+            old_lines = content.splitlines(keepends=True)
+            new_lines = new_content.splitlines(keepends=True)
+            import difflib
+            diff = "".join(difflib.unified_diff(old_lines, new_lines, n=2))[:2000]
+            result = f"✅ Modificado '{file_ref}'\nBackup: {backup}\n"
+            if syntax:
+                result += f"{syntax}\n"
+            result += f"\nDiff:\n{diff}"
+            return result
+        except Exception as e:
+            return f"Error: {e}"
+
+    elif action == "add_function":
+        if not file_ref or not function_code:
+            return "Error: Se requieren file y function_code."
+        try:
+            fp = _resolve_path(file_ref)
+            content = fp.read_text(encoding="utf-8")
+            if after_line:
+                if after_line not in content:
+                    return f"Error: 'after_line' no encontrado."
+                backup = _make_backup(fp)
+                new_content = content.replace(after_line, after_line + "\n" + function_code, 1)
+            else:
+                backup = _make_backup(fp)
+                new_content = content.rstrip() + "\n\n" + function_code + "\n"
+            fp.write_text(new_content, encoding="utf-8")
+            syntax = _verify_syntax(fp) if fp.suffix == ".py" else ""
+            return f"✅ Función agregada a '{file_ref}'\nBackup: {backup}\n{syntax}"
+        except Exception as e:
+            return f"Error: {e}"
+
+    elif action == "add_import":
+        if not file_ref or not import_line:
+            return "Error: Se requieren file y import_line."
+        try:
+            fp = _resolve_path(file_ref)
+            content = fp.read_text(encoding="utf-8")
+            if import_line in content:
+                return f"El import ya existe en '{file_ref}'."
+            backup = _make_backup(fp)
+            if after_line:
+                new_content = content.replace(after_line, after_line + "\n" + import_line, 1)
+            else:
+                lines = content.split("\n")
+                insert_idx = 0
+                for i, line in enumerate(lines):
+                    stripped = line.strip()
+                    if stripped.startswith("import ") or stripped.startswith("from "):
+                        insert_idx = i + 1
+                    elif stripped and not stripped.startswith("#"):
+                        break
+                lines.insert(insert_idx, import_line)
+                new_content = "\n".join(lines)
+            fp.write_text(new_content, encoding="utf-8")
+            syntax = _verify_syntax(fp) if fp.suffix == ".py" else ""
+            return f"✅ Import agregado a '{file_ref}'\nBackup: {backup}\n{syntax}"
+        except Exception as e:
+            return f"Error: {e}"
+
+    else:
+        return (
+            "Acciones de self_modify:\n"
+            "- read_first: Leer archivo antes de modificar\n"
+            "- modify: Buscar y reemplazar texto exacto con backup\n"
+            "- add_function: Agregar nueva funcion a un archivo\n"
+            "- add_import: Agregar import a un archivo"
+        )

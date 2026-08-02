@@ -140,6 +140,20 @@ class C:
         return cls._current
 
 
+def _load_saved_theme():
+    try:
+        from core.logging_setup import API_CONFIG_PATH
+        if API_CONFIG_PATH.exists():
+            cfg = json.loads(API_CONFIG_PATH.read_text("utf-8"))
+        else:
+            cfg = json.loads((_base_dir() / "config" / "api_keys.json").read_text("utf-8"))
+        theme = cfg.get("eris_theme", "gold")
+        if theme in THEMES:
+            C.set_theme(theme)
+    except Exception:
+        pass
+
+
 C.set_theme("gold")
 
 
@@ -969,16 +983,19 @@ class SettingsDialog(QDialog):
         """)
 
     def _load_config(self) -> dict:
+        from core.logging_setup import API_CONFIG_PATH
+        if API_CONFIG_PATH.exists():
+            try:
+                return json.loads(API_CONFIG_PATH.read_text("utf-8"))
+            except Exception:
+                pass
         user_path = _user_cfg_dir() / "config" / "api_keys.json"
         if user_path.exists():
             try:
                 return json.loads(user_path.read_text("utf-8"))
             except Exception:
                 pass
-        try:
-            return json.loads((_base_dir() / "config" / "api_keys.json").read_text("utf-8"))
-        except Exception:
-            return {}
+        return {}
 
     def _switch_section(self, idx: int):
         self._current_section = idx
@@ -1137,8 +1154,12 @@ class SettingsDialog(QDialog):
         lbl_pv.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl5.addWidget(lbl_pv)
         self._eris_voice = QComboBox()
-        self._eris_voice.addItems(["Zephyr (Calm)", "Aoede (Warm)", "Puck (Playful)", "Charon (Deep)"])
-        self._eris_voice.setCurrentText(self._cfg.get("eris_voice", "Zephyr (Calm)"))
+        from core.audio_config import ERIS_VOICES as _av
+        for _vk, (_vg, _vd) in _av.items():
+            self._eris_voice.addItem(f"{_vk} ({_vg})", _vk)
+        self._eris_voice.setCurrentIndex(
+            max(0, self._eris_voice.findData(self._cfg.get("eris_voice", "Aoede")))
+        )
         hl5.addWidget(self._eris_voice)
         hl5.addStretch()
         gb3_layout.addLayout(hl5)
@@ -1150,6 +1171,10 @@ class SettingsDialog(QDialog):
         self._wake_sound = QCheckBox("🔊  Play wake-up sound on activation")
         self._wake_sound.setChecked(self._cfg.get("wake_sound", True))
         gb3_layout.addWidget(self._wake_sound)
+
+        self._wake_mode_cb = QCheckBox("🎯  Activación por nombre: responder solo cuando digas \"Eris, ...\"")
+        self._wake_mode_cb.setChecked(self._cfg.get("wake_word_mode", True))
+        gb3_layout.addWidget(self._wake_mode_cb)
         form.addWidget(gb3)
 
         form.addStretch()
@@ -1282,7 +1307,7 @@ class SettingsDialog(QDialog):
                 QPushButton {{
                     background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
                         stop:0 {th['BG2']}, stop:1 {th['SURFACE']});
-                    border: 2px solid {'{C.PRI}' if t == name else th['PRI']};
+                    border: 2px solid {C.PRI if t == name else th['PRI']};
                     border-radius: 10px;
                 }}
                 QPushButton:hover {{
@@ -1464,6 +1489,19 @@ class SettingsDialog(QDialog):
     # ── Save ────────────────────────────────────────────────────────────────
     def _save(self):
         self._status_bar.setText("◆  COMMITTING configuration...  ◆")
+
+        def _safe_int(val, default=None):
+            try:
+                return int(val) if val.strip() else default
+            except (ValueError, AttributeError):
+                return default
+
+        def _safe_float(val, default=None):
+            try:
+                return float(val) if val.strip() else default
+            except (ValueError, AttributeError):
+                return default
+
         cfg = {
             "gemini_api_key": self._api_key.entry.text(),
             "model_for_conversation": self._model_conv.currentText(),
@@ -1480,33 +1518,35 @@ class SettingsDialog(QDialog):
             "openweather_api_key": self._weather_key.entry.text(),
             "tts_backend": self._tts.currentText(),
             "tts_voice": self._voice.currentText(),
-            "mic_device": int(self._mic.entry.text()) if self._mic.entry.text().strip() else None,
-            "spk_device": int(self._spk.entry.text()) if self._spk.entry.text().strip() and self._spk.entry.text().strip() != "None" else None,
-            "eris_voice": self._eris_voice.currentText(),
+            "mic_device": _safe_int(self._mic.entry.text()),
+            "spk_device": _safe_int(self._spk.entry.text()),
+            "eris_voice": self._eris_voice.currentData(),
             "eris_theme": C.get_theme(),
             "thinking_sound": self._thinking_sound.isChecked(),
             "wake_sound": self._wake_sound.isChecked(),
+            "wake_word_mode": self._wake_mode_cb.isChecked(),
             "language": self._lang.currentText(),
             "timezone": self._tz.entry.text(),
             "chrome_google_profile": self._chrome_profile.entry.text(),
             "chrome_exe_path": self._chrome_path.entry.text(),
             "camera_enabled": self._cam_toggle.isChecked(),
             "gpu_acceleration": self._gpu_accel.isChecked(),
-            "glass_opacity": int(self._glass_opacity.entry.text()) if self._glass_opacity.entry.text().strip() else 180,
-            "glow_intensity": float(self._glow_intensity.entry.text()) if self._glow_intensity.entry.text().strip() else 0.5,
+            "glass_opacity": _safe_int(self._glass_opacity.entry.text(), 180),
+            "glow_intensity": _safe_float(self._glow_intensity.entry.text(), 0.5),
             "webgl_orb": self._orb_renderer.currentText() == "WebGL (3D)",
             "os_system": self._cfg.get("os_system", "windows"),
         }
         try:
-            path = _user_cfg_dir() / "config" / "api_keys.json"
+            from core.logging_setup import API_CONFIG_PATH
+            path = API_CONFIG_PATH
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(cfg, indent=4), encoding="utf-8")
             self._status_bar.setText("◆  CONFIGURATION COMMITTED  ◆")
+            self.saved.emit(cfg)
+            QTimer.singleShot(300, self.accept)
         except Exception as e:
             self._status_bar.setText(f"◆  ERROR: {e}  ◆")
             print(f"[Settings] Error saving: {e}")
-        self.saved.emit(cfg)
-        QTimer.singleShot(300, self.accept)
 
 
 # ── Transcript Area ─────────────────────────────────────────────────────────────
@@ -1669,7 +1709,9 @@ class MainWindow(QMainWindow):
             hwnd = int(self.winId())
             ap = _AP()
             ap.AccentState = 4  # ACCENT_ENABLE_ACRYLICBLURBEHIND
-            ap.GradientColor = 0xcc0f0a02  # AABBGGRR (alpha=204, dark amber)
+            bg = C.BG.lstrip("#")
+            r, g, b = int(bg[0:2], 16), int(bg[2:4], 16), int(bg[4:6], 16)
+            ap.GradientColor = (0xcc << 24) | (b << 16) | (g << 8) | r  # AABBGGRR
             wcd = _WCD()
             wcd.Attribute = 19  # WCA_ACCENT_POLICY
             wcd.SizeOfData = ctypes.sizeof(ap)
@@ -1952,6 +1994,7 @@ class ErisUI:
     def __init__(self, face_png: str = ""):
         os.environ.setdefault("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu --no-sandbox --disable-software-rasterizer")
         self._app = QApplication.instance() or QApplication(sys.argv)
+        _load_saved_theme()
         self._app.setStyle("Fusion")
         self._app.setQuitOnLastWindowClosed(False)
 
@@ -1974,7 +2017,7 @@ class ErisUI:
                 "error",
             )
             raise
-        self._float_orb.show_main_callback = self._win.show_main
+        self._float_orb.show_main_callback = self._orb_clicked
         self._app.processEvents()
         self._splash.finish(self._win)
         self._win.show()
@@ -2048,6 +2091,18 @@ class ErisUI:
 
     def set_audio_level(self, level: float):
         self._win.set_audio_level(level)
+
+    def _orb_clicked(self):
+        """Clic en el orbe flotante: despierta a ERIS para escuchar,
+        sin abrir la ventana completa ni robar foco."""
+        cb = getattr(self, "_orb_wake_callback", None)
+        if cb:
+            try:
+                cb()
+                return
+            except Exception:
+                pass
+        self._win.show_main()
 
     def stream_eris_chunk(self, chunk: str):
         self._win.stream_eris_chunk(chunk)

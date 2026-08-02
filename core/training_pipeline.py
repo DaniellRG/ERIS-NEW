@@ -30,6 +30,17 @@ _CAPABILITIES = {
     "inner_monologue": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
     "computer_use_agent": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
     "task_planner": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "document_generator": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "presentation_generator": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "spreadsheet_generator": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "file_organizer": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "file_monitor": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "smart_file_organizer": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "browser_control": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "webfetch": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "web_search": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "youtube_video": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
+    "web_scraper": {"score": 0.0, "attempts": 0, "successes": 0, "failures": {}, "last_failure": "", "errors": []},
 }
 
 

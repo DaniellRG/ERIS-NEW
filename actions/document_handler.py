@@ -77,6 +77,8 @@ def document_handler(parameters: dict = None, player=None) -> str:
         return _interpret(params)
     elif action == "what_i_wrote":
         return _what_i_wrote()
+    elif action == "working_doc":
+        return _get_working_doc()
     elif action == "list_recent":
         return _list_recent()
     elif action == "clear_history":
@@ -86,7 +88,7 @@ def document_handler(parameters: dict = None, player=None) -> str:
         "LEER: read (auto), read_word, read_pptx, read_excel, read_pdf, read_txt\n"
         "CONVERTIR: convert_to_pdf, merge_pdfs, split_pdf\n"
         "ANALIZAR: summarize, translate, interpret, info\n"
-        "OTROS: open, what_i_wrote, list_recent, clear_history"
+        "OTROS: open, what_i_wrote, working_doc, list_recent, clear_history"
     )
 
 
@@ -847,6 +849,20 @@ def _clear_history() -> str:
     return "Historial de documentos limpiado"
 
 
+def _get_working_doc() -> str:
+    _base = Path(__file__).resolve().parent.parent / "data"
+    _wf = _base / "working_document.json"
+    if not _wf.exists():
+        return "No hay documento en curso."
+    try:
+        import json as _json
+        data = _json.loads(_wf.read_text(encoding="utf-8"))
+        return "Documento en curso:\n  Titulo: {}\n  Ruta: {}\n  Ultima modificacion: {}".format(
+            data.get("title", "?"), data.get("path", "?"), data.get("time", "?")[:16])
+    except Exception:
+        return "Error leyendo documento en curso."
+
+
 # ═══════════════════════════════════════════════════════════════
 #  UTILIDADES
 # ═══════════════════════════════════════════════════════════════
@@ -854,10 +870,18 @@ def _clear_history() -> str:
 def _resolve_path(path_str: str, default_ext: str) -> Path:
     if path_str:
         p = Path(path_str)
+        # If path is a directory (no file extension), auto-generate filename inside it
+        if p.suffix not in (".docx", ".pptx", ".xlsx", ".pdf", ".txt", ".csv", ".md", ".html", ".json", ".py", ".js"):
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            p = p / "doc_{}{}".format(ts, default_ext)
     else:
-        _DOCS_DIR.mkdir(parents=True, exist_ok=True)
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        p = _DOCS_DIR / "doc_{}{}".format(ts, default_ext)
+        # Default: save to Desktop/ERIS_Documentos
+        try:
+            from actions.path_helper import get_desktop_path
+            desk = Path(get_desktop_path())
+        except Exception:
+            desk = Path.home() / "Desktop"
+        p = desk / "ERIS_Documentos" / "doc_{}{}".format(datetime.now().strftime("%Y%m%d_%H%M%S"), default_ext)
     p.parent.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -889,6 +913,14 @@ def _track_created(fmt: str, path: Path, title: str):
         created = created[-100:]
     _save_created(created)
     _log_history("create", str(path), fmt)
+    try:
+        import json as _json
+        _base = Path(__file__).resolve().parent.parent / "data"
+        _wf = _base / "working_document.json"
+        _wf.parent.mkdir(parents=True, exist_ok=True)
+        _wf.write_text(_json.dumps({"title": title, "path": str(path), "time": datetime.now().isoformat()}, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _track_opened(path: Path):

@@ -37,6 +37,8 @@ _TOOLS = {
     "rules_engine":          ("actions.rules_engine", "rules_engine"),
     "document_creator":      ("actions.document_creator", "document_creator"),
     "document_handler":      ("actions.document_handler", "document_handler"),
+    "gustos":                ("actions.gustos", "gustos"),
+    "cancion_generator":     ("actions.cancion_generator", "cancion_generator"),
     "code_helper":           ("actions.code_helper", "code_helper"),
     "reminder":              ("actions.reminder", "reminder"),
     "notifications":         ("actions.notifications", "notify"),
@@ -77,10 +79,13 @@ _TOOLS = {
     # ── Section 14G: Search ──
     "web_search":            ("actions.web_search", "web_search"),
     "super_search":          ("actions.super_search", "super_search"),
+    "deep_research":         ("actions.deep_research", "deep_research"),
 
     # ── Section 14H: Advanced ──
     "auto_programmer":       ("actions.auto_programmer", "auto_programmer"),
     "self_edit":             ("actions.self_edit", "self_edit"),
+    "self_modify":           ("actions.self_edit", "self_modify"),
+    "self_improvement_loop": ("actions.self_improvement_loop", "self_improvement_loop"),
     "self_awareness":        ("actions.self_awareness", "self_awareness"),
     "computer_control":      ("actions.computer_control", "computer_control"),
     "visual_click":          ("actions.visual_click", "visual_click"),
@@ -180,6 +185,8 @@ _TOOLS = {
 
     # ── Batch 3: 11 new features ──
     "sandbox_execution":     ("actions.sandbox_execution", "sandbox_execution"),
+    "sandbox_run":           ("actions.sandbox", "sandbox_run"),
+    "sandbox_test_tool":     ("actions.sandbox", "sandbox_test_tool"),
     "knowledge_graph":       ("actions.knowledge_graph", "knowledge_graph"),
     "theme_manager":         ("actions.theme_manager", "theme_manager"),
     "plugin_loader":         ("actions.plugin_loader", "plugin_loader"),
@@ -211,6 +218,9 @@ _TOOLS = {
     "task_manager":          ("actions.task_manager", "task_manager"),
     "system_reader":         ("actions.system_reader", "system_reader"),
     "webfetch":              ("actions.webfetch", "webfetch"),
+    "document_generator":    ("actions.document_generator", "document_generator"),
+    "presentation_generator": ("actions.presentation_generator", "presentation_generator"),
+    "spreadsheet_generator": ("actions.spreadsheet_generator", "spreadsheet_generator"),
     "ask_user":              ("actions.ask_user", "ask_user"),
     "subagent_task":         ("actions.subagent_task", "subagent_task"),
     "self_heal":             ("actions.self_heal", "self_heal"),
@@ -287,8 +297,6 @@ _TOOLS = {
     "predict_analyze":       ("actions.predict_analyze", "predict_analyze"),
     "res_monitor":           ("actions.res_monitor", "res_monitor"),
     "res_protect":           ("actions.res_protect", "res_protect"),
-    "sandbox_run":           ("actions.sandbox_run", "sandbox_run"),
-    "sandbox_test_tool":     ("actions.sandbox_test_tool", "sandbox_test_tool"),
     "save_memory":           ("actions.save_memory", "save_memory"),
     "search_info":           ("actions.search_info", "search_info"),
     "shutdown_eris":         ("actions.shutdown_eris", "shutdown_eris"),
@@ -302,6 +310,13 @@ _TOOLS = {
     "self_healing":          ("core.self_healing", "self_healing_tool"),
     # ── Batch 6: Page/Video Summarizer ──
     "page_summarizer":       ("actions.page_summarizer", "page_summarizer"),
+
+    # ── Batch 7: Excel/Office por voz ──
+    "office_docs":           ("actions.office_tools", "office_docs"),
+
+    # ── Batch 8: Audio y volumen del sistema ──
+    "system_volume":         ("actions.system_volume", "system_volume"),
+    "screen_control":        ("actions.screen_control", "screen_control"),
 }
 
 

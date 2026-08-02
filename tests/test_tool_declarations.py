@@ -32,7 +32,7 @@ def test_known_tools_present():
     from core.tool_declarations import TOOL_DECLARATIONS
     names = {t["name"] for t in TOOL_DECLARATIONS}
     expected = {"open_app", "web_search", "browser_control", "computer_control",
-                "file_controller", "whatsapp", "screen_process"}
+                "file_controller", "whatsapp", "screen_vision"}
     assert expected.issubset(names)
 
 

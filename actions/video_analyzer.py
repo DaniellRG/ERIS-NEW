@@ -20,12 +20,24 @@ DATA_DIR = BASE_DIR / "data"
 VIDEO_CACHE = DATA_DIR / "video_cache"
 HISTORY_FILE = DATA_DIR / "video_history.json"
 
-# Get ffmpeg path
+# Get ffmpeg/ffprobe path
 try:
     import imageio_ffmpeg
-    FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
+    _FFMPEG_EXE = imageio_ffmpeg.get_ffmpeg_exe()
+    _FFMPEG_DIR = os.path.dirname(_FFMPEG_EXE)
+    FFMPEG_PATH = _FFMPEG_EXE
+    _FFMPEG_LOCATION = _FFMPEG_DIR
+    # Ensure ffprobe exists alongside ffmpeg
+    _ffprobe = os.path.join(_FFMPEG_DIR, "ffprobe.exe")
+    if not os.path.exists(_ffprobe):
+        try:
+            import shutil
+            shutil.copy2(_FFMPEG_EXE, _ffprobe)
+        except Exception:
+            pass
 except Exception:
     FFMPEG_PATH = "ffmpeg"
+    _FFMPEG_LOCATION = None
 
 
 def _log(msg):
@@ -70,6 +82,7 @@ def _get_video_info(url: str) -> dict:
             'no_warnings': True,
             'skip_download': True,
             'extract_flat': False,
+            'ffmpeg_location': _FFMPEG_LOCATION,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -107,6 +120,7 @@ def _download_subtitles(url: str, video_id: str) -> str:
             'subtitleslangs': ['es', 'en', 'pt', 'fr', 'de', 'auto'],
             'subtitlesformat': 'vtt/srt/best',
             'outtmpl': str(subs_dir / '%(id)s.%(ext)s'),
+            'ffmpeg_location': _FFMPEG_LOCATION,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -161,35 +175,48 @@ def _transcribe_audio(url: str, video_id: str) -> str:
         import yt_dlp
         subs_dir = VIDEO_CACHE / video_id
         subs_dir.mkdir(parents=True, exist_ok=True)
-        audio_path = subs_dir / f"{video_id}.mp3"
 
-        # Download audio only
+        # Download best audio stream (raw, no postprocessing)
         _log("Downloading audio...")
         ydl_opts = {
             'quiet': True,
             'no_warnings': True,
             'format': 'bestaudio/best',
             'outtmpl': str(subs_dir / f'{video_id}.%(ext)s'),
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '64',
-            }],
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        if not audio_path.exists():
-            # Find any audio file
-            for f in subs_dir.glob(f"{video_id}.*"):
-                if f.suffix in ['.mp3', '.wav', '.m4a', '.opus', '.webm']:
-                    audio_path = f
-                    break
+        # Find the downloaded audio file
+        audio_path = None
+        for f in subs_dir.glob(f"{video_id}.*"):
+            if f.suffix in ['.mp3', '.wav', '.m4a', '.opus', '.webm', '.m4a']:
+                audio_path = f
+                break
 
-        if not audio_path.exists():
+        if not audio_path or not audio_path.exists():
             return "Error: Could not download audio"
 
-        _log(f"Audio downloaded: {audio_path.name} ({audio_path.stat().st_size / 1024 / 1024:.1f} MB)")
+        # Convert to mp3 with ffmpeg directly (avoids yt-dlp postprocessor ffprobe requirement)
+        mp3_path = subs_dir / f"{video_id}.mp3"
+        if audio_path.suffix != '.mp3':
+            _log(f"Converting {audio_path.suffix} to mp3...")
+            try:
+                import subprocess
+                subprocess.run(
+                    [FFMPEG_PATH, '-i', str(audio_path), '-vn', '-acodec', 'libmp3lame',
+                     '-ar', '16000', '-ac', '1', '-y', str(mp3_path)],
+                    capture_output=True, timeout=300,
+                )
+                if mp3_path.exists():
+                    audio_path = mp3_path
+            except Exception as conv_e:
+                _log(f"Conversion failed, using original: {conv_e}")
+
+        if not audio_path.exists():
+            return "Error: Audio file missing after download"
+
+        _log(f"Audio: {audio_path.name} ({audio_path.stat().st_size / 1024 / 1024:.1f} MB)")
 
         # Transcribe with faster-whisper
         _log("Transcribing with Whisper...")
@@ -199,21 +226,20 @@ def _transcribe_audio(url: str, video_id: str) -> str:
         segments, info = model.transcribe(
             str(audio_path),
             beam_size=3,
-            language=None,  # Auto-detect
+            language=None,
             vad_filter=True,
         )
 
         _log(f"Detected language: {info.language} (prob: {info.language_probability:.2f})")
 
-        transcript_parts = []
-        for segment in segments:
-            transcript_parts.append(segment.text.strip())
-
+        transcript_parts = [segment.text.strip() for segment in segments]
         transcript = " ".join(transcript_parts)
 
-        # Clean up audio file to save space
+        # Clean up audio files
         try:
             audio_path.unlink()
+            if mp3_path and mp3_path.exists() and mp3_path != audio_path:
+                mp3_path.unlink()
         except Exception:
             pass
 
@@ -264,22 +290,150 @@ def _generate_summary(transcript: str, info: dict) -> str:
     return summary
 
 
+def _get_local_metadata(file_path: str) -> dict:
+    import cv2
+    cap = cv2.VideoCapture(file_path)
+    if not cap.isOpened():
+        return {"error": "Could not open video file"}
+    info = {
+        "file": os.path.basename(file_path),
+        "size_bytes": os.path.getsize(file_path),
+        "fps": round(cap.get(cv2.CAP_PROP_FPS), 2),
+        "frame_count": int(cap.get(cv2.CAP_PROP_FRAME_COUNT)),
+        "width": int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+        "height": int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)),
+        "duration_sec": round(cap.get(cv2.CAP_PROP_FRAME_COUNT) / max(cap.get(cv2.CAP_PROP_FPS), 1), 2),
+    }
+    fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))
+    if fourcc:
+        codec = chr(fourcc & 0xFF) + chr((fourcc >> 8) & 0xFF) + chr((fourcc >> 16) & 0xFF) + chr((fourcc >> 24) & 0xFF)
+        info["codec"] = codec.strip()
+    cap.release()
+    return info
+
+
+def _extract_keyframes(file_path: str, max_frames: int = 8) -> list:
+    import cv2
+    import base64
+    import io
+    from PIL import Image
+
+    cap = cv2.VideoCapture(file_path)
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if total <= 0:
+        cap.release()
+        return []
+    step = max(total // max_frames, 1)
+    frames_b64 = []
+    for i in range(0, total, step):
+        cap.set(cv2.CAP_PROP_POS_FRAMES, i)
+        ret, frame = cap.read()
+        if not ret:
+            continue
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        pil_img = Image.fromarray(frame_rgb)
+        buf = io.BytesIO()
+        pil_img.save(buf, format="JPEG", quality=85)
+        b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        frames_b64.append(b64)
+        if len(frames_b64) >= max_frames:
+            break
+    cap.release()
+    return frames_b64
+
+
+def _analyze_local_video(file_path: str, prompt: str = "") -> str:
+    meta = _get_local_metadata(file_path)
+    if "error" in meta:
+        return f"Error: {meta['error']}"
+
+    lines = [
+        f"**Video Analysis: {meta['file']}**",
+        "=" * 60,
+        f"Size: {meta['size_bytes'] / 1024 / 1024:.1f} MB",
+        f"Resolution: {meta['width']}x{meta['height']}",
+        f"FPS: {meta['fps']}",
+        f"Duration: {int(meta['duration_sec'] // 60)}:{int(meta['duration_sec'] % 60):02d}",
+        f"Frames: {meta['frame_count']}",
+    ]
+    if meta.get("codec"):
+        lines.append(f"Codec: {meta['codec']}")
+    lines.append("")
+
+    frames_b64 = _extract_keyframes(file_path)
+    if not frames_b64:
+        lines.append("Could not extract frames from video.")
+        return "\n".join(lines)
+
+    lines.append(f"Extracted {len(frames_b64)} keyframes for AI analysis.")
+    lines.append("")
+
+    # Send frames + prompt to Gemini
+    try:
+        from memory.config_manager import get_gemini_key
+        import requests
+
+        api_key = get_gemini_key()
+        if not api_key:
+            lines.append("Gemini API key not configured. Showing frames only.")
+            return "\n".join(lines)
+
+        user_prompt = prompt.strip() or (
+            "Analiza este video frame por frame. Describe: "
+            "1) Qué tipo de contenido es (tutorial, gameplay, entrevista, etc.) "
+            "2) Escenas principales detectadas "
+            "3) Texto visible importante "
+            "4) Acciones o eventos clave "
+            "Da un resumen completo en español."
+        )
+
+        parts = [{"text": user_prompt}]
+        for b64 in frames_b64:
+            parts.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
+
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        payload = {
+            "contents": [{"parts": parts}],
+            "generationConfig": {"temperature": 0.3, "maxOutputTokens": 4096},
+        }
+        resp = requests.post(url, json=payload, timeout=120)
+        resp.raise_for_status()
+        data = resp.json()
+        candidates = data.get("candidates", [])
+        if candidates:
+            result_parts = candidates[0].get("content", {}).get("parts", [])
+            ai_text = " ".join(p.get("text", "") for p in result_parts if "text" in p)
+            if ai_text:
+                lines.append("**AI Analysis:**")
+                lines.append(ai_text)
+            else:
+                lines.append("Gemini returned empty response.")
+        else:
+            lines.append(f"Gemini error: {json.dumps(data, indent=2)[:500]}")
+    except ImportError:
+        lines.append("Could not import Gemini modules. Frame extraction only.")
+    except Exception as e:
+        lines.append(f"Gemini analysis error: {e}")
+
+    return "\n".join(lines)
+
+
 def video_analyzer(parameters: dict, player=None) -> str:
     """
-    Analizador de videos de YouTube.
-    Descarga subtítulos o transcribe audio, y genera resúmenes.
+    Analizador de videos de YouTube y archivos locales.
 
     Acciones:
-      - info: Info del video (título, duración, descripción). Parametros: url
+      - info: Info del video de YouTube. Parametros: url
       - subtitles: Extraer subtítulos del video. Parametros: url
       - transcribe: Descargar audio y transcribir con Whisper. Parametros: url
       - summarize: Resumen completo (subtítulos o transcripción). Parametros: url
-      - research: Research web sobre el tema del video (como hace Eris). Parametros: url
+      - research: Research web sobre el tema del video. Parametros: url
       - full: Análisis completo: info + subtítulos/transcripción + resumen. Parametros: url
-      - history: Ver historial de videos analizados
+      - local: Analizar video local (.mp4, .avi, .mov, .mkv). Parametros: file, prompt (opcional)
+      - local_audio: Extraer y transcribir audio de video local. Parametros: file
+      - history: Historial de videos analizados
     """
     action = parameters.get("action", "info").lower()
-    url = parameters.get("url", "").strip()
 
     if action == "history":
         history = _get_history()
@@ -290,8 +444,68 @@ def video_analyzer(parameters: dict, player=None) -> str:
             result += f"  [{h.get('time', '?')[:16]}] {h.get('title', '?')} ({h.get('method', '?')})\n"
         return result
 
+    if action in ("local", "local_audio"):
+        file_path = parameters.get("file", "")
+        if not file_path:
+            return "Error: Se requiere 'file' con la ruta del video local"
+        if not os.path.exists(file_path):
+            return f"Error: File not found: {file_path}"
+        ext = Path(file_path).suffix.lower()
+        if ext not in (".mp4", ".avi", ".mov", ".mkv", ".webm", ".flv", ".wmv", ".m4v", ".mpg", ".mpeg"):
+            return f"Error: Unsupported video format '{ext}'. Supported: .mp4, .avi, .mov, .mkv, .webm, .flv, .wmv, .m4v"
+
+        if action == "local":
+            result = _analyze_local_video(file_path, parameters.get("prompt", ""))
+            _save_history({
+                "time": datetime.now().isoformat(),
+                "title": os.path.basename(file_path),
+                "video_id": file_path,
+                "method": "local_vision",
+            })
+            return result
+
+        elif action == "local_audio":
+            result = "**Transcribing audio from local video...**\n"
+            try:
+                from faster_whisper import WhisperModel
+                import subprocess
+                import tempfile
+
+                # Extract audio to temp file using ffmpeg
+                with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
+                    audio_path = tmp.name
+                _log("Extracting audio with ffmpeg...")
+                subprocess.run(
+                    [FFMPEG_PATH, "-i", file_path, "-vn", "-acodec", "libmp3lame", "-ar", "16000",
+                     "-ac", "1", "-y", audio_path],
+                    capture_output=True, timeout=600,
+                )
+
+                if not os.path.exists(audio_path):
+                    return result + "Error: Could not extract audio"
+
+                result += f"**Audio extracted:** {os.path.getsize(audio_path) / 1024:.1f} KB\n\n"
+                _log("Transcribing with Whisper...")
+                model = WhisperModel("base", device="cpu", compute_type="int8")
+                segments, info = model.transcribe(audio_path, beam_size=3, language=None, vad_filter=True)
+                transcript = " ".join(s.text.strip() for s in segments)
+                try:
+                    os.unlink(audio_path)
+                except Exception:
+                    pass
+                result += f"**Transcript:** ({len(transcript)} chars, lang: {info.language})\n\n"
+                result += transcript[:5000]
+                if len(transcript) > 5000:
+                    result += f"\n\n... (truncated, {len(transcript)} total chars)"
+                return result
+            except ImportError:
+                return result + "Error: faster-whisper not installed"
+            except Exception as e:
+                return result + f"Error: {e}"
+
+    url = parameters.get("url", "").strip()
     if not url:
-        return "Error: Se requiere 'url' del video de YouTube"
+        return "Error: Se requiere 'url' del video de YouTube o 'file' para video local.\nActions: info, subtitles, transcribe, summarize, research, full, local, local_audio, history"
 
     video_id = _extract_video_id(url)
     if not video_id:
@@ -464,5 +678,5 @@ def video_analyzer(parameters: dict, player=None) -> str:
         })
         return result
 
-    available = "info | subtitles | transcribe | summarize | research | full | history"
+    available = "info | subtitles | transcribe | summarize | research | full | local | local_audio | history"
     return f"Action '{action}' not found. Available: {available}"

@@ -68,7 +68,7 @@ ERIS_MAP = {
         "semantic_memory.py": {"desc": "Memoria semántica — episódica/semántica/working + knowledge graph"},
         "task_planner.py": {"desc": "Planificador multi-paso — descompone metas, retry, persistencia"},
         "time_utils.py": {"desc": "Timezone colombiana, contexto de hora del día"},
-        "tool_declarations.py": {"desc": "Schema de 192 herramientas para Gemini function calling", "lines": 3505},
+        "tool_declarations.py": {"desc": "Schema de 67 herramientas para Gemini function calling", "lines": 1515},
         "tool_dispatcher.py": {"desc": "Despachador — rutea tool calls a actions via ThreadPoolExecutor", "lines": 838},
         "tool_registry.py": {"desc": "Registro lazy-loading — 226 tools, imports bajo demanda"},
         "training_pipeline.py": {"desc": "Entrenamiento continuo — auto-evaluación, detección de fallos, corrección"},

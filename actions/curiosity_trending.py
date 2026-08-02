@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 """
-actions/curiosity_trending.py — Stub module for ERIS tool: curiosity_trending
+curiosity_trending.py — Tendencias actuales (via curiosity_engine).
+Acciones: trending (temas de moda del momento).
 """
 from __future__ import annotations
 
@@ -7,4 +9,8 @@ from __future__ import annotations
 def curiosity_trending(parameters: dict = None, player=None) -> str:
     if parameters is None:
         parameters = {}
-    return "[curiosity_trending] Herramienta declarada pero no implementada aun. Pendiente de entrenamiento."
+    try:
+        from actions.curiosity_engine import curiosity_trending as _trending
+        return _trending(player=player)
+    except Exception as e:
+        return f"Error obteniendo tendencias: {e}"

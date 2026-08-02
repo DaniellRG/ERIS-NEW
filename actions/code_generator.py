@@ -7,11 +7,36 @@ import subprocess
 import sys
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 SCRIPTS_DIR = os.path.join(DATA_DIR, "generated_scripts")
 INDEX_FILE = os.path.join(DATA_DIR, "generated_scripts_index.json")
+
+
+def _resolve_output_path(file_path: str, language: str) -> str:
+    """If file_path given, use it. Otherwise default to Desktop."""
+    if file_path:
+        p = Path(file_path)
+        # If path is a directory (no recognized extension), auto-generate filename
+        if p.suffix not in (".py", ".ps1", ".bat", ".js", ".ts", ".sh", ".html", ".css", ".java", ".rs", ".go", ".sql", ".json", ".yaml", ".xml", ".md"):
+            ext_map = {"python": ".py", "powershell": ".ps1", "batch": ".bat"}
+            ext = ext_map.get(language, ".py")
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            p = p / f"script_{ts}{ext}"
+    else:
+        try:
+            from actions.path_helper import get_desktop_path
+            desk = Path(get_desktop_path())
+        except Exception:
+            desk = Path.home() / "Desktop"
+        ext_map = {"python": ".py", "powershell": ".ps1", "batch": ".bat"}
+        ext = ext_map.get(language, ".py")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        p = desk / "ERIS_Scripts" / f"script_{ts}{ext}"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    return str(p)
 
 TEMPLATES: dict[str, dict[str, str]] = {
     "python_hello": {
@@ -167,6 +192,7 @@ def code_generator(parameters: dict, player=None) -> str:
     if action == "generate":
         description = parameters.get("description", parameters.get("code", ""))
         language = parameters.get("language", "python").lower()
+        file_path = parameters.get("file_path", "")
         if not description:
             return "Error: 'description' parameter is required."
         code = _generate_from_description(description, language)
@@ -174,11 +200,11 @@ def code_generator(parameters: dict, player=None) -> str:
             valid, msg = _validate_python(code)
             if not valid:
                 return f"Generated code has syntax errors: {msg}\nCode:\n{code}"
-        script_id = str(uuid.uuid4())[:8]
-        filename = f"{script_id}_{language}.{'py' if language == 'python' else 'ps1' if language == 'powershell' else 'bat'}"
-        filepath = os.path.join(SCRIPTS_DIR, filename)
+        filepath = _resolve_output_path(file_path, language)
+        filename = os.path.basename(filepath)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(code)
+        script_id = str(uuid.uuid4())[:8]
         index = _load_index()
         index["scripts"][script_id] = {
             "id": script_id,
@@ -190,11 +216,12 @@ def code_generator(parameters: dict, player=None) -> str:
             "run_count": 0,
         }
         _save_index(index)
-        return f"Script generated: {filename}\nLanguage: {language}\nDescription: {description}\nCode:\n{code}"
+        return f"Script generated: {filepath}\nLanguage: {language}\nDescription: {description}\nCode:\n{code}"
 
     elif action == "save":
         code = parameters.get("code", "")
         language = parameters.get("language", "python").lower()
+        file_path = parameters.get("file_path", "")
         filename = parameters.get("filename", "")
         if not code:
             return "Error: 'code' parameter is required."
@@ -202,13 +229,10 @@ def code_generator(parameters: dict, player=None) -> str:
             valid, msg = _validate_python(code)
             if not valid:
                 return f"Syntax error: {msg}"
-        if not filename:
-            ext = {"python": ".py", "powershell": ".ps1", "batch": ".bat"}.get(language, ".txt")
-            script_id = str(uuid.uuid4())[:8]
-            filename = f"{script_id}{ext}"
-        filepath = os.path.join(SCRIPTS_DIR, filename)
+        filepath = _resolve_output_path(file_path, language)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(code)
+        filename = os.path.basename(filepath)
         index = _load_index()
         script_id = filename.split("_")[0] if "_" in filename else str(uuid.uuid4())[:8]
         index["scripts"][script_id] = {

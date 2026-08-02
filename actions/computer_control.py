@@ -9,6 +9,7 @@ import subprocess
 import json
 import pyautogui
 import pyperclip
+import pygetwindow as gw
 
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 0.02
@@ -119,6 +120,8 @@ def computer_control(parameters: dict, player=None) -> str:
     try:
         if action in ("type", "smart_type"):
             return _type_text(text, clear_first)
+        elif action == "open_and_type":
+            return _open_app_and_type(parameters.get("app", ""), text)
         elif action == "press":
             return _press_key(key)
         elif action == "hotkey":
@@ -262,6 +265,74 @@ def computer_control(parameters: dict, player=None) -> str:
 
     except Exception as e:
         return "Error en computer_control: {}".format(str(e)[:100])
+
+
+def _open_app_and_type(app_name: str, text: str) -> str:
+    if not app_name:
+        return "Error: Necesito el nombre de la app (ej: 'notepad', 'bloc de notas')."
+    if not text:
+        return "Error: Necesito el texto a escribir."
+
+    app_map = {
+        "notepad": "notepad.exe", "bloc de notas": "notepad.exe", "block de notas": "notepad.exe",
+        "bloc": "notepad.exe", "block": "notepad.exe",
+        "calc": "calc.exe", "calculadora": "calc.exe",
+        "cmd": "cmd.exe", "simbolo del sistema": "cmd.exe", "terminal": "cmd.exe",
+        "powershell": "powershell.exe",
+        "word": "winword.exe", "wordpad": "write.exe",
+        "excel": "excel.exe",
+        "paint": "mspaint.exe", "pintura": "mspaint.exe",
+        "explorer": "explorer.exe", "explorador": "explorer.exe",
+        "chrome": "chrome.exe", "edge": "msedge.exe", "firefox": "firefox.exe",
+    }
+
+    exe = app_map.get(app_name.lower().strip(), app_name)
+    try:
+        subprocess.Popen(exe, shell=False)
+    except Exception:
+        try:
+            os.startfile(exe)
+        except Exception as e:
+            return f"No pude abrir '{app_name}': {str(e)[:80]}"
+
+    # Wait for window to appear and focus it
+    keywords = [exe.replace(".exe", "").lower(), app_name.lower(),
+                "bloc de notas", "notepad", "sin título", "calculadora", "paint",
+                "word", "excel", "powershell", "símbolo"]
+
+    time.sleep(0.5)
+    for attempt in range(15):
+        time.sleep(0.3)
+        all_wins = gw.getAllWindows()
+        target = None
+        for w in all_wins:
+            if not w.visible or not w.title:
+                continue
+            for kw in keywords:
+                if kw in w.title.lower():
+                    target = w
+                    break
+            if target:
+                break
+        if target:
+            try:
+                if target.isMinimized:
+                    target.restore()
+                target.activate()
+                time.sleep(0.5)
+                pyperclip.copy(text)
+                time.sleep(0.1)
+                pyautogui.hotkey("ctrl", "v")
+                return "Abierto '{}' y escrito el texto en la ventana.".format(app_name)
+            except Exception:
+                continue
+
+    # Fallback: just type
+    time.sleep(0.5)
+    pyperclip.copy(text)
+    time.sleep(0.1)
+    pyautogui.hotkey("ctrl", "v")
+    return "Abierto '{}'. Se intentó escribir.".format(app_name)
 
 
 def _type_text(text: str, clear_first: bool = False) -> str:

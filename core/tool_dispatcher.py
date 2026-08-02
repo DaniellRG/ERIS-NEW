@@ -277,6 +277,26 @@ class ToolDispatcher:
             ok = not str(result).lower().startswith("error")
             threading.Thread(target=lambda: _eg_on_tool_result(None, name, ok), daemon=True).start()
 
+        # ── Training pipeline: track tool success/failure ──
+        try:
+            from core.training_pipeline import evaluate_tool_usage, learn_from_failure
+            _ok = not str(result).lower().startswith("error")
+            _dur = 0.0
+            threading.Thread(target=lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur), daemon=True).start()
+            if not _ok:
+                threading.Thread(target=lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"), daemon=True).start()
+        except Exception:
+            pass
+
+        # ── Self-learning: learn from mistakes ──
+        try:
+            _ok = not str(result).lower().startswith("error")
+            if not _ok:
+                from actions.self_learning import learn_from_mistake
+                threading.Thread(target=lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parámetros o conexión"}), daemon=True).start()
+        except Exception:
+            pass
+
         if not self.ui.muted:
             self.ui.set_state("LISTENING")
 

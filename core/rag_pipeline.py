@@ -310,3 +310,31 @@ def stats() -> dict:
         "chunks": total_chunks,
         "chroma_entries": chroma_count,
     }
+
+
+class RAGPipeline:
+    """Object-oriented wrapper around the rag_pipeline module API."""
+
+    def __init__(self, base_path=None):
+        self.base_path = str(base_path or _BASE)
+
+    def index(self, path: str | Path) -> str:
+        return index_document(path)
+
+    def query(self, query: str, top_k: int = 5) -> list[dict]:
+        return query_documents(query, top_k=top_k)
+
+    def list_indexed(self) -> list[dict]:
+        return list_indexed()
+
+    def delete(self, path: str | Path) -> str:
+        return delete_index(path)
+
+    def clear(self) -> str:
+        return clear_all()
+
+    def stats(self) -> dict:
+        return stats()
+
+
+rag = RAGPipeline()

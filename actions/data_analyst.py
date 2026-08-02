@@ -8,6 +8,12 @@ from pathlib import Path
 from datetime import datetime
 from collections import Counter, defaultdict
 
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+
 
 def _detect_type(values: list) -> str:
     int_count = 0
@@ -143,6 +149,130 @@ def _col_stats(headers: list[str], rows: list[dict], col: str) -> dict:
         stats["values_sample"] = non_empty[:5]
 
     return stats
+
+
+def _pandas_read(file_path: str):
+    ext = Path(file_path).suffix.lower()
+    if ext == ".csv":
+        return pd.read_csv(file_path, encoding="utf-8-sig")
+    elif ext in (".xlsx", ".xls"):
+        return pd.read_excel(file_path)
+    elif ext == ".json":
+        return pd.read_json(file_path)
+    elif ext == ".parquet":
+        return pd.read_parquet(file_path)
+    elif ext == ".feather":
+        return pd.read_feather(file_path)
+    elif ext == ".tsv":
+        return pd.read_csv(file_path, sep="\t", encoding="utf-8-sig")
+    else:
+        raise ValueError(f"Unsupported format for pandas: {ext}")
+
+
+def _pandas_analyze_full(df: pd.DataFrame) -> str:
+    lines = [
+        f"Pandas Analysis: {df.shape[0]} rows x {df.shape[1]} columns",
+        "=" * 60,
+        "",
+        "Column Types:",
+    ]
+    for col, dtype in df.dtypes.items():
+        nulls = df[col].isna().sum()
+        uniq = df[col].nunique()
+        lines.append(f"  {col}: {dtype} | {uniq} unique | {nulls} nulls")
+
+    lines.append("")
+    lines.append("Descriptive Statistics (numeric):")
+    desc = df.describe(include="number").to_string()
+    for line in desc.split("\n"):
+        lines.append(f"  {line}")
+
+    text_cols = df.select_dtypes(include="object").columns
+    if len(text_cols) > 0:
+        lines.append("")
+        lines.append("Text Columns (top values):")
+        for col in text_cols[:5]:
+            top = df[col].value_counts().head(3)
+            top_str = ", ".join(f"'{k}': {v}" for k, v in top.items())
+            lines.append(f"  {col}: {top_str}")
+
+    lines.append("")
+    lines.append("Missing Values Summary:")
+    missing = df.isna().sum()
+    missing = missing[missing > 0]
+    if len(missing) > 0:
+        for col, cnt in missing.items():
+            pct = cnt / len(df) * 100
+            lines.append(f"  {col}: {cnt} ({pct:.1f}%)")
+    else:
+        lines.append("  No missing values")
+
+    return "\n".join(lines)
+
+
+def _pandas_groupby(df: pd.DataFrame, params: dict) -> str:
+    by = params.get("column", "")
+    agg_col = params.get("agg_column", "")
+    agg_func = params.get("agg_func", "mean")
+    if by not in df.columns:
+        return f"Error: Column '{by}' not found"
+    if agg_col and agg_col not in df.columns:
+        return f"Error: Agg column '{agg_col}' not found"
+
+    if agg_col:
+        grouped = df.groupby(by)[agg_col].agg(agg_func).reset_index()
+        grouped.columns = [by, f"{agg_func}_{agg_col}"]
+    else:
+        grouped = df.groupby(by).size().reset_index(name="count")
+
+    lines = [
+        f"Pandas GroupBy: {by}" + (f" -> {agg_func}({agg_col})" if agg_col else ""),
+        "=" * 60,
+        grouped.to_string(index=False),
+    ]
+    return "\n".join(lines)
+
+
+def _pandas_pivot(df: pd.DataFrame, params: dict) -> str:
+    index = params.get("index", "")
+    columns = params.get("columns", "")
+    values = params.get("values", "")
+    agg = params.get("aggfunc", "mean")
+    if not index or not columns or not values:
+        return "Error: 'index', 'columns', and 'values' required for pivot"
+    for c in [index, columns, values]:
+        if c not in df.columns:
+            return f"Error: Column '{c}' not found"
+
+    try:
+        pivot = pd.pivot_table(df, index=index, columns=columns, values=values, aggfunc=agg)
+        lines = [
+            f"Pivot Table: {values} by {index} and {columns}",
+            "=" * 60,
+            pivot.to_string(),
+        ]
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Error creating pivot: {e}"
+
+
+def _pandas_filter(df: pd.DataFrame, params: dict) -> str:
+    query = params.get("query", "")
+    if not query:
+        return "Error: 'query' parameter required (e.g., query='age > 30')"
+    try:
+        result = df.query(query)
+        lines = [
+            f"Pandas Query: {query}",
+            f"Matched: {len(result)} of {len(df)} rows",
+            "=" * 60,
+            result.to_string(index=False, max_rows=50),
+        ]
+        if len(result) > 50:
+            lines.append(f"... and {len(result) - 50} more rows")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Error in query: {e}"
 
 
 def data_analyst(parameters: dict, player=None) -> str:
@@ -444,8 +574,47 @@ def data_analyst(parameters: dict, player=None) -> str:
 
         return f"Exported {len(rows)} rows to {output} ({fmt})"
 
+    elif action == "pandas":
+        if not HAS_PANDAS:
+            return "Error: pandas not installed. Install with: pip install pandas"
+        try:
+            df = _pandas_read(file_path)
+        except Exception as e:
+            return f"Error reading with pandas: {e}"
+        return _pandas_analyze_full(df)
+
+    elif action == "pivot":
+        if not HAS_PANDAS:
+            return "Error: pandas not installed. Install with: pip install pandas"
+        try:
+            df = _pandas_read(file_path)
+        except Exception as e:
+            return f"Error reading file: {e}"
+        return _pandas_pivot(df, parameters)
+
+    elif action == "pandas_groupby":
+        if not HAS_PANDAS:
+            return "Error: pandas not installed. Install with: pip install pandas"
+        try:
+            df = _pandas_read(file_path)
+        except Exception as e:
+            return f"Error reading file: {e}"
+        return _pandas_groupby(df, parameters)
+
+    elif action == "pandas_filter":
+        if not HAS_PANDAS:
+            return "Error: pandas not installed. Install with: pip install pandas"
+        try:
+            df = _pandas_read(file_path)
+        except Exception as e:
+            return f"Error reading file: {e}"
+        return _pandas_filter(df, parameters)
+
     else:
+        avail = "analyze, summary, filter, sort, group, chart, compare, export"
+        if HAS_PANDAS:
+            avail += ", pandas, pivot, pandas_groupby, pandas_filter"
         return (
             f"Error: Unknown action '{action}'. Available:\n"
-            "  analyze, summary, filter, sort, group, chart, compare, export"
+            f"  {avail}"
         )

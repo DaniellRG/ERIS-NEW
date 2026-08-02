@@ -50,7 +50,7 @@ AGENT_DEFINITIONS = {
             "spotify", "youtube", "calendario", "email", "codigo", "git",
         ],
         "tools": [
-            "web_search", "super_search", "session_search"
+            "web_search", "super_search", "deep_research", "session_search"
         ],
     },
     "security": {
@@ -98,7 +98,8 @@ AGENT_DEFINITIONS = {
             "windows_settings", "computer_settings", "accessibility",
             "screen_reader", "accessibility_overlay",
             "linux_settings", "hyprland_control", "omarchy_control",
-            "shell_executor"
+            "shell_executor",
+            "file_organizer", "file_monitor", "smart_file_organizer"
         ],
     },
     "media": {
@@ -133,7 +134,8 @@ AGENT_DEFINITIONS = {
         ],
         "tools": [
             "google_calendar", "gmail_control", "google_drive",
-            "document_creator", "project_manager", "goals", "reminder",
+            "document_creator", "document_generator", "document_handler",
+            "presentation_generator", "spreadsheet_generator", "project_manager", "goals", "reminder",
             "scheduler"
         ],
     },

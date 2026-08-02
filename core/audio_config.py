@@ -35,7 +35,7 @@ def get_api_key() -> str:
 
 
 ERIS_VOICES = {
-    "Aoede":  ("Femenina", "Cálida y sofisticada — ideal para asistente IA"),
+    "Aoede":  ("Femenina", "Cálida y sofisticada — ideal para asistente IA — RECOMENDADA PARA ERIS"),
     "Kore":   ("Femenina", "Suave y precisa"),
     "Leda":   ("Femenina", "Natural y fluida"),
     "Zephyr": ("Femenina", "Dinámica y expresiva"),
@@ -49,6 +49,10 @@ ERIS_VOICES = {
 def get_eris_voice() -> str:
     try:
         cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
-        return cfg.get("eris_voice", cfg.get("jarvis_voice", "Aoede"))
+        voice = cfg.get("eris_voice", cfg.get("jarvis_voice", "Aoede"))
+        # Strip suffixes like " (Warm)" or " (Femenina)" in case UI saved display text
+        if " (" in voice:
+            voice = voice.split(" (")[0]
+        return voice
     except Exception:
         return "Aoede"

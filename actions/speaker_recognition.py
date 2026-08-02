@@ -3,7 +3,7 @@
 speaker_recognition.py — ERIS Speaker Recognition & Voice Analysis.
 Identifies WHO is speaking, gender, pitch, tone, and voice characteristics.
 
-Uses: sounddevice (mic capture), numpy/scipy (audio analysis), speech_recognition (STT).
+Uses: sounddevice (mic capture), numpy (audio analysis).
 Speaker identification via MFCC-like feature extraction + cosine similarity.
 
 Actions:
@@ -27,9 +27,6 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-from scipy.io import wavfile
-from scipy.fftpack import fft
-from scipy.signal import lfilter, butter
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROFILES_DIR = BASE_DIR / "data" / "voice_profiles"
@@ -76,9 +73,15 @@ def _save_wav(audio: np.ndarray, path: str, sample_rate: int = SAMPLE_RATE):
 
 def _load_wav(path: str) -> tuple:
     """Load WAV file, return (sample_rate, audio_array)."""
-    sr, data = wavfile.read(path)
-    if data.dtype != np.float64:
-        data = data.astype(np.float64) / 32768.0
+    import wave as _wave
+    with _wave.open(path, "rb") as wf:
+        sr = wf.getframerate()
+        channels = wf.getnchannels()
+        raw = wf.readframes(wf.getnframes())
+    data = np.frombuffer(raw, dtype=np.int16)
+    if channels > 1:
+        data = data[::channels]
+    data = data.astype(np.float64) / 32768.0
     return sr, data
 
 
@@ -137,7 +140,7 @@ def _extract_mfcc(audio: np.ndarray, sr: int = SAMPLE_RATE) -> np.ndarray:
     frames *= hamming
 
     # FFT
-    mag_frames = np.absolute(fft(frames, N_FFT))
+    mag_frames = np.absolute(np.fft.fft(frames, N_FFT))
     pow_frames = (1.0 / N_FFT) * (mag_frames[:, :N_FFT // 2 + 1] ** 2)
 
     # Mel filterbank
@@ -246,7 +249,7 @@ def _analyze_energy(audio: np.ndarray) -> dict:
 
 def _analyze_spectral(audio: np.ndarray, sr: int = SAMPLE_RATE) -> dict:
     """Analyze spectral characteristics."""
-    spectrum = np.abs(fft(audio))
+    spectrum = np.abs(np.fft.fft(audio))
     freqs = np.fft.fftfreq(len(audio), 1 / sr)
 
     # Only positive frequencies

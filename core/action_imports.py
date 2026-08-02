@@ -333,9 +333,14 @@ try:
 except ImportError:
     auto_programmer = None
 try:
-    from actions.self_edit import self_edit
+    from actions.self_edit import self_edit, self_modify
 except ImportError:
     self_edit = None
+    self_modify = None
+try:
+    from actions.self_improvement_loop import self_improvement_loop
+except ImportError:
+    self_improvement_loop = None
 try:
     from actions.self_awareness import self_awareness
 except ImportError:
@@ -442,6 +447,18 @@ try:
     from actions.webfetch import webfetch
 except ImportError:
     webfetch = None
+try:
+    from actions.document_generator import document_generator
+except ImportError:
+    document_generator = None
+try:
+    from actions.presentation_generator import presentation_generator
+except ImportError:
+    presentation_generator = None
+try:
+    from actions.spreadsheet_generator import spreadsheet_generator
+except ImportError:
+    spreadsheet_generator = None
 try:
     from actions.ask_user import ask_user
 except ImportError:
@@ -887,6 +904,18 @@ try:
     from actions.webfetch import webfetch
 except ImportError:
     webfetch = None
+try:
+    from actions.document_generator import document_generator
+except ImportError:
+    document_generator = None
+try:
+    from actions.presentation_generator import presentation_generator
+except ImportError:
+    presentation_generator = None
+try:
+    from actions.spreadsheet_generator import spreadsheet_generator
+except ImportError:
+    spreadsheet_generator = None
 try:
     from actions.ask_user import ask_user
 except ImportError:
