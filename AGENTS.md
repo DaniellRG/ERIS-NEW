@@ -52,9 +52,20 @@ $env:PYTHONIOENCODING="utf-8"; & .venv\Scripts\python.exe -c "import sys; sys.pa
    (registro en memoria) y `core/tool_declarations.py` (declaraciones para la API),
    luego verificar: `len(registradas)==len(declaradas)` y 0 duplicados, y REINICIAR ERIS.
 7. **Ollama**: exe en `C:\Users\danie\AppData\Local\Programs\Ollama\ollama.exe`
-   (serve v0.30.8). Modelos: `phi`, `tinyllama`, `nomic-embed-text`, `minicpm-v`.
-   Config: `ollama_enabled=true`, `ollama_model=phi`. No usar modelos no instalados
-   (p.ej. `llama3.2` → cambiar a `phi`).
+   (serve v0.30.8). Modelos: `phi`, `tinyllama`, `nomic-embed-text`, `minicpm-v`,
+   `qwen3:14b` (9.3GB, ~10 tok/s — MUY lento) y **`qwen3:8b`** (37-63 tok/s, el bueno).
+   No usar modelos no instalados (p.ej. `llama3.2`). Si el serve no corre:
+   `Start-Process "C:\Users\danie\AppData\Local\Programs\Ollama\ollama.exe" serve`.
+8. **Ollama tool_calls**: `tool_calls[].function.arguments` llega como **dict** (no
+   string) → no hacer `json.loads` directo; parsear con `isinstance(raw_args, dict)`.
+9. **edge-tts** (`core/tts_engine.py`): `synthesize()` es **asíncrono** — llamarlo con
+   `asyncio.run(...)`. Requiere `imageio-ffmpeg` instalado (ffmpeg estático; no hay
+   ffmpeg en el sistema). `get_voice()` devuelve la voz de otro backend (p.ej.
+   "Zephyr") que edge rechaza → `_synthesize_edge` valida contra `_EDGE_VOICES.values()`
+   y cae a `es-AR-ElenaNeural`. PCM resultante: s16le 24000 Hz mono.
+10. **Vosk** (`core/offline_voice.py`): `vosk.KaldiRecognizer` recibe un objeto
+    `vosk.Model(...)`, NO la ruta string (si no: `'str' object has no attribute '_handle'`).
+    Modelo es: `data/vosk-model-es`.
 
 ## Arquitectura
 
@@ -76,6 +87,8 @@ $env:PYTHONIOENCODING="utf-8"; & .venv\Scripts\python.exe -c "import sys; sys.pa
 | Integración | Estado | Key/archivo requerido |
 |---|---|---|
 | OpenAI / Gemini | OK | `api_keys.json` (`gemini_api_key`, `openrouter_api_key`) |
+| Cerebro dual (fallback) | OK | `local_brain_enabled=true`, `local_brain_model=qwen3:8b`, `cloud_brain_model=google/gemini-2.5-pro`, `local_tools_enabled=true` |
+| Voz local (fallback) | OK | `core/offline_voice.py`: Vosk→cerebro dual→edge-tts; se activa al entrar fallback (≥5 fails de cuota) |
 | Spotify | OK | `spotify_token.json` |
 | Ollama (respaldo LLM) | OK | `ollama_enabled=true`, `ollama_model=phi` |
 | RAG (memoria) | OK | 27 docs indexados |
@@ -84,6 +97,12 @@ $env:PYTHONIOENCODING="utf-8"; & .venv\Scripts\python.exe -c "import sys; sys.pa
 | Gmail/Calendar/Drive | PENDIENTE | OAuth client |
 | SMS | PENDIENTE | Twilio (`twilio_account_sid`, `twilio_auth_token`, `twilio_from`) o `sms_gateway_url` |
 | TMDB / OpenWeather | OPCIONAL | `tmdb_api_key`, `openweather_api_key` (clima ya funciona con wttr.in) |
+
+Cerebro dual: `core/local_brain.py` enruta por heurística (largo>260 o regex
+`_CLOUD_HINTS` → OpenRouter nube; sino → Ollama local `qwen3:8b` con tool-calling de
+14 tools del registry). Fallback de chat en `main.py` → `get_brain().respond(text)` +
+`_announce()`. Requiere `quick_check()` (verifica que Ollama esté arriba).
+`weather_report` necesita User-Agent `curl/8.0` (Mozilla devuelve HTML de wttr.in).
 
 Asistente interactivo para integrar: `.venv\Scripts\python.exe config\setup_integrations.py`
 
