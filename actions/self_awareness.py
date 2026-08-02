@@ -317,7 +317,7 @@ def self_awareness(parameters: dict = None, player=None) -> str:
         lines.append(f"  Última reflexión: {datetime.now().isoformat()}")
         return "\n".join(lines)
 
-    elif action == "log":
+    elif action in ("log", "analyze_conversations"):
         content = params.get("content", "").strip()
         if not content:
             return "¿Qué quiere ERIS escribir sobre sí misma?"
@@ -344,7 +344,7 @@ def self_awareness(parameters: dict = None, player=None) -> str:
             lines.append("")
         return "\n".join(lines)
 
-    elif action == "metacognition":
+    elif action in ("metacognition", "analyze_prompts"):
         meta = _update_metacognition()
 
         lines = ["═══ META-COGNICIÓN ───", ""]
@@ -381,7 +381,7 @@ def self_awareness(parameters: dict = None, player=None) -> str:
             lines.append(f"  [{ts}] {content}")
         return "\n".join(lines)
 
-    elif action == "status":
+    elif action in ("status", "report"):
         _analyze_self()
         identity = _load_json(_IDENTITY_FILE)
         log = _load_json(_LOG_FILE)
@@ -434,7 +434,7 @@ def self_awareness(parameters: dict = None, player=None) -> str:
         from core.self_map import get_capabilities
         return get_capabilities(parameters, player)
 
-    elif action == "search_code":
+    elif action in ("search_code", "analyze_code"):
         from core.self_map import search_my_code
         return search_my_code(parameters, player)
 

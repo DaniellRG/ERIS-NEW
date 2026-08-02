@@ -37,6 +37,8 @@ def email_manager(parameters: dict = None, player=None) -> str:
         return _get_status()
     elif action == "list":
         return _list_emails(params)
+    elif action == "list_inbox":
+        return _list_emails(params)
     elif action == "read":
         return _read_email(params)
     elif action == "send":
@@ -47,7 +49,7 @@ def email_manager(parameters: dict = None, player=None) -> str:
         return _list_folders()
     elif action == "unread_count":
         return _unread_count()
-    elif action == "mark_read":
+    elif action in ("mark_read", "mark_as"):
         return _mark_read(params)
     elif action == "delete":
         return _delete_email(params)

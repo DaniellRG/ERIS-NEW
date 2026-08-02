@@ -50,6 +50,47 @@ def set_backend(backend: str, voice: str = ""):
     API_CFG_PATH.write_text(json.dumps(cfg, indent=4, ensure_ascii=False), encoding="utf-8")
 
 
+def _save_cfg(cfg: dict):
+    API_CFG_PATH.write_text(json.dumps(cfg, indent=4, ensure_ascii=False), encoding="utf-8")
+
+
+def tts_set_voice(parameters: dict, player=None) -> str:
+    """Tool: configura el motor TTS (selecciona voz, velocidad, backend)."""
+    action = (parameters.get("action") or "list_voices").lower().strip()
+    if action == "list_voices":
+        cfg = _load_cfg()
+        voices = ", ".join(sorted(set(_EDGE_VOICES.values())))
+        return (f"Backend actual: {cfg.get('tts_backend', 'gemini')} | "
+                f"Voz: {cfg.get('tts_voice', '')} | Velocidad: {cfg.get('tts_speed', 1.0)}\n"
+                f"Voces edge disponibles: {voices}")
+    if action == "set_voice":
+        voice = (parameters.get("voice") or "").strip()
+        if not voice:
+            return "Dime el nombre de la voz a usar."
+        cfg = _load_cfg()
+        cfg["tts_voice"] = voice
+        _save_cfg(cfg)
+        return f"Voz configurada: {voice}"
+    if action == "set_speed":
+        try:
+            speed = float(parameters.get("speed", 1.0))
+        except (TypeError, ValueError):
+            return "Velocidad inválida. Usá un número entre 0.5 y 2.0."
+        cfg = _load_cfg()
+        cfg["tts_speed"] = max(0.5, min(2.0, speed))
+        _save_cfg(cfg)
+        return f"Velocidad de voz configurada: {cfg['tts_speed']}"
+    if action == "set_backend":
+        backend = (parameters.get("backend") or "edge").lower().strip()
+        if backend not in ("edge", "gemini", "kokoro", "bark"):
+            return f"Backend no soportado: {backend}. Opciones: edge, gemini, kokoro, bark."
+        cfg = _load_cfg()
+        cfg["tts_backend"] = backend
+        _save_cfg(cfg)
+        return f"Backend TTS configurado: {backend}"
+    return "Acciones: list_voices, set_voice, set_speed, set_backend"
+
+
 async def synthesize(text: str, backend: str | None = None, voice: str | None = None) -> bytes:
     """Synthesize text to PCM audio (24kHz, mono, int16).
     Returns full WAV bytes ready for playback.
@@ -82,7 +123,15 @@ async def _synthesize_edge(text: str, voice: str = "") -> bytes:
     if not voice or voice == "bark" or voice not in _EDGE_VOICES.values():
         voice = _EDGE_VOICES.get("es-ar", "es-AR-ElenaNeural")
 
-    communicate = edge_tts.Communicate(text, voice)
+    rate = ""
+    try:
+        speed = float(_load_cfg().get("tts_speed", 1.0))
+        if speed and speed != 1.0:
+            rate = f"{'+' if speed > 1 else ''}{int(round((speed - 1) * 100))}%"
+    except Exception:
+        rate = ""
+
+    communicate = edge_tts.Communicate(text, voice, rate=rate)
     audio_chunks: list[bytes] = []
     async for chunk in communicate.stream():
         if chunk["type"] == "audio":

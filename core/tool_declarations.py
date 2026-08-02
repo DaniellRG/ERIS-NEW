@@ -1097,11 +1097,11 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "skill_manage",
-        "description": "Manage ERIS skills: list, enable, disable",
+        "description": "Manage ERIS skills: list, view, create, edit, patch, delete, sync",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "list, enable, disable, info, create, delete"},
+                "action": {"type": "STRING", "description": "list, view, create, edit, patch, delete, sync"},
                 "skill": {"type": "STRING", "description": "Skill name"},
             },
             "required": ["action"],

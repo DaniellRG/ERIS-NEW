@@ -223,7 +223,7 @@ def ocr_reader(parameters: dict, player=None) -> str:
         data = _ocr_image(path)
         return _format_result(data, path)
 
-    elif action == "read_screenshot":
+    elif action in ("read_screenshot", "read_from_screen"):
         clipboard_script = """
 Add-Type -AssemblyName System.Windows.Forms
 $clip = [System.Windows.Forms.Clipboard]::GetImage()
@@ -276,4 +276,9 @@ if ($clip) {{
         except Exception as e:
             return f"Error downloading image: {e}"
 
-    return f"Unknown action: {action}. Available: read_image, read_screenshot, read_url"
+    elif action == "languages":
+        return ("Idiomas OCR: depende del motor instalado. "
+                "Instalá Tesseract (https://github.com/tesseract-ocr/tesseract) y configurá "
+                "TESSERACT_CMD para soportar español ('spa') y otros idiomas.")
+
+    return f"Unknown action: {action}. Available: read_image, read_screenshot, read_from_screen, read_url, languages"

@@ -6,10 +6,36 @@ import traceback
 
 def web_navigation(parameters: dict, player=None) -> str:
     """
-    Maneja la navegación web, en especial reproducir música en YouTube u otras páginas.
+    Maneja la navegación web: abrir URLs, YouTube, búsquedas y control del navegador.
     """
-    action = parameters.get("action", "").lower()
+    action = (parameters.get("action") or "").lower()
     query = parameters.get("query", "")
+    url = (parameters.get("url") or "").strip()
+
+    if action in ("back", "forward", "refresh", "close"):
+        try:
+            import pyautogui
+            if action == "back":
+                pyautogui.hotkey("alt", "left")
+                return "Navegador: atrás."
+            if action == "forward":
+                pyautogui.hotkey("alt", "right")
+                return "Navegador: adelante."
+            if action == "refresh":
+                pyautogui.hotkey("ctrl", "r")
+                return "Navegador: página recargada."
+            pyautogui.hotkey("ctrl", "w")
+            return "Navegador: pestaña cerrada."
+        except Exception as e:
+            return f"Error controlando el navegador: {e}"
+
+    if action == "navigate":
+        if not url:
+            return "Falta la URL a navegar (parámetro 'url')."
+        if not url.startswith(("http://", "https://")):
+            url = "https://" + url
+        webbrowser.open(url)
+        return f"He abierto la URL {url} en tu navegador."
 
     if not action or not query:
         return "Error: Faltan parámetros ('action' o 'query')."

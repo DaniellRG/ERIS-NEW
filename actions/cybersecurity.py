@@ -1201,7 +1201,7 @@ def cybersecurity(parameters: dict, player=None) -> str:
     action = parameters.get("action", "topics").lower()
     data = _load_progress()
 
-    if action == "topics":
+    if action in ("topics", "tips"):
         result = "**🔒 Cybersecurity Topics**\n\n"
         for key, topic in TOPICS.items():
             count = len(topic.get("subtopics", {}))
@@ -1211,7 +1211,7 @@ def cybersecurity(parameters: dict, player=None) -> str:
         result += f"\nTopics studied: {len(data['topics_studied'])}/{len(TOPICS)} | Subtopics completed: {len(data['subtopics_completed'])}"
         return result
 
-    elif action == "learn":
+    elif action in ("learn", "teach"):
         topic = parameters.get("topic", "")
         subtopic = parameters.get("subtopic", "")
         if not topic:
@@ -1375,6 +1375,12 @@ def cybersecurity(parameters: dict, player=None) -> str:
             return f"🔒 Saved to Obsidian: Aprendizaje/CyberSec: {title}.md"
         except Exception as e:
             return f"Could not save to Obsidian: {e}"
+
+    elif action in ("scan", "analyze", "vuln"):
+        target = parameters.get("target", "")
+        return ("Las herramientas de escaneo ('scan', 'analyze', 'vuln') no están "
+                "habilitadas en ERIS para evitar uso indebido. Usá 'learn' o 'search' "
+                "para estudiar el tema" + (f" de '{target}'" if target else "") + ".")
 
     available = "topics | learn | search | lab | progress | tools | quiz | save_to_obsidian"
     return f"Action '{action}' not found. Available: {available}"

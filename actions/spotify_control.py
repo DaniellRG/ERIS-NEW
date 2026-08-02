@@ -245,7 +245,7 @@ def _api_control(sp, action, params, player=None):
         sp.repeat(mode)
         return f"🔁 Repeat: {mode}"
 
-    elif action == "current":
+    elif action in ("current", "now_playing"):
         cur = sp.current_playback()
         if cur is None or cur.get("item") is None:
             return "Nada reproduciéndose."
@@ -306,7 +306,7 @@ def _api_control(sp, action, params, player=None):
             lines.append(f"  • {p.get('name', '?')} ({p.get('tracks', {}).get('total', 0)} canciones)")
         return "\n".join(lines)
 
-    elif action == "volume":
+    elif action in ("volume", "set_volume"):
         return _keyboard_control(action, params, player)
 
     return f"Acción desconocida: {action}"
@@ -316,7 +316,7 @@ def _api_control(sp, action, params, player=None):
 
 def _keyboard_control(action, params, player=None):
     import pyautogui
-    value = params.get("value", "")
+    value = params.get("value", params.get("volume", ""))
 
     if action in ("play", "pause", "resume", "toggle"):
         pyautogui.press("playpause")
@@ -327,7 +327,7 @@ def _keyboard_control(action, params, player=None):
     elif action in ("prev", "previous", "back"):
         pyautogui.press("prevtrack")
         r = "⏮️ Anterior"
-    elif action == "volume":
+    elif action in ("volume", "set_volume"):
         v = str(value).lower()
         if "up" in v:
             pyautogui.press("volumeup", presses=5)
@@ -337,11 +337,8 @@ def _keyboard_control(action, params, player=None):
             r = "🔉 Volumen -"
         elif v.replace(".", "").lstrip("-").isdigit():
             try:
-                from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-                from comtypes import CLSCTX_ALL
-                dev = AudioUtilities.GetSpeakers()
-                interface = dev.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-                vol_obj = interface.QueryInterface(IAudioEndpointVolume)
+                from pycaw.pycaw import AudioUtilities
+                vol_obj = AudioUtilities.GetSpeakers().EndpointVolume
                 vol_obj.SetMasterVolumeLevelScalar(max(0.0, min(1.0, float(v) / 100.0)), None)
                 r = f"🔊 Volumen {v}%"
             except Exception:

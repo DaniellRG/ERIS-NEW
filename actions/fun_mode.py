@@ -37,8 +37,31 @@ FUN_FACTS = [
     "El Internet original solo conectaba 4 universidades en 1969.",
 ]
 
-TRIVIA_QUESTIONS = [
-    {"q": "¿Qué lenguaje se usa más en inteligencia artificial?", "a": "Python", "opts": ["Java", "Python", "C++", "Ruby"]},
+QUOTES = [
+    "El éxito es la suma de pequeños esfuerzos repetidos día tras día. — Robert Collier",
+    "No cuentes los días, haz que los días cuenten. — Muhammad Ali",
+    "La mejor forma de predecir el futuro es creándolo. — Peter Drucker",
+    "Cree que puedes y ya estás a mitad de camino. — Theodore Roosevelt",
+    "El único modo de hacer un gran trabajo es amar lo que haces. — Steve Jobs",
+    "La disciplina es el puente entre metas y logros. — Jim Rohn",
+    "Aprender nunca agota la mente. — Leonardo da Vinci",
+    "El que no arriesga, no gana. — Proverbio",
+    "La imaginación es más importante que el conocimiento. — Albert Einstein",
+    "Todo lo que puedas imaginar es real. — Pablo Picasso",
+]
+
+RIDDLES = [
+    {"q": "Tengo ciudades, pero no casas; montañas, pero no árboles; agua, pero sin peces. ¿Qué soy?", "a": "un mapa"},
+    {"q": "Cuanto más quito, más grande se hace. ¿Qué es?", "a": "un agujero"},
+    {"q": "Blanca por dentro, verde por fuera. Si quieres que te lo diga, espera.", "a": "la pera"},
+    {"q": "Todos me pisan pero yo no piso a nadie.", "a": "el suelo"},
+    {"q": "Tiene dientes y no muerde, tiene cabeza y no piensa. ¿Qué es?", "a": "el ajo"},
+    {"q": "Oro parece, plata no es. ¿Qué es?", "a": "el plátano"},
+    {"q": "Vuela sin alas y silba sin boca. ¿Qué es?", "a": "el viento"},
+    {"q": "Somos dos hermanas que siempre andamos juntas, nunca nos alcanzamos y siempre nos juntamos. ¿Qué somos?", "a": "las piernas"},
+]
+
+TRIVIA_QUESTIONS = [    {"q": "¿Qué lenguaje se usa más en inteligencia artificial?", "a": "Python", "opts": ["Java", "Python", "C++", "Ruby"]},
     {"q": "¿Cuántos bits tiene un byte?", "a": "8", "opts": ["4", "8", "16", "32"]},
     {"q": "¿Qué significa HTML?", "a": "HyperText Markup Language", "opts": ["HyperText Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyper Transfer Markup Language"]},
     {"q": "¿En qué año se fundó Google?", "a": "1998", "opts": ["1995", "1998", "2000", "2001"]},
@@ -71,6 +94,14 @@ def fun_mode(parameters: dict, player=None) -> str:
         return "\n".join(random.sample(JOKES, min(5, len(JOKES))))
     elif action in ("facts", "datos"):
         return "\n".join(random.sample(FUN_FACTS, min(5, len(FUN_FACTS))))
+    elif action in ("quote", "frase", "cita"):
+        return "💬 " + random.choice(QUOTES)
+    elif action in ("riddle", "acertijo"):
+        q = random.choice(RIDDLES)
+        _riddle_state["current"] = q
+        return f"🤔 {q['q']}"
+    elif action in ("riddle_answer", "answer_riddle"):
+        return _check_riddle(parameters.get("answer") or "")
     else:
         category = random.choice(["joke", "fact", "trivia"])
         if category == "joke":
@@ -116,3 +147,14 @@ def _get_score():
     if t == 0:
         return "Aún no jugaste ninguna trivia."
     return f"Tu puntaje: {c}/{t} ({c/t*100:.0f}% de aciertos)"
+
+_riddle_state = {"current": None}
+
+
+def _check_riddle(answer):
+    current = _riddle_state.get("current")
+    if not current:
+        return "No hay acertijo activo. Pedime uno."
+    if current["a"] in answer.strip().lower():
+        return f"✅ ¡Correcto! La respuesta es: {current['a']}"
+    return f"❌ No, la respuesta era: {current['a']}. Pedime otro."

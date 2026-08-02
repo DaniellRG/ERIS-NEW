@@ -55,10 +55,29 @@ def voice_clone(parameters: dict, player=None) -> str:
         return _check_quality(parameters)
     elif action == "switch":
         return _switch_voice(parameters)
-    elif action == "list":
+    elif action in ("list", "list_voices"):
         return _list_voices(parameters)
+    elif action == "delete":
+        profile_name = parameters.get("profile", "")
+        if not profile_name:
+            return "'profile' parameter required (or use samples with sub_action=delete)."
+        profiles = _load_profiles()
+        if profile_name not in profiles["profiles"]:
+            return f"Profile '{profile_name}' not found."
+        del profiles["profiles"][profile_name]
+        _save_profiles(profiles)
+        return f"Profile '{profile_name}' deleted."
+    elif action == "train":
+        return ("Entrenamiento de clon de voz no disponible: requiere un modelo tipo Coqui TTS "
+                "/ XTTS v2 (pip install TTS) y GPU. Podés gestionar muestras con 'samples'.")
+    elif action == "synthesize":
+        return ("Síntesis con voz clonada no disponible sin un modelo entrenado. "
+                "Usá la tool 'tts' (edge-tts) para síntesis neural de alta calidad.")
+    elif action == "compare":
+        return ("Comparación de voces no disponible sin modelos entrenados. "
+                "Podés listar voces con 'list_voices' y probar cada una con la tool 'tts'.")
     else:
-        return f"Unknown action: {action}. Valid: profile, samples, quality, switch, list"
+        return f"Unknown action: {action}. Valid: profile, samples, quality, switch, list, delete, train, synthesize, compare"
 
 
 def _get_set_profile(parameters: dict):

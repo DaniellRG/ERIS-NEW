@@ -27,6 +27,34 @@ def _get_token():
     return keys.get("telegram_bot_token", os.environ.get("TELEGRAM_BOT_TOKEN", ""))
 
 
+def _send_file(parameters):
+    chat_id = (parameters.get("chat_id") or "").strip()
+    file_path = (parameters.get("file_path") or "").strip()
+    caption = parameters.get("text") or ""
+    if not chat_id or not file_path:
+        return "Faltan 'chat_id' y 'file_path' para enviar el archivo."
+    if not os.path.isfile(file_path):
+        return f"Archivo no encontrado: {file_path}"
+    token = _get_token()
+    if not token:
+        return "No Telegram bot token configured. Set in config/api_keys.json"
+    try:
+        import requests
+        with open(file_path, "rb") as f:
+            resp = requests.post(
+                f"https://api.telegram.org/bot{token}/sendDocument",
+                data={"chat_id": chat_id, "caption": caption},
+                files={"document": (os.path.basename(file_path), f)},
+                timeout=30,
+            )
+        data = resp.json()
+        if data.get("ok"):
+            return f"Archivo enviado a {chat_id}: {os.path.basename(file_path)}"
+        return f"Error de Telegram: {data.get('description', data)}"
+    except Exception as e:
+        return f"Error enviando archivo: {e}"
+
+
 def _api_call(method, data=None, token=None):
     if not token:
         token = _get_token()
@@ -53,8 +81,10 @@ def telegram_bot(parameters: dict, player=None) -> str:
         return _send_message(parameters)
     elif action == "list_chats":
         return _list_chats(parameters)
-    elif action == "read_messages":
+    elif action in ("read_messages", "get_updates"):
         return _read_messages(parameters)
+    elif action == "send_file":
+        return _send_file(parameters)
     elif action == "start_bot":
         return _start_bot(parameters)
     elif action == "stop_bot":

@@ -193,5 +193,21 @@ def audio_transcriber(parameters: dict, player=None) -> str:
             lines.append(f"     \"{text_preview}{'...' if len(entry.get('text', '')) > 80 else ''}\"")
         return "\n".join(lines)
 
+    elif action == "list_models":
+        return ("Modelos de transcripción disponibles (faster-whisper):\n"
+                "  - tiny   (~75 MB, rápido, menos preciso)\n"
+                "  - base   (~145 MB, balance)\n"
+                "  - small  (~460 MB, preciso)\n"
+                "  - medium (~1.5 GB, muy preciso)\n"
+                "  - large-v3 (~3 GB, máxima precisión)\n"
+                "Parámetro 'model' para elegir (default base). Requiere: pip install faster-whisper")
+
+    elif action == "transcribe_mic":
+        try:
+            import faster_whisper  # noqa: F401
+        except ImportError:
+            return "Para transcribir desde el micrófono necesito instalar faster-whisper: pip install faster-whisper"
+        return "transcribe_mic aún no está implementado. Usá 'transcribe' con un archivo o el Modo Suspención con Vosk."
+
     else:
-        return f"Error: Unknown action '{action}'. Available: transcribe, transcribe_clipboard, languages, history"
+        return f"Error: Unknown action '{action}'. Available: transcribe, transcribe_mic, list_models, transcribe_clipboard, languages, history"

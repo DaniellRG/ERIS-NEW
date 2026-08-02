@@ -112,5 +112,36 @@ def smart_file_organizer(parameters: dict, player=None) -> str:
         except Exception as e:
             return f"Error leyendo espacio de disco: {e}"
 
+    elif action == "stats":
+        try:
+            if not target_path.exists() or not target_path.is_dir():
+                return f"No existe el directorio: {directory}"
+            from collections import Counter
+            ext_counts = Counter()
+            total_files = 0
+            total_size = 0
+            for f in target_path.rglob("*"):
+                if f.is_file():
+                    total_files += 1
+                    total_size += f.stat().st_size
+                    ext_counts[f.suffix.lower() or "(sin ext)"] += 1
+            top = ext_counts.most_common(10)
+            lines = [f"Estadísticas de '{target_path.name}':",
+                     f"  Archivos: {total_files}",
+                     f"  Tamaño total: {total_size / (1024**2):.1f} MB"]
+            if top:
+                lines.append("  Por extensión:")
+                for ext, n in top:
+                    lines.append(f"    - {ext}: {n}")
+            return "\n".join(lines)
+        except Exception as e:
+            return f"Error calculando estadísticas: {e}"
+
+    elif action == "learn":
+        return "Modo 'learn': el organizador aprende patrones al usar 'organize'. Ejecutá 'organize' con un directorio."
+
+    elif action == "undo":
+        return "No hay historial de deshacer disponible para esta sesión."
+
     else:
         return f"Acción '{action}' no reconocida por el organizador inteligente de archivos."

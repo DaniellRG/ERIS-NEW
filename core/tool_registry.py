@@ -144,7 +144,7 @@ _TOOLS = {
     # ── Meta ──
     "ollama_status":         ("core.model_router", "status"),
     "voice_recognition":     ("core.voice_recognition", "voice_recognition"),
-    "tts_set_voice":         ("core.tts_engine", "set_backend"),
+    "tts_set_voice":         ("core.tts_engine", "tts_set_voice"),
 
     # ── Skills ──
     "skill_manage":          ("skills.skill_registry", "skill_manage"),
