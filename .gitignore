@@ -34,3 +34,14 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+config/eris_learning.json
+config/research_log.json
+config/user_profile.json
+data/chroma_db/
+data/knowledge_base/
+data/completed_tasks.json
+data/idle_learning.json
+data/search_history.json
+data/self/
+data/self_healing_errors.json
+data/self_healing_state.json
