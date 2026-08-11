@@ -1978,6 +1978,8 @@ class ErisLive:
 
         reconnect_delay   = 1.0
         consecutive_fails = 0
+        _last_session_ok  = False   # sesión previa estable (>=30s) → resetear backoff
+        _session_started  = 0.0     # marca de tiempo de la sesión actual
 
         while True:
             try:
@@ -2013,6 +2015,14 @@ class ErisLive:
                             print(f"[ERIS] 🧹 Drained {_drained} stale audio chunks")
 
                     print("[ERIS] ✅ Conectado.")
+                    # Solo resetear backoff si la sesión anterior fue estable (>=30s).
+                    # Si la API cortó al instante (ej. 1008 por cuota), mantener el
+                    # contador para que el backoff crezca y active el fallback Ollama.
+                    if _last_session_ok:
+                        reconnect_delay   = 1.0
+                        consecutive_fails = 0
+                    _last_session_ok = False
+                    _session_started = time.monotonic()
                     # Activación por nombre: estado inicial en standby
                     self._wake_gate_open = not self._wake_mode
                     self._wake_buffer = []
@@ -2111,6 +2121,10 @@ class ErisLive:
 
             except Exception as e:
                 exceptions = e.exceptions if isinstance(e, ExceptionGroup) else [e]
+
+                # La sesión anterior fue estable si vivió >=30s; eso habilita
+                # el reset del backoff en la próxima conexión.
+                _last_session_ok = (time.monotonic() - _session_started) >= 30.0
 
                 is_handshake_timeout = False
                 is_config_reconnect  = False
@@ -2214,7 +2228,17 @@ class ErisLive:
                     )
                 else:
                     print("[FALLBACK] Ollama no disponible. Reintentando Gemini...")
+                    if not getattr(self, "_backoff_warned", False):
+                        self._backoff_warned = True
+                        self.ui.write_log(
+                            "SYS: ⚠️ Gemini caído por cuota/política. Ollama no disponible.\n"
+                            "SYS: Reintentando con espera progresiva (hasta 90s)."
+                        )
                     consecutive_fails = 3  # lower fails to avoid permanent loop
+            else:
+                # Streak limpio: resetear el aviso para la próxima racha
+                if getattr(self, "_backoff_warned", False):
+                    self._backoff_warned = False
 
             # ── Desactivar fallback si Gemini se reconectó ────────────────
             if consecutive_fails == 0 and self._fallback_mode:

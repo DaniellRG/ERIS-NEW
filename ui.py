@@ -298,15 +298,13 @@ class ParticleOrb(QWidget):
         self._audio_level = level * 0.5
 
     def _apply_frame_rate(self):
-        """FPS adaptativos: ahorra CPU cuando ERIS está en reposo u oculta."""
+        """FPS adaptativos: suaves en pantalla (60 FPS), ahorra CPU al ocultarse."""
         if not self.isVisible():
             target = 300
-        elif self._state in ("SPEAKING", "THINKING", "LISTENING"):
-            target = 16
-        elif self._state in ("INITIATING", "MUTED", "ERROR"):
-            target = 50
+        elif self._state in ("MUTED", "ERROR"):
+            target = 33   # estados raros: 30 FPS bastan
         else:
-            target = 100
+            target = 16   # IDLE y activos: 60 FPS fluidos (antes IDLE caía a 10 FPS)
         if self._timer.interval() != target:
             self._timer.start(target)
 
