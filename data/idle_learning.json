@@ -1,357 +1,529 @@
 {
-  "total_idle_sessions": 34,
-  "total_topics_learned": 68,
-  "last_session": "2026-07-27T22:37:33.223427",
+  "total_idle_sessions": 189,
+  "total_topics_learned": 20,
+  "last_session": "2026-08-11T11:45:18.997113",
   "topics_learned": [
-    "automatizacion tareas inteligentes IA",
-    "inteligencia artificial explicativa",
-    "computacion cuantica avances recientes",
-    "seguridad datos privacidad GDPR",
     "Docker Kubernetes mejoras recientes",
-    "bases de datos nuevas tendencias NoSQL",
     "machine learning modelos nuevos 2026",
-    "redes 5G 6G tecnologias nuevas"
+    "nuevos frameworks programacion tendencias",
+    "robotica automatizacion avances",
+    "energias renovables tecnologia",
+    "blockchain aplicaciones reales 2026",
+    "ultimos avances inteligencia artificial 2026",
+    "vehiculos autonomos avances",
+    "cloud computing servicios nuevos",
+    "redes 5G 6G tecnologias nuevas",
+    "bases de datos nuevas tendencias NoSQL",
+    "seguridad datos privacidad GDPR",
+    "inteligencia artificial explicativa",
+    "Python nuevas caracteristicas version",
+    "automatizacion tareas inteligentes IA",
+    "desarrollo software metodologias agiles",
+    "biotecnologia bioinformatica avances",
+    "Big Data herramientas nuevas",
+    "ultimas tendencias tecnologia 2026",
+    "descubrimientos cientificos recientes"
   ],
   "research_history": [
     {
-      "topic": "ultimos avances inteligencia artificial 2026",
-      "time": "2026-07-24T12:56:22.840583",
-      "result": "Indexado: idle_ultimos_avances_inteligencia_artificial_2026.md (2 fragmentos, 1,120 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-03T22:32:41.432243",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,800 bytes)"
     },
     {
-      "topic": "cloud computing servicios nuevos",
-      "time": "2026-07-24T12:56:28.168735",
-      "result": "Indexado: idle_cloud_computing_servicios_nuevos.md (2 fragmentos, 1,054 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-03T22:32:50.659230",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "bases de datos nuevas tendencias NoSQL",
-      "time": "2026-07-24T12:56:33.549200",
-      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (2 fragmentos, 1,060 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-04T12:55:25.701108",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "machine learning modelos nuevos 2026",
-      "time": "2026-07-24T12:56:38.973567",
-      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (2 fragmentos, 1,099 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-04T12:55:34.850343",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,771 bytes)"
     },
     {
-      "topic": "biotecnologia bioinformatica avances",
-      "time": "2026-07-24T13:01:16.431334",
-      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (2 fragmentos, 1,127 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-04T17:20:36.725065",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "nuevos frameworks programacion tendencias",
-      "time": "2026-07-24T13:01:19.752512",
-      "result": "Indexado: idle_nuevos_frameworks_programacion_tendencias.md (1 fragmentos, 1,002 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-04T17:20:45.410242",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,771 bytes)"
     },
     {
-      "topic": "automatizacion tareas inteligentes IA",
-      "time": "2026-07-24T13:06:58.918748",
-      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (2 fragmentos, 1,146 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-04T21:51:53.032782",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "robotica automatizacion avances",
-      "time": "2026-07-24T13:07:04.374837",
-      "result": "Indexado: idle_robotica_automatizacion_avances.md (2 fragmentos, 1,048 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-04T21:52:02.811248",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,771 bytes)"
     },
     {
-      "topic": "Docker Kubernetes mejoras recientes",
-      "time": "2026-07-24T13:30:50.135372",
-      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (1 fragmentos, 302 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-04T22:04:59.642958",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "seguridad datos privacidad GDPR",
-      "time": "2026-07-24T13:30:55.646525",
-      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (2 fragmentos, 1,068 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-04T22:05:10.573022",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (4 fragmentos, 3,100 bytes)"
     },
     {
-      "topic": "ciberseguridad vulnerabilidades recientes",
-      "time": "2026-07-24T20:40:41.828601",
-      "result": "Indexado: idle_ciberseguridad_vulnerabilidades_recientes.md (1 fragmentos, 187 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-04T22:13:57.890689",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "Big Data herramientas nuevas",
-      "time": "2026-07-24T20:40:42.621820",
-      "result": "Indexado: idle_Big_Data_herramientas_nuevas.md (1 fragmentos, 161 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-04T22:14:06.578570",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,771 bytes)"
     },
     {
-      "topic": "energias renovables tecnologia",
-      "time": "2026-07-24T21:10:45.456443",
-      "result": "Indexado: idle_energias_renovables_tecnologia.md (1 fragmentos, 165 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T08:36:41.009316",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "inteligencia artificial explicativa",
-      "time": "2026-07-24T21:10:46.324503",
-      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (1 fragmentos, 175 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T08:36:50.219984",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "vehiculos autonomos avances",
-      "time": "2026-07-25T11:11:16.302524",
-      "result": "Indexado: idle_vehiculos_autonomos_avances.md (1 fragmentos, 159 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T08:49:18.696645",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,517 bytes)"
     },
     {
-      "topic": "Python nuevas caracteristicas version",
-      "time": "2026-07-25T11:11:17.009994",
-      "result": "Indexado: idle_Python_nuevas_caracteristicas_version.md (1 fragmentos, 179 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T08:49:27.319864",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "desarrollo software metodologias agiles",
-      "time": "2026-07-25T11:41:19.509663",
-      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (1 fragmentos, 183 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T09:00:15.892825",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "computacion cuantica avances recientes",
-      "time": "2026-07-25T11:41:20.467988",
-      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (1 fragmentos, 181 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T09:00:24.646470",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "redes 5G 6G tecnologias nuevas",
-      "time": "2026-07-25T12:11:22.925887",
-      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (1 fragmentos, 165 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T09:17:30.812503",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "blockchain aplicaciones reales 2026",
-      "time": "2026-07-25T12:11:23.941086",
-      "result": "Indexado: idle_blockchain_aplicaciones_reales_2026.md (1 fragmentos, 175 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T09:17:39.756195",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "Docker Kubernetes mejoras recientes",
-      "time": "2026-07-25T12:41:26.757385",
-      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (1 fragmentos, 175 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T09:28:13.289226",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,804 bytes)"
     },
     {
-      "topic": "Big Data herramientas nuevas",
-      "time": "2026-07-25T12:41:27.732268",
-      "result": "Indexado: idle_Big_Data_herramientas_nuevas.md (1 fragmentos, 161 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T09:28:21.833514",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
     },
     {
-      "topic": "ultimos avances inteligencia artificial 2026",
-      "time": "2026-07-25T13:11:28.277003",
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T09:45:56.293261",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T09:46:10.473367",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (5 fragmentos, 3,717 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T10:06:30.787622",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T10:06:39.323144",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T10:39:34.221786",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T10:39:42.780821",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T12:10:10.870120",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,770 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T12:10:14.504132",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T21:44:37.373476",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (6 fragmentos, 4,173 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T21:44:44.027694",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (2 fragmentos, 1,529 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-05T22:10:05.301106",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-05T22:10:13.913377",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T09:19:03.549714",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,411 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T09:19:14.716555",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (4 fragmentos, 2,689 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T09:55:24.589636",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,411 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T09:55:34.222241",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T10:19:01.030072",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,809 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T10:19:09.588752",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T10:41:50.820539",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,773 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T10:41:59.417085",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,766 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T11:12:13.747833",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,186 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T11:12:22.347413",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T11:42:38.195766",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,174 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T11:42:46.857407",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T12:12:55.654905",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T12:13:11.222590",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (6 fragmentos, 4,946 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T12:43:11.621843",
       "result": "rag_error: 'NoneType' object is not iterable"
     },
     {
-      "topic": "cloud computing servicios nuevos",
-      "time": "2026-07-25T13:11:28.851279",
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T12:43:11.659058",
       "result": "rag_error: 'NoneType' object is not iterable"
     },
     {
-      "topic": "bases de datos nuevas tendencias NoSQL",
-      "time": "2026-07-26T10:13:19.704651",
-      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (1 fragmentos, 181 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T21:37:05.975205",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "seguridad datos privacidad GDPR",
-      "time": "2026-07-26T10:13:20.795533",
-      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (1 fragmentos, 167 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T21:37:14.763983",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "automatizacion tareas inteligentes IA",
-      "time": "2026-07-26T10:27:50.489100",
-      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (1 fragmentos, 179 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T22:07:27.538293",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,808 bytes)"
     },
     {
-      "topic": "machine learning modelos nuevos 2026",
-      "time": "2026-07-26T10:27:51.595807",
-      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (1 fragmentos, 177 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T22:07:36.105931",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "biotecnologia bioinformatica avances",
-      "time": "2026-07-26T10:57:54.349350",
-      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (1 fragmentos, 177 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T22:18:51.709509",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,870 bytes)"
     },
     {
-      "topic": "computacion cuantica avances recientes",
-      "time": "2026-07-26T10:57:55.422407",
-      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (1 fragmentos, 181 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T22:19:00.401527",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "blockchain aplicaciones reales 2026",
-      "time": "2026-07-26T11:27:58.380194",
-      "result": "Indexado: idle_blockchain_aplicaciones_reales_2026.md (1 fragmentos, 175 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T22:35:22.313176",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,741 bytes)"
     },
     {
-      "topic": "robotica automatizacion avances",
-      "time": "2026-07-26T11:27:59.308671",
-      "result": "Indexado: idle_robotica_automatizacion_avances.md (1 fragmentos, 167 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T22:35:31.781352",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "desarrollo software metodologias agiles",
-      "time": "2026-07-26T14:06:23.421705",
-      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (3 fragmentos, 1,611 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T22:51:17.379694",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,168 bytes)"
     },
     {
-      "topic": "inteligencia artificial explicativa",
-      "time": "2026-07-26T14:06:25.914375",
-      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (3 fragmentos, 1,476 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T22:51:26.630270",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "vehiculos autonomos avances",
-      "time": "2026-07-26T14:28:14.300864",
-      "result": "Indexado: idle_vehiculos_autonomos_avances.md (3 fragmentos, 1,726 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T23:21:40.807577",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,748 bytes)"
     },
     {
-      "topic": "Python nuevas caracteristicas version",
-      "time": "2026-07-26T14:28:16.909281",
-      "result": "Indexado: idle_Python_nuevas_caracteristicas_version.md (4 fragmentos, 2,816 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T23:21:49.801972",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "nuevos frameworks programacion tendencias",
-      "time": "2026-07-26T14:35:59.658902",
-      "result": "Indexado: idle_nuevos_frameworks_programacion_tendencias.md (3 fragmentos, 1,564 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T23:33:26.019630",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "energias renovables tecnologia",
-      "time": "2026-07-26T14:36:02.678516",
-      "result": "Indexado: idle_energias_renovables_tecnologia.md (2 fragmentos, 1,414 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T23:33:34.932799",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "ciberseguridad vulnerabilidades recientes",
-      "time": "2026-07-26T14:52:50.035863",
-      "result": "Indexado: idle_ciberseguridad_vulnerabilidades_recientes.md (6 fragmentos, 4,134 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-06T23:43:12.945198",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (3 fragmentos, 1,560 bytes)"
     },
     {
-      "topic": "redes 5G 6G tecnologias nuevas",
-      "time": "2026-07-26T14:52:52.383444",
-      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (2 fragmentos, 1,555 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-06T23:43:28.163528",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (6 fragmentos, 4,982 bytes)"
     },
     {
-      "topic": "robotica automatizacion avances",
-      "time": "2026-07-26T16:11:26.652623",
-      "result": "Indexado: idle_robotica_automatizacion_avances.md (4 fragmentos, 2,911 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T09:40:50.030690",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,116 bytes)"
     },
     {
-      "topic": "biotecnologia bioinformatica avances",
-      "time": "2026-07-26T16:11:31.244630",
-      "result": "Indexado: idle_biotecnologia_bioinformatica_avances.md (3 fragmentos, 1,558 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T09:40:58.621461",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "machine learning modelos nuevos 2026",
-      "time": "2026-07-27T09:53:18.796813",
-      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (3 fragmentos, 1,549 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T09:54:38.443502",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "automatizacion tareas inteligentes IA",
-      "time": "2026-07-27T09:53:21.435591",
-      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (6 fragmentos, 4,322 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T09:54:47.225866",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "inteligencia artificial explicativa",
-      "time": "2026-07-27T10:23:25.983513",
-      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (5 fragmentos, 4,083 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T10:11:52.486022",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (6 fragmentos, 4,218 bytes)"
     },
     {
-      "topic": "vehiculos autonomos avances",
-      "time": "2026-07-27T10:23:28.415889",
-      "result": "Indexado: idle_vehiculos_autonomos_avances.md (3 fragmentos, 1,565 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T10:12:01.333146",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "cloud computing servicios nuevos",
-      "time": "2026-07-27T11:36:34.927924",
-      "result": "Indexado: idle_cloud_computing_servicios_nuevos.md (6 fragmentos, 4,290 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T10:19:21.237238",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,193 bytes)"
     },
     {
-      "topic": "bases de datos nuevas tendencias NoSQL",
-      "time": "2026-07-27T11:36:37.662836",
-      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (4 fragmentos, 2,809 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T10:19:29.945640",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "desarrollo software metodologias agiles",
-      "time": "2026-07-27T11:45:49.114301",
-      "result": "Indexado: idle_desarrollo_software_metodologias_agiles.md (3 fragmentos, 1,611 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T10:36:08.084494",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (3 fragmentos, 1,517 bytes)"
     },
     {
-      "topic": "redes 5G 6G tecnologias nuevas",
-      "time": "2026-07-27T11:45:51.597169",
-      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (2 fragmentos, 1,503 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T10:36:19.092720",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "Docker Kubernetes mejoras recientes",
-      "time": "2026-07-27T12:00:47.297767",
-      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (3 fragmentos, 1,599 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T10:45:23.047610",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,152 bytes)"
     },
     {
-      "topic": "ultimos avances inteligencia artificial 2026",
-      "time": "2026-07-27T12:00:49.813562",
-      "result": "Indexado: idle_ultimos_avances_inteligencia_artificial_2026.md (3 fragmentos, 1,634 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T10:45:41.565574",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "Big Data herramientas nuevas",
-      "time": "2026-07-27T12:23:03.672650",
-      "result": "Indexado: idle_Big_Data_herramientas_nuevas.md (4 fragmentos, 2,814 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T10:57:31.617544",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,162 bytes)"
     },
     {
-      "topic": "computacion cuantica avances recientes",
-      "time": "2026-07-27T12:23:06.173449",
-      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (2 fragmentos, 1,425 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T10:57:42.629766",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (4 fragmentos, 2,834 bytes)"
     },
     {
-      "topic": "Python nuevas caracteristicas version",
-      "time": "2026-07-27T21:07:56.248174",
-      "result": "Indexado: idle_Python_nuevas_caracteristicas_version.md (3 fragmentos, 1,499 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T11:09:56.912311",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "nuevos frameworks programacion tendencias",
-      "time": "2026-07-27T21:07:58.647445",
-      "result": "Indexado: idle_nuevos_frameworks_programacion_tendencias.md (3 fragmentos, 1,564 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T11:10:05.663954",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "energias renovables tecnologia",
-      "time": "2026-07-27T21:16:18.463130",
-      "result": "Indexado: idle_energias_renovables_tecnologia.md (4 fragmentos, 2,930 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T11:38:50.456949",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "ciberseguridad vulnerabilidades recientes",
-      "time": "2026-07-27T21:16:21.181617",
-      "result": "Indexado: idle_ciberseguridad_vulnerabilidades_recientes.md (3 fragmentos, 2,401 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T11:38:59.135948",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "seguridad datos privacidad GDPR",
-      "time": "2026-07-27T21:46:23.793959",
-      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (4 fragmentos, 2,909 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T12:09:11.227012",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,879 bytes)"
     },
     {
-      "topic": "blockchain aplicaciones reales 2026",
-      "time": "2026-07-27T21:46:26.418436",
-      "result": "Indexado: idle_blockchain_aplicaciones_reales_2026.md (6 fragmentos, 4,413 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T12:09:20.189008",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "automatizacion tareas inteligentes IA",
-      "time": "2026-07-27T21:57:02.795479",
-      "result": "Indexado: idle_automatizacion_tareas_inteligentes_IA.md (6 fragmentos, 4,328 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T13:20:42.937059",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,741 bytes)"
     },
     {
-      "topic": "inteligencia artificial explicativa",
-      "time": "2026-07-27T21:57:05.627047",
-      "result": "Indexado: idle_inteligencia_artificial_explicativa.md (6 fragmentos, 4,105 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T13:20:52.026090",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "computacion cuantica avances recientes",
-      "time": "2026-07-27T22:09:57.337261",
-      "result": "Indexado: idle_computacion_cuantica_avances_recientes.md (5 fragmentos, 4,189 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T13:39:18.029258",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,890 bytes)"
     },
     {
-      "topic": "seguridad datos privacidad GDPR",
-      "time": "2026-07-27T22:09:59.907302",
-      "result": "Indexado: idle_seguridad_datos_privacidad_GDPR.md (4 fragmentos, 2,901 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T13:39:26.981127",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "Docker Kubernetes mejoras recientes",
-      "time": "2026-07-27T22:23:37.385212",
-      "result": "Indexado: idle_Docker_Kubernetes_mejoras_recientes.md (2 fragmentos, 1,390 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T19:54:26.756453",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (2 fragmentos, 1,510 bytes)"
     },
     {
-      "topic": "bases de datos nuevas tendencias NoSQL",
-      "time": "2026-07-27T22:23:39.804631",
-      "result": "Indexado: idle_bases_de_datos_nuevas_tendencias_NoSQL.md (2 fragmentos, 1,391 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T19:54:35.823408",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     },
     {
-      "topic": "machine learning modelos nuevos 2026",
-      "time": "2026-07-27T22:37:39.834077",
-      "result": "Indexado: idle_machine_learning_modelos_nuevos_2026.md (3 fragmentos, 1,549 bytes)"
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T20:24:51.695378",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (5 fragmentos, 4,146 bytes)"
     },
     {
-      "topic": "redes 5G 6G tecnologias nuevas",
-      "time": "2026-07-27T22:37:42.336471",
-      "result": "Indexado: idle_redes_5G_6G_tecnologias_nuevas.md (2 fragmentos, 1,503 bytes)"
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T20:25:00.576612",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T20:55:13.682724",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,773 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T20:55:22.803655",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-07T21:25:34.719060",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (3 fragmentos, 1,517 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-07T21:25:43.569988",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
+    },
+    {
+      "topic": "ultimas tendencias tecnologia 2026",
+      "time": "2026-08-08T09:49:29.008896",
+      "result": "Indexado: idle_ultimas_tendencias_tecnologia_2026.md (4 fragmentos, 2,777 bytes)"
+    },
+    {
+      "topic": "descubrimientos cientificos recientes",
+      "time": "2026-08-08T09:49:37.928330",
+      "result": "Indexado: idle_descubrimientos_cientificos_recientes.md (3 fragmentos, 1,621 bytes)"
     }
   ]
 }

@@ -40,6 +40,36 @@ def _save_json(path: Path, data: Any):
     except Exception as e:
         print(f"[SelfImprovement] Save error: {e}")
 
+
+def _try_improve(original: str, feedback: list[str]) -> Optional[str]:
+    """Genera una versión corregida de la respuesta vía respaldo local.
+
+    Retorna el texto mejorado, o None si no hay respaldo disponible.
+    """
+    try:
+        from actions.ollama_provider import is_available, chat
+        if not is_available():
+            return None
+        fb = "\n".join(feedback) if feedback else "La respuesta fue de baja calidad."
+        system = (
+            "Eres ERIS mejorando tu propia respuesta. Reescribí la respuesta "
+            "corrigiendo los problemas señalados. Respondé SOLO con la nueva "
+            "versión, sin explicaciones ni prefacios."
+        )
+        improved = chat(
+            prompt=(
+                f"Respuesta original:\n{original[:800]}\n\n"
+                f"Problemas a corregir:\n{fb}\n\n"
+                f"Nueva versión mejorada:"
+            ),
+            system=system,
+        )
+        if improved and len(improved.strip()) > 10:
+            return improved.strip()[:2000]
+    except Exception:
+        pass
+    return None
+
 # ── Self-Evaluation ───────────────────────────────────────────────────────────
 
 class SelfEvaluator:
@@ -82,7 +112,9 @@ class SelfEvaluator:
     def _llm_evaluate(self, user_input: str, response: str) -> dict | None:
         """Attempt LLM-powered evaluation. Returns dict or None if unavailable."""
         try:
-            from core.llm_bridge import prompt_json
+            from actions.ollama_provider import is_available, chat
+            if not is_available():
+                return None
             system = (
                 "Eres un evaluador de calidad de respuestas. Responde SOLO con JSON:\n"
                 "{\n"
@@ -92,12 +124,19 @@ class SelfEvaluator:
                 '  "feedback": ["sugerencia 1", "sugerencia 2"]\n'
                 "}"
             )
-            return prompt_json(
-                f"Usuario: {user_input[:300]}\nRespuesta: {response[:500]}\n\nEvaluá la calidad de la respuesta.",
-                system=system, temperature=0.2, max_tokens=512
+            raw = chat(
+                prompt=(
+                    f"Usuario: {user_input[:300]}\nRespuesta: {response[:500]}\n\n"
+                    f"Evaluá la calidad de la respuesta."
+                ),
+                system=system, temperature=0.2, max_tokens=512,
             )
+            data = json.loads(raw)
+            if isinstance(data, dict) and "metrics" in data:
+                return data
         except Exception:
-            return None
+            pass
+        return None
 
     def _calculate_metrics(self, user_input: str, response: str) -> list[dict]:
         """Calculate quality metrics."""
@@ -392,7 +431,12 @@ class LessonLearner:
         self.lessons = _load_json(_LEARNED_LESSONS_FILE, [])
 
     def learn(self, lesson: str, category: str = "general", importance: float = 0.8):
-        """Store a learned lesson."""
+        """Store a learned lesson (skip if identical lesson already exists)."""
+        for existing in self.lessons:
+            if existing.get("lesson") == lesson:
+                existing["last_seen"] = time.time()
+                _save_json(_LEARNED_LESSONS_FILE, self.lessons)
+                return
         self.lessons.append({
             "id": f"lesson_{int(time.time() * 1000)}",
             "lesson": lesson,
@@ -449,11 +493,14 @@ class SelfImprovementSystem:
         
         # If low quality, record for correction
         if evaluation["overall_score"] < 0.5:
-            self.corrector.record_correction(
-                response,
-                "[Respuesta mejorada pendiente]",
-                f"Baja calidad: {evaluation['overall_score']:.0%}",
-            )
+            feedback = evaluation.get("feedback", [])
+            improved = _try_improve(response, feedback)
+            if improved:
+                self.corrector.record_correction(
+                    response,
+                    improved,
+                    f"Baja calidad: {evaluation['overall_score']:.0%}",
+                )
         
         # Record prompt effectiveness
         self.optimizer.record_prompt(user_input, evaluation["overall_score"])
@@ -566,9 +613,10 @@ class FeedbackLoop:
                 verify = reasoning.verify_claim(response)
                 if verify.get("confidence", 1.0) < 0.5:
                     correction_reason = f"Verificación falló: {verify.get('summary', 'baja confianza')}"
+                    improved = _try_improve(response, [str(verify.get("summary", "verificación falló"))])
                     self.system.corrector.record_correction(
                         response,
-                        "[Requiere revisión: respuesta no verificada]",
+                        improved or "[Sin corrección automática: respaldo local no disponible]",
                         correction_reason,
                     )
                     cycle_result["correction"] = correction_reason

@@ -27,14 +27,24 @@ def _find_media_files(query: str = "") -> list[Path]:
     return files
 
 
-def _play_file(path: Path) -> str:
+def _play_file(path: Path, player=None) -> str:
     try:
         os.startfile(str(path))
+        if player is not None:
+            try:
+                player.set_music(1.0)
+            except Exception:
+                pass
         return f"Reproduciendo: {path.name}"
     except Exception:
         pass
     try:
         subprocess.Popen(["cmd", "/c", "start", "", str(path)])
+        if player is not None:
+            try:
+                player.set_music(1.0)
+            except Exception:
+                pass
         return f"Reproduciendo: {path.name}"
     except Exception as e:
         return f"No pude reproducir {path.name}: {str(e)[:80]}"
@@ -56,28 +66,33 @@ def music_player(parameters: dict = None, player=None) -> str:
             return f"No encontré el archivo: {p}"
         if p.suffix.lower() not in MEDIA_EXTS:
             return f"No reconozco el formato {p.suffix}. Soporto: {', '.join(sorted(MEDIA_EXTS))}"
-        return _play_file(p)
+        return _play_file(p, player)
 
     # ── Play by search query ──
     if action in ("play", "reproducir", "poner"):
         if path_str:
             p = Path(path_str)
             if p.exists():
-                return _play_file(p)
+                return _play_file(p, player)
         if query:
             files = _find_media_files(query)
             if files:
-                return _play_file(files[0])
+                return _play_file(files[0], player)
             return f"No encontré '{query}' en las carpetas de música."
         files = _find_media_files()
         if not files:
             return "No hay archivos de música en las carpetas habituales."
-        return _play_file(files[0])
+        return _play_file(files[0], player)
 
     elif action in ("pause", "pausar"):
         try:
             import pyautogui
             pyautogui.press("playpause")
+            if player is not None:
+                try:
+                    player.set_music(0.0)
+                except Exception:
+                    pass
             return "Pausado/reanudado"
         except Exception:
             return "Usá el reproductor del sistema para pausar"
@@ -86,6 +101,11 @@ def music_player(parameters: dict = None, player=None) -> str:
         try:
             import pyautogui
             pyautogui.press("playpause")
+            if player is not None:
+                try:
+                    player.set_music(0.0)
+                except Exception:
+                    pass
             return "Detenido"
         except Exception:
             return "Usá el reproductor del sistema"
@@ -142,7 +162,7 @@ def music_player(parameters: dict = None, player=None) -> str:
         if not files:
             return "No hay archivos para mezclar."
         random.shuffle(files)
-        return _play_file(files[0])
+        return _play_file(files[0], player)
 
     else:
         return (

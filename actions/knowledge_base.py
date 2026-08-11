@@ -8,10 +8,27 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent.parent
 _DB_DIR = _BASE / "data" / "knowledge_base"
 _ENTRIES_FILE = _DB_DIR / "entries.json"
+_EMBED_DIM = 384
 
 
 def _ensure_dirs():
     _DB_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _normalize_dim(vec: list[float], target: int = _EMBED_DIM) -> list[float]:
+    n = len(vec)
+    if n == target:
+        return vec
+    if n > target:
+        step = n / target
+        out = []
+        for i in range(target):
+            start = int(i * step)
+            end = max(start + 1, int((i + 1) * step))
+            chunk = vec[start:end]
+            out.append(sum(chunk) / len(chunk))
+        return out
+    return vec + [0.0] * (target - n)
 
 
 def _get_embedding(text: str) -> list[float]:
@@ -27,13 +44,13 @@ def _get_embedding(text: str) -> list[float]:
                 json={"model": model, "prompt": text[:8192]},
             )
             resp.raise_for_status()
-            return resp.json()["embedding"]
+            return _normalize_dim(resp.json()["embedding"])
     except Exception:
         import numpy as np
         h = hashlib.sha256(text.encode()).digest()
         seed = int.from_bytes(h[:4], "big")
         rng = np.random.RandomState(seed)
-        return rng.randn(384).tolist()
+        return rng.randn(_EMBED_DIM).tolist()
 
 
 def _get_chroma():

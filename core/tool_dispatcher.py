@@ -8,6 +8,7 @@ import inspect
 import json
 import os
 import threading
+import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 
@@ -21,6 +22,25 @@ from core.tool_registry import get_tool
 from core.resilient import get_manager, generate_task_id
 
 TOOL_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="eris-tool")
+
+# ── Throttle de auto-aprendizaje: evita registrar cada fallo como lección ──
+_LEARN_LOCK = threading.Lock()
+_LEARN_LOG: dict[str, float] = {}      # "tool:error_prefix" -> last learn timestamp
+_LEARN_WINDOW = 15 * 60                 # una leccion por tool+error cada 15 min
+
+
+def _should_learn(name: str, result: str) -> bool:
+    """Devuelve True solo si este fallo no se aprendio recientemente."""
+    sig = "{}:{}".format(name, str(result)[:80])
+    now = time.time()
+    with _LEARN_LOCK:
+        last = _LEARN_LOG.get(sig, 0.0)
+        if now - last < _LEARN_WINDOW:
+            return False
+        _LEARN_LOG[sig] = now
+        if len(_LEARN_LOG) > 500:
+            _LEARN_LOG.clear()
+        return True
 
 # ── Tools that need special handling (not just parameters=, player=) ──
 _SPECIAL_TOOLS = frozenset({
@@ -109,6 +129,10 @@ class ToolDispatcher:
             # ── Special: eris_ui_control ──
             if name == "eris_ui_control":
                 result = self._handle_ui_control(args)
+
+            # ── Special: show_expression (la cara de ERIS) ──
+            elif name == "show_expression":
+                result = self._handle_show_expression(args)
 
             # ── Special: agent_task ──
             elif name == "agent_task":
@@ -282,16 +306,17 @@ class ToolDispatcher:
             from core.training_pipeline import evaluate_tool_usage, learn_from_failure
             _ok = not str(result).lower().startswith("error")
             _dur = 0.0
-            threading.Thread(target=lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur), daemon=True).start()
             if not _ok:
-                threading.Thread(target=lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"), daemon=True).start()
+                if _should_learn(name, str(result)):
+                    threading.Thread(target=lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur), daemon=True).start()
+                    threading.Thread(target=lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"), daemon=True).start()
         except Exception:
             pass
 
         # ── Self-learning: learn from mistakes ──
         try:
             _ok = not str(result).lower().startswith("error")
-            if not _ok:
+            if not _ok and _should_learn(name, str(result)):
                 from actions.self_learning import learn_from_mistake
                 threading.Thread(target=lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parámetros o conexión"}), daemon=True).start()
         except Exception:
@@ -353,6 +378,22 @@ class ToolDispatcher:
         return f"Unknown tool: {name}. No se encontró en tool_registry ni en actions."
 
     # ── Special handlers ──
+
+    def _handle_show_expression(self, args):
+        expr = (args.get("expression") or "").strip().lower()
+        text = (args.get("text") or "").strip()
+        try:
+            mode = self.ui.visual_mode()
+        except Exception:
+            mode = "face"
+        try:
+            if hasattr(self.ui, "show_expression"):
+                self.ui.show_expression(expr, text)
+        except Exception as e:
+            return f"No pude mostrar la expresión: {e}"
+        if mode == "face":
+            return f"Listo: mostré '{expr}' en mi cara. {text}".strip()
+        return f"Ahora estoy en forma de orbe de partículas; mi expresión se refleja en la energía del orbe. {text}".strip()
 
     def _handle_ui_control(self, args):
         action_ui = args.get("action", "").lower()

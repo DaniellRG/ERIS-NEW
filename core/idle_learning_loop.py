@@ -57,6 +57,15 @@ def _log(msg: str):
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = "[{}] {}\n".format(ts, msg)
     _LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    # Rotación: si el log supera 250KB se rota (evita crecimiento sin límite)
+    try:
+        if _LOG_FILE.exists() and _LOG_FILE.stat().st_size > 250 * 1024:
+            _rot = _LOG_FILE.with_name(_LOG_FILE.name + ".old")
+            if _rot.exists():
+                _rot.unlink()
+            _LOG_FILE.rename(_rot)
+    except Exception:
+        pass
     with open(str(_LOG_FILE), "a", encoding="utf-8") as f:
         f.write(line)
 
@@ -144,6 +153,17 @@ def _save_topic_history(history: dict):
     TOPIC_HISTORY_FILE.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def _topic_seen(topic: str, state: dict, history: dict) -> bool:
+    """True si el tema ya fue aprendido (normaliza mayúsculas/puntuación)."""
+    norm = " ".join(topic.lower().split())
+    learned = state.get("topics_learned", [])
+    recent = history.get("recent_topics", [])
+    for existing in list(learned[-100:]) + list(recent[-200:]):
+        if " ".join(str(existing).lower().split()) == norm:
+            return True
+    return False
+
+
 def run_idle_learning() -> str:
     """Execute one idle learning cycle. Returns summary of what was learned."""
     global _cycle_count, _last_learning_time
@@ -153,11 +173,21 @@ def run_idle_learning() -> str:
         _last_learning_time = time.time()
 
     state = _load_state()
+    history = _load_topic_history()
     state["total_idle_sessions"] += 1
     state["last_session"] = datetime.now().isoformat()
 
     # Generate topics dynamically via Gemini
     topics_to_learn = _generate_topics(MAX_TOPICS_PER_SESSION)
+
+    # Filtrar temas ya aprendidos: no repetir lo que ya se investigó
+    fresh_topics = [t for t in topics_to_learn if not _topic_seen(t, state, history)]
+    if not fresh_topics:
+        summary = "Sesion #{}: sin temas nuevos (todo repetido)".format(state["total_idle_sessions"])
+        _save_state(state)
+        _log(summary)
+        return summary
+    topics_to_learn = fresh_topics[:MAX_TOPICS_PER_SESSION]
 
     results = []
     for topic in topics_to_learn:
@@ -175,6 +205,10 @@ def run_idle_learning() -> str:
             _log("ERROR learning '{}': {}".format(topic, str(e)[:80]))
             results.append("ERROR: {}".format(str(e)[:80]))
 
+    # Recortar historiales para que no crezcan sin límite
+    state["topics_learned"] = state["topics_learned"][-100:]
+    state["research_history"] = state["research_history"][-100:]
+
     _save_state(state)
 
     summary = "Sesion #{}: {} temas aprendidos [{}]".format(
@@ -187,6 +221,29 @@ def run_idle_learning() -> str:
     return summary
 
 
+def _is_quality_result(result: str) -> bool:
+    """Rechaza resultados vacios, mensajes de error/'no encontrado' y
+    contenido dominado por links/publicidad (no debe indexarse)."""
+    if not result or len(result) < 50:
+        return False
+    low = result.lower()
+    markers = (
+        "no encontr", "no se encontr", "no hay resumen", "error en busqueda",
+        "error buscando", "pip install", "especifica que buscar", "search_failed",
+        "insufficient_data", "no encontre resultados", "no encontre definicion",
+        "no encontre noticias",
+    )
+    if any(m in low for m in markers):
+        return False
+    # Dominado por URLs sueltas / publicidad: >30% de lineas son solo enlaces
+    lines = [l.strip() for l in result.splitlines() if l.strip()]
+    if len(lines) >= 3:
+        url_lines = sum(1 for l in lines if l.startswith("http"))
+        if url_lines / len(lines) > 0.3:
+            return False
+    return True
+
+
 def _learn_one_topic(topic: str) -> str:
     """Research a topic via web search and ingest into ALL memory systems."""
     # 1. Web search
@@ -196,7 +253,7 @@ def _learn_one_topic(topic: str) -> str:
     except Exception as e:
         return "search_failed: {}".format(str(e)[:50])
 
-    if not search_result or len(search_result) < 50:
+    if not _is_quality_result(search_result):
         return "insufficient_data"
 
     # 2. Create knowledge file
@@ -294,13 +351,14 @@ def sync_obsidian_to_rag() -> str:
         skipped = 0
         for note_path in notes:
             try:
-                content = note_path.read_text(encoding="utf-8", errors="replace")
+                full = VAULT_PATH / note_path
+                content = full.read_text(encoding="utf-8", errors="replace")
                 fm, body = _parse_frontmatter(content)
                 if len(body.strip()) < 50:
                     skipped += 1
                     continue
                 from core.rag_pipeline import index_document
-                result = index_document(str(note_path))
+                result = index_document(str(full))
                 if result and "indexed" in result:
                     indexed += 1
                 else:
@@ -325,7 +383,7 @@ def learn_from_user(context: str, user_msg: str) -> str:
     except Exception:
         return "No pude investigar '{}'. Intentalo de nuevo.".format(topic)
 
-    if not search_result or len(search_result) < 50:
+    if not _is_quality_result(search_result):
         return "No encontre suficiente informacion sobre '{}'.".format(topic)
 
     # 2. Create knowledge file

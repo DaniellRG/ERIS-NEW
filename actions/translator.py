@@ -1,6 +1,7 @@
 import re
 import json
 import hashlib
+from pathlib import Path
 from urllib.parse import quote_plus
 
 import requests
@@ -136,9 +137,9 @@ def _detect_via_scrape(text):
         "los": "es", "las": "es", "de": "es", "en": "es", "le": "fr", "les": "fr",
         "des": "fr", "une": "fr", "der": "de", "die": "de", "das": "de", "ein": "de",
         "di": "it", "il": "it", "lo": "it", "gli": "it", "o": "pt", "a": "pt",
-        "os": "pt", "as": "pt", "は": "ja", "です": "ja", "ます": "ja",
+        "os": "pt", "as": "pt", "是": "zh", "的": "zh", "了": "zh", "不": "zh",
+        "は": "ja", "です": "ja", "ます": "ja",
         "은": "ko", "는": "ko", "입니다": "ko",
-        "的": "zh", "是": "zh", "了": "zh", "不": "zh",
     }
     words = re.findall(r'[\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]+', text.lower())
     scores = {}
@@ -149,6 +150,186 @@ def _detect_via_scrape(text):
     if scores:
         return max(scores, key=scores.get)
     return "unknown"
+
+
+def _gtx_translate(text, src, dst, timeout=15):
+    """Traducción vía el endpoint público de Google Translate (JSON limpio)."""
+    url = ("https://translate.googleapis.com/translate_a/single?client=gtx"
+           "&sl={}&tl={}&dt=t&q={}".format(src, dst, quote_plus(text)))
+    resp = requests.get(url, headers=_HEADERS, timeout=timeout)
+    resp.raise_for_status()
+    data = resp.json()
+    parts = data[0] if data and isinstance(data[0], list) else []
+    out = "".join(p[0] for p in parts if p and p[0])
+    out = out.strip()
+    return out or None
+
+
+def _ollama_translate(text, src, dst):
+    """Traducción offline con el modelo local de Ollama (privada, sin internet)."""
+    from actions.ollama_provider import chat, is_available
+    if not is_available():
+        raise RuntimeError("Ollama no disponible")
+    system = ("You are a professional translator. Translate the text from "
+              "{} to {}. Reply ONLY with the translation, nothing else, "
+              "keeping the original meaning and tone.").format(
+                  LANG_NAMES.get(src, src), LANG_NAMES.get(dst, dst))
+    out = (chat(prompt=text, system=system) or "").strip()
+    if not out:
+        raise RuntimeError("Ollama no devolvió traducción")
+    return out
+
+
+def _chunk_text(text, size=2800):
+    """Divide texto largo en trozos de ≤size caracteres respetando párrafos/oraciones."""
+    chunks = []
+    current = ""
+    for para in text.split("\n\n"):
+        piece = " ".join(para.split())
+        if not piece:
+            continue
+        if len(piece) > size:
+            sentences = re.split(r"(?<=[.!?])\s+", piece)
+            buf = ""
+            for s in sentences:
+                if len(buf) + len(s) + 1 > size and buf:
+                    chunks.append(buf)
+                    buf = s
+                else:
+                    buf = (buf + " " + s).strip() if buf else s
+            if buf:
+                chunks.append(buf)
+            continue
+        if len(current) + len(piece) + 2 > size and current:
+            chunks.append(current)
+            current = piece
+        else:
+            current = (current + "\n\n" + piece) if current else piece
+    if current:
+        chunks.append(current)
+    return [c for c in chunks if c.strip()]
+
+
+def _translate_long(text, src, dst, player=None):
+    """Traduce un texto largo por trozos: Google Translate → scrape → Ollama."""
+    chunks = _chunk_text(text)
+    if not chunks:
+        return ""
+    out = []
+    for i, c in enumerate(chunks, 1):
+        r = _gtx_translate(c, src, dst)
+        if not r:
+            r = _google_translate_scrape(c, src, dst)
+        if not r:
+            r = _ollama_translate(c, src, dst)
+        if not r:
+            raise RuntimeError("Sin traducción para el fragmento {}/{}".format(i, len(chunks)))
+        out.append(r)
+        if player:
+            player.write_log("🌐 traduciendo fragmento {}/{} ({} chars)".format(i, len(chunks), len(c)))
+    return "\n\n".join(out)
+
+
+def _extract_page_text(html):
+    """Extrae el texto principal de una página HTML (sin scripts/navs)."""
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style", "noscript", "svg", "nav", "header",
+                     "footer", "aside", "form", "button", "iframe", "figure", "canvas"]):
+        tag.decompose()
+    container = soup.find("article") or soup.find("main") or soup.find("body") or soup
+    for br in container.find_all(["br", "p", "li", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote"]):
+        br.append("\n")
+    text = container.get_text("\n", strip=True)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    return text.strip()
+
+
+def translate_web(parameters, player=None) -> str:
+    """Descarga una URL y traduce el contenido de la página al idioma deseado."""
+    url = (parameters.get("url") or "").strip()
+    target = (parameters.get("target") or "es").lower()
+    source = (parameters.get("source") or "auto").lower()
+    mode = (parameters.get("mode") or "text").lower()
+    max_chars = int(parameters.get("max_chars") or 6000)
+    save_path = (parameters.get("save") or "").strip()
+    if not url:
+        return "Error: URL requerida (param 'url')."
+    if target not in LANG_NAMES or target == "auto":
+        return "Error: idioma destino '{}' no soportado. Válidos: {}".format(
+            target, ", ".join(k for k in LANG_NAMES if k != "auto"))
+    if not url.startswith(("http://", "https://")):
+        url = "https://" + url
+    try:
+        resp = requests.get(url, headers=_HEADERS, timeout=20)
+        resp.raise_for_status()
+        content_type = resp.headers.get("content-type", "").lower()
+        if "html" in content_type:
+            text = _extract_page_text(resp.text)
+        else:
+            text = resp.text
+        if len(text) < 40:
+            return "No se pudo extraer contenido legible de la página."
+        if source == "auto":
+            source = _detect_via_scrape(text[:300])
+            if source == "unknown":
+                source = "auto"
+        if player:
+            player.write_log("🌐 translate_web: {} ({} chars, {}->{})".format(
+                url, len(text), source, target))
+        if mode == "file" or save_path:
+            if not save_path:
+                import datetime
+                stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                save_path = str(Path(__file__).resolve().parent.parent /
+                                "data" / "traduccion_{}.txt".format(stamp))
+            translated = _translate_long(text, source, target, player)
+            path = Path(save_path)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(translated, encoding="utf-8")
+            return ("Traducción completa guardada en: {}\n"
+                    "Idioma: {} -> {}\n"
+                    "Original: {} caracteres | Traducción: {} caracteres.").format(
+                        path, LANG_NAMES.get(source, source),
+                        LANG_NAMES.get(target, target), len(text), len(translated))
+        translated = _translate_long(text, source, target, player)
+        if len(translated) > max_chars:
+            translated = translated[:max_chars] + (
+                "\n\n[...truncado a {} caracteres. Traducción completa: {} caracteres. "
+                "Pedí mode='file' para guardarla entera en disco.]").format(max_chars, len(translated))
+        return "[{} -> {}] Página traducida:\n{}".format(
+            LANG_NAMES.get(source, source), LANG_NAMES.get(target, target), translated)
+    except Exception as e:
+        return "Error traduciendo página: {}".format(e)
+
+
+def translate_text(parameters, player=None) -> str:
+    """Wrapper del dispatcher: traduce texto (equivalente a translator translate)."""
+    return translator({
+        "action": "translate",
+        "text": parameters.get("text", ""),
+        "source": parameters.get("source", "auto"),
+        "target": parameters.get("target", "es"),
+    }, player)
+
+
+def translator_status(parameters=None, player=None) -> str:
+    try:
+        from actions.ollama_provider import is_available
+        ollama = "sí" if is_available() else "no"
+    except Exception:
+        ollama = "desconocido"
+    return ("Traductor listo. Ollama local disponible: {}. "
+            "Idiomas: es, en, fr, de, pt, it, ja, ko, zh. "
+            "Acciones: translate (texto), translate_web (página URL), detect, batch, languages.").format(ollama)
+
+
+def start_monitoring(parameters=None, player=None) -> str:
+    return "Monitoring no requerido para el traductor; usá translate / translate_web / detect."
+
+
+def stop_monitoring(parameters=None, player=None) -> str:
+    return "Monitoring detenido."
 
 
 def translator(parameters: dict, player=None) -> str:
@@ -166,10 +347,11 @@ def translator(parameters: dict, player=None) -> str:
             src = _detect_via_scrape(text)
             if src == "unknown":
                 src = "en"
-        result = _dict_translate(text, src, dst)
-        if result:
-            return f"[{LANG_NAMES.get(src, src)} -> {LANG_NAMES.get(dst, dst)}]\n{result}"
-        result = _google_translate_scrape(text, src, dst)
+        result = _gtx_translate(text, src, dst)
+        if not result:
+            result = _dict_translate(text, src, dst)
+        if not result:
+            result = _google_translate_scrape(text, src, dst)
         if result:
             return f"[{LANG_NAMES.get(src, src)} -> {LANG_NAMES.get(dst, dst)}]\n{result}"
         return f"Translation not available offline for {src}->{dst}. Try online translation service.\nDetected source: {src} ({LANG_NAMES.get(src, 'unknown')})"
@@ -181,6 +363,10 @@ def translator(parameters: dict, player=None) -> str:
         lang = _detect_via_scrape(text)
         name = LANG_NAMES.get(lang, lang)
         return f"Detected language: {lang} ({name})\nConfidence: {'high' if lang != 'unknown' else 'low'}"
+
+    elif action == "languages":
+        return "Idiomas soportados: " + ", ".join(
+            f"{k} ({v})" for k, v in LANG_NAMES.items() if k != "auto")
 
     elif action == "batch":
         texts = parameters.get("texts", [])

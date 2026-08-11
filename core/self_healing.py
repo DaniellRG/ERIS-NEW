@@ -76,14 +76,18 @@ class SelfHealingSystem:
             pass
 
     def _log_learning(self, action: str, detail: str):
-        """Log a learning event."""
+        """Log a learning event (deduplica entradas idénticas consecutivas)."""
         try:
             logs = []
             if _LEARNING_LOG.exists():
                 logs = json.loads(_LEARNING_LOG.read_text(encoding="utf-8"))
+            detail = detail[:500]
+            # No repetir la misma entrada consecutiva (evita spam de ollama_down)
+            if logs and logs[-1].get("action") == action and logs[-1].get("detail") == detail:
+                return
             logs.append({
                 "action": action,
-                "detail": detail[:500],
+                "detail": detail,
                 "time": datetime.now().isoformat(),
             })
             if len(logs) > 200:
@@ -128,13 +132,19 @@ class SelfHealingSystem:
         except Exception:
             return False
 
+    def _iter_project_py(self):
+        """Yield project .py files, excluding caches and .venv/site-packages."""
+        src = Path(__file__).resolve().parent.parent
+        for py_file in src.rglob("*.py"):
+            s = str(py_file)
+            if any(x in s for x in ("__pycache__", "backups", ".venv", "site-packages", "node_modules", ".git")):
+                continue
+            yield py_file
+
     def check_all_modules(self) -> dict:
         """Scan all Python files for syntax errors."""
         results = {"ok": [], "errors": [], "fixed": []}
-        src = Path(__file__).resolve().parent.parent
-        for py_file in src.rglob("*.py"):
-            if "__pycache__" in str(py_file) or "backups" in str(py_file):
-                continue
+        for py_file in self._iter_project_py():
             ok, msg = self.check_syntax(str(py_file))
             if ok:
                 results["ok"].append(str(py_file.name))
@@ -195,7 +205,7 @@ class SelfHealingSystem:
             known[error_type] = count
             self._state["known_errors"] = known
             if count >= 3:
-                self._log_learning("recurring_error", "Error '{}' occurred {} times".format(error_type, count))
+                self._log_learning("recurring_error", "Error recurrente: {}".format(error_type))
             self._save_state()
             return "Error registrado: {} ({} veces)".format(error_type, count)
 
@@ -241,6 +251,7 @@ class SelfHealingSystem:
                     if syntax["errors"]:
                         for err in syntax["errors"]:
                             self.handle_error("syntax_error", err["file"], err["error"])
+                    self._save_state()
                 except Exception:
                     pass
                 time.sleep(interval)
@@ -310,9 +321,7 @@ def self_healing_tool(parameters: dict = None, player=None) -> str:
         return "\n".join(lines)
 
     elif action == "scan_all":
-        src = Path(__file__).resolve().parent.parent
-        files = list(src.rglob("*.py"))
-        files = [f for f in files if "__pycache__" not in str(f) and "backups" not in str(f)]
+        files = list(healer._iter_project_py())
 
         healthy = 0
         error_files = []
@@ -328,6 +337,7 @@ def self_healing_tool(parameters: dict = None, player=None) -> str:
                 categories[cat] = categories.get(cat, 0) + 1
             except py_compile.PyCompileError as e:
                 total_errors += 1
+                src = Path(__file__).resolve().parent.parent
                 rel = str(f.relative_to(src))
                 cat = "core" if "core" in rel else "actions" if "actions" in rel else "agents" if "agents" in rel else "other"
                 cat_errors[cat] = cat_errors.get(cat, 0) + 1
@@ -366,9 +376,7 @@ def self_healing_tool(parameters: dict = None, player=None) -> str:
         return "\n".join(lines)
 
     elif action == "health_report":
-        src = Path(__file__).resolve().parent.parent
-        files = list(src.rglob("*.py"))
-        files = [f for f in files if "__pycache__" not in str(f) and "backups" not in str(f)]
+        files = list(healer._iter_project_py())
 
         total_lines = 0
         functions = 0

@@ -2,104 +2,104 @@
   "current_topic": null,
   "recent_entities": [
     {
-      "name": "Resultados",
+      "name": "Estamos",
       "type": "entity",
-      "added_at": 1785209017.3838665
+      "added_at": 1786122551.2261755
     },
     {
-      "name": "Release",
+      "name": "Alkomprar",
       "type": "entity",
-      "added_at": 1785209017.384396
+      "added_at": 1786126842.9237354
     },
     {
-      "name": "Notes**",
+      "name": "Alkomprar**",
       "type": "entity",
-      "added_at": 1785209017.3846734
+      "added_at": 1786126842.9247634
     },
     {
-      "name": "Find",
+      "name": "Aniversario",
       "type": "entity",
-      "added_at": 1785209017.3849328
+      "added_at": 1786126842.9365363
     },
     {
-      "name": "NoSQL.",
+      "name": "Compratecnologíacon",
       "type": "entity",
-      "added_at": 1785209019.8016539
+      "added_at": 1786127958.0166633
     },
     {
-      "name": "NoSQL'",
+      "name": "Crédito",
       "type": "entity",
-      "added_at": 1785209019.8022091
+      "added_at": 1786127958.0171404
     },
     {
-      "name": "Bases",
+      "name": "NASA",
       "type": "entity",
-      "added_at": 1785209019.802475
+      "added_at": 1786127966.9635966
     },
     {
-      "name": "Datos:",
+      "name": "Ciencia**",
       "type": "entity",
-      "added_at": 1785209019.8027515
+      "added_at": 1786127966.9642508
     },
     {
-      "name": "NoSQL,",
+      "name": "Últimas",
       "type": "entity",
-      "added_at": 1785209019.8030078
+      "added_at": 1786127966.964591
     },
     {
-      "name": "Nube",
+      "name": "Explora",
       "type": "entity",
-      "added_at": 1785209019.8032796
+      "added_at": 1786127966.9804544
     },
     {
-      "name": "Híbrida**",
+      "name": "Compra",
       "type": "entity",
-      "added_at": 1785209019.8035438
+      "added_at": 1786152291.666314
     },
     {
-      "name": "Tendenciasclave",
+      "name": "Descuentos",
       "type": "entity",
-      "added_at": 1785209019.8038247
+      "added_at": 1786152291.680025
     },
     {
-      "name": "Inteligencia",
+      "name": "Alkomprar.",
       "type": "entity",
-      "added_at": 1785209019.8040833
+      "added_at": 1786152291.694851
     },
     {
-      "name": "Artificial",
+      "name": "Encuentra",
       "type": "entity",
-      "added_at": 1785209019.8043597
+      "added_at": 1786154113.6640143
     },
     {
-      "name": "Machine",
+      "name": "Ahorra",
       "type": "entity",
-      "added_at": 1785209859.8313968
+      "added_at": 1786154113.6648366
     },
     {
-      "name": "Learning",
+      "name": "Tecnologia",
       "type": "entity",
-      "added_at": 1785209859.8317235
-    },
-    {
-      "name": "Innovaciones",
-      "type": "entity",
-      "added_at": 1785209859.8320343
-    },
-    {
-      "name": "Conclusión:2026llegó",
-      "type": "entity",
-      "added_at": 1785209859.8323185
+      "added_at": 1786200568.9638538
     },
     {
       "name": "Aprendi",
       "type": "entity",
-      "added_at": 1785209862.335636
+      "added_at": 1786200577.9124928
     },
     {
-      "name": "El6Gtraerá",
+      "name": "Resultados",
       "type": "entity",
-      "added_at": 1785209862.3361886
+      "added_at": 1786200577.9128187
+    },
+    {
+      "name": "Daniel",
+      "type": "entity",
+      "added_at": 1786201823.1467113
+    },
+    {
+      "name": "ERIS",
+      "type": "entity",
+      "added_at": 1786201823.147143
     }
   ],
   "active_goals": [],

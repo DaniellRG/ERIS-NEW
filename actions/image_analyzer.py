@@ -40,6 +40,14 @@ def _get_gemini_key():
     env_var = os.environ.get("GEMINI_API_KEY", "")
     if env_var:
         return env_var
+    config_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+    if config_path.exists():
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+            return cfg.get("gemini_api_key", "") or None
+        except Exception:
+            pass
     return None
 
 
@@ -100,6 +108,111 @@ def _call_gemini(image_base64, prompt, mime_type="image/png"):
         return f"Gemini API request error: {e}"
     except Exception as e:
         return f"Error: {e}"
+
+
+def _get_ollama_cfg():
+    config_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+        return {
+            "base_url": data.get("ollama_base_url", "http://localhost:11434"),
+            "vision_model": data.get("ollama_vision_model", "minicpm-v"),
+        }
+    except Exception:
+        return {"base_url": "http://localhost:11434", "vision_model": "minicpm-v"}
+
+
+def _call_openrouter(image_base64, prompt, mime_type="image/png"):
+    config_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+        api_key = data.get("openrouter_api_key", "")
+    except Exception:
+        api_key = ""
+    if not api_key:
+        return ""
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "HTTP-Referer": "https://github.com/eris-beta",
+        "X-Title": "ERIS AI Assistant",
+        "Content-Type": "application/json",
+    }
+    for model in ["google/gemini-2.5-flash", "google/gemini-2.5-flash-lite"]:
+        payload = {
+            "model": model,
+            "max_tokens": 1500,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{image_base64}"}},
+                    ],
+                }
+            ],
+        }
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            if resp.status_code != 200:
+                continue
+            data = resp.json()
+            if data.get("choices"):
+                return data["choices"][0]["message"]["content"]
+        except Exception as e:
+            print(f"[ImageAnalyzer] OpenRouter error ({model}): {e}")
+    return ""
+
+
+def _call_ollama(image_base64, prompt):
+    cfg = _get_ollama_cfg()
+    base_url = cfg["base_url"]
+    model = cfg["vision_model"]
+    try:
+        resp = requests.get(f"{base_url}/api/tags", timeout=3)
+        if resp.status_code != 200:
+            return ""
+        available = [m.get("name", "") for m in resp.json().get("models", [])]
+        if not any(model in m for m in available):
+            print(f"[ImageAnalyzer] Ollama vision model '{model}' not found. Available: {available}")
+            return ""
+    except Exception:
+        return ""
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "images": [image_base64],
+        "stream": False,
+        "options": {"num_predict": 1500, "temperature": 0.3},
+    }
+    try:
+        resp = requests.post(f"{base_url}/api/generate", json=payload, timeout=120)
+        resp.raise_for_status()
+        return resp.json().get("response", "")
+    except Exception as e:
+        print(f"[ImageAnalyzer] Ollama error: {e}")
+        return ""
+
+
+def _is_error_result(result):
+    if not result:
+        return True
+    prefixes = ("Error", "Gemini API request error", "Gemini API error", "No response from Gemini")
+    return result.startswith(prefixes)
+
+
+def _analyze_vision(image_base64, prompt, mime_type="image/png"):
+    """Chain: Gemini -> OpenRouter -> Ollama local. Returns (result, source)."""
+    result = _call_gemini(image_base64, prompt, mime_type)
+    if result and not _is_error_result(result):
+        return result, "Gemini"
+    result = _call_openrouter(image_base64, prompt, mime_type)
+    if result:
+        return result, "OpenRouter"
+    result = _call_ollama(image_base64, prompt)
+    if result:
+        return result, "Ollama (local)"
+    return "Error: No se pudo analizar la imagen (Gemini, OpenRouter y Ollama fallaron).", None
 
 
 def _extract_exif(image_path):
@@ -219,17 +332,18 @@ def image_analyzer(parameters: dict, player=None) -> str:
             "- Notable details or unusual elements\n"
             "Be thorough but concise."
         )
-        result = _call_gemini(b64, prompt, mime)
-        return f"=== Image Analysis ===\nFile: {path} ({file_size:,} bytes)\n\n{result}"
+        result, source = _analyze_vision(b64, prompt, mime)
+        return f"=== Image Analysis ===\nFile: {path} ({file_size:,} bytes)\n\n{result}" + (f"\n\n[Fuente: {source}]" if source else "")
 
     elif action == "identify":
         prompt = (
-            "Identify and list all objects, people, animals, and notable elements in this image. "
-            "For each item, describe its approximate location in the image (top-left, center, etc.). "
-            "Be as specific as possible."
+            "Identify and list all objects, people, animals, drawings/illustrations, text, "
+            "and notable elements in this image. For each item, describe its approximate location "
+            "in the image (top-left, center, etc.). Count how many of each category there are "
+            "(e.g. '3 personas', '2 perros', '1 letrero con texto'). Be as specific as possible."
         )
-        result = _call_gemini(b64, prompt, mime)
-        return f"=== Object Identification ===\nFile: {path}\n\n{result}"
+        result, source = _analyze_vision(b64, prompt, mime)
+        return f"=== Object Identification ===\nFile: {path}\n\n{result}" + (f"\n\n[Fuente: {source}]" if source else "")
 
     elif action == "read_text":
         prompt = (
@@ -238,7 +352,7 @@ def image_analyzer(parameters: dict, player=None) -> str:
             "Maintain the original structure and layout as much as possible. "
             "If text is partially obscured or unclear, note that."
         )
-        result = _call_gemini(b64, prompt, mime)
-        return f"=== OCR Result ===\nFile: {path}\n\n{result}"
+        result, source = _analyze_vision(b64, prompt, mime)
+        return f"=== OCR Result ===\nFile: {path}\n\n{result}" + (f"\n\n[Fuente: {source}]" if source else "")
 
     return f"Unknown action: {action}. Available: analyze, identify, read_text, compare, metadata"

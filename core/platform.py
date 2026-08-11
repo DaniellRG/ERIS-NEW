@@ -44,7 +44,7 @@ def get_platform_name() -> str:
 def get_python_executable() -> str:
     """Return the appropriate Python executable for the platform."""
     if IS_WINDOWS:
-        return "pythonw.exe"
+        return "python.exe"
     return "python3"
 
 def get_python_interpreter() -> str:

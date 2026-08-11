@@ -16,5 +16,215 @@
     "path": "D:\\Eris_Source\\data\\documents\\doc_20260727_214510.docx",
     "title": "test_batch",
     "time": "2026-07-27T21:45:11.065357"
+  },
+  {
+    "format": "Word",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_214955.docx",
+    "title": "HandlerTest",
+    "time": "2026-07-29T21:49:56.016386"
+  },
+  {
+    "format": "PDF",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_214956.pdf",
+    "title": "PDFTest",
+    "time": "2026-07-29T21:49:56.564559"
+  },
+  {
+    "format": "Word",
+    "path": "Documents\\Historia_Simon_Bolivar.docx",
+    "title": "Historia de Simón Bolívar",
+    "time": "2026-07-29T21:52:42.964494"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\_test.docx",
+    "title": "Test",
+    "time": "2026-07-29T22:07:00.737765"
+  },
+  {
+    "format": "Word",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_220701.docx",
+    "title": "HandlerTest",
+    "time": "2026-07-29T22:07:01.206494"
+  },
+  {
+    "format": "PDF",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_220701.pdf",
+    "title": "PDFTest",
+    "time": "2026-07-29T22:07:01.714540"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\Mi_Documento_20260729_220711.docx",
+    "title": "Mi Documento",
+    "time": "2026-07-29T22:07:11.261396"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\_test.docx",
+    "title": "Test",
+    "time": "2026-07-29T22:13:32.389618"
+  },
+  {
+    "format": "Word",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_221332.docx",
+    "title": "HandlerTest",
+    "time": "2026-07-29T22:13:32.807202"
+  },
+  {
+    "format": "PDF",
+    "path": "D:\\Eris_Source\\data\\documents\\doc_20260729_221332.pdf",
+    "title": "PDFTest",
+    "time": "2026-07-29T22:13:33.266629"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\Desktop\\prueba_escritorio.docx",
+    "title": "DesktopTest",
+    "time": "2026-07-29T22:13:38.711196"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\Desktop\\MiCarpeta\\test_custom.docx",
+    "title": "CustomFolder",
+    "time": "2026-07-29T22:13:38.743298"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_002450.docx",
+    "title": "Prueba ERIS",
+    "time": "2026-07-30T00:24:50.617845"
+  },
+  {
+    "format": "Texto",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_002450.txt",
+    "title": "prueba_texto",
+    "time": "2026-07-30T00:24:50.635864"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\Desktop\\doc_20260730_002450.docx",
+    "title": "Documento en Desktop",
+    "time": "2026-07-30T00:24:50.673329"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003400.docx",
+    "title": "Prueba Word ERIS",
+    "time": "2026-07-30T00:34:00.493976"
+  },
+  {
+    "format": "PowerPoint",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003400.pptx",
+    "title": "Presentacion ERIS",
+    "time": "2026-07-30T00:34:00.786882"
+  },
+  {
+    "format": "Excel",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003400.xlsx",
+    "title": "Datos ERIS",
+    "time": "2026-07-30T00:34:01.070475"
+  },
+  {
+    "format": "PDF",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003401.pdf",
+    "title": "PDF ERIS",
+    "time": "2026-07-30T00:34:01.680244"
+  },
+  {
+    "format": "Texto",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003401.txt",
+    "title": "texto_plano",
+    "time": "2026-07-30T00:34:01.698252"
+  },
+  {
+    "format": "CSV",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003401.csv",
+    "title": "CSV",
+    "time": "2026-07-30T00:34:01.716087"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\Documento_Completo_ERIS_20260730_003550.docx",
+    "title": "Documento Completo ERIS",
+    "time": "2026-07-30T00:35:50.474355"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003550.docx",
+    "title": "Word Directo",
+    "time": "2026-07-30T00:35:50.509580"
+  },
+  {
+    "format": "PowerPoint",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003550.pptx",
+    "title": "PPT Directo",
+    "time": "2026-07-30T00:35:50.541007"
+  },
+  {
+    "format": "Excel",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003550.xlsx",
+    "title": "Excel Directo",
+    "time": "2026-07-30T00:35:50.573007"
+  },
+  {
+    "format": "PDF",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003550.pdf",
+    "title": "PDF Directo",
+    "time": "2026-07-30T00:35:51.055787"
+  },
+  {
+    "format": "Texto",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003551.txt",
+    "title": "TXT Directo",
+    "time": "2026-07-30T00:35:51.075576"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003703.docx",
+    "title": "Historia de Simon Bolivar",
+    "time": "2026-07-30T00:37:03.810779"
+  },
+  {
+    "format": "PowerPoint",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003703.pptx",
+    "title": "Simon Bolivar",
+    "time": "2026-07-30T00:37:04.030695"
+  },
+  {
+    "format": "Excel",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003704.xlsx",
+    "title": "Cronologia Bolivar",
+    "time": "2026-07-30T00:37:04.303544"
+  },
+  {
+    "format": "PDF",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003704.pdf",
+    "title": "Simon Bolivar Resumen",
+    "time": "2026-07-30T00:37:06.106616"
+  },
+  {
+    "format": "Texto",
+    "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\doc_20260730_003706.txt",
+    "title": "Simon Bolivar Datos",
+    "time": "2026-07-30T00:37:06.227709"
+  },
+  {
+    "format": "Word",
+    "path": "C:\\Users\\danie\\Desktop\\Historia_Simon_Bolivar.docx",
+    "title": "Historia de Simón Bolívar",
+    "time": "2026-08-05T12:17:03.271071"
+  },
+  {
+    "format": "Texto",
+    "path": "C:\\Users\\danie\\Desktop\\Problema_Generacion_Texto.txt",
+    "title": "Reporte de Problema de Generación",
+    "time": "2026-08-05T12:18:54.575742"
+  },
+  {
+    "format": "Texto",
+    "path": "D:\\Eris_Source\\data\\resumen_inventario.txt",
+    "title": "documento",
+    "time": "2026-08-06T22:45:11.811104"
   }
 ]

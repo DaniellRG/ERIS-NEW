@@ -48,8 +48,8 @@ def handle_productivity(text: str, player=None, **kwargs) -> str:
 
         # Document creation
         elif any(kw in text_lower for kw in ["documento", "document", "crear doc", "crear documento", "word", "pdf"]):
-            from actions.document_creator import document_creator
-            result = document_creator(parameters={"action": "create"}, player=player)
+            from actions.document_generator import document_generator
+            result = document_generator(parameters={"action": "create", "content": text}, player=player)
 
         # Project management
         elif any(kw in text_lower for kw in ["proyecto", "project", "tarea", "task", "kanban"]):

@@ -27,6 +27,19 @@ def _check_ollama() -> bool:
         return False
 
 
+def ping(timeout: float = 1.0) -> bool:
+    """Chequeo rápido (no cacheado) de disponibilidad de Ollama.
+
+    Útil para no bloquear 30s (timeout de embed) cuando Ollama está caído
+    pero quedó cacheado como disponible.
+    """
+    try:
+        urllib.request.urlopen(f"{OLLAMA_BASE}/api/tags", timeout=timeout)
+        return True
+    except Exception:
+        return False
+
+
 _ollama_available: Optional[bool] = None
 
 

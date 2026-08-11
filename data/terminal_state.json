@@ -1,276 +1,356 @@
 {
   "history": [
     {
-      "cmd": "dir C:\\Users\\danie\\Desktop /b",
-      "shell": "cmd",
-      "output": "ERIS.lnk\nReporte_Fallas_ERIS.txt\nscreenshot.png\nSISTEMA_ENTRENAMIENTO_AGENTE_IA.md",
-      "time": "2026-07-27 11:16:21"
-    },
-    {
-      "cmd": "Get-Date",
-      "shell": "powershell",
-      "output": "lunes, 27 de julio de 2026 11:16:21 a. m.",
-      "time": "2026-07-27 11:16:21"
-    },
-    {
-      "cmd": "Get-Process | Select-Object -First 5 Name, Id, CPU",
-      "shell": "powershell",
-      "output": "Name                    Id      CPU\n----                    --      ---\nAdobeCollabSync      16528 0.046875\nAdobeCollabSync      16592        2\namdfendrsr            3000         \nApplicationFrameHost  6404 0.234375\narmsvc                4840",
-      "time": "2026-07-27 11:16:21"
-    },
-    {
-      "cmd": "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion",
-      "shell": "powershell",
-      "output": "WindowsProductName WindowsVersion\n------------------ --------------\nWindows 10 Home    2009",
-      "time": "2026-07-27 11:16:25"
-    },
-    {
-      "cmd": "echo Hola desde ERIS",
-      "shell": "cmd",
-      "output": "Hola desde ERIS",
-      "time": "2026-07-27 11:16:25"
-    },
-    {
-      "cmd": "Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{N='GB';E={[math]::Round($_.Used/1GB,1)}}, @{N='Libre_GB';E={[math]::Round($_.Free/1GB,1)}} | Format-Table -AutoSize",
-      "shell": "powershell",
-      "output": "Name    GB Libre_GB\n----    -- --------\nC    336.3    137.5\nD     81.9    383.9\nE      209     14.6\nF     16.2     41.5\nG      0.5    111.3\nJ    100.7     18.6",
-      "time": "2026-07-27 11:22:23"
-    },
-    {
-      "cmd": "Get-ChildItem -Path C:\\Users\\danie -Filter '*.py' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 10 FullName",
-      "shell": "powershell",
-      "output": "FullName                                                                                                               \n--------                                                                                                               \nC:\\Users\\danie\\.lmstudio\\extensions\\backends\\vendor\\_amphibian\\app-harmony-win-x86@7\\postinstall.py                    \nC:\\Users\\danie\\.lmstudio\\extensions\\backends\\vendor\\_amphibian\\app-harmony-win-x86@7\\Lib\\site-packages\\sitecustomize.py\nC:\\Users\\danie\\.lmst",
-      "time": "2026-07-27 11:22:24"
-    },
-    {
-      "cmd": "dir D:\\ /b",
-      "shell": "cmd",
-      "output": "cache\nComprobantes de pypal y ediccion\nef_err.txt\nef_out.txt\nEris_Backup_20260712_134230\nEris_Backup_20260715_091310\nEris_Backup_20260715_120614\nEris_backup_ACTUAL_20260618_113542\nEris_backup_antes_eris2_20260617_195822\nEris_backup_ANTES_ORBE_20260618_212953\nEris_backup_AUDIT_20260620_214145\nEris_backup_eris2_20260617_200029\nEris_backup_FINAL_20260620_201954\nEris_backup_GAME_20260620_110454\nEris_backup_GAME_AGENT_20260620_114836\nEris_backup_MEMORIAFIX_20260619_104046\nEris_backup_MEMORIA_20260619",
-      "time": "2026-07-27 11:22:24"
-    },
-    {
-      "cmd": "Copy-Item 'C:\\Users\\danie\\Desktop\\screenshot.png' -Destination 'C:\\Users\\danie\\Desktop\\screenshot_backup.png' -Force; Write-Output 'Copia exitosa'",
-      "shell": "powershell",
-      "output": "Copia exitosa",
-      "time": "2026-07-27 11:22:24"
-    },
-    {
-      "cmd": "New-Item -Path 'C:\\Users\\danie\\Desktop\\ERIS_TEST' -ItemType Directory -Force | Select-Object FullName",
-      "shell": "powershell",
-      "output": "FullName                        \n--------                        \nC:\\Users\\danie\\Desktop\\ERIS_TEST",
-      "time": "2026-07-27 11:22:25"
-    },
-    {
-      "cmd": "Set-Content -Path 'C:\\Users\\danie\\Desktop\\ERIS_TEST\\test.txt' -Value 'Hola desde ERIS - Test de escritura' -Encoding UTF8; Get-Content 'C:\\Users\\danie\\Desktop\\ERIS_TEST\\test.txt'",
-      "shell": "powershell",
-      "output": "Hola desde ERIS - Test de escritura",
-      "time": "2026-07-27 11:22:25"
-    },
-    {
       "cmd": "Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 Name, Id, @{N='CPU_s';E={[math]::Round($_.CPU,2)}} | Format-Table -AutoSize",
       "shell": "powershell",
-      "output": "Name                Id  CPU_s\n----                --  -----\nSpotify          18852 704.64\nopencode          5032 256.05\nSteelSeriesSonar 16740 217.17\nexplorer          7804  99.31\naudiodg           4376  83.17",
-      "time": "2026-07-27 11:22:25"
+      "elevated": false,
+      "output": "Name                   Id   CPU_s\n----                   --   -----\npython              18344 1065.55\nopencode             5384  992.31\nSteelSeriesSonar    17976  289.88\nSteelSeriesGGClient 19696  201.66\nSteelSeriesGGClient  8280  161.06",
+      "time": "2026-08-03 11:00:05"
     },
     {
       "cmd": "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsProcessors, CsPhyicallyInstalledMemory",
       "shell": "powershell",
+      "elevated": false,
       "output": "WindowsProductName         : Windows 10 Home\nWindowsVersion             : 2009\nOsArchitecture             : 64 bits\nCsProcessors               : {AMD Ryzen 7 5700G with Radeon Graphics         }\nCsPhyicallyInstalledMemory : 33554432",
-      "time": "2026-07-27 11:22:28"
+      "time": "2026-08-03 11:00:08"
     },
     {
       "cmd": "Get-NetIPAddress | Where-Object {$_.AddressFamily -eq 'IPv4' -and $_.IPAddress -ne '127.0.0.1'} | Select-Object InterfaceAlias, IPAddress | Format-Table -AutoSize",
       "shell": "powershell",
+      "elevated": false,
       "output": "InterfaceAlias            IPAddress      \n--------------            ---------      \nConexi¢n de red Bluetooth 169.254.185.62 \nConexi¢n de  rea local* 2 169.254.96.51  \nEthernet 2                192.168.1.19   \nConexi¢n de  rea local* 1 169.254.113.122\nEthernet                  169.254.169.134\nWi-Fi                     169.254.78.159",
-      "time": "2026-07-27 11:22:31"
+      "time": "2026-08-03 11:00:09"
     },
     {
       "cmd": "ping -n 3 google.com",
       "shell": "cmd",
-      "output": "Haciendo ping a google.com [172.217.30.174] con 32 bytes de datos:\nRespuesta desde 172.217.30.174: bytes=32 tiempo=57ms TTL=118\nRespuesta desde 172.217.30.174: bytes=32 tiempo=26ms TTL=118\nRespuesta desde 172.217.30.174: bytes=32 tiempo=25ms TTL=118\n\nEstad¡sticas de ping para 172.217.30.174:\n    Paquetes: enviados = 3, recibidos = 3, perdidos = 0\n    (0% perdidos),\nTiempos aproximados de ida y vuelta en milisegundos:\n    M¡nimo = 25ms, M ximo = 57ms, Media = 36ms",
-      "time": "2026-07-27 11:22:33"
+      "elevated": false,
+      "output": "Haciendo ping a google.com [142.251.132.174] con 32 bytes de datos:\nRespuesta desde 142.251.132.174: bytes=32 tiempo=25ms TTL=118\nRespuesta desde 142.251.132.174: bytes=32 tiempo=24ms TTL=118\nRespuesta desde 142.251.132.174: bytes=32 tiempo=26ms TTL=118\n\nEstad¡sticas de ping para 142.251.132.174:\n    Paquetes: enviados = 3, recibidos = 3, perdidos = 0\n    (0% perdidos),\nTiempos aproximados de ida y vuelta en milisegundos:\n    M¡nimo = 24ms, M ximo = 26ms, Media = 25ms",
+      "time": "2026-08-03 11:00:11"
     },
     {
       "cmd": "Get-ChildItem -Path C:\\Users\\danie -Recurse -File -ErrorAction SilentlyContinue | Where-Object {$_.Length -gt 100MB} | Select-Object FullName, @{N='MB';E={[math]::Round($_.Length/1MB)}} | Sort-Object MB -Descending | Select-Object -First 10 | Format-Table -AutoSize",
       "shell": "powershell",
-      "output": "FullName                                                                                                               \n--------                                                                                                               \nC:\\Users\\danie\\Downloads\\Bugonia.2025.WEB-DL.1080p-Dual-Lat\\Bugonia.2025.WEB-DL.1080p-Dual-Lat.mkv                     \nC:\\Users\\danie\\Downloads\\Scary.Movie.Terrorificamente.incorrecta.2026.WEB-DL.1080p-Dual-Lat\\Scary.Movie.Terrorificam...\nC:\\Users\\danie\\.olla",
-      "time": "2026-07-27 11:22:38"
+      "elevated": false,
+      "output": "FullName                                                                                                               \n--------                                                                                                               \nC:\\Users\\danie\\.ollama\\models\\blobs\\sha256-a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e            \nC:\\Users\\danie\\.ollama\\models\\blobs\\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f            \nC:\\Users\\danie\\.olla",
+      "time": "2026-08-03 11:00:14"
     },
     {
       "cmd": "Get-Service | Where-Object {$_.Status -eq 'Running'} | Select-Object -First 10 Name, DisplayName | Format-Table -AutoSize",
       "shell": "powershell",
+      "elevated": false,
       "output": "Name                        DisplayName                                           \n----                        -----------                                           \nAdobeARMservice             Adobe Acrobat Update Service                          \nAMD Crash Defender Service  AMD Crash Defender Service                            \nAMD External Events Utility AMD External Events Utility                           \nAppinfo                     Informaci¢n de la aplicaci¢n                          \nAp",
-      "time": "2026-07-27 11:22:39"
-    },
-    {
-      "cmd": "Get-Service | Where-Object {.Status -eq Running} | Measure-Object | Select-Object -ExpandProperty Count",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "0\n\n[STDERR]\n.Status : El t‚rmino '.Status' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa \nejecutable. Compruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta \nes correcta e int‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 29\n+ Get-Service | Where-Object {.Status -eq Running} | Measure-Object | S ...\n+                             ~~~~~~~\n    + CategoryInfo          : ObjectNotFound: (.Status:String) [], CommandNotFoundExce",
-      "time": "2026-07-27 11:24:45"
-    },
-    {
-      "cmd": "Get-Service | Where-Object {$_.Status -eq \"Running\"} | Measure-Object | Select-Object -ExpandProperty Count",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "108",
-      "time": "2026-07-27 11:25:27"
-    },
-    {
-      "cmd": "Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 3 Name, @{N='MB';E={[math]::Round($_.WorkingSet64/1MB)}} | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name            MB\n----            --\nopencode       960\nsteamwebhelper 463\nbrave          364",
-      "time": "2026-07-27 11:25:28"
-    },
-    {
-      "cmd": "systeminfo | findstr /B /C:\"OS Name\" /C:\"Total Physical Memory\"",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "FINDSTR: No se puede abrir Name\"\nFINDSTR: No se puede abrir /C:\"Total\nFINDSTR: No se puede abrir Physical",
-      "time": "2026-07-27 11:25:30"
-    },
-    {
-      "cmd": "Get-PSDrive -PSProvider FileSystem | ForEach-Object { $drive = $_.Name; Get-ChildItem -Path \"$drive\\\" -Directory -ErrorAction SilentlyContinue | Select-Object -First 3 FullName } | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-07-27 11:25:30"
-    },
-    {
-      "cmd": "Get-WindowsDriver -Online | Select-Object -First 5 ClassName, ProviderName, Version | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": true,
-      "output": "(comando ejecutado como admin — si no viste ventana, aceptá el UAC)",
-      "time": "2026-07-27 11:25:48"
+      "time": "2026-08-03 11:00:15"
     },
     {
       "cmd": "open: C:\\Users\\danie\\Desktop",
       "shell": "open",
       "elevated": false,
       "output": "Abierto: C:\\Users\\danie\\Desktop",
-      "time": "2026-07-27 11:31:02"
+      "time": "2026-08-03 11:00:15"
     },
     {
       "cmd": "open: notepad",
       "shell": "open",
       "elevated": false,
       "output": "Abierto: notepad",
-      "time": "2026-07-27 11:31:03"
+      "time": "2026-08-03 11:00:15"
     },
     {
       "cmd": "taskkill /F /IM notepad.exe",
       "shell": "cmd",
       "elevated": false,
-      "output": "Correcto: se termin¢ el proceso \"Notepad.exe\" con PID 9860.\nCorrecto: se termin¢ el proceso \"Notepad.exe\" con PID 5628.",
-      "time": "2026-07-27 11:31:05"
+      "output": "Correcto: se termin¢ el proceso \"Notepad.exe\" con PID 1788.",
+      "time": "2026-08-03 11:00:17"
     },
     {
       "cmd": "win_r: calc",
       "shell": "win_r",
       "elevated": false,
       "output": "Win+R ejecutado: calc",
-      "time": "2026-07-27 11:31:08"
+      "time": "2026-08-03 11:00:20"
     },
     {
       "cmd": "open: https://www.google.com",
       "shell": "open",
       "elevated": false,
       "output": "Abierto: https://www.google.com",
-      "time": "2026-07-27 11:31:10"
+      "time": "2026-08-03 11:00:23"
     },
     {
       "cmd": "open: D:\\",
       "shell": "open",
       "elevated": false,
       "output": "Abierto: D:\\",
-      "time": "2026-07-27 11:31:10"
+      "time": "2026-08-03 11:00:23"
     },
     {
       "cmd": "shell_execute: mspaint",
       "shell": "powershell",
       "elevated": false,
       "output": "ShellExecute: mspaint",
-      "time": "2026-07-27 11:31:11"
+      "time": "2026-08-03 11:00:24"
     },
     {
       "cmd": "Get-Date",
       "shell": "powershell",
       "elevated": false,
-      "output": "lunes, 27 de julio de 2026 11:31:11 a. m.",
-      "time": "2026-07-27 11:31:11"
+      "output": "lunes, 3 de agosto de 2026 11:00:24 a. m.",
+      "time": "2026-08-03 11:00:24"
     },
     {
       "cmd": "echo Hola desde ERIS en CMD",
       "shell": "cmd",
       "elevated": false,
       "output": "Hola desde ERIS en CMD",
-      "time": "2026-07-27 11:31:11"
+      "time": "2026-08-03 11:00:24"
     },
     {
-      "cmd": "Write-Output 'ERIS_TEST_OK'",
+      "cmd": "start spotify",
       "shell": "powershell",
       "elevated": false,
-      "output": "ERIS_TEST_OK",
-      "time": "2026-07-27 12:32:41"
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-03 21:17:08"
     },
     {
-      "cmd": "echo ERIS_TEST_OK",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "ERIS_TEST_OK",
-      "time": "2026-07-27 12:32:41"
-    },
-    {
-      "cmd": "Get-Process python | Select-Object Id, ProcessName, CPU | Format-Table -AutoSize",
+      "cmd": "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Hola')",
       "shell": "powershell",
       "elevated": false,
-      "output": "Id ProcessName      CPU\n   -- -----------      ---\n 9472 python        77.625\n10780 python      0.078125",
-      "time": "2026-07-27 21:13:34"
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-05 11:58:44"
     },
     {
-      "cmd": "powershell -Command \"Out-File -Path './informe_problema.txt' -Encoding UTF8 -InputObject 'Informe de problema: El usuario Daniel intentó realizar una búsqueda web en el navegador Brave. A pesar de que la herramienta open_app y web_search se ejecutaron correctamente, el usuario reportó en múltiples ocasiones que los resultados no se mostraban en pantalla o no eran visibles. Se desconoce la causa exacta del fallo de visualización en el entorno del usuario.'\"",
-      "shell": "cmd",
+      "cmd": "winget install MySQL.MySQL",
+      "shell": "powershell",
       "elevated": false,
-      "output": "Out-File -Path './informe_problema.txt' -Encoding UTF8 -InputObject 'Informe de problema: El usuario Daniel intent¢ realizar una b£squeda web en el navegador Brave. A pesar de que la herramienta open_app y web_search se ejecutaron correctamente, el usuario report¢ en m£ltiples ocasiones que los resultados no se mostraban en pantalla o no eran visibles. Se desconoce la causa exacta del fallo de visualizaci¢n en el entorno del usuario.'",
-      "time": "2026-07-27 21:20:47"
+      "output": "No package found matching input criteria.",
+      "time": "2026-08-06 09:46:44"
     },
     {
-      "cmd": "powershell -Command \"Move-Item -Path './informe_problema.txt' -Destination '$env:USERPROFILE\\Desktop'\"",
-      "shell": "cmd",
+      "cmd": "winget search MySQL",
+      "shell": "powershell",
       "elevated": false,
-      "output": "Move-Item -Path './informe_problema.txt' -Destination 'C:\\Users\\danie\\Desktop'",
-      "time": "2026-07-27 21:21:18"
+      "output": "Name                                        Id                                        Version      Match      Source\n---------------------------------------------------------------------------------------------------------------------\nMySQL                                       Oracle.MySQL                              8.4.9                   winget\nHangar                                      AnssolLabs.Hangar                         1.0.0        Tag: mysql winget\nXAMPP 8.1                      ",
+      "time": "2026-08-06 09:46:48"
     },
     {
-      "cmd": "echo hello",
+      "cmd": "winget install Oracle.MySQL",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Timeout: el comando tardó más de 30s",
+      "time": "2026-08-06 09:47:25"
+    },
+    {
+      "cmd": "winget install Oracle.MySQL",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Found an existing package already installed. Trying to upgrade the installed package...\nNo available upgrade found.\nNo newer package versions are available from the configured sources.",
+      "time": "2026-08-06 09:48:29"
+    },
+    {
+      "cmd": "mysql --version",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
+      "time": "2026-08-06 09:48:32"
+    },
+    {
+      "cmd": "Get-ChildItem -Path \"C:\\Program Files\\MySQL\" -Recurse -Filter \"mysql.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Directorio: C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\n\n\nMode                 LastWriteTime         Length Name                                                                 \n----                 -------------         ------ ----                                                                 \n-a----     07/04/2026  09:08 p. m.        7177848 mysql.exe",
+      "time": "2026-08-06 09:49:01"
+    },
+    {
+      "cmd": "[System.Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\", [System.EnvironmentVariableTarget]::Machine)",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Excepci¢n al llamar a \"SetEnvironmentVariable\" con los argumentos \"3\": \"Acceso denegado al Registro solicitado.\"\nEn l¡nea: 1 Car cter: 1\n+ [System.Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";C: ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException\n    + FullyQualifiedErrorId : SecurityException",
+      "time": "2026-08-06 09:49:02"
+    },
+    {
+      "cmd": "$env:Path += \";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-06 09:49:05"
+    },
+    {
+      "cmd": "mysql --version",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
+      "time": "2026-08-06 09:49:07"
+    },
+    {
+      "cmd": "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"[System.Environment]::SetEnvironmentVariable(\\\"Path\\\", $env:Path + \\\";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\\", [System.EnvironmentVariableTarget]::Machine)\"' -Verb RunAs",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-06 09:49:41"
+    },
+    {
+      "cmd": "Get-Package -Name \"*MySQL*\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Name                           Version          Source                           ProviderName                          \n----                           -------          ------                           ------------                          \nMySQL Server 8.4               8.4.9            C:\\Program Files\\MySQL\\MySQL ... msi                                   \nMySQL Server 8.0               8.0.46           C:\\Program Files\\MySQL\\MySQL ... msi                                   \nMySQL Installer     ",
+      "time": "2026-08-06 10:28:18"
+    },
+    {
+      "cmd": "\"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "En l¡nea: 1 Car cter: 59\n+ \"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version\n+                                                           ~~~~~~~\nToken 'version' inesperado en la expresi¢n o la instrucci¢n.\nEn l¡nea: 1 Car cter: 1\n+ \"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nEl operador -- solamente funciona en variables o en propiedades.\n    + CategoryInfo          : ParserError: (:) [], ParentContai",
+      "time": "2026-08-06 10:28:54"
+    },
+    {
+      "cmd": "start \"\" \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Start-Process : No se puede validar el argumento del par metro 'FilePath'. El argumento es null o est  vac¡o. \nProporcione un argumento que no sea null o que no est‚ vac¡o e intente ejecutar el comando de nuevo.\nEn l¡nea: 1 Car cter: 7\n+ start \"\" \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.e ...\n+       ~~\n    + CategoryInfo          : InvalidData: (:) [Start-Process], ParameterBindingValidationException\n    + FullyQualifiedErrorId : ParameterArgumentValidationError,Microsoft.Powe",
+      "time": "2026-08-06 10:28:56"
+    },
+    {
+      "cmd": "mysql --version",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
+      "time": "2026-08-06 10:28:58"
+    },
+    {
+      "cmd": "Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\M ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException\n    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand",
+      "time": "2026-08-06 10:29:01"
+    },
+    {
+      "cmd": "Get-ChildItem -Path \"C:\\Program Files\\MySQL\\\" -Recurse -Filter \"MySQLWorkbench.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-06 10:29:03"
+    },
+    {
+      "cmd": "Get-Service -Name \"*MySQL*\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Status   Name               DisplayName                           \n------   ----               -----------                           \nRunning  MySQL80            MySQL80                               \nRunning  MySQL84            MySQL84",
+      "time": "2026-08-06 10:29:04"
+    },
+    {
+      "cmd": "Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0 CE\\MySQLWorkbench.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-06 10:33:32"
+    },
+    {
+      "cmd": "(Get-ChildItem -Path D:\\Eris_Source\\actions -File).Count",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "256",
+      "time": "2026-08-06 22:45:10"
+    },
+    {
+      "cmd": "python Desktop/ERIS_Scripts/calculadora.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Ingrese el primer nÃºmero: \n[STDERR]\nTraceback (most recent call last):\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 89, in <module>\n    main()\n    ~~~~^^\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 68, in main\n    num1 = float(input(\"Ingrese el primer nÃºmero: \"))\n                 ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nEOFError: EOF when reading a line",
+      "time": "2026-08-07 12:39:58"
+    },
+    {
+      "cmd": "python \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Ingrese el primer nÃºmero: \n[STDERR]\nTraceback (most recent call last):\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 89, in <module>\n    main()\n    ~~~~^^\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 68, in main\n    num1 = float(input(\"Ingrese el primer nÃºmero: \"))\n                 ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nEOFError: EOF when reading a line",
+      "time": "2026-08-07 12:43:29"
+    },
+    {
+      "cmd": "Start-Process powershell.exe -ArgumentList '-NoExit', '-Command', 'cd \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\"; python calculadora.py'",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-07 12:44:05"
+    },
+    {
+      "cmd": "Start-Process -FilePath \"C:\\Users\\danie\\AppData\\Local\\Discord\\Update.exe\" -ArgumentList \"--processStart Discord.exe\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-07 20:08:49"
+    },
+    {
+      "cmd": "npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "npx : No se puede cargar el archivo C:\\Program Files\\nodejs\\npx.ps1 porque la ejecuci¢n de scripts est  deshabilitada \nen este sistema. Para obtener m s informaci¢n, consulta el tema about_Execution_Policies en \nhttps:/go.microsoft.com/fwlink/?LinkID=135170.\nEn l¡nea: 1 Car cter: 1\n+ npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris  ...\n+ ~~~\n    + CategoryInfo          : SecurityError: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess",
+      "time": "2026-08-08 13:47:25"
+    },
+    {
+      "cmd": "npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "npx : No se puede cargar el archivo C:\\Program Files\\nodejs\\npx.ps1 porque la ejecuci¢n de scripts est  deshabilitada \nen este sistema. Para obtener m s informaci¢n, consulta el tema about_Execution_Policies en \nhttps:/go.microsoft.com/fwlink/?LinkID=135170.\nEn l¡nea: 1 Car cter: 1\n+ npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris  ...\n+ ~~~\n    + CategoryInfo          : SecurityError: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess",
+      "time": "2026-08-08 13:47:26"
+    },
+    {
+      "cmd": "New-Item -Path \"C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris\" -ItemType Directory -Force",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Directorio: C:\\Users\\danie\\Desktop\\ERIS_web\n\n\nMode                 LastWriteTime         Length Name                                                                 \n----                 -------------         ------ ----                                                                 \nd-----     08/08/2026  02:02 p. m.                next-eris",
+      "time": "2026-08-08 14:20:44"
+    },
+    {
+      "cmd": "Get-WindowsDriver -Online | Select-Object -First 5 ClassName, ProviderName, Version | Format-Table -AutoSize",
+      "shell": "powershell",
+      "elevated": true,
+      "output": "(comando ejecutado como admin — aceptá el UAC)",
+      "time": "2026-08-08 19:13:15"
+    },
+    {
+      "cmd": "dir C:\\Users\\danie\\Desktop /b",
       "shell": "cmd",
       "elevated": false,
-      "output": "hello",
-      "time": "2026-07-27 22:26:07"
+      "output": "Error: 'NoneType' object has no attribute 'strip'",
+      "time": "2026-08-08 19:13:16"
     },
     {
       "cmd": "Get-Date",
       "shell": "powershell",
       "elevated": false,
-      "output": "lunes, 27 de julio de 2026 10:26:09 p. m.",
-      "time": "2026-07-27 22:26:09"
+      "output": "Error: 'NoneType' object has no attribute 'strip'",
+      "time": "2026-08-08 19:13:16"
     },
     {
-      "cmd": "echo hello world",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "hello world",
-      "time": "2026-07-27 22:30:03"
-    },
-    {
-      "cmd": "Get-Date",
+      "cmd": "Get-Process | Select-Object -First 5 Name, Id, CPU",
       "shell": "powershell",
       "elevated": false,
-      "output": "lunes, 27 de julio de 2026 10:30:04 p. m.",
-      "time": "2026-07-27 22:30:04"
+      "output": "Name                    Id     CPU\n----                    --     ---\nAdobeCollabSync      19128 0.03125\nAdobeCollabSync      19168 3.03125\namdfendrsr            3016        \nApplicationFrameHost  1884  0.4375\narmsvc                4864",
+      "time": "2026-08-08 19:13:17"
+    },
+    {
+      "cmd": "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "WindowsProductName WindowsVersion\n------------------ --------------\nWindows 10 Home    2009",
+      "time": "2026-08-08 19:13:20"
+    },
+    {
+      "cmd": "echo Hola desde ERIS",
+      "shell": "cmd",
+      "elevated": false,
+      "output": "Hola desde ERIS",
+      "time": "2026-08-08 19:13:20"
+    },
+    {
+      "cmd": "Get-AudioDevice -List",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-08 19:44:28"
     }
   ],
-  "last_cmd": "Get-Date",
-  "last_output": "lunes, 27 de julio de 2026 10:30:04 p. m."
+  "last_cmd": "Get-AudioDevice -List",
+  "last_output": "(comando ejecutado sin output)"
 }

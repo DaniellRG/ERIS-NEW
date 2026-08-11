@@ -49,6 +49,8 @@ def chat(
     system: str = "",
     model: str | None = None,
     base_url: str | None = None,
+    temperature: float = 0.7,
+    max_tokens: int = 1024,
 ) -> str:
     """Send a prompt to Ollama and return the response text."""
     cfg = _get_cfg()
@@ -57,7 +59,8 @@ def chat(
     if model is None:
         model = cfg.get("ollama_model", "llama3.2")
 
-    payload = {"model": model, "prompt": prompt, "stream": False}
+    payload = {"model": model, "prompt": prompt, "stream": False,
+               "temperature": temperature, "num_predict": max_tokens}
     if system:
         payload["system"] = system
 

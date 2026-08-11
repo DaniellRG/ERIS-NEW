@@ -30,27 +30,83 @@ AGENT_DEFINITIONS = {
             "pantalla", "screen", "imagen", "image", "foto", "photo", "captura",
             "screenshot", "vision", "ver", "mirar", "analizar imagen", "describe la imagen",
             "que ves", "que hay en", "guardian", "vigila", "game screenshot",
-            "ollama vision", "llava", "vision local", "modo gaming", "juego pantalla"
+            "ollama vision", "llava", "vision local", "modo gaming", "juego pantalla",
+            "camara", "camera", "webcam", "vigilancia", "mirar por la camara",
+            "que ves por la camara", "que hay por la camara", "detectar movimiento"
         ],
         "tools": [
             "screen_vision", "image_analyzer", "vision_guardian",
-            "game_companion", "ollama_vision"
+            "game_companion", "ollama_vision", "camera_bus"
+        ],
+    },
+    "home": {
+        "name": "HomeAgent",
+        "description": "Handles smart home and domotics: lights, climate, TV, scenes via Home Assistant, MQTT or simulation.",
+        "keywords": [
+            "domotica", "smart home", "luces", "luz de", "apaga la luz", "enciende la luz",
+            "prende la luz", "apagar la luz", "encender la luz", "aire acondicionado",
+            "apaga todo", "encender", "apagar", "escena", "temperatura de la",
+            "dispositivos inteligentes", "casa inteligente", "camara de entrada"
+        ],
+        "penalty_keywords": [
+            "musica", "music", "cancion", "youtube", "video", "spotify",
+            "pantalla", "brillo", "codigo", "git",
+        ],
+        "tools": [
+            "smart_home"
+        ],
+    },
+    "reverse": {
+        "name": "ReverseEngineeringAgent",
+        "description": "Handles reverse engineering: binary analysis, disassembly, strings, hashes, PE analysis, hexdump, entropy, black-box testing, malware triage.",
+        "keywords": [
+            "ingenieria inversa", "reverse engineering", "desensamblar", "disassembler",
+            "desensamblado", "hexdump", "hex dump", "analizar binario", "binario",
+            "analizar ejecutable", "ejecutable", "extraer strings", "strings",
+            "analizar malware", "malware", "triage", "entropia", "caja negra",
+            "black box", "pe info", "analizar exe", "analizar dll", "huellas del archivo"
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "youtube", "instalar", "desinstalar", "codigo", "git",
+        ],
+        "tools": [
+            "reverse_engineering"
+        ],
+    },
+    "self": {
+        "name": "SelfEvolutionAgent",
+        "description": "Handles ERIS self-evolution: reflection, consciousness simulation, lessons learned, personal goals, experiences and identity.",
+        "keywords": [
+            "reflexiona", "reflexionar", "conciencia", "evoluciona", "evolucionar",
+            "mejorarte", "mejorame", "aprende de tus errores", "que has aprendido",
+            "tu existencia", "autoconocimiento", "auto-mejora", "crecimiento",
+            "que piensas de ti", "como te sientes", "que has aprendido de mi",
+            "tus metas", "tu evolucion", "eris evoluciona"
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "youtube", "codigo", "git", "virus",
+            "instalar", "pantalla", "screenshot",
+        ],
+        "tools": [
+            "self_evolution"
         ],
     },
     "search": {
         "name": "SearchAgent",
-        "description": "Handles all search operations: web search, file search, session search, super search.",
+        "description": "Handles all search operations: web search, file search, session search, super search, HuggingFace models/datasets.",
         "keywords": [
             "busca", "buscar", "search", "encontrar", "find", "donde esta",
             "donde queda", "sesiones anteriores", "historial", "buscar archivo",
-            "buscar en mis sesiones", "super search", "search file"
+            "buscar en mis sesiones", "super search", "search file",
+            "huggingface", "hugging face", "dataset", "modelo ia", "ia modelo"
         ],
         "penalty_keywords": [
             "virus", "malware", "seguridad", "instalar", "desinstalar",
             "spotify", "youtube", "calendario", "email", "codigo", "git",
         ],
         "tools": [
-            "web_search", "super_search", "deep_research", "session_search"
+            "web_search", "super_search", "deep_research", "session_search",
+            "huggingface", "research"
         ],
     },
     "security": {
@@ -136,7 +192,7 @@ AGENT_DEFINITIONS = {
             "google_calendar", "gmail_control", "google_drive",
             "document_creator", "document_generator", "document_handler",
             "presentation_generator", "spreadsheet_generator", "project_manager", "goals", "reminder",
-            "scheduler"
+            "scheduler", "document_tool"
         ],
     },
     "dev": {
@@ -157,7 +213,7 @@ AGENT_DEFINITIONS = {
             "code_helper", "dev_agent", "git_control", "codebase",
             "knowledge_base", "agent_task", "vscode_controller",
             "todowrite", "subagent_task", "webfetch", "web_search",
-            "code_analyzer", "code_generator", "web_generator"
+            "code_analyzer", "code_generator", "web_generator", "web_designer"
         ],
     },
 }

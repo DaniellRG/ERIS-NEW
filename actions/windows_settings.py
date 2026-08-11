@@ -15,5 +15,6 @@ def windows_settings(parameters: dict, player=None) -> str:
                 "startup, features, environment) requieren ajustes manuales.")
     return (
         f"Windows settings no implementa '{action}' aún. "
-        f"Disponible: audio, status. Para energía usá pc_control (sleep/hibernate/restart)."
+        f"Disponible: audio, status. El control de energía del PC (apagar/suspender/reiniciar) "
+        f"está deshabilitado por seguridad."
     )

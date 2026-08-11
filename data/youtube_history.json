@@ -64,5 +64,23 @@
     "target": "never gonna give you up",
     "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "time": "2026-07-27T21:44:13.707437"
+  },
+  {
+    "action": "play_search",
+    "target": "lofi hip hop",
+    "url": "https://www.youtube.com/results?search_query=lofi%20hip%20hop&sp=EgIQAQ%3D%3D",
+    "time": "2026-07-30T00:31:26.816270"
+  },
+  {
+    "action": "play_direct",
+    "target": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "time": "2026-07-30T00:31:45.161297"
+  },
+  {
+    "action": "play_direct",
+    "target": "musica relajante para estudiar",
+    "url": "https://www.youtube.com/watch?v=VzmtIUmjkTo",
+    "time": "2026-07-30T00:31:46.228435"
   }
 ]

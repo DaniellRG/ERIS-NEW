@@ -27,6 +27,19 @@ class WAVEFORMATEX(ctypes.Structure):
     ]
 
 
+class WAVEOUTCAPS(ctypes.Structure):
+    _fields_ = [
+        ("wMid", ctypes.wintypes.WORD),
+        ("wPid", ctypes.wintypes.WORD),
+        ("vDriverVersion", ctypes.wintypes.DWORD),
+        ("szPname", ctypes.c_wchar * 32),
+        ("dwFormats", ctypes.wintypes.DWORD),
+        ("wChannels", ctypes.wintypes.WORD),
+        ("wReserved1", ctypes.wintypes.WORD),
+        ("dwSupport", ctypes.wintypes.DWORD),
+    ]
+
+
 class WAVEHDR(ctypes.Structure):
     _fields_ = [
         ("lpData", ctypes.wintypes.LPSTR),
@@ -85,6 +98,59 @@ _wave_out_reset = winmm.waveOutReset
 _wave_out_reset.restype = MMRESULT
 _wave_out_reset.argtypes = [ctypes.wintypes.HANDLE]
 
+_wave_out_get_num_devs = winmm.waveOutGetNumDevs
+_wave_out_get_dev_caps = winmm.waveOutGetDevCapsW
+_wave_out_get_dev_caps.restype = MMRESULT
+_wave_out_get_dev_caps.argtypes = [
+    ctypes.wintypes.UINT,
+    ctypes.POINTER(WAVEOUTCAPS),
+    ctypes.wintypes.UINT,
+]
+
+
+def winmm_output_devices() -> list[dict]:
+    """Enumeración de dispositivos de salida waveOut: [{'index','name','channels'}...]."""
+    out: list[dict] = []
+    n = _wave_out_get_num_devs()
+    for i in range(n):
+        caps = WAVEOUTCAPS()
+        r = _wave_out_get_dev_caps(i, ctypes.byref(caps), ctypes.sizeof(WAVEOUTCAPS))
+        if r == MMSYSERR_NOERROR:
+            out.append({
+                "index": i,
+                "name": caps.szPname.rstrip(" \x00"),
+                "channels": caps.wChannels,
+            })
+    return out
+
+
+def waveout_device_name(idx: int | None) -> str:
+    if idx is None:
+        return "(default de Windows)"
+    for d in winmm_output_devices():
+        if d["index"] == idx:
+            return d["name"]
+    return f"(dispositivo {idx})"
+
+
+def winmm_probe(idx: int, samplerate: int = 24000, channels: int = 1, bits: int = 16) -> bool:
+    """True si el dispositivo waveOut abre de verdad a samplerate/channels."""
+    fmt = WAVEFORMATEX(
+        wFormatTag=WAVE_FORMAT_PCM,
+        nChannels=channels,
+        nSamplesPerSec=samplerate,
+        nAvgBytesPerSec=samplerate * channels * bits // 8,
+        nBlockAlign=channels * bits // 8,
+        wBitsPerSample=bits,
+        cbSize=0,
+    )
+    hwave = ctypes.wintypes.HANDLE()
+    err = _wave_out_open(ctypes.byref(hwave), idx, ctypes.byref(fmt), 0, 0, 0)
+    if err != MMSYSERR_NOERROR:
+        return False
+    _wave_out_close(hwave)
+    return True
+
 
 class WinAudioOutput:
     def __init__(
@@ -92,10 +158,13 @@ class WinAudioOutput:
         channels: int = 1,
         samplerate: int = 24000,
         bits_per_sample: int = 16,
+        device: int | None = None,
     ):
         self.channels = channels
         self.samplerate = samplerate
         self.bits_per_sample = bits_per_sample
+        self.device = device  # None = WAVE_MAPPER (default de Windows)
+        self.device_name = ""
         self._block_align = channels * bits_per_sample // 8
         self._avg_bytes_per_sec = samplerate * self._block_align
 
@@ -120,10 +189,11 @@ class WinAudioOutput:
             cbSize=0,
         )
 
+        dev = WAVE_MAPPER if self.device is None else self.device
         hwave = ctypes.wintypes.HANDLE()
         err = _wave_out_open(
             ctypes.byref(hwave),
-            WAVE_MAPPER,
+            dev,
             ctypes.byref(self._wave_format),
             0,
             0,
@@ -134,6 +204,7 @@ class WinAudioOutput:
             return False
 
         self._hwave = hwave.value
+        self.device_name = waveout_device_name(self.device)
 
         self._cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)
         self._cleanup_thread.start()

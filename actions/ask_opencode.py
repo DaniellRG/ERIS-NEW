@@ -22,16 +22,16 @@ def ask_opencode(parameters: dict = None, player=None) -> str:
         )
         try:
             from actions.openrouter_agent import openrouter_agent
-            result = openrouter_agent(prompt, model=model)
+            result = openrouter_agent(prompt, model=model, save_long=False)
             return f"Respuesta de codigo:\n{str(result)[:1500]}"
         except Exception as e:
             return f"Error consultando al agente de codigo: {e}"
 
     if action == "status":
         try:
-            from actions.openrouter_agent import _get_api_key
-            has = bool(_get_api_key())
-            return "Agente de codigo disponible (OpenRouter)." if has else "Agente de codigo sin API key de OpenRouter configurada."
+            from actions.openrouter_agent import _get_api_key, _get_gemini_key
+            has = bool(_get_api_key()) or bool(_get_gemini_key())
+            return "Agente de codigo disponible (OpenRouter o Gemini)." if has else "Agente de codigo sin API key configurada."
         except Exception:
             return "Estado del agente de codigo no disponible."
 

@@ -21,13 +21,13 @@
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_ultimos_avances_inteligencia_artificial_2026.md": {
     "filename": "idle_ultimos_avances_inteligencia_artificial_2026.md",
-    "chunks": 3,
-    "size_bytes": 1634
+    "chunks": 4,
+    "size_bytes": 2868
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_cloud_computing_servicios_nuevos.md": {
     "filename": "idle_cloud_computing_servicios_nuevos.md",
-    "chunks": 6,
-    "size_bytes": 4290
+    "chunks": 4,
+    "size_bytes": 2763
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_bases_de_datos_nuevas_tendencias_NoSQL.md": {
     "filename": "idle_bases_de_datos_nuevas_tendencias_NoSQL.md",
@@ -42,7 +42,7 @@
   "D:\\Eris_Source\\data\\knowledge\\idle_biotecnologia_bioinformatica_avances.md": {
     "filename": "idle_biotecnologia_bioinformatica_avances.md",
     "chunks": 3,
-    "size_bytes": 1558
+    "size_bytes": 1738
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_nuevos_frameworks_programacion_tendencias.md": {
     "filename": "idle_nuevos_frameworks_programacion_tendencias.md",
@@ -52,12 +52,12 @@
   "D:\\Eris_Source\\data\\knowledge\\idle_automatizacion_tareas_inteligentes_IA.md": {
     "filename": "idle_automatizacion_tareas_inteligentes_IA.md",
     "chunks": 6,
-    "size_bytes": 4328
+    "size_bytes": 4288
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_robotica_automatizacion_avances.md": {
     "filename": "idle_robotica_automatizacion_avances.md",
-    "chunks": 4,
-    "size_bytes": 2911
+    "chunks": 3,
+    "size_bytes": 1501
   },
   "D:\\Eris_Source\\data\\knowledge\\eris_self_knowledge.md": {
     "filename": "eris_self_knowledge.md",
@@ -66,38 +66,38 @@
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_Docker_Kubernetes_mejoras_recientes.md": {
     "filename": "idle_Docker_Kubernetes_mejoras_recientes.md",
-    "chunks": 2,
-    "size_bytes": 1390
+    "chunks": 4,
+    "size_bytes": 2834
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_seguridad_datos_privacidad_GDPR.md": {
     "filename": "idle_seguridad_datos_privacidad_GDPR.md",
     "chunks": 4,
-    "size_bytes": 2901
+    "size_bytes": 2594
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_ciberseguridad_vulnerabilidades_recientes.md": {
     "filename": "idle_ciberseguridad_vulnerabilidades_recientes.md",
-    "chunks": 3,
-    "size_bytes": 2401
+    "chunks": 1,
+    "size_bytes": 199
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_Big_Data_herramientas_nuevas.md": {
     "filename": "idle_Big_Data_herramientas_nuevas.md",
-    "chunks": 4,
-    "size_bytes": 2814
+    "chunks": 2,
+    "size_bytes": 1402
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_energias_renovables_tecnologia.md": {
     "filename": "idle_energias_renovables_tecnologia.md",
     "chunks": 4,
-    "size_bytes": 2930
+    "size_bytes": 2801
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_inteligencia_artificial_explicativa.md": {
     "filename": "idle_inteligencia_artificial_explicativa.md",
-    "chunks": 6,
-    "size_bytes": 4105
+    "chunks": 5,
+    "size_bytes": 3684
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_vehiculos_autonomos_avances.md": {
     "filename": "idle_vehiculos_autonomos_avances.md",
     "chunks": 3,
-    "size_bytes": 1565
+    "size_bytes": 1727
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_Python_nuevas_caracteristicas_version.md": {
     "filename": "idle_Python_nuevas_caracteristicas_version.md",
@@ -111,17 +111,327 @@
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_computacion_cuantica_avances_recientes.md": {
     "filename": "idle_computacion_cuantica_avances_recientes.md",
-    "chunks": 5,
-    "size_bytes": 4189
+    "chunks": 3,
+    "size_bytes": 1532
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_redes_5G_6G_tecnologias_nuevas.md": {
     "filename": "idle_redes_5G_6G_tecnologias_nuevas.md",
-    "chunks": 2,
-    "size_bytes": 1503
+    "chunks": 4,
+    "size_bytes": 2753
   },
   "D:\\Eris_Source\\data\\knowledge\\idle_blockchain_aplicaciones_reales_2026.md": {
     "filename": "idle_blockchain_aplicaciones_reales_2026.md",
+    "chunks": 3,
+    "size_bytes": 1484
+  },
+  "D:\\Eris_Source\\data\\knowledge\\idle_ultimas_tendencias_tecnologia_2026.md": {
+    "filename": "idle_ultimas_tendencias_tecnologia_2026.md",
+    "chunks": 4,
+    "size_bytes": 2777
+  },
+  "D:\\Eris_Source\\data\\knowledge\\idle_descubrimientos_cientificos_recientes.md": {
+    "filename": "idle_descubrimientos_cientificos_recientes.md",
+    "chunks": 3,
+    "size_bytes": 1621
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_analisis_diseno_sistemas.md": {
+    "filename": "materia_analisis_diseno_sistemas.md",
+    "chunks": 5,
+    "size_bytes": 2992
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_arquitectura_computadores.md": {
+    "filename": "materia_arquitectura_computadores.md",
+    "chunks": 5,
+    "size_bytes": 3049
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_bd_1.md": {
+    "filename": "materia_bd_1.md",
+    "chunks": 3,
+    "size_bytes": 2192
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_diseno_web_1.md": {
+    "filename": "materia_diseno_web_1.md",
+    "chunks": 4,
+    "size_bytes": 2796
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_ia_aplicada.md": {
+    "filename": "materia_ia_aplicada.md",
+    "chunks": 4,
+    "size_bytes": 2596
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_java_1.md": {
+    "filename": "materia_java_1.md",
+    "chunks": 3,
+    "size_bytes": 2211
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_net_1.md": {
+    "filename": "materia_net_1.md",
+    "chunks": 3,
+    "size_bytes": 2226
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_poo_1.md": {
+    "filename": "materia_poo_1.md",
+    "chunks": 4,
+    "size_bytes": 2473
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_bd_2.md": {
+    "filename": "materia_bd_2.md",
+    "chunks": 5,
+    "size_bytes": 3065
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_diseno_web_2.md": {
+    "filename": "materia_diseno_web_2.md",
+    "chunks": 5,
+    "size_bytes": 3071
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_java_2.md": {
+    "filename": "materia_java_2.md",
+    "chunks": 5,
+    "size_bytes": 3073
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_net_2.md": {
+    "filename": "materia_net_2.md",
+    "chunks": 5,
+    "size_bytes": 2903
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_poo_2.md": {
+    "filename": "materia_poo_2.md",
+    "chunks": 5,
+    "size_bytes": 2979
+  },
+  "D:\\Eris_Source\\data\\knowledge\\materia_redes_sd.md": {
+    "filename": "materia_redes_sd.md",
+    "chunks": 4,
+    "size_bytes": 3009
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Test ERIS Training.md": {
+    "filename": "Test ERIS Training.md",
+    "chunks": 1,
+    "size_bytes": 211
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Training Session Live.md": {
+    "filename": "Training Session Live.md",
+    "chunks": 1,
+    "size_bytes": 209
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\.trash\\Test Eris Brain.md": {
+    "filename": "Test Eris Brain.md",
+    "chunks": 1,
+    "size_bytes": 271
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn automatizacion tareas inteligentes IA.md": {
+    "filename": "Auto-learn automatizacion tareas inteligentes IA.md",
+    "chunks": 12,
+    "size_bytes": 8262
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn bases de datos nuevas tendencias NoSQL.md": {
+    "filename": "Auto-learn bases de datos nuevas tendencias NoSQL.md",
+    "chunks": 9,
+    "size_bytes": 5597
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn Big Data herramientas nuevas.md": {
+    "filename": "Auto-learn Big Data herramientas nuevas.md",
+    "chunks": 12,
+    "size_bytes": 7735
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn biotecnologia bioinformatica avances.md": {
+    "filename": "Auto-learn biotecnologia bioinformatica avances.md",
+    "chunks": 14,
+    "size_bytes": 8104
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn blockchain aplicaciones reales 2026.md": {
+    "filename": "Auto-learn blockchain aplicaciones reales 2026.md",
+    "chunks": 13,
+    "size_bytes": 7938
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn ciberseguridad vulnerabilidades recientes.md": {
+    "filename": "Auto-learn ciberseguridad vulnerabilidades recientes.md",
+    "chunks": 10,
+    "size_bytes": 7114
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn cloud computing servicios nuevos.md": {
+    "filename": "Auto-learn cloud computing servicios nuevos.md",
+    "chunks": 11,
+    "size_bytes": 8142
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn computacion cuantica avances recientes.md": {
+    "filename": "Auto-learn computacion cuantica avances recientes.md",
+    "chunks": 10,
+    "size_bytes": 5756
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn desarrollo software metodologias agiles.md": {
+    "filename": "Auto-learn desarrollo software metodologias agiles.md",
+    "chunks": 13,
+    "size_bytes": 7171
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn descubrimientos cientificos recientes.md": {
+    "filename": "Auto-learn descubrimientos cientificos recientes.md",
+    "chunks": 313,
+    "size_bytes": 177337
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn Docker Kubernetes mejoras recientes.md": {
+    "filename": "Auto-learn Docker Kubernetes mejoras recientes.md",
+    "chunks": 13,
+    "size_bytes": 8091
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn energias renovables tecnologia.md": {
+    "filename": "Auto-learn energias renovables tecnologia.md",
+    "chunks": 15,
+    "size_bytes": 9773
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn inteligencia artificial explicativa.md": {
+    "filename": "Auto-learn inteligencia artificial explicativa.md",
+    "chunks": 16,
+    "size_bytes": 10528
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn machine learning modelos nuevos 2026.md": {
+    "filename": "Auto-learn machine learning modelos nuevos 2026.md",
+    "chunks": 13,
+    "size_bytes": 6690
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn nuevos frameworks programacion tendencias.md": {
+    "filename": "Auto-learn nuevos frameworks programacion tendencias.md",
+    "chunks": 17,
+    "size_bytes": 9210
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn Python nuevas caracteristicas version.md": {
+    "filename": "Auto-learn Python nuevas caracteristicas version.md",
+    "chunks": 16,
+    "size_bytes": 9308
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn redes 5G 6G tecnologias nuevas.md": {
+    "filename": "Auto-learn redes 5G 6G tecnologias nuevas.md",
+    "chunks": 13,
+    "size_bytes": 8789
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn robotica automatizacion avances.md": {
+    "filename": "Auto-learn robotica automatizacion avances.md",
+    "chunks": 15,
+    "size_bytes": 8222
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn seguridad datos privacidad GDPR.md": {
+    "filename": "Auto-learn seguridad datos privacidad GDPR.md",
+    "chunks": 15,
+    "size_bytes": 9635
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn ultimas tendencias tecnologia 2026.md": {
+    "filename": "Auto-learn ultimas tendencias tecnologia 2026.md",
+    "chunks": 260,
+    "size_bytes": 176312
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn ultimos avances inteligencia artificial 2026.md": {
+    "filename": "Auto-learn ultimos avances inteligencia artificial 2026.md",
+    "chunks": 13,
+    "size_bytes": 8514
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Auto-learn vehiculos autonomos avances.md": {
+    "filename": "Auto-learn vehiculos autonomos avances.md",
+    "chunks": 16,
+    "size_bytes": 9017
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\CyberSec Active Directory.md": {
+    "filename": "CyberSec Active Directory.md",
+    "chunks": 1,
+    "size_bytes": 431
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\CyberSec Networking.md": {
+    "filename": "CyberSec Networking.md",
+    "chunks": 1,
+    "size_bytes": 560
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\CyberSec Phases.md": {
+    "filename": "CyberSec Phases.md",
+    "chunks": 1,
+    "size_bytes": 812
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\CyberSec Tools.md": {
+    "filename": "CyberSec Tools.md",
+    "chunks": 1,
+    "size_bytes": 448
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\CyberSec Web Hacking.md": {
+    "filename": "CyberSec Web Hacking.md",
+    "chunks": 1,
+    "size_bytes": 622
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\English A1 Grammar.md": {
+    "filename": "English A1 Grammar.md",
+    "chunks": 1,
+    "size_bytes": 702
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\English A2 Grammar.md": {
+    "filename": "English A2 Grammar.md",
+    "chunks": 1,
+    "size_bytes": 699
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\English B1 Grammar.md": {
+    "filename": "English B1 Grammar.md",
+    "chunks": 1,
+    "size_bytes": 697
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\ERIS Auto-Conocimiento v2.0.md": {
+    "filename": "ERIS Auto-Conocimiento v2.0.md",
     "chunks": 6,
-    "size_bytes": 4413
+    "size_bytes": 4137
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Leccion 1 - Personalidad.md": {
+    "filename": "Leccion 1 - Personalidad.md",
+    "chunks": 1,
+    "size_bytes": 568
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Leccion 2 - El Vault es mi extension.md": {
+    "filename": "Leccion 2 - El Vault es mi extension.md",
+    "chunks": 1,
+    "size_bytes": 539
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Aprendizaje\\Leccion 3 - Ejecutar sin dudar.md": {
+    "filename": "Leccion 3 - Ejecutar sin dudar.md",
+    "chunks": 1,
+    "size_bytes": 440
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\Crecimiento Emocional.md": {
+    "filename": "Crecimiento Emocional.md",
+    "chunks": 1,
+    "size_bytes": 548
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\Eris AI.md": {
+    "filename": "Eris AI.md",
+    "chunks": 1,
+    "size_bytes": 1000
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\Lenguaje Natural.md": {
+    "filename": "Lenguaje Natural.md",
+    "chunks": 1,
+    "size_bytes": 564
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\Obsidian Vault.md": {
+    "filename": "Obsidian Vault.md",
+    "chunks": 1,
+    "size_bytes": 711
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\User Name.md": {
+    "filename": "User Name.md",
+    "chunks": 1,
+    "size_bytes": 216
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Conceptos\\Windows Control.md": {
+    "filename": "Windows Control.md",
+    "chunks": 1,
+    "size_bytes": 519
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Daily\\2026-07-20.md": {
+    "filename": "2026-07-20.md",
+    "chunks": 1,
+    "size_bytes": 663
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Investigacion\\OSINT SoulXD2.md": {
+    "filename": "OSINT SoulXD2.md",
+    "chunks": 1,
+    "size_bytes": 577
+  },
+  "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris\\Memoria\\Scan Results 2026-07-23.md": {
+    "filename": "Scan Results 2026-07-23.md",
+    "chunks": 1,
+    "size_bytes": 872
   }
 }

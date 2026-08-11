@@ -38,8 +38,10 @@ _TOOLS = {
     "document_creator":      ("actions.document_creator", "document_creator"),
     "document_handler":      ("actions.document_handler", "document_handler"),
     "gustos":                ("actions.gustos", "gustos"),
+    "relationship":          ("actions.relationship", "relationship"),
     "cancion_generator":     ("actions.cancion_generator", "cancion_generator"),
     "code_helper":           ("actions.code_helper", "code_helper"),
+    "code_copilot":          ("actions.code_copilot", "code_copilot"),
     "reminder":              ("actions.reminder", "reminder"),
     "notifications":         ("actions.notifications", "notify"),
 
@@ -50,6 +52,11 @@ _TOOLS = {
     "todowrite":             ("actions.todowrite", "todowrite"),
     "vscode_controller":     ("actions.vscode_controller", "vscode_controller"),
     "web_generator":         ("actions.web_generator", "web_generator"),
+    "web_designer":          ("actions.web_designer", "web_designer"),
+    "react_designer":        ("actions.react_designer", "react_designer"),
+    "angular_designer":      ("actions.angular_designer", "angular_designer"),
+    "vue_designer":          ("actions.vue_designer", "vue_designer"),
+    "next_designer":         ("actions.next_designer", "next_designer"),
 
     # ── Section 14D: Communication ──
     "send_message":          ("actions.send_message", "send_message"),
@@ -89,24 +96,32 @@ _TOOLS = {
     "self_awareness":        ("actions.self_awareness", "self_awareness"),
     "computer_control":      ("actions.computer_control", "computer_control"),
     "visual_click":          ("actions.visual_click", "visual_click"),
+    "reverse_engineering":   ("actions.reverse_engineering", "reverse_engineering"),
+    "document_tool":         ("actions.document_tool", "document_tool"),
 
     # ── Knowledge & RAG ──
     "knowledge_ingestor":     ("actions.knowledge_ingestor", "knowledge_ingestor"),
     "data_connectors":        ("actions.data_connectors", "data_connectors"),
+    "huggingface":            ("actions.huggingface", "huggingface"),
 
     # ── Section 14I: Memory & Vision ──
     "security_scanner":      ("actions.security_scanner", "security_scanner"),
     "morning_brief":         ("actions.morning_brief", "morning_brief"),
     "vision_guardian":       ("actions.vision_guardian", "vision_guardian"),
+    "eris_guardian":         ("actions.eris_guardian", "eris_guardian"),
     "screen_vision":         ("actions.screen_vision", "screen_vision"),
     "game_companion":        ("actions.game_companion", "game_companion"),
     "document_rag":          ("actions.document_rag", "document_rag"),
     "image_analyzer":        ("actions.image_analyzer", "image_analyzer"),
+    "camera_bus":            ("actions.camera_bus", "camera_bus"),
 
     # ── Section 14J: AI Features ──
     "personality":           ("actions.personality", "personality_engine"),
     "emotional_state":       ("core.emotional_state", "emotional_state_tool"),
+    "eris_style":            ("core.style_engine", "eris_style"),
+    "daily_digest":          ("core.daily_digest", "daily_digest_tool"),
     "self_map":              ("core.self_map", "get_full_map"),
+    "self_evolution":        ("actions.self_evolution", "self_evolution"),
     "document_rag_stats":    ("actions.document_rag", "document_rag"),
     "image_generation":      ("actions.image_generation", "image_generation"),
 
@@ -132,11 +147,11 @@ _TOOLS = {
     "curiosity_engine":      ("actions.curiosity_engine", "curiosity_tell_fact"),
 
     # ── AGI ──
-    "agi_memory":            ("core.semantic_memory", "get_memory_system"),
-    "agi_self_improve":      ("core.self_improvement", "get_self_improvement"),
-    "agi_reasoning":         ("core.reasoning_engine", "get_reasoning_engine"),
-    "agi_world_model":       ("core.world_model", "get_world_model"),
-    "agi_agent":             ("core.agent_architecture", "get_agent_loop"),
+    "agi_memory":            ("core.agi_tools", "agi_memory"),
+    "agi_self_improve":      ("core.agi_tools", "agi_self_improve"),
+    "agi_reasoning":         ("core.agi_tools", "agi_reasoning"),
+    "agi_world_model":       ("core.agi_tools", "agi_world_model"),
+    "agi_agent":             ("core.agi_tools", "agi_agent"),
 
     # ── Updater ──
     "eris_update":           ("core.updater", "check_for_update"),

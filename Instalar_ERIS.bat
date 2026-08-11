@@ -1,61 +1,57 @@
 @echo off
-title Instalador de ERIS AI
-
-:: ── Solicitar permisos de Administrador ──────────────────────────────────────
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [INFO] Solicitando permisos de administrador...
-    powershell -Command "Start-Process -Verb RunAs -FilePath '%~f0'"
-    exit /b
-)
-
-:: Ya somos admin — establecer directorio de trabajo
 cd /d "%~dp0"
+title Instalador de ERIS AI
+echo ====================================
+echo   INSTALADOR DE ERIS AI
+echo ====================================
+echo.
 
-:: 1. Comprobar si existe el Python del entorno virtual local primero
-if exist ".venv\Scripts\python.exe" (
-    ".venv\Scripts\python.exe" install.py
-    exit
-)
-
-:: 2. Intentar buscar Python en la ruta estandar de instalacion del usuario (LocalAppData)
-if exist "%LocalAppData%\Programs\Python\Python312\python.exe" (
-    "%LocalAppData%\Programs\Python\Python312\python.exe" install.py
-    exit
-)
-if exist "%LocalAppData%\Programs\Python\Python313\python.exe" (
-    "%LocalAppData%\Programs\Python\Python313\python.exe" install.py
-    exit
-)
-if exist "%LocalAppData%\Programs\Python\Python311\python.exe" (
-    "%LocalAppData%\Programs\Python\Python311\python.exe" install.py
-    exit
-)
-
-:: 3. Intentar con el Python global del sistema (si esta en el PATH)
+:: ── Buscar Python ──
+set PYTHON=python
 where python >nul 2>&1
-if %errorlevel% equ 0 (
-    python install.py
-    exit
+if errorlevel 1 (
+    echo [ERROR] Python no encontrado. Instala Python 3.12+ desde python.org
+    pause
+    exit /b 1
 )
 
-:: 4. Intentar en Program Files por si acaso
-if exist "%ProgramFiles%\Python312\python.exe" (
-    "%ProgramFiles%\Python312\python.exe" install.py
-    exit
+:: ── Crear .venv si no existe ──
+if not exist ".venv\" (
+    echo Creando entorno virtual...
+    "%PYTHON%" -m venv .venv
+    if errorlevel 1 (
+        echo [ERROR] No se pudo crear .venv
+        pause
+        exit /b 1
+    )
 )
-if exist "%ProgramFiles%\Python313\python.exe" (
-    "%ProgramFiles%\Python313\python.exe" install.py
-    exit
+
+:: ── Activar e instalar dependencias ──
+echo Instalando dependencias...
+.venv\Scripts\python.exe -m pip install --upgrade pip -q
+.venv\Scripts\python.exe -m pip install -r requirements.txt -q
+if errorlevel 1 (
+    echo [ERROR] Fallo al instalar dependencias
+    pause
+    exit /b 1
+)
+
+:: ── Ejecutar setup (API keys, nombre, acceso directo) ──
+echo.
+echo Configuracion inicial...
+.venv\Scripts\python.exe install.py
+if errorlevel 1 (
+    echo [ERROR] Configuracion cancelada
+    pause
+    exit /b 1
 )
 
 echo.
-echo =======================================================================
-echo [ERROR] No se pudo encontrar una instalacion de Python valida.
-echo =======================================================================
+echo ====================================
+echo   INSTALACION COMPLETADA
+echo ====================================
 echo.
-echo Por favor, instala Python 3.12 o 3.13 y asegurate de marcar la opcion
-echo "Add Python to PATH" durante la instalacion.
+echo Hace doble clic en ERIS.lnk del escritorio
+echo para iniciar ERIS.
 echo.
 pause
-exit

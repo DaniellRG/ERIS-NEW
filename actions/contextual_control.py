@@ -43,21 +43,8 @@ def set_brightness(percent: int) -> bool:
             return False
 
 def set_power_plan(plan_name: str) -> bool:
-    """Cambia el plan de energía activo de Windows."""
-    plans = {
-        "balanced": "381b4222-f694-41f0-9685-ff5bb260df2e",
-        "high_performance": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
-        "power_saver": "a1841308-3541-4fab-bc81-f71556f20b4a"
-    }
-    guid = plans.get(plan_name.lower())
-    if not guid:
-        return False
-    try:
-        subprocess.run(f"powercfg /setactive {guid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        return True
-    except Exception as e:
-        print(f"[Contextual Control] Error setting power plan: {e}")
-        return False
+    """Deshabilitado por seguridad: ERIS no debe tocar el plan de energía del PC."""
+    return False
 
 def set_focus_assist(level: int) -> bool:
     """Ajusta el nivel de No Molestar (Focus Assist) en Windows usando el registro."""
@@ -99,12 +86,7 @@ def contextual_control(parameters: dict, player=None) -> str:
         return "El ajuste de brillo de pantalla no está soportado en este hardware (común en PC de escritorio sin soporte WMI)."
 
     elif action == "set_power_plan":
-        plan = parameters.get("power_plan")
-        if not plan:
-            return "Error: Falta el parámetro 'power_plan' (balanced, high_performance, power_saver) para la acción 'set_power_plan'."
-        if set_power_plan(plan):
-            return f"Plan de energía cambiado correctamente a '{plan}'."
-        return f"No se pudo cambiar al plan de energía '{plan}'."
+        return "Plan de energía no disponible: deshabilitado por seguridad. ERIS no modifica el plan de energía del PC."
 
     elif action == "set_dnd":
         # Do Not Disturb / Focus Assist
@@ -144,41 +126,36 @@ def contextual_control(parameters: dict, player=None) -> str:
         if any(w in title for w in ["zoom", "teams", "meet", "discord", "skype", "whatsapp"]):
             set_master_volume(40)
             set_brightness(60)
-            set_power_plan("balanced")
             set_focus_assist(1)  # Solo Prioridad
-            result_msgs.append("Modo Reunión/Comunicación: Volumen 40%, Brillo 60%, Energía Equilibrado, No Molestar Activo.")
+            result_msgs.append("Modo Reunión/Comunicación: Volumen 40%, Brillo 60%, No Molestar Activo.")
             
         # 2. Gaming / Alto Rendimiento
         elif any(w in title for w in ["steam", "epicgames", "cyberpunk", "csgo", "minecraft", "valorant", "gta"]):
             set_master_volume(75)
             set_brightness(90)
-            set_power_plan("high_performance")
             set_focus_assist(2)  # Solo Alarmas
-            result_msgs.append("Modo Gaming: Volumen 75%, Brillo 90%, Alto Rendimiento activado, No Molestar total.")
+            result_msgs.append("Modo Gaming: Volumen 75%, Brillo 90%, No Molestar total.")
 
         # 3. Multimedia / Entretenimiento
         elif any(w in title for w in ["vlc", "netflix", "prime video", "youtube", "spotify"]):
             set_master_volume(80)
             set_brightness(80)
-            set_power_plan("balanced")
             set_focus_assist(0)  # Apagado (para ver notificaciones o según preferencia)
-            result_msgs.append("Modo Multimedia: Volumen 80%, Brillo 80%, Energía Equilibrado, No Molestar Desactivado.")
+            result_msgs.append("Modo Multimedia: Volumen 80%, Brillo 80%, No Molestar Desactivado.")
 
         # 4. Trabajo de Foco / Programación / Oficina
         elif any(w in title for w in ["word", "excel", "powerpoint", "vscode", "notepad", "sublime", "pdf", "python", "eris"]):
             set_master_volume(20)
             set_brightness(50)
-            set_power_plan("power_saver")
             set_focus_assist(1)
-            result_msgs.append("Modo Productividad/Foco: Volumen 20% (silencioso), Brillo 50% (cuidado de vista), Ahorro de Energía, No Molestar Activo.")
+            result_msgs.append("Modo Productividad/Foco: Volumen 20% (silencioso), Brillo 50% (cuidado de vista), No Molestar Activo.")
             
         else:
             # Valores por defecto para otros contextos
             set_master_volume(50)
             set_brightness(70)
-            set_power_plan("balanced")
             set_focus_assist(0)
-            result_msgs.append(f"Contexto general ('{title[:40]}...'): Ajustes estándar aplicados (Volumen 50%, Brillo 70%, Plan Equilibrado, Notificaciones activas).")
+            result_msgs.append(f"Contexto general ('{title[:40]}...'): Ajustes estándar aplicados (Volumen 50%, Brillo 70%, Notificaciones activas).")
             
         return result_msgs[0]
 

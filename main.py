@@ -49,8 +49,8 @@ setup_logging()
 
 from core.audio_config import (
     LIVE_MODEL, CHANNELS, SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE,
-    CHUNK_SIZE, PLAY_CHUNK_SIZE, resolve_device, get_api_key,
-    ERIS_VOICES, get_eris_voice
+    CHUNK_SIZE, PLAY_CHUNK_SIZE, resolve_device, resolve_mic, resolve_speaker,
+    get_api_key, ERIS_VOICES, get_eris_voice
 )
 import core.audio_config as _audio_cfg
 
@@ -59,8 +59,25 @@ from core.prompt_loader import load_system_prompt
 
 _CTRL_RE = re.compile(r"<ctrl\d+>", re.IGNORECASE)
 
-# ── Activación por nombre: ERIS solo responde cuando escucha "Eris, ..." ──
-_GATE_WAKE_PHRASES = ("eris", "eres")          # palabras que abren el gate
+# ── Activación por nombre: ERIS responde cuando escucha su nombre (o variación) ──
+# Variaciones fonéticas del nombre por si el STT local la reconoce mal:
+# "aires", "iris", "irys", "heris", "eriz", "eiris", "erris", "aries"...
+_GATE_WAKE_PHRASES = (
+    "eris", "eres",
+    "heris", "heiris", "heriz", "haris",
+    "eiris", "erris", "erys", "eriz", "erix",
+    "aires", "aries", "airis", "aris", "arais",
+    "iris", "irys", "iriz", "iriss",
+    "erik", "eric", "erick",
+)
+# Frases completas que también abren el gate (le está hablando a ERIS)
+_GATE_WAKE_PHRASES_MULTI = (
+    "hola eris", "hey eris", "oye eris", "oiga eris", "eh eris", "a eris", "o eris",
+    "escuchas eris", "es eris", "dime eris", "ven eris",
+    "despierta", "estas ahi", "estas hay", "estas aqui", "estas ahi eris",
+    "me escuchas", "me oyes", "me escucha", "me entiendes", "si me entiendes",
+    "entendiste", "sal",
+)
 _WAKE_BUFFER_SECONDS = 6.0                     # cuántos segundos de audio bufferear
 _WAKE_SPEECH_THRESHOLD = 0.008                 # RMS mínimo para considerar "voz"
 _WAKE_SILENCE_RUN_SECONDS = 0.30               # silencio que separa ráfagas de voz
@@ -73,22 +90,112 @@ _END_CONVERSATION_PHRASES = (
     "me voy", "me despido", "adiós", "adios", "chao", "chau", "hasta luego",
 )
 
+def _normalize_name(w: str) -> str:
+    """Normaliza una palabra para compararla con variaciones de 'Eris'."""
+    w = w.lower().strip(".,!?¿¡'\"")
+    w = w.replace("h", "")
+    w = w.replace("y", "i")
+    w = w.replace("ai", "e")
+    w = w.replace("i", "e")
+    w = w.replace("z", "s").replace("x", "s")
+    w = re.sub(r"(.)\1", r"\1", w)
+    return w
+
+def _edit_distance(a: str, b: str) -> int:
+    """Distancia de Levenshtein entre a y b (para reconocimiento tolerante)."""
+    m, n = len(a), len(b)
+    prev = list(range(n + 1))
+    for i in range(1, m + 1):
+        cur = [i] + [0] * n
+        for j in range(1, n + 1):
+            cur[j] = min(prev[j] + 1, cur[j - 1] + 1,
+                         prev[j - 1] + (a[i - 1] != b[j - 1]))
+        prev = cur
+    return prev[n]
+
+def _is_name_variation(word: str) -> bool:
+    """True si una palabra suena como 'Eris' (reconocida bien o con error)."""
+    wl = word.lower().strip(".,!?¿¡'\"")
+    if not wl:
+        return False
+    if wl in _GATE_WAKE_PHRASES:
+        return True
+    if "eris" in wl or "eres" in wl:
+        return True
+    n = _normalize_name(wl)
+    if n in ("eris", "eres"):
+        return True
+    return len(n) >= 3 and _edit_distance(n, "eris") <= 1
+
 def _has_wake_word(text: str) -> bool:
-    """Detecta la palabra de activación como palabra completa (no subcadena)."""
-    padded = " {} ".format(text.lower())
-    return any(" {} ".format(w) in padded for w in _GATE_WAKE_PHRASES)
+    """Detecta si el texto invoca a ERIS: nombre, variación o frase de llamado."""
+    t = re.sub(r"[^a-záéíóúñü ]", " ", text.lower())
+    t = re.sub(r"\s+", " ", t).strip()
+    if not t:
+        return False
+    padded = " {} ".format(t)
+    for phrase in _GATE_WAKE_PHRASES_MULTI:
+        if " {} ".format(phrase) in padded:
+            return True
+    return any(_is_name_variation(w) for w in t.split())
 
 def _clean_transcript(text: str) -> str:    
     text = _CTRL_RE.sub("", text)
     text = re.sub(r"[\x00-\x08\x0b-\x1f]", "", text)
     return text.strip()
 
+_SELF_IMPROV_LOCK = threading.Lock()
+_SELF_IMPROV_LAST = 0.0
+_SELF_IMPROV_INTERVAL = 300.0  # 5 min: evita evaluar con Ollama en cada turno
+
+
 def _run_self_improvement(user_input: str, response: str, context: dict = None):
-    """Run self-improvement cycle in background thread."""
+    """Run self-improvement cycle in background thread (throttled)."""
+    global _SELF_IMPROV_LAST
+    now = time.time()
+    with _SELF_IMPROV_LOCK:
+        if now - _SELF_IMPROV_LAST < _SELF_IMPROV_INTERVAL:
+            return
+        _SELF_IMPROV_LAST = now
+    if not user_input or len(user_input.strip()) < 15:
+        return
     try:
         from core.self_improvement import FeedbackLoop
         _loop = FeedbackLoop()
         _loop.run_cycle(user_input, response, context)
+    except Exception:
+        pass
+
+
+def _generate_daily_digest():
+    """Genera el digest del día en background (no bloquea el loop)."""
+    try:
+        from core.daily_digest import generate_digest
+        generate_digest()
+    except Exception:
+        pass
+
+
+_STORE_EPISODE_LOCK = threading.Lock()
+_STORE_EPISODE_DAY = ""
+_STORE_EPISODE_COUNT = 0
+_STORE_EPISODE_CAP = 40  # máx. episodios de conversación guardados por día
+
+
+def _store_episode(event: str, category: str = "conversation", importance: float = 0.6):
+    """Guarda un evento en la memoria episódica (DB) con throttle diario."""
+    global _STORE_EPISODE_DAY, _STORE_EPISODE_COUNT
+    try:
+        today = time.strftime("%Y-%m-%d")
+        with _STORE_EPISODE_LOCK:
+            if today != _STORE_EPISODE_DAY:
+                _STORE_EPISODE_DAY = today
+                _STORE_EPISODE_COUNT = 0
+            if _STORE_EPISODE_COUNT >= _STORE_EPISODE_CAP:
+                return
+            _STORE_EPISODE_COUNT += 1
+        from actions.eris_db import episodic_add
+        episodic_add(str(event)[:400], category, "", float(importance or 0.6))
     except Exception:
         pass
 
@@ -110,7 +217,9 @@ class ErisLive:
         self._wake_buffer     = []      # (data, is_speech) ring buffer para reenviar al activarse
         self._wake_buffer_bytes = 0
         self._wake_last_activity = time.time()  # para cierre por inactividad
+        self._wake_convo_started = time.time()  # para no loguear cierres triviales
         self._online_logged = False             # para no spamear "ERIS en línea" en cada reconexión
+        self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -119,8 +228,19 @@ class ErisLive:
                 self._wake_mode = bool(_wc.get("wake_word_mode", True))
         except Exception:
             pass
+        # Voz offline (Vosk/Ollama): desactivada por defecto — causa crash de
+        # asyncio/Python 3.14 que cuelga el puerto mobile (~10-12 min).
+        # Para reactivar: "offline_voice": true en config/api_keys.json
+        self._offline_voice_enabled = False
+        try:
+            if API_CONFIG_PATH.exists():
+                _ocfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+                self._offline_voice_enabled = bool(_ocfg.get("offline_voice", False))
+        except Exception:
+            pass
         # Iniciar carga o descarga de Vosk en segundo plano para no congelar la UI
-        threading.Thread(target=self._init_vosk, daemon=True).start()
+        if self._offline_voice_enabled:
+            threading.Thread(target=self._init_vosk, daemon=True).start()
         self.audio_in_queue = None
         # Iniciar scheduler y motor de reglas en background al arrancar ERIS
         if start_runner:
@@ -157,10 +277,11 @@ class ErisLive:
         except Exception as _ce:
             print(f"[ERIS] Connectivity monitor init: {_ce}")
         try:
-            from core.offline_voice import get_offline_pipeline
-            self._offline_pipeline = get_offline_pipeline(
-                on_text_response=self._on_offline_response
-            )
+            if self._offline_voice_enabled:
+                from core.offline_voice import get_offline_pipeline
+                self._offline_pipeline = get_offline_pipeline(
+                    on_text_response=self._on_offline_response
+                )
         except Exception as _oe:
             print(f"[ERIS] Offline pipeline init: {_oe}")
         try:
@@ -183,6 +304,20 @@ class ErisLive:
                             print(f"[ERIS] 🔍 Auto-mejora: {len(suggestions)} sugerencia(s) generada(s)")
                     except Exception:
                         pass
+                    try:
+                        from actions.self_evolution import autonomous_reflect
+                        ref = autonomous_reflect()
+                        if ref:
+                            print(f"[ERIS] ✨ Reflexion autonoma: {ref[:120]}...")
+                    except Exception:
+                        pass
+                    try:
+                        from actions.research_agent import research
+                        _res = research({"action": "auto"}, None)
+                        if _res:
+                            print(f"[ERIS] 🧠 Investigacion autonoma: {_res.splitlines()[0][:100]}")
+                    except Exception:
+                        pass
                     time.sleep(3600)
             self._improvement_timer = threading.Thread(target=_run_improvement_scan, daemon=True)
             self._improvement_timer.start()
@@ -203,15 +338,13 @@ class ErisLive:
         self._proactive_thread = threading.Thread(target=self._proactive_loop, daemon=True)
         self._proactive_thread.start()
 
-        # Mobile companion server (WebSocket + chat web app)
+        # Health endpoint (liveness para el watchdog; sin chat móvil)
         if _mobile_start:
             try:
-                _mobile_url = _mobile_start(port=8765, inject_callback=self._on_text_command)
-                print(f"[MAIN] 📱 Compañero mobile: {_mobile_url}")
-                print(f"[MAIN] 📱 Abrí esa URL en el navegador de tu celular en la misma red WiFi")
-                self.ui.write_log(f"SYS: 📱 Compañero mobile: {_mobile_url}")
+                _health_url = _mobile_start(port=8765)
+                print(f"[MAIN] Endpoint de salud: {_health_url}")
             except Exception as _me:
-                print(f"[MAIN] Error iniciando servidor mobile: {_me}")
+                print(f"[MAIN] Error iniciando endpoint de salud: {_me}")
 
     # ── Online/Offline mode switching ────────────────────────────────────
     def _on_mode_change(self, is_online: bool):
@@ -276,6 +409,8 @@ class ErisLive:
     def _inject_text(self, text: str):
         """Thread-safe injection of a text message into the current live session."""
         if self._loop and self.session:
+            if text and len(text) > 3000:
+                text = text[:3000] + "...\n[Texto truncado por tamaño]"
             asyncio.run_coroutine_threadsafe(
                 self.session.send_realtime_input(text=text),
                 self._loop
@@ -297,6 +432,7 @@ class ErisLive:
             return
         self._wake_gate_open = True
         self._wake_last_activity = time.time()
+        self._wake_convo_started = time.time()
         self.ui.set_state("LISTENING")
         self.ui.write_log("SYS: Te escucho...")
         if self._loop and self.out_queue:
@@ -335,7 +471,10 @@ class ErisLive:
         self._wake_buffer = []
         self._wake_buffer_bytes = 0
         self.ui.set_state("IDLE")
-        self.ui.write_log("SYS: En standby. Decime 'Eris' cuando quieras hablar.")
+        # Solo loguear el standby si hubo una conversación real (≥3s);
+        # los cierres por timeout de falso positivo no ensucian el log
+        if time.time() - self._wake_convo_started >= 3.0:
+            self.ui.write_log("SYS: En standby. Decime 'Eris' cuando quieras hablar.")
 
     def _is_end_conversation(self, text: str) -> bool:
         """True si el usuario indicó que termina la conversación."""
@@ -382,6 +521,20 @@ class ErisLive:
             except Exception as e:
                 print(f"[RESILIENT] Health loop error: {e}")
 
+    def _remember(self, text: str, cap: int = 12, max_len: int = 400):
+        """Acumula interacciones recientes para reinyectarlas al reconectar."""
+        try:
+            text = str(text).strip()
+            if not text:
+                return
+            if len(text) > max_len:
+                text = text[:max_len] + "…"
+            self._convo_ctx.append(text)
+            if len(self._convo_ctx) > cap:
+                del self._convo_ctx[:len(self._convo_ctx) - cap]
+        except Exception:
+            pass
+
     def _on_text_command(self, text: str):
         self._last_user_interaction = time.time()  # Reset idle timer
 
@@ -394,18 +547,50 @@ class ErisLive:
                 )
             return
 
+        # Image file: analyze with the vision chain and feed the result back
+        if text.startswith("[IMAGE_FILE]"):
+            m = re.search(r'path=(.+)', text)
+            if m:
+                threading.Thread(
+                    target=self._process_image_file,
+                    args=(m.group(1).strip(),),
+                    daemon=True,
+                ).start()
+            return
+
+        # Document file: extract content with the document tool and feed it back
+        if text.startswith("[DOC_FILE]"):
+            m = re.search(r'path=(.+)', text)
+            if m:
+                threading.Thread(
+                    target=self._process_document_file,
+                    args=(m.group(1).strip(),),
+                    daemon=True,
+                ).start()
+            return
+
         # Fire phrase triggers in background (only for text-input path)
         self._last_text_trigger = text
         threading.Thread(target=self._fire_phrase_triggers, args=(text,), daemon=True).start()
         # DB: log user message
         if convo_log:
             threading.Thread(target=lambda: convo_log(self._session_id, "user", text), daemon=True).start()
+        # Persistir en contexto de reconexión
+        self._remember(f"Usuario: {text}")
         # Emotional reaction to user interaction
         if react_to_user_interaction:
             threading.Thread(target=react_to_user_interaction, daemon=True).start()
         # Emotional growth - each interaction deepens the bond
         if _eg_on_user_msg:
             threading.Thread(target=lambda: _eg_on_user_msg(None, text), daemon=True).start()
+        # Empathetic reaction to user mood (text path)
+        try:
+            from core.emotional_state import react_to_user_text
+            _face = react_to_user_text(text)
+            if _face:
+                threading.Thread(target=lambda f=_face: self.ui.show_expression(f), daemon=True).start()
+        except Exception:
+            pass
 
         # ── Fallback mode: route through Ollama ─────────────────────────────
         if self._fallback_mode or not self._loop or not self.session:
@@ -432,6 +617,7 @@ class ErisLive:
             response = get_brain().respond(text, self)
             if response:
                 self.ui.write_log(f"ERIS (offline): {response}")
+                self.ui.express_emotion(response)
                 if _mobile_broadcast:
                     _mobile_broadcast(response)
                 self._announce(response)
@@ -489,14 +675,114 @@ class ErisLive:
 
             # Feed result back into the realtime session so ERIS can speak it
             if self.session:
-                await self.session.send_client_content(
-                    turns={"parts": [{"text": f"[RESULTADO AUDIO '{p.name}']\n{result}"}]},
-                    turn_complete=True
+                result_short = result if len(result) <= 3000 else result[:3000] + "...\n[Analisis completo guardado]"
+                await self.session.send_realtime_input(
+                    text=f"[RESULTADO AUDIO '{p.name}']\n{result_short}"
                 )
 
         except Exception as e:
             traceback.print_exc()
             self.ui.write_log(f"❌ Error procesando audio: {e}")
+        finally:
+            if not self.ui.muted:
+                self.ui.set_state("LISTENING")
+
+    def _process_image_file(self, path: str):
+        """Analyze an image file with the vision chain and feed the result back
+        into the realtime session so ERIS can speak/respond about it."""
+        try:
+            p = Path(path)
+            if not p.exists():
+                self.ui.write_log(f"❌ Archivo no encontrado: {path}")
+                return
+
+            self.ui.set_state("THINKING")
+            self.ui.write_log(f"🖼️ Procesando imagen: {p.name}...")
+
+            from actions.image_analyzer import image_analyzer
+            result = image_analyzer({"action": "identify", "path": str(p)})
+            if "\n\n" in result:
+                result = result.split("\n\n", 1)[1]
+
+            self.ui.write_log(f"ERIS: {result}")
+
+            # Guardar el analisis completo por si ERIS necesita mas detalle
+            full_path = None
+            try:
+                full_path = Path("D:/Eris_Source/snapshots") / f"{p.stem}_analysis.txt"
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(result, encoding="utf-8")
+            except Exception:
+                pass
+
+            # Feed result back into the realtime session so ERIS can speak it.
+            # Usar send_realtime_input en vez de send_client_content: intercalar
+            # client_content con el stream realtime de audio causa el error 1007
+            # "invalid argument" (doc del SDK lo desaconseja). Texto truncado por
+            # seguridad y el analisis completo queda en disco.
+            if self.session and self._loop:
+                result_short = result if len(result) <= 3000 else result[:3000] + "...\n[Analisis completo guardado en el archivo indicado por la herramienta]"
+                asyncio.run_coroutine_threadsafe(
+                    self.session.send_realtime_input(
+                        text=f"[RESULTADO IMAGEN '{p.name}']\n{result_short}"
+                    ),
+                    self._loop,
+                )
+
+        except Exception as e:
+            traceback.print_exc()
+            self.ui.write_log(f"❌ Error procesando imagen: {e}")
+        finally:
+            if not self.ui.muted:
+                self.ui.set_state("LISTENING")
+
+    def _process_document_file(self, path: str):
+        """Extrae el contenido de un documento (PDF/Word/Excel/PPT/texto/codigo)
+        con el document_tool y lo inyecta en la sesion realtime para que ERIS
+        pueda leerlo, resumirlo o editarlo. El contenido completo queda en disco."""
+        try:
+            p = Path(path)
+            if not p.exists():
+                self.ui.write_log(f"❌ Archivo no encontrado: {path}")
+                return
+
+            self.ui.set_state("THINKING")
+            self.ui.write_log(f"📄 Procesando documento: {p.name}...")
+
+            from actions.document_tool import document_tool
+            result = document_tool({"action": "read", "path": str(p), "max_chars": 150000})
+            if result.startswith("Error"):
+                self.ui.write_log(f"❌ {result}")
+                if not self.ui.muted:
+                    self.ui.set_state("LISTENING")
+                return
+
+            preview = result[:1200] + ("..." if len(result) > 1200 else "")
+            self.ui.write_log(f"ERIS: {preview}")
+            if "\n\n" in result:
+                result = result.split("\n\n", 1)[1]
+
+            # Guardar el contenido completo en snapshots para ediciones posteriores
+            try:
+                full_path = Path("D:/Eris_Source/snapshots") / f"{p.stem}_content.txt"
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(result, encoding="utf-8")
+            except Exception:
+                pass
+
+            # Inyectar en la sesion realtime (texto truncado; el detalle queda en disco)
+            if self.session and self._loop:
+                result_short = result if len(result) <= 3000 else result[:3000] + "...\n[Contenido completo guardado en el archivo indicado por la herramienta]"
+                asyncio.run_coroutine_threadsafe(
+                    self.session.send_realtime_input(
+                        text=f"[DOCUMENTO '{p.name}']\n{result_short}"
+                    ),
+                    self._loop,
+                )
+
+        except Exception as e:
+            traceback.print_exc()
+            self.ui.write_log(f"❌ Error procesando documento: {e}")
         finally:
             if not self.ui.muted:
                 self.ui.set_state("LISTENING")
@@ -642,6 +928,10 @@ class ErisLive:
     def set_speaking(self, value: bool):
         with self._speaking_lock:
             self._is_speaking = value
+        try:
+            self.ui.set_face_speaking(value)
+        except Exception:
+            pass
         if value:
             self.ui.set_state("SPEAKING")
         elif not self.ui.muted:
@@ -654,10 +944,7 @@ class ErisLive:
         if not self._loop or not self.session:
             return
         asyncio.run_coroutine_threadsafe(
-            self.session.send_client_content(
-                turns={"parts": [{"text": text}]},
-                turn_complete=True
-            ),
+            self.session.send_realtime_input(text=text),
             self._loop
         )
 
@@ -674,11 +961,14 @@ class ErisLive:
                 import numpy as _np
                 import sounddevice as _sd
                 from core.tts_engine import synthesize
+                self.ui.express_emotion(text)
                 pcm = asyncio.run(synthesize(text, backend="edge"))
                 if pcm and len(pcm) > 0:
                     audio = _np.frombuffer(pcm, dtype=_np.int16)
+                    self.ui.set_face_speaking(True)
                     _sd.play(audio, 24000)
                     _sd.wait()
+                    self.ui.set_face_speaking(False)
             except Exception as e:
                 print(f"[ERIS] Aviso por voz falló: {e}")
         threading.Thread(target=_job, daemon=True).start()
@@ -692,10 +982,25 @@ class ErisLive:
             asyncio.run_coroutine_threadsafe(self._drain_audio_queue(), self._loop)
 
     def _proactive_loop(self):
-        """Modo proactivo: aprende y sugiere SIN interrumpir."""
+        """Modo proactivo: aprende, sugiere y genera el digest diario SIN interrumpir."""
         import random as _rnd
+        _last_digest_day = ""
         while True:
             time.sleep(60)
+            # ── Digest diario (memoria de largo plazo) ──
+            try:
+                from datetime import date as _date
+                from core.daily_digest import _today_file
+                _today = _date.today().isoformat()
+                if _today != _last_digest_day:
+                    _last_digest_day = _today
+                    if not _today_file().exists():
+                        threading.Thread(
+                            target=_generate_daily_digest,
+                            daemon=True
+                        ).start()
+            except Exception:
+                pass
             idle_seconds = time.time() - self._last_user_interaction
             if idle_seconds > 300 and self._loop and self.session:
                 try:
@@ -705,6 +1010,82 @@ class ErisLive:
                         self.ui.write_log("[IDLE_LEARN] {}".format(summary))
                 except Exception as _ile:
                     self.ui.write_log("[IDLE_LEARN] Error: {}".format(str(_ile)[:80]))
+
+            # ── Proactividad: recordatorios de agenda + saludo matutino ──
+            if time.time() - self._last_user_interaction > 90:
+                self._proactive_reminders()
+
+    def _proactive_reminders(self):
+        """Recordatorios proactivos al móvil: agenda del día y eventos próximos."""
+        try:
+            from datetime import datetime as _dt, timedelta as _td
+            import json as _json
+            from pathlib import Path as _Path
+
+            _DATA = _Path(__file__).resolve().parent / "data"
+            _events_file = _DATA / "calendar_events.json"
+            _state_file = _DATA / "eris_proactive_state.json"
+
+            state = {}
+            if _state_file.exists():
+                try:
+                    state = _json.loads(_state_file.read_text(encoding="utf-8"))
+                except Exception:
+                    state = {}
+            if not isinstance(state, dict):
+                state = {}
+            if not state.get("enabled", True):
+                return
+
+            now = _dt.now()
+            notified = set(state.get("reminded_events", []))
+            messages = []
+
+            events = []
+            if _events_file.exists():
+                try:
+                    events = _json.loads(_events_file.read_text(encoding="utf-8"))
+                except Exception:
+                    events = []
+            current_ids = set()
+            for e in events:
+                eid = e.get("id", "")
+                if not eid:
+                    continue
+                current_ids.add(eid)
+                if eid in notified:
+                    continue
+                try:
+                    start = _dt.fromisoformat(str(e.get("start", "")))
+                except Exception:
+                    continue
+                rem = int(e.get("reminder_minutes", 15))
+                if start - _td(minutes=rem) <= now <= start:
+                    mins = int((start - now).total_seconds() / 60) + 1
+                    messages.append("Recordatorio: '{}' empieza en {} min".format(
+                        e.get("title", "evento"), mins))
+                    notified.add(eid)
+
+            if not messages:
+                return
+
+            notified = notified & current_ids
+            state["reminded_events"] = sorted(notified)
+            for msg in messages:
+                if _mobile_broadcast:
+                    _mobile_broadcast(msg)
+                try:
+                    self.ui.write_log("[PROACTIVE] {}".format(msg))
+                except Exception:
+                    pass
+            try:
+                _state_file.parent.mkdir(parents=True, exist_ok=True)
+                _state_file.write_text(
+                    _json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+            except Exception:
+                pass
+        except Exception as _pe:
+            self.ui.write_log("[PROACTIVE] Error: {}".format(str(_pe)[:80]))
 
     async def _drain_audio_queue(self):
         """Vacía la cola de audio para cortar la reproducción de inmediato."""
@@ -727,7 +1108,8 @@ class ErisLive:
         mem_str    = format_memory_for_prompt(memory)
         sys_prompt = load_system_prompt()
 
-        # ── Inject real memory context ──
+        # ── Inject real memory context (partes aparte, ANTES del sys_prompt
+        #    para que sobrevivan al truncado) ──
         memory_context = ""
         try:
             from actions.eris_db import memory_all, episodic_recent
@@ -736,28 +1118,95 @@ class ErisLive:
                 memory_context += "[MEMORIAS]\n"
                 for m in mems[:4]:
                     memory_context += f"- {m['key']}: {str(m['value'])[:120]}\n"
-            eps = episodic_recent(3)
+            eps = episodic_recent(8)
             if eps:
-                memory_context += "\n[EVENTOS RECIENTES]\n"
-                for e in eps[:3]:
-                    memory_context += f"- {e['event'][:120]}\n"
+                _clean_eps = [e for e in eps
+                              if e.get("category") != "idle_learning"
+                              and "no encontre" not in str(e.get("event", "")).lower()]
+                if _clean_eps:
+                    memory_context += "\n[EVENTOS RECIENTES]\n"
+                    for e in _clean_eps[:3]:
+                        memory_context += f"- {e['event'][:120]}\n"
         except Exception:
             pass
-        
-        if memory_context:
-            sys_prompt = sys_prompt + "\n\n" + memory_context
 
-        # ── Inject RAG knowledge context ──
+        # ── Memoria semántica (semantic.json / episodic.json): lectura directa,
+        #    barata, sin embeddings — la memoria semántica se usa en el prompt ──
+        semantic_context = ""
         try:
+            from pathlib import Path as _Path
+            _mem_dir = _Path(__file__).resolve().parent / "memory"
+            _sem_file = _mem_dir / "semantic.json"
+            _epi_file = _mem_dir / "episodic.json"
+            if _sem_file.exists():
+                _facts = json.loads(_sem_file.read_text(encoding="utf-8"))
+                if isinstance(_facts, list) and _facts:
+                    _clean_facts = []
+                    for f in _facts:
+                        _subj = str(f.get("subject", ""))
+                        _obj  = str(f.get("object", ""))
+                        _low  = (_subj + " " + _obj).lower()
+                        if "aprendi sobre" in _low or "no encontre" in _low or "no se encontraron" in _low:
+                            continue
+                        if float(f.get("confidence", 0) or 0) < 0.45:
+                            continue
+                        _clean_facts.append(f)
+                    if _clean_facts:
+                        semantic_context += "[HECHOS SEMANTICOS]\n"
+                        for f in _clean_facts[-4:]:
+                            semantic_context += "- {} {} {} (conf {:.0f}%)\n".format(
+                                str(f.get("subject", ""))[:60],
+                                str(f.get("predicate", ""))[:30],
+                                str(f.get("object", ""))[:80],
+                                float(f.get("confidence", 0) or 0),
+                            )
+            if _epi_file.exists():
+                _epi = json.loads(_epi_file.read_text(encoding="utf-8"))
+                if isinstance(_epi, list) and _epi:
+                    _clean_epi = []
+                    for e in _epi:
+                        _evt = str(e.get("event", ""))
+                        if "no encontre" in _evt.lower() or "no se encontraron" in _evt.lower():
+                            continue
+                        _clean_epi.append(e)
+                    if _clean_epi:
+                        semantic_context += "\n[EPISODIOS SEMANTICOS]\n"
+                        for e in _clean_epi[-3:]:
+                            semantic_context += "- {} (imp {:.1f})\n".format(
+                                str(e.get("event", ""))[:120],
+                                float(e.get("importance", 0) or 0),
+                            )
+        except Exception:
+            pass
+
+        # ── RAG knowledge context: solo si Ollama responde rápido
+        #    (evita el stall de 30s por timeout de embed al reconectar) ──
+        rag_context = ""
+        try:
+            from core.llm_bridge import ping as _ollama_ping
             from core.rag_pipeline import query_documents, stats
-            _rag_stats = stats()
-            if _rag_stats.get("documents", 0) > 0:
-                _rag_results = query_documents(f"Conocimiento general sobre {', '.join(memory.keys()) if isinstance(memory, dict) else 'temas principales'}", top_k=4)
-                if _rag_results:
-                    rag_context = "\n[CONOCIMIENTO INDEXADO]\n"
-                    for r in _rag_results:
-                        rag_context += f"- {r['filename']}: {r['text'][:200]}\n"
-                    sys_prompt += rag_context
+            if _ollama_ping(1.0):
+                _rag_stats = stats()
+                if _rag_stats.get("documents", 0) > 0:
+                    # Usar la conversación reciente (sobrevive a reconexiones)
+                    # como base de la query, NO memory.keys() (conocimiento genérico).
+                    _recent = getattr(self, "_convo_ctx", None) or []
+                    _query_txt = " ".join(_recent[-4:]).strip()
+                    if not _query_txt:
+                        _query_txt = "temas principales"
+                    _rag_results = query_documents(_query_txt[:500], top_k=4)
+                    if _rag_results:
+                        rag_context = "[CONOCIMIENTO INDEXADO]\n"
+                        for r in _rag_results:
+                            rag_context += f"- {r['filename']}: {r['text'][:200]}\n"
+        except Exception:
+            pass
+
+        # ── Digest diario (memoria de largo plazo) ──
+        digest_block = ""
+        try:
+            from core.daily_digest import inject_digest
+            digest_block = inject_digest()
         except Exception:
             pass
 
@@ -765,19 +1214,29 @@ class ErisLive:
         time_ctx = get_time_context()
 
         parts = [time_ctx]
-        if mem_str:
-            parts.append(mem_str)
-        parts.append(sys_prompt)
 
         # ── Inject emotional state & personality into prompt ──
+        # (antes de sys_prompt para que sobrevivan al truncado de 32K)
         try:
             from actions.emotional_growth import _load as _eg_load, get_prompt_injection
             from core.personality_engine import get_tone_for_response
+            from core.emotional_state import get_tone_instruction as _state_tone
+            from actions.relationship import inject_relationship
+            from core.style_engine import inject_style
             _eg_state = _eg_load()
             _injection = get_prompt_injection(_eg_state)
             _tone = get_tone_for_response()
             parts.append(f"[PERSONALIDAD] {_tone}")
             parts.append(f"[EMOCION] {_injection}")
+            _state_tone_txt = _state_tone() if _state_tone else ""
+            if _state_tone_txt:
+                parts.append(f"[TONO] {_state_tone_txt}")
+            _rel = inject_relationship()
+            if _rel:
+                parts.append(_rel)
+            _style = inject_style()
+            if _style:
+                parts.append(_style)
         except Exception:
             pass
 
@@ -790,6 +1249,71 @@ class ErisLive:
         except Exception:
             pass
 
+        if memory_context:
+            parts.append(memory_context)
+        if semantic_context:
+            parts.append(semantic_context)
+        if rag_context:
+            parts.append(rag_context)
+        if digest_block:
+            parts.append(digest_block)
+        if mem_str:
+            parts.append(mem_str)
+        # ── Lecciones aprendidas y correcciones: el auto-aprendizaje SÍ impacta
+        #    respuestas futuras (solo lecciones de calidad, sin placeholders) ──
+        learning_context = ""
+        try:
+            _mem_dir = _Path(__file__).resolve().parent / "memory"
+            _lessons_file = _mem_dir / "learned_lessons.json"
+            _corrections_file = _mem_dir / "auto_corrections.json"
+            if _lessons_file.exists():
+                _lessons = json.loads(_lessons_file.read_text(encoding="utf-8"))
+                if isinstance(_lessons, list):
+                    _good = [l for l in _lessons
+                             if not str(l.get("lesson", "")).startswith("[Sin corrección")
+                             and str(l.get("lesson", "")).strip()]
+                    if _good:
+                        learning_context += "[LECCIONES APRENDIDAS]\n"
+                        for l in _good[-5:]:
+                            _cat = l.get("category", "general")
+                            _txt = str(l.get("lesson", ""))[:160]
+                            learning_context += f"- [{_cat}] {_txt}\n"
+            if _corrections_file.exists():
+                _corr = json.loads(_corrections_file.read_text(encoding="utf-8"))
+                if isinstance(_corr, list):
+                    _good = [c for c in _corr
+                             if str(c.get("corrected", "")).strip()
+                             and not str(c.get("corrected", "")).startswith("[Sin corrección")]
+                    if _good:
+                        learning_context += "\n[CORRECCIONES RECIENTES (evitar estos errores)]\n"
+                        for c in _good[-3:]:
+                            learning_context += f"- {str(c.get('reason', ''))[:100]} → {str(c.get('corrected', ''))[:120]}\n"
+            if learning_context:
+                parts.append(learning_context)
+        except Exception:
+            pass
+        # ── Contexto de conversación reciente (sobrevive a reconexiones) ──
+        if getattr(self, "_convo_ctx", None):
+            parts.append(
+                "[CONTEXTO DE CONVERSACIÓN RECIENTE (lo que veníamos haciendo)]\n"
+                + "\n".join(self._convo_ctx)
+            )
+        parts.append(sys_prompt)
+
+        # ── Smart trim: nunca cortar lo esencial (personalidad, relación,
+        #    estilo, memoria, digest). Se recorta solo la cola del prompt base.
+        #    60000 chars ≈ ~15K tokens (Gemini 3.1 Flash aguanta ~1M) — el prompt
+        #    completo (~49K) entra sin perder secciones críticas. ──
+        MAX_SYSTEM_CHARS = 60000
+        system_text = "\n".join(parts)
+        if len(system_text) > MAX_SYSTEM_CHARS:
+            _essential = "\n".join(parts[:-1])
+            _budget = MAX_SYSTEM_CHARS - len(_essential) - 80
+            if _budget > 2000:
+                sys_prompt = sys_prompt[:_budget] + "\n[CONTEXTO TRUNCADO]"
+                system_text = _essential + "\n" + sys_prompt
+            else:
+                system_text = system_text[:MAX_SYSTEM_CHARS] + "\n[CONTEXTO TRUNCADO]"
         # Build SpeechConfig — try to set speaking rate for faster delivery
         _voice_name = get_eris_voice()
         _speech_cfg = None
@@ -803,11 +1327,6 @@ class ErisLive:
             )
         except Exception:
             _speech_cfg = None
-
-        system_text = "\n".join(parts)
-        MAX_SYSTEM_CHARS = 32000
-        if len(system_text) > MAX_SYSTEM_CHARS:
-            system_text = system_text[:MAX_SYSTEM_CHARS] + "\n[CONTEXTO TRUNCADO]"
 
         cfg_kwargs: dict = dict(
             response_modalities=["AUDIO"],
@@ -846,7 +1365,15 @@ class ErisLive:
 
 
     async def _execute_tool(self, fc) -> types.FunctionResponse:
-        return await self._tool_dispatcher.execute(fc)
+        _resp = await self._tool_dispatcher.execute(fc)
+        try:
+            _tool_name = getattr(fc, "name", "tool")
+            _txt = str(getattr(_resp, "response", ""))[:400]
+            if _txt:
+                self._remember(f"[Herramienta {_tool_name}] {_txt}")
+        except Exception:
+            pass
+        return _resp
 
     async def _send_realtime(self):
         _ready = getattr(self, '_session_ready', None)
@@ -900,9 +1427,8 @@ class ErisLive:
                     if self.vosk_recognizer.AcceptWaveform(audio_data):
                         res = json.loads(self.vosk_recognizer.Result())
                         text = res.get("text", "").lower()
-                        # Multiple wake phrases
-                        wake_phrases = ["eris", "despierta", "hola eris", "hey eris", "eres", "oye eris", "sal", "estas ahi", "estas hay"]
-                        if any(phrase in text for phrase in wake_phrases):
+                        # Mismo matcher tolerante de nombre/frases que en modo normal
+                        if _has_wake_word(text):
                             self.is_sleeping = False
                             self._open_wake_gate()
                             self.ui.set_state("LISTENING")
@@ -922,6 +1448,24 @@ class ErisLive:
                                 winsound.Beep(500, 200)
                                 winsound.Beep(700, 200)
                             except: pass
+                    else:
+                        # Detección incremental: despertar apenas reconoce el nombre
+                        try:
+                            partial = json.loads(self.vosk_recognizer.PartialResult())
+                            _pt = partial.get("partial", "").strip()
+                            if len(_pt.split()) >= 2 and _has_wake_word(_pt):
+                                self.is_sleeping = False
+                                self._open_wake_gate()
+                                self.ui.set_state("LISTENING")
+                                self.ui.write_log("SYS: Despierta!")
+                                try:
+                                    import winsound
+                                    winsound.Beep(500, 200)
+                                    winsound.Beep(700, 200)
+                                except Exception:
+                                    pass
+                        except Exception:
+                            pass
                 return
 
             with self._speaking_lock:
@@ -966,7 +1510,17 @@ class ErisLive:
                         pass
                 return
 
-            # Apply mic gain to boost low-level microphones
+            # ── Half-duplex anti-eco: mientras ERIS habla NO se envía el mic
+            #    a Gemini. Sin esto, ERIS se escucha a sí misma por el altavoz
+            #    y entra en un bucle de eco que la deja "pillada" emitiendo un
+            #    sonido infinito ("mmmmmmmm..."). Se vuelve a escuchar al terminar. ──
+            if eris_speaking:
+                try:
+                    rms = float(np.sqrt(np.mean(indata.astype(np.float32) ** 2))) / 32768.0
+                    self.ui.set_audio_level(min(1.0, rms * 15))
+                except Exception:
+                    pass
+                return
             gain = getattr(self, "_mic_gain", None)
             if gain is None:
                 try:
@@ -985,7 +1539,10 @@ class ErisLive:
             # Calculate RMS audio level for sphere visualization
             try:
                 rms = float(np.sqrt(np.mean(amplified.astype(np.float32) ** 2))) / 32768.0
-                self.ui.set_audio_level(min(1.0, rms * 18))
+                # Mientras ERIS habla, el orbe se mueve con SU voz (nivel de
+                # playback), no con el ruido ambiente del micro
+                if not eris_speaking:
+                    self.ui.set_orb_audio_level(min(1.0, rms * 18))
             except Exception:
                 rms = 0.0
             data = amplified.tobytes()
@@ -1004,6 +1561,16 @@ class ErisLive:
                         text = res.get("text", "").lower()
                         if _has_wake_word(text):
                             self._open_wake_gate()
+                    else:
+                        # Detección incremental: abrir el gate apenas dice el
+                        # nombre (no esperar al final de la oración) → menor latencia
+                        try:
+                            partial = json.loads(self.vosk_recognizer.PartialResult())
+                            _pt = partial.get("partial", "").strip()
+                            if len(_pt.split()) >= 2 and _has_wake_word(_pt):
+                                self._open_wake_gate()
+                        except Exception:
+                            pass
                 return
 
             # ── Gate abierto (o modo libre): audio en vivo a Gemini ──
@@ -1017,29 +1584,18 @@ class ErisLive:
             loop.call_soon_threadsafe(self._put_audio_chunk, data)
 
         try:
-            mic_device_idx = None
-            _dev_name = "HAYLOU"
             try:
-                from memory.config_manager import BASE_DIR
-                api_cfg_path = BASE_DIR / "config" / "api_keys.json"
-                if api_cfg_path.exists():
-                    c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
-                    d = c.get("mic_device", "")
-                    if d != "":
-                        mic_device_idx = int(d)
-                    _dev_name = c.get("mic_device_name", "HAYLOU")
+                mic_device_idx = resolve_mic()
             except Exception:
-                pass
-            # Fallback: search by name if numeric index doesn't point to a valid input device
+                mic_device_idx = None
             if mic_device_idx is not None:
                 try:
-                    _d = sd.query_devices(mic_device_idx)
-                    if _d["max_input_channels"] == 0:
-                        mic_device_idx = None  # not an input device, fall back
+                    _mic_name = sd.query_devices(mic_device_idx)["name"]
                 except Exception:
-                    mic_device_idx = None
-            if mic_device_idx is None:
-                mic_device_idx = resolve_device(_dev_name, "input")
+                    _mic_name = ""
+            else:
+                _mic_name = "(default)"
+            print(f"[ERIS] 🎤 Mic seleccionado: {mic_device_idx} {_mic_name}")
 
             _mic_kw = dict(
                 samplerate=SEND_SAMPLE_RATE,
@@ -1050,8 +1606,8 @@ class ErisLive:
             )
             try:
                 mic_stream = sd.InputStream(device=mic_device_idx, **_mic_kw)
-            except Exception:
-                print(f"[ERIS] ⚠️ Fallback: using default mic device")
+            except Exception as e:
+                print(f"[ERIS] ⚠️ Mic '{mic_device_idx}' falló ({e}); usando default")
                 mic_stream = sd.InputStream(device=None, **_mic_kw)
 
             with mic_stream:
@@ -1078,6 +1634,8 @@ class ErisLive:
             return msg
         self.session._ws.recv = _patched_recv
         out_buf, in_buf = [], []
+        out_full = ""            # acumulador O(n) de la respuesta (sin joins por chunk)
+        _mobile_buf = []         # batch para broadcast mobile (flush por frase)
         _first_chunk   = True
         _last_tool     = None   # track which tool was executing when error hit
 
@@ -1103,14 +1661,27 @@ class ErisLive:
                                 if _first_chunk:
                                     self.ui.clear_eris_response()
                                     _first_chunk = False
+                                    self.ui.set_state("THINKING")
+                                    # Cara según el estado emocional actual de ERIS
+                                    try:
+                                        from core.emotional_state import get_face_expression
+                                        self.ui.show_expression(get_face_expression(), "")
+                                    except Exception:
+                                        pass
                                     if self._first_transcript_time:
                                         now = time.time()
                                         print(f"[TIMING] ✅ First response chunk: +{now - self._first_transcript_time:.1f}s | text: {txt}")
                                 out_buf.append(txt)
+                                out_full = (out_full + " " + txt).strip() if out_full else txt
                                 self.ui.stream_eris_chunk(txt)
-                                # Broadcast to mobile clients
-                                if _mobile_broadcast:
-                                    _mobile_broadcast(txt)
+                                self.ui.express_emotion(out_full)
+                                # Broadcast a mobile agrupado por frase (evita flood)
+                                _mobile_buf.append(txt)
+                                _m_joined = "".join(_mobile_buf)
+                                if _m_joined.rstrip().endswith((".", "!", "?", "\n", ":", ";")) or len(_m_joined) >= 150:
+                                    if _mobile_broadcast:
+                                        _mobile_broadcast(_m_joined)
+                                    _mobile_buf = []
 
                         if sc.input_transcription and sc.input_transcription.text:
                             txt = _clean_transcript(sc.input_transcription.text)
@@ -1128,6 +1699,19 @@ class ErisLive:
                             if full_in and full_in != self._last_text_trigger:
                                 self.ui.write_log(f"Tú: {full_in}")
                                 threading.Thread(target=self._fire_phrase_triggers, args=(full_in,), daemon=True).start()
+                            # Reacción emocional también en la vía por voz
+                            if full_in and full_in != self._last_text_trigger:
+                                if react_to_user_interaction:
+                                    threading.Thread(target=react_to_user_interaction, daemon=True).start()
+                                if _eg_on_user_msg:
+                                    threading.Thread(target=lambda: _eg_on_user_msg(None, full_in), daemon=True).start()
+                                try:
+                                    from core.emotional_state import react_to_user_text
+                                    _face = react_to_user_text(full_in)
+                                    if _face:
+                                        self.ui.show_expression(_face)
+                                except Exception:
+                                    pass
                             # Activación por nombre: la conversación queda abierta
                             # (no repetir "Eris") hasta que el usuario la cierre con
                             # una frase de cierre o por inactividad
@@ -1135,24 +1719,52 @@ class ErisLive:
                                 self._wake_last_activity = time.time()
                                 if self._is_end_conversation(full_in):
                                     self._close_wake_gate()
+                                elif not self._is_speaking:
+                                    # Respuesta solo texto: volver a escuchar
+                                    self.ui.set_state("LISTENING")
                             # ── Self-improvement cycle (async, non-blocking) ──
                             try:
-                                full_out = " ".join(out_buf).strip()
-                                if full_in and full_out:
+                                if full_in and out_full:
                                     _si_context = {"session_id": getattr(self, '_session_id', '')}
                                     threading.Thread(
                                         target=_run_self_improvement,
-                                        args=(full_in, full_out, _si_context),
+                                        args=(full_in, out_full, _si_context),
                                         daemon=True
+                                    ).start()
+                            except Exception:
+                                pass
+                            # Flush restante del broadcast mobile
+                            if _mobile_buf and _mobile_broadcast:
+                                _mobile_broadcast("".join(_mobile_buf))
+                            _mobile_buf = []
+                            # Persistir turno en contexto de reconexión
+                            if full_in:
+                                self._remember(f"Usuario: {full_in}")
+                            if out_full:
+                                self._remember(f"ERIS: {out_full}")
+                            # ── Memoria episódica de largo plazo: guardar solo
+                            #    turnos significativos, en hilo daemon ──
+                            try:
+                                if full_in and out_full and len(full_in) >= 10:
+                                    _mem_evt = (
+                                        f"Conversación: usuario preguntó \"{full_in[:140]}\" "
+                                        f"y ERIS respondió \"{out_full[:140]}\""
+                                    )
+                                    threading.Thread(
+                                        target=_store_episode,
+                                        args=(_mem_evt, "conversation", 0.6),
+                                        daemon=True,
                                     ).start()
                             except Exception:
                                 pass
                             in_buf = []
                             out_buf = []
+                            out_full = ""
                             _first_chunk = True
 
                     if response.tool_call:
                         self.ui.clear_eris_response()
+                        self.ui.set_state("THINKING")
                         _first_chunk = True
                         fcs = response.tool_call.function_calls
                         for fc in fcs:
@@ -1202,6 +1814,8 @@ class ErisLive:
                 tool_info = f" durante '{_last_tool}'" if _last_tool else ""
                 print(f"[ERIS] ⚡ API 1011{tool_info} — reconectando...")
                 self._api_1011_tool = _last_tool
+            elif code == 1008 or "1008" in msg or "policy violation" in msg.lower():
+                print(f"[ERIS] ⚠️ Sesión cerrada por la API (1008, política). Reconectando...")
             else:
                 print(f"[ERIS] ❌ Recv: {e}")
                 traceback.print_exc()
@@ -1214,40 +1828,43 @@ class ErisLive:
         _use_win_audio = False
         try:
             from core.win_audio_output import WinAudioOutput
-            _win_out = WinAudioOutput(channels=CHANNELS, samplerate=RECEIVE_SAMPLE_RATE, bits_per_sample=16)
+            from core.audio_config import resolve_waveout
+            _win_out_device = resolve_waveout()
+            _win_out = WinAudioOutput(
+                channels=CHANNELS,
+                samplerate=RECEIVE_SAMPLE_RATE,
+                bits_per_sample=16,
+                device=_win_out_device,
+            )
             if _win_out.open():
                 _use_win_audio = True
-                print("[ERIS] 🎧 Usando WinAudioOutput (Windows Multimedia API)")
+                print(f"[ERIS] 🎧 Usando WinAudioOutput: {_win_out.device_name or _win_out_device}")
             else:
-                _win_out = None
+                print("[ERIS] ⚠️ WinAudioOutput no pudo abrir el dispositivo elegido; probando default")
+                _win_out = WinAudioOutput(channels=CHANNELS, samplerate=RECEIVE_SAMPLE_RATE, bits_per_sample=16)
+                if _win_out.open():
+                    _use_win_audio = True
+                    print(f"[ERIS] 🎧 Usando WinAudioOutput: {_win_out.device_name or '(default)'}")
+                else:
+                    _win_out = None
         except Exception as _we:
             print(f"[ERIS] ⚠️ WinAudioOutput no disponible: {_we}")
             _win_out = None
 
         # Fallback: sounddevice
         if not _use_win_audio:
-            speaker_device_idx = None
-            _dev_name = "HAYLOU"
             try:
-                from memory.config_manager import BASE_DIR
-                api_cfg_path = BASE_DIR / "config" / "api_keys.json"
-                if api_cfg_path.exists():
-                    c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
-                    d = c.get("speaker_device", "")
-                    if d != "":
-                        speaker_device_idx = int(d)
-                    _dev_name = c.get("speaker_device_name", "HAYLOU")
+                speaker_device_idx = resolve_speaker()
             except Exception:
-                pass
+                speaker_device_idx = None
             if speaker_device_idx is not None:
                 try:
-                    _d = sd.query_devices(speaker_device_idx)
-                    if _d["max_output_channels"] == 0:
-                        speaker_device_idx = None
+                    _speaker_name = sd.query_devices(speaker_device_idx)["name"]
                 except Exception:
-                    speaker_device_idx = None
-            if speaker_device_idx is None:
-                speaker_device_idx = resolve_device(_dev_name, "output")
+                    _speaker_name = ""
+            else:
+                _speaker_name = "(default)"
+            print(f"[ERIS] 🎧 Altavoz seleccionado: {speaker_device_idx} {_speaker_name}")
             _play_channels = CHANNELS
             if speaker_device_idx is not None:
                 try:
@@ -1278,8 +1895,28 @@ class ErisLive:
                 _win_out.write(data)
             else:
                 stream.write(data)
+            # Alimentar el orbe con el volumen real de la voz de ERIS
+            try:
+                arr = np.frombuffer(data, dtype=np.int16)
+                if arr.size:
+                    rms = float(np.sqrt(np.mean(arr.astype(np.float32) ** 2))) / 32768.0
+                    self.ui.set_audio_level(min(1.0, rms * 12))
+            except Exception:
+                pass
 
         try:
+            # ── Corte de seguridad: si ERIS emite audio continuo más de
+            #    max_speech_seconds (default 45s, configurable en api_keys.json),
+            #    se corta por si el modelo entró en un bucle de voz infinito. ──
+            _max_speech = 45.0
+            try:
+                _cfg = json.loads(
+                    (Path(__file__).resolve().parent / "config" / "api_keys.json")
+                    .read_text(encoding="utf-8"))
+                _max_speech = float(_cfg.get("max_speech_seconds", 45.0))
+            except Exception:
+                pass
+            _speech_started = None
             while True:
                 try:
                     chunk = await asyncio.wait_for(
@@ -1294,6 +1931,15 @@ class ErisLive:
                     ):
                         self.set_speaking(False)
                         self._turn_done_event.clear()
+                    continue
+
+                if _speech_started is None:
+                    _speech_started = time.time()
+                elif time.time() - _speech_started > _max_speech:
+                    self.ui.write_log("SYS: ⏱️ Corte de seguridad de audio ({}s) — posible bucle.".format(int(_max_speech)))
+                    print(f"[ERIS] ⏱️ Safety audio cut after {int(_max_speech)}s")
+                    await self._drain_audio_queue()
+                    _speech_started = None
                     continue
 
                 self.set_speaking(True)
@@ -1437,6 +2083,13 @@ class ErisLive:
                             )
                         except Exception as _vge:
                             print(f"[ERIS] VisionGuardian init error: {_vge}")
+                        # Start ERIS Guardian (health/syntax monitor) in background
+                        try:
+                            from actions.eris_guardian import start_monitor as _start_guardian
+                            _start_guardian()
+                            print("[ERIS] 🛡️ Guardian de ERIS activo (monitoreo en background)")
+                        except Exception as _gd_e:
+                            print(f"[ERIS] Guardian init error: {_gd_e}")
                         # Auto morning brief (6am–12pm, once per day)
                         _hour = __import__("datetime").datetime.now().hour
                         if 6 <= _hour < 12 and not already_briefed_today():
@@ -1602,8 +2255,9 @@ def main():
     # ── Single Instance Lock ──────────────────────────────────────────────────
     import ctypes
     global _single_instance_mutex
-    _single_instance_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "ERIS_AI_SINGLE_INSTANCE_MUTEX_v2")
-    if ctypes.windll.kernel32.GetLastError() == 183: # ERROR_ALREADY_EXISTS
+    _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    _single_instance_mutex = _kernel32.CreateMutexW(None, False, "ERIS_AI_SINGLE_INSTANCE_MUTEX_v2")
+    if ctypes.get_last_error() == 183: # ERROR_ALREADY_EXISTS
         print("[ERIS] Ya hay una instancia en ejecución. Cerrando.")
         sys.exit(0)
 
@@ -1623,14 +2277,15 @@ def main():
         
         gemini = cfg.get("gemini_api_key", "").strip()
         openrouter = cfg.get("openrouter_api_key", "").strip()
-        
+
         from memory.memory_manager import load_memory, save_memory
-        
+
         # Check if name is already set in memory
         mem = load_memory()
         existing_name = mem.get("identity", {}).get("name", {}).get("value", "")
-        
-        if gemini and openrouter and existing_name:
+
+        # openrouter es OPCIONAL (solo fallback de agentes): no debe bloquear el arranque
+        if gemini and existing_name:
             return
             
         from PyQt6.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox

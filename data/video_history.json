@@ -4,5 +4,39 @@
     "title": "¿V-SYNC sirve si NO llegas al tope de FPS? ¡La verdad que nadie te explica!",
     "video_id": "e7Q-LIBQGog",
     "method": "research"
+  },
+  {
+    "time": "2026-07-29T22:44:44.206733",
+    "title": "eris_test_video.mp4",
+    "video_id": "C:\\Users\\danie\\AppData\\Local\\Temp\\eris_test_video.mp4",
+    "method": "local_vision"
+  },
+  {
+    "time": "2026-07-29T22:56:24.480467",
+    "title": "Me at the zoo",
+    "video_id": "jNQXAC9IVRw",
+    "method": "subtitles",
+    "chars": 177
+  },
+  {
+    "time": "2026-07-29T23:10:19.000122",
+    "title": "Mejores clips de IlloJuan en Resident Evil: Requiem 🍷",
+    "video_id": "rsmNd8qDaDM",
+    "method": "whisper",
+    "chars": 8140
+  },
+  {
+    "time": "2026-07-29T23:41:07.680848",
+    "title": "Mil Años - Frieren 🌙  El Peso de la Eternidad | Proyecto Isekai | Trap",
+    "video_id": "jM56anjvLXo",
+    "method": "whisper",
+    "chars": 418
+  },
+  {
+    "time": "2026-08-04T17:45:24.936202",
+    "title": "🚀 ¿Qué son las CLASES? ¿Cómo crear una CLASE? 🤔| POO con Java 🖥️ | Explicación FÁCIL | #2",
+    "video_id": "q9gZ9fjKIC0",
+    "method": "whisper",
+    "chars": 6935
   }
 ]

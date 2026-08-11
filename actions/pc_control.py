@@ -54,16 +54,10 @@ def pc_control(parameters: dict, player=None) -> str:
         return _screenshot()
     elif action in ("lock", "bloquear"):
         return _lock_pc()
-    elif action in ("restart", "reiniciar"):
-        return _shutdown("restart")
-    elif action in ("shutdown", "apagar pc"):
-        return _shutdown("shutdown")
-    elif action in ("sleep", "suspender"):
-        return _sleep_pc()
-    elif action in ("logout", "cerrar sesion"):
-        return _logout_pc()
-    elif action in ("hibernate", "hibernar"):
-        return _shutdown("hibernate")
+    elif action in ("restart", "reiniciar", "shutdown", "apagar pc", "sleep", "suspender",
+                    "logout", "cerrar sesion", "hibernate", "hibernar"):
+        return ("⛔ Acción de energía deshabilitada por seguridad: "
+                "ERIS no puede apagar, suspender, reiniciar, hibernar ni cerrar la sesión del PC.")
     elif action in ("status", "estado"):
         return _full_status()
     else:
@@ -71,7 +65,7 @@ def pc_control(parameters: dict, player=None) -> str:
             f"Acciones disponibles: volume_up, volume_down, volume_set, mute, unmute, "
             f"monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, "
             f"bluetooth_on, bluetooth_off, bluetooth_status, "
-            f"screenshot, lock, sleep, hibernate, logout, restart, shutdown, status"
+            f"screenshot, lock, status"
         )
 
 def _change_volume(delta):
@@ -191,34 +185,6 @@ def _lock_pc():
         return "PC bloqueada"
     except Exception as e:
         return f"Error al bloquear: {e}"
-
-def _shutdown(mode):
-    try:
-        if mode == "restart":
-            subprocess.run(["shutdown", "/r", "/t", "10", "/c", "ERIS reiniciando el PC"], timeout=5)
-            return "PC reiniciando en 10 segundos"
-        if mode == "hibernate":
-            subprocess.run(["shutdown", "/h"], timeout=5)
-            return "PC hibernando"
-        else:
-            subprocess.run(["shutdown", "/s", "/t", "10", "/c", "ERIS apagando el PC"], timeout=5)
-            return "PC apagando en 10 segundos"
-    except Exception as e:
-        return f"Error: {e}"
-
-def _sleep_pc():
-    try:
-        subprocess.run(["rundll32.exe", "powrprof.dll,SetSuspendState", "0,1,0"], timeout=5)
-        return "PC en suspensión"
-    except Exception as e:
-        return f"Error al suspender: {e}"
-
-def _logout_pc():
-    try:
-        subprocess.run(["shutdown", "/l"], timeout=5)
-        return "Cerrando sesión"
-    except Exception as e:
-        return f"Error al cerrar sesión: {e}"
 
 def _full_status():
     try:

@@ -180,6 +180,26 @@ try:
 except ImportError:
     web_generator = None
 try:
+    from actions.web_designer import web_designer
+except ImportError:
+    web_designer = None
+try:
+    from actions.react_designer import react_designer
+except ImportError:
+    react_designer = None
+try:
+    from actions.angular_designer import angular_designer
+except ImportError:
+    angular_designer = None
+try:
+    from actions.vue_designer import vue_designer
+except ImportError:
+    vue_designer = None
+try:
+    from actions.next_designer import next_designer
+except ImportError:
+    next_designer = None
+try:
     from actions.todowrite         import todowrite
 except ImportError:
     todowrite = None
@@ -252,6 +272,26 @@ try:
 except ImportError:
     smart_home = None
 try:
+    from actions.camera_bus        import camera_bus
+except ImportError:
+    camera_bus = None
+try:
+    from actions.self_evolution    import self_evolution
+except ImportError:
+    self_evolution = None
+try:
+    from actions.reverse_engineering import reverse_engineering
+except ImportError:
+    reverse_engineering = None
+try:
+    from actions.document_tool        import document_tool
+except ImportError:
+    document_tool = None
+try:
+    from actions.huggingface          import huggingface
+except ImportError:
+    huggingface = None
+try:
     from actions.system_monitor    import system_monitor
 except ImportError:
     system_monitor = None
@@ -295,6 +335,10 @@ try:
     from actions.vision_guardian   import vision_guardian, start as _start_vision_guardian
 except ImportError:
     vision_guardian = None; _start_vision_guardian = None
+try:
+    from actions.eris_guardian import eris_guardian, start_monitor, stop_monitor, get_guardian_status
+except ImportError:
+    eris_guardian = None; start_monitor = None; stop_monitor = None; get_guardian_status = None
 try:
     from actions.openrouter_agent  import openrouter_agent
 except ImportError:
@@ -373,12 +417,14 @@ try:
     from core.emotional_state import (
         get_emotional_state, adjust_emotion, react_to_success,
         react_to_failure, react_to_user_interaction, get_mood_description,
-        get_tone_instruction, emotional_state_tool
+        get_tone_instruction, emotional_state_tool,
+        detect_user_mood, react_to_user_text, get_face_expression,
     )
 except ImportError:
     get_emotional_state = None; adjust_emotion = None; react_to_success = None
     react_to_failure = None; react_to_user_interaction = None; get_mood_description = None
     get_tone_instruction = None; emotional_state_tool = None
+    detect_user_mood = None; react_to_user_text = None; get_face_expression = None
 try:
     from agents.opencode_bridge import opencode_task, recall_lessons
 except ImportError:

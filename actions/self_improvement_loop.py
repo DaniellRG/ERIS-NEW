@@ -73,10 +73,16 @@ def _scan_errors():
         "os_error": re.compile(r"OSError", re.IGNORECASE),
     }
     found = []
-    for line in log_lines:
+    for i, line in enumerate(log_lines):
         for error_type, pattern in patterns.items():
             if pattern.search(line):
-                found.append({"type": error_type, "line": line[:200], "timestamp": time.time()})
+                context = "\n".join(l[:160] for l in log_lines[max(0, i - 6):i])[-400:]
+                found.append({
+                    "type": error_type,
+                    "line": line[:200],
+                    "context": context,
+                    "timestamp": time.time(),
+                })
                 break
     return found
 
@@ -107,7 +113,38 @@ def _check_startup_errors():
 
 
 def _check_performance():
-    return None
+    """Analiza la tendencia de calidad de respuestas (self_evaluation.json).
+
+    Devuelve una sugerencia concreta si la calidad está empeorando o el
+    promedio es bajo. None si todo va bien o no hay datos.
+    """
+    eval_file = MEMORY_DIR / "self_evaluation.json"
+    try:
+        if not eval_file.exists():
+            return None
+        evaluations = json.loads(eval_file.read_text("utf-8"))
+        if not isinstance(evaluations, list) or not evaluations:
+            return None
+        recent = [e.get("overall_score", 0.5) for e in evaluations[-10:]]
+        older = [e.get("overall_score", 0.5) for e in evaluations[-20:-10]]
+        recent_avg = sum(recent) / len(recent)
+        older_avg = (sum(older) / len(older)) if older else recent_avg
+        if recent_avg < older_avg - 0.1:
+            return {
+                "issue": "quality_drop",
+                "detail": (f"Calidad de respuestas bajando: {older_avg:.0%} → {recent_avg:.0%} "
+                           f"en las últimas 10 interacciones"),
+                "suggestion": "Revisar prompts del sistema o contexto de la sesión para estabilizar calidad",
+            }
+        if recent_avg < 0.5:
+            return {
+                "issue": "low_quality",
+                "detail": f"Calidad promedio baja ({recent_avg:.0%})",
+                "suggestion": "Ajustar estrategia de respuesta y verificar contexto",
+            }
+        return None
+    except Exception:
+        return None
 
 
 def generate_suggestions():
@@ -123,12 +160,15 @@ def generate_suggestions():
         counts = _count_errors_by_type(errors)
         for error_type, count in counts.items():
             if count >= 3:
-                sample = next((e["line"] for e in errors if e["type"] == error_type), "")
+                sample_err = next((e for e in errors if e["type"] == error_type), None)
+                sample = sample_err["line"] if sample_err else ""
+                context = sample_err["context"] if sample_err else ""
                 suggestions.append({
                     "type": "error_pattern",
                     "severity": "alta" if count >= 10 else "media",
                     "title": f"Error recurrente: {error_type} ({count} veces)",
                     "detail": sample[:150],
+                    "context": context,
                     "code_action": None,
                     "timestamp": now,
                 })
@@ -149,8 +189,19 @@ def generate_suggestions():
             suggestions.append({
                 "type": "startup",
                 "severity": "alta",
-                "title": f"Error de inicio detectado",
+                "title": "Error de inicio detectado",
                 "detail": startup["detail"],
+                "code_action": None,
+                "timestamp": now,
+            })
+
+        performance = _check_performance()
+        if performance:
+            suggestions.append({
+                "type": "performance",
+                "severity": "media",
+                "title": performance["issue"],
+                "detail": performance["detail"],
                 "code_action": None,
                 "timestamp": now,
             })
@@ -164,7 +215,16 @@ def get_stored_suggestions():
 
 
 def save_suggestion(suggestion):
+    """Guarda una sugerencia, deduplicando por título para no acumular spam."""
     suggestions = get_stored_suggestions()
+    title = (suggestion or {}).get("title", "")
+    if title:
+        existing = [s for s in suggestions if s.get("title", "") == title]
+        if existing:
+            existing[0]["timestamp"] = suggestion.get("timestamp", time.time())
+            existing[0]["count"] = existing[0].get("count", 1) + 1
+            _save_json(_SUGGESTIONS_FILE, suggestions)
+            return
     suggestions.append(suggestion)
     if len(suggestions) > 50:
         suggestions = suggestions[-50:]
@@ -176,7 +236,15 @@ def get_applied():
 
 
 def save_applied(item):
+    """Guarda una mejora aplicada, deduplicando por título."""
     applied = get_applied()
+    title = (item or {}).get("title", "")
+    if title:
+        existing = [a for a in applied if a.get("title", "") == title]
+        if existing:
+            existing[0]["timestamp"] = item.get("timestamp", time.time())
+            _save_json(_APPLIED_FILE, applied)
+            return
     applied.append(item)
     if len(applied) > 50:
         applied = applied[-50:]

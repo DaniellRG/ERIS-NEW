@@ -298,5 +298,41 @@
     "target": "Vista gráfica - BaseObsiEris - Obsidian 1.12.7",
     "result": "OK",
     "timestamp": "2026-07-27T22:37:03.833246"
+  },
+  {
+    "action": "open_app",
+    "target": "calc.exe",
+    "result": "OK -> 'Calculadora'",
+    "timestamp": "2026-07-30T00:29:49.778329"
+  },
+  {
+    "action": "focus",
+    "target": "OpenCode",
+    "result": "OK",
+    "timestamp": "2026-08-04T09:37:12.857073"
+  },
+  {
+    "action": "close",
+    "target": "",
+    "result": "OK",
+    "timestamp": "2026-08-04T09:37:43.576151"
+  },
+  {
+    "action": "focus",
+    "target": "Apache NetBeans IDE 30",
+    "result": "OK",
+    "timestamp": "2026-08-07T12:55:17.310654"
+  },
+  {
+    "action": "close",
+    "target": "OpenCode",
+    "result": "OK",
+    "timestamp": "2026-08-08T10:22:25.259446"
+  },
+  {
+    "action": "focus",
+    "target": "OpenCode",
+    "result": "OK",
+    "timestamp": "2026-08-08T19:49:01.074442"
   }
 ]

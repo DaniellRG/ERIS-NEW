@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 def test_agent_definitions_complete():
     from core.agent_router import AGENT_DEFINITIONS
-    required_agents = {"vision", "search", "security", "system", "media", "productivity", "dev"}
+    required_agents = {"vision", "search", "security", "system", "media", "productivity", "dev", "home", "reverse", "self"}
     assert required_agents == set(AGENT_DEFINITIONS.keys())
 
 
@@ -84,7 +84,7 @@ def test_get_agent_list():
     router = get_router()
     agents = router.get_agent_list()
     assert isinstance(agents, list)
-    assert len(agents) == 7
+    assert len(agents) == 10
     for agent in agents:
         assert "key" in agent
         assert "name" in agent
@@ -97,7 +97,7 @@ def test_get_stats():
     stats = router.get_stats()
     assert "handoff_count" in stats
     assert "agents_available" in stats
-    assert stats["agents_available"] == 7
+    assert stats["agents_available"] == 10
 
 
 def test_registry_persists(tmp_path):

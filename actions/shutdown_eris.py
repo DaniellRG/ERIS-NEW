@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import threading
 import time
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def _do_shutdown(player):

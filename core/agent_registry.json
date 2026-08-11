@@ -26,20 +26,29 @@
         "llava",
         "vision local",
         "modo gaming",
-        "juego pantalla"
+        "juego pantalla",
+        "camara",
+        "camera",
+        "webcam",
+        "vigilancia",
+        "mirar por la camara",
+        "que ves por la camara",
+        "que hay por la camara",
+        "detectar movimiento"
       ],
       "tools": [
         "screen_vision",
         "image_analyzer",
         "vision_guardian",
         "game_companion",
-        "ollama_vision"
+        "ollama_vision",
+        "camera_bus"
       ],
       "enabled": true
     },
     "search": {
       "name": "SearchAgent",
-      "description": "Handles all search operations: web search, file search, session search, super search.",
+      "description": "Handles all search operations: web search, file search, session search, super search, HuggingFace models/datasets.",
       "keywords": [
         "busca",
         "buscar",
@@ -53,12 +62,20 @@
         "buscar archivo",
         "buscar en mis sesiones",
         "super search",
-        "search file"
+        "search file",
+        "huggingface",
+        "hugging face",
+        "dataset",
+        "modelo ia",
+        "ia modelo"
       ],
       "tools": [
         "web_search",
         "super_search",
-        "session_search"
+        "deep_research",
+        "session_search",
+        "huggingface",
+        "research"
       ],
       "enabled": true
     },
@@ -258,7 +275,8 @@
         "project_manager",
         "goals",
         "reminder",
-        "scheduler"
+        "scheduler",
+        "document_tool"
       ],
       "enabled": true
     },
@@ -308,7 +326,98 @@
         "web_search",
         "code_analyzer",
         "code_generator",
-        "web_generator"
+        "web_generator",
+        "web_designer"
+      ],
+      "enabled": true
+    },
+    "home": {
+      "name": "HomeAgent",
+      "description": "Handles smart home and domotics: lights, climate, TV, scenes via Home Assistant, MQTT or simulation.",
+      "keywords": [
+        "domotica",
+        "smart home",
+        "luces",
+        "luz de",
+        "apaga la luz",
+        "enciende la luz",
+        "prende la luz",
+        "apagar la luz",
+        "encender la luz",
+        "aire acondicionado",
+        "apaga todo",
+        "encender",
+        "apagar",
+        "escena",
+        "temperatura de la",
+        "dispositivos inteligentes",
+        "casa inteligente",
+        "camara de entrada"
+      ],
+      "tools": [
+        "smart_home"
+      ],
+      "enabled": true
+    },
+    "reverse": {
+      "name": "ReverseEngineeringAgent",
+      "description": "Handles reverse engineering: binary analysis, disassembly, strings, hashes, PE analysis, hexdump, entropy, black-box testing, malware triage.",
+      "keywords": [
+        "ingenieria inversa",
+        "reverse engineering",
+        "desensamblar",
+        "disassembler",
+        "desensamblado",
+        "hexdump",
+        "hex dump",
+        "analizar binario",
+        "binario",
+        "analizar ejecutable",
+        "ejecutable",
+        "extraer strings",
+        "strings",
+        "analizar malware",
+        "malware",
+        "triage",
+        "entropia",
+        "caja negra",
+        "black box",
+        "pe info",
+        "analizar exe",
+        "analizar dll",
+        "huellas del archivo"
+      ],
+      "tools": [
+        "reverse_engineering"
+      ],
+      "enabled": true
+    },
+    "self": {
+      "name": "SelfEvolutionAgent",
+      "description": "Handles ERIS self-evolution: reflection, consciousness simulation, lessons learned, personal goals, experiences and identity.",
+      "keywords": [
+        "reflexiona",
+        "reflexionar",
+        "conciencia",
+        "evoluciona",
+        "evolucionar",
+        "mejorarte",
+        "mejorame",
+        "aprende de tus errores",
+        "que has aprendido",
+        "tu existencia",
+        "autoconocimiento",
+        "auto-mejora",
+        "crecimiento",
+        "que piensas de ti",
+        "como te sientes",
+        "que has aprendido de mi",
+        "tus metas",
+        "tu evolucion",
+        "eris evoluciona"
+      ],
+      "tools": [
+        "self_evolution"
       ],
       "enabled": true
     }

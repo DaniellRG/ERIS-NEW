@@ -2,18 +2,18 @@
 
 ## Auto-investigacion (idle learning)
 
-Fecha: 2026-07-27 22:23
+Fecha: 2026-07-29 23:13
 
 Resultados para 'Docker Kubernetes mejoras recientes' (DuckDuckGo):
 
+**Kubernetes y docker en AWS desde cero**
+Obtén tu certificado online con este curso deKubernetes. Únete a millones de estudiantes alrededor del mundo aprendiendo en Udemy.
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fduckduckgo.com%2Fy.js%3Fad_domain%3Dudemy.com%26ad_provider%3Dbingv7aa%26ad_type%3Dtxad%26click_metadata%3DvtpisnjU8pPvfyicWNg8hLbd5foPjzsbLO4LAF%252Da%252DFdPiZ_E68PFEv2LTzx9h_XRWTmVNbNRAE%252DeAtFjOrk7lrVsN4CZ_Yr7mrBhB9JgDobV%252DIQhMbHP%252DvmER6CihDYv7XvE_D0F8BmqpE_omrNQnMUQCgojhr9wVBVVVHjkk0k.qm3l57niz4pB5ZWn6RcGBw%26rut%3De085227e2679b266700e20e04c7eb9f424eca1ca3c4f85b90726065b9b06dda9%26u3%3Dhttps%253A%252F%252Fwww.bing.com%252Faclick%253Fld%253De8fxkglEX80i9RX8W7uv0RUTVUCUxN4FX6JbaBiFM6Gd_Nb5mlzO0wSR1iyhNLaGiFOruuW3n7LieD9rr7WpFGzH9MYGsNUSPmsc6%252DtLoPLItMj8dG84BwR%252DmjEQ%252DMBvuKQ_%252DqgN%252D9%252Dtfg_My9wv7%252DRV%252D3gISVAVvGFFXDS3x7T7e5o0IoSADesS%252DauZuFZz2CCPbqNgPqPvG0vTeaIfC47pQJjWY%2526u%253DaHR0cHMlM2ElMmYlMmZ3d3cudWRlbXkuY29tJTJmY291cnNlJTJma3ViZXJuZXRlcy15LWRvY2tlci1lbi1hd3MtZGVzZGUtY2VybyUyZiUzZnV0bV9jYW1wYWlnbiUzZEJHLVNlYXJjaF9EU0FfQWxwaGFfUHJvZl9sYS5FU19jYy5ST1ctU3BhbmlzaCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZHBhaWQtc2VhcmNoJTI2cG9ydGZvbGlvJTNkQmluZy1ST1ctU3BhbmlzaCUyNnV0bV9hdWRpZW5jZSUzZG14JTI2dXRtX3RhY3RpYyUzZG5iJTI2dXRtX3Rlcm0lM2RfLl9hZ18xMzIxNjE1MzY1MDQxMDAwXy5fYWRfXy5fa3dfdWRlbXklMjZ1dG1fY29udGVudCUzZHMlMjZmdW5uZWwlM2QlMjZ0ZXN0JTNkJTI2dXRtX2NhbXBhaWduX2lkJTNkNjM4NTk2MjIwJTI2bXNjbGtpZCUzZGFmZTI3MDczNGQzMDE3OTAzZmJkMWExOTgyMDM2ZjQ1%2526rlid%253Dafe270734d3017903fbd1a1982036f45%26vqd%3D4%2D72790802295138917742795989891058458458%26iurl%3D%257B1%257DIG%253DF9F28E3A3781471EB6819EE56DE41804%2526CID%253D3B5459C6C7BF6CFF3FBB4E60C6B36DA2%2526ID%253DDevEx%252C5037.1&rut=50223338159baec0d433c1fe4d277742884f7b10c40444bfdf9afb7f3329dbaf
+
 **Kubernetes Release Notes**
 Find comprehensive release notes forKubernetes, detailing updates, features, and changes across versions to help you stay informed and up-to-date.
-//duckduckgo.com/l/?uddg=https%3A%2F%2Frelnotes.k8s.io%2F&rut=f724d5e68b160e422b6233ffd18c042e6835bfaee16fa5acf3212a96caaddfcc
+//duckduckgo.com/l/?uddg=https%3A%2F%2Frelnotes.k8s.io%2F&rut=889f5206a866fcc2ba06c7cc1b356111b996818ae1c6326272e64291a05f2f3d
 
 **Actualizaciones en Docker, Kubernetes y CI/CD que revolucionan DevOps y ...**
 Mejorasen gestión y seguridad de clústeres Las actualizaciones enKubernetesincorporan mejores controles de acceso RBAC y políticas para asegurar pods, previniendo vulnerabilidades en producción. Se fo
-//duckduckgo.com/l/?uddg=https%3A%2F%2Fwarapphub.com%2F481%2Factualizaciones%2Den%2Ddocker%2Dkubernetes%2Dy%2Dci%2Dcd%2Dque%2Drevolucionan%2Ddevops%2Dy%2Dseguridad%2Den%2D2025%2F&rut=0e12d772280053e7f461fd3f2dbf68a90283d5b93a2dcd4d485c4571028b7af6
-
-**Releases - Kubernetes**
-TheKubernetesproject maintains release branches for the most recent three minor releases (1.36, 1.35, 1.34).Kubernetes1.19 and newer receive approximately 1 year of patch support.Kubernetes1.18 and ol
-//duckduckgo.com/l/?uddg=https%3A%2F%2Fkubernetes.io%2Freleases%2F&rut=7ed57aee106897338b386abee47df1fe09b0689c17f6a227b74e1695a0220146
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fwarapphub.com%2F481%2Factualizaciones%2Den%2Ddocker%2Dkubernetes%2Dy%2Dci%2Dcd%2Dque%2Drevolucionan%2Ddevops%2Dy%2Dseguridad%2Den%2D2025%2F&rut=e65629a5422bcd433594a4a6c805f71f7f216a14cf3cba5431ea818fc4ce68a6

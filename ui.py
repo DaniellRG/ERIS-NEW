@@ -20,7 +20,7 @@ import psutil
 os.environ.setdefault("QT_OPENGL", "desktop")
 
 from PyQt6.QtCore import (
-    Qt, QTimer, pyqtSignal, pyqtSlot, QRect, QUrl, QObject, QPointF,
+    Qt, QTimer, pyqtSignal, pyqtSlot, QRect, QRectF, QUrl, QObject, QPointF,
 )
 from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtGui import (
@@ -30,13 +30,16 @@ from PyQt6.QtGui import (
     QTransform, QWheelEvent, QWindow, QCursor, QFontDatabase,
 )
 from PyQt6.QtWidgets import (
-    QApplication, QCheckBox, QComboBox, QDialog,
+    QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QPushButton, QScrollArea, QSplashScreen, QSystemTrayIcon,
     QTextEdit, QVBoxLayout, QWidget, QMenu, QTabWidget,
 )
 from PyQt6.QtGui import QShortcut, QKeySequence
-from PyQt6.QtWebEngineWidgets import QWebEngineView
+# Nota: QtWebEngine (Chromium) se importa SOLO dentro de WebGLOrb.__init__
+# (lazy). Importarlo al top cargaba Chromium en cada proceso y causaba
+# crashes 0x80000003 en Qt6WebEngineCore aunque nunca se usara.
+from face_design import FaceWidget
 
 try:
     from zoneinfo import ZoneInfo
@@ -177,6 +180,7 @@ class WebGLOrb(QWidget):
         super().__init__(parent)
         self.setMinimumSize(200, 200)
         self._state = "IDLE"
+        from PyQt6.QtWebEngineWidgets import QWebEngineView
         self._view = QWebEngineView(self)
         self._view.setStyleSheet("background: transparent; border: none;")
         self._view.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
@@ -288,9 +292,31 @@ class ParticleOrb(QWidget):
     def set_state(self, state: str):
         if state in self.states:
             self._state = state
+            self._apply_frame_rate()
 
     def set_audio_level(self, level: float):
         self._audio_level = level * 0.5
+
+    def _apply_frame_rate(self):
+        """FPS adaptativos: ahorra CPU cuando ERIS está en reposo u oculta."""
+        if not self.isVisible():
+            target = 300
+        elif self._state in ("SPEAKING", "THINKING", "LISTENING"):
+            target = 16
+        elif self._state in ("INITIATING", "MUTED", "ERROR"):
+            target = 50
+        else:
+            target = 100
+        if self._timer.interval() != target:
+            self._timer.start(target)
+
+    def showEvent(self, e):
+        super().showEvent(e)
+        self._apply_frame_rate()
+
+    def hideEvent(self, e):
+        super().hideEvent(e)
+        self._apply_frame_rate()
 
     def _tick(self):
         self._phase += 0.02
@@ -306,24 +332,46 @@ class ParticleOrb(QWidget):
                 cy + random.uniform(-80, 80),
             ))
 
+        lvl = self._audio_level
         for p in self._particles:
+            d = math.hypot(p.x - cx, p.y - cy) + 1
+            angle = math.atan2(p.y - cy, p.x - cx)
             if attract:
                 p.update(mx, my, True)
             elif self._state == "SPEAKING":
-                angle = math.atan2(p.y - cy, p.x - cx)
-                p.vx += math.cos(angle) * 0.05 * self._audio_level
-                p.vy += math.sin(angle) * 0.05 * self._audio_level
+                # ERIS hablando: bombeo radial fuerte al ritmo de su voz
+                pump = 0.05 + 0.9 * lvl
+                p.vx += math.cos(angle) * pump * (90.0 / d)
+                p.vy += math.sin(angle) * pump * (90.0 / d)
+                p.vx += math.cos(angle + math.pi / 2) * 0.04
+                p.vy += math.sin(angle + math.pi / 2) * 0.04
                 p.update()
             elif self._state == "THINKING":
-                angle = math.atan2(p.y - cy, p.x - cx) + self._phase
-                p.vx += math.cos(angle + self._phase) * 0.3
-                p.vy += math.sin(angle + self._phase) * 0.3
+                # ERIS trabajando: remolino orbital acelerado + respiración
+                cur_r = d - 1
+                target_r = 45 + 60 * (0.5 + 0.5 * math.sin(self._phase * 2 + p.x))
+                pull = (target_r - cur_r) * 0.016
+                p.vx += math.cos(angle) * pull
+                p.vy += math.sin(angle) * pull
+                p.vx += math.cos(angle + math.pi / 2) * 0.22
+                p.vy += math.sin(angle + math.pi / 2) * 0.22
                 p.update(cx, cy, True)
             elif self._state == "LISTENING":
-                p.update(cx, cy, True)
-            else:
+                # Tú hablando: remolino suave + ondas radiales con tu voz
+                p.vx += math.cos(angle + math.pi / 2) * 0.03
+                p.vy += math.sin(angle + math.pi / 2) * 0.03
+                p.vx += (cx - p.x) / d * 0.01
+                p.vy += (cy - p.y) / d * 0.01
+                push = 0.45 * lvl * (100.0 / d)
+                p.vx += math.cos(angle) * push
+                p.vy += math.sin(angle) * push
                 p.update()
-            p.size = 1.5 + self._audio_level * 3
+            else:
+                # IDLE: siempre vivo — deriva orbital suave constante
+                p.vx += math.cos(angle + math.pi / 2) * (0.03 + 0.06 * lvl)
+                p.vy += math.sin(angle + math.pi / 2) * (0.03 + 0.06 * lvl)
+                p.update()
+            p.size = 1.5 + lvl * 3
             if p.life <= 0:
                 angle = random.uniform(0, 2 * math.pi)
                 dist = random.uniform(0, 120)
@@ -336,7 +384,9 @@ class ParticleOrb(QWidget):
             if d > 200:
                 p.vx += dx / d * 0.1
                 p.vy += dy / d * 0.1
-        self.update()
+        if self.isVisible():
+            self.update()
+        self._apply_frame_rate()
 
     def mousePressEvent(self, e):
         if e.button() == Qt.MouseButton.LeftButton:
@@ -403,12 +453,54 @@ class ParticleOrb(QWidget):
                     ts = sz * i / len(pt.trail) * 0.5
                     p.drawEllipse(QPointF(tx, ty), ts, ts)
         ring_color = QColor(state_color)
-        ring_color.setAlpha(int(40 + 20 * self._pulse))
+        ring_color.setAlpha(int(40 + 30 * self._pulse))
         pen = QPen(ring_color, 1)
         p.setPen(pen)
         p.setBrush(Qt.BrushStyle.NoBrush)
-        r = 30 + 10 * self._pulse
+        r = 30 + 14 * self._pulse
         p.drawEllipse(QPointF(cx, cy), r, r)
+
+        # ── Efectos por estado ──
+        lvl = self._audio_level
+
+        def _comet(radius, speed, n_dots=12, spread=6, base_alpha=60, max_alpha=170):
+            """Anillo de puntos con un punto brillante que viaja (movimiento asimétrico visible)."""
+            for i in range(n_dots):
+                ang = (self._phase * speed + i * (math.pi * 2 / n_dots))
+                dx, dy = math.cos(ang), math.sin(ang)
+                px, py = cx + dx * radius, cy + dy * radius
+                br = 0.5 + 0.5 * math.sin(ang - self._phase * speed)
+                br = max(0.0, min(1.0, br * (1.0 + spread)))
+                rc = QColor(state_color)
+                rc.setAlpha(int(base_alpha + (max_alpha - base_alpha) * br))
+                rad = 2.5 + 3.0 * br
+                p.setPen(Qt.PenStyle.NoPen)
+                p.setBrush(QBrush(rc))
+                p.drawEllipse(QRectF(px - rad, py - rad, rad * 2, rad * 2))
+
+        if self._state == "IDLE":
+            # Siempre vivo: cometa lento orbitando + respiración del anillo
+            _comet(34, 1.6, n_dots=10, spread=5, base_alpha=40, max_alpha=130)
+        elif self._state in ("LISTENING", "SPEAKING"):
+            # Anillos expansivos al ritmo de la voz (onda sonora)
+            n_rings = 3 if self._state == "LISTENING" else 4
+            speed = 1.2 if self._state == "LISTENING" else 1.6
+            for i in range(n_rings):
+                t = (self._phase * speed + i / n_rings) % 1.0
+                rr = 24 + t * (70 + 90 * lvl)
+                rc = QColor(state_color)
+                rc.setAlpha(int((1.0 - t) * 100))
+                pen = QPen(rc, max(1, int(1 + t * 3)))
+                p.setPen(pen)
+                p.setBrush(Qt.BrushStyle.NoBrush)
+                p.drawEllipse(QPointF(cx, cy), rr, rr)
+            # Cometa giratorio marcando actividad
+            _comet(52, 2.6 if self._state == "SPEAKING" else 1.8,
+                   n_dots=12, spread=6, base_alpha=60, max_alpha=180)
+        elif self._state == "THINKING":
+            # Cometa giratorio de puntos (anillo doble): señal clara de "estoy trabajando"
+            _comet(62, 4.0, n_dots=12, spread=8, base_alpha=40, max_alpha=190)
+            _comet(40, -3.0, n_dots=12, spread=8, base_alpha=30, max_alpha=150)
         p.end()
 
 
@@ -669,6 +761,50 @@ class NotesWidget(GlassWidget):
 
 
 # ── File Drop Zone ──────────────────────────────────────────────────────────────
+_IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif")
+
+_DOC_EXTS = (
+    ".pdf", ".docx", ".docm", ".xlsx", ".xlsm", ".xlsb", ".xltx",
+    ".pptx", ".pptm", ".potx", ".txt", ".text", ".md", ".markdown",
+    ".rst", ".log", ".csv", ".tsv", ".json", ".jsonl", ".xml", ".html",
+    ".htm", ".css", ".js", ".jsx", ".ts", ".tsx", ".py", ".pyw", ".java",
+    ".c", ".h", ".cpp", ".hpp", ".cs", ".go", ".rs", ".rb", ".php",
+    ".sql", ".sh", ".bat", ".cmd", ".ps1", ".ini", ".cfg", ".yaml",
+    ".yml", ".toml", ".env", ".gitignore",
+)
+
+
+class _ChatInput(QLineEdit):
+    """Chat input with image & document drag & drop support."""
+    image_dropped = pyqtSignal(str)
+    doc_dropped = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, e: QDragEnterEvent):
+        if e.mimeData().hasUrls():
+            for url in e.mimeData().urls():
+                low = url.toLocalFile().lower()
+                if low.endswith(_IMAGE_EXTS) or low.endswith(_DOC_EXTS):
+                    e.acceptProposedAction()
+                    return
+        e.ignore()
+
+    def dropEvent(self, e: QDropEvent):
+        for url in e.mimeData().urls():
+            path = url.toLocalFile()
+            if not path:
+                continue
+            low = path.lower()
+            if low.endswith(_IMAGE_EXTS):
+                self.image_dropped.emit(path)
+            elif low.endswith(_DOC_EXTS):
+                self.doc_dropped.emit(path)
+        e.acceptProposedAction()
+
+
 class FileDropZone(QWidget):
     file_selected = pyqtSignal(str)
 
@@ -1126,24 +1262,46 @@ class SettingsDialog(QDialog):
         gb_layout.addWidget(test_tts)
         form.addWidget(gb)
 
-        gb2 = QGroupBox("🎧  AUDIO DEVICES")
+        gb2 = QGroupBox("🎧  AUDIO DEVICES — ENTRADA Y SALIDA")
         gb2_layout = QVBoxLayout(gb2)
         gb2_layout.setSpacing(6)
-        self._mic = _NeonField("MICROPHONE DEVICE INDEX", "Default: empty", default=str(self._cfg.get("mic_device", "")))
-        gb2_layout.addWidget(self._mic)
-        self._spk = _NeonField("SPEAKER DEVICE INDEX", "Default: empty", default=str(self._cfg.get("spk_device", "")))
-        gb2_layout.addWidget(self._spk)
 
-        # Scan devices button
-        scan_btn = QPushButton("⟳  SCAN AUDIO DEVICES")
-        scan_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        scan_btn.setStyleSheet(f"""
+        self._audio_status = QLabel("◆  Presiona 'DETECTAR' para ver y elegir tus dispositivos  ◆")
+        self._audio_status.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 9px;")
+        self._audio_status.setWordWrap(True)
+        gb2_layout.addWidget(self._audio_status)
+
+        hl_mic = QHBoxLayout()
+        lbl_mic = QLabel("🎤  MICRÓFONO (entrada de voz):")
+        lbl_mic.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_mic.addWidget(lbl_mic)
+        self._mic_cb = QComboBox()
+        self._mic_cb.setStyleSheet(f"QComboBox {{ background: {C.BG3}; color: {C.PRI_LIGHT}; "
+                                   f"border: 1px solid {C.BORDER}; border-radius: 4px; padding: 4px 6px; }}")
+        hl_mic.addWidget(self._mic_cb, 1)
+        gb2_layout.addLayout(hl_mic)
+
+        hl_spk = QHBoxLayout()
+        lbl_spk = QLabel("🔊  AUDÍFONOS/ALTAVOCES (salida):")
+        lbl_spk.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_spk.addWidget(lbl_spk)
+        self._spk_cb = QComboBox()
+        self._spk_cb.setStyleSheet(f"QComboBox {{ background: {C.BG3}; color: {C.PRI_LIGHT}; "
+                                   f"border: 1px solid {C.BORDER}; border-radius: 4px; padding: 4px 6px; }}")
+        hl_spk.addWidget(self._spk_cb, 1)
+        gb2_layout.addLayout(hl_spk)
+
+        detect_btn = QPushButton("⟳  DETECTAR DISPOSITIVOS AUTOMÁTICAMENTE")
+        detect_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        detect_btn.setStyleSheet(f"""
             QPushButton {{ background: transparent; color: {C.PRI}; border: 1px solid {C.BORDER};
             border-radius: 4px; padding: 6px 14px; font-size: 9px; }}
             QPushButton:hover {{ background: rgba(245,158,11,0.1); }}
         """)
-        scan_btn.clicked.connect(lambda: self._status_bar.setText("◆  SCANNING audio devices...  ◆"))
-        gb2_layout.addWidget(scan_btn)
+        detect_btn.clicked.connect(self._detect_audio_devices)
+        gb2_layout.addWidget(detect_btn)
+
+        self._populate_audio_combos()
         form.addWidget(gb2)
 
         gb3 = QGroupBox("🎭  ERIS VOICE STYLE")
@@ -1183,6 +1341,54 @@ class SettingsDialog(QDialog):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(scroll)
         return w
+
+    def _populate_audio_combos(self):
+        """Llena los combos de micro y altavoz con los dispositivos detectados."""
+        from core.audio_config import audio_device_options
+        cur_mic = str(self._cfg.get("mic_device", ""))
+        cur_spk = str(self._cfg.get("speaker_device", self._cfg.get("spk_device", "")))
+
+        self._mic_cb.blockSignals(True)
+        self._mic_cb.clear()
+        self._mic_cb.addItem("🔄  AUTO — detectar el mejor micrófono", "")
+        for idx, label in audio_device_options("input"):
+            self._mic_cb.addItem(label, idx)
+        i = self._mic_cb.findData(cur_mic)
+        self._mic_cb.setCurrentIndex(i if i >= 0 else 0)
+        self._mic_cb.blockSignals(False)
+
+        self._spk_cb.blockSignals(True)
+        self._spk_cb.clear()
+        self._spk_cb.addItem("🔄  AUTO — detectar el mejor altavoz", "")
+        for idx, label in audio_device_options("output"):
+            self._spk_cb.addItem(label, idx)
+        i = self._spk_cb.findData(cur_spk)
+        self._spk_cb.setCurrentIndex(i if i >= 0 else 0)
+        self._spk_cb.blockSignals(False)
+
+    def _detect_audio_devices(self):
+        """Detecta el micro y el altavoz en uso y los selecciona en los combos."""
+        try:
+            from core.audio_config import resolve_mic, resolve_speaker, get_device_name
+            self._status_bar.setText("◆  DETECTANDO dispositivos de audio...  ◆")
+            self._audio_status.setText("◆  Probando micros y altavoces...  ◆")
+            m = resolve_mic()
+            s = resolve_speaker()
+            self._populate_audio_combos()
+            i = self._mic_cb.findData(str(m) if m is not None else "")
+            self._mic_cb.setCurrentIndex(i if i >= 0 else 0)
+            i = self._spk_cb.findData(str(s) if s is not None else "")
+            self._spk_cb.setCurrentIndex(i if i >= 0 else 0)
+            _mic_name = get_device_name(m) or "(default de Windows)"
+            _spk_name = get_device_name(s) or "(default de Windows)"
+            self._audio_status.setText(
+                f"✔  DETECTADO — Entrada: [{m}] {_mic_name}   ·   Salida: [{s}] {_spk_name}"
+            )
+            self._status_bar.setText("◆  DISPOSITIVOS detectados — pulsa COMMIT para guardar  ◆")
+        except Exception as e:
+            self._audio_status.setText(f"⚠  Error detectando audio: {e}")
+            self._status_bar.setText("◆  ERROR detectando audio  ◆")
+            print(f"[Settings] Audio detect error: {e}")
 
     # ── Section: Appearance ─────────────────────────────────────────────────
     def _build_appearance_section(self):
@@ -1280,6 +1486,17 @@ class SettingsDialog(QDialog):
         hl_orb.addWidget(self._orb_renderer)
         hl_orb.addStretch()
         gb2_layout.addLayout(hl_orb)
+
+        hl_visual = QHBoxLayout()
+        lbl_visual = QLabel("Eris muestra:")
+        lbl_visual.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_visual.addWidget(lbl_visual)
+        self._central_visual = QComboBox()
+        self._central_visual.addItems(["Cara de ERIS", "Orbe (partículas)"])
+        self._central_visual.setCurrentText("Cara de ERIS" if self._cfg.get("central_visual", "face") == "face" else "Orbe (partículas)")
+        hl_visual.addWidget(self._central_visual)
+        hl_visual.addStretch()
+        gb2_layout.addLayout(hl_visual)
 
         form.addWidget(gb2)
 
@@ -1502,7 +1719,22 @@ class SettingsDialog(QDialog):
             except (ValueError, AttributeError):
                 return default
 
-        cfg = {
+        def _combo_idx(cb):
+            data = cb.currentData()
+            try:
+                return int(data) if data not in (None, "") else None
+            except (ValueError, TypeError):
+                return None
+
+        def _combo_dev_name(cb):
+            data = cb.currentData()
+            if data in (None, ""):
+                return ""
+            from core.audio_config import get_device_name
+            return get_device_name(int(data))
+
+        cfg = dict(self._cfg)
+        cfg.update({
             "gemini_api_key": self._api_key.entry.text(),
             "model_for_conversation": self._model_conv.currentText(),
             "model_for_agents": self._cfg.get("model_for_agents", "gemini"),
@@ -1518,8 +1750,11 @@ class SettingsDialog(QDialog):
             "openweather_api_key": self._weather_key.entry.text(),
             "tts_backend": self._tts.currentText(),
             "tts_voice": self._voice.currentText(),
-            "mic_device": _safe_int(self._mic.entry.text()),
-            "spk_device": _safe_int(self._spk.entry.text()),
+            "mic_device": _combo_idx(self._mic_cb),
+            "mic_device_name": _combo_dev_name(self._mic_cb),
+            "speaker_device": _combo_idx(self._spk_cb),
+            "speaker_device_name": _combo_dev_name(self._spk_cb),
+            "spk_device": _combo_idx(self._spk_cb),
             "eris_voice": self._eris_voice.currentData(),
             "eris_theme": C.get_theme(),
             "thinking_sound": self._thinking_sound.isChecked(),
@@ -1534,8 +1769,9 @@ class SettingsDialog(QDialog):
             "glass_opacity": _safe_int(self._glass_opacity.entry.text(), 180),
             "glow_intensity": _safe_float(self._glow_intensity.entry.text(), 0.5),
             "webgl_orb": self._orb_renderer.currentText() == "WebGL (3D)",
+            "central_visual": "face" if self._central_visual.currentText().startswith("Cara") else "orb",
             "os_system": self._cfg.get("os_system", "windows"),
-        }
+        })
         try:
             from core.logging_setup import API_CONFIG_PATH
             path = API_CONFIG_PATH
@@ -1759,6 +1995,10 @@ class MainWindow(QMainWindow):
         self._orb.set_state("IDLE")
         layout.addWidget(self._orb, 1)
 
+        self._face = FaceWidget("neutral")
+        layout.addWidget(self._face, 1)
+        self._apply_central_visual()
+
         # Chat area (transcript + input)
         chat_container = QWidget()
         chat_container.setStyleSheet(f"background: rgba(10,7,3,160); border-top: 1px solid {C.BORDER};")
@@ -1783,8 +2023,36 @@ class MainWindow(QMainWindow):
         input_row = QHBoxLayout()
         input_row.setSpacing(8)
 
-        self._chat_input = QLineEdit()
+        self._img_btn = QPushButton("🖼")
+        self._img_btn.setFixedSize(34, 34)
+        self._img_btn.setToolTip("Subir imagen (también puedes arrastrarla aquí)")
+        self._img_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._img_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: rgba(255,255,255,0.05); color: {C.PRI};
+                border: 1px solid {C.BORDER}; border-radius: 8px; font-size: 15px;
+            }}
+            QPushButton:hover {{ background: rgba(255,255,255,0.12); color: {C.PRI_LIGHT}; }}
+        """)
+        self._img_btn.clicked.connect(self._pick_image)
+
+        self._doc_btn = QPushButton("📄")
+        self._doc_btn.setFixedSize(34, 34)
+        self._doc_btn.setToolTip("Subir documento (PDF, Word, Excel, PowerPoint, txt, código… también puedes arrastrarlo aquí)")
+        self._doc_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._doc_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: rgba(255,255,255,0.05); color: {C.PRI};
+                border: 1px solid {C.BORDER}; border-radius: 8px; font-size: 15px;
+            }}
+            QPushButton:hover {{ background: rgba(255,255,255,0.12); color: {C.PRI_LIGHT}; }}
+        """)
+        self._doc_btn.clicked.connect(self._pick_document)
+
+        self._chat_input = _ChatInput()
         self._chat_input.setPlaceholderText("Escribele a ERIS...")
+        self._chat_input.image_dropped.connect(self._send_image)
+        self._chat_input.doc_dropped.connect(self._send_document)
         self._chat_input.setStyleSheet(f"""
             QLineEdit {{
                 background: {C.BG3}; color: {C.TEXT};
@@ -1809,6 +2077,8 @@ class MainWindow(QMainWindow):
         """)
         self._send_btn.clicked.connect(self._send_chat)
 
+        input_row.addWidget(self._img_btn)
+        input_row.addWidget(self._doc_btn)
         input_row.addWidget(self._chat_input)
         input_row.addWidget(self._send_btn)
 
@@ -1874,7 +2144,28 @@ class MainWindow(QMainWindow):
         self._orb.set_state(self._orb._state)
         self.showFullScreen()
 
+    def _central_visual_cfg(self) -> str:
+        try:
+            from core.logging_setup import API_CONFIG_PATH
+            if API_CONFIG_PATH.exists():
+                return json.loads(API_CONFIG_PATH.read_text("utf-8")).get("central_visual", "face")
+        except Exception:
+            pass
+        return "face"
+
+    def _apply_central_visual(self, mode: str = ""):
+        mode = mode or self._central_visual_cfg()
+        if not hasattr(self, "_face"):
+            return
+        face_mode = mode == "face"
+        self._face.setVisible(face_mode)
+        self._orb.setVisible(not face_mode)
+        self._visual_mode = "face" if face_mode else "orb"
+        if face_mode:
+            self._apply_state(getattr(self._orb, "_state", "IDLE"))
+
     def _on_config_saved(self, cfg: dict):
+        self._apply_central_visual(cfg.get("central_visual", "face"))
         if self.on_config_saved:
             self.on_config_saved(cfg)
 
@@ -1895,6 +2186,16 @@ class MainWindow(QMainWindow):
 
     def _apply_state(self, state: str):
         self._orb.set_state(state)
+        face = getattr(self, "_face", None)
+        if face is not None and face.isVisible():
+            expr = {
+                "IDLE": "neutral", "LISTENING": "smiling", "THINKING": "thinking",
+                "SPEAKING": "happy", "INITIATING": "neutral", "MUTED": "neutral",
+                "ERROR": "crying",
+            }.get(state, "neutral")
+            if face.music <= 0 and face.expr != expr:
+                face.set_expr(expr)
+            face.set_mood(state in ("IDLE", "LISTENING", "MUTED"))
 
     def _send_chat(self):
         text = self._chat_input.text().strip()
@@ -1905,6 +2206,45 @@ class MainWindow(QMainWindow):
         self._append_transcript(f"<b style='color:{C.PRI}'>Tú:</b> {text}")
         if self.on_text_command:
             self.on_text_command(text)
+
+    def _pick_image(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Selecciona una imagen para ERIS", "",
+            "Imágenes (*.png *.jpg *.jpeg *.gif *.webp *.bmp *.tiff *.tif);;Todos los archivos (*.*)"
+        )
+        if path:
+            self._send_image(path)
+
+    def _send_image(self, path: str):
+        path = path.strip()
+        if not path:
+            return
+        name = os.path.basename(path)
+        self._append_transcript(f"<b style='color:{C.PRI}'>Tú:</b> 🖼️ {name}")
+        if self.on_text_command:
+            self.on_text_command(f"[IMAGE_FILE] path={path}")
+
+    def _pick_document(self):
+        doc_filter = (
+            "Documentos (*.pdf *.docx *.docm *.xlsx *.xlsm *.pptx *.pptm *.txt "
+            "*.md *.csv *.json *.xml *.html *.py *.js *.ts *.java *.c *.cpp *.go "
+            "*.rs *.rb *.php *.sql *.sh *.bat *.ps1 *.yaml *.yml *.toml);;"
+            "Todos los archivos (*.*)"
+        )
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Selecciona un documento para ERIS", "", doc_filter
+        )
+        if path:
+            self._send_document(path)
+
+    def _send_document(self, path: str):
+        path = path.strip()
+        if not path:
+            return
+        name = os.path.basename(path)
+        self._append_transcript(f"<b style='color:{C.PRI}'>Tú:</b> 📄 {name}")
+        if self.on_text_command:
+            self.on_text_command(f"[DOC_FILE] path={path}")
 
     def _append_transcript(self, html: str):
         self._transcript.append(html)
@@ -1949,7 +2289,7 @@ class MainWindow(QMainWindow):
     # ── Public API ─────────────────────────────────────────────────────────
     def set_state(self, state: str):
         self._state_sig.emit(state)
-        if self._float_orb:
+        if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_state(state)
 
     def write_log(self, text: str):
@@ -1983,20 +2323,77 @@ class MainWindow(QMainWindow):
         self._chunk_sig.emit("__clear__")
 
     def set_audio_level(self, level: float):
-        self._orb.set_audio_level(level)
-        if self._float_orb:
+        face = getattr(self, "_face", None)
+        if face is not None:
+            face.set_audio(level)
+        if self._orb.isVisible():
+            self._orb.set_audio_level(level)
+        if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_audio_level(level)
 
+    def set_face_speaking(self, value: bool):
+        face = getattr(self, "_face", None)
+        if face is not None:
+            face.set_speaking(value)
+
+    def set_orb_audio_level(self, level: float):
+        if self._orb.isVisible():
+            self._orb.set_audio_level(level)
+        if self._float_orb and self._float_orb.isVisible():
+            self._float_orb.set_audio_level(level)
+
+    def set_music(self, level: float):
+        face = getattr(self, "_face", None)
+        if face is not None:
+            face.set_music(level)
+
+    def express_emotion(self, text: str):
+        face = getattr(self, "_face", None)
+        if face is not None and face.isVisible():
+            face.express_emotion(text)
+
+    def show_expression(self, name: str, text: str = ""):
+        face = getattr(self, "_face", None)
+        if face is not None and face.isVisible():
+            face.show_expression(name, text)
+            return "cara"
+        return "orbe"
+
+    def visual_mode(self) -> str:
+        return getattr(self, "_visual_mode", "face")
+
         # ── Public API Facade ───────────────────────────────────────────────────────────
+class _MarshalBridge(QObject):
+    """Vive en el hilo principal de Qt. Su señal es thread-safe: emit desde
+    cualquier hilo entrega el callable al event loop del hilo principal."""
+    invoke = pyqtSignal(object)
+
+    def __init__(self):
+        super().__init__()
+        self.invoke.connect(self._run)
+
+    def _run(self, fn):
+        try:
+            fn()
+        except Exception:
+            pass
+
+
 class ErisUI:
     """Public API for main.py integration."""
 
     def __init__(self, face_png: str = ""):
-        os.environ.setdefault("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu --no-sandbox --disable-software-rasterizer")
+        # Chromium necesita un rasterizador: sin GPU usa SwiftShader (software).
+        # Antes se usaba "--disable-gpu --no-sandbox --disable-software-rasterizer"
+        # (sin NINGUN renderer) -> crashes 0x80000003 en Qt6WebEngineCore.
+        os.environ.setdefault("QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox")
         self._app = QApplication.instance() or QApplication(sys.argv)
         _load_saved_theme()
         self._app.setStyle("Fusion")
         self._app.setQuitOnLastWindowClosed(False)
+
+        # Puente al hilo principal (creado aquí, en el main thread)
+        self._bridge = _MarshalBridge()
 
         pixmap = QPixmap(400, 300)
         pixmap.fill(QColor(C.BG))
@@ -2006,6 +2403,7 @@ class ErisUI:
         self._app.processEvents()
 
         self._float_orb = FloatingOrb()
+        self._last_vol = 0.0
         try:
             self._win = MainWindow(float_orb=self._float_orb)
         except Exception as _mw_err:
@@ -2036,7 +2434,7 @@ class ErisUI:
     @muted.setter
     def muted(self, v: bool):
         self._win._muted = v
-        self._win.set_state("MUTED" if v else "IDLE")
+        self._marshal(self._win.set_state, "MUTED" if v else "IDLE")
 
     @property
     def current_file(self) -> str:
@@ -2074,38 +2472,70 @@ class ErisUI:
     def on_mute_command(self, cb):
         self._win.on_mute_command = cb
 
+    def _marshal(self, fn, *args, **kwargs):
+        """Ejecuta fn en el hilo principal de Qt. El event loop de ERIS corre
+        en un hilo separado (asyncio.run en runner thread); llamar a widgets
+        Qt desde ahi causa crashes (Qt6Core fail-fast 0xc0000409 / Qt6Gui
+        access violation). Uso un puente QObject con una señal (thread-safe):
+        QTimer.singleShot(0, ...) desde un thread SIN event loop de Qt NUNCA
+        dispara, por eso las actualizaciones de UI se perdian en silencio."""
+        if threading.current_thread() is threading.main_thread():
+            fn(*args, **kwargs)
+        else:
+            self._bridge.invoke.emit(lambda: fn(*args, **kwargs))
+
     def set_state(self, state: str):
-        self._win.set_state(state)
+        self._marshal(self._win.set_state, state)
 
     def write_log(self, text: str):
-        self._win.write_log(text)
+        self._marshal(self._win.write_log, text)
 
     def wait_for_api_key(self):
         self._ready = True
 
     def start_speaking(self):
-        self._win.set_state("SPEAKING")
+        self._marshal(self._win.set_state, "SPEAKING")
 
     def stop_speaking(self):
-        self._win.set_state("LISTENING")
+        self._marshal(self._win.set_state, "LISTENING")
 
     def set_audio_level(self, level: float):
-        self._win.set_audio_level(level)
+        # Delegado al win (ParticleOrb actualiza atributo; FloatingOrb usa
+        # runJavaScript). Se limita a ~12 Hz para no inundar el event loop
+        # de Qt desde el hilo de audio.
+        now = time.time()
+        if now - self._last_vol > 0.08:
+            self._last_vol = now
+            self._marshal(self._win.set_audio_level, level)
+
+    def set_orb_audio_level(self, level: float):
+        now = time.time()
+        if now - self._last_vol > 0.08:
+            self._last_vol = now
+            self._marshal(self._win.set_orb_audio_level, level)
+
+    def set_face_speaking(self, value: bool):
+        self._marshal(self._win.set_face_speaking, value)
+
+    def set_music(self, level: float):
+        self._marshal(self._win.set_music, level)
+
+    def express_emotion(self, text: str):
+        self._marshal(self._win.express_emotion, text)
+
+    def show_expression(self, name: str, text: str = ""):
+        self._marshal(self._win.show_expression, name, text)
+
+    def visual_mode(self) -> str:
+        return self._win.visual_mode()
 
     def _orb_clicked(self):
-        """Clic en el orbe flotante: despierta a ERIS para escuchar,
-        sin abrir la ventana completa ni robar foco."""
-        cb = getattr(self, "_orb_wake_callback", None)
-        if cb:
-            try:
-                cb()
-                return
-            except Exception:
-                pass
+        """Clic en el orbe flotante: abre la interfaz completa de ERIS
+        (la ventana principal). Escape (Esc) vuelve al orbe flotante."""
         self._win.show_main()
 
     def stream_eris_chunk(self, chunk: str):
-        self._win.stream_eris_chunk(chunk)
+        self._marshal(self._win.stream_eris_chunk, chunk)
 
     def clear_eris_response(self):
-        self._win.clear_eris_response()
+        self._marshal(self._win.clear_eris_response)

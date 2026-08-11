@@ -11,6 +11,12 @@
       "title": "Calculadora",
       "details": "ventana encontrada",
       "time": "2026-07-26T12:55:13.027965"
+    },
+    {
+      "app": "calc.exe",
+      "title": "Calculadora",
+      "details": "ventana encontrada",
+      "time": "2026-07-30T00:29:49.769319"
     }
   ],
   "minimized": [
@@ -33,6 +39,18 @@
       "title": "Vista gráfica - BaseObsiEris - Obsidian 1.12.7",
       "details": "",
       "time": "2026-07-27T22:37:03.832344"
+    },
+    {
+      "app": "OpenCode",
+      "title": "OpenCode",
+      "details": "",
+      "time": "2026-08-04T09:37:43.565521"
+    },
+    {
+      "app": "OpenCode",
+      "title": "OpenCode",
+      "details": "",
+      "time": "2026-08-08T10:22:25.258404"
     }
   ],
   "sessions": []

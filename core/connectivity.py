@@ -115,13 +115,14 @@ class ConnectivityMonitor:
     def _check_internet(self) -> bool:
         """Try to reach the internet via HTTP."""
         for url in self._config["ping_urls"]:
-            try:
-                req = urllib.request.Request(url, method="HEAD")
-                resp = urllib.request.urlopen(req, timeout=3)
-                resp.close()
-                return True
-            except Exception:
-                continue
+            for method in ("HEAD", "GET"):
+                try:
+                    req = urllib.request.Request(url, method=method)
+                    resp = urllib.request.urlopen(req, timeout=3)
+                    resp.close()
+                    return True
+                except Exception:
+                    continue
         return False
 
     def _monitor_loop(self):
@@ -156,6 +157,13 @@ class ConnectivityMonitor:
         """Start background monitoring."""
         if self._running:
             return
+        # Verificacion inicial sincrona: NO confiar en el estado persistido
+        # (puede estar desactualizado de una sesion anterior y forzar modo
+        # OFFLINE erroneamente al arrancar).
+        try:
+            self._online = self._check_internet()
+        except Exception:
+            pass
         self._running = True
         self._thread = threading.Thread(target=self._monitor_loop, daemon=True)
         self._thread.start()

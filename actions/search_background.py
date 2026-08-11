@@ -34,7 +34,14 @@ def search_background(parameters: dict, player=None) -> str:
         if result:
             return "\n".join(result)
         
-        # Fallback: simple Google search hint
+        # Fallback: busqueda real (DuckDuckGo HTML) en vez de un texto vacio
+        try:
+            from actions.web_search import _search_ddg
+            ddg = _search_ddg(query, 3)
+            if ddg and not ddg.startswith("No encontr") and not ddg.startswith("Error"):
+                return ddg
+        except Exception:
+            pass
         return f"Busqueda: '{query}'. No se encontro resumen automatico. Sugiero buscar en Google manualmente."
     
     except Exception as e:

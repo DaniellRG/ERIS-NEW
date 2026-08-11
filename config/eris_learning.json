@@ -32,21 +32,21 @@
     },
     "research_vehiculos": {
       "type": "research",
-      "count": 2,
+      "count": 6,
       "first_seen": "2026-07-16T09:40:22.116299",
-      "last_seen": "2026-07-28T22:53:40.401817"
+      "last_seen": "2026-08-08T21:25:28.637445"
     },
     "research_tecnologia": {
       "type": "research",
-      "count": 2,
+      "count": 14,
       "first_seen": "2026-07-16T09:40:30.671298",
-      "last_seen": "2026-07-27T22:26:17.901678"
+      "last_seen": "2026-08-11T11:27:46.886439"
     },
     "research_inteligencia": {
       "type": "research",
-      "count": 1,
+      "count": 5,
       "first_seen": "2026-07-16T09:41:15.424646",
-      "last_seen": "2026-07-16T09:41:15.424655"
+      "last_seen": "2026-08-08T19:52:05.162993"
     },
     "research_python": {
       "type": "research",
@@ -68,9 +68,99 @@
     },
     "research_computacion": {
       "type": "research",
-      "count": 1,
+      "count": 15,
       "first_seen": "2026-07-27T22:30:15.482012",
-      "last_seen": "2026-07-27T22:30:15.482019"
+      "last_seen": "2026-08-11T09:20:41.886116"
+    },
+    "research_nuevos": {
+      "type": "research",
+      "count": 5,
+      "first_seen": "2026-08-03T14:21:36.888419",
+      "last_seen": "2026-08-08T14:19:59.835070"
+    },
+    "research_descubrimientos": {
+      "type": "research",
+      "count": 8,
+      "first_seen": "2026-08-03T19:56:17.944334",
+      "last_seen": "2026-08-09T19:35:54.297154"
+    },
+    "research_biologia": {
+      "type": "research",
+      "count": 7,
+      "first_seen": "2026-08-03T21:11:44.429185",
+      "last_seen": "2026-08-11T10:56:52.346093"
+    },
+    "research_seguridad": {
+      "type": "research",
+      "count": 4,
+      "first_seen": "2026-08-03T21:15:58.342319",
+      "last_seen": "2026-08-09T18:32:42.962895"
+    },
+    "research_ciberseguridad": {
+      "type": "research",
+      "count": 5,
+      "first_seen": "2026-08-03T21:25:36.758684",
+      "last_seen": "2026-08-08T21:31:38.742153"
+    },
+    "research_ultimos": {
+      "type": "research",
+      "count": 5,
+      "first_seen": "2026-08-03T22:25:43.524951",
+      "last_seen": "2026-08-08T18:44:52.631294"
+    },
+    "research_energias": {
+      "type": "research",
+      "count": 4,
+      "first_seen": "2026-08-04T09:31:16.824640",
+      "last_seen": "2026-08-08T21:21:41.466414"
+    },
+    "research_materiales": {
+      "type": "research",
+      "count": 10,
+      "first_seen": "2026-08-04T12:45:20.894225",
+      "last_seen": "2026-08-07T12:33:57.716702"
+    },
+    "research_criptomonedas": {
+      "type": "research",
+      "count": 5,
+      "first_seen": "2026-08-04T17:31:20.021169",
+      "last_seen": "2026-08-07T13:29:13.886038"
+    },
+    "research_interfaces": {
+      "type": "research",
+      "count": 7,
+      "first_seen": "2026-08-04T21:53:57.158489",
+      "last_seen": "2026-08-11T10:03:18.718244"
+    },
+    "research_realidad": {
+      "type": "research",
+      "count": 6,
+      "first_seen": "2026-08-04T22:14:42.606759",
+      "last_seen": "2026-08-08T19:49:57.241801"
+    },
+    "research_exploracion": {
+      "type": "research",
+      "count": 5,
+      "first_seen": "2026-08-05T08:44:17.148726",
+      "last_seen": "2026-08-08T14:02:06.385812"
+    },
+    "research_innovaciones": {
+      "type": "research",
+      "count": 4,
+      "first_seen": "2026-08-05T09:52:07.182614",
+      "last_seen": "2026-08-11T10:48:11.153564"
+    },
+    "research_fusion": {
+      "type": "research",
+      "count": 3,
+      "first_seen": "2026-08-05T10:34:31.876746",
+      "last_seen": "2026-08-09T18:30:58.868217"
+    },
+    "research_robotica": {
+      "type": "research",
+      "count": 6,
+      "first_seen": "2026-08-05T11:58:11.687980",
+      "last_seen": "2026-08-11T11:40:35.027303"
     }
   },
   "skills": {
@@ -151,7 +241,10 @@
     "multi_tab_research": 35,
     "end_to_end_automation": 45,
     "complete_session_mastery": 50,
-    "investigacion_web": 20
+    "investigacion_web": 100,
+    "research_materiales": 50,
+    "research_computacion": 50,
+    "research_tecnologia": 50
   },
   "sessions": [
     {
@@ -162,7 +255,193 @@
   ],
   "total_learning_time": 0,
   "current_session_start": "2026-06-17T13:34:29.931924",
-  "mistakes": [],
+  "mistakes": [
+    {
+      "error": "web_generator: Error en web_generator: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T11:43:46.091200"
+    },
+    {
+      "error": "file_controller: Error: 'C:\\Users\\danie\\OneDrive\\Desktop\\historia_colombia.html' no existe.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T12:24:00.295046"
+    },
+    {
+      "error": "code_helper: Error: Se requiere 'description' para generar código.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T21:07:27.144612"
+    },
+    {
+      "error": "document_generator: Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T21:27:33.921661"
+    },
+    {
+      "error": "document_generator: Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel Gomez\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T21:28:54.437019"
+    },
+    {
+      "error": "computer_control: Error: Se requiere titulo de ventana.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T21:33:44.392605"
+    },
+    {
+      "error": "document_handler: Error en document_handler: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T21:52:19.077933"
+    },
+    {
+      "error": "file_controller: Error: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T22:29:13.937853"
+    },
+    {
+      "error": "computer_control: Error: No se proporciono combinacion.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:12:33.593367"
+    },
+    {
+      "error": "computer_control: Error: No se proporciono combinacion.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:12:33.611749"
+    },
+    {
+      "error": "computer_control: Error: No se proporciono combinacion.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:12:34.505847"
+    },
+    {
+      "error": "skill_manage: Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:14:29.429986"
+    },
+    {
+      "error": "skill_manage: Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:14:52.759314"
+    },
+    {
+      "error": "file_controller: Error: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:15:22.518392"
+    },
+    {
+      "error": "skill_manage: Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-29T23:42:17.123031"
+    },
+    {
+      "error": "cancion_generator: Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T00:06:32.420050"
+    },
+    {
+      "error": "cancion_generator: Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T00:07:23.410788"
+    },
+    {
+      "error": "deep_research: Error en deep_research: HTTP Error 403: Forbidden",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T12:09:26.441970"
+    },
+    {
+      "error": "deep_research: Error en deep_research: HTTP Error 403: Forbidden",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T12:39:01.458648"
+    },
+    {
+      "error": "terminal_agent: Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"steam.exe\" -ErrorAction Stop\n",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T12:40:34.983779"
+    },
+    {
+      "error": "terminal_agent: Error abriendo C:\\Program Files (x86)\\Steam\\steam.exe: Command '['powershell', '-NoProfile', '-Command', 'Start-Process \"C:\\\\Program Files (x86)\\\\Steam\\\\steam.exe\" -ErrorAction Stop']' timed out after",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-30T12:41:24.961482"
+    },
+    {
+      "error": "audio_transcriber: Error: Unknown action 'transcribe_mic'. Available: transcribe, transcribe_clipboard, languages, history",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-07-31T20:59:34.043057"
+    },
+    {
+      "error": "computer_settings: Error ajustando volumen absoluto: 'AudioDevice' object has no attribute 'Activate'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-01T20:39:51.670020"
+    },
+    {
+      "error": "game_companion: Error vision: HTTP Error 402: Payment Required",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-01T21:32:52.451126"
+    },
+    {
+      "error": "game_companion: Error vision: HTTP Error 402: Payment Required",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-01T21:32:56.408321"
+    },
+    {
+      "error": "game_companion: Error vision: HTTP Error 402: Payment Required",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-01T21:33:20.677196"
+    },
+    {
+      "error": "pc_control: Error al suspender: Command '['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0']' timed out after 5 seconds",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-01T22:02:26.256532"
+    },
+    {
+      "error": "document_tool: Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-03T13:53:34.097989"
+    },
+    {
+      "error": "document_tool: Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-03T13:53:34.912396"
+    },
+    {
+      "error": "deep_research: Error en deep_research: HTTP Error 403: Forbidden",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-05T22:10:26.699911"
+    },
+    {
+      "error": "computer_control: Error: Se requiere titulo de ventana.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-07T12:55:14.414702"
+    },
+    {
+      "error": "screenshot_history: Error capturando: region argument must be a tuple of four ints",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-07T12:55:18.748506"
+    },
+    {
+      "error": "screenshot_history: Error capturando: region argument must be a tuple of four ints",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-07T12:55:19.863654"
+    },
+    {
+      "error": "next_designer: Error en next_designer: '\\n  --bg'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-08T14:20:43.593492"
+    },
+    {
+      "error": "next_designer: Error en next_designer: '\\n  --bg'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-08T14:20:46.312700"
+    },
+    {
+      "error": "desktop_control: Error: se requiere 'query'",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-08T19:48:58.597816"
+    },
+    {
+      "error": "computer_control: Error: Se requiere titulo de ventana.",
+      "lesson": "Revisar parámetros o conexión",
+      "timestamp": "2026-08-09T18:26:42.298979"
+    }
+  ],
   "achievements": [
     {
       "name": "Maestría en busqueda_web_diaria",
@@ -183,6 +462,21 @@
       "name": "Maestría en sandbox_testing_rutina",
       "unlocked_at": "2026-06-17T13:49:17.276526",
       "description": "Patrón 'sandbox_testing_rutina' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en research_materiales",
+      "unlocked_at": "2026-08-07T12:33:57.716717",
+      "description": "Patrón 'research_materiales' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en research_computacion",
+      "unlocked_at": "2026-08-08T11:25:39.322661",
+      "description": "Patrón 'research_computacion' dominado (10 repeticiones)"
+    },
+    {
+      "name": "Maestría en research_tecnologia",
+      "unlocked_at": "2026-08-08T19:48:37.011513",
+      "description": "Patrón 'research_tecnologia' dominado (10 repeticiones)"
     }
   ]
 }

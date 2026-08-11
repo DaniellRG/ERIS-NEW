@@ -2,18 +2,18 @@
 
 ## Auto-investigacion (idle learning)
 
-Fecha: 2026-07-27 22:37
+Fecha: 2026-07-30 00:16
 
 Resultados para 'redes 5G 6G tecnologias nuevas' (DuckDuckGo):
 
+**5G Fundamentos y Tecnologías**
+Explora miles de cursos y alcanza tus metas profesionales. Satisfacción garantizada por 30 días. Suscríbete hoy y obtén una oferta especial.
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fduckduckgo.com%2Fy.js%3Fad_domain%3Dudemy.com%26ad_provider%3Dbingv7aa%26ad_type%3Dtxad%26click_metadata%3DhhtNenSpuNLq2OQVSeJmCt3xnWeQL6Smw88KdRhf_erPwUQoHbUTja0UpO%252DYWuyYjER8hCReQpi5Euni05gAh_RxINsSZoBhzK5xDqMxSiTLANKSiIHHZfpEQnDm02Ciuj4avzQx_uzQH6Xe8YMnRpgr2Sd9kTLPKQQFqMsHPXE.xlQ63Rnrs7E_jca50Jzi5w%26rut%3D08447bc71db145ff22f7c21d9937090e9edea4da8cc85a4baff129148ce9b245%26u3%3Dhttps%253A%252F%252Fwww.bing.com%252Faclick%253Fld%253De8p7xOPXOMaNZ7_OKq5n%252D0QTVUCUxBBUFV%252DQekrAyaPtkMhKnc6pq9m7krbDMQOAgJoWlSGEy0xDNo5ZoyVkBricR6YZbzvFsc%252D50d%252DeEczbQNzbvZDwcJc6fPqDlx2vlgEbqEfkRq_UCWbmRtRLkrHb3CFmm8pCrOo89I4ca9V%252Dr0USStrIBnnt_uT7eJ5U672z8T7nzw%252DAQAtBNWR16Tk%252DV6hkY%2526u%253DaHR0cHMlM2ElMmYlMmZ3d3cudWRlbXkuY29tJTJmY291cnNlJTJmNWctZnVuZGFtZW50b3MteS10ZWNub2xvZ2lhcyUyZiUzZnV0bV9jYW1wYWlnbiUzZEJHLVNlYXJjaF9EU0FfQmV0YV9Qcm9mX2xhLkVTX2NjLlJPVy1TcGFuaXNoJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkcGFpZC1zZWFyY2glMjZwb3J0Zm9saW8lM2RCaW5nLVJPVy1TcGFuaXNoJTI2dXRtX2F1ZGllbmNlJTNkbXglMjZ1dG1fdGFjdGljJTNkbmIlMjZ1dG1fdGVybSUzZF8uX2FnXzEzMjYwMTM0MTE2NzU2OTJfLl9hZF9fLl9rd191ZGVteSUyNnV0bV9jb250ZW50JTNkcyUyNmZ1bm5lbCUzZCUyNnRlc3QlM2QlMjZ1dG1fY2FtcGFpZ25faWQlM2Q2Mzg1OTYyMjMlMjZtc2Nsa2lkJTNkODI2NjQ1ZTI1MTcxMWVlYzFhYWMyZjg4OGY1YTlhNzI%2526rlid%253D826645e251711eec1aac2f888f5a9a72%26vqd%3D4%2D231539514056056084235228697936234696368%26iurl%3D%257B1%257DIG%253D798813C3EAC14353A5457036DE8DA9E7%2526CID%253D1671FE1CA6336D3E0FA6E9BAA73F6CDE%2526ID%253DDevEx%252C5037.1&rut=ad07fc8d4076b0c5dd5b928ab980ff94354e69d29d20c611ca07cac0bddffed4
+
 **6G: toda la información, tecnología y diferencias con el 5G**
 El6Gtraerá consigo ventajas en diferentes sectores de la industria y la economía, como la medicina y la automoción. Hay varios campos que serán potenciados claramente con estanueva...
-//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.xatakamovil.com%2Fnuevo%2F6g%2Dtoda%2Dinformacion&rut=ad836adb4fb926f621d43efc6fe888ee3a84c09e5afdc595b9a2b9e804f76660
+//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.xatakamovil.com%2Fnuevo%2F6g%2Dtoda%2Dinformacion&rut=926429009c03bfea77e6d20de1feb1ed3d9bb4472ebd056377c24032cff8929d
 
 **Diferencias 5G y 6G | Comparativa y el futuro de las redes móviles**
 Analizamos las diferencias clave entre lasredes5Gy la futura6G. Descubre las mejoras esperadas en velocidad, latencia ynuevasaplicaciones.
-//duckduckgo.com/l/?uddg=https%3A%2F%2Foperadorescon5g.es%2Fguias%2Fdiferencias%2Dentre%2D5g%2D6g%2F&rut=3d07a041366af723477d0f91ac61819ffdf219e37a4b122f2de8473783f28627
-
-**El 6G ya está en marcha: qué cambiará frente al 5G y ... - Infobae**
-El salto del5Gal6GActualmente, lasredes5Gemplean un conjunto limitado de frecuencias de radio, con velocidades que pueden llegar a los 10 Gbps en condiciones óptimas. Sin embargo, el nuevo ...
-//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.infobae.com%2Ftecno%2F2025%2F09%2F02%2Fel%2D6g%2Dya%2Desta%2Den%2Dmarcha%2Dque%2Dcambiara%2Dfrente%2Dal%2D5g%2Dy%2Dcuando%2Dpodremos%2Dusarlo%2F&rut=1245345faff187d4b5e9a9a37a5177f21cfc7ea317eb46917e3b9e213e604c12
+//duckduckgo.com/l/?uddg=https%3A%2F%2Foperadorescon5g.es%2Fguias%2Fdiferencias%2Dentre%2D5g%2D6g%2F&rut=8310cccd6133eab7a0f383ab89a46a5a442cc99ae35cb00479b63994f64030a6

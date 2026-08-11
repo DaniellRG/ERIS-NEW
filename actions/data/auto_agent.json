@@ -94,6 +94,65 @@
       "current_step": 0,
       "completed_steps": 0,
       "total_steps": 7
+    },
+    "26d4f8bb": {
+      "id": "26d4f8bb",
+      "goal": "diagnostico del sistema",
+      "steps": [
+        {
+          "id": "cacf9e13",
+          "description": "Show disk usage",
+          "tool_to_use": "shell",
+          "parameters": {
+            "command": "wmic logicaldisk get size,freespace,caption /format:list"
+          },
+          "status": "pending",
+          "result": null,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "id": "840d2c3e",
+          "description": "Check Windows Firewall status",
+          "tool_to_use": "shell",
+          "parameters": {
+            "command": "netsh advfirewall show allprofiles"
+          },
+          "status": "pending",
+          "result": null,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "id": "5d6939e9",
+          "description": "List inbound rules",
+          "tool_to_use": "shell",
+          "parameters": {
+            "command": "netsh advfirewall firewall show rule name=all dir=in | findstr /i \"Rule Name\""
+          },
+          "status": "pending",
+          "result": null,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "id": "8af1c8fb",
+          "description": "Check Windows Defender status",
+          "tool_to_use": "shell",
+          "parameters": {
+            "command": "powershell -Command \"Get-MpComputerStatus | Select-Object RealTimeProtectionEnabled, AntivirusEnabled\""
+          },
+          "status": "pending",
+          "result": null,
+          "started_at": null,
+          "completed_at": null
+        }
+      ],
+      "created_at": "2026-08-08T10:12:40.149769",
+      "status": "pending",
+      "current_step": 0,
+      "completed_steps": 0,
+      "total_steps": 4
     }
   },
   "history": []

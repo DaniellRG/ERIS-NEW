@@ -474,13 +474,62 @@ def _uninstall_snap(name: str, silent: bool = True, password: str | None = None)
 
 # ── Install programs ─────────────────────────────────────────────────────────
 
+def _resolve_winget_id(name: str) -> dict | None:
+    """Busca en winget y devuelve la mejor coincidencia con su ID exacto."""
+    cands = _search_winget(name)
+    if not cands:
+        return None
+    nl = name.strip().lower()
+
+    def score(c: dict) -> int:
+        s = 0
+        cid, cname = c["id"].lower(), c["name"].lower()
+        if cid == nl or cname == nl:
+            s += 100
+        if nl in cid or nl in cname:
+            s += 40
+        if cname.startswith(nl):
+            s += 10
+        m = c.get("match", "").lower()
+        if m.startswith("moniker:"):
+            moniker = m.split("moniker:", 1)[1].strip()
+            if moniker == nl:
+                s += 60
+            elif nl in moniker:
+                s += 25
+        return s
+
+    winget_cands = [c for c in cands if c.get("source", "").lower() == "winget"]
+    pool = winget_cands or cands
+    return max(pool, key=score)
+
+
 def _install_winget(name: str, silent: bool = True) -> str:
-    """Install program via winget."""
-    cmd = ["winget", "install", "--id", name, "--accept-source-agreements", "--accept-package-agreements"]
+    """Instala un programa via winget resolviendo primero su ID exacto.
+
+    Paso a paso: buscar → resolver ID → descargar/instalar → reportar.
+    """
+    resolved = _resolve_winget_id(name)
+    pid = resolved["id"] if resolved else name
+    label = f"{resolved['name']} ({pid}) v{resolved.get('version', '?')}" if resolved else name
+
+    steps = [f"1. Buscando '{name}' en winget... OK → {label}"]
+
+    cmd = ["winget", "install", "--id", pid,
+           "--accept-source-agreements", "--accept-package-agreements",
+           "--disable-interactivity"]
     if silent:
         cmd.append("--silent")
-    output = _run_cmd(cmd, timeout=300)
-    return output
+
+    steps.append(f"2. Descargando e instalando {pid} (puede tardar)...")
+    out, err, rc = _run_cmd_details(cmd, timeout=900)
+    if rc == 0 or "successfully" in out.lower() or "instalado" in out.lower():
+        steps.append(f"3. ✅ Instalación completada ({label}).")
+    else:
+        detail = (out + "\n" + err).strip()
+        steps.append(f"3. ❌ La instalación falló (código {rc}).\nSalida de winget:\n{detail[:1500]}")
+        steps.append("   → Verificá el ID exacto con program_manager(action='search', name=...) o instalá manualmente.")
+    return "\n".join(steps)
 
 def _install_choco(name: str, silent: bool = True) -> str:
     """Install program via Chocolatey."""
@@ -509,13 +558,53 @@ def _install_file(path: str, silent: bool = True) -> str:
     output = _run_cmd(cmd, timeout=600)
     return output
 
-# ── Uninstall programs ───────────────────────────────────────────────────────
+# ── Download programs ────────────────────────────────────────────────────────
 
+def _download_winget(name: str, dest_dir: str = "") -> str:
+    """Descarga un programa via winget SIN instalarlo (instalador en disco)."""
+    import sys
+    if sys.platform != "win32":
+        return "La descarga via winget solo está disponible en Windows."
+    resolved = _resolve_winget_id(name)
+    pid = resolved["id"] if resolved else name
+    label = f"{resolved['name']} ({pid})" if resolved else name
+
+    dest = dest_dir.strip() or str(Path.home() / "Downloads" / "ERIS_downloads")
+    try:
+        Path(dest).mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        return f"No pude crear la carpeta de descargas: {e}"
+
+    steps = [f"1. Buscando '{name}' en winget... OK → {label}",
+             f"2. Descargando instalador de {pid} en: {dest} (puede tardar)..."]
+    cmd = ["winget", "download", "--id", pid, "-d", dest,
+           "--accept-source-agreements", "--accept-package-agreements",
+           "--disable-interactivity"]
+    out, err, rc = _run_cmd_details(cmd, timeout=900)
+    if rc == 0 or "successfully" in out.lower():
+        files = [f.name for f in Path(dest).iterdir() if f.is_file()]
+        steps.append(f"3. ✅ Instalador descargado en {dest}: {', '.join(files)[:300]}")
+    else:
+        steps.append(f"3. ❌ La descarga falló (código {rc}).\nSalida de winget:\n{(out + err).strip()[:1200]}")
+    return "\n".join(steps)
+
+# ── Uninstall programs ───────────────────────────────────────────────────────
 def _uninstall_winget(name: str) -> str:
     """Uninstall program via winget."""
-    cmd = ["winget", "uninstall", "--id", name, "--silent"]
-    output = _run_cmd(cmd, timeout=300)
-    return output
+    cmd = ["winget", "uninstall", "--name", name, "--silent", "--accept-source-agreements"]
+    output = _run_cmd_details(cmd, timeout=300)
+    out, err, rc = output
+    if rc == 0 or "successfully" in out.lower() or "desinstalado" in out.lower():
+        return out
+    resolved = _resolve_winget_id(name)
+    if resolved:
+        cmd2 = ["winget", "uninstall", "--id", resolved["id"], "--silent",
+                "--accept-source-agreements", "--accept-package-agreements"]
+        out2, err2, rc2 = _run_cmd_details(cmd2, timeout=300)
+        if rc2 == 0 or "successfully" in out2.lower():
+            return out2
+        return f"Intento fallido. Salida: {(out + err + out2 + err2)[:800]}"
+    return out or f"No se encontró '{name}' para desinstalar."
 
 def _uninstall_registry(name: str, uninstall_string: str = "") -> str:
     """Uninstall via registry uninstall string."""
@@ -573,25 +662,58 @@ def _run_program(name_or_path: str, args: str = "") -> str:
 # ── Search programs ──────────────────────────────────────────────────────────
 
 def _search_winget(query: str) -> list[dict]:
-    """Search for programs in winget repository."""
+    """Search for programs in winget repository, parsing columns by header."""
     results = []
     try:
         output = _run_cmd(["winget", "search", query, "--accept-source-agreements"], timeout=30)
-        lines = output.strip().split("\n")
-        for line in lines[3:]:
-            parts = line.split()
-            if len(parts) >= 3:
-                name = " ".join(parts[:-2])
-                version = parts[-2]
-                source = parts[-1]
-                results.append({
-                    "name": name,
-                    "version": version,
-                    "source": source,
-                    "id": name.lower().replace(" ", "-"),
-                })
+        results = _parse_winget_table(output)
     except Exception:
         pass
+    return results
+
+def _parse_winget_table(output: str) -> list[dict]:
+    """Parsea la tabla de winget (search/list) usando la fila de cabecera.
+
+    La salida es una tabla con columnas variables: Name, Id, Version,
+    Match (solo en search) y Source. Encuentra la cabecera y corta cada
+    fila por las posiciones reales de las columnas.
+    """
+    lines = [l for l in output.splitlines() if l.strip()]
+    header_idx = None
+    for i, l in enumerate(lines):
+        if "Name" in l and "Id" in l and "Version" in l and "Source" in l:
+            header_idx = i
+            break
+    if header_idx is None:
+        return []
+
+    header = lines[header_idx]
+    has_match = "Match" in header
+    bounds = [0]
+    for token in ("Id", "Version", "Match", "Source"):
+        idx = header.find(token)
+        if idx > 0:
+            bounds.append(idx)
+    bounds = sorted(set(bounds))
+
+    results = []
+    for l in lines[header_idx + 1:]:
+        stripped = l.strip()
+        if not stripped or set(stripped) <= {"-", " "}:
+            continue
+        cells = []
+        for j, b in enumerate(bounds):
+            end = bounds[j + 1] if j + 1 < len(bounds) else len(l)
+            cells.append(l[b:end].strip())
+        if len(cells) < 2 or not cells[1]:
+            continue
+        results.append({
+            "name": cells[0],
+            "id": cells[1],
+            "version": cells[2] if len(cells) > 2 else "",
+            "match": cells[3] if has_match and len(cells) > 3 else "",
+            "source": cells[-1],
+        })
     return results
 
 def _search_pacman(query: str) -> list[dict]:
@@ -812,6 +934,27 @@ def verify_installation(name: str) -> str:
             if name.lower() in out.lower():
                 return f"✅ '{name}' está instalado como Snap."
 
+    # Windows: verificar via winget y Registro
+    if sys.platform == "win32" and _winget_available():
+        resolved = _resolve_winget_id(name)
+        if resolved:
+            out, err, rc = _run_cmd_details(
+                ["winget", "list", "--id", resolved["id"], "--accept-source-agreements"], timeout=30)
+            if rc == 0 and resolved["id"].lower() in (out + err).lower():
+                return (f"✅ '{name}' está instalado: {resolved['name']} "
+                        f"({resolved['id']}) v{resolved.get('version', '?')}.")
+        out = _run_cmd(["winget", "list", "--accept-source-agreements"], timeout=30)
+        for line in out.splitlines():
+            if name.lower() in line.lower() and "id" not in line.lower().split()[:1]:
+                return f"✅ '{name}' está instalado (winget): {line.strip()}"
+        try:
+            reg = _list_registry()
+            for p in reg:
+                if name.lower() in p["name"].lower():
+                    return f"✅ '{name}' está instalado (Registro): {p['name']} v{p.get('version', '?')}"
+        except Exception:
+            pass
+
     return f"❌ No se pudo verificar que '{name}' esté instalado."
 
 
@@ -1019,10 +1162,19 @@ def program_manager(parameters: dict, player=None, **kwargs) -> str:
         for r in results[:20]:
             desc = r.get('description', '')
             desc_str = f" - {desc[:80]}" if desc else ""
-            lines.append(f"  • {r['name']} v{r.get('version', '?')} [{r.get('source', '?')}]{desc_str}")
+            lines.append(f"  • {r['name']} v{r.get('version', '?')} [ID: {r.get('id', '?')}] [{r.get('source', '?')}]{desc_str}")
         lines.append("")
         lines.append("Para instalar: program_manager(action='install', name='NOMBRE_DEL_PROGRAMA', password='...')")
         return "\n".join(lines)
+    
+    # ── DOWNLOAD ──────────────────────────────────────────────────────────────
+    elif action in ("download", "descargar"):
+        import sys
+        if sys.platform != "win32":
+            return "La descarga via winget solo está disponible en Windows."
+        if not name:
+            return "Especificá el nombre del programa a descargar."
+        return _download_winget(name, path)
     
     # ── INSTALL ───────────────────────────────────────────────────────────────
     elif action in ("install", "instalar"):
@@ -1046,18 +1198,26 @@ def program_manager(parameters: dict, player=None, **kwargs) -> str:
         
         # Cross-platform install
         pm = _get_package_manager()
-        
+
+        # Mostrar el ID exacto que se instalará (clave para que funcione)
+        resolved = None
+        if sys.platform == "win32" and pm == "winget" and name:
+            try:
+                resolved = _resolve_winget_id(name)
+            except Exception:
+                resolved = None
+
         if not confirm:
+            target = f"{resolved['name']} (ID: {resolved['id']})" if resolved else name
             return (
                 f"⚠️ Voy a instalar '{name}' usando {pm}.\n"
+                f"   Paquete a instalar: {target}\n"
                 f"   ¿Confirmás la instalación? Respondé 'sí, instalá' para continuar."
             )
         
         if sys.platform == "win32":
             if pm == "winget":
                 output = _install_winget(name, silent=silent)
-                if "successfully" in output.lower() or "éxito" in output.lower():
-                    return f"✅ '{name}' instalado correctamente."
                 return f"Resultado de instalación:\n{output}"
             elif pm == "choco":
                 output = _install_choco(name, silent=silent)

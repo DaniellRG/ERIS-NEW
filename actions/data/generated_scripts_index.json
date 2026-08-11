@@ -62,6 +62,33 @@
       "description": "pagina web de bienvenida",
       "created_at": "2026-07-30T00:40:05.116673",
       "run_count": 0
+    },
+    "cc787fa7": {
+      "id": "cc787fa7",
+      "filename": "script_20260803_105929.py",
+      "filepath": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Scripts\\script_20260803_105929.py",
+      "language": "python",
+      "description": "hello world function",
+      "created_at": "2026-08-03T10:59:29.719994",
+      "run_count": 0
+    },
+    "50a5df55": {
+      "id": "50a5df55",
+      "filename": "script_20260808_191239.py",
+      "filepath": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Scripts\\script_20260808_191239.py",
+      "language": "python",
+      "description": "hello world function",
+      "created_at": "2026-08-08T19:12:39.156104",
+      "run_count": 0
+    },
+    "c9737172": {
+      "id": "c9737172",
+      "filename": "script_20260808_191504.py",
+      "filepath": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Scripts\\script_20260808_191504.py",
+      "language": "python",
+      "description": "hello world function",
+      "created_at": "2026-08-08T19:15:04.636459",
+      "run_count": 0
     }
   }
 }

@@ -5,12 +5,8 @@
       "updated": "2026-05-21"
     },
     "city": {
-      "value": "Lima, Peru",
-      "updated": "2026-05-17"
-    },
-    "mood": {
-      "value": "festive",
-      "updated": "2026-05-17"
+      "value": "Santa Marta, Magdalena, Colombia",
+      "updated": "2026-08-02"
     },
     "address_form": {
       "value": "Daniel"
@@ -25,25 +21,66 @@
       "updated": "2026-05-17"
     },
     "current_game": {
-      "value": "AION 2"
+      "value": "none"
     }
   },
   "projects": {
-    "code_project_status": {
-      "value": "User deleted the entire code project.",
-      "updated": "2026-05-17"
-    },
     "improve_eris": {
       "value": "User's current project is improving Eris and ensuring all functions work correctly."
+    },
+    "current_project": {
+      "value": "Improving Eris"
+    },
+    "eris_improvement_status": {
+      "value": "User added requested features and improved some things."
     }
   },
   "relationships": {},
   "wishes": {},
-  "notes": {},
-  "context": {
-    "activity": {
-      "value": "playing AION 2"
+  "notes": {
+    "nota_materias": {
+      "value": "El usuario estudia estas materias. Tengo guias de estudio indexadas en mi base de conocimiento (data/knowledge/materia_*.md). Usalas para ayudarle a estudiar, repasar y preparar examenes. Al consultar, dame contexto de la materia correcta."
+    },
+    "nota_materias_avanzadas": {
+      "value": "El usuario cursa estas materias avanzadas. Guias indexadas en data/knowledge/materia_*2*.md y materia_redes_sd.md. Ayudale con temas avanzados: patrones, SOLID, streams, concurrencia, CTE/window functions, procedimientos, React/Node, subredes CIDR, teorema CAP, tolerancia a fallos."
     }
   },
-  "action": "status"
+  "context": {},
+  "action": "status",
+  "_last_updated": "2026-07-29T22:21:02.645694",
+  "user_info": {
+    "juego_actual": {
+      "value": "Ya no juego Aion2, lo desinstale"
+    },
+    "activity": {
+      "value": "none"
+    },
+    "current_activity": {
+      "value": "Improving Eris"
+    },
+    "materias_actuales": "Inteligencia Artificial Aplicada; Tecnologia .NET I; Introduccion a JAVA; Base de Datos I; Diseno Web I; Programacion Orientada a Objetos I; Analisis y Diseno de Sistemas; Arquitectura de Computadores",
+    "materias_avanzadas": "Tecnologia .NET II; Java Avanzado; Base de Datos II; Diseno Web II; Programacion Orientada a Objetos II; Redes y Sistemas Distribuidos"
+  },
+  "capabilities": {
+    "advanced_data_analysis": {
+      "value": "Can process large CSV, Excel, JSON and generate visualizations. Pandas added to data_analyst."
+    },
+    "deep_system_control": {
+      "value": "Autonomous process management and advanced network diagnostics."
+    },
+    "specialized_ia_integration": {
+      "value": "Powerful vision models for real-time analysis and local fine-tuning. Local video analysis added."
+    },
+    "workflow_automation": {
+      "value": "Create complex scripts combining multiple actions."
+    },
+    "memory_context_improvement": {
+      "value": "Enhanced long-term memory for complex project details."
+    }
+  },
+  "system_update": {
+    "recent_additions": {
+      "value": "Pandas in data_analyst, Plotly in data_viz, local video analysis, updated tool declarations and prompt."
+    }
+  }
 }

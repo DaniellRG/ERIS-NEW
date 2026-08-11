@@ -20,6 +20,16 @@ SANDBOX_DIR.mkdir(parents=True, exist_ok=True)
 HISTORY_FILE = Path(__file__).resolve().parent.parent / "config" / "eris_sandbox_history.json"
 MAX_HISTORY = 200
 
+def _decode_output(raw: bytes) -> str:
+    """Decodifica salida de subprocesos sin mojibake: intenta UTF-8 y
+    cae a cp1252 (output de herramientas nativas de Windows como taskkill)."""
+    if not raw:
+        return ""
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("cp1252", errors="replace")
+
 def _load_history():
     try:
         if HISTORY_FILE.exists():
@@ -69,13 +79,13 @@ def sandbox_run(parameters: dict, player=None) -> str:
         try:
             result = subprocess.run(
                 [sys.executable, str(script_path)],
-                capture_output=True, text=True, timeout=timeout,
+                capture_output=True, timeout=timeout,
                 cwd=str(SANDBOX_DIR),
                 env={**os.environ, "PYTHONPATH": str(SANDBOX_DIR)}
             )
             elapsed = time.time() - start_time
-            stdout = result.stdout[:2000]
-            stderr = result.stderr[:2000]
+            stdout = _decode_output(result.stdout)[:2000]
+            stderr = _decode_output(result.stderr)[:2000]
             
             entry = {
                 "timestamp": datetime.now().isoformat(),
@@ -122,12 +132,12 @@ def sandbox_run(parameters: dict, player=None) -> str:
         start_time = time.time()
         try:
             result = subprocess.run(
-                command, shell=True, capture_output=True, text=True,
+                command, shell=True, capture_output=True,
                 timeout=timeout, cwd=cwd
             )
             elapsed = time.time() - start_time
-            stdout = result.stdout[:2000]
-            stderr = result.stderr[:2000]
+            stdout = _decode_output(result.stdout)[:2000]
+            stderr = _decode_output(result.stderr)[:2000]
             
             entry = {
                 "timestamp": datetime.now().isoformat(),

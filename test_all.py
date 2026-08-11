@@ -273,6 +273,55 @@ try:
 except Exception as e:
     fail("dupes", str(e))
 
+# ── 17. MEMORY GROWTH CAPS ──
+print("[17] MEMORY CAPS")
+try:
+    import core.semantic_memory as _sm
+    _orig_save = _sm._save_json
+    _sm._save_json = lambda *a, **k: None  # no tocar disco durante el test
+
+    # Facts semánticos: tope 500
+    _s = _sm.SemanticMemory()
+    for i in range(550):
+        _s.add_fact("sujeto{}".format(i), "es", "objeto{}".format(i))
+    if len(_s.facts) <= 500:
+        ok("memcaps", "semantic facts cap 500 -> {}".format(len(_s.facts)))
+    else:
+        fail("memcaps", "semantic facts sin tope: {}".format(len(_s.facts)))
+
+    # Knowledge graph: nodos tope 2000
+    _g = _sm.KnowledgeGraph()
+    _g.nodes = {}
+    _g.edges = []
+    for i in range(2100):
+        _g.add_node("nodo{}".format(i))
+    if len(_g.nodes) <= 2000:
+        ok("memcaps", "graph nodes cap 2000 -> {}".format(len(_g.nodes)))
+    else:
+        fail("memcaps", "graph nodes sin tope: {}".format(len(_g.nodes)))
+
+    # Knowledge graph: aristas tope 5000
+    for i in range(5100):
+        _g.add_edge("origen", "destino", "rel{}".format(i))
+    if len(_g.edges) <= 5000:
+        ok("memcaps", "graph edges cap 5000 -> {}".format(len(_g.edges)))
+    else:
+        fail("memcaps", "graph edges sin tope: {}".format(len(_g.edges)))
+
+    # Episódica: tope 1000 (pre-existente)
+    _e = _sm.EpisodicMemory()
+    _e.entries = []
+    for i in range(1050):
+        _e.add("evento{}".format(i), None, importance=0.5)
+    if len(_e.entries) <= 1000:
+        ok("memcaps", "episodic cap 1000 -> {}".format(len(_e.entries)))
+    else:
+        fail("memcaps", "episodic sin tope: {}".format(len(_e.entries)))
+
+    _sm._save_json = _orig_save
+except Exception as e:
+    fail("memcaps", str(e))
+
 # ── SUMMARY ──
 print("\n" + "=" * 70)
 print("  RESUMEN")

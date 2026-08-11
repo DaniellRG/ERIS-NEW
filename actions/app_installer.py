@@ -12,29 +12,20 @@ def app_installer(parameters: dict, player=None) -> str:
         return "Error: Especifica 'action'. Opciones: install, uninstall, list, run."
 
     try:
+        from actions.program_manager import _install_winget, _uninstall_winget, _resolve_winget_id
+
         if action == "install":
             if not app_name:
                 return "Error: Especifica 'app_name' a instalar."
-            result = subprocess.run(
-                ["winget", "install", "--accept-source-agreements", "--accept-package-agreements", app_name],
-                capture_output=True, text=True, timeout=120, shell=True
-            )
-            if result.returncode == 0:
-                return f"Instalando '{app_name}' via winget. Revisa la ventana de instalacion."
-            else:
-                # Fallback: buscar en PATH o abrir Microsoft Store
-                return f"Winget no pudo instalar '{app_name}'. Error: {result.stderr[:200]}. Intenta manualmente desde Microsoft Store."
+            resolved = _resolve_winget_id(app_name)
+            target = f"{resolved['name']} (ID: {resolved['id']})" if resolved else app_name
+            result = _install_winget(app_name, silent=True)
+            return f"Instalando '{target}' via winget.\n{result}"
 
         elif action == "uninstall":
             if not app_name:
                 return "Error: Especifica 'app_name' a desinstalar."
-            result = subprocess.run(
-                ["winget", "uninstall", app_name],
-                capture_output=True, text=True, timeout=60, shell=True
-            )
-            if result.returncode == 0:
-                return f"Desinstalando '{app_name}'."
-            return f"No se pudo desinstalar '{app_name}'. Error: {result.stderr[:200]}"
+            return f"Desinstalando '{app_name}'.\n{_uninstall_winget(app_name)}"
 
         elif action == "list":
             result = subprocess.run(

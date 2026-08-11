@@ -174,6 +174,9 @@ class SemanticMemory:
                 return
         
         self.facts.append(fact)
+        # Prevenir crecimiento sin límite: mantener los 500 hechos más recientes
+        if len(self.facts) > 500:
+            self.facts = self.facts[-500:]
         _save_json(_SEMANTIC_FILE, self.facts)
 
     def query(self, subject: str = None, predicate: str = None, obj: str = None) -> list[dict]:
@@ -305,6 +308,9 @@ class KnowledgeGraph:
             "created_at": time.time(),
             "connections": 0,
         }
+        # Prevenir crecimiento sin límite: mantener los 2000 nodos más recientes
+        if len(self.nodes) > 2000:
+            self.nodes = dict(list(self.nodes.items())[-2000:])
         self._save()
 
     def add_edge(self, source: str, target: str, relation: str, weight: float = 1.0):
@@ -317,6 +323,9 @@ class KnowledgeGraph:
             "timestamp": time.time(),
         }
         self.edges.append(edge)
+        # Prevenir crecimiento sin límite: mantener las 5000 aristas más recientes
+        if len(self.edges) > 5000:
+            self.edges = self.edges[-5000:]
         
         # Update node connection counts
         for node in [source.lower(), target.lower()]:

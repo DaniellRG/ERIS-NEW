@@ -13,10 +13,13 @@ def agent_task(parameters: dict = None, player=None) -> str:
 
     if action == "status":
         try:
-            from actions.openrouter_agent import _get_api_key, _get_ollama_cfg
+            from actions.openrouter_agent import _get_api_key, _ollama_available, _get_gemini_key
             has_or = bool(_get_api_key())
-            has_ol = bool(_get_ollama_cfg())
-            return f"Agentes disponibles: OpenRouter {'SI' if has_or else 'NO'}, Ollama {'SI' if has_ol else 'NO'}."
+            has_ol = _ollama_available()
+            has_gem = bool(_get_gemini_key())
+            return (f"Agentes disponibles: OpenRouter {'SI' if has_or else 'NO'}, "
+                    f"Ollama {'SI' if has_ol else 'NO'}, "
+                    f"Gemini (fallback) {'SI' if has_gem else 'NO'}.")
         except Exception:
             return "Estado de agentes no disponible."
 

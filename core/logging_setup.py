@@ -16,6 +16,24 @@ LOG_PATH        = BASE_DIR / "eris.log"
 
 def setup_logging():
     """Redirect stdout/stderr to log file and suppress subprocess console windows."""
+    # ── Rotate oversized log before redirecting output ─
+    _MAX_LOG_MB = 5
+    _rotate_msg = None
+    try:
+        if LOG_PATH.exists() and LOG_PATH.stat().st_size > _MAX_LOG_MB * 1024 * 1024:
+            for _i in range(2, 0, -1):
+                _old = LOG_PATH.with_name(f"eris.log.{_i}")
+                if _old.exists():
+                    _old.unlink()
+                if _i > 1:
+                    _prev = LOG_PATH.with_name(f"eris.log.{_i - 1}")
+                    if _prev.exists():
+                        _prev.rename(_old)
+            LOG_PATH.rename(LOG_PATH.with_name("eris.log.1"))
+            _rotate_msg = f"[ERIS] Log rotado: eris.log >{_MAX_LOG_MB}MB -> eris.log.1"
+    except Exception:
+        pass
+
     # ── Redirect output to log file (pythonw.exe has no console) ─
     try:
         import io as _io
@@ -38,6 +56,8 @@ def setup_logging():
 
         sys.stdout = _TeeStream(sys.stdout, _log_fh)
         sys.stderr = _TeeStream(sys.stderr, _log_fh)
+        if _rotate_msg:
+            print(_rotate_msg)
     except Exception:
         pass
 

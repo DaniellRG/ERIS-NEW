@@ -5,6 +5,8 @@
 
 from typing import Any
 
+import json
+
 # ── Ordered by functional domain ──
 
 
@@ -12,6 +14,18 @@ TOOL_DECLARATIONS = [
 
     # ── Section 14A: Core System ──
 
+    {
+        "name": "show_expression",
+        "description": "Muestra una expresion en TU CARA animada (la que aparece en la interfaz). Elegi el nombre de la expresion. Expresiones disponibles: neutral, smiling, happy, grinning, laugh, wink, thinking, hmm, sleepy, astonished, in_love, loved, kiss, blush_smile, crying, sobbing, holding_tears, angry, pouting, fearful, screaming, relieved, tears_of_joy, party, cool, hot, cold, pleading, sad, yum, money, hug, devious. Usala cuando el usuario te pida que hagas una cara, muestres una emocion, o cuando quieras reaccionar con tu rostro.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "expression": {"type": "STRING", "description": "Nombre de la expresion de tu cara (ej: 'happy', 'in_love', 'thinking', 'crying')"},
+                "text": {"type": "STRING", "description": "Opcional: que se esta sintiendo con esa cara (ej: 'curiosidad')"},
+            },
+            "required": ["expression"],
+        }
+    },
     {
         "name": "action_history",
         "description": "Grabador de flujos/macros.",
@@ -208,6 +222,23 @@ TOOL_DECLARATIONS = [
                 "action": {"type": "STRING", "description": "list_all (ver todo), eris_add, eris_remove, user_add, user_remove, categorias, eris_categoria_list, user_categoria_list, reset"},
                 "categoria": {"type": "STRING", "description": "Categoría: comida, bebida, musica, artista, color, hobby, pelicula, serie, libro, arte, lugar, animal, estacion, deporte, etc."},
                 "valor": {"type": "STRING", "description": "El gusto en sí, ej: 'pizza', 'rock', 'gatos'"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "relationship",
+        "description": "Memoria de relación con el usuario: guardar su nombre, el apodo cariñoso con el que le gusta que lo llames, cómo prefiere que te dirijas a él, notas sobre él, y momentos importantes que compartieron. Úsala cuando el usuario te diga cómo llamarlo, cuando compartan algo importante, o cuando pregunte qué sabes de él.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status (ver lo que sé), set_apodo, set_name, set_trato, add_note, remember"},
+                "apodo": {"type": "STRING", "description": "Apodo cariñoso para llamar al usuario (action=set_apodo)"},
+                "name": {"type": "STRING", "description": "Nombre del usuario (action=set_name)"},
+                "trato": {"type": "STRING", "description": "Cómo prefiere que te dirijas a él (action=set_trato)"},
+                "key": {"type": "STRING", "description": "Clave de la nota sobre el usuario (action=add_note)"},
+                "value": {"type": "STRING", "description": "Valor de la nota (action=add_note)"},
+                "text": {"type": "STRING", "description": "Momento importante para recordar (action=remember)"},
             },
             "required": ["action"],
         }
@@ -422,6 +453,101 @@ TOOL_DECLARATIONS = [
             "required": ["action"],
         }
     },
+    {
+        "name": "web_designer",
+        "description": "Diseñador web profesional. Crea paginas web RICAS y completas (nunca en blanco): con informacion real, imagenes, animaciones y JS. Si se da una URL de referencia (reference_url), analiza el sitio (framework React/Angular/Vue/Next/etc., colores, fuentes, animaciones) y replica su estilo. Actions: analyze (analizar una URL de referencia), create (generar la pagina: title, topic, sections, reference_url, folder), preview (renderizar y sacar screenshot), serve (servidor local), stop, memory. Las paginas son autocontenidas (index.html con CSS+JS inline). Usar SIEMPRE esta herramienta para crear webs, NUNCA code_copilot con language=html.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "analyze, create, preview, serve, stop, memory"},
+                "url": {"type": "STRING", "description": "URL de referencia a analizar (action=analyze)"},
+                "reference_url": {"type": "STRING", "description": "URL de referencia cuyo estilo clonar (action=create)"},
+                "title": {"type": "STRING", "description": "Titulo de la pagina"},
+                "topic": {"type": "STRING", "description": "Tema/negocio de la pagina (define contenido e imagenes)"},
+                "description": {"type": "STRING", "description": "Descripcion/hero de la pagina"},
+                "sections": {"type": "STRING", "description": "Contenido real de la pagina: JSON o formato markdown-lite (## Titulo + bullets - )"},
+                "folder": {"type": "STRING", "description": "Carpeta donde crear la pagina (default: Desktop/ERIS_web)"},
+                "port": {"type": "INTEGER", "description": "Puerto para serve (default 8899)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "react_designer",
+        "description": "Diseñador de páginas web con REACT (Vite). Crea un proyecto React completo y funcional: package.json, vite.config.js, index.html, src/main.jsx, src/App.jsx (router), src/data.js, src/index.css y src/components/sections.jsx con componentes React por sección (Nav, Hero, Features, Gallery, Stats, Testimonials, Faq, Prices, Process, Team, About, Contact, Footer). Instala dependencias con npm, levanta el dev server y abre el navegador. Usa la misma paleta/fuente/variedad anti-repetición que web_designer, así que cada proyecto es distinto. Actions: create (genera el proyecto: title, topic, description, sections, folder, pages), install (npm install), dev (levantar Vite), build (compilar a dist/), preview (renderizar con Playwright y sacar screenshots), stop, memory. Usar SIEMPRE esta herramienta cuando el usuario pida una página web en React o cuando la referencia (reference_url) sea React; NO generar HTML plano para eso.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "create, install, dev, build, preview, stop, memory"},
+                "title": {"type": "STRING", "description": "Titulo del sitio React"},
+                "topic": {"type": "STRING", "description": "Tema/negocio del sitio (define contenido e imagenes)"},
+                "description": {"type": "STRING", "description": "Descripcion/hero del sitio"},
+                "sections": {"type": "STRING", "description": "Contenido real: JSON o formato markdown-lite (## Titulo + bullets -)"},
+                "folder": {"type": "STRING", "description": "Carpeta donde crear el proyecto (default: Desktop/ERIS_web)"},
+                "pages": {"type": "STRING", "description": "site (multi-pagina con router) o single (una pagina)"},
+                "port": {"type": "INTEGER", "description": "Puerto del dev server (default 5173)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "angular_designer",
+        "description": "Diseñador de páginas web con ANGULAR (Angular 20 standalone). Crea un proyecto Angular completo y funcional: package.json, angular.json, tsconfig.json, src/index.html, src/main.ts, src/styles.css y src/app/ con componentes standalone (Nav, Footer, Hero, Features, Gallery, Stats, Testimonials, Faq, Prices, Process, Team, About, Contact), directivas reveal/count, routing con react-router-style y data.ts con el contenido. Instala dependencias con npm, levanta ng serve (puerto 4200) y abre el navegador. Usa la misma paleta/fuente/variedad anti-repetición que web_designer. Actions: create (genera el proyecto: title, topic, description, sections, folder, pages), install, dev (ng serve), build (compilar a dist/), preview (renderizar con Playwright y sacar screenshots), stop, memory. Usar SIEMPRE esta herramienta cuando el usuario pida una página web en Angular o cuando la referencia (reference_url) sea Angular; NO generar HTML plano ni React para eso.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "create, install, dev, build, preview, stop, memory"},
+                "title": {"type": "STRING", "description": "Titulo del sitio Angular"},
+                "topic": {"type": "STRING", "description": "Tema/negocio del sitio (define contenido e imagenes)"},
+                "description": {"type": "STRING", "description": "Descripcion/hero del sitio"},
+                "sections": {"type": "STRING", "description": "Contenido real: JSON o formato markdown-lite (## Titulo + bullets -)"},
+                "folder": {"type": "STRING", "description": "Carpeta donde crear el proyecto (default: Desktop/ERIS_web)"},
+                "pages": {"type": "STRING", "description": "site (multi-pagina con router) o single (una pagina)"},
+                "port": {"type": "INTEGER", "description": "Puerto del dev server (default 4200)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "vue_designer",
+        "description": "Diseñador de páginas web con VUE (Vue 3 + Vite). Crea un proyecto Vue completo y funcional: package.json, vite.config.js, index.html, src/main.js, src/App.vue (router), src/data.js, src/styles.css y src/components/sections.vue con componentes por sección (Nav, Hero, Features, Gallery, Stats, Testimonials, Faq, Prices, Process, Team, About, Contact, Footer). Instala dependencias con npm, levanta el dev server (puerto 5174) y abre el navegador. Usa la misma paleta/fuente/variedad anti-repetición que web_designer. Actions: create (genera el proyecto: title, topic, description, sections, folder, pages), install (npm install), dev (levantar Vite), build (compilar a dist/), preview (renderizar con Playwright y sacar screenshots), stop, memory. Usar SIEMPRE esta herramienta cuando el usuario pida una página web en Vue o cuando la referencia (reference_url) sea Vue; NO generar HTML plano ni React para eso.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "create, install, dev, build, preview, stop, memory"},
+                "title": {"type": "STRING", "description": "Titulo del sitio Vue"},
+                "topic": {"type": "STRING", "description": "Tema/negocio del sitio (define contenido e imagenes)"},
+                "description": {"type": "STRING", "description": "Descripcion/hero del sitio"},
+                "sections": {"type": "STRING", "description": "Contenido real: JSON o formato markdown-lite (## Titulo + bullets -)"},
+                "folder": {"type": "STRING", "description": "Carpeta donde crear el proyecto (default: Desktop/ERIS_web)"},
+                "pages": {"type": "STRING", "description": "site (multi-pagina con router) o single (una pagina)"},
+                "port": {"type": "INTEGER", "description": "Puerto del dev server (default 5174)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "next_designer",
+        "description": "Diseñador de páginas web con NEXT.JS (Next.js 15 App Router + Tailwind CSS). Crea un proyecto Next.js completo y funcional: package.json, next.config.mjs, postcss.config.mjs (Tailwind), jsconfig.json, src/app/layout.jsx (metadatos SEO), src/app/globals.css (Tailwind + tema), src/app/page.jsx y src/app/[pid]/page.jsx (rutas reales /, /servicios, /nosotros, /galeria, /contacto con generateStaticParams para SSG), src/lib/data.js (tema + contenido) y src/components/sections.jsx (componentes 'use client' con Tailwind: Nav, Hero, Features, Gallery, Stats, Testimonials, Faq, Prices, Process, Team, About, Contact, Footer). Instala dependencias con npm, levanta el dev server (puerto 3000) y puede renderizar con Playwright. Usa la misma paleta/fuente/variedad anti-repetición que web_designer. Actions: create (genera el proyecto: title, topic, description, sections, folder, pages), install (npm install), dev (levantar next dev), build (compilar a .next/), preview (renderizar con Playwright y sacar screenshots), stop, memory. Usar SIEMPRE esta herramienta cuando el usuario pida una página web en Next.js, Next, con Tailwind, SSR/SSG, SEO o producción moderna; NO generar HTML plano, React ni Vue para eso, ni usar terminal_agent con npx create-next-app.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "create, install, dev, build, preview, stop, memory"},
+                "title": {"type": "STRING", "description": "Titulo del sitio Next.js"},
+                "topic": {"type": "STRING", "description": "Tema/negocio del sitio (define contenido e imagenes)"},
+                "design_style": {"type": "STRING", "description": "Estilo forzado (editorial, minimal, brutalista, corporativo, dark, tech, dashboard, ecommerce, artesanal, portafolio, creativo, evento, documentacion, vet, lumina, natural, tierno, medico, futurista, colorido). Vence a la seleccion automatica."},
+                "description": {"type": "STRING", "description": "Descripcion/hero del sitio"},
+                "sections": {"type": "STRING", "description": "Contenido real: JSON o formato markdown-lite (## Titulo + bullets -)"},
+                "folder": {"type": "STRING", "description": "Carpeta donde crear el proyecto (default: Desktop/ERIS_web)"},
+                "pages": {"type": "STRING", "description": "site (multi-pagina con rutas reales) o single (una pagina)"},
+                "images": {"type": "INTEGER", "description": "Cantidad de imagenes de galeria (default 4)"},
+                "port": {"type": "INTEGER", "description": "Puerto del dev server (default 3000)"},
+            },
+            "required": ["action"],
+        }
+    },
 
     # ── Section 14D: Communication ──
 
@@ -558,11 +684,15 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "smart_home",
-        "description": "smart_home tool",
+        "description": "Domotica. Controla dispositivos inteligentes via Home Assistant, MQTT o modo simulacion. Acciones: status (estado de conexiones), devices (lista de dispositivos), control (name/device + state on|off, opcional brightness/temperature/volume), all_off, scene (scene_id), add_device. Config en config/smart_home_config.json.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "status, devices, control, all_off, scene, add_device"},
+                "name": {"type": "STRING", "description": "Nombre o id del dispositivo (ej: Luz de sala)"},
+                "state": {"type": "STRING", "description": "on u off"},
+                "device": {"type": "STRING", "description": "Alias de name"},
+                "scene_id": {"type": "STRING", "description": "Id o nombre de la escena a activar"},
             },
             "required": ["action"],
         }
@@ -920,6 +1050,20 @@ TOOL_DECLARATIONS = [
             "required": ["action"],
         }
     },
+    {
+        "name": "eris_guardian",
+        "description": "Guardian de ERIS: vigila la salud del codigo y del sistema. Escanea todos los archivos .py del proyecto, detecta errores de sintaxis o importacion, intenta repararlos automaticamente (con backup), monitorea CPU/RAM/GPU/disco, reinicia ERIS si se cae y mantiene un diario de reparaciones. Acciones: status (estado general del sistema + guardia), scan (escaneo completo de codigo), repair (reparar errores con backup), start (iniciar monitoreo en background), stop (detener monitoreo), journal (ver diario de reparaciones).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, scan, repair, start, stop, journal"},
+                "repair": {"type": "BOOLEAN", "description": "Intentar reparar errores detectados (default true)"},
+                "target": {"type": "STRING", "description": "Archivo .py especifico a escanear/reparar"},
+                "limit": {"type": "INTEGER", "description": "Max entradas del diario a mostrar (default 10)"},
+            },
+            "required": ["action"],
+        }
+    },
 
     # ── Section 14J: AI Features ──
 
@@ -1000,55 +1144,67 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "agi_agent",
-        "description": "agi_agent tool",
+        "description": "Delega una meta a un agente multi-paso que descompone la tarea y la ejecuta. Acciones: plan (crear plan con 'goal'), execute (ejecutar con 'plan_id' y opcional 'max_steps'), status (ver progreso con 'plan_id' o activos), cancel, history.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "plan | execute | status | cancel | history"},
+                "goal": {"type": "STRING", "description": "Meta a descomponer (para plan)"},
+                "plan_id": {"type": "STRING", "description": "ID del plan (para execute/status/cancel)"},
+                "max_steps": {"type": "INTEGER", "description": "Máximo de pasos a ejecutar (opcional)"},
             },
             "required": ["action"],
         }
     },
     {
         "name": "agi_memory",
-        "description": "agi_memory tool",
+        "description": "Memoria semántica/episódica de ERIS. Acciones: store (guardar 'text'), recall (recuperar con 'query'), consolidate (consolidar working a largo plazo), status (contadores).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "store | recall | consolidate | status"},
+                "text": {"type": "STRING", "description": "Información a recordar (para store)"},
+                "query": {"type": "STRING", "description": "Búsqueda a recuperar (para recall)"},
             },
             "required": ["action"],
         }
     },
     {
         "name": "agi_reasoning",
-        "description": "agi_reasoning tool",
+        "description": "Motor de razonamiento paso a paso. Acciones: reason (con 'question' y opcional 'context'), verify (verificar una afirmación con 'claim'), what_if (razonamiento contra-factual con 'premise' y 'question'), status.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "reason | verify | what_if | status"},
+                "question": {"type": "STRING", "description": "Pregunta a razonar (para reason/what_if)"},
+                "context": {"type": "STRING", "description": "Contexto adicional (opcional, para reason)"},
+                "claim": {"type": "STRING", "description": "Afirmación a verificar (para verify)"},
+                "premise": {"type": "STRING", "description": "Premisa del escenario (para what_if)"},
             },
             "required": ["action"],
         }
     },
     {
         "name": "agi_self_improve",
-        "description": "agi_self_improve tool",
+        "description": "Auto-mejora autónoma de ERIS. Acciones: scan (escanear logs y generar sugerencias), suggestions (listar sugerencias), applied (listar mejoras aplicadas), apply (marcar sugerencia como aplicada con 'title'), learn (guardar una 'lesson'), report (reporte de calidad y tendencia), status.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "scan | suggestions | applied | apply | learn | report | status"},
+                "title": {"type": "STRING", "description": "Título de la sugerencia a marcar (para apply)"},
+                "lesson": {"type": "STRING", "description": "Lección a aprender (para learn)"},
             },
             "required": ["action"],
         }
     },
     {
         "name": "agi_world_model",
-        "description": "agi_world_model tool",
+        "description": "Modelo del mundo: estado de ERIS y del sistema. Acciones: status (estado actual), snapshot (guardar snapshot en memoria), note (registrar una observación con 'observation').",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "status | snapshot | note"},
+                "observation": {"type": "STRING", "description": "Observación a registrar (para note)"},
             },
             "required": ["action"],
         }
@@ -1165,11 +1321,15 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "program_manager",
-        "description": "Gestiona programas: instalar, desinstalar, ejecutar, listar, buscar.",
+        "description": "Gestiona programas: instalar, desinstalar, ejecutar, listar, buscar, descargar. SIEMPRE resuelve el ID exacto de winget con search antes de instalar (ej. MySQL -> Oracle.MySQL).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "install, uninstall, run, list, search, download, verify"},
+                "name": {"type": "STRING", "description": "Nombre o ID del programa"},
+                "path": {"type": "STRING", "description": "Ruta de instalador local o carpeta destino para download"},
+                "silent": {"type": "BOOLEAN", "description": "Instalación silenciosa (default true)"},
+                "confirm": {"type": "BOOLEAN", "description": "Confirmación del usuario (obligatorio para install/uninstall)"},
             },
             "required": ["action"],
         }
@@ -1873,6 +2033,29 @@ TOOL_DECLARATIONS = [
         }
     },
     {
+        "name": "code_copilot",
+        "description": "Asistente de código IA con edición QUIRÚRGICA: genera código en TODOS los lenguajes (java, html, css, javascript, python, c#, c++, react, angular, vue, bootstrap, mysql, php, typescript, go, rust...), corrige SOLO la línea con error sin tocar el resto, agrega código en el punto correcto de un archivo existente, localiza problemas, organiza archivos en carpetas, renombra y analiza proyectos. Usala SIEMPRE para tareas de programación.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "new (generar código/proyecto), fix (corregir solo las líneas con error), add (agregar código a archivo existente), locate (encontrar problemas), analyze (analizar), structure (organizar en carpetas), organize (mover por tipo), rename (renombrar archivo), languages (listar lenguajes), knowledge (convenciones de un lenguaje)"},
+                "language": {"type": "STRING", "description": "python, javascript, typescript, html, css, java, csharp, cpp, react, angular, vue, php, mysql, go, rust, bash... (default python)"},
+                "description": {"type": "STRING", "description": "Descripción de lo que querés generar, corregir o agregar"},
+                "error": {"type": "STRING", "description": "Mensaje de error o problema a corregir (action=fix)"},
+                "file_path": {"type": "STRING", "description": "Ruta del archivo a corregir/agregar/analizar"},
+                "path": {"type": "STRING", "description": "Ruta de carpeta/proyecto para structure, organize, locate, analyze"},
+                "output_dir": {"type": "STRING", "description": "Carpeta donde guardar el código generado (action=new)"},
+                "filename": {"type": "STRING", "description": "Nombre del archivo a generar (action=new)"},
+                "new_name": {"type": "STRING", "description": "Nuevo nombre de archivo (action=rename)"},
+                "update_refs": {"type": "STRING", "description": "rename: 'true' para actualizar referencias del nombre viejo en el proyecto"},
+                "apply": {"type": "STRING", "description": "structure/organize: 'true' para aplicar los cambios; si no, solo propuesta"},
+                "line": {"type": "NUMBER", "description": "Número de línea del error (opcional, action=fix)"},
+                "issue": {"type": "STRING", "description": "Qué problema buscar (action=locate)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
         "name": "context_engine",
         "description": "context_engine tool",
         "parameters": {
@@ -2026,6 +2209,103 @@ TOOL_DECLARATIONS = [
             "type": "OBJECT",
             "properties": {
                 "action": {"type": "STRING", "description": "Action to perform"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "eris_style",
+        "description": "Perfil de estilo configurable de ERIS (config/eris_style.json): identidad, trato con el usuario, frases (saludos, despedidas, humor) y reglas de auto-suficiencia/proactividad. Úsala para ver tu estilo, cambiar cómo tratas al usuario, agregar frases o ajustar cuántos intentos haces antes de reportar.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, set_trato, set_descripcion, set_firma, add_frase, set_intentos, set_flag"},
+                "trato": {"type": "STRING", "description": "Cómo tratar al usuario (action=set_trato, ej: 'tú')"},
+                "text": {"type": "STRING", "description": "Texto/frase (add_frase, set_descripcion, set_firma)"},
+                "lista": {"type": "STRING", "description": "Lista para add_frase: frases, despedidas, reacciones"},
+                "value": {"type": "STRING", "description": "Valor (set_intentos número, set_flag true/false)"},
+                "key": {"type": "STRING", "description": "Flag para set_flag (ej: anticipar_fallos, corregir_sin_preguntar)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "daily_digest",
+        "description": "Memoria de largo plazo de ERIS: digest diario que consolida qué se hizo, qué se aprendió y qué falló cada día. Cuando el usuario pregunte '¿qué hiciste hoy?', 'resumí el día' o quiera recordar el trabajo reciente, usá esta herramienta.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "today (ver digest de hoy), recent (últimos digests), generate (regenerar el de hoy)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "camera_bus",
+        "description": "Cámaras del equipo: detecta cámaras conectadas, captura instantáneas y analiza lo que ve con visión. Acciones: info (listar cámaras), snapshot/capture (capturar imagen, opcional analyze=true con question).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "info, snapshot, capture"},
+                "index": {"type": "INTEGER", "description": "Índice de cámara (default 0)"},
+                "question": {"type": "STRING", "description": "Pregunta sobre la imagen (con analyze=true)"},
+                "analyze": {"type": "BOOLEAN", "description": "Analizar la captura con visión"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "document_tool",
+        "description": "Trabaja con documentos y archivos: info (metadatos), read (extraer texto), summary, write (crear), edit/replace, append, convert (to_txt). Usala para leer y modificar archivos de ofimática, texto y código.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "info, read, summary, write, edit, replace, append, to_txt, formats"},
+                "path": {"type": "STRING", "description": "Ruta del archivo"},
+                "max_chars": {"type": "INTEGER", "description": "Límite de caracteres a leer (default 150000)"},
+                "content": {"type": "STRING", "description": "Contenido para write/append"},
+                "replace": {"type": "STRING", "description": "Texto de reemplazo para edit/replace"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "huggingface",
+        "description": "Explora Hugging Face: busca modelos y datasets públicos por query. Acciones: search_models/models, search_datasets/datasets, top_datasets.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "search_models, models, search_datasets, datasets, top_datasets"},
+                "query": {"type": "STRING", "description": "Término de búsqueda"},
+                "limit": {"type": "INTEGER", "description": "Cantidad de resultados (1-20, default 5)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "reverse_engineering",
+        "description": "Análisis local y defensivo de archivos/ejecutables: hashes (MD5/SHA1/SHA256), tipo, cadenas legibles y filtros. Uso defensivo (verificar archivos sospechosos). Acciones: file_info/info/hashes, strings/cadenas.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "file_info, info, hashes, strings"},
+                "path": {"type": "STRING", "description": "Ruta del archivo o ejecutable"},
+                "min_length": {"type": "INTEGER", "description": "Longitud mínima de cadena (default 4)"},
+                "pattern": {"type": "STRING", "description": "Filtro regex sobre cadenas"},
+                "count": {"type": "INTEGER", "description": "Máximo de cadenas a mostrar (default 60)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "self_evolution",
+        "description": "Estado evolutivo de ERIS: reflexiones, lecciones, metas e hitos. Acciones: status (ver evolución), reflect (reflexionar), lesson (guardar lección), goal (proponer meta).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, reflect, lesson, goal"},
+                "text": {"type": "STRING", "description": "Texto de la lección o meta"},
+                "focus": {"type": "STRING", "description": "Tema de la reflexión"},
             },
             "required": ["action"],
         }
@@ -2226,13 +2506,12 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "pc_control",
-        "description": "Controla el PC: apagar, reiniciar, bloquear, suspender, cerrar sesion. Acciones: shutdown (apagar), restart (reiniciar), lock (bloquear), sleep (suspender), logout (cerrar sesion), hibernate (hibernar). Todas confirman antes de ejecutar.",
+        "description": "Controla el PC en acciones SEGURAS que no tocan la energía: volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, screenshot, lock, status. IMPORTANTE: apagar, suspender, reiniciar, hibernar y cerrar sesion estan DESHABILITADOS por seguridad y devuelven error.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "shutdown, restart, lock, sleep, logout, hibernate"},
-                "force": {"type": "BOOLEAN", "description": "Forzar cierre de aplicaciones (default false)"},
-                "delay": {"type": "INTEGER", "description": "Segundos de espera antes de ejecutar (default 30)"},
+                "action": {"type": "STRING", "description": "volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, screenshot, lock, status"},
+                "value": {"type": "STRING", "description": "Valor opcional (ej: nivel de volumen)"},
             },
             "required": ["action"],
         }
@@ -2607,16 +2886,20 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "translator",
-        "description": "Traduce texto entre idiomas via web scraping. Acciones: translate (traducir texto), detect (detectar idioma), languages (listar idiomas disponibles).",
+        "description": "Traduce texto o páginas web completas entre idiomas (default español). Acciones: translate (traducir texto), translate_web (traducir una página web por URL), detect (detectar idioma), languages (listar idiomas), batch (múltiples textos).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "translate, detect, languages"},
-                "text": {"type": "STRING", "description": "Texto a traducir"},
-                "target_lang": {"type": "STRING", "description": "Idioma destino. Ej: 'es', 'en', 'fr', 'pt'"},
-                "source_lang": {"type": "STRING", "description": "Idioma origen (opcional, default auto-detect)"},
+                "action": {"type": "STRING", "description": "translate, translate_web, detect, languages, batch"},
+                "text": {"type": "STRING", "description": "Texto a traducir (action=translate)"},
+                "url": {"type": "STRING", "description": "URL de la página web a traducir (action=translate_web)"},
+                "target": {"type": "STRING", "description": "Idioma destino. Ej: 'es', 'en', 'fr', 'pt' (default es)"},
+                "source": {"type": "STRING", "description": "Idioma origen (opcional, default auto-detect)"},
+                "mode": {"type": "STRING", "description": "translate_web: 'text' (default, devuelve traducción) o 'file' (guarda la traducción completa en disco)"},
+                "max_chars": {"type": "NUMBER", "description": "Máximo de caracteres a devolver en mode=text (default 6000)"},
+                "save": {"type": "STRING", "description": "Ruta donde guardar la traducción completa (opcional)"},
             },
-            "required": ["action", "text"],
+            "required": ["action"],
         }
     },
     {
@@ -2846,13 +3129,19 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "episodic_log",
-        "description": "episodic_log tool",
+        "description": "Registra o consulta la memoria episodica de ERIS (experiencias/resumenes de sesiones). Acciones: add (event, category, context, importance), recent (limit), search (query).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "Action to perform"},
+                "action": {"type": "STRING", "description": "Accion: 'add' para registrar, 'recent' para ver las ultimas, 'search' para buscar"},
+                "event": {"type": "STRING", "description": "Descripcion breve del evento (requerido para action=add)"},
+                "category": {"type": "STRING", "description": "Categoria del evento (ej: training, game, conversation, system)"},
+                "context": {"type": "STRING", "description": "Contexto o detalles adicionales del evento"},
+                "importance": {"type": "NUMBER", "description": "Importancia 0.0-1.0 (default 0.5)"},
+                "limit": {"type": "INTEGER", "description": "Cantidad de eventos a listar (default 10)"},
+                "query": {"type": "STRING", "description": "Texto a buscar en los eventos (para action=search)"}
             },
-            "required": ["action"],
+            "required": ["action"]
         }
     },
     {
