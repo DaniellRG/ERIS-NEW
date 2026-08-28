@@ -553,6 +553,103 @@ class SelfImprovementSystem:
         
         return "\n".join(lines)
 
+# ── Session-Level Evaluation (post-sesión) ───────────────────────────────────
+
+def evaluate_session(metrics: dict = None) -> dict:
+    """Evalúa el desempeño global de la sesión al cerrarla y lo registra.
+
+    Reúne señales de la sesión (mensajes, tareas, handoffs, nodos) y las
+    combina en un overall_score heurístico. Guarda la evaluación en
+    memory/self_evaluation.json (entrada type=session) y registra la
+    sesión como experiencia de evolución.
+    """
+    day = time.strftime("%Y-%m-%d")
+    ctx = metrics or {}
+    signals = {}
+
+    try:
+        from actions.eris_db import convo_recent, episodic_recent
+        rows = convo_recent(500) or []
+        signals["messages"] = sum(1 for r in rows if str(r.get("time", "")).startswith(day))
+    except Exception:
+        signals["messages"] = ctx.get("messages", 0)
+
+    try:
+        tasks = json.loads((_BASE / "data" / "completed_tasks.json").read_text("utf-8"))
+        items = list(tasks.values()) if isinstance(tasks, dict) else tasks
+        signals["tasks"] = sum(1 for t in items if str(t.get("time", t.get("timestamp", ""))).startswith(day))
+    except Exception:
+        signals["tasks"] = ctx.get("tasks", 0)
+
+    try:
+        reg = json.loads((_BASE / "core" / "agent_registry.json").read_text("utf-8"))
+        signals["handoffs"] = int(reg.get("handoff_count", 0))
+    except Exception:
+        signals["handoffs"] = ctx.get("handoffs", 0)
+
+    try:
+        from core.neuro_spheres import get_status
+        signals["neuro_nodes"] = int(get_status().get("total_nodes", 0))
+    except Exception:
+        signals["neuro_nodes"] = ctx.get("neuro_nodes", 0)
+
+    # Score heurístico 0..1
+    score = 0.5
+    notes = []
+    if signals.get("messages", 0) >= 3:
+        score += 0.1
+        notes.append("sesión activa")
+    if signals.get("tasks", 0) >= 3:
+        score += 0.1
+        notes.append("buen volumen de tareas")
+    if signals.get("handoffs", 0) > 0:
+        score += 0.1
+        notes.append("agentes utilizados")
+    if signals.get("neuro_nodes", 0) >= 90:
+        score += 0.1
+        notes.append("memoria creciendo")
+    score = round(min(1.0, score), 2)
+    trend = ""
+    try:
+        trend = SelfEvaluator().get_trend()
+    except Exception:
+        pass
+
+    entry = {
+        "id": f"session_{int(time.time() * 1000)}",
+        "type": "session",
+        "day": day,
+        "signals": signals,
+        "notes": notes,
+        "overall_score": score,
+        "feedback": notes or ["sin señales suficientes"],
+        "timestamp": time.time(),
+    }
+    try:
+        evals = _load_json(_EVALUATION_FILE, [])
+        evals.append(entry)
+        _save_json(_EVALUATION_FILE, evals)
+    except Exception:
+        pass
+
+    try:
+        from actions.self_evolution import note_experience
+        note_experience(
+            f"Sesión del {day}: {signals.get('messages', 0)} mensajes, "
+            f"{signals.get('tasks', 0)} tareas, {signals.get('handoffs', 0)} handoffs. "
+            f"Score {score:.0%}."
+        )
+    except Exception:
+        pass
+
+    entry["trend"] = trend
+    entry["report"] = (
+        f"[Evaluación de sesión {day}] score {score:.0%} "
+        f"({'/'.join(notes) if notes else 'sin datos'}) · tendencia {trend}"
+    )
+    return entry
+
+
 # ── Feedback Loop (Ciclo Agéntico Real) ──────────────────────────────────────
 
 class FeedbackLoop:

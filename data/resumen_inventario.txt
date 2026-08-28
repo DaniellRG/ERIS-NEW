@@ -1,0 +1,4 @@
+Resumen de Inventario:
+
+1) Archivos en D:\Eris_Source\actions: 256
+2) Líneas en D:\Eris_Source\main.py: 2065

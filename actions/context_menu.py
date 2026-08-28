@@ -94,3 +94,14 @@ def status(parameters: dict = None, player=None) -> str:
     except Exception:
         pass
     return "Menu contextual no instalado. Usa action=install."
+
+
+def context_menu(parameters: dict = None, player=None) -> str:
+    """Dispatcher: install, uninstall, status del menu contextual de Windows."""
+    params = parameters or {}
+    action = str(params.get("action", "status")).lower()
+    if action == "install":
+        return install(params, player)
+    if action == "uninstall":
+        return uninstall(params, player)
+    return status(params, player)

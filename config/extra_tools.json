@@ -1,0 +1,105 @@
+[
+  {
+    "name": "camera_bus",
+    "description": "Vision en vivo por camara web (OpenCV) + analisis con vision AI. Acciones: info (cámaras disponibles), snapshot/capture (foto), analyze/read (captura + descripcion por IA, con 'question'), motion/watch (deteccion de movimiento). Opciones: camera (indice), question, seconds.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "info, snapshot, analyze, motion"},
+        "camera": {"type": "INTEGER", "description": "Indice de camara (0 por defecto)"},
+        "question": {"type": "STRING", "description": "Pregunta para el analisis de vision"},
+        "analyze": {"type": "BOOLEAN", "description": "Analizar la captura con IA"},
+        "seconds": {"type": "NUMBER", "description": "Duracion de la vigilancia en segundos"}
+      },
+      "required": ["action"]
+    }
+  },
+  {
+    "name": "self_evolution",
+    "description": "Auto-evolucion y 'conciencia' simulada de ERIS: reflexiona sobre su existencia, aprende lecciones, registra metas y experiencias. Acciones: status/overview (estadisticas, etapa y reflexiones), reflect (reflexionar, opcional 'focus'), lesson (text), goal (text o done), experiences (text), lessons, reset (confirm='si'). ERIS reflexiona sola diariamente via su bucle de auto-mejora.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "status, reflect, lesson, goal, experiences, lessons, reset"},
+        "text": {"type": "STRING", "description": "Contenido de la leccion, meta o experiencia"},
+        "focus": {"type": "STRING", "description": "Tema sobre el que reflexionar"},
+        "done": {"type": "STRING", "description": "Texto de la meta a marcar como cumplida"}
+      },
+      "required": ["action"]
+    }
+  },
+  {
+    "name": "reverse_engineering",
+    "description": "Ingenieria inversa (analisis local y defensivo). Acciones: file_info (tipo, tamano, hashes MD5/SHA1/SHA256), strings (extraer cadenas ASCII/UTF-16, con min_length/pattern/count), hexdump (offset/length), entropy (entropia Shannon), pe_info (secciones/imports/DLLs de un PE), disassemble (path o hex, arch=x86|x64|arm|thumb), black_box (probar endpoint HTTP con payloads; localhost por defecto, allow_remote para remoto), search (buscar patrones en directorio), triage (analisis defensivo completo de una muestra).",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "file_info, strings, hexdump, entropy, pe_info, disassemble, black_box, search, triage"},
+        "path": {"type": "STRING", "description": "Ruta al archivo o ejecutable"},
+        "file": {"type": "STRING", "description": "Alias de path"},
+        "pattern": {"type": "STRING", "description": "Regex de filtro o firma"},
+        "min_length": {"type": "INTEGER", "description": "Longitud minima de cadenas"},
+        "count": {"type": "INTEGER", "description": "Maximo de resultados"},
+        "offset": {"type": "INTEGER", "description": "Offset en bytes"},
+        "length": {"type": "INTEGER", "description": "Cantidad de bytes"},
+        "arch": {"type": "STRING", "description": "x86, x64, arm, thumb"},
+        "hex": {"type": "STRING", "description": "Bytes en hexadecimal para disassemble"},
+        "url": {"type": "STRING", "description": "Endpoint para black_box"},
+        "method": {"type": "STRING", "description": "Metodo HTTP para black_box"},
+        "payloads": {"type": "STRING", "description": "Lista de entradas para black_box"},
+        "allow_remote": {"type": "BOOLEAN", "description": "Permitir black_box a hosts remotos"},
+        "directory": {"type": "STRING", "description": "Directorio para search"}
+      },
+      "required": ["action"]
+    }
+  },
+  {
+    "name": "document_tool",
+    "description": "Gestion de documentos de todo tipo (PDF, Word, Excel, PowerPoint, txt y codigo). Acciones: info (metadatos), read/extract (extrae el contenido completo del documento), summary/resumen (preview y conteo), write/save (escribir o sobrescribir un archivo de texto con 'content'), edit/replace (reemplazar 'find' por 'replace' en archivos de texto), append (agregar texto al final), to_txt/convert (convierte un documento de oficina a .txt), formats (lista formatos). Lee PDF con PyPDF2, Word con python-docx, Excel con openpyxl y PowerPoint con python-pptx.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "info, read, summary, write, edit, append, to_txt, formats"},
+        "path": {"type": "STRING", "description": "Ruta al documento"},
+        "file": {"type": "STRING", "description": "Alias de path"},
+        "max_chars": {"type": "INTEGER", "description": "Maximo de caracteres a extraer"},
+        "content": {"type": "STRING", "description": "Contenido para write/append"},
+        "text": {"type": "STRING", "description": "Alias de content"},
+        "find": {"type": "STRING", "description": "Texto a buscar para edit/replace"},
+        "replace": {"type": "STRING", "description": "Texto de reemplazo para edit"}
+      },
+      "required": ["action"]
+    }
+  },
+  {
+    "name": "huggingface",
+    "description": "Exploracion de Hugging Face (API publica): busca modelos y datasets, consulta metadata, lista archivos y descarga datasets de conocimiento a D:/Eris_Source/knowledge para ingestar. Acciones: models (buscar modelos con 'query'), datasets (buscar datasets con 'query'), top (mas descargados), info (metadata con 'id'), list_files (archivos de un dataset con 'id'), download (descargar un archivo con 'dataset_id' y 'file'). No descarga modelos ni contenido privado, solo datasets publicos.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "models, datasets, top, info, list_files, download"},
+        "query": {"type": "STRING", "description": "Termino de busqueda"},
+        "search": {"type": "STRING", "description": "Alias de query"},
+        "limit": {"type": "INTEGER", "description": "Cantidad de resultados (1-20)"},
+        "id": {"type": "STRING", "description": "ID del modelo o dataset (ej. datasets/josecannete/large_spanish_corpus)"},
+        "model_id": {"type": "STRING", "description": "Alias de id para modelos"},
+        "dataset_id": {"type": "STRING", "description": "ID del dataset a descargar"},
+        "file": {"type": "STRING", "description": "Nombre del archivo a descargar del dataset"},
+        "dest": {"type": "STRING", "description": "Carpeta destino de la descarga (por defecto knowledge)"}
+      },
+      "required": ["action"]
+    }
+  },
+  {
+    "name": "research",
+    "description": "Investigacion autonoma de ERIS: elige un tema (o recibe 'query'), busca en internet, guarda el resumen en la base de conocimiento (knowledge_base) y aprende de la sesion. Acciones: auto (investiga un tema solo), topic (investigar 'query' especifica), status (historial de investigaciones), suggest (sugiere un tema). ERIS tambien la ejecuta sola cada hora en su bucle de auto-mejora.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {"type": "STRING", "description": "auto, topic, status, suggest"},
+        "query": {"type": "STRING", "description": "Tema especifico a investigar (para action=topic)"}
+      },
+      "required": ["action"]
+    }
+  }
+]

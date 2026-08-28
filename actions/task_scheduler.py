@@ -136,6 +136,14 @@ def _execute_task(task_id: str) -> None:
         "executed_at": datetime.now().isoformat(),
         "result": "executed",
     }
+    cmd = task.get("command", "")
+    if cmd:
+        try:
+            import subprocess
+            proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=180)
+            entry["result"] = (proc.stdout or proc.stderr or "").strip()[:300] or f"exit {proc.returncode}"
+        except Exception as e:
+            entry["result"] = f"error: {e}"
     data["log"].append(entry)
     if len(data["log"]) > 200:
         data["log"] = data["log"][-200:]

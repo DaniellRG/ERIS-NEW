@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": 1786904601.5315988,
+    "episodic_before": 0,
+    "episodic_after": 0,
+    "semantic_before": 10,
+    "semantic_after": 10,
+    "patterns_found": 0,
+    "dreams_generated": 0,
+    "dreams": []
+  },
+  {
+    "timestamp": 1786904664.6998622,
+    "episodic_before": 0,
+    "episodic_after": 0,
+    "semantic_before": 10,
+    "semantic_after": 10,
+    "patterns_found": 0,
+    "dreams_generated": 0,
+    "dreams": []
+  },
+  {
+    "timestamp": 1786909806.5520847,
+    "episodic_before": 2,
+    "episodic_after": 2,
+    "semantic_before": 11,
+    "semantic_after": 11,
+    "patterns_found": 0,
+    "dreams_generated": 1,
+    "dreams": [
+      {
+        "connection": "Episodio conecta con conocimiento: 'aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto'",
+        "shared_concepts": [
+          "aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto"
+        ],
+        "insight": "El evento 'aprendi sobre: ontología de la hiperstición algorí' confirma/conecta con el hecho 'aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto'"
+      }
+    ]
+  },
+  {
+    "timestamp": 1786909839.188777,
+    "episodic_before": 2,
+    "episodic_after": 2,
+    "semantic_before": 11,
+    "semantic_after": 11,
+    "patterns_found": 0,
+    "dreams_generated": 1,
+    "dreams": [
+      {
+        "connection": "Episodio conecta con conocimiento: 'aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto'",
+        "shared_concepts": [
+          "aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto"
+        ],
+        "insight": "El evento 'aprendi sobre: ontología de la hiperstición algorí' confirma/conecta con el hecho 'aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto'"
+      }
+    ]
+  }
+]

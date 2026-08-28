@@ -1,0 +1,602 @@
+[
+  {
+    "timestamp": "2026-08-23T15:18:34.321159",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T15:28:44.157653",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T15:38:50.097547",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T15:48:50.097802",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T15:58:48.588971",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:09:02.694787",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:19:00.915075",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:29:00.940377",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:39:14.222223",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:49:16.358613",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T16:59:15.910257",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:09:28.296178",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:19:29.982876",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:29:30.011441",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:39:34.633204",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:49:34.781134",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T17:59:34.850912",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:09:39.778628",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:19:39.709922",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:29:39.951374",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:39:57.394550",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:50:00.703902",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T18:59:58.589971",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T19:10:12.996063",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T19:20:12.050698",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T19:30:12.339806",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T19:40:26.000759",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-23T19:50:26.562420",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T09:36:01.863654",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T09:46:04.638605",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T09:56:27.892464",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:06:59.446302",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:17:59.368668",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:27:59.389339",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:37:59.447615",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:49:08.623088",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T10:59:08.574603",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T11:09:11.372953",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T11:30:17.139592",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T11:41:43.623412",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T11:52:25.714977",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:03:13.840891",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:13:42.634847",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:23:45.736387",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:33:45.702080",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 885 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:44:24.126257",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:54:27.246604",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:04:27.291135",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:14:27.339332",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:24:38.193305",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:34:38.220100",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:44:38.257177",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:55:19.770749",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:05:19.840581",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:15:19.852206",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:47:27.110238",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:57:27.148968",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 886 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:46:37.160026",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:57:01.330234",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:29:06.372549",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:39:40.930669",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:50:09.413204",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:00:24.471819",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:10:24.538546",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:20:34.047424",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:30:42.187331",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:41:30.598003",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 888 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:51:45.900054",
+    "action": "self_improve",
+    "details": "Analisis: 176 archivos, 891 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:35:53.007002",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 891 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:46:16.866023",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 891 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:56:16.934509",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 891 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:06:16.855692",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 891 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:19:27.622300",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 893 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:32:20.597338",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 893 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:42:20.533357",
+    "action": "self_improve",
+    "details": "Analisis: 177 archivos, 893 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:55:23.421880",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:05:23.550215",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:15:23.613765",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:26:16.877650",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:36:16.911330",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:46:16.943176",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:56:16.994911",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:06:50.436082",
+    "action": "self_improve",
+    "details": "Analisis: 178 archivos, 907 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:17:39.444663",
+    "action": "self_improve",
+    "details": "Analisis: 179 archivos, 922 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:28:06.133422",
+    "action": "self_improve",
+    "details": "Analisis: 179 archivos, 922 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:38:18.011021",
+    "action": "self_improve",
+    "details": "Analisis: 179 archivos, 927 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:48:46.909194",
+    "action": "self_improve",
+    "details": "Analisis: 179 archivos, 930 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:59:25.451307",
+    "action": "self_improve",
+    "details": "Analisis: 180 archivos, 948 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T12:10:01.821426",
+    "action": "self_improve",
+    "details": "Analisis: 180 archivos, 948 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:44:06.260213",
+    "action": "self_improve",
+    "details": "Analisis: 180 archivos, 951 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:54:13.928638",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 972 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:05:02.917082",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 972 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:15:21.342541",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 972 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:26:10.080908",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 973 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:36:39.524943",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 973 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:47:00.751533",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 973 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:57:03.034285",
+    "action": "self_improve",
+    "details": "Analisis: 181 archivos, 973 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:07:03.115983",
+    "action": "self_improve",
+    "details": "Analisis: 182 archivos, 991 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:17:04.467503",
+    "action": "self_improve",
+    "details": "Analisis: 182 archivos, 991 issues",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:28:08.252859",
+    "action": "self_improve",
+    "details": "Analisis: 183 archivos, 1000 issues",
+    "success": true
+  }
+]

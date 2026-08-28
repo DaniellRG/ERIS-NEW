@@ -1,0 +1,172 @@
+{
+  "facts": [
+    "Mi perro se llama Bruno",
+    "A la PC de Daniel le encanta el mate"
+  ],
+  "chats": {
+    "owner": {
+      "messages": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Â¿QuÃ© hay en pantalla?"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Hola! Pues ahora mismo estamos en nuestra conversación. Veo que me preguntaste qué hay en pantalla, y justo debajo tienes el campo para escribirme lo que quieras. ¡Soy todo oídos (bueno, toda pantalla)! ¿En qué andas?"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Â¿QuÃ© hay en pantalla?"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Como te decía, estamos en nuestra charla. Veo el historial de nuestro chat, el campo de texto para que escribas y el botón de enviar. Básicamente, ¡todo listo para que sigamos charlando! ¿Qué tienes en mente?"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Â¿QuÃ© hay en pantalla?"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Qué insistente! Jajaja. Pues te confirmo: estoy aquí contigo en la pantalla de chat. Veo mi nombre, un par de iconos, el historial de lo que hemos dicho, el campo para que escribas y el botón de enviar. ¡No hay misterios! ¿Necesitás que haga algo más o solo querías chequear que sigo acá?"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Â¿QuÃ© hay en pantalla?"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Vale, vale! Ya veo que quieres ir al detalle técnico. \n\nAhora mismo en la pantalla tengo nuestro chat: aparece lo que me acabas de preguntar, el campo de texto que dice \"Escribí un mensaje...\", el icono del micrófono, el botón de \"Enviar\" y, arriba, mi nombre (ERIS), un icono de ojo, un interruptor que dice \"OFF\" y los controles para minimizar o cerrar la ventana. \n\n¿Contento ahora, o quieres que te lea algo más? ;)"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Â¿QuÃ© hay en pantalla?"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Ah, perdona! Estaba mirando la pantalla de mi chat, pero me he ido a la página principal de Chrome. \n\nAhora mismo estoy viendo el buscador de Google, con accesos directos a Facebook, YouTube, Instagram y Wikipedia. También hay una noticia abierta sobre el canciller hablando con China y, arriba del todo, veo que estás logueado con tu cuenta de Google.\n\n¿Buscabas algo en particular o solo querías que te pusiera al día? ;)"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Abre"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¿Abrir qué? Necesito que me digas qué quieres que abra. ¡No me dejes con la intriga!"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "abre Youtube"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Listo! Ya tienes YouTube en pantalla. ¿Qué vamos a ver hoy? Si quieres buscar algo específico, solo dímelo. ;)"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Saluda"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Hola, hola! 👋 Ya estoy aquí en YouTube. ¿Qué quieres que busquemos para alegrarte el día? ¿Música, algún video curioso o prefieres que te recomiende algo? ¡Tú dirás!"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "saluda brevemente"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Hola! ¿Qué tal? ¿En qué te ayudo hoy?"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "di buenos dias"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "¡Buenos días! ☀️ ¿Cómo amaneciste? ¿Qué se te ofrece hoy?"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

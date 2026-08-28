@@ -3,11 +3,18 @@ import json
 from core.logging_setup import API_CONFIG_PATH
 
 LIVE_MODEL          = "models/gemini-3.1-flash-live-preview"
+
+# Modelos alternativos para fallback cuando el primario falla (error 1008)
+LIVE_MODEL_FALLBACKS = [
+    "models/gemini-2.5-flash-native-audio-preview-12-2025",
+    "models/gemini-2.5-flash-native-audio-latest",
+]
+_live_model_index = 0  # índice del modelo actual en uso
 CHANNELS            = 1
 SEND_SAMPLE_RATE    = 16000
 RECEIVE_SAMPLE_RATE = 24000
-CHUNK_SIZE          = 256      # 16ms chunks — mic input (keep small for low latency)
-PLAY_CHUNK_SIZE     = 480      # 20ms chunks — playback (smaller = lower latency)
+CHUNK_SIZE          = 128      # 8ms chunks — mic input (keep small for low latency)
+PLAY_CHUNK_SIZE     = 240      # 10ms chunks — playback (smaller = lower latency)
 
 _cached_api_key: str | None = None
 
@@ -315,8 +322,10 @@ def resolve_waveout() -> int | None:
     scored = []
     for d in devs:
         name = d["name"].lower()
+        # Skip bad devices UNLESS the user explicitly selected them in config
         if any(b in name for b in _WAVEOUT_BAD):
-            continue
+            if not (preferred and preferred in name):
+                continue
         s = 4
         if any(g in name for g in _WAVEOUT_GOOD):
             s += 3

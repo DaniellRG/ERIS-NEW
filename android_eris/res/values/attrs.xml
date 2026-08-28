@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="erisBgDeep" format="color"/>
+    <attr name="erisBgDark" format="color"/>
+    <attr name="erisCard" format="color"/>
+    <attr name="erisLine" format="color"/>
+    <attr name="erisTextPrimary" format="color"/>
+    <attr name="erisTextSecondary" format="color"/>
+    <attr name="erisAccent" format="color"/>
+    <attr name="erisAccentDark" format="color"/>
+    <attr name="erisBubbleEris" format="color"/>
+    <attr name="erisBubbleSystem" format="color"/>
+    <attr name="erisHeaderFrom" format="color"/>
+    <attr name="erisHeaderTo" format="color"/>
+</resources>

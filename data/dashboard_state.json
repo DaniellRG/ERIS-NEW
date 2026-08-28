@@ -1,6 +1,6 @@
 {
-  "server_running": false,
-  "port": 8888,
+  "server_running": true,
+  "port": 8892,
   "visits": 0,
   "chat_history": [
     {
@@ -34,6 +34,14 @@
     {
       "user": "WF",
       "timestamp": "2026-07-26T12:07:35.279654"
+    },
+    {
+      "user": "Decime la hora actual y el estado del sistema.",
+      "timestamp": "2026-08-15T20:57:31.310585"
+    },
+    {
+      "user": "Decime la hora actual y el estado del sistema.",
+      "timestamp": "2026-08-15T21:07:00.096682"
     }
   ]
 }

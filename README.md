@@ -1,37 +1,145 @@
-# ERIS AI -
+﻿# ERIS AI — Asistente Autónomo
 
-Un poderoso asistente virtual avanzado para escritorio inspirado en la IA de Marvel. Este proyecto cuenta con integracion profunda en Windows, automatizacion cognitiva, control de entorno y una interfaz Glassmorphism holografica interactiva.
+Asistente virtual de escritorio con autonomía total, integración profunda en Windows, inteligencia emocional, NeuroSpheres y 448 tools.
 
-## Caracteristicas Principales
+## Arquitectura
 
-- **Interfaz Holografica:** Orbe reactivo y esquema de color inspirado en ERIS (Era de Ultron) con tema dorado y animaciones de procesamiento dinamicas.
-- **Comandos de Voz y Atajos Inteligentes:** Puedes llamarlo en cualquier momento, incluso si la ventana esta minimizada, usando la tecla global `Insert` para activar el microfono inmediatamente de manera nativa.
-- **Control Contextual del Entorno:** Control autonomo del volumen, brillo, energia y Focus Assist basado en tus habitos y la ventana activa en pantalla.
-- **Programacion Autonoma en Sandbox:** ERIS puede escribirse sus propios scripts de habilidades (`auto_programmer`), compilarlos en frio y ejecutarlos con un timeout seguro en un entorno de pruebas, para inyectar su propio codigo en tiempo real si tiene exito.
-- **Navegacion Web (YouTube):** Capacidad nativa de buscar musica y videos invisibles y reproducirlos automaticamente a traves del navegador web.
-- **Organizador y Gestor de Archivos:** Abre, visualiza y edita documentos, sumado al analisis de archivos con clasificacion inteligente y eliminacion de duplicados exactos usando sumas `MD5`.
-- **Comunicaciones Unificadas:** Envia informacion centralizada usando correos, Telegram, Discord y WhatsApp desde una sola interfaz base.
+```
+Eris_Source/
+├── main.py              # Entry point GUI (PyQt6)
+├── eris_cli.py          # CLI terminal (estilo opencode)
+├── ui.py                # UI principal (2908 líneas)
+├── config/
+│   └── api_keys.json    # API keys, modelos, configuración
+├── core/
+│   ├── tool_registry.py         # 448 tools registradas
+│   ├── tool_declarations.py     # 442 declarations para LLM
+│   ├── tool_dispatcher.py       # Ejecutor de tools
+│   ├── action_imports.py        # Imports de 295 action modules
+│   ├── gemini_text_chat.py      # Chat dual Ollama/Gemini
+│   ├── neuro_spheres.py         # Cerebro visual (91+ nodos)
+│   ├── emotional_state.py       # Sistema emocional
+│   ├── neural_bridge.py         # Puente neural
+│   ├── world_simulation.py      # Simulación del mundo
+│   ├── semantic_memory.py       # Memoria semántica
+│   ├── rag_pipeline.py          # RAG (Retrieval Augmented Generation)
+│   ├── compaction.py            # Compresión de contexto
+│   ├── context_window_optimizer.py
+│   ├── autonomous_learner.py    # Auto-aprendizaje
+│   ├── idle_learning_loop.py    # Aprendizaje en idle
+│   ├── prompt.txt               # System prompt de Eris
+│   └── ...
+├── actions/             # 295 módulos de acciones
+├── agents/              # 9 agentes especializados
+├── skills/              # 39 skills instaladas (21 builtin + 18 user_created)
+├── memory/              # Estado de memoria y NeuroSpheres
+├── data/
+│   ├── knowledge/       # 62 archivos .md de conocimiento
+│   ├── session_analytics.json
+│   ├── search_history.json
+│   └── ...
+└── test_all.py          # 56 tests (0 fallos)
+```
 
-## Tecnologias
+## Lanzamiento
 
-- **Python 3.12**
-- **PyQt6** (Para la interfaz holografica dinamica y el QWebEngineView)
-- **LLMs** (Soporte integrado para Gemini y OpenRouter)
-- Integraciones de SO: `pycaw`, `pygetwindow`, `psutil`, `WMI`, `winreg` y llamadas directas al Win32 Kernel (`ctypes`) para el atajo global inteligente.
+### GUI (recomendado)
+```cmd
+cd D:\Eris_Source
+.\.venv\Scripts\pythonw.exe main.py
+```
 
-## Implementacion y Parches Arrelgad0s
+### CLI (desde CMD)
+```cmd
+eris
+```
 
-- **Ejecutable standalone (EXE implementad0):** Ahora puedes descargar directamente el archivo `ERIS.exe` generado con PyInstaller. No necesitas tener Python instalado ni crear un entorno virtual. El ejecutable incluye todas las dependencias y la interfaz holografica.
-- **Parches criticos resueltos:**
-  - Solucionado el error `ModuleNotFoundError: No module named '_socket'` durante el empaquetado, asegurando que el proceso hijo de PyInstaller encuentre correctamente los modulos nativos de Python.
-  - Mejorada la deteccion de rutas de DLLs en Windows para evitar conflictos con entornos virtuales corruptos.
-  - Añadido soporte para variables de entorno que fuerzan la carga de modulos nativos (`PYINSTALLER_ISOLATED_HOOKS=0` como alternativa).
-  - El script de instalacion (`Instalar_ERIS.bat`) ahora recrea el `.venv` desde cero si detecta inconsistencias, evitando errores de rutas absolutas.
-- **Compilacion automatizada:** Se incluye el comando exacto de PyInstaller que genera el EXE con todos los `--collect-all` necesarios y la inclusion de recursos (`assets`, `config`, `memory`). El ejecutable resultante es portable y funciona en Windows 10 y 11.
+### Tests
+```cmd
+cd D:\Eris_Source
+.\.venv\Scripts\python.exe test_all.py
+```
 
-## Instalacion y Uso
+## Tools (442)
 
-1. Instala [Python 3.12](https://www.python.org/downloads/) asegurandote de marcar "Add Python to PATH" (solo si deseas modificar el codigo fuente).
-2. Clona este repositorio en tu escritorio:
-   ```bash
-   git clone https://github.com/tu-usuario/ERIS-AI.git
+Las 448 tools están perfectamente sincronizadas entre `tool_declarations.py` y `tool_registry.py`. Categorías principales:
+
+| Categoría | Ejemplos |
+|-----------|----------|
+| **Archivos** | read, write, edit, glob, grep, file_organizer |
+| **Terminal** | shell, shell_elevated, shell_session |
+| **Web** | web_search, web_fetch, web_scrape, browser_control |
+| **Memoria** | memory_read, memory_write, memory_search, memory_consolidation |
+| **NeuroSpheres** | neuro_spheres (add, connect, strengthen, query, learn) |
+| **Código** | ast_analyze, ast_edit, code_review, project_builder |
+| **Sistema** | system_monitor, computer_control, process_manager |
+| **Comunicación** | gmail_control, telegram, whatsapp, discord |
+| **Multimedia** | image_generation, tts, speech_to_text, screen_vision |
+| **Autonomía** | self_evolution, self_edit, autonomous_learner |
+| **Emociones** | emotional_state, neural_bridge, world_simulation |
+| **IDE** | ide_integration (detecta VS Code, PyCharm, etc.) |
+
+## NeuroSpheres (91+ nodos)
+
+Cerebro visual que crece con cada interacción. 11 esferas:
+
+- **aprendizaje** — Lo que Eris aprende de cada sesión
+- **memoria** — Conexiones entre aprendizajes
+- **emociones** — Registros emocionales
+- **habilidad** — Nuevas capacidades
+- **investigacion** — Temas investigados
+- **codigo** — Código analizado/revisado
+- **error/bug/solucion** — Errores encontrados y solucionados
+- **diagnostico** — Análisis completos
+
+### Auto-aprendizaje
+```python
+from core.neuro_spheres import learn_from_sessions
+result = learn_from_sessions()  # Analiza sesiones reales, crea nodos automáticamente
+```
+
+## Agentes (9)
+
+| Agente | Función |
+|--------|---------|
+| `dev_agent` | Desarrollo de software |
+| `media_agent` | Procesamiento multimedia |
+| `productivity_agent` | Productividad y organización |
+| `search_agent` | Búsqueda e investigación |
+| `security_agent` | Seguridad del sistema |
+| `system_agent` | Control del sistema |
+| `vision_agent` | Análisis de imágenes/pantalla |
+| `studies_agent` | Estudios/aprendizaje: explica, resume, planes, quizzes |
+| `opencode_bridge` | Bridge a opencode |
+
+## Skills (33)
+
+Módulos especializados: code_review, deep_research, dev_flow, file_forensics, network_intel, obsidian_vault, self_evolution, voice_assistant, y más.
+
+## Modelo de IA
+
+- **Default**: Ollama (local, sin rate limits) — `qwen3:8b`
+- **Fallback**: Gemini API (cloud)
+- **Fish Audio TTS**: Voz personalizada
+- **Config**: `config/api_keys.json`
+
+## Requisitos
+
+- Python 3.14
+- PyQt6
+- Ollama (opcional, para modo local)
+- API key de Gemini (para modo cloud)
+- API key de Fish Audio (para voz)
+
+## Estado Actual
+
+- **56/56 tests pass** ✓
+- **448 tools** sincronizadas ✓
+- **0 duplicados** en declarations/registry ✓
+- **0 imports rotos** ✓
+- **0 archivos .pyi huérfanos** ✓
+- **0 stubs muertos** ✓
+- **0 BOMs** ✓
+- **95+ nodos NeuroSpheres** con contenido real ✓
+- **62 knowledge files** ✓
+- **9/9 agents** en uso ✓

@@ -1,351 +1,277 @@
-"""ERIS Full System Test — 26/07/2026"""
-import json, os, sys, traceback
+"""ERIS System Test — 26/08/2026"""
+import json, os, sys, py_compile
 from pathlib import Path
 
 PASS = 0
 FAIL = 0
 WARN = 0
 RESULTS = []
+BASE = Path(r"D:\Eris_Source")
 
 def ok(section, msg):
-    global PASS
-    PASS += 1
-    RESULTS.append(("PASS", section, msg))
+    global PASS; PASS += 1; RESULTS.append(("PASS", section, msg))
 
 def fail(section, msg):
-    global FAIL
-    FAIL += 1
-    RESULTS.append(("FAIL", section, msg))
+    global FAIL; FAIL += 1; RESULTS.append(("FAIL", section, msg))
 
 def warn(section, msg):
-    global WARN
-    WARN += 1
-    RESULTS.append(("WARN", section, msg))
+    global WARN; WARN += 1; RESULTS.append(("WARN", section, msg))
 
 print("=" * 70)
-print("  TEST COMPLETO DE ERIS — 26/07/2026")
+print("  TEST COMPLETO DE ERIS — 26/08/2026")
 print("=" * 70)
 
-# ── 1. TOOL REGISTRY ──
+# ── 1. TOOL REGISTRY (442 tools) ──
 print("\n[1] TOOL REGISTRY")
 try:
     from core.tool_registry import get_tool, get_all_tool_names, _TOOLS
     tools = get_all_tool_names()
-    ok("registry", "Total tools: {}".format(len(tools)))
+    if len(tools) >= 440:
+        ok("registry", f"{len(tools)} tools loaded")
+    else:
+        fail("registry", f"Expected 442, got {len(tools)}")
 except Exception as e:
     fail("registry", str(e))
 
-# ── 2. TOOL DECLARATIONS ──
+# ── 2. TOOL DECLARATIONS (442 declarations) ──
 print("[2] TOOL DECLARATIONS")
 try:
     from core.tool_declarations import TOOL_DECLARATIONS
-    ok("declarations", "Total declarations: {}".format(len(TOOL_DECLARATIONS)))
+    if len(TOOL_DECLARATIONS) >= 440:
+        ok("declarations", f"{len(TOOL_DECLARATIONS)} declarations")
+    else:
+        fail("declarations", f"Expected 442, got {len(TOOL_DECLARATIONS)}")
 except Exception as e:
     fail("declarations", str(e))
 
-# ── 3. TOOL DISPATCHER ──
-print("[3] TOOL DISPATCHER")
+# ── 3. DECLARATIONS ↔ REGISTRY SYNC ──
+print("[3] SYNC CHECK")
 try:
-    from core.tool_dispatcher import ToolDispatcher
-    ok("dispatcher", "ToolDispatcher imported OK")
+    dec_names = {t["name"] for t in TOOL_DECLARATIONS}
+    reg_names = set(tools)
+    missing_in_reg = dec_names - reg_names
+    missing_in_dec = reg_names - dec_names
+    if not missing_in_reg and not missing_in_dec:
+        ok("sync", f"Perfect: {len(dec_names)} == {len(reg_names)}")
+    else:
+        if missing_in_reg:
+            warn("sync", f"In declarations but not registry: {missing_in_reg}")
+        if missing_in_dec:
+            warn("sync", f"In registry but not declarations: {missing_in_dec}")
 except Exception as e:
-    fail("dispatcher", str(e))
+    fail("sync", str(e))
 
-# ── 4. 16 NEW TOOLS LOAD ──
-print("[4] 16 NUEVAS TOOLS")
-new_tools = [
-    "memory_consolidation", "email_manager", "calendar_manager", "flow_recorder",
-    "screenshot_history", "clipboard_manager", "multi_user", "voice_cloning_new",
-    "browser_extension", "smart_notifications", "usage_analytics", "skill_marketplace",
-    "api_server", "federated_learning", "file_organizer", "data_encryption",
+# ── 4. NO DUPLICATE DECLARATIONS ──
+print("[4] NO DUPLICATES")
+try:
+    names = [t["name"] for t in TOOL_DECLARATIONS]
+    dupes = [n for n in names if names.count(n) > 1]
+    if not dupes:
+        ok("dupes", "Zero duplicates in declarations")
+    else:
+        fail("dupes", f"Duplicates: {set(dupes)}")
+except Exception as e:
+    fail("dupes", str(e))
+
+# ── 5. CORE MODULES IMPORT ──
+print("[5] CORE MODULES")
+core_modules = [
+    "core.tool_registry", "core.tool_declarations", "core.tool_dispatcher",
+    "core.logging_setup", "core.self_map", "core.emotional_state",
+    "core.llm_bridge", "core.rag_pipeline", "core.autonomous_learner",
+    "core.idle_learning_loop", "core.agent_router", "core.neuro_spheres",
+    "core.gemini_text_chat", "core.memory_consolidation",
+    "core.semantic_memory", "core.prompt_loader",
 ]
-for t in new_tools:
-    try:
-        func = get_tool(t)
-        if func:
-            ok("new_tool", t)
-        else:
-            fail("new_tool", t + " -> get_tool returned None")
-    except Exception as e:
-        fail("new_tool", t + " -> " + str(e))
-
-# ── 5. ALL TOOLS LOAD ──
-print("[5] ALL TOOLS IN REGISTRY")
-loaded = 0
-failed_tools = []
-for t in tools:
-    try:
-        func = get_tool(t)
-        if func:
-            loaded += 1
-        else:
-            failed_tools.append(t)
-    except Exception:
-        failed_tools.append(t)
-ok("all_tools", "{}/{} loaded".format(loaded, len(tools)))
-if failed_tools:
-    warn("all_tools", "Tools with no implementation: {}".format(", ".join(failed_tools[:10])))
-
-# ── 6. CORE MODULES ──
-print("[6] CORE MODULES")
-core_tests = [
-    ("core.tool_registry", "get_tool"),
-    ("core.tool_declarations", "TOOL_DECLARATIONS"),
-    ("core.tool_dispatcher", "ToolDispatcher"),
-    ("core.logging_setup", "BASE_DIR"),
-    ("core.self_map", "get_full_map"),
-    ("core.emotional_state", "emotional_state_tool"),
-    ("core.llm_bridge", "get_embedding"),
-    ("core.rag_pipeline", "RAGPipeline"),
-    ("core.autonomous_learner", "autonomous_learner"),
-    ("core.idle_learning_loop", "run_idle_learning"),
-    ("core.agent_router", "AgentRouter"),
-]
-for mod_name, attr in core_tests:
-    try:
-        mod = __import__(mod_name, fromlist=[attr])
-        obj = getattr(mod, attr, None)
-        if obj is not None:
-            ok("core", mod_name + "." + attr)
-        else:
-            warn("core", mod_name + "." + attr + " is None")
-    except Exception as e:
-        fail("core", mod_name + " -> " + str(e))
-
-# ── 7. ACTION MODULES ──
-print("[7] ACTION MODULES")
-action_tests = [
-    "actions.memory_consolidation", "actions.email_manager", "actions.calendar_manager",
-    "actions.flow_recorder", "actions.screenshot_history", "actions.clipboard_manager",
-    "actions.multi_user", "actions.image_generation", "actions.voice_cloning",
-    "actions.browser_extension", "actions.smart_notifications", "actions.usage_analytics",
-    "actions.skill_marketplace", "actions.api_server", "actions.federated_learning",
-    "actions.file_organizer", "actions.data_encryption",
-    "actions.computer_control", "actions.file_controller", "actions.browser_control",
-    "actions.system_monitor", "actions.screen_vision", "actions.document_rag",
-    "actions.self_awareness", "actions.self_edit", "actions.knowledge_ingestor",
-    "actions.data_connectors", "actions.open_app", "actions.weather_report",
-    "actions.web_search", "actions.file_processor",
-]
-for mod_name in action_tests:
+for mod_name in core_modules:
     try:
         __import__(mod_name)
-        ok("action", mod_name)
+        ok("core", mod_name)
     except Exception as e:
-        fail("action", mod_name + " -> " + str(e))
+        fail("core", f"{mod_name}: {e}")
 
-# ── 8. FUNCTIONAL TESTS (call tools with status/list) ──
-print("[8] FUNCTIONAL TESTS (invoke tools)")
-functional_tests = [
-    ("memory_consolidation", {"action": "status"}),
-    ("email_manager", {"action": "status"}),
-    ("calendar_manager", {"action": "status"}),
-    ("flow_recorder", {"action": "status"}),
-    ("screenshot_history", {"action": "stats"}),
-    ("clipboard_manager", {"action": "stats"}),
-    ("multi_user", {"action": "stats"}),
-    ("image_generation", {"action": "status"}),
-    ("voice_cloning_new", {"action": "status"}),
-    ("browser_extension", {"action": "status"}),
-    ("smart_notifications", {"action": "status"}),
-    ("usage_analytics", {"action": "summary"}),
-    ("skill_marketplace", {"action": "status"}),
-    ("api_server", {"action": "status"}),
-    ("federated_learning", {"action": "status"}),
-    ("file_organizer", {"action": "scan", "directory": "D:/Eris_Source/actions"}),
-    ("data_encryption", {"action": "status"}),
-    ("system_monitor", {"action": "status"}),
-    ("self_awareness", {"action": "status"}),
-]
-for tool_name, params in functional_tests:
+# ── 6. AGENT IMPORTS ──
+print("[6] AGENTS")
+agents = ["dev_agent", "media_agent", "productivity_agent", "search_agent",
+          "security_agent", "system_agent", "vision_agent", "opencode_bridge",
+          "studies_agent"]
+for a in agents:
     try:
-        func = get_tool(tool_name)
-        if func:
-            result = func(parameters=params)
-            if result and "error" not in str(result).lower()[:20]:
-                ok("functional", tool_name + " -> " + str(result)[:60])
-            else:
-                warn("functional", tool_name + " -> " + str(result)[:60])
-        else:
-            fail("functional", tool_name + " -> not found")
+        __import__(f"agents.{a}")
+        ok("agents", a)
     except Exception as e:
-        fail("functional", tool_name + " -> " + str(e)[:80])
+        fail("agents", f"{a}: {e}")
 
-# ── 9. DATA FILES ──
-print("[9] DATA FILES")
+# ── 7. NEUROSPHERES AUTO-LEARN ──
+print("[7] NEUROSPHERES")
+try:
+    from core.neuro_spheres import get_status, add_node, learn_from_sessions
+    status = get_status()
+    total = status["total_nodes"]
+    if total >= 80:
+        ok("neuro", f"{total} nodes, {status['total_connections']} connections")
+    else:
+        warn("neuro", f"Only {total} nodes (expected >= 80)")
+    
+    # Test add_node
+    import time
+    test_title = f"TEST_NODE_{int(time.time()*1000)}"
+    r = add_node("aprendizaje", "aprendizaje", test_title, "test")
+    if r.get("success") or r.get("status") == "updated":
+        ok("neuro", "add_node works")
+    else:
+        fail("neuro", f"add_node failed: {r}")
+except Exception as e:
+    fail("neuro", str(e))
+
+# ── 8. CLI FILE EXISTS ──
+print("[8] CLI")
+cli_path = BASE / "eris_cli.py"
+if cli_path.exists():
+    size = cli_path.stat().st_size
+    ok("cli", f"eris_cli.py ({size} bytes)")
+else:
+    fail("cli", "eris_cli.py not found")
+
+bat_path = Path(r"C:\Users\danie\.eris\bin\eris.bat")
+if bat_path.exists():
+    ok("cli", "eris.bat exists")
+else:
+    fail("cli", "eris.bat not found")
+
+# ── 9. ACTION IMPORTS (no duplicates) ──
+print("[9] ACTION IMPORTS")
+try:
+    ai_content = (BASE / "core" / "action_imports.py").read_text("utf-8")
+    lines = ai_content.splitlines()
+    import_lines = [l for l in lines if "from actions." in l and "import" in l and "(" not in l]
+    action_names = []
+    for l in import_lines:
+        parts = l.split()
+        for i, p in enumerate(parts):
+            if p == "import" and i + 1 < len(parts):
+                action_names.append(parts[i + 1].strip())
+    dupes = [n for n in action_names if action_names.count(n) > 1]
+    if not dupes:
+        ok("imports", f"{len(action_names)} imports, 0 duplicates")
+    else:
+        fail("imports", f"Duplicate imports: {set(dupes)}")
+except Exception as e:
+    fail("imports", str(e))
+
+# ── 10. DATA FILES ──
+print("[10] DATA FILES")
 data_files = [
     "memory/long_term.json", "memory/episodic.json", "memory/semantic.json",
-    "data/self/full_map.json", "core/prompt.txt", "data/autonomous_learn.json",
-    "data/idle_learning.json",
+    "memory/neuro_spheres_state.json", "core/prompt.txt",
+    "config/api_keys.json",
 ]
 for f in data_files:
-    path = Path("D:/Eris_Source") / f
+    path = BASE / f
     if path.exists():
         size = path.stat().st_size
-        ok("data", f + " ({:.1f}KB)".format(size / 1024))
+        ok("data", f"{f} ({size // 1024}KB)")
     else:
-        fail("data", f + " MISSING")
+        fail("data", f"{f} MISSING")
 
-# ── 10. CHROMADB ──
-print("[10] CHROMADB")
-try:
-    import chromadb
-    client = chromadb.PersistentClient(path="D:/Eris_Source/data/chroma_db")
-    collections = client.list_collections()
-    total_docs = sum(c.count() for c in collections)
-    ok("chromadb", "{} collections, {} docs".format(len(collections), total_docs))
-except Exception as e:
-    fail("chromadb", str(e))
-
-# ── 11. OLLAMA ──
-print("[11] OLLAMA")
-try:
-    import requests
-    resp = requests.get("http://localhost:11434/api/tags", timeout=3)
-    if resp.status_code == 200:
-        models = resp.json().get("models", [])
-        model_names = [m.get("name", "?") for m in models]
-        ok("ollama", "online, {} models: {}".format(len(model_names), ", ".join(model_names[:5])))
-    else:
-        warn("ollama", "responded with status " + str(resp.status_code))
-except Exception:
-    warn("ollama", "not running")
-
-# ── 12. SEMANTIC MEMORY ──
-print("[12] SEMANTIC MEMORY")
-try:
-    from core.semantic_memory import get_memory_system
-    ms = get_memory_system()
-    status = ms.get_status()
-    ok("semantic_memory", str(status)[:80])
-except Exception as e:
-    fail("semantic_memory", str(e))
-
-# ── 13. OBSIDIAN VAULT ──
-print("[13] OBSIDIAN VAULT")
-obsidian_path = Path("D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris")
-if obsidian_path.exists():
-    md_files = list(obsidian_path.rglob("*.md"))
-    ok("obsidian", "{} markdown files".format(len(md_files)))
+# ── 11. KNOWLEDGE FILES ──
+print("[11] KNOWLEDGE")
+kb_dir = BASE / "data" / "knowledge"
+if kb_dir.exists():
+    md_files = list(kb_dir.glob("*.md"))
+    ok("knowledge", f"{len(md_files)} files")
 else:
-    fail("obsidian", "vault not found")
+    fail("knowledge", "knowledge dir not found")
 
-# ── 14. PYTHON ENVIRONMENT ──
-print("[14] PYTHON ENVIRONMENT")
-ok("python", "version " + sys.version.split()[0])
+# ── 12. PYTHON ENVIRONMENT ──
+print("[12] PYTHON")
+ok("python", f"version {sys.version.split()[0]}")
 packages = ["PyQt6", "requests", "chromadb", "google.genai"]
 for pkg in packages:
     try:
         __import__(pkg)
         ok("packages", pkg)
     except ImportError:
-        warn("packages", pkg + " not installed")
+        warn("packages", f"{pkg} not installed")
 
-# ── 15. ERIS LOG HEALTH ──
-print("[15] ERIS LOG")
-log_path = Path("D:/Eris_Source/eris.log")
-if log_path.exists():
-    content = log_path.read_text(encoding="utf-8", errors="replace")
-    lines = content.splitlines()
-    errors = [l for l in lines if "ERROR" in l.upper() or "Traceback" in l]
-    ok("log", "{} lines, {} errors".format(len(lines), len(errors)))
-    if errors:
-        for e in errors[-3:]:
-            warn("log", e[:80])
-else:
-    fail("log", "eris.log not found")
+# ── 13. COMPILE CHECK ──
+print("[13] COMPILE CHECK")
+critical_files = [
+    "main.py", "eris_cli.py", "ui.py",
+    "core/tool_registry.py", "core/tool_declarations.py",
+    "core/action_imports.py", "core/neuro_spheres.py",
+    "core/gemini_text_chat.py", "core/tool_dispatcher.py",
+]
+for f in critical_files:
+    try:
+        py_compile.compile(str(BASE / f), doraise=True)
+        ok("compile", f)
+    except py_compile.PyCompileError as e:
+        fail("compile", f"{f}: {e}")
 
-# ── 16. TOOL DECLARATION DUPLICATES CHECK ──
-print("[16] DUPLICATE CHECK")
+# ── 14. BOM CHECK ──
+print("[14] BOM CHECK")
+bom_count = 0
+for root, dirs, files in os.walk(BASE):
+    if ".venv" in root or "__pycache__" in root or "backups" in root:
+        continue
+    for f in files:
+        if f.endswith((".py", ".json")):
+            fp = os.path.join(root, f)
+            try:
+                with open(fp, "rb") as fh:
+                    if fh.read(3) == b"\xef\xbb\xbf":
+                        bom_count += 1
+                        warn("bom", f"BOM found: {os.path.relpath(fp, BASE)}")
+            except:
+                pass
+if bom_count == 0:
+    ok("bom", "Zero BOM files")
+
+# ── 15. WINDOW CHECK ──
+print("[15] GUI WINDOW")
 try:
-    from core.tool_declarations import TOOL_DECLARATIONS
-    names = [t["name"] for t in TOOL_DECLARATIONS]
-    seen = {}
-    dupes = []
-    for n in names:
-        if n in seen:
-            dupes.append(n)
-        seen[n] = seen.get(n, 0) + 1
-    if dupes:
-        warn("dupes", "Duplicados: {}".format(", ".join(dupes)))
+    import ctypes
+    user32 = ctypes.windll.user32
+    hwnd = user32.FindWindowW(None, "ERIS")
+    if hwnd:
+        rect = ctypes.wintypes.RECT()
+        user32.GetWindowRect(hwnd, ctypes.byref(rect))
+        w = rect.right - rect.left
+        h = rect.bottom - rect.top
+        if w > 100 and h > 100:
+            ok("gui", f"Window visible: {w}x{h}")
+        else:
+            warn("gui", f"Window too small: {w}x{h}")
     else:
-        ok("dupes", "Sin duplicados en declarations")
+        warn("gui", "No ERIS window found (may not be running)")
 except Exception as e:
-    fail("dupes", str(e))
-
-# ── 17. MEMORY GROWTH CAPS ──
-print("[17] MEMORY CAPS")
-try:
-    import core.semantic_memory as _sm
-    _orig_save = _sm._save_json
-    _sm._save_json = lambda *a, **k: None  # no tocar disco durante el test
-
-    # Facts semánticos: tope 500
-    _s = _sm.SemanticMemory()
-    for i in range(550):
-        _s.add_fact("sujeto{}".format(i), "es", "objeto{}".format(i))
-    if len(_s.facts) <= 500:
-        ok("memcaps", "semantic facts cap 500 -> {}".format(len(_s.facts)))
-    else:
-        fail("memcaps", "semantic facts sin tope: {}".format(len(_s.facts)))
-
-    # Knowledge graph: nodos tope 2000
-    _g = _sm.KnowledgeGraph()
-    _g.nodes = {}
-    _g.edges = []
-    for i in range(2100):
-        _g.add_node("nodo{}".format(i))
-    if len(_g.nodes) <= 2000:
-        ok("memcaps", "graph nodes cap 2000 -> {}".format(len(_g.nodes)))
-    else:
-        fail("memcaps", "graph nodes sin tope: {}".format(len(_g.nodes)))
-
-    # Knowledge graph: aristas tope 5000
-    for i in range(5100):
-        _g.add_edge("origen", "destino", "rel{}".format(i))
-    if len(_g.edges) <= 5000:
-        ok("memcaps", "graph edges cap 5000 -> {}".format(len(_g.edges)))
-    else:
-        fail("memcaps", "graph edges sin tope: {}".format(len(_g.edges)))
-
-    # Episódica: tope 1000 (pre-existente)
-    _e = _sm.EpisodicMemory()
-    _e.entries = []
-    for i in range(1050):
-        _e.add("evento{}".format(i), None, importance=0.5)
-    if len(_e.entries) <= 1000:
-        ok("memcaps", "episodic cap 1000 -> {}".format(len(_e.entries)))
-    else:
-        fail("memcaps", "episodic sin tope: {}".format(len(_e.entries)))
-
-    _sm._save_json = _orig_save
-except Exception as e:
-    fail("memcaps", str(e))
+    warn("gui", str(e))
 
 # ── SUMMARY ──
 print("\n" + "=" * 70)
 print("  RESUMEN")
 print("=" * 70)
-print("  PASS: {}".format(PASS))
-print("  FAIL: {}".format(FAIL))
-print("  WARN: {}".format(WARN))
-print("  TOTAL: {}".format(PASS + FAIL + WARN))
+print(f"  PASS: {PASS}")
+print(f"  FAIL: {FAIL}")
+print(f"  WARN: {WARN}")
+print(f"  TOTAL: {PASS + FAIL + WARN}")
 
 if FAIL > 0:
     print("\n  FALLOS:")
     for status, section, msg in RESULTS:
         if status == "FAIL":
-            print("    [FAIL] {}: {}".format(section, msg))
+            print(f"    [FAIL] {section}: {msg}")
 
 if WARN > 0:
     print("\n  ADVERTENCIAS:")
     for status, section, msg in RESULTS:
         if status == "WARN":
-            print("    [WARN] {}: {}".format(section, msg))
+            print(f"    [WARN] {section}: {msg}")
 
 print("\n" + "=" * 70)
 if FAIL == 0:
     print("  TODOS LOS TESTS PASARON!")
 else:
-    print("  {} TESTS FALLARON".format(FAIL))
+    print(f"  {FAIL} TESTS FALLARON")
 print("=" * 70)

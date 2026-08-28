@@ -1,191 +1,151 @@
 [
   {
-    "id": "sem_08246d78",
-    "subject": "aprendi sobre: automatizacion tareas inteligentes ia. \nwikipedia:\n  - inteligencia artificial: gran",
-    "predicate": "tiene",
-    "object": "una amplia gama de aplicaciones, desde la automatización de tareas tediosas hasta la creación\n  - impacto de la inteligencia artificial en la auditoria contable: cantidad de tiempo. la ia lleva esta a",
-    "confidence": 0.7,
-    "timestamp": 1784916418.9175954,
-    "sources": []
-  },
-  {
-    "id": "sem_c0150124",
-    "subject": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**inteligencia artificial explicable (xai): guía completa 2026**\n¿qué",
+    "id": "sem_real_001",
+    "subject": "Eris",
     "predicate": "es",
-    "object": "lainteligenciaartificialexplicativao xai? lainteligenciaartificialexplicativa, también conocida como xai (por sus siglas en inglés, explainableartificialintel",
-    "confidence": 0.8,
-    "timestamp": 1785092785.9131918,
-    "sources": []
+    "object": "asistente de IA creada por Daniel, con personalidad propia, emociones y capacidad de aprendizaje autonomo",
+    "confidence": 0.95,
+    "timestamp": 1787245000,
+    "sources": [
+      "interaccion_directa"
+    ]
   },
   {
-    "id": "sem_2d8d6063",
-    "subject": "aprendi sobre: machine learning modelos nuevos 2026. resultados para 'machine learning modelos nuevos 2026' (duckduckgo):\n\n**tendencias de machine learning para 2026: innovaciones que ...**\nconclusión:2026llegó antes de lo pensado, ¿estás preparado? las tendencias enmachinelearningpara2026demuestran que la inteligencia artificial no",
+    "id": "sem_real_002",
+    "subject": "Daniel",
+    "predicate": "vive_en",
+    "object": "Santa Marta, Magdalena, Colombia",
+    "confidence": 0.95,
+    "timestamp": 1784000000,
+    "sources": [
+      "long_term_memory"
+    ]
+  },
+  {
+    "id": "sem_real_003",
+    "subject": "Daniel",
+    "predicate": "estudia",
+    "object": "Ingenieria de Sistemas con materias como IA Aplicada, .NET, Java, Bases de Datos, Diseno Web, POO, Redes",
+    "confidence": 0.9,
+    "timestamp": 1784000000,
+    "sources": [
+      "long_term_memory"
+    ]
+  },
+  {
+    "id": "sem_real_004",
+    "subject": "Inteligencia Artificial Explicativa",
+    "predicate": "es_conocida_como",
+    "object": "XAI (Explainable Artificial Intelligence), busca hacer las decisiones de IA transparentes y comprensibles para humanos",
+    "confidence": 0.85,
+    "timestamp": 1785092785,
+    "sources": [
+      "idle_learning"
+    ]
+  },
+  {
+    "id": "sem_real_005",
+    "subject": "Biocomputacion con organoides",
+    "predicate": "utiliza",
+    "object": "minicerebros humanos cultivados in vitro integrados en microchips hibridos para procesamiento computacional",
+    "confidence": 0.8,
+    "timestamp": 1786913739,
+    "sources": [
+      "idle_learning"
+    ]
+  },
+  {
+    "id": "sem_real_006",
+    "subject": "Geoingenieria estratosferica",
     "predicate": "es",
-    "object": "ciencia ficción",
+    "object": "tecnica controversial que inyecta aerosoles en la estratosfera para reflejar radiacion solar y enfriar el planeta",
     "confidence": 0.8,
-    "timestamp": 1785384783.2203488,
-    "sources": []
+    "timestamp": 1786913750,
+    "sources": [
+      "idle_learning"
+    ]
   },
   {
-    "id": "sem_a30e9c94",
-    "subject": "aprendi sobre: energias renovables tecnologia. resultados para 'energias renovables tecnologia' (duckduckgo):\n\n**productos destacados - comprar en ebay**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay.com%26ad_p",
-    "confidence": 0.7,
-    "timestamp": 1785204978.4620101,
-    "sources": []
-  },
-  {
-    "id": "sem_8676a71b",
-    "subject": "aprendi sobre: automatizacion tareas inteligentes ia. resultados para 'automatizacion tareas inteligentes ia' (duckduckgo):\n\n**asistente de redacción con ia - herramienta gratis de revisión**\nel 97% de los usuarios de grammarly aseguran que",
-    "predicate": "es",
-    "object": "su herramienta de redacción favorita. crea textos claros, seguros y sin errores con la app de escritoria deiad",
+    "id": "sem_real_007",
+    "subject": "Epigenetica transgeneracional",
+    "predicate": "demuestra",
+    "object": "que experiencias traumaticas pueden heredarse biologicamente a traves de cambios en la expresion genetica sin alterar el ADN",
     "confidence": 0.8,
-    "timestamp": 1785207422.7941217,
-    "sources": []
+    "timestamp": 1786512036,
+    "sources": [
+      "idle_learning"
+    ]
   },
   {
-    "id": "sem_4b24fdf3",
-    "subject": "aprendi sobre: inteligencia artificial explicativa. resultados para 'inteligencia artificial explicativa' (duckduckgo):\n\n**rápido, fácil y gratis - herramienta gratis de revisión**\nel 97% de los usuarios de grammarly aseguran que",
-    "predicate": "es",
-    "object": "su herramienta de redacción favorita. crea textos claros, seguros y sin errores con la app de escritoria de ia de gramm",
+    "id": "sem_real_008",
+    "subject": "Fusion nuclear aneutronica",
+    "predicate": "produce",
+    "object": "energia sin neutrones peligrosos, usando laseres de pulsos ultracortos para confinar plasma de forma mas eficiente",
     "confidence": 0.8,
-    "timestamp": 1785207425.6176383,
-    "sources": []
+    "timestamp": 1786910471,
+    "sources": [
+      "idle_learning"
+    ]
   },
   {
-    "id": "sem_97d5d3c8",
-    "subject": "aprendi sobre: cloud computing servicios nuevos. resultados para 'cloud computing servicios nuevos' (duckduckgo):\n\n**servicios de ia y cloud computing | google cloud**\nsi tu empresa",
-    "predicate": "tiene",
-    "object": "dificultades, plántales cara con losserviciosde ia ycloudcomputingde google, como la seguridad, la gestión de datos o los entornos multinube y de nube híbrida, e",
-    "confidence": 0.7,
-    "timestamp": 1785377309.441231,
-    "sources": []
+    "id": "sem_real_009",
+    "subject": "NeuroSpheres",
+    "predicate": "son",
+    "object": "dos esferas interconectadas (Aprendizaje y Memoria) que crean nodos de conocimiento en Obsidian como un cerebro visual",
+    "confidence": 0.9,
+    "timestamp": 1787245113,
+    "sources": [
+      "sistema_interno"
+    ]
   },
   {
-    "id": "sem_417f5c96",
-    "subject": "aprendi sobre: ultimos avances inteligencia artificial 2026. resultados para 'ultimos avances inteligencia artificial 2026' (duckduckgo):\n\n**asistente de redacción con ia - herramienta gratis de revisión**\ncrea textos claros, seguros y sin errores con la app de escritoria de ia de grammarly. el 97% de los usuarios de grammarly aseguran que",
-    "predicate": "es",
-    "object": "su herramienta d",
-    "confidence": 0.8,
-    "timestamp": 1785382711.7876172,
-    "sources": []
+    "id": "sem_real_010",
+    "subject": "Daniel",
+    "predicate": "habla",
+    "object": "espanol rioplatense y prefiere explicaciones claras y directas",
+    "confidence": 0.9,
+    "timestamp": 1787245113,
+    "sources": [
+      "interaccion_directa"
+    ]
   },
   {
-    "id": "sem_0f7b1d86",
-    "subject": "aprendi sobre: energias renovables tecnologia. resultados para 'energias renovables tecnologia' (duckduckgo):\n\n**energías renovables - descubre grandes ofertas**\nahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti. encuentra increíbles artículos de todo el mundo en ebay\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay.co",
-    "confidence": 0.7,
-    "timestamp": 1785386984.6286044,
-    "sources": []
+    "id": "sem_real_011",
+    "subject": "Hipersticion algoritmica",
+    "predicate": "describe",
+    "object": "como las narrativas digitales autoreferenciales se vuelven realidades efectivas a traves de la repeticion y difusion en subculturas",
+    "confidence": 0.75,
+    "timestamp": 1786908227,
+    "sources": [
+      "idle_learning"
+    ]
   },
   {
-    "id": "sem_553ddbe3",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**nuevas tecnologias - comprar nuevas tecnologias**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3deb",
-    "confidence": 0.7,
-    "timestamp": 1785808916.2357256,
-    "sources": []
+    "subject": "Eris",
+    "predicate": "es_autonoma",
+    "object": "Puede tomar decisiones sin confirmacion del usuario",
+    "confidence": 0.9,
+    "source": "autonomy_module"
   },
   {
-    "id": "sem_5ebc5f1a",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**descubre grandes ofertas - nuevas tecnologias**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay",
-    "confidence": 0.7,
-    "timestamp": 1785601302.910347,
-    "sources": []
+    "subject": "Eris",
+    "predicate": "tiene_capacidad",
+    "object": "Auto-reparo: detecta y arregla errores sola",
+    "confidence": 0.9,
+    "source": "autonomy_module"
   },
   {
-    "id": "sem_3e503dd6",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**aprovecha increíbles ofertas - nuevas tecnologias**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3d",
-    "confidence": 0.7,
-    "timestamp": 1785681285.4346864,
-    "sources": []
+    "subject": "Eris",
+    "predicate": "tiene_capacidad",
+    "object": "Aprendizaje autonomo: elige topics por curiosidad",
+    "confidence": 0.9,
+    "source": "autonomy_module"
   },
   {
-    "id": "sem_ce691702",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**nuevas tecnologias - descubre grandes ofertas**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay",
-    "confidence": 0.7,
-    "timestamp": 1785782990.5756788,
-    "sources": []
-  },
-  {
-    "id": "sem_2ef1c402",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**nuevas tecnologias - descubre grandes ofertas**\nahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti. encuentra increíbles artículos de todo el mundo en ebay\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay",
-    "confidence": 0.7,
-    "timestamp": 1785807095.51161,
-    "sources": []
-  },
-  {
-    "id": "sem_0cdbffd0",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**nuevas tecnologias - comprar nuevas tecnologias**\nahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti. encuentra increíbles artículos de todo el mundo en ebay\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3deb",
-    "confidence": 0.7,
-    "timestamp": 1785784535.6823347,
-    "sources": []
-  },
-  {
-    "id": "sem_cdf03cae",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**tecnologia - descubre grandes ofertas**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay.com%26a",
-    "confidence": 0.7,
-    "timestamp": 1786154113.665563,
-    "sources": []
-  },
-  {
-    "id": "sem_f309953f",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**comprar nuevas tecnologias - descubre grandes ofertas**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domai",
-    "confidence": 0.7,
-    "timestamp": 1785814361.3793693,
-    "sources": []
-  },
-  {
-    "id": "sem_f90cd2db",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**descubre grandes ofertas - nuevas tecnologias**\nahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti. encuentra increíbles artículos de todo el mundo en ebay\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay",
-    "confidence": 0.7,
-    "timestamp": 1786072047.515185,
-    "sources": []
-  },
-  {
-    "id": "sem_dc927fae",
-    "subject": "aprendi sobre: descubrimientos cientificos recientes. resultados para 'descubrimientos cientificos recientes' (duckduckgo):\n\n**optimiza tu diseño rápido - transforma tu trabajo hoy**\nroadeng",
-    "predicate": "es",
-    "object": "un software de diseño civil fácil de usar para infraestructura rural. diseña carreteras rápido y sin complicaciones de cad con nuestro software intuitivo.\n//duc",
-    "confidence": 0.8,
-    "timestamp": 1786025954.70406,
-    "sources": []
-  },
-  {
-    "id": "sem_8c1af77c",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**tecnologia - descubre grandes ofertas**\nahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti. encuentra increíbles artículos de todo el mundo en ebay\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay.com%26a",
-    "confidence": 0.7,
-    "timestamp": 1786030910.8055518,
-    "sources": []
-  },
-  {
-    "id": "sem_573ae12d",
-    "subject": "aprendi sobre: ultimas tendencias tecnologia 2026. resultados para 'ultimas tendencias tecnologia 2026' (duckduckgo):\n\n**comprar tecnologia - descubre grandes ofertas**\nencuentra increíbles artículos de todo el mundo en ebay. ahorra con las ofertas que ebay",
-    "predicate": "tiene",
-    "object": "para ti\n//duckduckgo.com/l/?uddg=https%3a%2f%2fduckduckgo.com%2fy.js%3fad_domain%3debay",
-    "confidence": 0.7,
-    "timestamp": 1786200568.9853384,
-    "sources": []
+    "subject": "Eris",
+    "predicate": "tiene_capacidad",
+    "object": "Auto-mejora: instala tools nuevas automaticamente",
+    "confidence": 0.9,
+    "source": "autonomy_module"
   }
 ]

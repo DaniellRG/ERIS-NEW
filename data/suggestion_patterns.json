@@ -1,0 +1,2498 @@
+{
+  "show_expression": [
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "browser_control": [
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_control",
+      "action": "tool:browser_control",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "deep_research": [
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:deep_research",
+      "action": "tool:deep_research",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "multi_search": [
+    {
+      "suggestion": "tool:multi_search",
+      "action": "tool:multi_search",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "whatsapp": [
+    {
+      "suggestion": "tool:whatsapp",
+      "action": "tool:whatsapp",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:whatsapp",
+      "action": "tool:whatsapp",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:whatsapp",
+      "action": "tool:whatsapp",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "phone_control": [
+    {
+      "suggestion": "tool:phone_control",
+      "action": "tool:phone_control",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "screen_see": [
+    {
+      "suggestion": "tool:screen_see",
+      "action": "tool:screen_see",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:screen_see",
+      "action": "tool:screen_see",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:screen_see",
+      "action": "tool:screen_see",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "obsidian_note": [
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:obsidian_note",
+      "action": "tool:obsidian_note",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "shell_executor": [
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:shell_executor",
+      "action": "tool:shell_executor",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "program_manager": [
+    {
+      "suggestion": "tool:program_manager",
+      "action": "tool:program_manager",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "video_analyzer": [
+    {
+      "suggestion": "tool:video_analyzer",
+      "action": "tool:video_analyzer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:video_analyzer",
+      "action": "tool:video_analyzer",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "dependency_manager": [
+    {
+      "suggestion": "tool:dependency_manager",
+      "action": "tool:dependency_manager",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "openrouter_agent": [
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:openrouter_agent",
+      "action": "tool:openrouter_agent",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "computer_settings": [
+    {
+      "suggestion": "tool:computer_settings",
+      "action": "tool:computer_settings",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:computer_settings",
+      "action": "tool:computer_settings",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:computer_settings",
+      "action": "tool:computer_settings",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "calculator": [
+    {
+      "suggestion": "tool:calculator",
+      "action": "tool:calculator",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:calculator",
+      "action": "tool:calculator",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "game_companion": [
+    {
+      "suggestion": "tool:game_companion",
+      "action": "tool:game_companion",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "web_search": [
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "emotional_state": [
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "morning_brief": [
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "system_volume": [
+    {
+      "suggestion": "tool:system_volume",
+      "action": "tool:system_volume",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "window_manager": [
+    {
+      "suggestion": "tool:window_manager",
+      "action": "tool:window_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:window_manager",
+      "action": "tool:window_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:window_manager",
+      "action": "tool:window_manager",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "browser_unified": [
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:browser_unified",
+      "action": "tool:browser_unified",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "super_search": [
+    {
+      "suggestion": "tool:super_search",
+      "action": "tool:super_search",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:super_search",
+      "action": "tool:super_search",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "open_app": [
+    {
+      "suggestion": "tool:open_app",
+      "action": "tool:open_app",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:open_app",
+      "action": "tool:open_app",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:open_app",
+      "action": "tool:open_app",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:open_app",
+      "action": "tool:open_app",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:open_app",
+      "action": "tool:open_app",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "screen_vision": [
+    {
+      "suggestion": "tool:screen_vision",
+      "action": "tool:screen_vision",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "file_controller": [
+    {
+      "suggestion": "tool:file_controller",
+      "action": "tool:file_controller",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "code_engineer": [
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "file_manager": [
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "app_discovery": [
+    {
+      "suggestion": "tool:app_discovery",
+      "action": "tool:app_discovery",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:app_discovery",
+      "action": "tool:app_discovery",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "memory_rag": [
+    {
+      "suggestion": "tool:memory_rag",
+      "action": "tool:memory_rag",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:memory_rag",
+      "action": "tool:memory_rag",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:memory_rag",
+      "action": "tool:memory_rag",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "relationship": [
+    {
+      "suggestion": "tool:relationship",
+      "action": "tool:relationship",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "image_generation": [
+    {
+      "suggestion": "tool:image_generation",
+      "action": "tool:image_generation",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "learning_pipeline": [
+    {
+      "suggestion": "tool:learning_pipeline",
+      "action": "tool:learning_pipeline",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "ide_integration": [
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "desktop_control": [
+    {
+      "suggestion": "tool:desktop_control",
+      "action": "tool:desktop_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:desktop_control",
+      "action": "tool:desktop_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:desktop_control",
+      "action": "tool:desktop_control",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:desktop_control",
+      "action": "tool:desktop_control",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "codebase_explorer": [
+    {
+      "suggestion": "tool:codebase_explorer",
+      "action": "tool:codebase_explorer",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "self_awareness": [
+    {
+      "suggestion": "tool:self_awareness",
+      "action": "tool:self_awareness",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:self_awareness",
+      "action": "tool:self_awareness",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "image_analyzer": [
+    {
+      "suggestion": "tool:image_analyzer",
+      "action": "tool:image_analyzer",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "terminal_agent": [
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "autonomy": [
+    {
+      "suggestion": "tool:autonomy",
+      "action": "tool:autonomy",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "code_helper": [
+    {
+      "suggestion": "tool:code_helper",
+      "action": "tool:code_helper",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_helper",
+      "action": "tool:code_helper",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "camera_bus": [
+    {
+      "suggestion": "tool:camera_bus",
+      "action": "tool:camera_bus",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "emotional_rl": [
+    {
+      "suggestion": "tool:emotional_rl",
+      "action": "tool:emotional_rl",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "neuro_spheres": [
+    {
+      "suggestion": "tool:neuro_spheres",
+      "action": "tool:neuro_spheres",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:neuro_spheres",
+      "action": "tool:neuro_spheres",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "contextual_awareness": [
+    {
+      "suggestion": "tool:contextual_awareness",
+      "action": "tool:contextual_awareness",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:contextual_awareness",
+      "action": "tool:contextual_awareness",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "project_builder": [
+    {
+      "suggestion": "tool:project_builder",
+      "action": "tool:project_builder",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "meta_cognition": [
+    {
+      "suggestion": "tool:meta_cognition",
+      "action": "tool:meta_cognition",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "meta_communication": [
+    {
+      "suggestion": "tool:meta_communication",
+      "action": "tool:meta_communication",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:meta_communication",
+      "action": "tool:meta_communication",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:meta_communication",
+      "action": "tool:meta_communication",
+      "priority": 2,
+      "source": "learned"
+    }
+  ]
+}

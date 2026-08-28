@@ -1,0 +1,117 @@
+{
+  "mistakes": [
+    {
+      "id": "mistake_1786903019",
+      "pattern": "import error",
+      "cause": "",
+      "solution": "",
+      "context": "",
+      "severity": "medium",
+      "category": "debugging",
+      "resolved": false,
+      "recurrence_count": 0,
+      "created_at": 1786903019.6021338
+    },
+    {
+      "id": "mistake_1786904592",
+      "pattern": "olvidar verificar permisos",
+      "cause": "no usar el check de permisos",
+      "solution": "siempre ejecutar verification_layer",
+      "context": "",
+      "severity": "high",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786904592.0823805
+    },
+    {
+      "id": "mistake_1786904592",
+      "pattern": "hacer commits sin testear",
+      "cause": "saltarse pytest",
+      "solution": "correr pytest antes de commit",
+      "context": "",
+      "severity": "medium",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786904592.1155922
+    },
+    {
+      "id": "mistake_1786904662",
+      "pattern": "olvidar verificar permisos",
+      "cause": "no usar el check de permisos",
+      "solution": "siempre ejecutar verification_layer",
+      "context": "",
+      "severity": "high",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786904662.9904163
+    },
+    {
+      "id": "mistake_1786904663",
+      "pattern": "hacer commits sin testear",
+      "cause": "saltarse pytest",
+      "solution": "correr pytest antes de commit",
+      "context": "",
+      "severity": "medium",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786904663.0245824
+    },
+    {
+      "id": "mistake_1786909803",
+      "pattern": "olvidar verificar permisos",
+      "cause": "no usar el check de permisos",
+      "solution": "siempre ejecutar verification_layer",
+      "context": "",
+      "severity": "high",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786909803.9005804
+    },
+    {
+      "id": "mistake_1786909803",
+      "pattern": "hacer commits sin testear",
+      "cause": "saltarse pytest",
+      "solution": "correr pytest antes de commit",
+      "context": "",
+      "severity": "medium",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786909803.9351661
+    },
+    {
+      "id": "mistake_1786909835",
+      "pattern": "olvidar verificar permisos",
+      "cause": "no usar el check de permisos",
+      "solution": "siempre ejecutar verification_layer",
+      "context": "",
+      "severity": "high",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786909835.4150114
+    },
+    {
+      "id": "mistake_1786909835",
+      "pattern": "hacer commits sin testear",
+      "cause": "saltarse pytest",
+      "solution": "correr pytest antes de commit",
+      "context": "",
+      "severity": "medium",
+      "category": "general",
+      "resolved": true,
+      "recurrence_count": 0,
+      "created_at": 1786909835.4583237
+    }
+  ],
+  "rules": [],
+  "stats": {
+    "total": 9,
+    "resolved": 8
+  }
+}

@@ -1,0 +1,333 @@
+[
+ {
+  "ts": 1787934673.8063354,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787934674.6106772
+ },
+ {
+  "ts": 1787934553.6719046,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787934554.77576
+ },
+ {
+  "ts": 1787934441.575141,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787934443.020447
+ },
+ {
+  "ts": 1787934402.7889426,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787934404.1669486
+ },
+ {
+  "ts": 1787933759.769467,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"Vista gráfica - BaseObsiEris - Obsidian 1.13.7\",\n  \"message\": \"No se reconoce el prog",
+  "ts_end": 1787933759.8070912
+ },
+ {
+  "ts": 1787933420.9722307,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787933421.9630778
+ },
+ {
+  "ts": 1787931794.3121555,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931795.196962
+ },
+ {
+  "ts": 1787931704.5983129,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931705.2638016
+ },
+ {
+  "ts": 1787931542.1605713,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931542.912299
+ },
+ {
+  "ts": 1787931352.980164,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931354.387609
+ },
+ {
+  "ts": 1787931275.2006354,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931276.6224477
+ },
+ {
+  "ts": 1787931241.7360845,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "running",
+  "agent": ""
+ },
+ {
+  "ts": 1787931028.8035986,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787931029.7450037
+ },
+ {
+  "ts": 1787930995.5480077,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787930998.0094466
+ },
+ {
+  "ts": 1787930822.149436,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787930823.6396444
+ },
+ {
+  "ts": 1787930724.433644,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787930725.9536314
+ },
+ {
+  "ts": 1787930642.8149908,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787930644.3397336
+ },
+ {
+  "ts": 1787930401.652335,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787930403.0961409
+ },
+ {
+  "ts": 1787929841.329316,
+  "tool": "neuro_spheres",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "🧠 NeuroSpheres — Estado del Cerebro\nTotal nodos: 46\nTotal conexiones: 69\nEsferas:\n  - aprendizaje: 35 nodos\n  - memoria:",
+  "ts_end": 1787929841.3784614
+ },
+ {
+  "ts": 1787929841.327987,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [#######---] 70%\n  energy: [#######---] 71%\n  confidence: [######----] 62%\n  curiosity: [",
+  "ts_end": 1787929841.351346
+ },
+ {
+  "ts": 1787929715.952747,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 23°C(sensación 23°C), humedad 60%, viento ",
+  "ts_end": 1787929716.8854828
+ },
+ {
+  "ts": 1787929279.283061,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 22°C(sensación 22°C), humedad 64%, viento ",
+  "ts_end": 1787929281.0639296
+ },
+ {
+  "ts": 1787928620.9008853,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [#######---] 70%\n  energy: [#######---] 71%\n  confidence: [######----] 62%\n  curiosity: [",
+  "ts_end": 1787928620.9075878
+ },
+ {
+  "ts": 1787928206.3294263,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Friday 28 de August de 2026.\nClima: Clima en Lima: Nubes, 22°C(sensación 22°C), humedad 64%, viento ",
+  "ts_end": 1787928207.2528722
+ },
+ {
+  "ts": 1787849222.3740022,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Thursday 27 de August de 2026.\nClima: Clima en Lima: Muy Nuboso, 23°C(sensación 22°C), humedad 64%, ",
+  "ts_end": 1787849223.2436867
+ },
+ {
+  "ts": 1787848436.6554039,
+  "tool": "ide_integration",
+  "args": "action=read, file_path=C:\\\\Users\\\\danie\\\\source\\\\repos\\\\SistemadeEmpleados\\\\Sist...",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"source\": \"disk\",\n  \"code\": \"using System;\\nusing System.Collections.Generic;\\nusing System.Linq;\\nusing System.Text",
+  "ts_end": 1787848436.6746588
+ },
+ {
+  "ts": 1787848394.0464072,
+  "tool": "ide_integration",
+  "args": "action=read, file_path=C:\\\\Users\\\\danie\\\\source\\\\repos\\\\SistemadeEmpleados\\\\Sist...",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": true,\n  \"ide\": \"visual_studio\",\n  \"ide_friendly\": \"Visual Studio\",\n  \"title\": \"SistemadeEmpleados - Prog",
+  "ts_end": 1787848394.06469
+ },
+ {
+  "ts": 1787848394.04521,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"source\": \"disk\",\n  \"code\": \"using System;\\nusing System.Collections.Generic;\\nusing System.Linq;\\nusing System.Text",
+  "ts_end": 1787848395.807501
+ },
+ {
+  "ts": 1787848321.8244352,
+  "tool": "ide_integration",
+  "args": "action=read, file_path=C:\\\\Users\\\\danie\\\\source\\\\repos\\\\SistemadeEmpleados\\\\Sist...",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"source\": \"disk\",\n  \"code\": \"using System;\\nusing System.Collections.Generic;\\nusing System.Linq;\\nusing System.Text",
+  "ts_end": 1787848321.8522563
+ },
+ {
+  "ts": 1787848319.3566673,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": true,\n  \"ide\": \"visual_studio\",\n  \"ide_friendly\": \"Visual Studio\",\n  \"title\": \"SistemadeEmpleados - Prog",
+  "ts_end": 1787848321.0456815
+ },
+ {
+  "ts": 1787848319.354374,
+  "tool": "app_discovery",
+  "args": "action=search, query=mysql",
+  "status": "done",
+  "agent": "",
+  "result": "No se encontraron apps con 'mysql'.",
+  "ts_end": 1787848319.3771977
+ },
+ {
+  "ts": 1787848231.9684384,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Thursday 27 de August de 2026.\nClima: Clima en Lima: Muy Nuboso, 22°C(sensación 22°C), humedad 64%, ",
+  "ts_end": 1787848233.5325449
+ },
+ {
+  "ts": 1787847565.2189996,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [#######---] 70%\n  energy: [#######---] 71%\n  confidence: [######----] 62%\n  curiosity: [",
+  "ts_end": 1787847565.237509
+ },
+ {
+  "ts": 1787847412.9624832,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Thursday 27 de August de 2026.\nClima: Clima en Lima: Muy Nuboso, 22°C(sensación 22°C), humedad 64%, ",
+  "ts_end": 1787847414.9290664
+ },
+ {
+  "ts": 1787846537.4475014,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": true,\n  \"ide\": \"visual_studio\",\n  \"ide_friendly\": \"Visual Studio\",\n  \"title\": \"SistemadeEmpleados (Ejecu",
+  "ts_end": 1787846537.4864573
+ },
+ {
+  "ts": 1787846347.7677479,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Thursday 27 de August de 2026.\nClima: Clima en Lima: Muy Nuboso, 23°C(sensación 22°C), humedad 64%, ",
+  "ts_end": 1787846348.703593
+ },
+ {
+  "ts": 1787842067.5798209,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es Thursday 27 de August de 2026.\nClima: Clima en Lima: Muy Nuboso, 22°C(sensación 22°C), humedad 73%, ",
+  "ts_end": 1787842069.0741527
+ }
+]

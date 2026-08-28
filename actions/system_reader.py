@@ -4,6 +4,7 @@ import datetime
 import os
 import json
 import platform
+from collections import Counter
 
 _CPU_HISTORY = []
 _MEM_HISTORY = []
@@ -16,7 +17,12 @@ def _safe_read(path, default=""):
     except:
         return default
 
-def system_reader(action: str = "status", detail: str = "normal"):
+def system_reader(parameters=None, player=None, action: str = None, detail: str = None):
+    params = parameters if isinstance(parameters, dict) else {}
+    if action is None:
+        action = params.get("action", "status")
+    if detail is None:
+        detail = params.get("detail", "normal")
     if action == "status":
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
@@ -73,12 +79,71 @@ def system_reader(action: str = "status", detail: str = "normal"):
 
     elif action == "network":
         net = psutil.net_io_counters()
-        conns = psutil.net_connections()
+        conns = psutil.net_connections(kind="inet")
         lines = [
             f"Red total: bajada {net.bytes_recv//(1024**2)}MB subida {net.bytes_sent//(1024**2)}MB",
-            f"Conexiones activas: {len(conns)}",
+            f"Conexiones TCP/UDP activas: {len(conns)}",
+            "",
         ]
+        if detail == "verbose":
+            tcp = [c for c in conns if c.status]
+            lines.append("Conexiones establecidas (top 12):")
+            for c in sorted(tcp, key=lambda x: (x.status or "") == "ESTABLISHED", reverse=True)[:12]:
+                laddr = f"{c.laddr.ip}:{c.laddr.port}" if c.laddr else "-"
+                raddr = f"{c.raddr.ip}:{c.raddr.port}" if c.raddr else "-"
+                lines.append(f"  {c.status:12s} {laddr:28s} -> {raddr:28s} pid={c.pid}")
+        else:
+            statuses = Counter(c.status or "?" for c in conns)
+            lines.append("Por estado: " + ", ".join(f"{k}: {v}" for k, v in statuses.most_common()))
+        try:
+            io = psutil.net_io_counters(pernic=True)
+            lines.append("")
+            lines.append("Interfaces:")
+            for iface, cnt in io.items():
+                lines.append(f"  {iface[:20]:20s} RX {cnt.bytes_recv//(1024**2)}MB  TX {cnt.bytes_sent//(1024**2)}MB")
+        except Exception:
+            pass
         return "\n".join(lines)
+
+    elif action == "advisory":
+        cpu = psutil.cpu_percent(interval=0.5)
+        mem = psutil.virtual_memory()
+        disk = psutil.disk_usage("C:\\")
+        boot = datetime.datetime.fromtimestamp(psutil.boot_time())
+        uptime = datetime.datetime.now() - boot
+        temp_ok = True
+        try:
+            temps = psutil.sensors_temperatures()
+            for entries in temps.values():
+                for e in entries:
+                    if e.current and e.current > 80:
+                        temp_ok = False
+        except Exception:
+            pass
+
+        findings = []
+        if cpu > 80:
+            findings.append("CPU al {cpu}%: hay procesos pesados consumiendo. Revisa 'top_processes'.")
+        if mem.percent > 85:
+            findings.append(f"RAM al {mem.percent}%: pocos recursos libres ({mem.available//(1024**3)}GB). Cerrar aplicaciones o liberar memoria.")
+        elif mem.percent > 70:
+            findings.append(f"RAM al {mem.percent}%: uso elevado pero controlable.")
+        if disk.percent > 90:
+            findings.append(f"Disco C: al {disk.percent}%: criticamente lleno, libera espacio.")
+        elif disk.percent > 80:
+            findings.append(f"Disco C: al {disk.percent}%: recomendable liberar espacio.")
+        if uptime.days >= 3:
+            findings.append(f"Uptime {uptime.days}d: considera reiniciar para liberar memoria y aplicar updates.")
+        if not temp_ok:
+            findings.append("Temperaturas altas (>80°C): revisa refrigeracion/ventilacion.")
+        procs = psutil.pids()
+        if len(procs) > 250:
+            findings.append(f"{len(procs)} procesos activos: numero alto, revisar tareas de fondo.")
+
+        if not findings:
+            return ("Sistema saludable.\n  CPU {cpu}% | RAM {mem.percent}% | Disco {disk.percent}%\n"
+                    "No se detectaron problemas.")
+        return ("Advertencias de salud del sistema:\n  " + "\n  ".join(findings))
 
     elif action == "sensors":
         temps = []

@@ -1,0 +1,111 @@
+{
+  "active_contexts": [
+    {
+      "session_id": "s1",
+      "timestamp": 1786903019.603285,
+      "user_intent": "test",
+      "tasks_in_progress": [],
+      "open_questions": [],
+      "key_decisions": [],
+      "related_sessions": []
+    },
+    {
+      "session_id": "sesion_test",
+      "timestamp": 1786904616.214617,
+      "user_intent": "implementar features",
+      "tasks_in_progress": [
+        "terminar audit"
+      ],
+      "open_questions": [
+        "queda pendiente"
+      ],
+      "key_decisions": [],
+      "related_sessions": []
+    },
+    {
+      "session_id": "sesion_test",
+      "timestamp": 1786904685.0710907,
+      "user_intent": "implementar features",
+      "tasks_in_progress": [
+        "terminar audit"
+      ],
+      "open_questions": [
+        "queda pendiente"
+      ],
+      "key_decisions": [],
+      "related_sessions": []
+    },
+    {
+      "session_id": "sesion_test",
+      "timestamp": 1786909817.3684273,
+      "user_intent": "implementar features",
+      "tasks_in_progress": [
+        "terminar audit"
+      ],
+      "open_questions": [
+        "queda pendiente"
+      ],
+      "key_decisions": [],
+      "related_sessions": []
+    },
+    {
+      "session_id": "sesion_test",
+      "timestamp": 1786909851.959306,
+      "user_intent": "implementar features",
+      "tasks_in_progress": [
+        "terminar audit"
+      ],
+      "open_questions": [
+        "queda pendiente"
+      ],
+      "key_decisions": [],
+      "related_sessions": []
+    }
+  ],
+  "pending_intentions": [],
+  "unfinished_tasks": [
+    {
+      "task": "terminar audit",
+      "session": "sesion_test",
+      "created_at": 1786904616.2146192
+    },
+    {
+      "task": "terminar audit",
+      "session": "sesion_test",
+      "created_at": 1786904685.0710928
+    },
+    {
+      "task": "terminar audit",
+      "session": "sesion_test",
+      "created_at": 1786909817.3684294
+    },
+    {
+      "task": "terminar audit",
+      "session": "sesion_test",
+      "created_at": 1786909851.9593086
+    }
+  ],
+  "unanswered_questions": [
+    {
+      "question": "queda pendiente",
+      "session": "sesion_test",
+      "created_at": 1786904616.21462
+    },
+    {
+      "question": "queda pendiente",
+      "session": "sesion_test",
+      "created_at": 1786904685.0710943
+    },
+    {
+      "question": "queda pendiente",
+      "session": "sesion_test",
+      "created_at": 1786909817.368431
+    },
+    {
+      "question": "queda pendiente",
+      "session": "sesion_test",
+      "created_at": 1786909851.9593105
+    }
+  ],
+  "session_links": []
+}

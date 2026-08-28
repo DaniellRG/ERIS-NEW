@@ -1,0 +1,118 @@
+{
+  "entries": [
+    {
+      "id": "fb_1786904591955",
+      "timestamp": 1786904591.955275,
+      "positive": true,
+      "response_summary": "Explicación clara y con ejemplos",
+      "topic": "python",
+      "style": "didáctico",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786904591991",
+      "timestamp": 1786904591.991844,
+      "positive": false,
+      "response_summary": "Respuesta muy larga",
+      "topic": "resumen",
+      "style": "breve",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786904662881",
+      "timestamp": 1786904662.881097,
+      "positive": true,
+      "response_summary": "Explicación clara y con ejemplos",
+      "topic": "python",
+      "style": "didáctico",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786904662902",
+      "timestamp": 1786904662.9020054,
+      "positive": false,
+      "response_summary": "Respuesta muy larga",
+      "topic": "resumen",
+      "style": "breve",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786909803800",
+      "timestamp": 1786909803.8001752,
+      "positive": true,
+      "response_summary": "Explicación clara y con ejemplos",
+      "topic": "python",
+      "style": "didáctico",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786909803811",
+      "timestamp": 1786909803.811905,
+      "positive": false,
+      "response_summary": "Respuesta muy larga",
+      "topic": "resumen",
+      "style": "breve",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786909835263",
+      "timestamp": 1786909835.263425,
+      "positive": true,
+      "response_summary": "Explicación clara y con ejemplos",
+      "topic": "python",
+      "style": "didáctico",
+      "context": "",
+      "response_id": ""
+    },
+    {
+      "id": "fb_1786909835293",
+      "timestamp": 1786909835.293936,
+      "positive": false,
+      "response_summary": "Respuesta muy larga",
+      "topic": "resumen",
+      "style": "breve",
+      "context": "",
+      "response_id": ""
+    }
+  ],
+  "patterns": {
+    "didáctico": {
+      "likes": 4,
+      "dislikes": 0
+    },
+    "breve": {
+      "likes": 0,
+      "dislikes": 4
+    }
+  },
+  "style_preferences": {
+    "brief": 0,
+    "detailed": 0,
+    "code_focused": 0,
+    "explanation_focused": 0,
+    "humorous": 0,
+    "formal": 0,
+    "didáctico": 4.0,
+    "breve": -6.0
+  },
+  "topic_scores": {
+    "python": {
+      "positive": 4,
+      "negative": 0,
+      "score": 1.0
+    },
+    "resumen": {
+      "positive": 0,
+      "negative": 4,
+      "score": 0.0
+    }
+  },
+  "total_positive": 4,
+  "total_negative": 4
+}

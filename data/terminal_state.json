@@ -1,321 +1,6 @@
 {
   "history": [
     {
-      "cmd": "Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 Name, Id, @{N='CPU_s';E={[math]::Round($_.CPU,2)}} | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name                   Id   CPU_s\n----                   --   -----\npython              18344 1065.55\nopencode             5384  992.31\nSteelSeriesSonar    17976  289.88\nSteelSeriesGGClient 19696  201.66\nSteelSeriesGGClient  8280  161.06",
-      "time": "2026-08-03 11:00:05"
-    },
-    {
-      "cmd": "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsProcessors, CsPhyicallyInstalledMemory",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "WindowsProductName         : Windows 10 Home\nWindowsVersion             : 2009\nOsArchitecture             : 64 bits\nCsProcessors               : {AMD Ryzen 7 5700G with Radeon Graphics         }\nCsPhyicallyInstalledMemory : 33554432",
-      "time": "2026-08-03 11:00:08"
-    },
-    {
-      "cmd": "Get-NetIPAddress | Where-Object {$_.AddressFamily -eq 'IPv4' -and $_.IPAddress -ne '127.0.0.1'} | Select-Object InterfaceAlias, IPAddress | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "InterfaceAlias            IPAddress      \n--------------            ---------      \nConexi¢n de red Bluetooth 169.254.185.62 \nConexi¢n de  rea local* 2 169.254.96.51  \nEthernet 2                192.168.1.19   \nConexi¢n de  rea local* 1 169.254.113.122\nEthernet                  169.254.169.134\nWi-Fi                     169.254.78.159",
-      "time": "2026-08-03 11:00:09"
-    },
-    {
-      "cmd": "ping -n 3 google.com",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "Haciendo ping a google.com [142.251.132.174] con 32 bytes de datos:\nRespuesta desde 142.251.132.174: bytes=32 tiempo=25ms TTL=118\nRespuesta desde 142.251.132.174: bytes=32 tiempo=24ms TTL=118\nRespuesta desde 142.251.132.174: bytes=32 tiempo=26ms TTL=118\n\nEstad¡sticas de ping para 142.251.132.174:\n    Paquetes: enviados = 3, recibidos = 3, perdidos = 0\n    (0% perdidos),\nTiempos aproximados de ida y vuelta en milisegundos:\n    M¡nimo = 24ms, M ximo = 26ms, Media = 25ms",
-      "time": "2026-08-03 11:00:11"
-    },
-    {
-      "cmd": "Get-ChildItem -Path C:\\Users\\danie -Recurse -File -ErrorAction SilentlyContinue | Where-Object {$_.Length -gt 100MB} | Select-Object FullName, @{N='MB';E={[math]::Round($_.Length/1MB)}} | Sort-Object MB -Descending | Select-Object -First 10 | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "FullName                                                                                                               \n--------                                                                                                               \nC:\\Users\\danie\\.ollama\\models\\blobs\\sha256-a8cc1361f3145dc01f6d77c6c82c9116b9ffe3c97b34716fe20418455876c40e            \nC:\\Users\\danie\\.ollama\\models\\blobs\\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f            \nC:\\Users\\danie\\.olla",
-      "time": "2026-08-03 11:00:14"
-    },
-    {
-      "cmd": "Get-Service | Where-Object {$_.Status -eq 'Running'} | Select-Object -First 10 Name, DisplayName | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name                        DisplayName                                           \n----                        -----------                                           \nAdobeARMservice             Adobe Acrobat Update Service                          \nAMD Crash Defender Service  AMD Crash Defender Service                            \nAMD External Events Utility AMD External Events Utility                           \nAppinfo                     Informaci¢n de la aplicaci¢n                          \nAp",
-      "time": "2026-08-03 11:00:15"
-    },
-    {
-      "cmd": "open: C:\\Users\\danie\\Desktop",
-      "shell": "open",
-      "elevated": false,
-      "output": "Abierto: C:\\Users\\danie\\Desktop",
-      "time": "2026-08-03 11:00:15"
-    },
-    {
-      "cmd": "open: notepad",
-      "shell": "open",
-      "elevated": false,
-      "output": "Abierto: notepad",
-      "time": "2026-08-03 11:00:15"
-    },
-    {
-      "cmd": "taskkill /F /IM notepad.exe",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "Correcto: se termin¢ el proceso \"Notepad.exe\" con PID 1788.",
-      "time": "2026-08-03 11:00:17"
-    },
-    {
-      "cmd": "win_r: calc",
-      "shell": "win_r",
-      "elevated": false,
-      "output": "Win+R ejecutado: calc",
-      "time": "2026-08-03 11:00:20"
-    },
-    {
-      "cmd": "open: https://www.google.com",
-      "shell": "open",
-      "elevated": false,
-      "output": "Abierto: https://www.google.com",
-      "time": "2026-08-03 11:00:23"
-    },
-    {
-      "cmd": "open: D:\\",
-      "shell": "open",
-      "elevated": false,
-      "output": "Abierto: D:\\",
-      "time": "2026-08-03 11:00:23"
-    },
-    {
-      "cmd": "shell_execute: mspaint",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "ShellExecute: mspaint",
-      "time": "2026-08-03 11:00:24"
-    },
-    {
-      "cmd": "Get-Date",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "lunes, 3 de agosto de 2026 11:00:24 a. m.",
-      "time": "2026-08-03 11:00:24"
-    },
-    {
-      "cmd": "echo Hola desde ERIS en CMD",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "Hola desde ERIS en CMD",
-      "time": "2026-08-03 11:00:24"
-    },
-    {
-      "cmd": "start spotify",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-03 21:17:08"
-    },
-    {
-      "cmd": "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Hola')",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-05 11:58:44"
-    },
-    {
-      "cmd": "winget install MySQL.MySQL",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "No package found matching input criteria.",
-      "time": "2026-08-06 09:46:44"
-    },
-    {
-      "cmd": "winget search MySQL",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name                                        Id                                        Version      Match      Source\n---------------------------------------------------------------------------------------------------------------------\nMySQL                                       Oracle.MySQL                              8.4.9                   winget\nHangar                                      AnssolLabs.Hangar                         1.0.0        Tag: mysql winget\nXAMPP 8.1                      ",
-      "time": "2026-08-06 09:46:48"
-    },
-    {
-      "cmd": "winget install Oracle.MySQL",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Timeout: el comando tardó más de 30s",
-      "time": "2026-08-06 09:47:25"
-    },
-    {
-      "cmd": "winget install Oracle.MySQL",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Found an existing package already installed. Trying to upgrade the installed package...\nNo available upgrade found.\nNo newer package versions are available from the configured sources.",
-      "time": "2026-08-06 09:48:29"
-    },
-    {
-      "cmd": "mysql --version",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
-      "time": "2026-08-06 09:48:32"
-    },
-    {
-      "cmd": "Get-ChildItem -Path \"C:\\Program Files\\MySQL\" -Recurse -Filter \"mysql.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Directorio: C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\n\n\nMode                 LastWriteTime         Length Name                                                                 \n----                 -------------         ------ ----                                                                 \n-a----     07/04/2026  09:08 p. m.        7177848 mysql.exe",
-      "time": "2026-08-06 09:49:01"
-    },
-    {
-      "cmd": "[System.Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\", [System.EnvironmentVariableTarget]::Machine)",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Excepci¢n al llamar a \"SetEnvironmentVariable\" con los argumentos \"3\": \"Acceso denegado al Registro solicitado.\"\nEn l¡nea: 1 Car cter: 1\n+ [System.Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";C: ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException\n    + FullyQualifiedErrorId : SecurityException",
-      "time": "2026-08-06 09:49:02"
-    },
-    {
-      "cmd": "$env:Path += \";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-06 09:49:05"
-    },
-    {
-      "cmd": "mysql --version",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
-      "time": "2026-08-06 09:49:07"
-    },
-    {
-      "cmd": "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"[System.Environment]::SetEnvironmentVariable(\\\"Path\\\", $env:Path + \\\";C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\\", [System.EnvironmentVariableTarget]::Machine)\"' -Verb RunAs",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-06 09:49:41"
-    },
-    {
-      "cmd": "Get-Package -Name \"*MySQL*\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name                           Version          Source                           ProviderName                          \n----                           -------          ------                           ------------                          \nMySQL Server 8.4               8.4.9            C:\\Program Files\\MySQL\\MySQL ... msi                                   \nMySQL Server 8.0               8.0.46           C:\\Program Files\\MySQL\\MySQL ... msi                                   \nMySQL Installer     ",
-      "time": "2026-08-06 10:28:18"
-    },
-    {
-      "cmd": "\"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "En l¡nea: 1 Car cter: 59\n+ \"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version\n+                                                           ~~~~~~~\nToken 'version' inesperado en la expresi¢n o la instrucci¢n.\nEn l¡nea: 1 Car cter: 1\n+ \"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\\mysql.exe\" --version\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nEl operador -- solamente funciona en variables o en propiedades.\n    + CategoryInfo          : ParserError: (:) [], ParentContai",
-      "time": "2026-08-06 10:28:54"
-    },
-    {
-      "cmd": "start \"\" \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Start-Process : No se puede validar el argumento del par metro 'FilePath'. El argumento es null o est  vac¡o. \nProporcione un argumento que no sea null o que no est‚ vac¡o e intente ejecutar el comando de nuevo.\nEn l¡nea: 1 Car cter: 7\n+ start \"\" \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.e ...\n+       ~~\n    + CategoryInfo          : InvalidData: (:) [Start-Process], ParameterBindingValidationException\n    + FullyQualifiedErrorId : ParameterArgumentValidationError,Microsoft.Powe",
-      "time": "2026-08-06 10:28:56"
-    },
-    {
-      "cmd": "mysql --version",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "mysql : El t‚rmino 'mysql' no se reconoce como nombre de un cmdlet, funci¢n, archivo de script o programa ejecutable. \nCompruebe si escribi¢ correctamente el nombre o, si incluy¢ una ruta de acceso, compruebe que dicha ruta es correcta e \nint‚ntelo de nuevo.\nEn l¡nea: 1 Car cter: 1\n+ mysql --version\n+ ~~~~~\n    + CategoryInfo          : ObjectNotFound: (mysql:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException",
-      "time": "2026-08-06 10:28:58"
-    },
-    {
-      "cmd": "Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\M ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException\n    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand",
-      "time": "2026-08-06 10:29:01"
-    },
-    {
-      "cmd": "Get-ChildItem -Path \"C:\\Program Files\\MySQL\\\" -Recurse -Filter \"MySQLWorkbench.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-06 10:29:03"
-    },
-    {
-      "cmd": "Get-Service -Name \"*MySQL*\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Status   Name               DisplayName                           \n------   ----               -----------                           \nRunning  MySQL80            MySQL80                               \nRunning  MySQL84            MySQL84",
-      "time": "2026-08-06 10:29:04"
-    },
-    {
-      "cmd": "Start-Process -FilePath \"C:\\Program Files\\MySQL\\MySQL Workbench 8.0 CE\\MySQLWorkbench.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-06 10:33:32"
-    },
-    {
-      "cmd": "(Get-ChildItem -Path D:\\Eris_Source\\actions -File).Count",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "256",
-      "time": "2026-08-06 22:45:10"
-    },
-    {
-      "cmd": "python Desktop/ERIS_Scripts/calculadora.py",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Ingrese el primer nÃºmero: \n[STDERR]\nTraceback (most recent call last):\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 89, in <module>\n    main()\n    ~~~~^^\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 68, in main\n    num1 = float(input(\"Ingrese el primer nÃºmero: \"))\n                 ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nEOFError: EOF when reading a line",
-      "time": "2026-08-07 12:39:58"
-    },
-    {
-      "cmd": "python \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Ingrese el primer nÃºmero: \n[STDERR]\nTraceback (most recent call last):\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 89, in <module>\n    main()\n    ~~~~^^\n  File \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\\calculadora.py\", line 68, in main\n    num1 = float(input(\"Ingrese el primer nÃºmero: \"))\n                 ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nEOFError: EOF when reading a line",
-      "time": "2026-08-07 12:43:29"
-    },
-    {
-      "cmd": "Start-Process powershell.exe -ArgumentList '-NoExit', '-Command', 'cd \"D:\\Eris_Source\\Desktop\\ERIS_Scripts\"; python calculadora.py'",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-07 12:44:05"
-    },
-    {
-      "cmd": "Start-Process -FilePath \"C:\\Users\\danie\\AppData\\Local\\Discord\\Update.exe\" -ArgumentList \"--processStart Discord.exe\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-07 20:08:49"
-    },
-    {
-      "cmd": "npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "npx : No se puede cargar el archivo C:\\Program Files\\nodejs\\npx.ps1 porque la ejecuci¢n de scripts est  deshabilitada \nen este sistema. Para obtener m s informaci¢n, consulta el tema about_Execution_Policies en \nhttps:/go.microsoft.com/fwlink/?LinkID=135170.\nEn l¡nea: 1 Car cter: 1\n+ npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris  ...\n+ ~~~\n    + CategoryInfo          : SecurityError: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess",
-      "time": "2026-08-08 13:47:25"
-    },
-    {
-      "cmd": "npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "npx : No se puede cargar el archivo C:\\Program Files\\nodejs\\npx.ps1 porque la ejecuci¢n de scripts est  deshabilitada \nen este sistema. Para obtener m s informaci¢n, consulta el tema about_Execution_Policies en \nhttps:/go.microsoft.com/fwlink/?LinkID=135170.\nEn l¡nea: 1 Car cter: 1\n+ npx create-next-app@latest C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris  ...\n+ ~~~\n    + CategoryInfo          : SecurityError: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess",
-      "time": "2026-08-08 13:47:26"
-    },
-    {
-      "cmd": "New-Item -Path \"C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris\" -ItemType Directory -Force",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Directorio: C:\\Users\\danie\\Desktop\\ERIS_web\n\n\nMode                 LastWriteTime         Length Name                                                                 \n----                 -------------         ------ ----                                                                 \nd-----     08/08/2026  02:02 p. m.                next-eris",
-      "time": "2026-08-08 14:20:44"
-    },
-    {
-      "cmd": "Get-WindowsDriver -Online | Select-Object -First 5 ClassName, ProviderName, Version | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": true,
-      "output": "(comando ejecutado como admin — aceptá el UAC)",
-      "time": "2026-08-08 19:13:15"
-    },
-    {
-      "cmd": "dir C:\\Users\\danie\\Desktop /b",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "Error: 'NoneType' object has no attribute 'strip'",
-      "time": "2026-08-08 19:13:16"
-    },
-    {
       "cmd": "Get-Date",
       "shell": "powershell",
       "elevated": false,
@@ -349,8 +34,323 @@
       "elevated": false,
       "output": "(comando ejecutado sin output)",
       "time": "2026-08-08 19:44:28"
+    },
+    {
+      "cmd": "Start-Process \"chrome\" \"https://es.wikipedia.org/wiki/Vía_Láctea\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "(comando ejecutado sin output)",
+      "time": "2026-08-12 11:14:20"
+    },
+    {
+      "cmd": "Get-ScheduledTask | Where-Object {$_.State -eq 'Ready'} | Select-Object TaskName, TaskPath, Author | Format-Table -AutoSize",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "TaskName                                                     TaskPath                                                  \n--------                                                     --------                                                  \nAdobe Acrobat Update Task                                    \\                                                         \nBlueStacksHelper_nxt                                         \\                                                         \nNVIDIA App SelfUpdat",
+      "time": "2026-08-12 11:16:46"
+    },
+    {
+      "cmd": "Get-MpComputerStatus | Select-Object AMServiceEnabled, AntivirusEnabled, RealTimeProtectionEnabled",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "AMServiceEnabled AntivirusEnabled RealTimeProtectionEnabled\n---------------- ---------------- -------------------------\n            True             True                      True",
+      "time": "2026-08-12 11:17:36"
+    },
+    {
+      "cmd": "Get-ScheduledTask | Where-Object {$_.State -eq 'Ready'} | Select-Object TaskName, TaskPath, Author",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "TaskName                                                     TaskPath                                                  \n--------                                                     --------                                                  \nAdobe Acrobat Update Task                                    \\                                                         \nBlueStacksHelper_nxt                                         \\                                                         \nNVIDIA App SelfUpdat",
+      "time": "2026-08-12 11:33:03"
+    },
+    {
+      "cmd": "Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct | Select-Object displayName, productState",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "displayName      productState\n-----------      ------------\nWindows Defender       397568",
+      "time": "2026-08-12 11:33:36"
+    },
+    {
+      "cmd": "Get-ScheduledTask | Where-Object {$_.Author -notlike '*Microsoft*' -and $_.Author -notlike '*Adobe*' -and $_.Author -notlike '*NVIDIA*'} | Select-Object TaskName, Author, @{Name='Command';Expression={$_.Actions.Execute}}",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "TaskName                                   Author                                                   Command            \n--------                                   ------                                                   -------            \nBlueStacksHelper_nxt                                                                                C:\\Program Files...\nOpenClaw Gateway                                                                                    C:\\Users\\danie\\....\nRunPlatformExperienc",
+      "time": "2026-08-12 11:34:08"
+    },
+    {
+      "cmd": "Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelperOnUnlock\"; Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelper_Daily\"; Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelper_Metrics\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Disable-ScheduledTask : El sistema no puede encontrar el archivo especificado.\nEn l¡nea: 1 Car cter: 1\n+ Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelperOnUnlock\" ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : ObjectNotFound: (PS_ScheduledTask:Root/Microsoft/...S_ScheduledTask) [Disable-ScheduledT \n   ask], CimException\n    + FullyQualifiedErrorId : HRESULT 0x80070002,Disable-ScheduledTask\n \nDisable-ScheduledTask : El sistema",
+      "time": "2026-08-12 11:34:31"
+    },
+    {
+      "cmd": "Get-ScheduledTask -TaskName \"RunPlatformExperienceHelper*\" | Disable-ScheduledTask",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "TaskPath                                       TaskName                          State     \n--------                                       --------                          -----     \n\\GoogleUserPEH\\                                RunPlatformExperienceHelper_Daily Disabled  \n\\GoogleUserPEH\\                                RunPlatformExperienceHelper_Me... Disabled  \n\\GoogleUserPEH\\                                RunPlatformExperienceHelperOnU... Disabled",
+      "time": "2026-08-12 11:34:33"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe devices",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "List of devices attached\nZY22JMR6HB\tdevice",
+      "time": "2026-08-13 22:35:45"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe devices",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "List of devices attached\nZY22JMR6HB\tdevice",
+      "time": "2026-08-13 22:37:13"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe devices",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "List of devices attached\nZY22JMR6HB\tdevice",
+      "time": "2026-08-13 22:37:49"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell dumpsys package com.eris.android | findstr versionName",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "versionName=1.0",
+      "time": "2026-08-13 22:40:43"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell run-as com.eris.android ls shared_prefs",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:40:49"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"run-as com.eris.android cat /data/data/com.eris.android/shared_prefs/config.xml\" || D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "En l¡nea: 1 Car cter: 145\n+ ... d cat /data/data/com.eris.android/shared_prefs/config.xml\" || D:\\Eris ...\n+                                                                ~~\nEl token '||' no es un separador de instrucciones v lido en esta versi¢n.\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\n    + FullyQualifiedErrorId : InvalidEndOfLine",
+      "time": "2026-08-13 22:40:54"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"run-as com.eris.android cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:40:57"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "cat: /data/data/com.eris.android/shared_prefs/config.xml: Permission denied",
+      "time": "2026-08-13 22:41:01"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe devices",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "List of devices attached\nZY22JMR6HB\tdevice",
+      "time": "2026-08-13 22:44:20"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell dumpsys package com.eris.android | findstr versionName",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "versionName=1.0",
+      "time": "2026-08-13 22:44:34"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell run-as com.eris.android ls shared_prefs",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:44:56"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"run-as com.eris.android cat /data/data/com.eris.android/shared_prefs/config.xml\" || D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "En l¡nea: 1 Car cter: 145\n+ ... d cat /data/data/com.eris.android/shared_prefs/config.xml\" || D:\\Eris ...\n+                                                                ~~\nEl token '||' no es un separador de instrucciones v lido en esta versi¢n.\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\n    + FullyQualifiedErrorId : InvalidEndOfLine",
+      "time": "2026-08-13 22:45:05"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"run-as com.eris.android cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:45:16"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "cat: /data/data/com.eris.android/shared_prefs/config.xml: Permission denied",
+      "time": "2026-08-13 22:45:26"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe devices",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "List of devices attached\nZY22JMR6HB\tdevice",
+      "time": "2026-08-13 22:49:41"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell dumpsys package com.eris.android | findstr versionName",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "versionName=1.0",
+      "time": "2026-08-13 22:49:50"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell run-as com.eris.android ls shared_prefs",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:50:01"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"run-as com.eris.android cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "run-as: package not debuggable: com.eris.android",
+      "time": "2026-08-13 22:50:06"
+    },
+    {
+      "cmd": "D:\\Eris_Source\\android_build\\sdk\\platform-tools\\adb.exe shell \"cat /data/data/com.eris.android/shared_prefs/config.xml\"",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "cat: /data/data/com.eris.android/shared_prefs/config.xml: Permission denied",
+      "time": "2026-08-13 22:50:14"
+    },
+    {
+      "cmd": "cat << 'EOF' > audit_tools.py\nimport inspect\nimport importlib\nimport sys\nimport os\n\n# Asegurar que el directorio raíz esté en el path\nsys.path.append(os.getcwd())\n\ntry:\n    # Importar los módulos necesarios\n    tool_declarations = importlib.import_module('core.tool_declarations')\n    tool_registry = importlib.import_module('core.tool_registry')\n    \n    # Obtener las herramientas declaradas\n    # Asumimos que tool_declarations tiene un diccionario o lista de herramientas\n    # Ajustar según la estructura real de core/tool_declarations.py\n    declarations = getattr(tool_declarations, 'TOOL_DECLARATIONS', {})\n    \n    mismatches = []\n    \n    for tool_name, decl in declarations.items():\n        try:\n            # Obtener la función real del registro\n            func = tool_registry.get_tool(tool_name)\n            if not func:\n                continue\n                \n            # Obtener la firma de la función real\n            sig = inspect.signature(func)\n            params_real = set(sig.parameters.keys())\n            \n            # Obtener los parámetros declarados\n            # Asumimos que 'decl' tiene una clave 'parameters' o similar\n            # Ajustar según la estructura real de core/tool_declarations.py\n            params_decl = set(decl.get('parameters', {}).get('properties', {}).keys())\n            \n            if params_decl != params_real:\n                mismatches.append({\n                    'tool': tool_name,\n                    'decl': params_decl,\n                    'real': params_real\n                })\n        except Exception as e:\n            print(f\"Error analizando {tool_name}: {e}\")\n            \n    print(\"--- REPORTE DE DESAJUSTES ---\")\n    for m in mismatches:\n        print(f\"Herramienta: {m['tool']}\")\n        print(f\"  Declarados: {m['decl']}\")\n        print(f\"  Reales:     {m['real']}\")\n        print(\"-\" * 20)\n\nexcept Exception as e:\n    print(f\"Error general: {e}\")\nEOF\npython audit_tools.py\n",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "En l¡nea: 1 Car cter: 6\n+ cat << 'EOF' > audit_tools.py\n+      ~\nFalta la especificaci¢n de archivo despu‚s del operador de redirecci¢n.\nEn l¡nea: 1 Car cter: 5\n+ cat << 'EOF' > audit_tools.py\n+     ~\nEl operador '<' est  reservado para uso futuro.\nEn l¡nea: 1 Car cter: 6\n+ cat << 'EOF' > audit_tools.py\n+      ~\nEl operador '<' est  reservado para uso futuro.\nEn l¡nea: 8 Car cter: 27\n+ sys.path.append(os.getcwd())\n+                           ~\nSe esperaba una expresi¢n despu‚s de '('.\nEn l¡nea: ",
+      "time": "2026-08-14 00:02:18"
+    },
+    {
+      "cmd": "python D:\\Eris_Source\\tools\\tool_audit.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "======================================================================\nDict-style auditadas: 247\n======================================================================\n\n[CLASE A] Declaradas pero NUNCA leídas por la función (se ignoran en silencio):\n  accessibility: 'text' no leída (lee: action)\n  angular_designer: 'description' no leída (lee: action, folder, port)\n  angular_designer: 'pages' no leída (lee: action, folder, port)\n  angular_designer: 'sections' no leída (lee: action, folder, port)\n",
+      "time": "2026-08-14 00:14:24"
+    },
+    {
+      "cmd": "python D:\\Eris_Source\\tools\\tool_audit.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "======================================================================\nDict-style auditadas: 247\n======================================================================\n\n[CLASE A] Declaradas pero NUNCA leídas por la función (se ignoran en silencio):\n  accessibility: 'text' no leída (lee: action)\n  backup_system: 'backup_id' no leída (lee: action, backup1, backup2, backups, destination, interval, name, source, type)\n  calendar_manager: 'date' no leída (lee: action, calendar_id, client_id, client_s",
+      "time": "2026-08-14 00:23:28"
+    },
+    {
+      "cmd": "Select-String -Path D:\\Eris_Source\\core\\tool_declarations.py -Pattern \"calendar_manager\" -Context 10,10",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "core\\tool_declarations.py:1496:        \"description\": \"Conexi¢n con navegador.\",\n  core\\tool_declarations.py:1497:        \"parameters\": {\n  core\\tool_declarations.py:1498:            \"type\": \"OBJECT\",\n  core\\tool_declarations.py:1499:            \"properties\": {\n  core\\tool_declarations.py:1500:                \"action\": {\"type\": \"STRING\", \"description\": \"Action to perform\"},\n  core\\tool_declarations.py:1501:            },\n  core\\tool_declarations.py:1502:            \"required\": [\"action\"],\n  core",
+      "time": "2026-08-14 00:29:38"
+    },
+    {
+      "cmd": "python D:\\Eris_Source\\tools\\tool_audit.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "======================================================================\nDict-style auditadas: 247\n======================================================================\n\n[CLASE A] Declaradas pero NUNCA leídas por la función (se ignoran en silencio):\n  accessibility: 'text' no leída (lee: action)\n  backup_system: 'backup_id' no leída (lee: action, backup1, backup2, backups, destination, interval, name, source, type)\n  calendar_manager: 'date' no leída (lee: action, calendar_id, client_id, client_s",
+      "time": "2026-08-14 00:31:15"
+    },
+    {
+      "cmd": "python D:\\Eris_Source\\tools\\tool_audit.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "======================================================================\nDict-style auditadas: 247\n======================================================================\n\n[CLASE A] Declaradas pero NUNCA leídas por la función (se ignoran en silencio):\n  accessibility: 'text' no leída (lee: action)\n  backup_system: 'backup_id' no leída (lee: action, backup1, backup2, backups, destination, interval, name, source, type)\n  calendar_manager: 'days' no leída (lee: action, calendar_id, client_id, client_s",
+      "time": "2026-08-14 00:34:19"
+    },
+    {
+      "cmd": "node --version; npm --version",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "v24.16.0\n\n[STDERR]\nnpm : No se puede cargar el archivo C:\\Program Files\\nodejs\\npm.ps1 porque la ejecuci¢n de scripts est  deshabilitada \nen este sistema. Para obtener m s informaci¢n, consulta el tema about_Execution_Policies en \nhttps:/go.microsoft.com/fwlink/?LinkID=135170.\nEn l¡nea: 1 Car cter: 17\n+ node --version; npm --version\n+                 ~~~\n    + CategoryInfo          : SecurityError: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess",
+      "time": "2026-08-14 09:11:21"
+    },
+    {
+      "cmd": "open: D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris",
+      "shell": "open",
+      "elevated": false,
+      "output": "Abierto: D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris",
+      "time": "2026-08-16 15:05:00"
+    },
+    {
+      "cmd": "open: obsidian",
+      "shell": "open",
+      "elevated": false,
+      "output": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException\n    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand",
+      "time": "2026-08-16 15:05:35"
+    },
+    {
+      "cmd": "open: C:\\Users\\danie\\AppData\\Local\\Obsidian\\Obsidian.exe",
+      "shell": "open",
+      "elevated": false,
+      "output": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"C:\\Users\\danie\\AppData\\Local\\Obsidian\\Obsidian.exe\" -E ...\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException\n    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand",
+      "time": "2026-08-16 15:05:36"
+    },
+    {
+      "cmd": "open: D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris",
+      "shell": "open",
+      "elevated": false,
+      "output": "Abierto: D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris",
+      "time": "2026-08-16 15:05:40"
+    },
+    {
+      "cmd": "open: brave",
+      "shell": "open",
+      "elevated": false,
+      "output": "Abierto: brave",
+      "time": "2026-08-19 12:50:35"
+    },
+    {
+      "cmd": "open: obsidian",
+      "shell": "open",
+      "elevated": false,
+      "output": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException\n    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand",
+      "time": "2026-08-19 12:50:46"
+    },
+    {
+      "cmd": "dotnet build C:\\Users\\danie\\source\\repos\\Ahorcado\\Ahorcado\\Ahorcado.csproj",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: [Errno 22] Invalid argument",
+      "time": "2026-08-21 23:39:21"
+    },
+    {
+      "cmd": "dotnet build",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: [Errno 22] Invalid argument",
+      "time": "2026-08-22 00:09:40"
+    },
+    {
+      "cmd": "pip show opencv-python",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: [Errno 22] Invalid argument",
+      "time": "2026-08-24 09:46:21"
+    },
+    {
+      "cmd": "pip list",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: [Errno 22] Invalid argument",
+      "time": "2026-08-24 09:46:23"
+    },
+    {
+      "cmd": "python C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Codigo\\code_20260824_094645.py",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: [Errno 22] Invalid argument",
+      "time": "2026-08-24 09:46:47"
     }
   ],
-  "last_cmd": "Get-AudioDevice -List",
-  "last_output": "(comando ejecutado sin output)"
+  "last_cmd": "python C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Codigo\\code_20260824_094645.py",
+  "last_output": "Error: [Errno 22] Invalid argument"
 }

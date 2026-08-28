@@ -391,7 +391,12 @@ def _analyze_local_video(file_path: str, prompt: str = "") -> str:
         for b64 in frames_b64:
             parts.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        try:
+            from core.model_config import get_model as _gm
+            _vmodel = _gm("vision")
+        except Exception:
+            _vmodel = "gemini-flash-latest"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{_vmodel}:generateContent?key={api_key}"
         payload = {
             "contents": [{"parts": parts}],
             "generationConfig": {"temperature": 0.3, "maxOutputTokens": 4096},

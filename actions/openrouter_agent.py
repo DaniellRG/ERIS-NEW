@@ -19,7 +19,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 API_FILE = BASE_DIR / "config" / "api_keys.json"
 SYSTEM = "Eres un Agente Especialista delegado por ERIS. Responde de forma clara y directa en español."
-GEMINI_MODEL = "gemini-2.0-flash"
+try:
+    from core.model_config import get_model as _get_model
+    GEMINI_MODEL = _get_model("agent")
+except Exception:
+    GEMINI_MODEL = "gemini-flash-latest"
 
 _ollama_cache = {"t": 0.0, "ok": False}
 
@@ -176,9 +180,14 @@ def _save_text(text: str, tag: str) -> Path:
     return path
 
 
-def openrouter_agent(query: str, model: str = "google/gemini-2.5-flash",
+def openrouter_agent(query: str = None, model: str = "google/gemini-2.5-flash",
                      target_chars: int = 30000, max_rounds: int = 12,
-                     save_long: bool = True) -> str:
+                     save_long: bool = True, parameters: dict = None,
+                     player=None) -> str:
+    if query is None:
+        query = parameters.get("query", "")
+    if not query:
+        return "Error: se requiere 'query'."
     """
     Delega una tarea de texto compleja.
 

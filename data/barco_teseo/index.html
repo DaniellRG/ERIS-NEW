@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>El Barco de Teseo - Paradoja Filosofica</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Space Grotesk","Segoe UI",sans-serif;background:#0f0a1a;color:#e8e0f0;font-size:17px;line-height:1.7;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.row{display:flex;flex-wrap:wrap;margin:0 -0.75rem;}
+.col-md-6{flex:0 0 50%;max-width:50%;padding:0 0.75rem;}
+.col-md-4{flex:0 0 33.333%;max-width:33.333%;padding:0 0.75rem;}
+@media(max-width:768px){.col-md-6,.col-md-4{flex:0 0 100%;max-width:100%;}}
+.text-center{text-align:center;}
+.d-flex{display:flex;}.flex-wrap{flex-wrap:wrap;}.gap-4{gap:1.5rem;}.gap-3{gap:1rem;}
+.justify-content-center{justify-content:center;}.align-items-center{align-items:center;}
+.mb-4{margin-bottom:1.5rem;}.mb-5{margin-bottom:3rem;}.mt-5{margin-top:3rem;}.w-100{width:100%;}
+
+/* Navbar */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;padding:0.8rem 2rem;background:#0f0a1add;backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);}
+.navbar-brand{font-weight:700;font-size:1.3rem;color:#a855f7;}
+.navbar-toggler{display:none;background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:1.3rem;}
+.navbar-collapse{display:flex;}.navbar-nav{display:flex;list-style:none;margin-left:auto;gap:0.3rem;}
+.nav-link{padding:0.5rem 1rem;color:rgba(255,255,255,0.55);transition:color 0.3s;position:relative;font-size:0.9rem;}
+.nav-link::after{content:"";position:absolute;bottom:0;left:50%;width:0;height:2px;background:#a855f7;transition:all .3s;transform:translateX(-50%);}
+.nav-link:hover,.nav-link.active{color:#a855f7;}.nav-link:hover::after,.nav-link.active::after{width:80%;}
+@media(max-width:768px){.navbar-toggler{display:block;}.navbar-collapse{display:none;flex-direction:column;width:100%;}.navbar-collapse.show{display:flex;}.navbar-nav{flex-direction:column;width:100%;}.nav-link{padding:0.5rem 0;}}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:5rem;background:radial-gradient(ellipse at 30% 40%,#a855f715 0%,#0f0a1a 70%);}
+.hero-content{position:relative;z-index:2;}
+.hero h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:700;line-height:1.1;margin-bottom:1.5rem;background:linear-gradient(135deg,#a855f7,#d946ef,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero .subtitle{font-size:1.2rem;opacity:0.7;max-width:650px;margin-bottom:2rem;}
+.btn{display:inline-block;padding:14px 36px;font-weight:600;border-radius:50px;transition:all 0.4s cubic-bezier(.175,.885,.32,1.275);cursor:pointer;border:none;font-size:1rem;}
+.btn-primary{background:linear-gradient(135deg,#a855f7,#d946ef);color:#fff;box-shadow:0 4px 25px rgba(168,85,247,0.3);}
+.btn-primary:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(168,85,247,0.4);}
+.btn-outline{background:transparent;border:2px solid rgba(255,255,255,0.3);color:#fff;}
+.btn-outline:hover{background:rgba(255,255,255,0.08);}
+
+/* Sections */
+section{padding:5rem 0;}
+section:nth-child(odd){background:rgba(255,255,255,0.01);}
+h2{font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:700;margin-bottom:1rem;text-align:center;}
+.section-icon{font-size:2.5rem;text-align:center;margin-bottom:0.5rem;}
+.section-sub{text-align:center;opacity:0.55;margin-bottom:3rem;font-size:1.05rem;}
+.highlight{background:#a855f718;border-left:4px solid #a855f7;padding:1.5rem 2rem;border-radius:0 16px 16px 0;margin:2rem 0;}
+.highlight p{margin:0;opacity:0.85;}
+.pill{display:inline-block;padding:4px 18px;border-radius:50px;font-size:0.8rem;font-weight:600;background:#a855f722;color:#a855f7;margin-bottom:1rem;}
+.card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:2rem;height:100%;transition:transform 0.4s;}
+.card:hover{transform:translateY(-6px);border-color:#a855f744;}
+.card h3{color:#a855f7;margin-bottom:0.8rem;font-size:1.2rem;}
+.card p{opacity:0.75;}
+.emoji-big{font-size:3rem;display:block;margin-bottom:1rem;}
+footer{padding:2rem 0;text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);font-size:0.9rem;}
+
+/* Animations */
+[data-aos]{opacity:0;transform:translateY(25px);transition:opacity 0.7s ease,transform 0.7s ease;}
+[data-aos].aos-animate{opacity:1;transform:translateY(0);}
+[data-aos=fade-left]{transform:translateX(-25px);}[data-aos=fade-left].aos-animate{transform:translateX(0);}
+
+/* Orb */
+#orb{position:fixed;top:20%;right:-10%;width:500px;height:500px;z-index:0;pointer-events:none;background:radial-gradient(circle,#a855f722,#d946ef11,transparent 70%);border-radius:50%;filter:blur(80px);animation:orbPulse 10s ease-in-out infinite;}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:0.3;}50%{transform:scale(1.3);opacity:0.5;}}
+</style>
+</head>
+<body>
+<div id="orb"></div>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="#">✦ Barco de Teseo</a>
+  <button class="navbar-toggler" onclick="document.getElementById('nav').classList.toggle('show')">☰</button>
+  <div class="navbar-collapse" id="nav">
+    <ul class="navbar-nav">
+      <li><a class="nav-link active" href="#inicio">Inicio</a></li>
+      <li><a class="nav-link" href="#origen">Origen</a></li>
+      <li><a class="nav-link" href="#paradoja">La Paradoja</a></li>
+      <li><a class="nav-link" href="#reflexion">Reflexion</a></li>
+      <li><a class="nav-link" href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="inicio" class="hero">
+  <div class="container hero-content">
+    <div class="d-flex justify-content-center" data-aos="fade-up">
+      <div class="pill">Filosofia &bull; Identidad &bull; Metafisica</div>
+    </div>
+    <div class="text-center" data-aos="fade-up">
+      <h1>El Barco de Teseo</h1>
+      <p class="subtitle" style="margin:0 auto;">Si reemplazas cada parte de un barco, una por una, hasta que no quede ninguna original… ¿sigue siendo el mismo barco? Una paradoja que lleva 2000 anos desafiando nuestra comprension de la identidad.</p>
+      <div class="d-flex gap-3 justify-content-center" style="margin-top:2rem;">
+        <a href="#origen" class="btn btn-primary">Descubrir la paradoja</a>
+        <a href="#reflexion" class="btn btn-outline">Reflexionar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="origen">
+  <div class="container">
+    <div class="section-icon">&#9878;</div>
+    <h2 data-aos="fade-up">Origen de la Paradoja</h2>
+    <p class="section-sub" data-aos="fade-up">Plutarco y el barco legendario</p>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div data-aos="fade-up">
+          <p>La paradoja del <strong>Barco de Teseo</strong> fue registrada por primera vez por el historiador griego <strong>Plutarco</strong> (46-120 d.C.) en su obra <em>Vidas paralelas</em>. Segun la leyenda, el barco en el que el heroe <strong>Teseo</strong> regreso de Creta despues de derrotar al Minotauro fue conservado por los atenienses durante siglos como reliquia nacional.</p>
+        </div>
+        <div class="highlight" data-aos="fade-up">
+          <p><strong>&ldquo;El barco en el que Teseo navego con los jovenes y regreso sano y salvo, los atenienses lo conservaron hasta la epoca de Demetrio de Falero, removiendo las tablas viejas a medida que se deterioraban y reemplazandolas con madera nueva y resistente.&rdquo;</strong></p>
+          <p style="margin-top:0.8rem;opacity:0.6;">&mdash; Plutarco, <em>Teseo</em></p>
+        </div>
+        <p data-aos="fade-up">Con el tiempo, los filosofos se preguntaron: si todas las partes originales han sido reemplazadas, <strong>¿sigue siendo el mismo barco?</strong> Y si alguien tomara las piezas viejas y reconstruyera el barco original, <strong>¿cual de los dos seria el verdadero Barco de Teseo?</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="paradoja">
+  <div class="container">
+    <div class="section-icon">&#9881;</div>
+    <h2 data-aos="fade-left">La Paradoja Explicada</h2>
+    <p class="section-sub" data-aos="fade-left">Dos barcos, una identidad dividida</p>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card" data-aos="fade-up">
+          <span class="emoji-big">&#9973;</span>
+          <h3>El Barco Continuo</h3>
+          <p>El barco que los atenienses mantuvieron navegando, reemplazando cada tabla podrida una por una. Aunque ningun componente original permanece, existe una <strong>continuidad fisica y temporal</strong> ininterrumpida. <strong>¿La identidad reside en la continuidad?</strong></p>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+          <span class="emoji-big">&#128736;</span>
+          <h3>El Barco Reconstruido</h3>
+          <p>Alguien recolecta todas las tablas viejas descartadas y las ensambla en su forma original. Ahora tenemos un barco hecho con los <strong>componentes originales</strong>, pero sin continuidad temporal. <strong>¿La identidad reside en los componentes?</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center" style="margin-top:1rem;" data-aos="fade-up">
+      <p style="font-size:1.1rem;opacity:0.8;"><strong>&#10067; La pregunta central:</strong> ¿Cual de los dos barcos es el verdadero Barco de Teseo? ¿Ambos? ¿Ninguno?</p>
+    </div>
+  </div>
+</section>
+
+<section id="reflexion">
+  <div class="container">
+    <div class="section-icon">&#128173;</div>
+    <h2 data-aos="fade-up">Reflexion Filosofica</h2>
+    <p class="section-sub" data-aos="fade-up">Implicaciones para la identidad personal</p>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="highlight" data-aos="fade-up">
+          <p><strong>&#128161; &ldquo;El Barco de Teseo no es solo un problema sobre barcos. Es un problema sobre nosotros.&rdquo;</strong></p>
+        </div>
+        
+        <h3 data-aos="fade-up" style="color:#a855f7;margin-top:2rem;">&#129504; El problema de la identidad personal</h3>
+        <p data-aos="fade-up">Los filosofos han utilizado esta paradoja como analogia para preguntarse: <strong>¿eres la misma persona que eras hace 10 anos?</strong> Tus celulas se han reemplazado casi por completo. Tus recuerdos han cambiado. Tus creencias han evolucionado. Sin embargo, sientes que eres &laquo;tu mismo&raquo;.</p>
+        
+        <h3 data-aos="fade-up" style="color:#a855f7;margin-top:2rem;">&#128300; Perspectivas filosoficas</h3>
+        <div class="row" style="margin-top:1rem;">
+          <div class="col-md-6 mb-4">
+            <div class="card" data-aos="fade-up">
+              <h3>Heraclito</h3>
+              <p>&ldquo;No puedes banarte dos veces en el mismo rio.&rdquo; Todo fluye, nada permanece. La identidad es una ilusion.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card" data-aos="fade-up">
+              <h3>Aristoteles</h3>
+              <p>La identidad no esta en la materia sino en la <strong>forma</strong> y la <strong>organizacion</strong>. La estructura define la identidad.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card" data-aos="fade-up">
+              <h3>Locke</h3>
+              <p>La identidad personal reside en la <strong>memoria</strong> y la <strong>conciencia</strong>. Eres quien recuerdas ser.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card" data-aos="fade-up">
+              <h3>Hume</h3>
+              <p>El &laquo;yo&raquo; es solo un <strong>haz de percepciones</strong> en constante cambio. No existe un yo permanente.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 data-aos="fade-up" style="color:#a855f7;margin-top:2rem;">&#127760; Aplicaciones modernas</h3>
+        <p data-aos="fade-up">La paradoja del Barco de Teseo resuena hoy en multiples campos:</p>
+        <ul style="margin:1rem 0 0 1.5rem;opacity:0.8;" data-aos="fade-up">
+          <li style="margin-bottom:0.5rem;"><strong>Biologia:</strong> Nuestras celulas se reemplazan cada 7-10 anos. ¿Somos la misma persona?</li>
+          <li style="margin-bottom:0.5rem;"><strong>Tecnologia:</strong> ¿Un software actualizado linea por linea sigue siendo el mismo programa?</li>
+          <li style="margin-bottom:0.5rem;"><strong>Medicina:</strong> Si trasplantamos cada organo de una persona, ¿sigue siendo ella misma?</li>
+          <li style="margin-bottom:0.5rem;"><strong>Identidad digital:</strong> ¿Eres el mismo &laquo;tu&raquo; en linea que en persona?</li>
+          <li style="margin-bottom:0.5rem;"><strong>Neurociencia:</strong> El cerebro se reconecta constantemente. ¿Donde reside el &laquo;yo&raquo;?</li>
+        </ul>
+
+        <div class="highlight" data-aos="fade-up" style="margin-top:2.5rem;">
+          <p><strong>&#10024; En conclusion:</strong> La paradoja del Barco de Teseo nos ensena que la <strong>identidad no es un hecho objetivo</strong>, sino una <strong>construccion</strong> que depende del criterio que elijamos: continuidad fisica, composicion material, memoria, forma, o funcion. No hay una respuesta correcta &mdash; solo preguntas que nos ayudan a entendernos mejor a nosotros mismos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="container">
+    <div class="section-icon">&#9993;</div>
+    <h2 data-aos="fade-up">Comparte tu Reflexion</h2>
+    <p class="section-sub" data-aos="fade-up">¿Que opinas? ¿El barco reconstruido es el original, el que nunca dejo de navegar, ambos o ninguno?</p>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form id="contactForm" data-aos="fade-up">
+          <div class="mb-4"><input class="form-control" placeholder="Tu nombre" required></div>
+          <div class="mb-4"><input class="form-control" type="email" placeholder="Tu email" required></div>
+          <div class="mb-4"><textarea class="form-control" rows="4" placeholder="Comparte tu reflexion sobre el Barco de Teseo..." required></textarea></div>
+          <button type="submit" class="btn btn-primary w-100">Enviar reflexion</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 El Barco de Teseo &mdash; Una creacion de ERIS AI para la reflexion filosofica</p>
+</footer>
+
+<script>
+(function(){var e=document.querySelectorAll('[data-aos]');function c(){e.forEach(function(el){var r=el.getBoundingClientRect();if(r.top<window.innerHeight-80)el.classList.add('aos-animate');});}c();window.addEventListener('scroll',c);window.addEventListener('resize',c);})();
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});});});
+var f=document.getElementById('contactForm');if(f){f.addEventListener('submit',function(e){e.preventDefault();if(this.checkValidity()){alert('Gracias por compartir tu reflexion. Te contactaremos pronto.');this.reset();}this.classList.add('was-validated');});}
+</script>
+</body>
+</html>

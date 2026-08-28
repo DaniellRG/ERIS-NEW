@@ -15,10 +15,6 @@ try:
 except ImportError:
     file_processor = None
 try:
-    from actions.flight_finder     import flight_finder
-except ImportError:
-    flight_finder = None
-try:
     from actions.open_app          import open_app
 except ImportError:
     open_app = None
@@ -71,17 +67,13 @@ try:
 except ImportError:
     dev_agent = None
 try:
-    from actions.web_search        import web_search as web_search_action
+    from actions.web_search        import web_search as web_search_action, web_search
 except ImportError:
-    web_search_action = None
+    web_search_action = None; web_search = None
 try:
     from actions.computer_control  import computer_control
 except ImportError:
     computer_control = None
-try:
-    from actions.game_updater      import game_updater
-except ImportError:
-    game_updater = None
 try:
     from actions.google_calendar   import google_calendar
 except ImportError:
@@ -91,30 +83,11 @@ try:
     from actions.emo_core import emo_core, emo_tick, emo_task_done, emo_task_failed
 except ImportError:
     emo_core = emo_tick = emo_task_done = emo_task_failed = None
-try:
-    from actions.task_automation import task_queue
-except ImportError:
-    task_queue = None
-try:
-    from actions.res_manager import res_monitor, res_protect
-except ImportError:
-    res_monitor = res_protect = None
-try:
-    from actions.self_learning import learn_session, learn_from_mistake
-except ImportError:
-    learn_session = learn_from_mistake = None
-try:
-    from actions.predict_engine import predict_analyze
-except ImportError:
-    predict_analyze = None
+
 try:
     from actions.web_jobs import web_jobs, start_server
 except ImportError:
     web_jobs = start_server = None
-try:
-    from actions.sandbox import sandbox_run, sandbox_test_tool
-except ImportError:
-    sandbox_run = sandbox_test_tool = None
 try:
     from actions.obsidian_brain import obsidian_note
 except ImportError:
@@ -132,25 +105,13 @@ try:
 except ImportError:
     scheduler = None; start_runner = None
 try:
-    from actions.google_drive      import google_drive
-except ImportError:
-    google_drive = None
-try:
     from actions.gmail_control     import gmail_control
 except ImportError:
     gmail_control = None
 try:
-    from actions.google_maps       import google_maps
-except ImportError:
-    google_maps = None
-try:
     from actions.rules_engine      import rules_engine, start_rules_runner, check_phrase_triggers, _run_action as _rules_run_action
 except ImportError:
     rules_engine = None; start_rules_runner = None; check_phrase_triggers = None; _rules_run_action = None
-try:
-    from actions.social_media      import social_media
-except ImportError:
-    social_media = None
 try:
     from actions.whatsapp          import whatsapp
 except ImportError:
@@ -212,17 +173,17 @@ try:
 except ImportError:
     start_recording = stop_recording = recording_status = None
 try:
-    from actions.translator  import translate_text, start_monitoring, stop_monitoring, translator_status
+    from actions.translator  import translate_text, start_monitoring, stop_monitoring, translator_status, translator
 except ImportError:
-    translate_text = start_monitoring = stop_monitoring = translator_status = None
+    translate_text = start_monitoring = stop_monitoring = translator_status = translator = None
 try:
-    from actions.meeting_transcriber  import start_transcription, stop_transcription, transcription_status, summarize_transcription
+    from actions.meeting_transcriber  import start_transcription, stop_transcription, transcription_status, summarize_transcription, meeting_transcriber
 except ImportError:
-    start_transcription = stop_transcription = transcription_status = summarize_transcription = None
+    start_transcription = stop_transcription = transcription_status = summarize_transcription = meeting_transcriber = None
 try:
-    from actions.network_monitor  import connections, bandwidth, wifi_info, ping_host, scan_network, monitor_start, monitor_stop, network_status
+    from actions.network_monitor  import connections, bandwidth, wifi_info, ping_host, scan_network, monitor_start, monitor_stop, network_status, network_monitor
 except ImportError:
-    connections = bandwidth = wifi_info = ping_host = scan_network = monitor_start = monitor_stop = network_status = None
+    connections = bandwidth = wifi_info = ping_host = scan_network = monitor_start = monitor_stop = network_status = network_monitor = None
 try:
     from actions.quick_actions  import add, update, remove, list_actions, execute as qa_execute
 except ImportError:
@@ -300,10 +261,6 @@ try:
 except ImportError:
     tiktok_analyzer = None
 try:
-    from actions.arca_invoice      import arca_invoice
-except ImportError:
-    arca_invoice = None
-try:
     from actions.terminal_agent    import terminal_agent
 except ImportError:
     terminal_agent = None
@@ -363,11 +320,11 @@ except ImportError:
 try:
     from actions.curiosity_engine import (
         curiosity_tell_joke, curiosity_tell_fact, curiosity_suggest_fun,
-        curiosity_trending, curiosity_greeting, curiosity_laugh
+        curiosity_greeting, curiosity_laugh
     )
 except ImportError:
     curiosity_tell_joke = None; curiosity_tell_fact = None; curiosity_suggest_fun = None
-    curiosity_trending = None; curiosity_greeting = None; curiosity_laugh = None
+    curiosity_greeting = None; curiosity_laugh = None
 try:
     from actions.curiosity_engine import proactive_suggest, proactive_learn
 except ImportError:
@@ -398,9 +355,9 @@ try:
 except ImportError:
     skill_manage = None
 try:
-    from skills.superpowers import superpowers_list, superpowers_activate, superpowers_tool_declaration
+    from skills.superpowers import superpowers_list, superpowers_tool_declaration
 except ImportError:
-    superpowers_list = None; superpowers_activate = None; superpowers_tool_declaration = None
+    superpowers_list = None; superpowers_tool_declaration = None
 try:
     from core.plugin_manager import get_plugin_manager
 except ImportError:
@@ -409,10 +366,6 @@ try:
     from actions.app_installer import app_installer
 except ImportError:
     app_installer = None
-try:
-    from actions.training_full import full_training
-except ImportError:
-    full_training = None
 try:
     from core.emotional_state import (
         get_emotional_state, adjust_emotion, react_to_success,
@@ -513,10 +466,6 @@ try:
     from actions.subagent_task import subagent_task
 except ImportError:
     subagent_task = None
-try:
-    from actions.self_awareness import self_awareness
-except ImportError:
-    self_awareness = None
 
 try:
     from actions.emotional_growth import emotional_growth, on_user_message as _eg_on_user_msg, on_tool_result as _eg_on_tool_result
@@ -575,10 +524,6 @@ try:
 except ImportError:
     reminders = None
 try:
-    from actions.web_search import web_search
-except ImportError:
-    web_search = None
-try:
     from actions.calculator import calculator
 except ImportError:
     calculator = None
@@ -611,10 +556,6 @@ try:
 except ImportError:
     active_firewall = None
 try:
-    from actions.network_monitor import network_monitor
-except ImportError:
-    network_monitor = None
-try:
     from actions.file_encryptor import file_encryptor
 except ImportError:
     file_encryptor = None
@@ -646,10 +587,6 @@ try:
     from actions.text_summarizer import text_summarizer
 except ImportError:
     text_summarizer = None
-try:
-    from actions.translator import translator
-except ImportError:
-    translator = None
 try:
     from actions.ocr_reader import ocr_reader
 except ImportError:
@@ -694,6 +631,10 @@ try:
     from actions.telegram_bot import telegram_bot
 except ImportError:
     telegram_bot = None
+try:
+    from actions.phone_control import phone_control
+except ImportError:
+    phone_control = None
 try:
     from actions.notification_center import notification_center
 except ImportError:
@@ -867,110 +808,6 @@ except ImportError:
     desktop_notifications = None
 # ── Batch 4: Complete Training ──
 try:
-    from actions.translator import translator
-except ImportError:
-    translator = None
-try:
-    from actions.network_monitor import network_monitor
-except ImportError:
-    network_monitor = None
-try:
-    from actions.quick_actions import quick_actions
-except ImportError:
-    quick_actions = None
-try:
-    from actions.pdf_editor import pdf_editor
-except ImportError:
-    pdf_editor = None
-try:
-    from actions.context_menu import context_menu
-except ImportError:
-    context_menu = None
-try:
-    from actions.document_manager import document_manager
-except ImportError:
-    document_manager = None
-try:
-    from actions.arca_invoice import arca_invoice
-except ImportError:
-    arca_invoice = None
-try:
-    from actions.terminal_agent import terminal_agent
-except ImportError:
-    terminal_agent = None
-try:
-    from actions.tool_creator import tool_creator
-except ImportError:
-    tool_creator = None
-try:
-    from actions.smart_file_organizer import smart_file_organizer
-except ImportError:
-    smart_file_organizer = None
-try:
-    from actions.emo_core import emo_core
-except ImportError:
-    emo_core = None
-try:
-    from actions.web_jobs import web_jobs
-except ImportError:
-    web_jobs = None
-try:
-    from actions.web_navigation import web_navigation
-except ImportError:
-    web_navigation = None
-try:
-    from actions.game_launcher import game_launcher
-except ImportError:
-    game_launcher = None
-try:
-    from actions.search_background import search_background
-except ImportError:
-    search_background = None
-try:
-    from actions.alarm_manager import alarm_manager
-except ImportError:
-    alarm_manager = None
-try:
-    from actions.habit_predictor import habit_predictor
-except ImportError:
-    habit_predictor = None
-try:
-    from actions.file_monitor import file_monitor
-except ImportError:
-    file_monitor = None
-try:
-    from actions.task_manager import task_manager
-except ImportError:
-    task_manager = None
-try:
-    from actions.system_reader import system_reader
-except ImportError:
-    system_reader = None
-try:
-    from actions.webfetch import webfetch
-except ImportError:
-    webfetch = None
-try:
-    from actions.document_generator import document_generator
-except ImportError:
-    document_generator = None
-try:
-    from actions.presentation_generator import presentation_generator
-except ImportError:
-    presentation_generator = None
-try:
-    from actions.spreadsheet_generator import spreadsheet_generator
-except ImportError:
-    spreadsheet_generator = None
-try:
-    from actions.ask_user import ask_user
-except ImportError:
-    ask_user = None
-try:
-    from actions.subagent_task import subagent_task
-except ImportError:
-    subagent_task = None
-try:
     from actions.self_heal import self_heal
 except ImportError:
     self_heal = None
@@ -987,186 +824,17 @@ try:
 except ImportError:
     speaker_recognition = None
 try:
-    from actions.emotional_growth import emotional_growth
+    from actions.data_visualize import data_visualize
 except ImportError:
-    emotional_growth = None
+    data_visualize = None
 try:
-    from actions.english_teacher import english_teacher
+    from actions.workflow_runner import workflow_runner
 except ImportError:
-    english_teacher = None
+    workflow_runner = None
 try:
-    from actions.cybersecurity import cybersecurity
+    from actions.self_extend import self_extend
 except ImportError:
-    cybersecurity = None
-try:
-    from actions.credential_recovery import credential_recovery
-except ImportError:
-    credential_recovery = None
-try:
-    from actions.osint_agent import osint_agent
-except ImportError:
-    osint_agent = None
-try:
-    from actions.security_shield import security_shield
-except ImportError:
-    security_shield = None
-try:
-    from actions.self_protection import self_protection
-except ImportError:
-    self_protection = None
-try:
-    from actions.video_analyzer import video_analyzer
-except ImportError:
-    video_analyzer = None
-try:
-    from actions.pc_control import pc_control
-except ImportError:
-    pc_control = None
-try:
-    from actions.reminders import reminders
-except ImportError:
-    reminders = None
-try:
-    from actions.calculator import calculator
-except ImportError:
-    calculator = None
-try:
-    from actions.file_manager import file_manager
-except ImportError:
-    file_manager = None
-try:
-    from actions.music_player import music_player
-except ImportError:
-    music_player = None
-try:
-    from actions.fun_mode import fun_mode
-except ImportError:
-    fun_mode = None
-try:
-    from actions.active_firewall import active_firewall
-except ImportError:
-    active_firewall = None
-try:
-    from actions.file_encryptor import file_encryptor
-except ImportError:
-    file_encryptor = None
-try:
-    from actions.task_scheduler import task_scheduler
-except ImportError:
-    task_scheduler = None
-try:
-    from actions.auto_agent import auto_agent
-except ImportError:
-    auto_agent = None
-try:
-    from actions.code_generator import code_generator
-except ImportError:
-    code_generator = None
-try:
-    from actions.memory_rag import memory_rag
-except ImportError:
-    memory_rag = None
-try:
-    from actions.context_engine import context_engine
-except ImportError:
-    context_engine = None
-try:
-    from actions.smart_browser import smart_browser
-except ImportError:
-    smart_browser = None
-try:
-    from actions.text_summarizer import text_summarizer
-except ImportError:
-    text_summarizer = None
-try:
-    from actions.ocr_reader import ocr_reader
-except ImportError:
-    ocr_reader = None
-try:
-    from actions.audio_transcriber import audio_transcriber
-except ImportError:
-    audio_transcriber = None
-try:
-    from actions.data_analyst import data_analyst
-except ImportError:
-    data_analyst = None
-try:
-    from actions.pdf_manager import pdf_manager
-except ImportError:
-    pdf_manager = None
-try:
-    from actions.template_engine import template_engine
-except ImportError:
-    template_engine = None
-try:
-    from actions.browser_history import browser_history
-except ImportError:
-    browser_history = None
-try:
-    from actions.process_manager import process_manager
-except ImportError:
-    process_manager = None
-try:
-    from actions.driver_manager import driver_manager
-except ImportError:
-    driver_manager = None
-try:
-    from actions.whatsapp_web import whatsapp_web
-except ImportError:
-    whatsapp_web = None
-try:
-    from actions.notification_center import notification_center
-except ImportError:
-    notification_center = None
-try:
-    from actions.voice_clone import voice_clone
-except ImportError:
-    voice_clone = None
-try:
-    from actions.real_time_tts import real_time_tts
-except ImportError:
-    real_time_tts = None
-try:
-    from actions.keylogger_detector import keylogger_detector
-except ImportError:
-    keylogger_detector = None
-try:
-    from actions.usb_monitor import usb_monitor
-except ImportError:
-    usb_monitor = None
-try:
-    from actions.ransomware_shield import ransomware_shield
-except ImportError:
-    ransomware_shield = None
-try:
-    from actions.darkweb_monitor import darkweb_monitor
-except ImportError:
-    darkweb_monitor = None
-try:
-    from actions.disk_wiper import disk_wiper
-except ImportError:
-    disk_wiper = None
-try:
-    from actions.app_installer import app_installer
-except ImportError:
-    app_installer = None
-try:
-    from actions.screen_recorder import start_recording
-except ImportError:
-    start_recording = None
-try:
-    from actions.eris_db import save_everywhere
-except ImportError:
-    save_everywhere = None
-try:
-    from actions.autonomous_agent import screen_see
-except ImportError:
-    screen_see = None
-try:
-    from actions.research_agent import research
-except ImportError:
-    research = None
-# ── Batch 4B: Stub Tools ──
+    self_extend = None
 try:
     from actions.agent_task import agent_task
 except ImportError:
@@ -1232,14 +900,6 @@ try:
 except ImportError:
     learn_session = None
 try:
-    from actions.meeting_transcriber import meeting_transcriber
-except ImportError:
-    meeting_transcriber = None
-try:
-    from actions.obsidian_note import obsidian_note
-except ImportError:
-    obsidian_note = None
-try:
     from actions.play_direct import play_direct
 except ImportError:
     play_direct = None
@@ -1259,14 +919,6 @@ try:
     from actions.res_protect import res_protect
 except ImportError:
     res_protect = None
-try:
-    from actions.sandbox_run import sandbox_run
-except ImportError:
-    sandbox_run = None
-try:
-    from actions.sandbox_test_tool import sandbox_test_tool
-except ImportError:
-    sandbox_test_tool = None
 try:
     from actions.save_memory import save_memory
 except ImportError:
@@ -1295,6 +947,30 @@ try:
     from actions.task_queue import task_queue
 except ImportError:
     task_queue = None
+try:
+    from actions.roadmap import roadmap
+except ImportError:
+    roadmap = None
+try:
+    from core.emotional_core import emotional_core_tool as emotional_core
+except ImportError:
+    emotional_core = None
+try:
+    from core.observer import observer_tool as observer
+except ImportError:
+    observer = None
+try:
+    from core.code_guard import code_guard_tool as guard
+except ImportError:
+    guard = None
+try:
+    from core.mission_agent import mission_tool as mission
+except ImportError:
+    mission = None
+try:
+    from core.self_evolution import self_evolution_tool as evolucion
+except ImportError:
+    evolucion = None
 # ── Batch 5: Connectivity + Self-Healing ──
 try:
     from core.connectivity import connectivity_tool

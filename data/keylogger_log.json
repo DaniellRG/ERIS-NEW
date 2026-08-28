@@ -56,6 +56,74 @@
         "brave.exe (PID: 19432)"
       ],
       "timestamp": "2026-07-27T21:46:03.623943"
+    },
+    {
+      "type": "process",
+      "details": [
+        "brave.exe (PID: 1736)",
+        "brave.exe (PID: 3156)",
+        "brave.exe (PID: 3416)",
+        "brave.exe (PID: 6596)",
+        "brave.exe (PID: 6616)",
+        "brave.exe (PID: 8004)",
+        "brave.exe (PID: 9232)",
+        "brave.exe (PID: 10208)",
+        "brave.exe (PID: 11296)",
+        "brave.exe (PID: 12068)",
+        "msedgewebview2.exe (PID: 12764)",
+        "brave.exe (PID: 13740)",
+        "NVIDIA Overlay.exe (PID: 16936)",
+        "brave.exe (PID: 17944)",
+        "brave.exe (PID: 18260)",
+        "brave.exe (PID: 21436)"
+      ],
+      "timestamp": "2026-08-14T09:42:17.925556"
+    },
+    {
+      "type": "process",
+      "details": [
+        "brave.exe (PID: 1924)",
+        "brave.exe (PID: 3156)",
+        "brave.exe (PID: 3416)",
+        "brave.exe (PID: 5200)",
+        "brave.exe (PID: 8004)",
+        "brave.exe (PID: 9228)",
+        "brave.exe (PID: 10136)",
+        "brave.exe (PID: 10208)",
+        "brave.exe (PID: 11296)",
+        "brave.exe (PID: 11528)",
+        "brave.exe (PID: 12068)",
+        "msedgewebview2.exe (PID: 12764)",
+        "NVIDIA Overlay.exe (PID: 16936)",
+        "brave.exe (PID: 17944)",
+        "brave.exe (PID: 18260)",
+        "brave.exe (PID: 21104)",
+        "brave.exe (PID: 21436)"
+      ],
+      "timestamp": "2026-08-14T09:45:58.661998"
+    },
+    {
+      "type": "process",
+      "details": [
+        "brave.exe (PID: 3156)",
+        "brave.exe (PID: 3388)",
+        "brave.exe (PID: 3416)",
+        "brave.exe (PID: 7188)",
+        "brave.exe (PID: 8004)",
+        "brave.exe (PID: 9816)",
+        "brave.exe (PID: 10136)",
+        "brave.exe (PID: 10208)",
+        "brave.exe (PID: 11296)",
+        "brave.exe (PID: 11936)",
+        "brave.exe (PID: 12068)",
+        "msedgewebview2.exe (PID: 12764)",
+        "brave.exe (PID: 14328)",
+        "NVIDIA Overlay.exe (PID: 16936)",
+        "brave.exe (PID: 17944)",
+        "brave.exe (PID: 18260)",
+        "brave.exe (PID: 21436)"
+      ],
+      "timestamp": "2026-08-14T09:52:35.684791"
     }
   ],
   "protected": false

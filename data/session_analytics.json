@@ -1,0 +1,87 @@
+{
+  "sessions": [
+    {
+      "id": "sess_1786904616",
+      "timestamp": 1786904616.8648856,
+      "date": "2026-08-16",
+      "hour": 13,
+      "weekday": "Sunday",
+      "duration": 60,
+      "message_count": 10,
+      "tools_used": [
+        "shell",
+        "read"
+      ],
+      "topics": [
+        "test"
+      ],
+      "success": true
+    },
+    {
+      "id": "sess_1786904685",
+      "timestamp": 1786904685.7341173,
+      "date": "2026-08-16",
+      "hour": 13,
+      "weekday": "Sunday",
+      "duration": 60,
+      "message_count": 10,
+      "tools_used": [
+        "shell",
+        "read"
+      ],
+      "topics": [
+        "test"
+      ],
+      "success": true
+    },
+    {
+      "id": "sess_1786909818",
+      "timestamp": 1786909818.0774877,
+      "date": "2026-08-16",
+      "hour": 14,
+      "weekday": "Sunday",
+      "duration": 60,
+      "message_count": 10,
+      "tools_used": [
+        "shell",
+        "read"
+      ],
+      "topics": [
+        "test"
+      ],
+      "success": true
+    },
+    {
+      "id": "sess_1786909852",
+      "timestamp": 1786909852.610421,
+      "date": "2026-08-16",
+      "hour": 14,
+      "weekday": "Sunday",
+      "duration": 60,
+      "message_count": 10,
+      "tools_used": [
+        "shell",
+        "read"
+      ],
+      "topics": [
+        "test"
+      ],
+      "success": true
+    }
+  ],
+  "daily_stats": {
+    "2026-08-16": {
+      "sessions": 4,
+      "total_duration": 240,
+      "total_messages": 40
+    }
+  },
+  "hourly_distribution": {
+    "13": 2,
+    "14": 2
+  },
+  "topic_frequency": {
+    "test": 4
+  },
+  "avg_session_length": 0
+}

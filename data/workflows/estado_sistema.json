@@ -1,0 +1,28 @@
+{
+  "name": "estado_sistema",
+  "description": "Diagnostico rapido del sistema.",
+  "on_error": "continue",
+  "steps": [
+    {
+      "label": "Sistema",
+      "tool": "system_reader",
+      "params": {
+        "action": "status"
+      }
+    },
+    {
+      "label": "Salud",
+      "tool": "system_reader",
+      "params": {
+        "action": "advisory"
+      }
+    },
+    {
+      "label": "Procesos",
+      "tool": "system_reader",
+      "params": {
+        "action": "top_processes"
+      }
+    }
+  ]
+}

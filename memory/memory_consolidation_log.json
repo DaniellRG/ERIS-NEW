@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2026-08-21T00:06:28.224239",
+    "action": "weekly_summary",
+    "details": "Resumen semanal creado"
+  },
+  {
+    "timestamp": "2026-08-21T00:06:28.224919",
+    "action": "full_consolidation",
+    "details": "Consolidacion completa"
+  }
+]

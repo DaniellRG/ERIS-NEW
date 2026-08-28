@@ -6,6 +6,7 @@ import ast
 import json
 import os
 import re
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -125,7 +126,18 @@ def code_review(parameters: dict = None, player=None) -> str:
             return f"Path not found: {path}"
         return _quick_review(p)
 
-    return "Actions: review, security, style, history, stats, quick"
+    elif action == "review_diff":
+        repo = params.get("repo", str(_BASE))
+        return _review_git_diff(repo, params.get("use_llm", False), player)
+
+    elif action == "pr":
+        repo = params.get("repo", str(_BASE))
+        title = params.get("title", "")
+        head = params.get("head", "")
+        base = params.get("base", "main")
+        return _review_and_pr(repo, title, head, base, player)
+
+    return "Actions: review, security, style, history, stats, quick, review_diff, pr"
 
 
 def _review_file(path: Path) -> str:
@@ -315,3 +327,85 @@ def _record_review(path, issues, high, medium):
     })
     data["reviews"] = data["reviews"][-100:]
     _save_history(data)
+
+
+def _git(args: list, repo: str) -> str:
+    try:
+        r = subprocess.run(["git"] + args, cwd=repo, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", timeout=60)
+        out = (r.stdout or "") + (r.stderr or "")
+        return out.strip()
+    except Exception as e:
+        return f"[git error] {e}"
+
+
+def _review_git_diff(repo: str, use_llm: bool = False, player=None) -> str:
+    """Revisa los cambios sin commitear (git diff) con heurística y opcionalmente LLM."""
+    diff = _git(["diff", "--stat"], repo)
+    full_diff = _git(["diff"], repo)
+    if not diff or "[git error]" in diff:
+        return f"Sin cambios pendientes o error: {diff}"
+    lines = [f"═══ REVIEW DE CAMBIOS ({repo}) ═══", "", diff, ""]
+    findings = []
+    for i, line in enumerate(full_diff.splitlines(), 1):
+        if line.startswith(("+", "-")) and len(line) > 3:
+            for pattern, severity, msg in SECURITY_PATTERNS:
+                if re.search(pattern, line):
+                    findings.append((severity, i, msg, line.strip()[:60]))
+            for pattern, severity, msg in STYLE_ISSUES:
+                if re.search(pattern, line):
+                    findings.append((severity, i, msg, line.strip()[:60]))
+    high = sum(1 for s, _, _, _ in findings if s == "HIGH")
+    lines.append(f"Issues en el diff: {len(findings)} (HIGH: {high})")
+    for sev, ln, msg, ctx in findings[:15]:
+        lines.append(f"  [{sev}] +{ln}: {msg}")
+        if ctx:
+            lines.append(f"         {ctx}")
+    if use_llm:
+        try:
+            from core.agent_architecture import _chat
+            prompt = (
+                "Sos un reviewer senior de Python. Revisá este diff y respondé en espanol: "
+                "1) bugs o riesgos, 2) mejoras concretas, 3) título de commit convencional sugerido.\n\n"
+                + full_diff[:6000]
+            )
+            review = _chat([{"role": "user", "content": prompt}], max_tokens=600)
+            if review:
+                lines.append("", "═══ REVIEW CON LLM ═══", "", str(review)[:2500])
+        except Exception as e:
+            lines.append(f"[llm error: {e}]")
+    return "\n".join(lines)
+
+
+def _review_and_pr(repo: str, title: str, head: str, base: str, player=None) -> str:
+    """Revisa el diff y crea un PR con GitHub. Si no hay 'title', lo infiere del diff."""
+    diff = _git(["diff", "--stat"], repo)
+    if not diff or "[git error]" in diff:
+        return f"Sin cambios para PR o error: {diff}"
+    if not title:
+        try:
+            from core.agent_architecture import _chat
+            prompt = (
+                "Dado este diff, generá un título de PR corto (max 60 chars) en ingles "
+                "siguiendo Conventional Commits (feat:/fix:/refactor:/docs:/test:/chore:). "
+                "Solo el título, sin explicaciones.\n\n" + diff[:3000]
+            )
+            t = _chat([{"role": "user", "content": prompt}], max_tokens=60)
+            title = (t or "").strip().strip('"').strip("'")[:60]
+        except Exception as e:
+            title = ""
+        if not title:
+            title = "chore: cambios recientes"
+    if not head:
+        head = _git(["branch", "--show-current"], repo).strip()
+        if not head:
+            head = "main"
+    review = _review_git_diff(repo, use_llm=False)
+    body = f"Revisión automática de ERIS:\n\n```\n{diff}\n```\n\n---\n\n{review[:1500]}"
+    try:
+        from actions.github_pr import github_pr
+        out = github_pr({"action": "pr_create", "title": title, "head": head, "base": base, "body": body})
+        return f"Título: {title} | Rama: {head} -> {base}\n\n{out}"
+    except Exception as e:
+        return f"Revisión lista (titulo: {title}) pero fallo al crear PR: {e}\n\n{review[:1200]}"
+

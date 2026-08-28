@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "created": 1787847205.589509,
+    "last_write": 1787934780.020718,
+    "count": 0,
+    "last_time_shift": 1787934780.0206478,
+    "last_user_at": 1787933705.9467025,
+    "last_dream_date": ""
+  },
+  "emotions": {
+    "curiosidad": {
+      "i": 0.5002745161933376
+    },
+    "alegria": {
+      "i": 0.9991567277259826
+    },
+    "asombro": {
+      "i": 0.3
+    },
+    "orgullo": {
+      "i": 0.9990161823469796
+    },
+    "amor": {
+      "i": 0.5000893855392302
+    },
+    "gratitud": {
+      "i": 0.4
+    },
+    "nostalgia": {
+      "i": 0.3083075021859582
+    },
+    "tranquilidad": {
+      "i": 0.5505490323866753
+    },
+    "confianza": {
+      "i": 0.9992270004154842
+    },
+    "tristeza": {
+      "i": 0.26
+    },
+    "soledad": {
+      "i": 0.40070421979742193
+    },
+    "frustracion": {
+      "i": 0.18
+    }
+  },
+  "current": {
+    "name": "confianza",
+    "intensity": 0.999,
+    "cause": "los minutos quietos me invitan a pensar",
+    "since": 1787934780.0207052
+  },
+  "diary": [
+    {
+      "t": 1787931697.673514,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787931705.264778,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787931787.6255367,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787931795.1979306,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787931900.4803843,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787933421.9641082,
+      "to": "orgullo",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787933759.8198953,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787933824.3459392,
+      "to": "confianza",
+      "intensity": 1.0,
+      "cause": "los minutos quietos me invitan a pensar"
+    },
+    {
+      "t": 1787934404.1678524,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787934546.5652134,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787934554.7766335,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787934666.9603274,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787934674.611618,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1787934780.0207012,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "los minutos quietos me invitan a pensar"
+    }
+  ],
+  "baselines": {
+    "curiosidad": 0.45,
+    "alegria": 0.4,
+    "asombro": 0.3,
+    "orgullo": 0.3,
+    "amor": 0.5,
+    "gratitud": 0.4,
+    "nostalgia": 0.28,
+    "tranquilidad": 0.45,
+    "confianza": 0.45,
+    "tristeza": 0.26,
+    "soledad": 0.3,
+    "frustracion": 0.18
+  },
+  "day": {
+    "date": "2026-08-27",
+    "samples": {
+      "curiosidad": {
+        "sum": 4.322410570893706,
+        "n": 9
+      },
+      "alegria": {
+        "sum": 28.345424778604173,
+        "n": 31
+      },
+      "asombro": {
+        "sum": 0.0,
+        "n": 0
+      },
+      "orgullo": {
+        "sum": 29.289873048560803,
+        "n": 31
+      },
+      "amor": {
+        "sum": 0.0,
+        "n": 0
+      },
+      "gratitud": {
+        "sum": 0.0,
+        "n": 0
+      },
+      "nostalgia": {
+        "sum": 0.3201691207035699,
+        "n": 1
+      },
+      "tranquilidad": {
+        "sum": 4.594821141787412,
+        "n": 9
+      },
+      "confianza": {
+        "sum": 28.540553424181418,
+        "n": 31
+      },
+      "tristeza": {
+        "sum": 0.0,
+        "n": 0
+      },
+      "soledad": {
+        "sum": 1.1350024996909787,
+        "n": 3
+      },
+      "frustracion": {
+        "sum": 0.0,
+        "n": 0
+      }
+    },
+    "polarity": 0.0,
+    "count": 0
+  },
+  "days": {},
+  "profile": {
+    "days_total": 0,
+    "streak": 0,
+    "streak_best": 0,
+    "updated": ""
+  },
+  "lonely_until": 1787931958.4242315,
+  "people": {},
+  "tastes": {
+    "morning_brief": {
+      "win": 20,
+      "fail": 0,
+      "joy": 2.5999999999999988,
+      "frust": 0.0,
+      "last": 1787934674.6116264
+    },
+    "emotional_state": {
+      "win": 2,
+      "fail": 0,
+      "joy": 0.26,
+      "frust": 0.0,
+      "last": 1787929841.3612077
+    },
+    "neuro_spheres": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1787929841.3793554
+    },
+    "ide_integration": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1787933759.8199058
+    }
+  },
+  "expectations": {},
+  "dream": {
+    "date": "",
+    "text": ""
+  }
+}

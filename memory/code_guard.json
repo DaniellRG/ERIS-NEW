@@ -1,0 +1,20 @@
+{
+  "config": {
+    "interval_sec": 10,
+    "auto_fix": true,
+    "auto_fix_w": false,
+    "cooldown_voz_s": 30,
+    "max_fix_fraction": 0.25,
+    "extra_targets": [
+      "C:\\Users\\danie\\Desktop\\demo_eris.py"
+    ]
+  },
+  "last_fp": "29ac7f54f5958c3ba44fd4a98b21dbb4",
+  "reported": {
+    "C:\\Users\\danie\\Desktop\\demo_eris.py": "9262582b9c2d3a20d95f00689fd64754",
+    "C:\\Users\\danie\\source\\repos\\SistemadeEmpleados\\SistemadeEmpleados\\Program.cs": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "last_voice": 1787931699.2066689,
+  "last_target": "C:\\Users\\danie\\source\\repos\\SistemadeEmpleados\\SistemadeEmpleados\\Program.cs",
+  "fixed_hoy": 3
+}

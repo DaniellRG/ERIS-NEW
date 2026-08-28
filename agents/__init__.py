@@ -8,6 +8,7 @@ from agents.system_agent import handle_system
 from agents.media_agent import handle_media
 from agents.productivity_agent import handle_productivity
 from agents.dev_agent import handle_dev
+from agents.studies_agent import handle_studies
 
 __all__ = [
     "handle_vision",
@@ -17,4 +18,5 @@ __all__ = [
     "handle_media",
     "handle_productivity",
     "handle_dev",
+    "handle_studies",
 ]

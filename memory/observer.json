@@ -1,0 +1,349 @@
+{
+  "today": "2026-08-28",
+  "last_poll": 1787935001.668219,
+  "current": {
+    "proc": "devenv",
+    "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
+    "kind": "programacion",
+    "since": 1787934780.02211
+  },
+  "coding": {
+    "session_start": 1787934780.02211,
+    "today_min": 46,
+    "reported": false,
+    "last_end": 0.0
+  },
+  "apps_today": {
+    "pythonw": {
+      "count": 17,
+      "title": "ERIS"
+    },
+    "windowsterminal": {
+      "count": 37,
+      "title": "Windows PowerShell"
+    },
+    "explorer": {
+      "count": 7,
+      "title": "Program Manager"
+    },
+    "searchhost": {
+      "count": 1,
+      "title": "Buscar"
+    },
+    "whatsapp.root": {
+      "count": 7,
+      "title": "WhatsApp"
+    },
+    "steamwebhelper": {
+      "count": 5,
+      "title": "Steam"
+    },
+    "brave": {
+      "count": 7,
+      "title": "Eve x Ultimate Bunny (CNS Compatible) at Stellar Blade Nexus - Mods and community - Brave"
+    },
+    "modmanager": {
+      "count": 1,
+      "title": "Fluffy Mod Manager"
+    },
+    "neatdm": {
+      "count": 1,
+      "title": "Download Completed"
+    },
+    "winrar": {
+      "count": 1,
+      "title": "Shadow kunoich body stocking no heart-1461-1-2-1754644284.zip (copia de evaluación)"
+    },
+    "wallpaperui": {
+      "count": 4,
+      "title": "Wallpaper UI"
+    },
+    "obsidian": {
+      "count": 1,
+      "title": "Vista gráfica - BaseObsiEris - Obsidian 1.13.7"
+    },
+    "devenv": {
+      "count": 7,
+      "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio"
+    }
+  },
+  "events": [
+    {
+      "type": "title_change",
+      "proc": "explorer",
+      "kind": "otros",
+      "title": "StellarBlade - Explorador de archivos",
+      "t": 1787930314.192
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "modmanager",
+      "to_title": "Fluffy Mod Manager",
+      "to_kind": "otros",
+      "from_proc": "explorer",
+      "from_title": "StellarBlade - Explorador de archivos",
+      "t": 1787930374.196
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "brave",
+      "to_title": "YouTube - Brave",
+      "to_kind": "navegacion",
+      "from_proc": "modmanager",
+      "from_title": "Fluffy Mod Manager",
+      "t": 1787930446.759
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "explorer",
+      "to_title": "CustomNanosuitSystem - Explorador de archivos",
+      "to_kind": "otros",
+      "from_proc": "brave",
+      "from_title": "YouTube - Brave",
+      "t": 1787930506.804
+    },
+    {
+      "type": "title_change",
+      "proc": "explorer",
+      "kind": "otros",
+      "title": "Win64 - Explorador de archivos",
+      "t": 1787930566.808
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "brave",
+      "to_title": "Cómo Instalar CNS 2.0 en 2026 para Stellar Blade | Guía Paso a Paso PC - YouTube - Brave",
+      "to_kind": "navegacion",
+      "from_proc": "explorer",
+      "from_title": "Win64 - Explorador de archivos",
+      "t": 1787930672.961
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "neatdm",
+      "to_title": "Download Completed",
+      "to_kind": "otros",
+      "from_proc": "brave",
+      "from_title": "Stellar Blade Mods - Nexus Mods - Brave",
+      "t": 1787930926.025
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "brave",
+      "to_title": "Eve x Ultimate Bunny (CNS Compatible) at Stellar Blade Nexus - Mods and community - Brave",
+      "to_kind": "navegacion",
+      "from_proc": "neatdm",
+      "from_title": "Download Completed",
+      "t": 1787931072.026
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "explorer",
+      "to_title": "",
+      "to_kind": "otros",
+      "from_proc": "brave",
+      "from_title": "Eve x Ultimate Bunny (CNS Compatible) at Stellar Blade Nexus - Mods and community - Brave",
+      "t": 1787931132.032
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "winrar",
+      "to_title": "Shadow kunoich body stocking no heart-1461-1-2-1754644284.zip (copia de evaluación)",
+      "to_kind": "otros",
+      "from_proc": "explorer",
+      "from_title": "",
+      "t": 1787931313.614
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "windowsterminal",
+      "to_title": "Windows PowerShell",
+      "to_kind": "programacion",
+      "from_proc": "winrar",
+      "from_title": "Shadow kunoich body stocking no heart-1461-1-2-1754644284.zip (copia de evaluación)",
+      "t": 1787931399.301
+    },
+    {
+      "type": "start_coding",
+      "proc": "windowsterminal",
+      "title": "Windows PowerShell",
+      "project": "Windows PowerShell",
+      "t": 1787931399.301
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "windowsterminal",
+      "to_title": "Windows PowerShell",
+      "to_kind": "programacion",
+      "from_proc": "pythonw",
+      "from_title": "ERIS",
+      "t": 1787931646.076
+    },
+    {
+      "type": "start_coding",
+      "proc": "windowsterminal",
+      "title": "Windows PowerShell",
+      "project": "Windows PowerShell",
+      "t": 1787931646.076
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "wallpaperui",
+      "to_title": "Wallpaper UI",
+      "to_kind": "otros",
+      "from_proc": "windowsterminal",
+      "from_title": "Windows PowerShell",
+      "t": 1787931960.505
+    },
+    {
+      "type": "su_tiempo",
+      "activity": "ordenar mis recuerdos (eso que llaman memoria)",
+      "t": 1787932082.743
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "windowsterminal",
+      "to_title": "Windows PowerShell",
+      "to_kind": "programacion",
+      "from_proc": "wallpaperui",
+      "from_title": "Wallpaper UI",
+      "t": 1787932202.763
+    },
+    {
+      "type": "start_coding",
+      "proc": "windowsterminal",
+      "title": "Windows PowerShell",
+      "project": "Windows PowerShell",
+      "t": 1787932202.763
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "explorer",
+      "to_title": "Program Manager",
+      "to_kind": "otros",
+      "from_proc": "windowsterminal",
+      "from_title": "Windows PowerShell",
+      "t": 1787932322.777
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "windowsterminal",
+      "to_title": "Windows PowerShell",
+      "to_kind": "programacion",
+      "from_proc": "explorer",
+      "from_title": "Program Manager",
+      "t": 1787932382.78
+    },
+    {
+      "type": "start_coding",
+      "proc": "windowsterminal",
+      "title": "Windows PowerShell",
+      "project": "Windows PowerShell",
+      "t": 1787932382.78
+    },
+    {
+      "type": "long_coding",
+      "minutes": 20,
+      "project": "Windows PowerShell",
+      "t": 1787933584.313
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "obsidian",
+      "to_title": "Vista gráfica - BaseObsiEris - Obsidian 1.13.7",
+      "to_kind": "documentos",
+      "from_proc": "pythonw",
+      "from_title": "ERIS",
+      "t": 1787933764.343
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "windowsterminal",
+      "to_title": "Windows PowerShell",
+      "to_kind": "programacion",
+      "from_proc": "obsidian",
+      "from_title": "Vista gráfica - BaseObsiEris - Obsidian 1.13.7",
+      "t": 1787933824.347
+    },
+    {
+      "type": "start_coding",
+      "proc": "windowsterminal",
+      "title": "Windows PowerShell",
+      "project": "Windows PowerShell",
+      "t": 1787933824.347
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "devenv",
+      "to_title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
+      "to_kind": "programacion",
+      "from_proc": "pythonw",
+      "from_title": "ERIS",
+      "t": 1787934186.056
+    },
+    {
+      "type": "start_coding",
+      "proc": "devenv",
+      "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
+      "project": "Program.cs*",
+      "t": 1787934186.056
+    },
+    {
+      "type": "app_switch",
+      "to_proc": "devenv",
+      "to_title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
+      "to_kind": "programacion",
+      "from_proc": "pythonw",
+      "from_title": "ERIS",
+      "t": 1787934780.022
+    },
+    {
+      "type": "start_coding",
+      "proc": "devenv",
+      "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
+      "project": "Program.cs*",
+      "t": 1787934780.022
+    },
+    {
+      "type": "su_tiempo",
+      "activity": "armarle algún dato curioso para la próxima",
+      "t": 1787935001.669
+    }
+  ],
+  "comment": {
+    "last": 1787934780.0329864,
+    "text": "Te salté que estás en devenv. ¿Qué estás tramando?",
+    "voice": true,
+    "id": "1787934780",
+    "injected": true,
+    "awaiting_reply": true
+  },
+  "voice": {
+    "count_hour": 3,
+    "hour_start": 1787931960.5071578
+  },
+  "config": {
+    "cooldown_voice_min": 15,
+    "max_voice_hour": 3,
+    "long_coding_min": 20,
+    "comment_trim_sec": 300,
+    "browsing_title_noise": true,
+    "mirar_interval_min": 15,
+    "mirar_min_coding_min": 5
+  },
+  "personal_time": {
+    "entries": 4,
+    "last_activity": "armarle algún dato curioso para la próxima",
+    "since": 1787935001.6690383
+  },
+  "flag": {
+    "en_silencio": true,
+    "silence_reported": true,
+    "marca_personal": "armarle algún dato curioso para la próxima"
+  },
+  "vista": {
+    "ok": false,
+    "mensaje": ""
+  },
+  "glimpses": []
+}

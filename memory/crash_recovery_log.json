@@ -1,0 +1,482 @@
+[
+  {
+    "timestamp": "2026-08-21T22:08:20.394093",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20320"
+  },
+  {
+    "timestamp": "2026-08-21T22:18:20.367275",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20320"
+  },
+  {
+    "timestamp": "2026-08-21T22:28:20.426139",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20320"
+  },
+  {
+    "timestamp": "2026-08-21T22:38:26.732990",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 22668"
+  },
+  {
+    "timestamp": "2026-08-21T22:48:58.409198",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 22668"
+  },
+  {
+    "timestamp": "2026-08-21T23:09:20.058206",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 25676"
+  },
+  {
+    "timestamp": "2026-08-21T23:19:34.200322",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 14656"
+  },
+  {
+    "timestamp": "2026-08-21T23:29:34.149043",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 14656"
+  },
+  {
+    "timestamp": "2026-08-21T23:40:19.007079",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24372"
+  },
+  {
+    "timestamp": "2026-08-21T23:51:03.987793",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 27552"
+  },
+  {
+    "timestamp": "2026-08-22T00:12:01.642315",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 7948"
+  },
+  {
+    "timestamp": "2026-08-22T00:22:01.641070",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 7948"
+  },
+  {
+    "timestamp": "2026-08-23T14:48:16.012756",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 13340"
+  },
+  {
+    "timestamp": "2026-08-23T14:58:17.451944",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 13340"
+  },
+  {
+    "timestamp": "2026-08-23T15:08:21.293211",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 16296"
+  },
+  {
+    "timestamp": "2026-08-23T15:18:34.614229",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 14416"
+  },
+  {
+    "timestamp": "2026-08-23T15:28:44.282842",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T15:48:50.257619",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T15:58:49.009048",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T16:09:02.910306",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T16:19:01.044661",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T16:29:02.609240",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T16:49:16.478777",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T16:59:16.027029",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T17:09:28.415659",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T17:19:30.100696",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T17:29:30.139691",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T17:49:34.939496",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T17:59:35.067429",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24404"
+  },
+  {
+    "timestamp": "2026-08-23T18:09:40.099701",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T18:19:39.871635",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T18:29:40.193976",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T18:50:00.916572",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T19:00:00.434598",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T19:10:13.279677",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T19:20:12.239769",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T19:30:12.830274",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-23T19:50:26.979245",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 29300"
+  },
+  {
+    "timestamp": "2026-08-24T09:36:02.121108",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 18400"
+  },
+  {
+    "timestamp": "2026-08-24T09:46:04.813479",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 3180"
+  },
+  {
+    "timestamp": "2026-08-24T09:56:28.031765",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 26000"
+  },
+  {
+    "timestamp": "2026-08-24T10:06:59.603760",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 26000"
+  },
+  {
+    "timestamp": "2026-08-24T10:17:59.495105",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20388"
+  },
+  {
+    "timestamp": "2026-08-24T10:37:59.959405",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20388"
+  },
+  {
+    "timestamp": "2026-08-24T10:49:08.815302",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24868"
+  },
+  {
+    "timestamp": "2026-08-24T10:59:08.702375",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24868"
+  },
+  {
+    "timestamp": "2026-08-24T11:09:11.502160",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24868"
+  },
+  {
+    "timestamp": "2026-08-24T11:30:17.282271",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 9480"
+  },
+  {
+    "timestamp": "2026-08-24T11:41:43.751878",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 10924"
+  },
+  {
+    "timestamp": "2026-08-24T11:52:25.857883",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24228"
+  },
+  {
+    "timestamp": "2026-08-24T12:03:13.980117",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 25968"
+  },
+  {
+    "timestamp": "2026-08-24T12:13:42.760742",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17156"
+  },
+  {
+    "timestamp": "2026-08-24T12:33:47.605804",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 28208"
+  },
+  {
+    "timestamp": "2026-08-24T12:44:24.266226",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T12:54:27.359839",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T13:04:27.405441",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T13:14:27.453240",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T13:34:38.368075",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T13:44:38.366216",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T13:55:19.919572",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T14:05:20.015721",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T14:15:19.966600",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 24092"
+  },
+  {
+    "timestamp": "2026-08-24T14:47:27.243890",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 28744"
+  },
+  {
+    "timestamp": "2026-08-24T14:57:27.289457",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 28744"
+  },
+  {
+    "timestamp": "2026-08-25T17:46:37.433588",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 1980"
+  },
+  {
+    "timestamp": "2026-08-25T17:57:01.431542",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 1980"
+  },
+  {
+    "timestamp": "2026-08-26T09:29:06.565442",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15208"
+  },
+  {
+    "timestamp": "2026-08-26T09:39:41.057398",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15208"
+  },
+  {
+    "timestamp": "2026-08-26T09:50:09.573390",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 8368"
+  },
+  {
+    "timestamp": "2026-08-26T10:00:24.602345",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 8368"
+  },
+  {
+    "timestamp": "2026-08-26T10:10:24.699246",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 8368"
+  },
+  {
+    "timestamp": "2026-08-26T10:30:42.408642",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 7052"
+  },
+  {
+    "timestamp": "2026-08-26T10:41:31.103555",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 7052"
+  },
+  {
+    "timestamp": "2026-08-26T10:51:46.053728",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 14836"
+  },
+  {
+    "timestamp": "2026-08-27T08:35:53.107703",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15684"
+  },
+  {
+    "timestamp": "2026-08-27T08:46:16.993951",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15684"
+  },
+  {
+    "timestamp": "2026-08-27T08:56:17.057045",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15684"
+  },
+  {
+    "timestamp": "2026-08-27T09:06:16.947732",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 15684"
+  },
+  {
+    "timestamp": "2026-08-27T09:19:27.747713",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 12776"
+  },
+  {
+    "timestamp": "2026-08-27T09:42:20.669525",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 12776"
+  },
+  {
+    "timestamp": "2026-08-27T09:55:25.275519",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T10:05:23.757633",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T10:15:25.627166",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T10:26:16.987451",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T10:46:17.088535",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T10:56:17.104953",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 17864"
+  },
+  {
+    "timestamp": "2026-08-27T11:06:50.541016",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 6040"
+  },
+  {
+    "timestamp": "2026-08-27T11:17:39.569569",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 13996"
+  },
+  {
+    "timestamp": "2026-08-27T11:28:06.242346",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 13996"
+  },
+  {
+    "timestamp": "2026-08-27T11:48:47.078338",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20180"
+  },
+  {
+    "timestamp": "2026-08-27T11:59:25.579420",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 20180"
+  },
+  {
+    "timestamp": "2026-08-27T12:10:01.943810",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 21940"
+  },
+  {
+    "timestamp": "2026-08-28T09:44:06.389123",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 3520"
+  },
+  {
+    "timestamp": "2026-08-28T09:54:14.056933",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 3520"
+  },
+  {
+    "timestamp": "2026-08-28T10:05:03.028019",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 18584"
+  },
+  {
+    "timestamp": "2026-08-28T10:15:21.809650",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 21536"
+  }
+]

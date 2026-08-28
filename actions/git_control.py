@@ -63,6 +63,24 @@ def git_control(parameters: dict, player=None) -> str:
             return "Especifico 'branch' para hacer checkout"
         return _git_cmd(repo_path, "checkout", branch)
 
+    # ── Worktrees: experimentos en ramas aisladas sin tocar el working dir ──
+    elif action == "worktree_add":
+        wt_path = parameters.get("worktree_path") or ""
+        if not wt_path:
+            return "Especifico 'worktree_path' (carpeta destino del worktree)."
+        if branch:
+            return _git_cmd(repo_path, "worktree", "add", "-b", branch, wt_path)
+        return _git_cmd(repo_path, "worktree", "add", wt_path)
+
+    elif action == "worktree_list":
+        return _git_cmd(repo_path, "worktree", "list")
+
+    elif action == "worktree_remove":
+        wt_path = parameters.get("worktree_path") or ""
+        if not wt_path:
+            return "Especifico 'worktree_path' (el worktree a remover)."
+        return _git_cmd(repo_path, "worktree", "remove", wt_path)
+
     elif action in ("merge", "fusionar"):
         if not branch:
             return "Especifico 'branch' para mergear"

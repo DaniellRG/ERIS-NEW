@@ -103,8 +103,9 @@ def _generate_topics(num_topics: int = 2) -> list:
             "Cada tema debe ser una frase corta y concreta (max 10 palabras)."
         ).format(num_topics, ", ".join(recent[-10:]) if recent else "ninguno")
 
+        from core.model_config import get_model
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+                    model=get_model("fast"),
             contents=prompt,
         )
         text = response.text.strip()

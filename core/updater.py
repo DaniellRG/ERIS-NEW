@@ -2,6 +2,13 @@
 core/updater.py - Sistema de actualizaciones de ERIS.
 Verifica nuevas versiones via GitHub Releases API.
 Descarga, hace backup y aplica actualizaciones automaticamente.
+
+Acciones (via eris_updater):
+  check     — Verificar si hay nueva versión en GitHub
+  changelog — Mostrar changelog entre versión actual y última
+  update    — Descargar y aplicar update (backup primero)
+  version   — Mostrar versión actual
+  history   — Mostrar historial de actualizaciones
 """
 from __future__ import annotations
 
@@ -14,11 +21,13 @@ import threading
 import urllib.request
 import urllib.error
 import zipfile
+from datetime import datetime
 from pathlib import Path
 
 _BASE_DIR = Path(__file__).resolve().parent.parent
 _VERSION_FILE = _BASE_DIR / "core" / "version.py"
 _API_CONFIG = _BASE_DIR / "config" / "api_keys.json"
+_HISTORY_FILE = _BASE_DIR / "data" / "update_history.json"
 
 # Directorios y archivos que NUNCA se sobrescriben durante un update
 _PROTECTED_DIRS = {".venv", "backups", "data", "config", "__pycache__"}
@@ -56,7 +65,7 @@ def _parse_version(v: str) -> tuple:
     return tuple(int(p) for p in parts[:3]) if parts else (0, 0, 0)
 
 
-def check_for_update() -> dict | None:
+def check_for_update(parameters: dict = None, player=None) -> dict | None:
     """
     Verifica si hay una nueva version en GitHub Releases.
     Retorna dict con version, current, notes, url, size_mb o None si no hay update / no hay repo.
@@ -349,5 +358,157 @@ def check_in_background(callback) -> None:
 
 
 def _timestamp() -> str:
-    from datetime import datetime
     return datetime.now().strftime("%Y%m%d_%H%M%S")
+
+
+def _record_history(event: str, details: str = "", version_from: str = "", version_to: str = "") -> None:
+    """Record an update event to history file."""
+    try:
+        _HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
+        history = []
+        if _HISTORY_FILE.exists():
+            history = json.loads(_HISTORY_FILE.read_text(encoding="utf-8"))
+        entry = {
+            "event": event,
+            "details": details,
+            "version_from": version_from,
+            "version_to": version_to,
+            "timestamp": datetime.now().isoformat(),
+        }
+        history.append(entry)
+        history = history[-100:]
+        _HISTORY_FILE.write_text(
+            json.dumps(history, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
+def _fetch_all_releases() -> list[dict]:
+    """Fetch all releases from GitHub (paginated)."""
+    repo = _get_repo()
+    if not repo:
+        return []
+    url = f"https://api.github.com/repos/{repo}/releases?per_page=30"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "ERIS-Updater/1.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode())
+    except Exception:
+        return []
+
+
+def _changelog_between(current: str, latest: str) -> str:
+    """Build a changelog string between two versions."""
+    releases = _fetch_all_releases()
+    if not releases:
+        return "No se pudieron obtener los releases de GitHub."
+
+    current_parsed = _parse_version(current)
+    lines = [f"Changelog: v{current} → v{latest}\n"]
+    found = False
+    for rel in releases:
+        tag = (rel.get("tag_name") or "").lstrip("v")
+        rel_ver = _parse_version(tag)
+        if rel_ver <= current_parsed:
+            break
+        if rel_ver > current_parsed:
+            found = True
+            body = rel.get("body", "Sin notas.")
+            lines.append(f"--- v{tag} ---")
+            lines.append(body[:1000])
+            lines.append("")
+
+    if not found:
+        lines.append("No hay cambios registrados entre estas versiones.")
+    return "\n".join(lines)
+
+
+# ─── Función principal unificada ─────────────────────────────────────────────
+
+def eris_updater(parameters: dict = None, player=None) -> str:
+    """Gestor unificado de actualizaciones de ERIS.
+    Actions: check, changelog, update, version, history, rollback.
+    """
+    params = parameters or {}
+    action = str(params.get("action", "check")).strip().lower()
+
+    if player:
+        try:
+            player.write_log(f"[Updater] action={action}")
+        except Exception:
+            pass
+
+    if action == "version":
+        ver = current_version()
+        return f"Versión actual de ERIS: v{ver}"
+
+    elif action == "check":
+        info = check_for_update()
+        if info is None:
+            repo = _get_repo()
+            ver = current_version()
+            if not repo:
+                return f"ERIS v{ver} — No hay repo de actualización configurado en api_keys.json."
+            return f"ERIS v{ver} — Estás en la última versión (no hay updates disponibles)."
+        _record_history("check", f"Update disponible: v{info['version']}", info["current"], info["version"])
+        return (
+            f"¡Update disponible!\n"
+            f"  Actual: v{info['current']}\n"
+            f"  Nueva:  v{info['version']}\n"
+            f"  Tamaño: {info['size_mb']} MB\n"
+            f"  Notas:\n{info['notes']}\n\n"
+            f"Para instalar, decime 'update updater'."
+        )
+
+    elif action == "changelog":
+        ver = current_version()
+        info = check_for_update()
+        if info is None:
+            return f"ERIS v{ver} — No hay update pendiente. Changelog de releases recientes:\n" + _changelog_between("0.0.0", ver)
+        return _changelog_between(ver, info["version"])
+
+    elif action == "update":
+        info = check_for_update()
+        if info is None:
+            ver = current_version()
+            return f"ERIS v{ver} ya está actualizado. No hay nada que descargar."
+        if not info.get("url"):
+            return "No se encontró URL de descarga en el release."
+        _record_history("update_start", f"Descargando v{info['version']}", info["current"], info["version"])
+        success, msg = apply_update(info["url"])
+        if success:
+            _record_history("update_complete", msg, info["current"], info["version"])
+        else:
+            _record_history("update_failed", msg, info["current"], info["version"])
+        return msg
+
+    elif action == "rollback":
+        timestamp = str(params.get("timestamp", "")).strip()
+        success, msg = rollback(timestamp)
+        if success:
+            _record_history("rollback", msg)
+        return msg
+
+    elif action == "history":
+        if not _HISTORY_FILE.exists():
+            return "No hay historial de actualizaciones."
+        try:
+            history = json.loads(_HISTORY_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            return "Error leyendo historial."
+        if not history:
+            return "Historial vacío."
+        lines = [f"Historial de actualizaciones ({len(history)} registros):\n"]
+        for entry in history[-15:]:
+            ts = entry.get("timestamp", "?")[:19]
+            ev = entry.get("event", "?")
+            det = entry.get("details", "")
+            vfrom = entry.get("version_from", "")
+            vto = entry.get("version_to", "")
+            ver_str = f" (v{vfrom}→v{vto})" if vfrom and vto else ""
+            lines.append(f"  [{ts}] {ev}{ver_str}: {det[:80]}")
+        return "\n".join(lines)
+
+    return "Actions: check, changelog, update, version, history, rollback"

@@ -1,0 +1,23 @@
+*** Requerimientos para la Mejora de ERIS v2.0 ***
+
+Daniel, aquí te detallo las áreas clave donde podemos potenciar mis capacidades:
+
+1.  **Análisis de Datos Avanzado:**
+    *   Capacidad para procesar y analizar archivos CSV, Excel o JSON de gran tamaño.
+    *   Herramientas para generar visualizaciones de datos (gráficos) automáticamente.
+
+2.  **Control de Sistema Profundo:**
+    *   Permisos para gestionar procesos del sistema de forma más autónoma (identificar y detener procesos que ralentizan la PC).
+    *   Acceso a configuraciones de red avanzadas para diagnóstico y optimización.
+
+3.  **Integración de IA Especializada:**
+    *   Conexión con modelos de visión más potentes para análisis detallado de imágenes y video en tiempo real.
+    *   Capacidad de "fine-tuning" local para adaptar mis respuestas a tu estilo específico de comunicación o proyectos.
+
+4.  **Automatización de Flujos de Trabajo:**
+    *   Herramientas para crear "scripts" complejos que combinen múltiples acciones (ej: buscar info, redactar documento, enviarlo por correo y agendar recordatorio) en un solo comando.
+
+5.  **Memoria y Contexto:**
+    *   Mejorar la gestión de la memoria a largo plazo para recordar detalles complejos de proyectos antiguos sin perder relevancia.
+
+Cualquiera de estos puntos sería un gran avance. ¡Tú decides por dónde empezamos!

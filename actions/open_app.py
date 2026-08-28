@@ -144,6 +144,36 @@ def open_app(parameters: dict, response=None, player=None) -> str:
             if player: player.write_log(f"🌐 Abriendo web: '{url}'.")
             return f"Abriendo web: {url}"
 
+        # Web apps — always open in browser
+        web_apps = {
+            "youtube": "https://www.youtube.com",
+            "google": "https://www.google.com",
+            "gmail": "https://mail.google.com",
+            "maps": "https://maps.google.com",
+            "reddit": "https://www.reddit.com",
+            "twitter": "https://twitter.com",
+            "x": "https://x.com",
+            "facebook": "https://www.facebook.com",
+            "instagram": "https://www.instagram.com",
+            "tiktok": "https://www.tiktok.com",
+            "twitch": "https://www.twitch.tv",
+            "netflix": "https://www.netflix.com",
+            "github": "https://github.com",
+            "stackoverflow": "https://stackoverflow.com",
+            "wikipedia": "https://www.wikipedia.com",
+            "chatgpt": "https://chatgpt.com",
+            "notion": "https://www.notion.so",
+            "linkedin": "https://www.linkedin.com",
+            "amazon": "https://www.amazon.com",
+            "mercadolibre": "https://www.mercadolibre.com",
+            "claude": "https://claude.ai",
+            "deepseek": "https://chat.deepseek.com",
+        }
+        if app_lower in web_apps:
+            webbrowser.open(web_apps[app_lower])
+            if player: player.write_log(f"🌐 Abriendo {app_name}: '{web_apps[app_lower]}'.")
+            return f"Abriendo {app_name}: {web_apps[app_lower]}"
+
         # Standard Mappings
         mappings = {
             "notepad": "notepad.exe",

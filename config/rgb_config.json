@@ -1,0 +1,20 @@
+{
+  "backend": "auto",
+  "openrgb_host": "127.0.0.1",
+  "openrgb_port": 6742,
+  "wled_ip": "",
+  "wled_port": 80,
+  "devices": [
+    {
+      "id": "rgb_1",
+      "name": "Tira del monitor",
+      "type": "rgb"
+    }
+  ],
+  "simulate": true,
+  "current": {
+    "color": "scene:fuego",
+    "brightness": 100,
+    "effect": "fuego"
+  }
+}

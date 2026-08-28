@@ -632,7 +632,7 @@ def self_healing_loop(parameters: dict, player=None) -> str:
             subprocess.Popen(
                 [PYTHON, str(BASE_DIR / "main.py")],
                 cwd=str(BASE_DIR),
-                creationflags=0x00000010  # DETACHED_PROCESS
+                creationflags=0x08000010  # CREATE_NO_WINDOW | DETACHED_PROCESS
             )
 
             _log(f"RESTART: Killed {killed} processes, starting new ERIS")

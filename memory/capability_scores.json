@@ -1,0 +1,1601 @@
+{
+  "screen_vision": {
+    "score": 1.0,
+    "attempts": 43,
+    "successes": 43,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "vision_guardian": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "visual_click": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "image_analyzer": {
+    "score": 1.0,
+    "attempts": 6,
+    "successes": 6,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "human_mouse": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "mouse_control": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "screen_processor": {
+    "score": 0.75,
+    "attempts": 4,
+    "successes": 3,
+    "failures": {
+      "No module named 'actions.screen_processor'": 1
+    },
+    "last_failure": "No module named 'actions.screen_processor'",
+    "errors": [
+      {
+        "error": "No module named 'actions.screen_processor'",
+        "time": "2026-08-16T13:23:49.136547"
+      }
+    ]
+  },
+  "ollama_vision": {
+    "score": 0.75,
+    "attempts": 4,
+    "successes": 3,
+    "failures": {
+      "No module named 'actions.ollama_vision'": 1
+    },
+    "last_failure": "No module named 'actions.ollama_vision'",
+    "errors": [
+      {
+        "error": "No module named 'actions.ollama_vision'",
+        "time": "2026-08-16T13:23:49.084287"
+      }
+    ]
+  },
+  "emotional_state": {
+    "score": 1.0,
+    "attempts": 7,
+    "successes": 7,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "inner_monologue": {
+    "score": 0.75,
+    "attempts": 4,
+    "successes": 3,
+    "failures": {
+      "No module named 'core.inner_monologue'": 1
+    },
+    "last_failure": "No module named 'core.inner_monologue'",
+    "errors": [
+      {
+        "error": "No module named 'core.inner_monologue'",
+        "time": "2026-08-16T13:23:49.033100"
+      }
+    ]
+  },
+  "computer_use_agent": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "task_planner": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "calendar_manager": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "todowrite": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "system_reader": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "weather_report": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "web_search": {
+    "score": 1.0,
+    "attempts": 45,
+    "successes": 45,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "file_controller": {
+    "score": 0.7333333333333333,
+    "attempts": 15,
+    "successes": 11,
+    "failures": {
+      "Error": 3,
+      "Error leyendo archivo": 1
+    },
+    "last_failure": "Error leyendo archivo: [Errno 13] Permission denied: 'D:\\\\Prueba'",
+    "errors": [
+      {
+        "error": "Error: 'C:\\Users\\danie\\OneDrive\\Desktop\\historia_colombia.html' no existe.",
+        "time": "2026-07-29T12:24:00.313465"
+      },
+      {
+        "error": "Error: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+        "time": "2026-07-29T22:29:13.936521"
+      },
+      {
+        "error": "Error: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+        "time": "2026-07-29T23:15:22.507498"
+      },
+      {
+        "error": "Error leyendo archivo: [Errno 13] Permission denied: 'D:\\\\Prueba'",
+        "time": "2026-08-19T10:58:57.458919"
+      }
+    ]
+  },
+  "terminal_agent": {
+    "score": 0.9272727272727272,
+    "attempts": 55,
+    "successes": 51,
+    "failures": {
+      "Error": 3,
+      "Error abriendo C": 1
+    },
+    "last_failure": "Error: [Errno 22] Invalid argument",
+    "errors": [
+      {
+        "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"steam.exe\" -ErrorAction Stop\n",
+        "time": "2026-07-30T12:40:34.983472"
+      },
+      {
+        "error": "Error abriendo C:\\Program Files (x86)\\Steam\\steam.exe: Command '['powershell', '-NoProfile', '-Command', 'Start-Process \"C:\\\\Program Files (x86)\\\\Steam\\\\steam.exe\" -ErrorAction Stop']' timed out after",
+        "time": "2026-07-30T12:41:24.961856"
+      },
+      {
+        "error": "Error: [Errno 22] Invalid argument",
+        "time": "2026-08-21T23:39:21.347313"
+      },
+      {
+        "error": "Error: [Errno 22] Invalid argument",
+        "time": "2026-08-24T09:46:21.351077"
+      }
+    ]
+  },
+  "web_generator": {
+    "score": 0.8333333333333334,
+    "attempts": 6,
+    "successes": 5,
+    "failures": {
+      "Error en web_generator": 1
+    },
+    "last_failure": "Error en web_generator: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+    "errors": [
+      {
+        "error": "Error en web_generator: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+        "time": "2026-07-29T11:43:46.106127"
+      }
+    ]
+  },
+  "ask_user": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "document_generator": {
+    "score": 0.8823529411764706,
+    "attempts": 17,
+    "successes": 15,
+    "failures": {
+      "Error creando documento": 2
+    },
+    "last_failure": "Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel Gomez\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+    "errors": [
+      {
+        "error": "Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+        "time": "2026-07-29T21:27:33.920260"
+      },
+      {
+        "error": "Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel Gomez\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+        "time": "2026-07-29T21:28:54.434625"
+      }
+    ]
+  },
+  "subagent_task": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "file_processor": {
+    "score": 1.0,
+    "attempts": 10,
+    "successes": 10,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "obsidian_note": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "presentation_generator": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "spreadsheet_generator": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "file_organizer": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "file_monitor": {
+    "score": 1.0,
+    "attempts": 6,
+    "successes": 6,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "smart_file_organizer": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "code_helper": {
+    "score": 0.75,
+    "attempts": 4,
+    "successes": 3,
+    "failures": {
+      "Error": 1
+    },
+    "last_failure": "Error: Se requiere 'description' para generar código.",
+    "errors": [
+      {
+        "error": "Error: Se requiere 'description' para generar código.",
+        "time": "2026-07-29T21:07:27.143615"
+      }
+    ]
+  },
+  "vscode_controller": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "open_app": {
+    "score": 1.0,
+    "attempts": 33,
+    "successes": 33,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "computer_control": {
+    "score": 0.625,
+    "attempts": 16,
+    "successes": 10,
+    "failures": {
+      "Error": 6
+    },
+    "last_failure": "Error: Se requiere titulo de ventana.",
+    "errors": [
+      {
+        "error": "Error: Se requiere titulo de ventana.",
+        "time": "2026-07-29T21:33:44.390885"
+      },
+      {
+        "error": "Error: No se proporciono combinacion.",
+        "time": "2026-07-29T23:12:33.591722"
+      },
+      {
+        "error": "Error: No se proporciono combinacion.",
+        "time": "2026-07-29T23:12:33.610130"
+      },
+      {
+        "error": "Error: No se proporciono combinacion.",
+        "time": "2026-07-29T23:12:34.504332"
+      },
+      {
+        "error": "Error: Se requiere titulo de ventana.",
+        "time": "2026-08-07T12:55:14.413439"
+      },
+      {
+        "error": "Error: Se requiere titulo de ventana.",
+        "time": "2026-08-09T18:26:42.302594"
+      }
+    ]
+  },
+  "video_analyzer": {
+    "score": 0.8571428571428571,
+    "attempts": 7,
+    "successes": 6,
+    "failures": {
+      "Error getting info": 1
+    },
+    "last_failure": "Error getting info: No module named 'yt_dlp'",
+    "errors": [
+      {
+        "error": "Error getting info: No module named 'yt_dlp'",
+        "time": "2026-08-16T15:21:20.996538"
+      }
+    ]
+  },
+  "document_handler": {
+    "score": 0.8,
+    "attempts": 5,
+    "successes": 4,
+    "failures": {
+      "Error en document_handler": 1
+    },
+    "last_failure": "Error en document_handler: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+    "errors": [
+      {
+        "error": "Error en document_handler: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+        "time": "2026-07-29T21:52:19.069129"
+      }
+    ]
+  },
+  "knowledge_base": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "super_search": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "system_monitor": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "codebase": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "skill_manage": {
+    "score": 0.5,
+    "attempts": 6,
+    "successes": 3,
+    "failures": {
+      "Error en skill_manage": 3
+    },
+    "last_failure": "Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+    "errors": [
+      {
+        "error": "Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+        "time": "2026-07-29T23:14:29.429111"
+      },
+      {
+        "error": "Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+        "time": "2026-07-29T23:14:52.756850"
+      },
+      {
+        "error": "Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+        "time": "2026-07-29T23:42:17.121924"
+      }
+    ]
+  },
+  "document_rag": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "db_memory": {
+    "score": 1.0,
+    "attempts": 6,
+    "successes": 6,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "spotify_control": {
+    "score": 1.0,
+    "attempts": 11,
+    "successes": 11,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cancion_generator": {
+    "score": 0.7142857142857143,
+    "attempts": 7,
+    "successes": 5,
+    "failures": {
+      "Error generando canción": 2
+    },
+    "last_failure": "Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+    "errors": [
+      {
+        "error": "Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+        "time": "2026-07-30T00:06:32.417242"
+      },
+      {
+        "error": "Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+        "time": "2026-07-30T00:07:23.403339"
+      }
+    ]
+  },
+  "music_player": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "morning_brief": {
+    "score": 1.0,
+    "attempts": 62,
+    "successes": 62,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "browser_control": {
+    "score": 1.0,
+    "attempts": 41,
+    "successes": 41,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "openrouter_agent": {
+    "score": 1.0,
+    "attempts": 13,
+    "successes": 13,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "deep_research": {
+    "score": 0.5,
+    "attempts": 6,
+    "successes": 3,
+    "failures": {
+      "Error en deep_research": 3
+    },
+    "last_failure": "Error en deep_research: HTTP Error 403: Forbidden",
+    "errors": [
+      {
+        "error": "Error en deep_research: HTTP Error 403: Forbidden",
+        "time": "2026-07-30T12:09:26.453884"
+      },
+      {
+        "error": "Error en deep_research: HTTP Error 403: Forbidden",
+        "time": "2026-07-30T12:39:01.459067"
+      },
+      {
+        "error": "Error en deep_research: HTTP Error 403: Forbidden",
+        "time": "2026-08-05T22:10:26.697522"
+      }
+    ]
+  },
+  "game_launcher": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "fun_mode": {
+    "score": 1.0,
+    "attempts": 6,
+    "successes": 6,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "audio_transcriber": {
+    "score": 0.0,
+    "attempts": 1,
+    "successes": 0,
+    "failures": {
+      "Error": 1
+    },
+    "last_failure": "Error: Unknown action 'transcribe_mic'. Available: transcribe, transcribe_clipboard, languages, history",
+    "errors": [
+      {
+        "error": "Error: Unknown action 'transcribe_mic'. Available: transcribe, transcribe_clipboard, languages, history",
+        "time": "2026-07-31T20:59:34.016316"
+      }
+    ]
+  },
+  "screen_see": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "english_teacher": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "self_awareness": {
+    "score": 1.0,
+    "attempts": 7,
+    "successes": 7,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "system_volume": {
+    "score": 1.0,
+    "attempts": 6,
+    "successes": 6,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "computer_settings": {
+    "score": 0.8333333333333334,
+    "attempts": 6,
+    "successes": 5,
+    "failures": {
+      "Error ajustando volumen absoluto": 1
+    },
+    "last_failure": "Error ajustando volumen absoluto: 'AudioDevice' object has no attribute 'Activate'",
+    "errors": [
+      {
+        "error": "Error ajustando volumen absoluto: 'AudioDevice' object has no attribute 'Activate'",
+        "time": "2026-08-01T20:39:51.698262"
+      }
+    ]
+  },
+  "google_calendar": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "game_companion": {
+    "score": 0.5714285714285714,
+    "attempts": 7,
+    "successes": 4,
+    "failures": {
+      "Error vision": 3
+    },
+    "last_failure": "Error vision: HTTP Error 402: Payment Required",
+    "errors": [
+      {
+        "error": "Error vision: HTTP Error 402: Payment Required",
+        "time": "2026-08-01T21:32:52.451834"
+      },
+      {
+        "error": "Error vision: HTTP Error 402: Payment Required",
+        "time": "2026-08-01T21:32:56.406200"
+      },
+      {
+        "error": "Error vision: HTTP Error 402: Payment Required",
+        "time": "2026-08-01T21:33:20.676810"
+      }
+    ]
+  },
+  "calculator": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "tts_set_voice": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "window_manager": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "image_generation": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "pc_control": {
+    "score": 0.6666666666666666,
+    "attempts": 3,
+    "successes": 2,
+    "failures": {
+      "Error al suspender": 1
+    },
+    "last_failure": "Error al suspender: Command '['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0']' timed out after 5 seconds",
+    "errors": [
+      {
+        "error": "Error al suspender: Command '['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0']' timed out after 5 seconds",
+        "time": "2026-08-01T22:02:25.614040"
+      }
+    ]
+  },
+  "document_tool": {
+    "score": 0.6,
+    "attempts": 5,
+    "successes": 3,
+    "failures": {
+      "Error en document_tool": 2
+    },
+    "last_failure": "Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+    "errors": [
+      {
+        "error": "Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+        "time": "2026-08-03T13:53:34.089113"
+      },
+      {
+        "error": "Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+        "time": "2026-08-03T13:53:34.902495"
+      }
+    ]
+  },
+  "emo_core": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "native_ui": {
+    "score": 1.0,
+    "attempts": 8,
+    "successes": 8,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "desktop_control": {
+    "score": 0.8888888888888888,
+    "attempts": 9,
+    "successes": 8,
+    "failures": {
+      "Error": 1
+    },
+    "last_failure": "Error: se requiere 'query'",
+    "errors": [
+      {
+        "error": "Error: se requiere 'query'",
+        "time": "2026-08-08T19:48:58.614485"
+      }
+    ]
+  },
+  "conversation_search": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "show_expression": {
+    "score": 1.0,
+    "attempts": 290,
+    "successes": 290,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "file_manager": {
+    "score": 1.0,
+    "attempts": 12,
+    "successes": 12,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "app_installer": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "program_manager": {
+    "score": 1.0,
+    "attempts": 10,
+    "successes": 10,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "relationship": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "daily_digest": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "self_evolution": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "huggingface": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "self_healing": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "translator": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "code_copilot": {
+    "score": 1.0,
+    "attempts": 14,
+    "successes": 14,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "screenshot_history": {
+    "score": 0.0,
+    "attempts": 2,
+    "successes": 0,
+    "failures": {
+      "Error capturando": 2
+    },
+    "last_failure": "Error capturando: region argument must be a tuple of four ints",
+    "errors": [
+      {
+        "error": "Error capturando: region argument must be a tuple of four ints",
+        "time": "2026-08-07T12:55:18.736080"
+      },
+      {
+        "error": "Error capturando: region argument must be a tuple of four ints",
+        "time": "2026-08-07T12:55:19.854316"
+      }
+    ]
+  },
+  "self_edit": {
+    "score": 0.8,
+    "attempts": 10,
+    "successes": 8,
+    "failures": {
+      "Error": 2
+    },
+    "last_failure": "Error: El archivo 'phone_control.py' no existe.",
+    "errors": [
+      {
+        "error": "Error: No se encontró el texto 'target' en 'actions/phone_control.py'. Asegurate de que sea exacto (incluyendo espacios e indentación).",
+        "time": "2026-08-13T12:00:27.494469"
+      },
+      {
+        "error": "Error: El archivo 'phone_control.py' no existe.",
+        "time": "2026-08-13T12:00:34.892420"
+      }
+    ]
+  },
+  "process_manager": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "page_summarizer": {
+    "score": 1.0,
+    "attempts": 2,
+    "successes": 2,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "webfetch": {
+    "score": 1.0,
+    "attempts": 5,
+    "successes": 5,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "web_navigation": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "web_designer": {
+    "score": 1.0,
+    "attempts": 3,
+    "successes": 3,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "next_designer": {
+    "score": 0.6,
+    "attempts": 5,
+    "successes": 3,
+    "failures": {
+      "Error en next_designer": 2
+    },
+    "last_failure": "Error en next_designer: '\\n  --bg'",
+    "errors": [
+      {
+        "error": "Error en next_designer: '\\n  --bg'",
+        "time": "2026-08-08T14:20:43.592180"
+      },
+      {
+        "error": "Error en next_designer: '\\n  --bg'",
+        "time": "2026-08-08T14:20:46.309124"
+      }
+    ]
+  },
+  "voice_recognition": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "agi_reasoning": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "telegram_bot": {
+    "score": 0.0,
+    "attempts": 1,
+    "successes": 0,
+    "failures": {
+      "Error": 1
+    },
+    "last_failure": "Error: No Telegram bot token configured. Set in config/api_keys.json",
+    "errors": [
+      {
+        "error": "Error: No Telegram bot token configured. Set in config/api_keys.json",
+        "time": "2026-08-11T12:55:58.891922"
+      }
+    ]
+  },
+  "feedback_record_positivo": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "feedback_record_negativo": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "feedback_stats": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "feedback_style": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "mistake_record": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "mistake_record2": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "mistake_analysis": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "mistake_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "error_record": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "error_solution": {
+    "score": 0.75,
+    "attempts": 4,
+    "successes": 3,
+    "failures": {
+      "name '_sol' is not defined": 1
+    },
+    "last_failure": "name '_sol' is not defined",
+    "errors": [
+      {
+        "error": "name '_sol' is not defined",
+        "time": "2026-08-16T13:23:12.246566"
+      }
+    ]
+  },
+  "error_solution_link": {
+    "score": 1.0,
+    "attempts": 1,
+    "successes": 1,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "error_find": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "error_stats": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "prompt_learn": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "prompt_rules": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "prompt_suffix": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "curriculum_init": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "curriculum_next": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "curriculum_complete": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "curriculum_focus": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "curriculum_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "dream_consolidate": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "dream_log": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cap_record_ok": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cap_record_fail": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cap_overall": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cap_weak": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "cap_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "autonomous_status": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "meta_analyze": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "meta_quick": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "confidence_single": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "confidence_multi": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "verifier_single": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "verifier_batch": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "graph_nodes": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "graph_nodes2": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "graph_edges": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "graph_stats": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "graph_related": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "goal_create": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "goal_summary": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "goal_next": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "goal_milestone": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "scheduler_task": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "scheduler_reminder": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "scheduler_active": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "scheduler_reminders": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "scheduler_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "anomaly_sizes": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "anomaly_code": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "anomaly_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "bridge_save": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "bridge_resume": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "bridge_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "bridge_summary": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "profile_file": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "profile_project": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "profile_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "analytics_record": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "analytics_patterns": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "analytics_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "resources_system": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "resources_suggestions": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "resources_format": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "web_scraper": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "youtube_video": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "lesson_1": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "lesson_2": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "lesson_3": {
+    "score": 1.0,
+    "attempts": 4,
+    "successes": 4,
+    "failures": {},
+    "last_failure": "",
+    "errors": []
+  },
+  "shell_executor": {
+    "score": 0.0,
+    "attempts": 2,
+    "successes": 0,
+    "failures": {
+      "Error": 2
+    },
+    "last_failure": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+    "errors": [
+      {
+        "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+        "time": "2026-08-16T15:05:35.465393"
+      },
+      {
+        "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+        "time": "2026-08-19T12:50:47.031922"
+      }
+    ]
+  },
+  "browser_unified": {
+    "score": 0.0,
+    "attempts": 1,
+    "successes": 0,
+    "failures": {
+      "Error": 1
+    },
+    "last_failure": "Error: Page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'button:contains(\"Buscar con Google\")' is not a valid selector.\n    at query (<anonymous>:5448:41)\n    at <anonymous",
+    "errors": [
+      {
+        "error": "Error: Page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'button:contains(\"Buscar con Google\")' is not a valid selector.\n    at query (<anonymous>:5448:41)\n    at <anonymous",
+        "time": "2026-08-19T00:08:40.357485"
+      }
+    ]
+  }
+}

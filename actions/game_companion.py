@@ -21,6 +21,16 @@ def _get_key():
         except: pass
     return ""
 
+def _get_gemini_key():
+    if API_FILE.exists():
+        try: return json.loads(API_FILE.read_text("utf-8")).get("gemini_api_key", "")
+        except: pass
+    alt = Path("config/api_keys.json")
+    if alt.exists():
+        try: return json.loads(alt.read_text("utf-8")).get("gemini_api_key", "")
+        except: pass
+    return ""
+
 def _capture() -> str:
     try:
         from mss import mss
@@ -42,9 +52,12 @@ def _ask_vision(prompt: str) -> str:
     b64 = _capture()
     if b64.startswith("ERROR:"):
         return f"No se pudo capturar pantalla: {b64}"
+    res = _ask_gemini_vision(prompt, b64)
+    if res and not res.startswith("Error") and not res.startswith("Gemini"):
+        return res
     key = _get_key()
     if not key:
-        return "Error: No hay API key de OpenRouter para vision."
+        return res or "Error: No hay API key de Gemini/OpenRouter para vision."
     try:
         body = json.dumps({
             "model": "google/gemini-2.5-flash",
@@ -61,6 +74,33 @@ def _ask_vision(prompt: str) -> str:
         )
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.loads(resp.read())["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"Error vision: {e}"
+
+def _ask_gemini_vision(prompt: str, b64: str) -> str:
+    key = _get_gemini_key()
+    if not key:
+        return "Error: No hay API key de Gemini."
+    try:
+        body = json.dumps({
+            "contents": [{
+                "parts": [
+                    {"text": prompt},
+                    {"inline_data": {"mime_type": "image/jpeg", "data": b64}}
+                ]
+            }],
+            "generationConfig": {"temperature": 0.4, "maxOutputTokens": 1024}
+        }).encode()
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={key}"
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=40) as resp:
+            data = json.loads(resp.read())
+        candidates = data.get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            texts = [p.get("text", "") for p in parts if "text" in p]
+            return "\n".join(texts) if texts else "No response from Gemini."
+        return f"Gemini API error: {json.dumps(data)[:300]}"
     except Exception as e:
         return f"Error vision: {e}"
 

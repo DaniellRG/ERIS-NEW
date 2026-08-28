@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-08-15T20:55:26.742430",
+  "compile_ok": true,
+  "compile_errors": [],
+  "pytest_ok": true,
+  "pytest_out": "........................................................................ [ 92%]\n......                                                                   [100%]\n78 passed in 1.59s",
+  "audit_a": 0,
+  "audit_b": 0,
+  "audit_ok": true,
+  "audit_text": "======================================================================\nDict-style auditadas: 275\n======================================================================\n\n[CLASE A] Declaradas pero NUNCA leídas por la función (se ignoran en silencio):\n  (ninguna)\n\n[CLASE B] Leídas por la función pero NO declaradas (el modelo nunca las manda):\n  (ninguna)\n\n[CLASE C] Funciones no-dict (firma con kwargs reales; el dispatcher las invoca mal):\n  (ninguna)\n\n[BITÁCORA] .py modificados en las últimas 24h SIN entrada en edit_journal.jsonl (ediciones hechas fuera de self_edit/file_controller):\n  D:\\Eris_Source\\actions\\accessibility_overlay.py\n  D:\\Eris_Source\\actions\\arca_invoice.py\n  D:\\Eris_Source\\actions\\ask_user.py\n  D:\\Eris_Source\\actions\\autonomous_agent.py\n  D:\\Eris_Source\\actions\\calc_test.py\n  D:\\Eris_Source\\actions\\code_review.py\n  D:\\Eris_Source\\actions\\code_validator.py\n  D:\\Eris_Source\\actions\\config_export.py\n  D:\\Eris_Source\\actions\\context_menu.py\n  D:\\Eris_Source\\actions\\curiosity_engine.py\n======================================================================\n"
+}

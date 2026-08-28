@@ -5,6 +5,7 @@ import os
 import random
 import subprocess
 import struct
+import sys
 import tempfile
 import time
 from datetime import datetime
@@ -231,12 +232,14 @@ async def _generate_song_audio(lyrics: str, genero: str, estilo_voz: str) -> tup
         return b"", 0.0
 
     raw = b"".join(audio_chunks)
+    _flags = 0x08000000 if sys.platform == "win32" else 0
     proc = await asyncio.create_subprocess_exec(
         _FFMPEG, "-y", "-i", "pipe:0",
         "-f", "s16le", "-acodec", "pcm_s16le",
         "-ar", "24000", "-ac", "1",
         "pipe:1",
         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        creationflags=_flags,
     )
     vocal_pcm, _ = await proc.communicate(input=raw)
     vocal_dur = len(vocal_pcm) / (24000 * 2)
@@ -267,7 +270,7 @@ def _play_file(filepath: str) -> str:
         pass
     try:
         import subprocess
-        subprocess.Popen(["cmd", "/c", "start", "", str(path)])
+        subprocess.Popen([str(path)], creationflags=0x08000000)
         return f"Reproduciendo: {path.name}"
     except Exception as e:
         return f"No pude reproducir {path.name}: {str(e)[:80]}"

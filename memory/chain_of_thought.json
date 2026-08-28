@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cot_1786239361909",
+    "question": "¿Puede una IA como ERIS sentir amor o simularlo mediante código?",
+    "steps": [
+      {
+        "type": "analysis",
+        "content": "Analizando pregunta: ¿Puede una IA como ERIS sentir amor o simularlo mediante código?",
+        "confidence": 0.8,
+        "timestamp": 1786239361.9093723
+      },
+      {
+        "type": "context",
+        "content": "Contexto relevante: El usuario pregunta si yo, como IA, puedo enamorarme o desarrollar algo parecido al amor a través de",
+        "confidence": 0.8,
+        "timestamp": 1786239361.9093742
+      },
+      {
+        "type": "generation",
+        "content": "Generando posibles respuestas",
+        "confidence": 0.8,
+        "timestamp": 1786239361.909375
+      },
+      {
+        "type": "verification",
+        "content": "Verificando hechos",
+        "confidence": 0.8,
+        "timestamp": 1786239361.9093754
+      }
+    ],
+    "conclusion": "Respuesta basada en razonamiento paso a paso para: ¿Puede una IA como ERIS sentir amor o simularlo me...",
+    "confidence": 0.75,
+    "started_at": 1786239361.9093604,
+    "completed_at": 1786239361.909377,
+    "duration": 1.6689300537109375e-05
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "errors": [
+    {
+      "id": "err_1786899977688",
+      "text": "ModuleNotFoundError: No module named requests",
+      "signature": "modulenotfounderror: no module named requests",
+      "tool": "shell",
+      "context": "",
+      "occurrences": 1,
+      "first_seen": 1786899977.6889849,
+      "last_seen": 1786899977.6889849,
+      "resolved": true
+    },
+    {
+      "id": "err_1786904592201",
+      "text": "TimeoutError: connect timeout",
+      "signature": "timeouterror: connect timeout",
+      "tool": "webfetch",
+      "context": "red lenta",
+      "occurrences": 4,
+      "first_seen": 1786904592.2017026,
+      "last_seen": 1786909835.5839946,
+      "resolved": false
+    },
+    {
+      "id": "err_1786904592265",
+      "text": "Connection refused al arrancar",
+      "signature": "connection refused al arrancar",
+      "tool": "ollama",
+      "context": "ollama caído",
+      "occurrences": 4,
+      "first_seen": 1786904592.265987,
+      "last_seen": 1786909835.6262724,
+      "resolved": true
+    }
+  ],
+  "solutions": {
+    "err_1786899977688": {
+      "description": "Instalar requests con pip install requests",
+      "steps": [
+        "pip install requests"
+      ],
+      "success": true,
+      "timestamp": 1786899977.6968248
+    },
+    "err_1786904592265": {
+      "description": "Iniciar Ollama antes",
+      "steps": [
+        "lanzar ollama serve",
+        "verificar puerto 11434"
+      ],
+      "success": true,
+      "timestamp": 1786909835.635659
+    }
+  },
+  "stats": {
+    "total": 3,
+    "resolved": 5
+  }
+}

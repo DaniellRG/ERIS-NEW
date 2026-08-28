@@ -39,15 +39,16 @@ def _capture(index=0):
         return None, "OpenCV (cv2) no esta instalado."
     if not HAS_NUMPY:
         return None, "numpy no esta instalado."
-    cap = cv2.VideoCapture(index, cv2.CAP_DSHOW if os.name == "nt" else 0)
-    if not cap.isOpened():
-        cap.release()
-        return None, f"No se pudo abrir la camara {index}. Prueba otra con 'camera'."
-    ok, frame = cap.read()
-    cap.release()
-    if not ok or frame is None:
-        return None, f"La camara {index} no devolvio imagen."
-    return frame, None
+    # Intentar con DirectShow primero, luego MSMF, luego default
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF, 0] if os.name == "nt" else [0]
+    for backend in backends:
+        cap = cv2.VideoCapture(index, backend)
+        if cap.isOpened():
+            ok, frame = cap.read()
+            cap.release()
+            if ok and frame is not None:
+                return frame, None
+    return None, f"No se pudo abrir la camara {index}. Prueba otra con 'camera'."
 
 
 def _save_snapshot(frame, index=0, tag="cam"):
@@ -60,9 +61,14 @@ def _save_snapshot(frame, index=0, tag="cam"):
 def _motion_analysis(index=0, seconds=1.0):
     if not HAS_CV2 or not HAS_NUMPY:
         return None, "OpenCV o numpy no instalados."
-    cap = cv2.VideoCapture(index, cv2.CAP_DSHOW if os.name == "nt" else 0)
-    if not cap.isOpened():
-        cap.release()
+    # Intentar con DirectShow primero, luego MSMF, luego default
+    backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF, 0] if os.name == "nt" else [0]
+    cap = None
+    for backend in backends:
+        cap = cv2.VideoCapture(index, backend)
+        if cap.isOpened():
+            break
+    if cap is None or not cap.isOpened():
         return None, f"No se pudo abrir la camara {index}."
     prev = None
     frames = 0
@@ -139,12 +145,17 @@ def camera_bus(parameters: dict, player=None) -> str:
             return "OpenCV no esta instalado."
         found = []
         for i in range(4):
-            cap = cv2.VideoCapture(i, cv2.CAP_DSHOW if os.name == "nt" else 0)
-            if cap.isOpened():
+            cap = None
+            for backend in ([cv2.CAP_DSHOW, cv2.CAP_MSMF, 0] if os.name == "nt" else [0]):
+                cap = cv2.VideoCapture(i, backend)
+                if cap.isOpened():
+                    break
+            if cap and cap.isOpened():
                 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
                 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
                 found.append(f"Camara {i}: disponible ({int(w)}x{int(h)})")
-            cap.release()
+            if cap:
+                cap.release()
         if not found:
             return "No se detectaron camaras conectadas."
         return "Camaras detectadas:\n" + "\n".join(found)

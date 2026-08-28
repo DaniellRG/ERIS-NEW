@@ -55,4 +55,28 @@ def eris_ui_control(parameters: dict = None, player=None) -> str:
         except Exception as e:
             return f"Error: {e}"
 
-    return "Acciones: state, log, focus, show (visible)."
+    if action == "terminal":
+        try:
+            tp = getattr(ui, 'terminal_panel', None)
+            if tp is None:
+                return "Terminal panel no disponible."
+            sub = (parameters.get("sub_action") or "toggle").lower()
+            if sub == "toggle":
+                tp.toggle()
+                return f"Terminal {'mostrado' if tp._visible else 'ocultado'}."
+            elif sub == "show":
+                if not tp._visible:
+                    tp.toggle()
+                return "Terminal mostrado."
+            elif sub == "hide":
+                if tp._visible:
+                    tp.toggle()
+                return "Terminal ocultado."
+            elif sub == "clear":
+                tp._do_clear()
+                return "Terminal limpiado."
+            return "Sub-acciones: toggle, show, hide, clear."
+        except Exception as e:
+            return f"Error: {e}"
+
+    return "Acciones: state, log, focus, show (visible), terminal (toggle/show/hide/clear)."

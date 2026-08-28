@@ -28,7 +28,7 @@ def _find_exe_in_folder(folder: str, max_depth=3):
 
 def game_launcher(parameters: dict, player=None) -> str:
     action = parameters.get("action", "list")
-    game_name = parameters.get("game", "").lower()
+    game_name = (parameters.get("game") or parameters.get("name", "")).lower()
     
     if action == "scan_all":
         """Scan ALL drives for games."""

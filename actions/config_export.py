@@ -14,6 +14,7 @@ _EXPORT_DIR = _BASE / "data" / "exports"
 CONFIG_DIRS = [
     "config",
     "data/self",
+    "memory",
 ]
 CONFIG_FILES = [
     "config/theme.json",
@@ -67,6 +68,15 @@ def _export_config(params: dict) -> str:
                 export_data["files"][rel_path] = content
             except:
                 pass
+
+    if include in ("all", "memory"):
+        mem_dir = _BASE / "memory"
+        if mem_dir.exists():
+            for f in mem_dir.glob("*.json"):
+                try:
+                    export_data["files"]["memory/{}".format(f.name)] = f.read_text(encoding="utf-8")
+                except:
+                    pass
 
     if include in ("all", "knowledge"):
         kb_dir = _BASE / "data" / "knowledge"
@@ -176,7 +186,59 @@ def _list_exports_data() -> list:
 
 
 def _diff_exports(params: dict) -> str:
-    return "Diff no implementado aún"
+    name = params.get("name", "")
+    compare = params.get("compare", "")
+    if not name:
+        return "Error: se requiere 'name' (y opcional 'compare' para comparar contra otro backup)"
+    target_path = _EXPORT_DIR / "{}.json".format(name)
+    if not target_path.exists():
+        return "Export no encontrado: {}".format(name)
+
+    try:
+        target = json.loads(target_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return "Error leyendo '{}': {}".format(name, e)
+
+    if compare:
+        cmp_path = _EXPORT_DIR / "{}.json".format(compare)
+        if not cmp_path.exists():
+            return "Export '{}' no encontrado para comparar".format(compare)
+        try:
+            other = json.loads(cmp_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            return "Error leyendo '{}': {}".format(compare, e)
+        other_files = other.get("files", {})
+    else:
+        other_files = {}
+
+    target_files = target.get("files", {})
+    changed, added, removed = [], [], []
+    for rel, content in target_files.items():
+        if rel in other_files:
+            if other_files[rel] != content:
+                changed.append(rel)
+        else:
+            added.append(rel)
+    for rel in other_files:
+        if rel not in target_files:
+            removed.append(rel)
+
+    lines = [
+        "=== DIFF {} {} ===".format(name, "vs " + compare if compare else "vs estado actual"),
+        "  Cambiados: {}".format(len(changed)),
+        "  Agregados: {}".format(len(added)),
+        "  Eliminados: {}".format(len(removed)),
+        "",
+    ]
+    for rel in changed[:20]:
+        lines.append("  ~ {}".format(rel))
+    for rel in added[:20]:
+        lines.append("  + {}".format(rel))
+    for rel in removed[:20]:
+        lines.append("  - {}".format(rel))
+    if len(changed) + len(added) + len(removed) > 60:
+        lines.append("  ... y más")
+    return "\n".join(lines)
 
 
 def _delete_export(params: dict) -> str:
@@ -214,12 +276,14 @@ def _get_status() -> str:
     exports = _list_exports_data()
     kb_count = len(list((_BASE / "data" / "knowledge").glob("*.md"))) if (_BASE / "data" / "knowledge").exists() else 0
     plugin_count = len(list((_BASE / "plugins").glob("*.py"))) if (_BASE / "plugins").exists() else 0
+    mem_count = len(list((_BASE / "memory").glob("*.json"))) if (_BASE / "memory").exists() else 0
     lines = [
         "═══ CONFIG EXPORT STATUS ═══",
         "",
         "  Exports:        {}".format(len(exports)),
         "  Knowledge docs: {}".format(kb_count),
         "  Plugins:        {}".format(plugin_count),
+        "  Memory files:   {}".format(mem_count),
         "  Config files:   {}".format(len(CONFIG_FILES)),
     ]
     return "\n".join(lines)

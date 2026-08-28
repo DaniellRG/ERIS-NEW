@@ -269,12 +269,17 @@ def skill_view(name: str) -> str:
     return f"Skill '{name}' no encontrada. Usa skill_manage(action='list') para ver skills disponibles."
 
 
-def skill_manage(parameters: dict) -> str:
+def skill_manage(parameters: dict, player=None) -> str:
     """
     CRUD operations for skills.
-    Actions: create, patch, edit, delete, list, view
+    Actions: sync, create, patch, edit, delete, list, view
     """
     params = parameters or {}
+    # Compatibilidad: el nombre de la skill puede llegar como 'skill' (declaración
+    # de la herramienta) o como 'name'. Aceptar ambos para no romper llamadas.
+    if "name" not in params and isinstance(params, dict) and "skill" in params:
+        params = dict(params)
+        params["name"] = params["skill"]
     action = params.get("action", "").lower().strip()
 
     if action in ("sync", "sincronizar"):

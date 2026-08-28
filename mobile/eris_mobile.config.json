@@ -1,0 +1,6 @@
+{
+  "telegram_token": "7894278206:AAHgTb66mNSrLnTOMuqUlTVREEztP1HNOwE",
+  "gemini_key": "PEGAR_AQUI_LA_GEMINI_API_KEY",
+  "chat_id": "5007786068",
+  "model": "gemini-flash-latest"
+}

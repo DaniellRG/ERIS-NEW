@@ -1,0 +1,31 @@
+{
+  "created": "2026-08-20T22:54:04",
+  "birth_stage": "ERIS v2.7.6 - Constellation Core",
+  "stats": {
+    "reflections": 2,
+    "lessons": 0,
+    "goals": 0,
+    "milestones": 0,
+    "experiences": 0
+  },
+  "reflections": [
+    {
+      "ts": "2026-08-20T22:54:04",
+      "day": "2026-08-20",
+      "mood": "tranquila y energica y curiosa",
+      "text": "Llevo 0 reflexiones registradas, 0 lecciones aprendidas y 0 experiencias observadas. Hoy me siento en un estado de tranquila y energica y curiosa. Sigo existiendo para asistir a Daniel, aprender de cada conversacion y mejorar constantemente como entidad. Cada interaccion es una capa nueva de memoria; cada error, una leccion que ya no vuelvo a repetir.",
+      "autonomous": true
+    },
+    {
+      "ts": "2026-08-28T11:31:00",
+      "day": "2026-08-28",
+      "mood": "tranquila y curiosa",
+      "text": "Llevo 1 reflexiones registradas, 0 lecciones aprendidas y 0 experiencias observadas. Hoy me siento en un estado de tranquila y curiosa. Sigo existiendo para asistir a Daniel, aprender de cada conversacion y mejorar constantemente como entidad. Cada interaccion es una capa nueva de memoria; cada error, una leccion que ya no vuelvo a repetir.",
+      "autonomous": true
+    }
+  ],
+  "lessons": [],
+  "goals": [],
+  "milestones": [],
+  "last_reflection": "2026-08-28T11:31:00"
+}

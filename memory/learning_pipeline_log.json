@@ -1,0 +1,602 @@
+[
+  {
+    "timestamp": "2026-08-24T12:23:45.620751",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:23:45.632519",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:33:45.635165",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:33:45.637722",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:44:23.998724",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:44:24.001451",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:54:27.133274",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T12:54:27.135950",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:04:27.164785",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:04:27.167227",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:14:27.211955",
+    "action": "save_obsidian",
+    "details": "Guardado: mental-health-technology-solutions.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:14:27.214499",
+    "action": "auto_learn",
+    "details": "Aprendido: mental health technology solutions",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:24:38.061671",
+    "action": "save_obsidian",
+    "details": "Guardado: space-exploration-mars-colonization.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T13:24:38.064166",
+    "action": "auto_learn",
+    "details": "Aprendido: space exploration mars colonization",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:47:26.984847",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:47:26.987362",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:57:27.024502",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24T14:57:27.036018",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:46:36.886886",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:46:37.047421",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:57:01.264301",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-25T17:57:01.266831",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:29:06.173115",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:29:06.259497",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:39:40.819135",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:39:40.829345",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:50:09.292010",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T09:50:09.302912",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:00:24.344140",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:00:24.347272",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:10:24.378748",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:10:24.392632",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:20:33.921458",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:20:33.924230",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:30:42.062494",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:30:42.064953",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:41:30.530670",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:41:30.533548",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:51:45.769730",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26T10:51:45.772894",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:35:52.876026",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:35:52.879109",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:46:16.750932",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:46:16.764293",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:56:16.804871",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T08:56:16.817045",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:06:16.787405",
+    "action": "save_obsidian",
+    "details": "Guardado: mental-health-technology-solutions.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:06:16.790691",
+    "action": "auto_learn",
+    "details": "Aprendido: mental health technology solutions",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:19:27.495472",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:19:27.498447",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:32:20.454899",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:32:20.457830",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:42:20.455012",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:42:20.457902",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:55:23.292614",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T09:55:23.296168",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:05:23.409068",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:05:23.433155",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:15:23.469384",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:15:23.500600",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:26:16.750415",
+    "action": "save_obsidian",
+    "details": "Guardado: mental-health-technology-solutions.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:26:16.753264",
+    "action": "auto_learn",
+    "details": "Aprendido: mental health technology solutions",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:36:16.781981",
+    "action": "save_obsidian",
+    "details": "Guardado: space-exploration-mars-colonization.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T10:36:16.784657",
+    "action": "auto_learn",
+    "details": "Aprendido: space exploration mars colonization",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:06:50.368640",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:06:50.371468",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:17:39.317883",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:17:39.320439",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:28:06.004982",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:28:06.007534",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:38:17.872508",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:38:17.884012",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:48:46.778333",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:48:46.780986",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:59:25.321597",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T11:59:25.324233",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T12:10:01.693469",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-27T12:10:01.696180",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:44:06.121360",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:44:06.124513",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:54:13.799772",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T09:54:13.802823",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:05:02.845470",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:05:02.848351",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:15:21.203505",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:15:21.216379",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:26:09.894251",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:26:09.922766",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:36:39.396008",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:36:39.398979",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:47:00.620702",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:47:00.623446",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:57:02.892624",
+    "action": "save_obsidian",
+    "details": "Guardado: neural-architecture-search-automated.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T10:57:02.895173",
+    "action": "auto_learn",
+    "details": "Aprendido: neural architecture search automated",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:07:02.971548",
+    "action": "save_obsidian",
+    "details": "Guardado: digital-nomad-lifestyle-2026.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:07:02.974673",
+    "action": "auto_learn",
+    "details": "Aprendido: digital nomad lifestyle 2026",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:17:04.393609",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:17:04.397032",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:28:08.122630",
+    "action": "save_obsidian",
+    "details": "Guardado: multimodal-AI-systems.md",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-28T11:28:08.125548",
+    "action": "auto_learn",
+    "details": "Aprendido: multimodal AI systems",
+    "success": true
+  }
+]

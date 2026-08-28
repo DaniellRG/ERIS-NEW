@@ -116,10 +116,30 @@ def _get_backlinks(title: str) -> list:
     return results
 
 
+def _summary(content: str, limit: int = 120) -> str:
+    """Primer párrafo de texto plano de una nota (sin frontmatter ni markdown)."""
+    _, body = _parse_frontmatter(content)
+    # Descartar bloques YAML incrustados (appends repetidos con frontmatter)
+    body = re.sub(r"---\s*\n(?:.*\n)*?---\s*\n?", " ", body)
+    body = re.sub(r"\[\[[^\]|]+\|[^\]]+\]\]", "", body)  # [[link|alias]]
+    body = re.sub(r"\[\[([^\]]+)\]\]", r"\1", body)        # [[link]] → link
+    body = re.sub(r"```.*?```", " ", body, flags=re.S)      # code blocks
+    body = re.sub(r"`[^`]*`", "", body)                     # inline code
+    body = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", body)        # images
+    body = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", body)    # md links
+    body = re.sub(r"[#>*_~\-|]", " ", body)                 # markdown symbols
+    body = re.sub(r"\s+", " ", body).strip()
+    if not body:
+        return ""
+    return body[:limit].strip() + ("…" if len(body) > limit else "")
+
+
 def _update_index():
     notes = _all_notes()
     tags_map = defaultdict(list)
     folders = defaultdict(list)
+    summaries = {}
+    backlinks_map = defaultdict(list)
     concepts = []
     daily = []
     memoria = []
@@ -132,6 +152,7 @@ def _update_index():
         try:
             content = (VAULT_PATH / note_path).read_text(encoding="utf-8", errors="replace")
             fm, _ = _parse_frontmatter(content)
+            summaries[note_path.stem] = _summary(content)
             tags = fm.get("tags", [])
             for t in tags:
                 tags_map[t].append(note_path.stem)
@@ -159,9 +180,24 @@ def _update_index():
     for note_path in notes:
         try:
             content = (VAULT_PATH / note_path).read_text(encoding="utf-8", errors="replace")
-            total_links += len(_get_links(content))
+            links = _get_links(content)
+            total_links += len(links)
+            for link, _ in links:
+                backlinks_map[link].append(note_path.stem)
         except Exception:
             pass
+
+    # Conexiones más fuertes: notas que más apuntan a otras y sus backlinks
+    connected = sorted(
+        [(stem, len(refs)) for stem, refs in backlinks_map.items() if refs],
+        key=lambda x: -x[1],
+    )[:15]
+
+    def _line(stem: str) -> str:
+        s = summaries.get(stem, "")
+        if s:
+            return f"- {_wikilink(stem)} — {s}"
+        return f"- {_wikilink(stem)}"
 
     index = _frontmatter({
         "tags": ["index"],
@@ -175,43 +211,43 @@ def _update_index():
     if concepts:
         index += "## 📚 Conceptos\n\n"
         for c in sorted(concepts):
-            index += f"- {_wikilink(c)}\n"
+            index += _line(c) + "\n"
         index += "\n"
 
     if daily:
         index += "## 📅 Diario\n\n"
         for d in sorted(daily, reverse=True)[:14]:
-            index += f"- {_wikilink(d)}\n"
+            index += _line(d) + "\n"
         index += "\n"
 
     if memoria:
         index += "## 🧠 Memoria\n\n"
         for m in sorted(memoria, reverse=True)[:10]:
-            index += f"- {_wikilink(m)}\n"
+            index += _line(m) + "\n"
         index += "\n"
 
     if aprendizaje:
         index += "## 📖 Aprendizaje\n\n"
         for a in sorted(aprendizaje):
-            index += f"- {_wikilink(a)}\n"
+            index += _line(a) + "\n"
         index += "\n"
 
     if proyectos:
         index += "## 🚧 Proyectos\n\n"
         for p in sorted(proyectos):
-            index += f"- {_wikilink(p)}\n"
+            index += _line(p) + "\n"
         index += "\n"
 
     if ideas:
         index += "## 💡 Ideas\n\n"
         for i in sorted(ideas):
-            index += f"- {_wikilink(i)}\n"
+            index += _line(i) + "\n"
         index += "\n"
 
     if other:
         index += "## 📝 Otras Notas\n\n"
         for o in sorted(other):
-            index += f"- {_wikilink(o)}\n"
+            index += _line(o) + "\n"
         index += "\n"
 
     if folders:
@@ -219,10 +255,21 @@ def _update_index():
         for folder, items in sorted(folders.items()):
             index += f"### {folder}/\n"
             for item in sorted(items)[:10]:
-                index += f"- {_wikilink(item)}\n"
+                index += _line(item) + "\n"
             if len(items) > 10:
                 index += f"  *(+{len(items)-10} más)*\n"
             index += "\n"
+
+    if connected:
+        index += "## 🔗 Conexiones (más referenciadas)\n\n"
+        for stem, count in connected:
+            refs = backlinks_map[stem]
+            index += f"- {_wikilink(stem)} ← {count} nota(s): "
+            index += ", ".join(_wikilink(r) for r in refs[:5])
+            if len(refs) > 5:
+                index += f" (+{len(refs)-5})"
+            index += "\n"
+        index += "\n"
 
     if tags_map:
         index += "## 🏷️ Tags\n\n"
@@ -270,12 +317,7 @@ def _open_in_obsidian(note_path: str = ""):
     else:
         uri = f"obsidian://open?vault={encoded}"
     try:
-        subprocess.Popen(
-            ["cmd", "/c", "start", "", uri],
-            shell=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+        os.startfile(uri)
         return True
     except Exception:
         return False
@@ -303,6 +345,7 @@ def obsidian_note(parameters: dict, player=None) -> str:
       search_tags    Buscar notas por etiqueta(s)
       open           Abrir Obsidian en el vault o nota específica
       index          Mostrar el índice del vault
+      wiki           Wiki curada: índice con resúmenes + conexiones/backlinks
       tags           Listar todas las etiquetas
       concepts       Extraer conceptos clave de un texto y crear notas
     """
@@ -625,6 +668,15 @@ def obsidian_note(parameters: dict, player=None) -> str:
         content = INDEX_FILE.read_text(encoding="utf-8", errors="replace")
         return content[:2500]
 
+    # ─── WIKI ───────────────────────────────────────────────────────
+    elif action == "wiki":
+        _update_index()
+        content = INDEX_FILE.read_text(encoding="utf-8", errors="replace")
+        header, _, body = content.partition("\n\n")
+        # Compacto: solo resúmenes + conexiones, sin lista duplicada de carpetas
+        compact = [header, body.split("## 📂 Por Carpeta")[0], body.split("## 📂 Por Carpeta")[-1].split("## 🏷️ Tags")[0]]
+        return "\n\n".join(compact)[:3000]
+
     # ─── TAGS ───────────────────────────────────────────────────────
     elif action == "tags":
         tags = defaultdict(list)
@@ -700,7 +752,7 @@ def obsidian_note(parameters: dict, player=None) -> str:
     return (
         f"Acción '{action}' no reconocida. "
         "Usa: write, read, search, daily, link, delete, rename, backlinks, "
-        "graph, append, update_fm, browse, search_tags, open, index, tags, concepts"
+        "graph, append, update_fm, browse, search_tags, open, index, wiki, tags, concepts"
     )
 
 

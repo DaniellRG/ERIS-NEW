@@ -17,7 +17,7 @@ import subprocess
 
 def _start_system_app(exe_name: str) -> tuple[bool, str]:
     try:
-        subprocess.Popen(["cmd", "/c", "start", exe_name])
+        os.startfile(exe_name)
         return True, ""
     except Exception as e:
         return False, str(e)

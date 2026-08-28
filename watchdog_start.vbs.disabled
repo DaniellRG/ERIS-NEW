@@ -1,0 +1,2 @@
+Set s = CreateObject("WScript.Shell")
+s.Run """D:\Eris_Source\.venv\Scripts\pythonw.exe"" ""D:\Eris_Source\watchdog_eris.py""", 0, False

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme_ErisBase" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_main</item>
+        <item name="android:statusBarColor">?attr/erisBgDeep</item>
+        <item name="android:navigationBarColor">?attr/erisBgDeep</item>
+        <item name="android:colorAccent">?attr/erisAccent</item>
+        <item name="android:textColorPrimary">?attr/erisTextPrimary</item>
+        <item name="android:textColorSecondary">?attr/erisTextSecondary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme_ErisDarkViolet" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#0E0B1E</item>
+        <item name="erisBgDark">#171131</item>
+        <item name="erisCard">#1B1536</item>
+        <item name="erisLine">#3A2F63</item>
+        <item name="erisTextPrimary">#F0EEFF</item>
+        <item name="erisTextSecondary">#A79FD0</item>
+        <item name="erisAccent">#8B5CF6</item>
+        <item name="erisAccentDark">#5B21B6</item>
+        <item name="erisBubbleEris">#221A42</item>
+        <item name="erisBubbleSystem">#211A3E</item>
+        <item name="erisHeaderFrom">#241C49</item>
+        <item name="erisHeaderTo">#171131</item>
+    </style>
+
+    <style name="Theme_ErisDarkBlue" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#071226</item>
+        <item name="erisBgDark">#0E1E3A</item>
+        <item name="erisCard">#122341</item>
+        <item name="erisLine">#2E4A79</item>
+        <item name="erisTextPrimary">#EEF4FF</item>
+        <item name="erisTextSecondary">#A3B7D9</item>
+        <item name="erisAccent">#3B82F6</item>
+        <item name="erisAccentDark">#1D4ED8</item>
+        <item name="erisBubbleEris">#132647</item>
+        <item name="erisBubbleSystem">#12203C</item>
+        <item name="erisHeaderFrom">#152B55</item>
+        <item name="erisHeaderTo">#0E1E3A</item>
+    </style>
+
+    <style name="Theme_ErisDarkGreen" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#05150E</item>
+        <item name="erisBgDark">#0C2418</item>
+        <item name="erisCard">#0E2A1C</item>
+        <item name="erisLine">#2C5E42</item>
+        <item name="erisTextPrimary">#EFFFF6</item>
+        <item name="erisTextSecondary">#A3CDB6</item>
+        <item name="erisAccent">#10B981</item>
+        <item name="erisAccentDark">#047857</item>
+        <item name="erisBubbleEris">#0F2E20</item>
+        <item name="erisBubbleSystem">#0E2A1C</item>
+        <item name="erisHeaderFrom">#123E2A</item>
+        <item name="erisHeaderTo">#0C2418</item>
+    </style>
+
+    <style name="Theme_ErisDarkPink" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#1E0A16</item>
+        <item name="erisBgDark">#2E1220</item>
+        <item name="erisCard">#351625</item>
+        <item name="erisLine">#6E2D4A</item>
+        <item name="erisTextPrimary">#FFF0F6</item>
+        <item name="erisTextSecondary">#D4A3BA</item>
+        <item name="erisAccent">#EC4899</item>
+        <item name="erisAccentDark">#9D174D</item>
+        <item name="erisBubbleEris">#391A2A</item>
+        <item name="erisBubbleSystem">#351625</item>
+        <item name="erisHeaderFrom">#4A2033</item>
+        <item name="erisHeaderTo">#2E1220</item>
+    </style>
+
+    <style name="Theme_ErisLightViolet" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#ECE7FA</item>
+        <item name="erisBgDark">#F5F2FF</item>
+        <item name="erisCard">#FFFFFF</item>
+        <item name="erisLine">#D8D0F2</item>
+        <item name="erisTextPrimary">#221A40</item>
+        <item name="erisTextSecondary">#6C6494</item>
+        <item name="erisAccent">#7C4DFF</item>
+        <item name="erisAccentDark">#5B21B6</item>
+        <item name="erisBubbleEris">#F1ECFF</item>
+        <item name="erisBubbleSystem">#EDE7FF</item>
+        <item name="erisHeaderFrom">#DCD3F8</item>
+        <item name="erisHeaderTo">#F5F2FF</item>
+    </style>
+
+    <style name="Theme_ErisLightBlue" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#E3EDFB</item>
+        <item name="erisBgDark">#F1F6FF</item>
+        <item name="erisCard">#FFFFFF</item>
+        <item name="erisLine">#C9D8F0</item>
+        <item name="erisTextPrimary">#14263E</item>
+        <item name="erisTextSecondary">#5F7394</item>
+        <item name="erisAccent">#2F7EF6</item>
+        <item name="erisAccentDark">#1D4ED8</item>
+        <item name="erisBubbleEris">#EAF2FF</item>
+        <item name="erisBubbleSystem">#E4EDFF</item>
+        <item name="erisHeaderFrom">#CFE0FA</item>
+        <item name="erisHeaderTo">#F1F6FF</item>
+    </style>
+
+    <style name="Theme_ErisLightGreen" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#E0F4EA</item>
+        <item name="erisBgDark">#EFFAF3</item>
+        <item name="erisCard">#FFFFFF</item>
+        <item name="erisLine">#C3E5D2</item>
+        <item name="erisTextPrimary">#113022</item>
+        <item name="erisTextSecondary">#5C8F73</item>
+        <item name="erisAccent">#0FA870</item>
+        <item name="erisAccentDark">#047857</item>
+        <item name="erisBubbleEris">#E9F9EF</item>
+        <item name="erisBubbleSystem">#E2F6EA</item>
+        <item name="erisHeaderFrom">#C9ECD9</item>
+        <item name="erisHeaderTo">#EFFAF3</item>
+    </style>
+
+    <style name="Theme_ErisLightPink" parent="@style/Theme_ErisBase">
+        <item name="erisBgDeep">#F9E3EE</item>
+        <item name="erisBgDark">#FDF0F6</item>
+        <item name="erisCard">#FFFFFF</item>
+        <item name="erisLine">#EFC9DC</item>
+        <item name="erisTextPrimary">#3A1224</item>
+        <item name="erisTextSecondary">#945F78</item>
+        <item name="erisAccent">#E03581</item>
+        <item name="erisAccentDark">#9D174D</item>
+        <item name="erisBubbleEris">#FCEBF3</item>
+        <item name="erisBubbleSystem">#FAE4EF</item>
+        <item name="erisHeaderFrom">#F5CDDF</item>
+        <item name="erisHeaderTo">#FDF0F6</item>
+    </style>
+
+    <style name="Eris_Btn">
+        <item name="android:background">@drawable/btn_dark</item>
+        <item name="android:textColor">?attr/erisTextPrimary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Eris_BtnAccent">
+        <item name="android:background">@drawable/btn_accent</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Eris_BtnIcon">
+        <item name="android:background">@drawable/btn_dark</item>
+        <item name="android:textColor">?attr/erisTextPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Eris_Input">
+        <item name="android:background">@drawable/input_bg</item>
+        <item name="android:textColor">?attr/erisTextPrimary</item>
+        <item name="android:textColorHint">?attr/erisTextSecondary</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:minHeight">46dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+</resources>

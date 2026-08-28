@@ -10,6 +10,16 @@ def ask_user(parameters: dict, player=None) -> str:
     if not question:
         return "Pregunta requerida."
 
+    # Bloqueante real: si la UI expone ask() (diálogo modal), espera respuesta.
+    ask = getattr(player, "ask", None)
+    if ask is not None:
+        try:
+            answer = ask(question, options, timeout=90)
+            if answer and answer != "skip":
+                return f"[RESPUESTA] {answer}"
+        except Exception:
+            pass
+
     if options:
         lines = [f"[PREGUNTA] {question}"]
         for i, opt in enumerate(options, 1):

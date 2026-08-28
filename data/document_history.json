@@ -190,5 +190,11 @@
     "target": "D:\\Eris_Source\\data\\resumen_inventario.txt",
     "format": "Texto",
     "time": "2026-08-06T22:45:11.811670"
+  },
+  {
+    "action": "create",
+    "target": "Desktop\\ERIS_Documentos\\wiki\\doc_20260815_214651.docx",
+    "format": "Word",
+    "time": "2026-08-15T21:46:51.981745"
   }
 ]

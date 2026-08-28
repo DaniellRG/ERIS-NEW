@@ -4,7 +4,7 @@ from datetime import datetime
 
 def habit_predictor(parameters: dict = None, player=None) -> str:
     """Predice que herramientas necesitas segun tu horario habitual."""
-    action = (parameters or {}).get("action", "predict")
+    action = parameters.get("action", "predict")
 
     if action == "predict":
         try:
@@ -58,7 +58,7 @@ def habit_predictor(parameters: dict = None, player=None) -> str:
             hints = json.loads(hints_str)
             now = datetime.now()
             key = f"{now.strftime('%A').lower()}_{now.hour}h"
-            tool = (parameters or {}).get("tool", "unknown")
+            tool = parameters.get("tool", "unknown")
             
             if key not in hints:
                 hints[key] = {}

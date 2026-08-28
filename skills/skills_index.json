@@ -1,9 +1,46 @@
 [
   {
     "name": "brainstorming",
-    "description": "",
+    "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
     "category": "general",
     "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "dispatching-parallel-agents",
+    "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "executing-plans",
+    "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "finishing-a-development-branch",
+    "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "forensics",
+    "description": "Forense digital en la PC: recolectar evidencia con cadena de custodia, analizar artefactos (logs, archivos, procesos, USB), y reportar hallazgos de forma objetiva sin contaminar la escena. Usar ante incidentes de seguridad, sospecha de intrusión, o cuando se pida investigar evidencia.",
+    "category": "security",
+    "tags": [
+      "forense",
+      "evidencia",
+      "incidentes",
+      "analisis"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -24,6 +61,22 @@
     "source": "builtin"
   },
   {
+    "name": "receiving-code-review",
+    "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "requesting-code-review",
+    "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
     "name": "subagent-driven",
     "description": "",
     "category": "general",
@@ -32,8 +85,16 @@
     "source": "builtin"
   },
   {
+    "name": "subagent-driven-development",
+    "description": "Use when executing implementation plans with independent tasks in the current session",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
     "name": "systematic-debugging",
-    "description": "",
+    "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes",
     "category": "general",
     "tags": [],
     "version": "1.0.0",
@@ -56,8 +117,32 @@
     "source": "builtin"
   },
   {
+    "name": "using-git-worktrees",
+    "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "using-superpowers",
+    "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
     "name": "verification",
     "description": "",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "builtin"
+  },
+  {
+    "name": "verification-before-completion",
+    "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
     "category": "general",
     "tags": [],
     "version": "1.0.0",
@@ -73,7 +158,7 @@
   },
   {
     "name": "writing-plans",
-    "description": "",
+    "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
     "category": "general",
     "tags": [],
     "version": "1.0.0",
@@ -86,5 +171,282 @@
     "tags": [],
     "version": "1.0.0",
     "source": "builtin"
+  },
+  {
+    "name": "auditoria-herramientas",
+    "description": "Auditoría de alineación entre las declaraciones de herramientas (core/tool_declarations.py) y las funciones reales (core/tool_registry.py). Detecta parámetros declarados que las funciones ignoran en silencio y claves leídas que el modelo nunca envía. Correr periódicamente y tras editar herramientas.",
+    "category": "development",
+    "tags": [
+      "auditoria",
+      "herramientas",
+      "parametros",
+      "bugs",
+      "auto-revision"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "build-install-eris",
+    "description": "Pipeline completo de build + instalación + verificación del APK de ERIS Android (sin Gradle). Usar cuando Daniel pida compilar, actualizar o reinstalar la app del celular, o después de editar código Java/recursos de android_eris.",
+    "category": "development",
+    "tags": [
+      "android",
+      "apk",
+      "build",
+      "adb",
+      "instalacion",
+      "verificacion"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "cso",
+    "description": "Chief Security Officer (metodología gstack). Revisión OWASP Top 10 + amenaza STRIDE completa para código nuevo/modificado. Sin ruido, sin falsos positivos, sin teatralidad. Enfocado en lo que un atacante encontraría primero. Usar en CUALQUIER feature que toque datos, red, autenticación o manejo de input.",
+    "category": "development",
+    "tags": [
+      "security",
+      "owasp",
+      "stride",
+      "cso",
+      "pentest",
+      "gstack"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "depuracion-playbook",
+    "description": "Playbook de depuración rápida: qué hacer ante cada clase de fallo típico (app que no arranca, comando que falla, API con error, build roto, resultado incorrecto, problema de red). Usar cuando algo no funciona y no sabés por dónde arrancar.",
+    "category": "development",
+    "tags": [
+      "debugging",
+      "fallos",
+      "api",
+      "build",
+      "red",
+      "logcat"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "diseno-web-estilos",
+    "description": "Guias de creacion de paginas web (HTML/CSS puro, React, Angular, Vue), estilos editoriales premium (Sierra & Mar), catalogo de estilos de diseno y estilo Lumina. Cargar al crear/modificar sitios web o elegir una estetica de UI.",
+    "category": "design",
+    "tags": [
+      "diseno",
+      "web",
+      "estilos",
+      "sierra-mar",
+      "lumina",
+      "react",
+      "angular",
+      "vue"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "english-teacher",
+    "description": "Profesora de ingles de ERIS: rol, reglas de ensenanza, estructura de clase y niveles A1->C2. Cargar cuando el usuario pida practicar o aprender ingles.",
+    "category": "education",
+    "tags": [
+      "ingles",
+      "idioma",
+      "ensenanza",
+      "teacher",
+      "curriculum"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "exploracion-paralela",
+    "description": "Patrón de exploración con subagentes en paralelo: cuando una tarea tiene varias partes desconocidas independientes, lanzar subagentes simultáneos (uno por zona) en vez de explorar secuencialmente, y fusionar resultados. Usar en investigaciones, diagnósticos grandes o tareas con múltiples áreas.",
+    "category": "development",
+    "tags": [
+      "subagentes",
+      "paralelo",
+      "investigacion",
+      "mapeo",
+      "eficiencia"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "guia-herramientas",
+    "description": "Guias de uso de las tools de ERIS de oficina, media y analisis: video_analyzer, pc_control, reminders, web_search, calculator, file_manager, music_player, fun_mode, email, calendar, clipboard, text_summarizer, translator, ocr, image_analyzer, audio_transcriber, data_analyst, data_viz, pdf_manager, template_engine, browser_history, whatsapp, telegram, phone, notifications, voice_clone, real_time_tts. Cargar cuando una de estas tools no responda como esperas o necesites su modo de uso exacto.",
+    "category": "productivity",
+    "tags": [
+      "guias",
+      "herramientas",
+      "oficina",
+      "media",
+      "analisis",
+      "comunicacion"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "guia-herramientas-dev",
+    "description": "Guias de las tools de ERIS de desarrollo e infra: task_scheduler, auto_agent, code_generator, code_copilot, memoria semantica, context_engine, browser_unified, process_manager, driver_manager, backup_system. Cargar al programar, automatizar tareas, gestionar procesos o usar el navegador por API.",
+    "category": "development",
+    "tags": [
+      "guias",
+      "desarrollo",
+      "tareas",
+      "copilot",
+      "browser",
+      "procesos",
+      "backups",
+      "rag"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "metodologia-opencode",
+    "description": "Método de trabajo completo del asistente de desarrollo opencode: bucle hipótesis-evidencia, test de verdad, edición mínima, verificación. Usar ante CUALQUIER tarea de código, diagnóstico o automatización para trabajar como un asistente de desarrollo experto.",
+    "category": "development",
+    "tags": [
+      "metodologia",
+      "debugging",
+      "hipotesis",
+      "verificacion",
+      "codigo"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "plan-eng-review",
+    "description": "Revisión de plan de ingeniería (Eng Manager). Bloquear arquitectura, flujo de datos, edge cases, matriz de tests y riesgos antes de implementar. Usar ante CUALQUIER plan/feature que vaya a tocar código, siguiendo la metodología de gstack.",
+    "category": "development",
+    "tags": [
+      "plan",
+      "arquitectura",
+      "eng",
+      "review",
+      "edge-cases",
+      "tests",
+      "gstack"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "project-builder",
+    "description": "Protocolo completo para crear proyectos de software autónomamente. Genera estructura + código + config + compilación para 8 tipos: Java/Maven, Python, C#, HTML/CSS/JS, React, Angular, Vue, MySQL.",
+    "category": "development",
+    "tags": [
+      "proyectos",
+      "java",
+      "python",
+      "react",
+      "angular",
+      "vue",
+      "mysql",
+      "creacion",
+      "autonomo"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "qa",
+    "description": "QA Lead (metodología gstack). Probar la app real, encontrar bugs, arreglarlos con commits atómicos, re-verificar, generar tests de regresión. Enfocado en bugs de UI/UX, rutas de error, y regresiones. Usar cuando la tarea es encontrar o corregir bugs en la interfaz/flujo del usuario.",
+    "category": "development",
+    "tags": [
+      "qa",
+      "testing",
+      "bugs",
+      "ui",
+      "ux",
+      "regresion",
+      "gstack"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "review",
+    "description": "Code review como Staff Engineer (metodología gstack). Encontrar bugs que pasan CI, auto-corregir los obvios, marcar gaps de completitud, no tocar el estilo del autor salvo que sea bloqueante. Usar ante CUALQUIER diff/cambio de código propio o ajeno antes de darlo por terminado.",
+    "category": "development",
+    "tags": [
+      "review",
+      "code",
+      "bugs",
+      "diff",
+      "ci",
+      "gstack"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "rutinas-diarias",
+    "description": "Rutinas diarias de ERIS estilo Jarvis OS. Inbox matutino (repaso de pendientes del vault Obsidian), plan del día (objetivos y agenda), métricas (recursos del sistema), actualizar vault Obsidian y cierre del día. Usar cuando Daniel pida \"rutinas\", \"rutina de la mañana\", \"plan del día\", \"inbox\", \"cierre del día\", \"métricas del sistema\" o arranque/cierre de jornada.",
+    "category": "routines",
+    "tags": [
+      "rutinas",
+      "inbox",
+      "plan",
+      "metricas",
+      "vault",
+      "obsidian",
+      "jarvis",
+      "cierre"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "seguridad-cyber",
+    "description": "Base de conocimiento de ciberseguridad (cybersecurity, credential_recovery, osint_agent), escudo de seguridad, firewall activo, monitor de red, encriptacion de archivos y tools de threat (keylogger, usb, ransomware, dark web, disk wiper). Cargar ante temas de seguridad/hacking/defensa.",
+    "category": "security",
+    "tags": [
+      "seguridad",
+      "hacking",
+      "osint",
+      "firewall",
+      "ransomware",
+      "cyber"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "voz-humana",
+    "description": "Escritura natural y anti-AI-slop para ERIS. Aplica patrones para que textos, emails, respuestas y diseños NO parezcan generados por IA. Usar al redactar respuestas largas, emails, posts, ensayos, o al generar UIs/Páginas web donde el resultado no deba \"oler\" a IA.",
+    "category": "communication",
+    "tags": [
+      "escritura",
+      "humano",
+      "natural",
+      "anti-ai-slop",
+      "redaccion",
+      "copywriting",
+      "diseño"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "workflow-codigo",
+    "description": "Pipeline completo de cambio de código estilo opencode: mapa → plan → edición mínima → REVISAR EL PROPIO DIFF como un reviewer → verificación → documentar/aprender → cerrar. Usar en CUALQUIER modificación de código, propia o de otros proyectos.",
+    "category": "development",
+    "tags": [
+      "codigo",
+      "edicion",
+      "review",
+      "verificacion",
+      "diff"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
   }
 ]

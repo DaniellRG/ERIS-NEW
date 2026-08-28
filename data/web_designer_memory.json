@@ -1,0 +1,958 @@
+{
+  "pages_created": 35,
+  "history": [
+    {
+      "id": "ba7631bb",
+      "title": "Café Aroma",
+      "topic": "cafeteria artesanal granos de cafe",
+      "palette": "indigo-twilight",
+      "font": "Sora",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\html-cafe",
+      "timestamp": 1786212169.2159188,
+      "kind": "site",
+      "layout": "split",
+      "bg": "rings",
+      "n_pages": 5
+    },
+    {
+      "id": "f0fca692",
+      "title": "FitZone",
+      "topic": "gimnasio entrenamiento fitness",
+      "palette": "retro-terminal",
+      "font": "Plus Jakarta Sans",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\react-gym",
+      "timestamp": 1786212198.1627417,
+      "kind": "react-site",
+      "layout": "compact",
+      "bg": "grid",
+      "n_pages": 5
+    },
+    {
+      "id": "e230fc70",
+      "title": "Nómada Travel",
+      "topic": "agencia de viajes turismo paquetes",
+      "palette": "studio-black",
+      "font": "Inter",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\angular-travel",
+      "timestamp": 1786212234.5164514,
+      "kind": "angular-site",
+      "layout": "editorial",
+      "bg": "mesh",
+      "n_pages": 5
+    },
+    {
+      "id": "0ba11851",
+      "title": "Lex & Asociados",
+      "topic": "estudio juridico abogados derecho legal",
+      "palette": "studio-black",
+      "font": "Poppins",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\vue-lex",
+      "timestamp": 1786212334.4741015,
+      "kind": "vue-site",
+      "layout": "centered",
+      "bg": "blobs",
+      "n_pages": 5
+    },
+    {
+      "id": "276c0901",
+      "title": "Lex & Asociados",
+      "topic": "estudio juridico abogados derecho legal",
+      "palette": "ruby",
+      "font": "DM Sans",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\vue-lex",
+      "timestamp": 1786212636.9086864,
+      "kind": "vue-site",
+      "layout": "centered",
+      "bg": "aurora",
+      "n_pages": 5
+    },
+    {
+      "id": "a9593ab1",
+      "title": "Casa del Pan",
+      "topic": "panaderia artesanal premium de autor",
+      "palette": "ocean-sand",
+      "font": "Fraunces",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\html-pan",
+      "timestamp": 1786213056.8989272,
+      "kind": "site",
+      "layout": "editorial",
+      "bg": "dots",
+      "n_pages": 5
+    },
+    {
+      "id": "2b437adf",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria premium editorial de autor, cl?nica 24 horas",
+      "palette": "teal-aurora",
+      "font": "Outfit",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\vet-amanecer",
+      "timestamp": 1786213316.6285615,
+      "kind": "site",
+      "layout": "split",
+      "bg": "rings",
+      "n_pages": 5
+    },
+    {
+      "id": "c1b48490",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria premium editorial de autor, cl?nica 24 horas",
+      "palette": "ocean-sand",
+      "font": "Fraunces",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\vet-amanecer",
+      "timestamp": 1786213399.6521182,
+      "kind": "site",
+      "layout": "compact",
+      "bg": "grid",
+      "n_pages": 5
+    },
+    {
+      "id": "6fc809e5",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria editorial premium",
+      "palette": "pink-rose",
+      "font": "Manrope",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\react-vet",
+      "timestamp": 1786213585.0751848,
+      "kind": "react-site",
+      "layout": "split",
+      "bg": "mesh",
+      "n_pages": 5
+    },
+    {
+      "id": "bc82a007",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria editorial premium",
+      "palette": "ocean-sand",
+      "font": "Fraunces",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\react-vet",
+      "timestamp": 1786213661.7620933,
+      "kind": "react-site",
+      "layout": "editorial",
+      "bg": "blobs",
+      "n_pages": 5
+    },
+    {
+      "id": "7c7a447c",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria editorial premium",
+      "palette": "ocean-sand",
+      "font": "Fraunces",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\vue-vet",
+      "timestamp": 1786213731.2555149,
+      "kind": "vue-site",
+      "layout": "centered",
+      "bg": "aurora",
+      "n_pages": 5
+    },
+    {
+      "id": "f984aa21",
+      "title": "Vet Amanecer",
+      "topic": "veterinaria editorial premium",
+      "palette": "ocean-sand",
+      "font": "Fraunces",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\angular-vet",
+      "timestamp": 1786213743.0853422,
+      "kind": "angular-site",
+      "layout": "centered",
+      "bg": "dots",
+      "n_pages": 5
+    },
+    {
+      "id": "78a28eaa",
+      "title": "L?mina Vet",
+      "topic": "veterinaria lumina premium natural, verde lima",
+      "palette": "lumina",
+      "font": "Playfair Display",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\lumina-vet",
+      "timestamp": 1786214030.8869724,
+      "kind": "site",
+      "layout": "compact",
+      "bg": "rings",
+      "n_pages": 5
+    },
+    {
+      "id": "838dca99",
+      "title": "Lúmina Vet Premium",
+      "topic": "veterinaria premium natural estilo lumina",
+      "palette": "teal-aurora",
+      "font": "Outfit",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\html-eris",
+      "timestamp": 1786214847.9390714,
+      "kind": "site",
+      "layout": "editorial",
+      "bg": "grid",
+      "n_pages": 5
+    },
+    {
+      "id": "95ae0325",
+      "title": "Lúmina Vet Premium",
+      "topic": "veterinaria premium natural moderna estilo lumina",
+      "palette": "magenta",
+      "font": "Outfit",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\next-eris",
+      "timestamp": 1786215770.791125,
+      "kind": "site",
+      "layout": "split",
+      "bg": "mesh",
+      "n_pages": 5
+    },
+    {
+      "id": "6e89eec4",
+      "title": "Lúmina Vet",
+      "topic": "veterinaria premium natural estilo lumina",
+      "palette": "sky",
+      "font": "Inter",
+      "folder": "C:\\Users\\danie\\Desktop\\ERIS_web\\html-eris",
+      "timestamp": 1786216849.0671039,
+      "kind": "site",
+      "layout": "editorial",
+      "bg": "blobs",
+      "n_pages": 5
+    },
+    {
+      "id": "70bcc58a",
+      "title": "Prueba Fix Designer",
+      "topic": "tecnologia",
+      "palette": "cyan-deep",
+      "font": "Plus Jakarta Sans",
+      "folder": "C:\\Users\\danie\\AppData\\Local\\Temp\\opencode\\nd_fix_test",
+      "timestamp": 1786237864.9785213,
+      "kind": "next-single",
+      "layout": "split",
+      "bg": "aurora",
+      "n_pages": 1
+    },
+    {
+      "id": "5284c6fb",
+      "title": "Test",
+      "topic": "Test",
+      "palette": "amber-warm",
+      "font": "Cormorant Garamond",
+      "folder": "C:\\Users\\danie\\AppData\\Local\\Temp\\opencode\\nx_test",
+      "timestamp": 1786473735.6249778,
+      "kind": "next-single",
+      "layout": "centered",
+      "bg": "dots",
+      "n_pages": 1
+    },
+    {
+      "id": "2fa035ad",
+      "title": "Veterinaria MiMascota",
+      "topic": "veterinaria",
+      "palette": "teal-aurora",
+      "font": "Manrope",
+      "folder": "C:\\Users\\danie\\AppData\\Local\\Temp\\opencode\\vet_test",
+      "timestamp": 1786473794.2494378,
+      "kind": "next-site",
+      "layout": "compact",
+      "bg": "rings",
+      "n_pages": 5
+    },
+    {
+      "id": "ac78d931",
+      "title": "Restaurante",
+      "topic": "restaurante",
+      "palette": "sunset",
+      "font": "Space Mono",
+      "folder": "C:\\Users\\danie\\AppData\\Local\\Temp\\opencode\\rest_test",
+      "timestamp": 1786473812.2632854,
+      "kind": "next-site",
+      "layout": "split",
+      "bg": "grid",
+      "n_pages": 5
+    }
+  ],
+  "analyzed_urls": [
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:41:30.569781"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:42:27.964406"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:42:45.828669"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:43:55.892034"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:44:40.096730"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:45:29.601820"
+    },
+    {
+      "url": "https://www.whitemirrorlab.com/",
+      "framework": "nextjs",
+      "time": "2026-08-08T10:47:59.491897"
+    }
+  ],
+  "palettes_used": [
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:10:35.724803"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:11:12.639956"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:12:16.885239"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:21:15.003070"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:23:09.330448"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T11:30:44.779583"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T12:42:23.095220"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T12:58:04.863144"
+    },
+    {
+      "value": "indigo-twilight",
+      "time": "2026-08-08T13:02:49.210070"
+    },
+    {
+      "value": "retro-terminal",
+      "time": "2026-08-08T13:03:18.157392"
+    },
+    {
+      "value": "studio-black",
+      "time": "2026-08-08T13:03:54.501615"
+    },
+    {
+      "value": "studio-black",
+      "time": "2026-08-08T13:05:34.464169"
+    },
+    {
+      "value": "ruby",
+      "time": "2026-08-08T13:10:36.902895"
+    },
+    {
+      "value": "ocean-sand",
+      "time": "2026-08-08T13:17:36.892128"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T13:21:56.621416"
+    },
+    {
+      "value": "ocean-sand",
+      "time": "2026-08-08T13:23:19.646660"
+    },
+    {
+      "value": "pink-rose",
+      "time": "2026-08-08T13:26:25.070915"
+    },
+    {
+      "value": "ocean-sand",
+      "time": "2026-08-08T13:27:41.757035"
+    },
+    {
+      "value": "ocean-sand",
+      "time": "2026-08-08T13:28:51.248552"
+    },
+    {
+      "value": "ocean-sand",
+      "time": "2026-08-08T13:29:03.075482"
+    },
+    {
+      "value": "lumina",
+      "time": "2026-08-08T13:33:50.881347"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-08T13:47:27.932487"
+    },
+    {
+      "value": "magenta",
+      "time": "2026-08-08T14:02:50.777645"
+    },
+    {
+      "value": "sky",
+      "time": "2026-08-08T14:20:49.060899"
+    },
+    {
+      "value": "cyan-deep",
+      "time": "2026-08-08T20:11:04.973506"
+    },
+    {
+      "value": "amber-warm",
+      "time": "2026-08-11T13:42:15.618817"
+    },
+    {
+      "value": "teal-aurora",
+      "time": "2026-08-11T13:43:14.242304"
+    },
+    {
+      "value": "sunset",
+      "time": "2026-08-11T13:43:32.248813"
+    }
+  ],
+  "fonts_used": [
+    {
+      "value": "Manrope",
+      "time": "2026-08-08T11:10:35.724821"
+    },
+    {
+      "value": "Manrope",
+      "time": "2026-08-08T11:11:12.639978"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T11:12:16.885257"
+    },
+    {
+      "value": "Manrope",
+      "time": "2026-08-08T11:21:15.003092"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T11:23:09.330467"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T11:30:44.779603"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T12:42:23.095239"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T12:58:04.863165"
+    },
+    {
+      "value": "Sora",
+      "time": "2026-08-08T13:02:49.210090"
+    },
+    {
+      "value": "Plus Jakarta Sans",
+      "time": "2026-08-08T13:03:18.157411"
+    },
+    {
+      "value": "Inter",
+      "time": "2026-08-08T13:03:54.501636"
+    },
+    {
+      "value": "Poppins",
+      "time": "2026-08-08T13:05:34.464196"
+    },
+    {
+      "value": "DM Sans",
+      "time": "2026-08-08T13:10:36.902924"
+    },
+    {
+      "value": "Fraunces",
+      "time": "2026-08-08T13:17:36.892145"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T13:21:56.621439"
+    },
+    {
+      "value": "Fraunces",
+      "time": "2026-08-08T13:23:19.646683"
+    },
+    {
+      "value": "Manrope",
+      "time": "2026-08-08T13:26:25.070938"
+    },
+    {
+      "value": "Fraunces",
+      "time": "2026-08-08T13:27:41.757057"
+    },
+    {
+      "value": "Fraunces",
+      "time": "2026-08-08T13:28:51.248582"
+    },
+    {
+      "value": "Fraunces",
+      "time": "2026-08-08T13:29:03.075501"
+    },
+    {
+      "value": "Playfair Display",
+      "time": "2026-08-08T13:33:50.881364"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T13:47:27.932495"
+    },
+    {
+      "value": "Outfit",
+      "time": "2026-08-08T14:02:50.777652"
+    },
+    {
+      "value": "Inter",
+      "time": "2026-08-08T14:20:49.060910"
+    },
+    {
+      "value": "Plus Jakarta Sans",
+      "time": "2026-08-08T20:11:04.973525"
+    },
+    {
+      "value": "Cormorant Garamond",
+      "time": "2026-08-11T13:42:15.618837"
+    },
+    {
+      "value": "Manrope",
+      "time": "2026-08-11T13:43:14.242324"
+    },
+    {
+      "value": "Space Mono",
+      "time": "2026-08-11T13:43:32.248821"
+    }
+  ],
+  "layouts_used": [
+    {
+      "value": "centered",
+      "time": "2026-08-08T11:10:35.724823"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T11:11:12.639980"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T11:12:16.885259"
+    },
+    {
+      "value": "compact",
+      "time": "2026-08-08T11:21:15.003094"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T11:23:09.330469"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T11:30:44.779605"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T12:42:23.095241"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T12:58:04.863167"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T13:02:49.210094"
+    },
+    {
+      "value": "compact",
+      "time": "2026-08-08T13:03:18.157413"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T13:03:54.501638"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T13:05:34.464200"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T13:10:36.902927"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T13:17:36.892147"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T13:21:56.621442"
+    },
+    {
+      "value": "compact",
+      "time": "2026-08-08T13:23:19.646686"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T13:26:25.070941"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T13:27:41.757059"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T13:28:51.248584"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-08T13:29:03.075503"
+    },
+    {
+      "value": "compact",
+      "time": "2026-08-08T13:33:50.881366"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T13:47:27.932497"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T14:02:50.777654"
+    },
+    {
+      "value": "editorial",
+      "time": "2026-08-08T14:20:49.060912"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-08T20:11:04.973527"
+    },
+    {
+      "value": "centered",
+      "time": "2026-08-11T13:42:15.618841"
+    },
+    {
+      "value": "compact",
+      "time": "2026-08-11T13:43:14.242326"
+    },
+    {
+      "value": "split",
+      "time": "2026-08-11T13:43:32.248823"
+    }
+  ],
+  "anims_used": [
+    {
+      "value": [
+        "reveal",
+        "blob"
+      ],
+      "time": "2026-08-08T11:10:35.724824"
+    },
+    {
+      "value": [
+        "reveal",
+        "particles"
+      ],
+      "time": "2026-08-08T11:11:12.639982"
+    },
+    {
+      "value": [
+        "reveal",
+        "marquee"
+      ],
+      "time": "2026-08-08T11:12:16.885260"
+    },
+    {
+      "value": [
+        "reveal"
+      ],
+      "time": "2026-08-08T11:21:15.003095"
+    },
+    {
+      "value": [
+        "reveal",
+        "blob",
+        "particles"
+      ],
+      "time": "2026-08-08T11:23:09.330470"
+    },
+    {
+      "value": [
+        "reveal",
+        "kenburns"
+      ],
+      "time": "2026-08-08T11:30:44.779606"
+    },
+    {
+      "value": [
+        "reveal",
+        "particles"
+      ],
+      "time": "2026-08-08T12:42:23.095243"
+    },
+    {
+      "value": [
+        "reveal",
+        "parallax",
+        "marquee"
+      ],
+      "time": "2026-08-08T12:58:04.863169"
+    },
+    {
+      "value": [
+        "reveal",
+        "marquee"
+      ],
+      "time": "2026-08-08T13:02:49.210095"
+    },
+    {
+      "value": [
+        "reveal",
+        "tilt"
+      ],
+      "time": "2026-08-08T13:03:18.157414"
+    },
+    {
+      "value": [
+        "reveal",
+        "blob"
+      ],
+      "time": "2026-08-08T13:03:54.501640"
+    },
+    {
+      "value": [
+        "reveal",
+        "kenburns"
+      ],
+      "time": "2026-08-08T13:05:34.464203"
+    },
+    {
+      "value": [
+        "reveal",
+        "float"
+      ],
+      "time": "2026-08-08T13:10:36.902930"
+    },
+    {
+      "value": [
+        "reveal",
+        "parallax",
+        "marquee"
+      ],
+      "time": "2026-08-08T13:17:36.892148"
+    },
+    {
+      "value": [
+        "reveal",
+        "marquee"
+      ],
+      "time": "2026-08-08T13:21:56.621443"
+    },
+    {
+      "value": [
+        "reveal",
+        "tilt"
+      ],
+      "time": "2026-08-08T13:23:19.646688"
+    },
+    {
+      "value": [
+        "reveal",
+        "particles"
+      ],
+      "time": "2026-08-08T13:26:25.070943"
+    },
+    {
+      "value": [
+        "reveal"
+      ],
+      "time": "2026-08-08T13:27:41.757061"
+    },
+    {
+      "value": [
+        "reveal",
+        "blob",
+        "particles"
+      ],
+      "time": "2026-08-08T13:28:51.248585"
+    },
+    {
+      "value": [
+        "reveal",
+        "float"
+      ],
+      "time": "2026-08-08T13:29:03.075505"
+    },
+    {
+      "value": [
+        "reveal",
+        "marquee"
+      ],
+      "time": "2026-08-08T13:33:50.881368"
+    },
+    {
+      "value": [
+        "reveal",
+        "blob"
+      ],
+      "time": "2026-08-08T13:47:27.932500"
+    },
+    {
+      "value": [
+        "reveal"
+      ],
+      "time": "2026-08-08T14:02:50.777655"
+    },
+    {
+      "value": [
+        "reveal",
+        "particles"
+      ],
+      "time": "2026-08-08T14:20:49.060914"
+    },
+    {
+      "value": [
+        "reveal",
+        "tilt"
+      ],
+      "time": "2026-08-08T20:11:04.973530"
+    },
+    {
+      "value": [
+        "reveal",
+        "blob",
+        "particles"
+      ],
+      "time": "2026-08-11T13:42:15.618844"
+    },
+    {
+      "value": [
+        "reveal",
+        "marquee"
+      ],
+      "time": "2026-08-11T13:43:14.242327"
+    },
+    {
+      "value": [
+        "reveal",
+        "float"
+      ],
+      "time": "2026-08-11T13:43:32.248825"
+    }
+  ],
+  "bgs_used": [
+    {
+      "value": "aurora",
+      "time": "2026-08-08T11:10:35.724825"
+    },
+    {
+      "value": "dots",
+      "time": "2026-08-08T11:11:12.639983"
+    },
+    {
+      "value": "rings",
+      "time": "2026-08-08T11:12:16.885263"
+    },
+    {
+      "value": "grid",
+      "time": "2026-08-08T11:21:15.003098"
+    },
+    {
+      "value": "mesh",
+      "time": "2026-08-08T11:23:09.330472"
+    },
+    {
+      "value": "blobs",
+      "time": "2026-08-08T11:30:44.779608"
+    },
+    {
+      "value": "aurora",
+      "time": "2026-08-08T12:42:23.095244"
+    },
+    {
+      "value": "dots",
+      "time": "2026-08-08T12:58:04.863170"
+    },
+    {
+      "value": "rings",
+      "time": "2026-08-08T13:02:49.210096"
+    },
+    {
+      "value": "grid",
+      "time": "2026-08-08T13:03:18.157416"
+    },
+    {
+      "value": "mesh",
+      "time": "2026-08-08T13:03:54.501641"
+    },
+    {
+      "value": "blobs",
+      "time": "2026-08-08T13:05:34.464206"
+    },
+    {
+      "value": "aurora",
+      "time": "2026-08-08T13:10:36.902932"
+    },
+    {
+      "value": "dots",
+      "time": "2026-08-08T13:17:36.892150"
+    },
+    {
+      "value": "rings",
+      "time": "2026-08-08T13:21:56.621445"
+    },
+    {
+      "value": "grid",
+      "time": "2026-08-08T13:23:19.646689"
+    },
+    {
+      "value": "mesh",
+      "time": "2026-08-08T13:26:25.070945"
+    },
+    {
+      "value": "blobs",
+      "time": "2026-08-08T13:27:41.757062"
+    },
+    {
+      "value": "aurora",
+      "time": "2026-08-08T13:28:51.248588"
+    },
+    {
+      "value": "dots",
+      "time": "2026-08-08T13:29:03.075506"
+    },
+    {
+      "value": "rings",
+      "time": "2026-08-08T13:33:50.881369"
+    },
+    {
+      "value": "grid",
+      "time": "2026-08-08T13:47:27.932502"
+    },
+    {
+      "value": "mesh",
+      "time": "2026-08-08T14:02:50.777656"
+    },
+    {
+      "value": "blobs",
+      "time": "2026-08-08T14:20:49.060915"
+    },
+    {
+      "value": "aurora",
+      "time": "2026-08-08T20:11:04.973532"
+    },
+    {
+      "value": "dots",
+      "time": "2026-08-11T13:42:15.618845"
+    },
+    {
+      "value": "rings",
+      "time": "2026-08-11T13:43:14.242329"
+    },
+    {
+      "value": "grid",
+      "time": "2026-08-11T13:43:32.248827"
+    }
+  ]
+}

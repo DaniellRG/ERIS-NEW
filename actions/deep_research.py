@@ -27,8 +27,11 @@ def _fetch_page(url: str, timeout: int = 15) -> str:
                        "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
         "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
     })
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        raw = resp.read().decode("utf-8", errors="replace")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+    except Exception:
+        return ""
     import html as html_mod
     text = html_mod.unescape(raw)
     text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
@@ -102,7 +105,7 @@ def _analyze_with_gemini(content: str, title: str, url: str, query: str) -> dict
         ).format(query, title, url, content[:4000])
 
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
         )
         text = response.text.strip()

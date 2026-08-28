@@ -1,0 +1,8 @@
+{"ts": "2026-08-14 09:27:33", "type": "write", "path": "C:\\Users\\danie\\AppData\\Local\\Temp\\jtestb00ldfit\\test.py", "detail": "Archivo escrito: C:\\Users\\danie\\AppData\\Local\\Temp\\jtestb00ldfit\\test.py (23 car"}
+{"ts": "2026-08-14 09:27:33", "type": "edit", "path": "C:\\Users\\danie\\AppData\\Local\\Temp\\jtestb00ldfit\\test.py", "detail": "Archivo editado (replace): C:\\Users\\danie\\AppData\\Local\\Temp\\jtestb00ldfit\\test."}
+{"ts": "2026-08-14 09:27:33", "type": "rename", "path": "C:\\Users\\danie\\AppData\\Local\\Temp\\jtestb00ldfit\\test.py", "detail": "renamed.py"}
+{"ts": "2026-08-14 09:58:09", "type": "append_file", "path": "D:\\Eris_Source\\data\\task_demo.py", "detail": "+54 chars"}
+{"ts": "2026-08-14 10:01:56", "type": "append_file", "path": "D:\\Eris_Source\\data\\task_demo.py", "detail": "+54 chars"}
+{"ts": "2026-08-14 22:30:04", "type": "edit", "path": "C:\\Users\\danie\\AppData\\Local\\Temp\\tmpv350tv6x\\mod.py", "detail": "return a + b"}
+{"ts": "2026-08-15 21:45:37", "type": "create_file", "path": "C:\\Users\\danie\\wiki\\Resumen scroll en Android.md", "detail": "Archivo creado: C:\\Users\\danie\\wiki\\Resumen scroll en Android.md"}
+{"ts": "2026-08-15 21:49:04", "type": "create_file", "path": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\wiki\\scroll_en_Android.md", "detail": "Archivo creado: C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Documentos\\wiki\\scroll_en_A"}

@@ -1,375 +1,366 @@
-"""
-file_organizer.py — Organización automática de archivos: downloads, escritorio, etc.
-Clasifica y organiza archivos por tipo, fecha, tamaño, o contenido.
-"""
+# -*- coding: utf-8 -*-
+from __future__ import annotations
+
 import json
+import hashlib
 import shutil
 from pathlib import Path
-from datetime import datetime
 
-_BASE = Path(__file__).resolve().parent.parent
-_ORGANIZER_LOG = _BASE / "data" / "file_organizer_log.json"
-
-FILE_CATEGORIES = {
-    "images": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg", ".ico", ".tiff"],
-    "documents": [".pdf", ".doc", ".docx", ".txt", ".rtf", ".odt", ".pages", ".epub"],
-    "spreadsheets": [".xls", ".xlsx", ".csv", ".ods", ".numbers"],
-    "presentations": [".ppt", ".pptx", ".key", ".odp"],
-    "videos": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm", ".m4v"],
-    "audio": [".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a"],
-    "archives": [".zip", ".rar", ".7z", ".tar", ".gz", ".bz2", ".xz"],
-    "code": [".py", ".js", ".ts", ".html", ".css", ".java", ".c", ".cpp", ".go", ".rs", ".rb", ".php"],
-    "executables": [".exe", ".msi", ".dmg", ".app", ".deb", ".rpm"],
-    "fonts": [".ttf", ".otf", ".woff", ".woff2", ".eot"],
-    "design": [".psd", ".ai", ".sketch", ".fig", ".xd", ".indd"],
-    "data": [".json", ".xml", ".yaml", ".yml", ".toml", ".ini", ".cfg"],
-}
-
-
-def file_organizer(parameters: dict = None, player=None) -> str:
-    """
-    Organizador automático de archivos.
-    Acciones: organize, scan, preview, rules, add_rule, undo, stats, categorize, find_duplicates, clean
-    """
-    params = parameters or {}
-    action = params.get("action", "scan").lower()
-
-    if action == "organize":
-        return _organize_files(params)
-    elif action == "scan":
-        return _scan_directory(params)
-    elif action == "preview":
-        return _preview_organize(params)
-    elif action == "rules":
-        return _list_rules()
-    elif action == "add_rule":
-        return _add_rule(params)
-    elif action == "remove_rule":
-        return _remove_rule(params)
-    elif action == "undo":
-        return _undo_last()
-    elif action == "stats":
-        return _get_stats(params)
-    elif action == "categorize":
-        return _categorize_file(params)
-    elif action == "find_duplicates":
-        return _find_duplicates(params)
-    elif action == "clean":
-        return _clean_directory(params)
-    elif action == "recent":
-        return _recent_files(params)
-    elif action == "big_files":
-        return _big_files(params)
-    return "Acciones: organize, scan, preview, rules, add_rule, remove_rule, undo, stats, categorize, find_duplicates, clean, recent, big_files"
-
-
-def _organize_files(params: dict) -> str:
-    source = params.get("source", str(Path.home() / "Downloads"))
-    dest = params.get("dest", str(Path.home() / "Organized"))
-    dry_run = params.get("dry_run", False)
-    custom_rules = params.get("rules", {})
-
-    source_path = Path(source)
-    if not source_path.exists():
-        return "Directorio no existe: {}".format(source)
-
-    files = [f for f in source_path.iterdir() if f.is_file()]
-    if not files:
-        return "No hay archivos en: {}".format(source)
-
-    moved = 0
-    errors = 0
-    actions = []
-
-    for f in files:
-        category = _categorize_by_extension(f, custom_rules)
-        target_dir = Path(dest) / category
-        target_file = target_dir / f.name
-
-        if target_file.exists():
-            stem = f.stem
-            suffix = f.suffix
-            counter = 1
-            while target_file.exists():
-                target_file = target_dir / "{}_{}{}".format(stem, counter, suffix)
-                counter += 1
-
-        actions.append({"source": str(f), "dest": str(target_file), "category": category})
-
-        if not dry_run:
-            try:
-                target_dir.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(f), str(target_file))
-                moved += 1
-            except Exception:
-                errors += 1
-
-    if not dry_run:
-        _log_organize(actions)
-
-    mode = "PREVIEW" if dry_run else "EJECUTADO"
-    return "{}: {} archivos | {} movidos | {} errores | {}".format(
-        mode, len(files), moved, errors, source)
-
-
-def _scan_directory(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    dir_path = Path(directory)
-
-    if not dir_path.exists():
-        return "Directorio no existe: {}".format(directory)
-
-    files = list(dir_path.iterdir())
-    file_list = [f for f in files if f.is_file()]
-
-    categories = {}
-    total_size = 0
-    for f in file_list:
-        cat = _categorize_by_extension(f)
-        categories.setdefault(cat, {"count": 0, "size": 0})
-        categories[cat]["count"] += 1
-        categories[cat]["size"] += f.stat().st_size
-        total_size += f.stat().st_size
-
-    lines = ["Escaneo de {} ({} archivos, {:.1f} MB):".format(directory, len(file_list), total_size / (1024*1024))]
-    for cat, data in sorted(categories.items(), key=lambda x: -x[1]["count"]):
-        lines.append("  {}: {} archivos ({:.1f} MB)".format(
-            cat, data["count"], data["size"] / (1024*1024)))
-    return "\n".join(lines)
-
-
-def _preview_organize(params: dict) -> str:
-    params["dry_run"] = True
-    return _organize_files(params)
-
-
-def _list_rules() -> str:
-    rules = _load_rules()
-    if not rules:
-        return "Solo hay reglas por defecto (por extensión). Agrega reglas con add_rule"
-
-    lines = ["Reglas personalizadas:"]
-    for rule in rules:
-        lines.append("  {} → {}".format(rule.get("pattern", ""), rule.get("category", "")))
-    return "\n".join(lines)
-
-
-def _add_rule(params: dict) -> str:
-    pattern = params.get("pattern", "")
-    category = params.get("category", "")
-    if not pattern or not category:
-        return "Error: se requiere 'pattern' y 'category'"
-
-    rules = _load_rules()
-    rules.append({
-        "pattern": pattern,
-        "category": category,
-        "type": params.get("type", "extension"),
-        "created": datetime.now().isoformat(),
-    })
-    _save_rules(rules)
-    return "Regla agregada: {} → {}".format(pattern, category)
-
-
-def _remove_rule(params: dict) -> str:
-    pattern = params.get("pattern", "")
-    if not pattern:
-        return "Error: se requiere 'pattern'"
-
-    rules = _load_rules()
-    rules = [r for r in rules if r.get("pattern") != pattern]
-    _save_rules(rules)
-    return "Regla eliminada: {}".format(pattern)
-
-
-def _undo_last() -> str:
-    log = _load_log()
-    actions = log.get("last_actions", [])
-    if not actions:
-        return "No hay acciones para deshacer"
-
-    undone = 0
-    for action in actions:
-        try:
-            dest = Path(action.get("dest", ""))
-            source = Path(action.get("source", ""))
-            if dest.exists():
-                source.parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(dest), str(source))
-                undone += 1
-        except Exception:
-            pass
-
-    log["last_actions"] = []
-    _save_log(log)
-    return "Deshecho: {} archivos movidos de vuelta".format(undone)
-
-
-def _get_stats(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    dir_path = Path(directory)
-
-    if not dir_path.exists():
-        return "Directorio no existe: {}".format(directory)
-
-    files = [f for f in dir_path.rglob("*") if f.is_file()]
-    total_size = sum(f.stat().st_size for f in files)
-    oldest = min((f.stat().st_mtime for f in files), default=0)
-    newest = max((f.stat().st_mtime for f in files), default=0)
-
-    return "Stats de {}: {} archivos | {:.1f} MB | Más antiguo: {} | Más reciente: {}".format(
-        directory, len(files), total_size / (1024*1024),
-        datetime.fromtimestamp(oldest).strftime("%Y-%m-%d") if oldest else "?",
-        datetime.fromtimestamp(newest).strftime("%Y-%m-%d") if newest else "?")
-
-
-def _categorize_file(params: dict) -> str:
-    filename = params.get("filename", "")
-    if not filename:
-        return "Error: se requiere 'filename'"
-    path = Path(filename)
-    category = _categorize_by_extension(path)
-    return "Archivo '{}' categorizado como: {}".format(filename, category)
-
-
-def _find_duplicates(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    dir_path = Path(directory)
-
-    if not dir_path.exists():
-        return "Directorio no existe: {}".format(directory)
-
-    files = [f for f in dir_path.rglob("*") if f.is_file()]
-    size_groups = {}
-    for f in files:
-        size = f.stat().st_size
-        size_groups.setdefault(size, []).append(f)
-
-    duplicates = {size: paths for size, paths in size_groups.items() if len(paths) > 1}
-
-    if not duplicates:
-        return "No se encontraron duplicados en {}".format(directory)
-
-    total_dupes = sum(len(paths) - 1 for paths in duplicates.values())
-    lines = ["Duplicados encontrados ({} archivos duplicados):".format(total_dupes)]
-    for size, paths in list(duplicates.items())[:10]:
-        lines.append("  Tamaño {:.1f}KB:".format(size / 1024))
-        for p in paths:
-            lines.append("    {}".format(p.name))
-    return "\n".join(lines)
-
-
-def _clean_directory(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    min_age_days = int(params.get("min_age_days", 30))
-    dry_run = params.get("dry_run", True)
-
-    dir_path = Path(directory)
-    if not dir_path.exists():
-        return "Directorio no existe: {}".format(directory)
-
-    cutoff = datetime.now().timestamp() - (min_age_days * 86400)
-    old_files = [f for f in dir_path.iterdir() if f.is_file() and f.stat().st_mtime < cutoff]
-
-    if not old_files:
-        return "No hay archivos mayores a {} días en {}".format(min_age_days, directory)
-
-    if dry_run:
-        return "PREVIEW: {} archivos mayores a {} días serían eliminados".format(len(old_files), min_age_days)
-
-    deleted = 0
-    for f in old_files:
-        try:
-            f.unlink()
-            deleted += 1
-        except Exception:
-            pass
-    return "Eliminados {} archivos mayores a {} días".format(deleted, min_age_days)
-
-
-def _recent_files(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    limit = int(params.get("limit", 10))
-
-    dir_path = Path(directory)
-    if not dir_path.exists():
-        return "Directorio no existe"
-
-    files = sorted([f for f in dir_path.iterdir() if f.is_file()],
-                   key=lambda x: x.stat().st_mtime, reverse=True)
-
-    lines = ["Archivos recientes en {}:".format(directory)]
-    for f in files[:limit]:
-        mtime = datetime.fromtimestamp(f.stat().st_mtime)
-        lines.append("  {} | {:.1f}KB | {}".format(f.name, f.stat().st_size/1024, mtime.strftime("%Y-%m-%d %H:%M")))
-    return "\n".join(lines)
-
-
-def _big_files(params: dict) -> str:
-    directory = params.get("directory", str(Path.home() / "Downloads"))
-    limit = int(params.get("limit", 10))
-
-    dir_path = Path(directory)
-    if not dir_path.exists():
-        return "Directorio no existe"
-
-    files = sorted([f for f in dir_path.rglob("*") if f.is_file()],
-                   key=lambda x: x.stat().st_size, reverse=True)
-
-    lines = ["Archivos más grandes en {}:".format(directory)]
-    for f in files[:limit]:
-        lines.append("  {} | {:.1f}MB".format(f.name, f.stat().st_size / (1024*1024)))
-    return "\n".join(lines)
-
-
-def _categorize_by_extension(path, custom_rules=None):
-    ext = path.suffix.lower()
-    if custom_rules:
-        for pattern, category in custom_rules.items():
-            if ext == pattern or path.name.endswith(pattern):
-                return category
-    for category, extensions in FILE_CATEGORIES.items():
-        if ext in extensions:
-            return category
-    return "other"
-
-
-def _log_organize(actions):
-    log = _load_log()
-    log["last_actions"] = actions
-    log.setdefault("history", []).append({
-        "timestamp": datetime.now().isoformat(),
-        "count": len(actions),
-    })
-    log["history"] = log["history"][-50:]
-    _save_log(log)
-
-
-def _load_rules():
-    path = _BASE / "data" / "organizer_rules.json"
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            pass
+DATA_DIR = Path(r"D:\Eris_Source\data")
+RULES_PATH = DATA_DIR / "organizer_rules.json"
+HISTORY_PATH = DATA_DIR / "organizer_history.json"
+
+DEFAULT_RULES = [
+    {"pattern": "*.pdf", "destination": "Documents/PDFs", "action": "move"},
+    {"pattern": "*.jpg|*.png|*.gif|*.jpeg|*.webp", "destination": "Pictures", "action": "move"},
+    {"pattern": "*.mp4|*.mkv|*.avi|*.mov", "destination": "Videos", "action": "move"},
+    {"pattern": "*.zip|*.rar|*.7z|*.tar|*.gz", "destination": "Archives", "action": "move"},
+    {"pattern": "*.py|*.js|*.ts|*.java|*.cpp|*.c|*.h", "destination": "Code", "action": "move"},
+    {"pattern": "*.exe|*.msi|*.dmg|*.deb", "destination": "Installers", "action": "move"},
+    {"pattern": "*.mp3|*.wav|*.flac|*.ogg", "destination": "Music", "action": "move"},
+    {"pattern": "*.doc|*.docx|*.odt|*.txt|*.md", "destination": "Documents", "action": "move"},
+    {"pattern": "*.xls|*.xlsx|*.csv", "destination": "Documents/Spreadsheets", "action": "move"},
+    {"pattern": "*.ppt|*.pptx", "destination": "Documents/Presentations", "action": "move"},
+]
+
+
+def _load_rules() -> list[dict]:
+    if RULES_PATH.exists():
+        with open(RULES_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    _save_rules(list(DEFAULT_RULES))
+    return list(DEFAULT_RULES)
+
+
+def _save_rules(rules: list[dict]) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(RULES_PATH, "w", encoding="utf-8") as f:
+        json.dump(rules, f, indent=2, ensure_ascii=False)
+
+
+def _load_history() -> list[dict]:
+    if HISTORY_PATH.exists():
+        with open(HISTORY_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
     return []
 
 
-def _save_rules(rules):
-    path = _BASE / "data" / "organizer_rules.json"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(rules, indent=2, ensure_ascii=False), encoding="utf-8")
+def _save_history(history: list[dict]) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
 
 
-def _load_log():
-    if _ORGANIZER_LOG.exists():
+def _match_pattern(filename: str, pattern: str) -> bool:
+    patterns = [p.strip() for p in pattern.split("|")]
+    name_lower = filename.lower()
+    for pat in patterns:
+        if pat.startswith("*.") and pat.endswith("*"):
+            mid = pat[2:-1].lower()
+            if mid in name_lower:
+                return True
+        elif pat.startswith("*."):
+            ext = pat[1:].lower()
+            if name_lower.endswith(ext):
+                return True
+        elif pat.startswith("*") and pat.endswith("*"):
+            mid = pat[1:-1].lower()
+            if mid in name_lower:
+                return True
+        elif pat.startswith("*"):
+            suffix = pat[1:].lower()
+            if name_lower.endswith(suffix):
+                return True
+        elif pat.endswith("*"):
+            prefix = pat[:-1].lower()
+            if name_lower.startswith(prefix):
+                return True
+        elif pat.lower() == name_lower:
+            return True
+    return False
+
+
+def _file_hash_first_kb(filepath: Path) -> str:
+    h = hashlib.md5()
+    try:
+        with open(filepath, "rb") as f:
+            h.update(f.read(1024))
+        return h.hexdigest()
+    except (OSError, IOError):
+        return ""
+
+
+def _format_size(size_bytes: int) -> str:
+    if size_bytes < 1024:
+        return f"{size_bytes} B"
+    elif size_bytes < 1024 * 1024:
+        return f"{size_bytes / 1024:.1f} KB"
+    elif size_bytes < 1024 * 1024 * 1024:
+        return f"{size_bytes / (1024 * 1024):.1f} MB"
+    else:
+        return f"{size_bytes / (1024 * 1024 * 1024):.1f} GB"
+
+
+def _scan_directory(directory: str, recursive: bool = False) -> list[dict]:
+    rules = _load_rules()
+    base_dir = Path(directory).expanduser().resolve()
+    if not base_dir.exists():
+        return []
+    results = []
+    iterator = base_dir.rglob("*") if recursive else base_dir.iterdir()
+    for item in iterator:
+        if not item.is_file():
+            continue
+        matched_rule = None
+        for rule in rules:
+            if _match_pattern(item.name, rule["pattern"]):
+                matched_rule = rule
+                break
+        results.append({
+            "file": str(item),
+            "filename": item.name,
+            "size": item.stat().st_size,
+            "rule": matched_rule["pattern"] if matched_rule else None,
+            "destination": matched_rule["destination"] if matched_rule else None,
+            "action": matched_rule["action"] if matched_rule else None,
+        })
+    return results
+
+
+def _execute_plan(plan: list[dict], dry_run: bool = True) -> tuple[list[dict], list[str]]:
+    history = _load_history()
+    actions_taken = []
+    errors = []
+    base_dir = Path(plan[0]["file"]).parent if plan else Path(".")
+    for item in plan:
+        if not item.get("destination"):
+            continue
+        src = Path(item["file"])
+        if not src.exists():
+            errors.append(f"No existe: {src.name}")
+            continue
+        dest_dir = base_dir / item["destination"]
+        dest_file = dest_dir / src.name
+        if dry_run:
+            actions_taken.append({
+                "file": str(src),
+                "destination": str(dest_file),
+                "action": item["action"],
+                "status": "dry_run",
+            })
+            continue
         try:
-            return json.loads(_ORGANIZER_LOG.read_text(encoding="utf-8"))
-        except Exception:
-            pass
-    return {"last_actions": [], "history": []}
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            if dest_file.exists():
+                stem = dest_file.stem
+                suffix = dest_file.suffix
+                counter = 1
+                while dest_file.exists():
+                    dest_file = dest_dir / f"{stem}_{counter}{suffix}"
+                    counter += 1
+            if item["action"] == "copy":
+                shutil.copy2(str(src), str(dest_file))
+                actions_taken.append({
+                    "file": str(src),
+                    "destination": str(dest_file),
+                    "action": "copy",
+                    "status": "ok",
+                })
+            else:
+                shutil.move(str(src), str(dest_file))
+                actions_taken.append({
+                    "file": str(src),
+                    "destination": str(dest_file),
+                    "action": "move",
+                    "status": "ok",
+                })
+                history.append({
+                    "timestamp": __import__("time").time(),
+                    "original": str(src),
+                    "destination": str(dest_file),
+                    "action": "move",
+                })
+        except Exception as e:
+            errors.append(f"{src.name}: {str(e)}")
+    if not dry_run and actions_taken:
+        _save_history(history)
+    return actions_taken, errors
 
 
-def _save_log(log):
-    _ORGANIZER_LOG.parent.mkdir(parents=True, exist_ok=True)
-    _ORGANIZER_LOG.write_text(json.dumps(log, indent=2, ensure_ascii=False), encoding="utf-8")
+def tool_file_organizer(parameters: dict = None, player=None) -> str:
+    if parameters is None:
+        parameters = {}
+    action = parameters.get("action", "scan")
+
+    if action == "scan":
+        directory = parameters.get("directory", "~/Downloads")
+        recursive = parameters.get("recursive", False)
+        plan = _scan_directory(directory, recursive)
+        if not plan:
+            return f"No se encontraron archivos en {directory}"
+        matched = [p for p in plan if p.get("destination")]
+        unmatched = [p for p in plan if not p.get("destination")]
+        lines = [f"=== Escaneo de {directory} ===", f"Total: {len(plan)} archivos | Empatados: {len(matched)} | Sin regla: {len(unmatched)}"]
+        by_dest: dict[str, list] = {}
+        for p in matched:
+            by_dest.setdefault(p["destination"], []).append(p)
+        for dest, items in sorted(by_dest.items()):
+            lines.append(f"\n  -> {dest} ({len(items)} archivos)")
+            for it in items[:10]:
+                lines.append(f"     {it['filename']} ({_format_size(it['size'])})")
+            if len(items) > 10:
+                lines.append(f"     ... y {len(items) - 10} mas")
+        if unmatched:
+            lines.append(f"\n  Sin regla ({len(unmatched)} archivos):")
+            for it in unmatched[:5]:
+                lines.append(f"     {it['filename']} ({_format_size(it['size'])})")
+            if len(unmatched) > 5:
+                lines.append(f"     ... y {len(unmatched) - 5} mas")
+        total_size = sum(p["size"] for p in matched)
+        lines.append(f"\nTamano total a organizar: {_format_size(total_size)}")
+        return "\n".join(lines)
+
+    elif action == "organize":
+        directory = parameters.get("directory", "~/Downloads")
+        dry_run = parameters.get("dry_run", True)
+        plan = _scan_directory(directory, False)
+        matched = [p for p in plan if p.get("destination")]
+        if not matched:
+            return "No hay archivos para organizar."
+        actions_taken, errors = _execute_plan(matched, dry_run)
+        mode = "VISTA PREVIA" if dry_run else "EJECUTADO"
+        lines = [f"=== Organizacion {mode} ===", f"Archivos procesados: {len(actions_taken)}"]
+        for at in actions_taken:
+            fname = Path(at["file"]).name
+            dest_name = Path(at["destination"]).name
+            lines.append(f"  {at['action']}: {fname} -> {Path(at['destination']).parent.name}/{dest_name}")
+        if errors:
+            lines.append(f"\nErrores ({len(errors)}):")
+            for e in errors:
+                lines.append(f"  {e}")
+        return "\n".join(lines)
+
+    elif action == "rules":
+        rules = _load_rules()
+        lines = ["=== Reglas de organizacion ==="]
+        for i, rule in enumerate(rules, 1):
+            lines.append(f"  {i}. {rule['pattern']} -> {rule['destination']} ({rule['action']})")
+        return "\n".join(lines)
+
+    elif action == "add_rule":
+        pattern = parameters.get("pattern", "")
+        destination = parameters.get("destination", "")
+        act = parameters.get("action", "move")
+        if not pattern or not destination:
+            return "Debes especificar pattern y destination."
+        rules = _load_rules()
+        rules.append({"pattern": pattern, "destination": destination, "action": act})
+        _save_rules(rules)
+        return f"Regla agregada: {pattern} -> {destination} ({act})"
+
+    elif action == "duplicates":
+        directory = parameters.get("directory", "~/Downloads")
+        base_dir = Path(directory).expanduser().resolve()
+        if not base_dir.exists():
+            return f"Directorio no encontrado: {directory}"
+        size_map: dict[int, list[Path]] = {}
+        for item in base_dir.rglob("*"):
+            if item.is_file():
+                try:
+                    size = item.stat().st_size
+                    size_map.setdefault(size, []).append(item)
+                except OSError:
+                    continue
+        dup_groups = []
+        for size, candidates in size_map.items():
+            if len(candidates) < 2:
+                continue
+            hash_map: dict[str, list[Path]] = {}
+            for c in candidates:
+                h = _file_hash_first_kb(c)
+                if h:
+                    hash_map.setdefault(h, []).append(c)
+            for h, group in hash_map.items():
+                if len(group) >= 2:
+                    dup_groups.append({"size": size, "hash": h, "files": [str(f) for f in group]})
+        if not dup_groups:
+            return "No se encontraron archivos duplicados."
+        lines = [f"=== Duplicados en {directory} ===", f"Grupos encontrados: {len(dup_groups)}"]
+        total_wasted = 0
+        for dg in dup_groups[:15]:
+            wasted = dg["size"] * (len(dg["files"]) - 1)
+            total_wasted += wasted
+            lines.append(f"\n  Grupo ({_format_size(dg['size'])} c/u, desperdicio: {_format_size(wasted)}):")
+            for f in dg["files"]:
+                lines.append(f"    {f}")
+        if len(dup_groups) > 15:
+            lines.append(f"\n  ... y {len(dup_groups) - 15} grupos mas")
+        lines.append(f"\nDesperdicio total estimado: {_format_size(total_wasted)}")
+        return "\n".join(lines)
+
+    elif action == "history":
+        history = _load_history()
+        if not history:
+            return "No hay historial de organizacion."
+        lines = [f"=== Historial ({len(history)} acciones) ==="]
+        for entry in history[-20:]:
+            fname = Path(entry["original"]).name
+            dest_name = Path(entry["destination"]).name
+            lines.append(f"  {entry['action']}: {fname} -> {Path(entry["destination"]).parent.name}/{dest_name}")
+        if len(history) > 20:
+            lines.append(f"  ... y {len(history) - 20} acciones anteriores")
+        return "\n".join(lines)
+
+    elif action == "undo":
+        history = _load_history()
+        if not history:
+            return "No hay acciones para deshacer."
+        undone = []
+        while history:
+            entry = history.pop()
+            dest = Path(entry["destination"])
+            original = Path(entry["original"])
+            if not dest.exists():
+                continue
+            try:
+                original.parent.mkdir(parents=True, exist_ok=True)
+                if original.exists():
+                    stem = original.stem
+                    suffix = original.suffix
+                    counter = 1
+                    while original.exists():
+                        original = original.parent / f"{stem}_{counter}{suffix}"
+                        counter += 1
+                shutil.move(str(dest), str(original))
+                undone.append(f"{dest.name} -> {original.name}")
+            except Exception as e:
+                undone.append(f"Error con {dest.name}: {str(e)}")
+                break
+        _save_history(history)
+        if not undone:
+            return "No se pudo deshacer ninguna accion."
+        lines = [f"=== Deshecho ({len(undone)} acciones) ==="]
+        for u in undone:
+            lines.append(f"  {u}")
+        return "\n".join(lines)
+
+    elif action == "stats":
+        history = _load_history()
+        rules = _load_rules()
+        lines = ["=== Estadisticas de organizacion ==="]
+        lines.append(f"Reglas activas: {len(rules)}")
+        lines.append(f"Acciones totales: {len(history)}")
+        if history:
+            total_moved = sum(1 for h in history if h.get("action") == "move")
+            total_copied = sum(1 for h in history if h.get("action") == "copy")
+            lines.append(f"Movidos: {total_moved} | Copiados: {total_copied}")
+            dest_counts: dict[str, int] = {}
+            for h in history:
+                dest_folder = Path(h.get("destination", "")).parent.name
+                dest_counts[dest_folder] = dest_counts.get(dest_folder, 0) + 1
+            lines.append("\nDestinos mas usados:")
+            for dest, count in sorted(dest_counts.items(), key=lambda x: -x[1])[:5]:
+                lines.append(f"  {dest}: {count}")
+        return "\n".join(lines)
+
+    return f"Accion desconocida: {action}. Acciones disponibles: scan, organize, rules, add_rule, duplicates, history, undo, stats"

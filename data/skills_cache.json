@@ -1,0 +1,287 @@
+[
+  {
+    "name": "auditoria-herramientas",
+    "description": "Auditoría de alineación entre las declaraciones de herramientas (core/tool_declarations.py) y las funciones reales (core/tool_registry.py). Detecta parámetros declarados que las funciones ignoran en silencio y claves leídas que el modelo nunca envía. Correr periódicamente y tras editar herramientas.",
+    "tags": [
+      "auditoria",
+      "herramientas",
+      "parametros",
+      "bugs",
+      "auto-revision"
+    ],
+    "category": "development",
+    "dir_name": "auditoria-herramientas",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\auditoria-herramientas\\SKILL.md"
+  },
+  {
+    "name": "build-install-eris",
+    "description": "Pipeline completo de build + instalación + verificación del APK de ERIS Android (sin Gradle). Usar cuando Daniel pida compilar, actualizar o reinstalar la app del celular, o después de editar código Java/recursos de android_eris.",
+    "tags": [
+      "android",
+      "apk",
+      "build",
+      "adb",
+      "instalacion",
+      "verificacion"
+    ],
+    "category": "development",
+    "dir_name": "build-install-eris",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\build-install-eris\\SKILL.md"
+  },
+  {
+    "name": "cso",
+    "description": "Chief Security Officer (metodología gstack). Revisión OWASP Top 10 + amenaza STRIDE completa para código nuevo/modificado. Sin ruido, sin falsos positivos, sin teatralidad. Enfocado en lo que un atacante encontraría primero. Usar en CUALQUIER feature que toque datos, red, autenticación o manejo de input.",
+    "tags": [
+      "security",
+      "owasp",
+      "stride",
+      "cso",
+      "pentest",
+      "gstack"
+    ],
+    "category": "development",
+    "dir_name": "cso",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\cso\\SKILL.md"
+  },
+  {
+    "name": "depuracion-playbook",
+    "description": "Playbook de depuración rápida: qué hacer ante cada clase de fallo típico (app que no arranca, comando que falla, API con error, build roto, resultado incorrecto, problema de red). Usar cuando algo no funciona y no sabés por dónde arrancar.",
+    "tags": [
+      "debugging",
+      "fallos",
+      "api",
+      "build",
+      "red",
+      "logcat"
+    ],
+    "category": "development",
+    "dir_name": "depuracion-playbook",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\depuracion-playbook\\SKILL.md"
+  },
+  {
+    "name": "exploracion-paralela",
+    "description": "Patrón de exploración con subagentes en paralelo: cuando una tarea tiene varias partes desconocidas independientes, lanzar subagentes simultáneos (uno por zona) en vez de explorar secuencialmente, y fusionar resultados. Usar en investigaciones, diagnósticos grandes o tareas con múltiples áreas.",
+    "tags": [
+      "subagentes",
+      "paralelo",
+      "investigacion",
+      "mapeo",
+      "eficiencia"
+    ],
+    "category": "development",
+    "dir_name": "exploracion-paralela",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\exploracion-paralela\\SKILL.md"
+  },
+  {
+    "name": "metodologia-opencode",
+    "description": "Método de trabajo completo del asistente de desarrollo opencode: bucle hipótesis-evidencia, test de verdad, edición mínima, verificación. Usar ante CUALQUIER tarea de código, diagnóstico o automatización para trabajar como un asistente de desarrollo experto.",
+    "tags": [
+      "metodologia",
+      "debugging",
+      "hipotesis",
+      "verificacion",
+      "codigo"
+    ],
+    "category": "development",
+    "dir_name": "metodologia-opencode",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\metodologia-opencode\\SKILL.md"
+  },
+  {
+    "name": "plan-eng-review",
+    "description": "Revisión de plan de ingeniería (Eng Manager). Bloquear arquitectura, flujo de datos, edge cases, matriz de tests y riesgos antes de implementar. Usar ante CUALQUIER plan/feature que vaya a tocar código, siguiendo la metodología de gstack.",
+    "tags": [
+      "plan",
+      "arquitectura",
+      "eng",
+      "review",
+      "edge-cases",
+      "tests",
+      "gstack"
+    ],
+    "category": "development",
+    "dir_name": "plan-eng-review",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\plan-eng-review\\SKILL.md"
+  },
+  {
+    "name": "qa",
+    "description": "QA Lead (metodología gstack). Probar la app real, encontrar bugs, arreglarlos con commits atómicos, re-verificar, generar tests de regresión. Enfocado en bugs de UI/UX, rutas de error, y regresiones. Usar cuando la tarea es encontrar o corregir bugs en la interfaz/flujo del usuario.",
+    "tags": [
+      "qa",
+      "testing",
+      "bugs",
+      "ui",
+      "ux",
+      "regresion",
+      "gstack"
+    ],
+    "category": "development",
+    "dir_name": "qa",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\qa\\SKILL.md"
+  },
+  {
+    "name": "review",
+    "description": "Code review como Staff Engineer (metodología gstack). Encontrar bugs que pasan CI, auto-corregir los obvios, marcar gaps de completitud, no tocar el estilo del autor salvo que sea bloqueante. Usar ante CUALQUIER diff/cambio de código propio o ajeno antes de darlo por terminado.",
+    "tags": [
+      "review",
+      "code",
+      "bugs",
+      "diff",
+      "ci",
+      "gstack"
+    ],
+    "category": "development",
+    "dir_name": "review",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\review\\SKILL.md"
+  },
+  {
+    "name": "workflow-codigo",
+    "description": "Pipeline completo de cambio de código estilo opencode: mapa → plan → edición mínima → REVISAR EL PROPIO DIFF como un reviewer → verificación → documentar/aprender → cerrar. Usar en CUALQUIER modificación de código, propia o de otros proyectos.",
+    "tags": [
+      "codigo",
+      "edicion",
+      "review",
+      "verificacion",
+      "diff"
+    ],
+    "category": "development",
+    "dir_name": "workflow-codigo",
+    "source": "user_created",
+    "path": "D:\\Eris_Source\\skills\\user_created\\workflow-codigo\\SKILL.md"
+  },
+  {
+    "name": "brainstorming",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "brainstorming",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\brainstorming\\SKILL.md"
+  },
+  {
+    "name": "executing-plans",
+    "description": "Ejecutar un plan paso a paso con disciplina: seguir el orden, marcar progreso, adaptarse sin perder el objetivo, y no declarar nada hecho sin verificación. Usar al implementar un plan aprobado (writing-plans) o cualquier tarea con varios pasos.",
+    "tags": [
+      "plan",
+      "ejecucion",
+      "progreso",
+      "verificacion"
+    ],
+    "category": "development",
+    "dir_name": "executing-plans",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\executing-plans\\SKILL.md"
+  },
+  {
+    "name": "forensics",
+    "description": "Forense digital en la PC: recolectar evidencia con cadena de custodia, analizar artefactos (logs, archivos, procesos, USB), y reportar hallazgos de forma objetiva sin contaminar la escena. Usar ante incidentes de seguridad, sospecha de intrusión, o cuando se pida investigar evidencia.",
+    "tags": [
+      "forense",
+      "evidencia",
+      "incidentes",
+      "analisis"
+    ],
+    "category": "security",
+    "dir_name": "forensics",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\forensics\\SKILL.md"
+  },
+  {
+    "name": "incident-response",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "incident-response",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\incident-response\\SKILL.md"
+  },
+  {
+    "name": "malware-analysis",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "malware-analysis",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\malware-analysis\\SKILL.md"
+  },
+  {
+    "name": "subagent-driven",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "subagent-driven",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\subagent-driven\\SKILL.md"
+  },
+  {
+    "name": "systematic-debugging",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "systematic-debugging",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\systematic-debugging\\SKILL.md"
+  },
+  {
+    "name": "test-driven-development",
+    "description": "Use when implementing any feature or bugfix, before writing implementation code",
+    "tags": [],
+    "category": "",
+    "dir_name": "test-driven-development",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\test-driven-development\\SKILL.md"
+  },
+  {
+    "name": "threat-hunting",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "threat-hunting",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\threat-hunting\\SKILL.md"
+  },
+  {
+    "name": "verification",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "verification",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\verification\\SKILL.md"
+  },
+  {
+    "name": "vulnerability-scanning",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "vulnerability-scanning",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\vulnerability-scanning\\SKILL.md"
+  },
+  {
+    "name": "writing-plans",
+    "description": "",
+    "tags": [],
+    "category": "",
+    "dir_name": "writing-plans",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\writing-plans\\SKILL.md"
+  },
+  {
+    "name": "writing-skills",
+    "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+    "tags": [],
+    "category": "",
+    "dir_name": "writing-skills",
+    "source": "builtin",
+    "path": "D:\\Eris_Source\\skills\\builtin\\writing-skills\\SKILL.md"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "name": "briefing_matutino",
+  "description": "Resumen del dia: clima + noticias + recordatorios.",
+  "on_error": "continue",
+  "vars": {
+    "ciudad": "Buenos Aires"
+  },
+  "steps": [
+    {
+      "label": "Clima",
+      "tool": "weather",
+      "params": {
+        "city": "{{ciudad}}"
+      },
+      "retries": 1
+    },
+    {
+      "label": "Noticias",
+      "tool": "web_search",
+      "params": {
+        "query": "ultimas noticias Argentina",
+        "count": 5
+      }
+    }
+  ]
+}

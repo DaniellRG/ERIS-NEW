@@ -1,0 +1,12 @@
+/* Portfolio Mi Negocio */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; }
+.navbar { background: rgba(10,10,15,0.9) !important; backdrop-filter: blur(20px); }
+.hero { min-height: 100vh; background: radial-gradient(ellipse at center, #1a1a2e, #0a0a0f); }
+.btn-primary { background: linear-gradient(135deg, #7c3aed, #6366f1); border: none; border-radius: 50px; padding: 12px 35px; transition: all 0.3s; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(124,58,237,0.4); }
+.project-card { border-radius: 15px; overflow: hidden; transition: all 0.4s; }
+.project-card:hover { transform: translateY(-10px); border-color: #a78bfa !important; box-shadow: 0 20px 60px rgba(124,58,237,0.15); }
+.progress { background: rgba(255,255,255,0.1); border-radius: 5px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }

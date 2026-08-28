@@ -1,11 +1,11 @@
 {
-  "enabled": false,
+  "enabled": true,
   "interval_hours": 6,
   "max_backups": 10,
   "backup_items": [
     {
       "name": "memory",
-      "path": "data/memory",
+      "path": "memory",
       "type": "dir"
     },
     {
@@ -44,6 +44,11 @@
       "type": "file"
     },
     {
+      "name": "version",
+      "path": "core/version.py",
+      "type": "file"
+    },
+    {
       "name": "rag_index",
       "path": "data/rag_index.json",
       "type": "file"
@@ -51,6 +56,11 @@
     {
       "name": "idle_learning",
       "path": "data/idle_learning.json",
+      "type": "file"
+    },
+    {
+      "name": "auto_backup_state",
+      "path": "data/auto_backup_state.json",
       "type": "file"
     }
   ]

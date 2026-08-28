@@ -24,7 +24,7 @@ def document_rag(parameters: dict, player=None) -> str:
     action = parameters.get("action", "").lower().strip()
 
     if not action:
-        return "Error: Se requiere 'action' (index, query, list, stats, delete, clear, ingest)."
+        return "Error: Se requiere 'action' (index, query, list, stats, delete, clear, ingest, index_episodic, compact_episodic, index_vault)."
 
     try:
         from core.rag_pipeline import (
@@ -34,9 +34,24 @@ def document_rag(parameters: dict, player=None) -> str:
             delete_index,
             clear_all,
             stats,
+            index_episodic,
+            compact_episodic,
+            index_vault,
         )
     except ImportError as e:
         return f"Error importando RAG pipeline: {e}"
+
+    if action in ("index_episodic", "episodic"):
+        max_entries = int(parameters.get("max_entries", 0))
+        return index_episodic(max_entries=max_entries)
+
+    if action in ("compact_episodic", "compact"):
+        days = int(parameters.get("days", parameters.get("older_than", 30)))
+        return compact_episodic(older_than_days=days)
+
+    if action in ("index_vault", "vault"):
+        folders = parameters.get("folders", "")
+        return index_vault(vault_path=parameters.get("path", ""), folders=folders)
 
     if action == "index":
         path = parameters.get("path", "")
@@ -119,5 +134,26 @@ def document_rag(parameters: dict, player=None) -> str:
         result = index_document(tmp_path)
         return f"Texto ingerido ({len(text)} chars): {result}"
 
+    elif action == "agentic_query":
+        query = parameters.get("query", "")
+        if not query:
+            return "Error: Se requiere 'query'."
+        top_k = int(parameters.get("top_k", 5))
+        force = parameters.get("force_decompose", False)
+        try:
+            from core.agentic_rag import agentic_query
+            t0 = time.time()
+            result = agentic_query(query, top_k=top_k, force_decompose=force)
+            dt = time.time() - t0
+            if "error" in result:
+                return result["error"]
+            lines = [f"Agentic RAG ({dt:.1f}s) — {result['num_results']} resultados:"]
+            if result.get("sub_queries"):
+                lines.append(f"Sub-queries: {result['sub_queries']}")
+            lines.append(f"\n{result['answer']}")
+            return "\n".join(lines)
+        except ImportError as e:
+            return f"Error importando agentic_rag: {e}"
+
     else:
-        return f"Acción '{action}' no reconocida. Usa: index, query, list, stats, delete, clear, ingest."
+        return f"Acción '{action}' no reconocida. Usa: index, query, agentic_query, list, stats, delete, clear, ingest, index_episodic, compact_episodic, index_vault."

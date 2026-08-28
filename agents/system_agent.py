@@ -1,11 +1,92 @@
 """
 agents/system_agent.py — ERIS System Specialized Agent.
 Handles computer control, desktop automation, system monitoring, Windows settings.
+Also handles file operations (FileAgent domain).
 """
 from __future__ import annotations
 
 import time
 from typing import Optional
+
+
+def handle_file(text: str, player=None, **kwargs) -> str:
+    """Handle file-related requests: read, write, edit, organize, search."""
+    from core.tracer import get_tracer
+    tracer = get_tracer()
+    t0 = time.perf_counter()
+    text_lower = text.lower()
+
+    try:
+        # Direct file_api dispatch
+        if any(kw in text_lower for kw in ["leer archivo", "read file", "abrir archivo"]):
+            import re
+            from core.file_api import file_api
+            fname = re.search(r'[\w\\:/]+\.\w+', text)
+            target = fname.group(0) if fname else ""
+            result = file_api({"action": "read", "path": target})
+
+        elif any(kw in text_lower for kw in ["escribir archivo", "write file", "crear archivo"]):
+            import re, os
+            from core.file_api import write_file
+            fname = re.search(r'(\w+\.\w+)', text)
+            content_match = re.search(r'con\s+(.+)', text)
+            fname_str = fname.group(1) if fname else "output.txt"
+            content_str = content_match.group(1) if content_match else "Created by ERIS"
+            fpath = os.path.join("D:\\PruebaEris", fname_str)
+            write_file(fpath, content_str)
+            result = f"Archivo {fname_str} creado en D:\\PruebaEris"
+
+        elif any(kw in text_lower for kw in ["buscar archivo", "find file", "encontrar archivo"]):
+            from core.file_api import file_api
+            import re
+            pattern = re.search(r'(?:buscar|find|encontrar)\s+(.+)', text_lower)
+            query = pattern.group(1).strip() if pattern else "*"
+            result = file_api({"action": "glob", "pattern": f"**/{query}"})
+
+        elif any(kw in text_lower for kw in ["listar archivos", "list files", "que archivos"]):
+            from core.file_api import file_api
+            result = file_api({"action": "list", "path": "."})
+
+        elif any(kw in text_lower for kw in ["copiar archivo", "copy file"]):
+            from core.file_api import file_api
+            result = file_api({"action": "copy", "source": text, "dest": ""})
+
+        elif any(kw in text_lower for kw in ["mover archivo", "move file", "renombrar"]):
+            from core.file_api import file_api
+            result = file_api({"action": "move", "source": text, "dest": ""})
+
+        elif any(kw in text_lower for kw in ["eliminar archivo", "borrar archivo", "delete file"]):
+            from core.file_api import file_api
+            result = file_api({"action": "delete", "path": text})
+
+        elif any(kw in text_lower for kw in ["organizar archivos", "organiza", "organize"]):
+            from actions.smart_file_organizer import smart_file_organizer
+            result = smart_file_organizer(parameters={"action": "organize", "path": "."}, player=player)
+
+        elif any(kw in text_lower for kw in ["backup", "respaldo", "copia de seguridad"]):
+            from actions.backup_system import backup_system
+            result = backup_system(parameters={"action": "create"}, player=player)
+
+        else:
+            result = (
+                "Puedo trabajar con archivos:\n"
+                "- 'Leer archivo X' → Leo su contenido\n"
+                "- 'Crear archivo X con Y' → Creo el archivo\n"
+                "- 'Buscar archivo X' → Busco archivos\n"
+                "- 'Listar archivos' → Muestro archivos\n"
+                "- 'Organizar archivos' → Organizo la carpeta\n"
+                "- 'Backup' → Creo respaldo"
+            )
+
+        elapsed = time.perf_counter() - t0
+        tracer.trace_handoff("file_agent", text, result, elapsed)
+        return result
+
+    except Exception as e:
+        elapsed = time.perf_counter() - t0
+        tracer.trace_handoff("file_agent", text, "", elapsed, success=False, error=str(e))
+        return f"Error en FileAgent: {e}"
+
 
 def handle_system(text: str, player=None, **kwargs) -> str:
     """Handle system-related requests."""

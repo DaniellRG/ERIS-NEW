@@ -45,3 +45,47 @@ data/search_history.json
 data/self/
 data/self_healing_errors.json
 data/self_healing_state.json
+# ===== Proteccion de secretos (NUNCA al repo) =====
+**/api_keys.json
+config/encryption_key.json
+config/spotify_token.json
+config/mcp_servers.json
+data/browser_cookies.json
+data/cookies*.json
+memory/identity.json
+memory/instance.lock
+
+# ===== Binarios gigantes / modelos / caches =====
+android_build/
+data/vosk-model-es/
+data/video_cache/
+data/screenshots/
+snapshots/
+data/exports/
+data/voice_clones/
+data/rag_embeddings.npz
+*.apk
+*.idsig
+data/test_edge.mp3
+data/test_el.mp3
+data/test_sapi.wav
+
+# ===== Backups de runtime / artefactos temporales =====
+backups/
+data/backups/
+memory/code_guard_backups/
+memory/self_evol_backups/
+memory/mission_backups/
+memory/identity_backups/
+memory/editor_backups/
+memory/missions/
+memory/proyectos/
+core/prompt.txt.new
+eris.log.*
+err.txt
+out.txt
+eris_workspace/stdout.txt
+eris_workspace/stderr.txt
+eris_workspace/error_log.txt
+data/self_extend_backups/
+config/vosk_model/

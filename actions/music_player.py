@@ -39,7 +39,7 @@ def _play_file(path: Path, player=None) -> str:
     except Exception:
         pass
     try:
-        subprocess.Popen(["cmd", "/c", "start", "", str(path)])
+        os.startfile(str(path))
         if player is not None:
             try:
                 player.set_music(1.0)

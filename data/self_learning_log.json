@@ -13,5 +13,15 @@
     "action": "recurring_error",
     "detail": "Error recurrente: ollama_down",
     "time": "2026-08-08T21:24:45.918297"
+  },
+  {
+    "action": "recurring_error",
+    "detail": "Error recurrente: syntax_error",
+    "time": "2026-08-17T00:22:40.272826"
+  },
+  {
+    "action": "recurring_error",
+    "detail": "Error recurrente: ollama_down",
+    "time": "2026-08-17T12:48:04.592947"
   }
 ]

@@ -272,6 +272,34 @@
       "properties": {},
       "created_at": 1786200568.985983,
       "connections": 1
+    },
+    "aprendi sobre: epigenética transgeneracional y herencia biológica de experiencias traumáticas.. resultados para 'epigenética transgeneracional y herencia biológica de experiencias traumáticas.' (duckduckgo):\n\n**la ciencia detrás del trauma transgeneracional**\ndescubre cómo lasexperienciasdevida pueden dejar huellas que se transmiten entre generaciones. este artículo,": {
+      "name": "aprendi sobre: epigenética transgeneracional y herencia biológica de experiencias traumáticas.. resultados para 'epigenética transgeneracional y herencia biológica de experiencias traumáticas.' (duckduckgo):\n\n**la ciencia detrás del trauma transgeneracional**\ndescubre cómo lasexperienciasdevida pueden dejar huellas que se transmiten entre generaciones. este artículo,",
+      "type": "entity",
+      "properties": {},
+      "created_at": 1786512036.1371903,
+      "connections": 1
+    },
+    "una continuacióndela se": {
+      "name": "una continuacióndela se",
+      "type": "concept",
+      "properties": {},
+      "created_at": 1786512036.1378293,
+      "connections": 1
+    },
+    "aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto": {
+      "name": "aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto",
+      "type": "entity",
+      "properties": {},
+      "created_at": 1786908227.474233,
+      "connections": 1
+    },
+    "importante recordar quelateleoplexia, definida como un tipodecontrol remoto hipercomplejo donde los": {
+      "name": "importante recordar quelateleoplexia, definida como un tipodecontrol remoto hipercomplejo donde los",
+      "type": "concept",
+      "properties": {},
+      "created_at": 1786908227.4748187,
+      "connections": 1
     }
   },
   "edges": [
@@ -484,6 +512,20 @@
       "relation": "tiene",
       "weight": 1.0,
       "timestamp": 1786200568.9936907
+    },
+    {
+      "source": "aprendi sobre: epigenética transgeneracional y herencia biológica de experiencias traumáticas.. resultados para 'epigenética transgeneracional y herencia biológica de experiencias traumáticas.' (duckduckgo):\n\n**la ciencia detrás del trauma transgeneracional**\ndescubre cómo lasexperienciasdevida pueden dejar huellas que se transmiten entre generaciones. este artículo,",
+      "target": "una continuacióndela se",
+      "relation": "es",
+      "weight": 1.0,
+      "timestamp": 1786512036.1383832
+    },
+    {
+      "source": "aprendi sobre: ontología de la hiperstición algorítmica en subculturas digitales contemporáneas. resultados para 'ontología de la hiperstición algorítmica en subculturas digitales contemporáneas' (duckduckgo):\n\n**pdfel paraíso digital perdido: hiperstición y pandemonium digital**\neneste punto",
+      "target": "importante recordar quelateleoplexia, definida como un tipodecontrol remoto hipercomplejo donde los",
+      "relation": "es",
+      "weight": 1.0,
+      "timestamp": 1786908227.4753578
     }
   ]
 }

@@ -69,8 +69,8 @@ def audio_transcriber(parameters: dict, player=None) -> str:
     action = parameters.get("action", "transcribe")
 
     if action == "transcribe":
-        file_path = parameters.get("file", "")
-        model_size = parameters.get("model", "base")
+        file_path = parameters.get("file_path") or parameters.get("file", "")
+        model_size = parameters.get("model_size") or parameters.get("model", "base")
         language = parameters.get("language", None)
 
         if not file_path:
@@ -130,7 +130,7 @@ def audio_transcriber(parameters: dict, player=None) -> str:
             return f"Error transcribing: {e}"
 
     elif action == "transcribe_clipboard":
-        model_size = parameters.get("model", "base")
+        model_size = parameters.get("model_size") or parameters.get("model", "base")
         duration = parameters.get("duration", 5)
 
         audio_file = _record_clipboard_audio(duration)

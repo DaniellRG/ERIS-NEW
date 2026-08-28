@@ -60,12 +60,14 @@ def send_toast(title: str, message: str) -> str:
         return f"Error toast: {e}"
 
 
-def notify(action: str = "send", **kwargs) -> str:
+def notify(parameters: dict = None, player=None) -> str:
     """Tool: send notifications."""
+    params = parameters or {}
+    action = str(params.get("action", "send")).lower()
     if action == "send":
-        title = kwargs.get("title", "ERIS")
-        msg = kwargs.get("message", "")
-        channel = kwargs.get("channel", "auto")
+        title = params.get("title", "ERIS")
+        msg = params.get("message", "")
+        channel = params.get("channel", "auto")
 
         if channel == "ntfy":
             return send_ntfy(title, msg)

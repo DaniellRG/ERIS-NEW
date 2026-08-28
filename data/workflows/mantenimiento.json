@@ -1,0 +1,23 @@
+{
+  "name": "mantenimiento",
+  "description": "Limpieza de temporales + backup de configuracion.",
+  "on_error": "continue",
+  "steps": [
+    {
+      "label": "Config",
+      "tool": "config_export",
+      "params": {
+        "action": "backup"
+      },
+      "retries": 1
+    },
+    {
+      "label": "Temporales",
+      "tool": "system_cleaner",
+      "params": {
+        "action": "clean_temps",
+        "confirm": true
+      }
+    }
+  ]
+}

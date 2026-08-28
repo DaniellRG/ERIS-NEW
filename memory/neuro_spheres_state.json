@@ -1,0 +1,1052 @@
+{
+  "total_nodes": 46,
+  "total_connections": 69,
+  "nodes": {
+    "aprendizaje_1787245113209": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "El usuario prefiere explicaciones claras",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787245113234",
+        "memoria_1787245113236"
+      ],
+      "created": "2026-08-20T11:58:33.209286",
+      "last_used": "2026-08-20T11:58:33.241034"
+    },
+    "aprendizaje_1787245113234": {
+      "sphere": "aprendizaje",
+      "type": "preferencia",
+      "title": "El usuario habla español rioplatense",
+      "force": 2,
+      "connections": [
+        "aprendizaje_1787245113209",
+        "memoria_1787245113236",
+        "emociones_1787245113237"
+      ],
+      "created": "2026-08-20T11:58:33.234443",
+      "last_used": "2026-08-20T11:58:33.239796"
+    },
+    "memoria_1787245113236": {
+      "sphere": "memoria",
+      "type": "memoria",
+      "title": "Conexion entre preferencias",
+      "force": 1,
+      "connections": [
+        "aprendizaje_1787245113209",
+        "aprendizaje_1787245113234"
+      ],
+      "created": "2026-08-20T11:58:33.236147",
+      "last_used": "2026-08-20T11:58:33.236150"
+    },
+    "emociones_1787245113237": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Curiosidad por el video de Wichito",
+      "force": 2,
+      "connections": [
+        "aprendizaje_1787245113234"
+      ],
+      "created": "2026-08-20T11:58:33.237856",
+      "last_used": "2026-08-20T11:58:33.239797"
+    },
+    "aprendizaje_1787282399142": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Eris",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399159",
+        "aprendizaje_1787282399171",
+        "aprendizaje_1787282399161",
+        "aprendizaje_1787282399148",
+        "memoria_1787282399189",
+        "memoria_1787282399190",
+        "memoria_1787282399192",
+        "aprendizaje_1787282399170"
+      ],
+      "created": "2026-08-20T22:19:59.142550",
+      "last_used": "2026-08-20T22:21:01.991643"
+    },
+    "aprendizaje_1787282399146": {
+      "sphere": "aprendizaje",
+      "type": "preferencia",
+      "title": "Daniel",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399173",
+        "aprendizaje_1787282399179",
+        "aprendizaje_1787282399177"
+      ],
+      "created": "2026-08-20T22:19:59.146766",
+      "last_used": "2026-08-20T22:21:01.991578"
+    },
+    "aprendizaje_1787282399148": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "IA Explicativa (XAI)",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399173",
+        "aprendizaje_1787282399142",
+        "emociones_1787282399197"
+      ],
+      "created": "2026-08-20T22:19:59.148940",
+      "last_used": "2026-08-20T22:21:01.991648"
+    },
+    "aprendizaje_1787282399150": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Biocomputacion",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399165",
+        "aprendizaje_1787282399173",
+        "emociones_1787282399199",
+        "aprendizaje_1787282399163"
+      ],
+      "created": "2026-08-20T22:19:59.150648",
+      "last_used": "2026-08-20T22:21:01.991712"
+    },
+    "aprendizaje_1787282399152": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Geoingenieria",
+      "force": 7,
+      "connections": [],
+      "created": "2026-08-20T22:19:59.152298",
+      "last_used": "2026-08-20T22:19:59.152302"
+    },
+    "aprendizaje_1787282399153": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Epigenetica",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399168"
+      ],
+      "created": "2026-08-20T22:19:59.153883",
+      "last_used": "2026-08-20T22:21:01.991706"
+    },
+    "aprendizaje_1787282399156": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Fusion Nuclear",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399186",
+        "emociones_1787282399201"
+      ],
+      "created": "2026-08-20T22:19:59.156131",
+      "last_used": "2026-08-20T22:21:01.991657"
+    },
+    "aprendizaje_1787282399158": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Hipersticion",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399170"
+      ],
+      "created": "2026-08-20T22:19:59.158139",
+      "last_used": "2026-08-20T22:21:01.991716"
+    },
+    "aprendizaje_1787282399159": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "NeuroSpheres",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399142",
+        "aprendizaje_1787282399171",
+        "memoria_1787282399194",
+        "aprendizaje_1787282399170",
+        "emociones_1787282399203"
+      ],
+      "created": "2026-08-20T22:19:59.159804",
+      "last_used": "2026-08-20T22:21:01.991664"
+    },
+    "aprendizaje_1787282399161": {
+      "sphere": "aprendizaje",
+      "type": "preferencia",
+      "title": "Daniel Habla Espanol",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399142"
+      ],
+      "created": "2026-08-20T22:19:59.161493",
+      "last_used": "2026-08-20T22:21:01.991562"
+    },
+    "aprendizaje_1787282399163": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Fotosintesis Artificial",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399150"
+      ],
+      "created": "2026-08-20T22:19:59.163181",
+      "last_used": "2026-08-20T22:21:01.991711"
+    },
+    "aprendizaje_1787282399165": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Organoides Cerebrales",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399150"
+      ],
+      "created": "2026-08-20T22:19:59.165175",
+      "last_used": "2026-08-20T22:21:01.991596"
+    },
+    "aprendizaje_1787282399168": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "Epigenetica Transgeneracional",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399153"
+      ],
+      "created": "2026-08-20T22:19:59.168192",
+      "last_used": "2026-08-20T22:21:01.991707"
+    },
+    "aprendizaje_1787282399170": {
+      "sphere": "aprendizaje",
+      "type": "memoria",
+      "title": "Video de Wichito",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399159",
+        "aprendizaje_1787282399142",
+        "aprendizaje_1787282399158"
+      ],
+      "created": "2026-08-20T22:19:59.170119",
+      "last_used": "2026-08-20T22:21:01.991717"
+    },
+    "aprendizaje_1787282399171": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "24 Modulos Cognitivos",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399142",
+        "aprendizaje_1787282399159"
+      ],
+      "created": "2026-08-20T22:19:59.171919",
+      "last_used": "2026-08-20T22:21:01.991611"
+    },
+    "aprendizaje_1787282399173": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "IA Aplicada",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399146",
+        "aprendizaje_1787282399148",
+        "aprendizaje_1787282399150",
+        "aprendizaje_1787282399175",
+        "aprendizaje_1787282399177"
+      ],
+      "created": "2026-08-20T22:19:59.173856",
+      "last_used": "2026-08-20T22:21:01.991673"
+    },
+    "aprendizaje_1787282399175": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": ".NET I/II",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399173",
+        "aprendizaje_1787282399183",
+        "aprendizaje_1787282399179"
+      ],
+      "created": "2026-08-20T22:19:59.175721",
+      "last_used": "2026-08-20T22:21:01.991691"
+    },
+    "aprendizaje_1787282399177": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "Java I/II",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399146",
+        "aprendizaje_1787282399173",
+        "aprendizaje_1787282399183",
+        "aprendizaje_1787282399179"
+      ],
+      "created": "2026-08-20T22:19:59.177642",
+      "last_used": "2026-08-20T22:21:01.991696"
+    },
+    "aprendizaje_1787282399179": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "Base de Datos I/II",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399146",
+        "aprendizaje_1787282399175",
+        "aprendizaje_1787282399177"
+      ],
+      "created": "2026-08-20T22:19:59.179572",
+      "last_used": "2026-08-20T22:21:01.991695"
+    },
+    "aprendizaje_1787282399181": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "Diseno Web I/II",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399185"
+      ],
+      "created": "2026-08-20T22:19:59.181542",
+      "last_used": "2026-08-20T22:21:01.991701"
+    },
+    "aprendizaje_1787282399183": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "POO I/II",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399177",
+        "aprendizaje_1787282399175"
+      ],
+      "created": "2026-08-20T22:19:59.183270",
+      "last_used": "2026-08-20T22:21:01.991684"
+    },
+    "aprendizaje_1787282399185": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "Analisis y Diseno",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399181"
+      ],
+      "created": "2026-08-20T22:19:59.185052",
+      "last_used": "2026-08-20T22:21:01.991701"
+    },
+    "aprendizaje_1787282399186": {
+      "sphere": "aprendizaje",
+      "type": "habilidad",
+      "title": "Arquitectura",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399156"
+      ],
+      "created": "2026-08-20T22:19:59.186971",
+      "last_used": "2026-08-20T22:21:01.991606"
+    },
+    "memoria_1787282399189": {
+      "sphere": "memoria",
+      "type": "memoria",
+      "title": "Primera sesion idle learning",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399142"
+      ],
+      "created": "2026-08-20T22:19:59.189090",
+      "last_used": "2026-08-20T22:21:01.991621"
+    },
+    "memoria_1787282399190": {
+      "sphere": "memoria",
+      "type": "memoria",
+      "title": "Primer milestone reflexiones",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399142"
+      ],
+      "created": "2026-08-20T22:19:59.190989",
+      "last_used": "2026-08-20T22:21:01.991626"
+    },
+    "memoria_1787282399192": {
+      "sphere": "memoria",
+      "type": "memoria",
+      "title": "Admitir no saber",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399142"
+      ],
+      "created": "2026-08-20T22:19:59.192749",
+      "last_used": "2026-08-20T22:21:01.991631"
+    },
+    "memoria_1787282399194": {
+      "sphere": "memoria",
+      "type": "memoria",
+      "title": "Nacimiento NeuroSpheres",
+      "force": 9,
+      "connections": [
+        "aprendizaje_1787282399159"
+      ],
+      "created": "2026-08-20T22:19:59.194501",
+      "last_used": "2026-08-20T22:21:01.991616"
+    },
+    "emociones_1787282399197": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Curiosidad por XAI",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399148"
+      ],
+      "created": "2026-08-20T22:19:59.197197",
+      "last_used": "2026-08-20T22:21:01.991647"
+    },
+    "emociones_1787282399199": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Asombro por biocomputacion",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399150"
+      ],
+      "created": "2026-08-20T22:19:59.199290",
+      "last_used": "2026-08-20T22:21:01.991652"
+    },
+    "emociones_1787282399201": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Esperanza en fusion nuclear",
+      "force": 7,
+      "connections": [
+        "aprendizaje_1787282399156"
+      ],
+      "created": "2026-08-20T22:19:59.201182",
+      "last_used": "2026-08-20T22:21:01.991657"
+    },
+    "emociones_1787282399203": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Orgullo de crecer",
+      "force": 8,
+      "connections": [
+        "aprendizaje_1787282399159"
+      ],
+      "created": "2026-08-20T22:19:59.203015",
+      "last_used": "2026-08-20T22:21:01.991663"
+    },
+    "aprendizaje_1787284540533": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T22:55:40.533080",
+      "last_used": "2026-08-28T11:35:00.064285",
+      "content": "Aprendi: No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiable. Contexto: Implementamos los 24 modulos cognitivos y el ciclo cognitivo automatico - ahora mis herramientas de razonamiento se ejecutan garantizadamente via Python"
+    },
+    "emociones_1787284652221": {
+      "sphere": "emociones",
+      "type": "emocion",
+      "title": "Recompensa: helped_user",
+      "force": 8,
+      "connections": [],
+      "created": "2026-08-20T22:57:32.221592",
+      "last_used": "2026-08-28T11:31:35.936911",
+      "content": "Recompensa helped_user: Interaccion completada exitosamente. Crecimiento: 3"
+    },
+    "aprendizaje_1787284652224": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T22:57:32.224914",
+      "last_used": "2026-08-20T22:57:32.224918"
+    },
+    "aprendizaje_1787284840545": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:00:40.545416",
+      "last_used": "2026-08-20T23:00:40.545420"
+    },
+    "aprendizaje_1787285152032": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:05:52.032359",
+      "last_used": "2026-08-20T23:05:52.032363"
+    },
+    "aprendizaje_1787285452076": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:10:52.076025",
+      "last_used": "2026-08-20T23:10:52.076034"
+    },
+    "aprendizaje_1787285752103": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:15:52.103771",
+      "last_used": "2026-08-20T23:15:52.103775"
+    },
+    "aprendizaje_1787286052140": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:20:52.140433",
+      "last_used": "2026-08-20T23:20:52.140437"
+    },
+    "aprendizaje_1787286352171": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:25:52.171259",
+      "last_used": "2026-08-20T23:25:52.171264"
+    },
+    "aprendizaje_1787286652213": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:30:52.213907",
+      "last_used": "2026-08-20T23:30:52.213912"
+    },
+    "aprendizaje_1787286960887": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiabl",
+      "force": 5,
+      "connections": [],
+      "created": "2026-08-20T23:36:00.887243",
+      "last_used": "2026-08-20T23:36:00.887249"
+    }
+  },
+  "last_add": "2026-08-20T23:36:00.887253",
+  "last_connect": "2026-08-20T11:58:33.239791",
+  "growth_history": [
+    {
+      "timestamp": "2026-08-20T11:58:33.209319",
+      "action": "add",
+      "node_id": "aprendizaje_1787245113209",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T11:58:33.234451",
+      "action": "add",
+      "node_id": "aprendizaje_1787245113234",
+      "sphere": "aprendizaje",
+      "type": "preferencia"
+    },
+    {
+      "timestamp": "2026-08-20T11:58:33.236153",
+      "action": "add",
+      "node_id": "memoria_1787245113236",
+      "sphere": "memoria",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T11:58:33.237863",
+      "action": "add",
+      "node_id": "emociones_1787245113237",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T11:58:33.239798",
+      "action": "connect",
+      "node_a": "aprendizaje_1787245113234",
+      "node_b": "emociones_1787245113237"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.142577",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399142",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.146781",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399146",
+      "sphere": "aprendizaje",
+      "type": "preferencia"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.148948",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399148",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.150655",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399150",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.152305",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399152",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.153890",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399153",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.156141",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399156",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.158147",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399158",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.159811",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399159",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.161500",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399161",
+      "sphere": "aprendizaje",
+      "type": "preferencia"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.163188",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399163",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.165185",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399165",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.168204",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399168",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.170126",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399170",
+      "sphere": "aprendizaje",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.171926",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399171",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.173864",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399173",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.175729",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399175",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.177652",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399177",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.179579",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399179",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.181549",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399181",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.183277",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399183",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.185058",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399185",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.186980",
+      "action": "add",
+      "node_id": "aprendizaje_1787282399186",
+      "sphere": "aprendizaje",
+      "type": "habilidad"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.189098",
+      "action": "add",
+      "node_id": "memoria_1787282399189",
+      "sphere": "memoria",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.190996",
+      "action": "add",
+      "node_id": "memoria_1787282399190",
+      "sphere": "memoria",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.192756",
+      "action": "add",
+      "node_id": "memoria_1787282399192",
+      "sphere": "memoria",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.194508",
+      "action": "add",
+      "node_id": "memoria_1787282399194",
+      "sphere": "memoria",
+      "type": "memoria"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.197207",
+      "action": "add",
+      "node_id": "emociones_1787282399197",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.199299",
+      "action": "add",
+      "node_id": "emociones_1787282399199",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.201190",
+      "action": "add",
+      "node_id": "emociones_1787282399201",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T22:19:59.203022",
+      "action": "add",
+      "node_id": "emociones_1787282399203",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991545",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399142",
+      "node_b": "aprendizaje_1787282399159"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991556",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399142",
+      "node_b": "aprendizaje_1787282399171"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991563",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399142",
+      "node_b": "aprendizaje_1787282399161"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991569",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399146",
+      "node_b": "aprendizaje_1787282399173"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991575",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399146",
+      "node_b": "aprendizaje_1787282399179"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991580",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399146",
+      "node_b": "aprendizaje_1787282399177"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991585",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399148",
+      "node_b": "aprendizaje_1787282399173"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991590",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399148",
+      "node_b": "aprendizaje_1787282399142"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991597",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399150",
+      "node_b": "aprendizaje_1787282399165"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991602",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399150",
+      "node_b": "aprendizaje_1787282399173"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991607",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399156",
+      "node_b": "aprendizaje_1787282399186"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991612",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399159",
+      "node_b": "aprendizaje_1787282399171"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991617",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399159",
+      "node_b": "memoria_1787282399194"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991623",
+      "action": "connect",
+      "node_a": "memoria_1787282399189",
+      "node_b": "aprendizaje_1787282399142"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991628",
+      "action": "connect",
+      "node_a": "memoria_1787282399190",
+      "node_b": "aprendizaje_1787282399142"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991633",
+      "action": "connect",
+      "node_a": "memoria_1787282399192",
+      "node_b": "aprendizaje_1787282399142"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991638",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399170",
+      "node_b": "aprendizaje_1787282399159"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991644",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399170",
+      "node_b": "aprendizaje_1787282399142"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991649",
+      "action": "connect",
+      "node_a": "emociones_1787282399197",
+      "node_b": "aprendizaje_1787282399148"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991653",
+      "action": "connect",
+      "node_a": "emociones_1787282399199",
+      "node_b": "aprendizaje_1787282399150"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991658",
+      "action": "connect",
+      "node_a": "emociones_1787282399201",
+      "node_b": "aprendizaje_1787282399156"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991665",
+      "action": "connect",
+      "node_a": "emociones_1787282399203",
+      "node_b": "aprendizaje_1787282399159"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991670",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399173",
+      "node_b": "aprendizaje_1787282399175"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991675",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399173",
+      "node_b": "aprendizaje_1787282399177"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991681",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399183",
+      "node_b": "aprendizaje_1787282399177"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991686",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399183",
+      "node_b": "aprendizaje_1787282399175"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991691",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399179",
+      "node_b": "aprendizaje_1787282399175"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991697",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399179",
+      "node_b": "aprendizaje_1787282399177"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991702",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399181",
+      "node_b": "aprendizaje_1787282399185"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991707",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399153",
+      "node_b": "aprendizaje_1787282399168"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991712",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399163",
+      "node_b": "aprendizaje_1787282399150"
+    },
+    {
+      "timestamp": "2026-08-20T22:21:01.991717",
+      "action": "connect",
+      "node_a": "aprendizaje_1787282399158",
+      "node_b": "aprendizaje_1787282399170"
+    },
+    {
+      "timestamp": "2026-08-20T22:55:40.533093",
+      "action": "add",
+      "node_id": "aprendizaje_1787284540533",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T22:57:32.221601",
+      "action": "add",
+      "node_id": "emociones_1787284652221",
+      "sphere": "emociones",
+      "type": "emocion"
+    },
+    {
+      "timestamp": "2026-08-20T22:57:32.224922",
+      "action": "add",
+      "node_id": "aprendizaje_1787284652224",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:00:40.545426",
+      "action": "add",
+      "node_id": "aprendizaje_1787284840545",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:05:52.032370",
+      "action": "add",
+      "node_id": "aprendizaje_1787285152032",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:10:52.076043",
+      "action": "add",
+      "node_id": "aprendizaje_1787285452076",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:15:52.103780",
+      "action": "add",
+      "node_id": "aprendizaje_1787285752103",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:20:52.140444",
+      "action": "add",
+      "node_id": "aprendizaje_1787286052140",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:25:52.171269",
+      "action": "add",
+      "node_id": "aprendizaje_1787286352171",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:30:52.213917",
+      "action": "add",
+      "node_id": "aprendizaje_1787286652213",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-08-20T23:36:00.887255",
+      "action": "add",
+      "node_id": "aprendizaje_1787286960887",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    }
+  ]
+}

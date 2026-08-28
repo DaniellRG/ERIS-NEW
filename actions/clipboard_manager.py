@@ -17,8 +17,8 @@ _monitor_thread = None
 
 def clipboard_manager(parameters: dict = None, player=None) -> str:
     """
-    Gestión del portapapeles.
-    Acciones: list, search, get, clear, copy, paste, start_monitor, stop_monitor, stats, pin, export
+    Gestión del portapapeles inteligente.
+    Acciones: list, search, get, clear, copy, paste, start_monitor, stop_monitor, stats, pin, export, delete, snippet, snippets, format
     """
     params = parameters or {}
     action = params.get("action", "list").lower()
@@ -49,10 +49,16 @@ def clipboard_manager(parameters: dict = None, player=None) -> str:
         return _export_history()
     elif action == "delete":
         return _delete_entry(params)
+    elif action == "snippet":
+        return _save_snippet(params)
+    elif action == "snippets":
+        return _list_snippets(params)
+    elif action == "format":
+        return _format_clipboard(params)
     elif action == "status":
-        return "Monitor: {} | Historial: {} items".format(
-            "activo" if _monitoring else "inactivo", len(_load_history()))
-    return "Acciones: list, search, get, clear, copy, paste, start_monitor, stop_monitor, stats, pin, export, delete"
+        return "Monitor: {} | Historial: {} items | Snippets: {}".format(
+            "activo" if _monitoring else "inactivo", len(_load_history()), len(_load_snippets()))
+    return "Acciones: list, search, get, clear, copy, paste, start_monitor, stop_monitor, stats, pin, export, delete, snippet, snippets, format"
 
 
 def _load_history() -> list:
@@ -288,3 +294,91 @@ def _export_history() -> str:
     export_path = _BASE / "data" / "clipboard_export.json"
     export_path.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
     return "Exportados {} items a {}".format(len(history), str(export_path))
+
+
+_SNIPPETS_FILE = _BASE / "data" / "clipboard_snippets.json"
+
+
+def _load_snippets() -> dict:
+    if _SNIPPETS_FILE.exists():
+        try:
+            return json.loads(_SNIPPETS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def _save_snippets(snippets: dict):
+    _SNIPPETS_FILE.write_text(json.dumps(snippets, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _save_snippet(params: dict) -> str:
+    name = params.get("name", "").strip()
+    text = params.get("text", "").strip()
+    tags = params.get("tags", [])
+    if isinstance(tags, str):
+        tags = [t.strip() for t in tags.split(",") if t.strip()]
+    if not name or not text:
+        return "Necesitás 'name' y 'text'. Ej: snippet name='mi_firma' text='Saludos, Danie'"
+    snippets = _load_snippets()
+    snippets[name] = {"text": text, "tags": tags, "created": datetime.now().isoformat(), "uses": 0}
+    _save_snippets(snippets)
+    return "✅ Snippet '{}' guardado ({} chars)".format(name, len(text))
+
+
+def _list_snippets(params: dict) -> str:
+    query = params.get("query", "").strip().lower()
+    snippets = _load_snippets()
+    if not snippets:
+        return "Sin snippets guardados. Usá: snippet name='...' text='...'"
+    items = list(snippets.items())
+    if query:
+        items = [(k, v) for k, v in items if query in k.lower() or query in v.get("text", "").lower() or query in " ".join(v.get("tags", []))]
+    if not items:
+        return "Sin resultados para '{}'".format(query)
+    lines = ["**Snippets ({}):**\n".format(len(items))]
+    for name, s in sorted(items, key=lambda x: -x[1].get("uses", 0)):
+        tags = " ".join("#{}".format(t) for t in s.get("tags", []))
+        preview = s.get("text", "")[:80]
+        lines.append("📌 **{}** {} (usado {} veces)".format(name, tags, s.get("uses", 0)))
+        lines.append("   {}\n".format(preview))
+    return "\n".join(lines)
+
+
+def _format_clipboard(params: dict) -> str:
+    fmt = params.get("format", "lower").strip().lower()
+    text = params.get("text", "").strip()
+    if not text:
+        entry = _get_last_history_entry()
+        if not entry:
+            return "Nada en el portapapeles."
+        text = entry.get("text", "")
+    if not text:
+        return "Necesitás 'text' o tener algo copiado."
+    formatters = {
+        "lower": text.lower(),
+        "upper": text.upper(),
+        "title": text.title(),
+        "capitalize": text.capitalize(),
+        "snake": text.lower().replace(" ", "_").replace("-", "_"),
+        "kebab": text.lower().replace(" ", "-").replace("_", "-"),
+        "camel": "".join(w.capitalize() if i else w.lower() for i, w in enumerate(text.split())),
+        "trim": "\n".join(l.strip() for l in text.splitlines()),
+        "md": "```\n{}\n```".format(text),
+        "quote": "\n".join("> {}".format(l) for l in text.splitlines()),
+    }
+    if fmt in formatters:
+        result = formatters[fmt]
+        try:
+            import subprocess
+            process = subprocess.Popen("clip", stdin=subprocess.PIPE, shell=True, creationflags=0x08000000)
+            process.communicate(result.encode("utf-16-le"))
+        except Exception:
+            pass
+        return "**{} → clipboard:**\n{}".format(fmt, result[:500])
+    return "Formatos: " + ", ".join(sorted(formatters.keys()))
+
+
+def _get_last_history_entry() -> dict | None:
+    history = _load_history()
+    return history[-1] if history else None

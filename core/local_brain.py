@@ -148,7 +148,7 @@ class LocalBrain:
     def __init__(self):
         cfg = _load_cfg()
         self.model = cfg.get("local_brain_model", "") or "qwen3:8b"
-        self.cloud_model = cfg.get("cloud_brain_model", "") or "google/gemini-2.5-pro"
+        self.cloud_model = cfg.get("cloud_brain_model", "") or "google/gemini-flash-latest"
         base = cfg.get("ollama_base_url", "") or "http://localhost:11434"
         self.ollama_url = base.rstrip("/")
         self.openrouter_key = cfg.get("openrouter_api_key", "")
@@ -220,6 +220,10 @@ class LocalBrain:
         for _round in range(5):
             out = self._ollama_chat(messages)
             if out is None:
+                # Ollama caído → fallback a la nube (OpenRouter) para no dejar
+                # la voz local muda cuando el motor local no está corriendo.
+                if self.openrouter_key:
+                    return self._cloud(text, player)
                 return "El respaldo local no está disponible. Verificá que Ollama esté corriendo."
             content = out.get("content") or ""
             tool_calls = out.get("tool_calls") or []

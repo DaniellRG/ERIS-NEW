@@ -5,7 +5,7 @@ from pathlib import Path
 def app_installer(parameters: dict, player=None) -> str:
     """Instala, desinstala, o ejecuta aplicaciones en Windows via winget."""
     action = parameters.get("action", "")
-    app_name = parameters.get("app_name", "")
+    app_name = parameters.get("app_name") or parameters.get("app", "")
     app_path = parameters.get("app_path", "")
 
     if not action:

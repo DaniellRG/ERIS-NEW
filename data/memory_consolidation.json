@@ -1,9 +1,9 @@
 {
-  "last_consolidation": "2026-07-26T10:36:07.686556",
+  "last_consolidation": "2026-08-14T09:52:39.882928",
   "action": "full",
   "results": [
-    "Episodic: 22 → 22 (0 removidos: vacíos, errores, viejos)",
-    "Semantic: 1 → 1 (0 duplicados fusionados)",
-    "Long-term: 10 → 10 entradas (3 categorías vacías marcadas)"
+    "Episodic: 319 → 319 (0 removidos: vacíos, errores, viejos)",
+    "Semantic: 13 → 13 (0 duplicados fusionados)",
+    "Long-term: 20 → 20 entradas (3 categorías vacías marcadas)"
   ]
 }

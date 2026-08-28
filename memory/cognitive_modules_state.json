@@ -1,0 +1,175 @@
+{
+  "total_analyses": 36,
+  "by_module": {
+    "chain_of_thought": 1,
+    "multi_perspective": 1,
+    "analogical_reasoning": 1,
+    "hypothesis_generator": 1,
+    "social_dynamics": 1,
+    "ethical_reasoning": 1,
+    "storytelling_engine": 1,
+    "teaching_optimizer": 1,
+    "debate_engine": 1,
+    "temporal_reasoning": 1,
+    "meta_cognition": 13,
+    "self_model": 1,
+    "confidence_calibration": 1,
+    "contradiction_detection": 1,
+    "assumption_detection": 1,
+    "goal_management": 1,
+    "attention_management": 1,
+    "transfer_learning": 1,
+    "abstraction": 1,
+    "principled_reasoning": 1,
+    "intellectual_humility": 1,
+    "creative_generation": 1,
+    "meta_communication": 1,
+    "bias_detection": 1
+  },
+  "history": [
+    {
+      "module": "chain_of_thought",
+      "time": "2026-08-20T12:29:39.078999"
+    },
+    {
+      "module": "multi_perspective",
+      "time": "2026-08-20T12:29:39.079520"
+    },
+    {
+      "module": "analogical_reasoning",
+      "time": "2026-08-20T12:29:39.079908"
+    },
+    {
+      "module": "hypothesis_generator",
+      "time": "2026-08-20T12:29:39.080260"
+    },
+    {
+      "module": "social_dynamics",
+      "time": "2026-08-20T12:29:39.080614"
+    },
+    {
+      "module": "ethical_reasoning",
+      "time": "2026-08-20T12:29:39.080998"
+    },
+    {
+      "module": "storytelling_engine",
+      "time": "2026-08-20T12:29:39.081359"
+    },
+    {
+      "module": "teaching_optimizer",
+      "time": "2026-08-20T12:29:39.081719"
+    },
+    {
+      "module": "debate_engine",
+      "time": "2026-08-20T12:29:39.082078"
+    },
+    {
+      "module": "temporal_reasoning",
+      "time": "2026-08-20T12:29:39.082436"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T12:39:32.892834"
+    },
+    {
+      "module": "self_model",
+      "time": "2026-08-20T12:39:32.893504"
+    },
+    {
+      "module": "confidence_calibration",
+      "time": "2026-08-20T12:39:32.893938"
+    },
+    {
+      "module": "contradiction_detection",
+      "time": "2026-08-20T12:39:32.894329"
+    },
+    {
+      "module": "assumption_detection",
+      "time": "2026-08-20T12:39:32.894693"
+    },
+    {
+      "module": "goal_management",
+      "time": "2026-08-20T12:39:32.895066"
+    },
+    {
+      "module": "attention_management",
+      "time": "2026-08-20T12:39:32.895453"
+    },
+    {
+      "module": "transfer_learning",
+      "time": "2026-08-20T12:39:32.895837"
+    },
+    {
+      "module": "abstraction",
+      "time": "2026-08-20T12:39:32.896201"
+    },
+    {
+      "module": "principled_reasoning",
+      "time": "2026-08-20T12:39:32.896590"
+    },
+    {
+      "module": "intellectual_humility",
+      "time": "2026-08-20T12:39:32.896959"
+    },
+    {
+      "module": "creative_generation",
+      "time": "2026-08-20T12:39:32.897333"
+    },
+    {
+      "module": "meta_communication",
+      "time": "2026-08-20T12:39:32.897709"
+    },
+    {
+      "module": "bias_detection",
+      "time": "2026-08-20T12:39:32.898078"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T22:55:40.573835"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T22:57:32.236562"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:00:42.382212"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:05:52.062280"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:10:52.079538"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:15:52.108802"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:20:52.151171"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:25:52.183783"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:30:52.217636"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-20T23:36:00.902519"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-28T11:31:35.992040"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-08-28T11:35:00.065371"
+    }
+  ]
+}

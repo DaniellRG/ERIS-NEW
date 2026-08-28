@@ -9,6 +9,8 @@ import difflib
 from pathlib import Path
 from datetime import datetime
 
+from core.edit_journal import log as _journal_log
+
 # Raíz del proyecto ERIS
 ERIS_ROOT = Path(__file__).resolve().parent.parent
 BACKUP_DIR = ERIS_ROOT / "backups"
@@ -58,11 +60,16 @@ def _resolve_path(file_ref: str) -> Path:
 def self_edit(parameters: dict, player=None) -> str:
     """
     Auto-edición de código de ERIS.
-    Acciones: read_file, edit_file, append_file, create_file, list_backups, restore_backup
+    Acciones: read_file, edit_file, append_file, create_file, list_backups, restore_backup, journal
     """
     action = parameters.get("action", "").lower()
     file_ref = parameters.get("file", "")
-    
+
+    # ── JOURNAL (bitácora de ediciones de la sesión) ─────────────────────
+    if action == "journal":
+        from core.edit_journal import recent as _journal_recent
+        return _journal_recent(int(parameters.get("n", 20) or 20))
+
     # ── READ ──────────────────────────────────────────────────────────────
     if action == "read_file":
         if not file_ref:
@@ -131,6 +138,17 @@ def self_edit(parameters: dict, player=None) -> str:
             )
             if diff_str:
                 result += f"\nDiff:\n{diff_str}"
+
+            # Verificación de sintaxis automática (py_compile) si es Python
+            if fp.suffix.lower() == ".py":
+                try:
+                    import py_compile
+                    py_compile.compile(str(fp), doraise=True)
+                    result += "\n[PY_COMPILE] ✅ Sintaxis válida."
+                except py_compile.PyCompileError as e:
+                    result += f"\n[PY_COMPILE] ⚠️ ERROR DE SINTAXIS: {str(e)[:300]}"
+
+            _journal_log("edit_file", fp, f"{len(diff)} líneas de diff")
             return result
 
         except Exception as e:
@@ -154,6 +172,7 @@ def self_edit(parameters: dict, player=None) -> str:
             with open(fp, "a", encoding="utf-8") as f:
                 f.write(content_to_add)
 
+            _journal_log("append_file", fp, f"+{len(content_to_add)} chars")
             return (
                 f"✅ Contenido agregado al final de '{file_ref}'.\n"
                 f"Backup: {backup_path}"
@@ -172,12 +191,14 @@ def self_edit(parameters: dict, player=None) -> str:
             if fp.exists():
                 backup_path = _make_backup(fp)
                 fp.write_text(content_new, encoding="utf-8")
+                _journal_log("create_file(overwrite)", fp, f"{len(content_new)} chars")
                 return (
                     f"✅ Archivo '{file_ref}' sobrescrito (backup: {backup_path})."
                 )
             else:
                 fp.parent.mkdir(parents=True, exist_ok=True)
                 fp.write_text(content_new, encoding="utf-8")
+                _journal_log("create_file", fp, f"{len(content_new)} chars")
                 return f"✅ Archivo '{file_ref}' creado exitosamente."
         except Exception as e:
             return f"Error creando archivo: {e}"
@@ -301,6 +322,7 @@ def self_modify(parameters: dict, player=None) -> str:
             new_lines = new_content.splitlines(keepends=True)
             import difflib
             diff = "".join(difflib.unified_diff(old_lines, new_lines, n=2))[:2000]
+            _journal_log("modify", fp, f"{len(diff)} líneas de diff")
             result = f"✅ Modificado '{file_ref}'\nBackup: {backup}\n"
             if syntax:
                 result += f"{syntax}\n"
@@ -325,6 +347,7 @@ def self_modify(parameters: dict, player=None) -> str:
                 new_content = content.rstrip() + "\n\n" + function_code + "\n"
             fp.write_text(new_content, encoding="utf-8")
             syntax = _verify_syntax(fp) if fp.suffix == ".py" else ""
+            _journal_log("add_function", fp, function_code.strip().split("\n")[0][:60])
             return f"✅ Función agregada a '{file_ref}'\nBackup: {backup}\n{syntax}"
         except Exception as e:
             return f"Error: {e}"
@@ -353,6 +376,7 @@ def self_modify(parameters: dict, player=None) -> str:
                 new_content = "\n".join(lines)
             fp.write_text(new_content, encoding="utf-8")
             syntax = _verify_syntax(fp) if fp.suffix == ".py" else ""
+            _journal_log("add_import", fp, import_line.strip()[:60])
             return f"✅ Import agregado a '{file_ref}'\nBackup: {backup}\n{syntax}"
         except Exception as e:
             return f"Error: {e}"

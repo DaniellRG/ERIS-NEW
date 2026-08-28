@@ -1,0 +1,14 @@
+README.md
+setup.py
+setup_cx.py
+ERIS_AI.egg-info/PKG-INFO
+ERIS_AI.egg-info/SOURCES.txt
+ERIS_AI.egg-info/dependency_links.txt
+ERIS_AI.egg-info/top_level.txt
+tests/test_agent_router.py
+tests/test_emotional_state.py
+tests/test_gpu_config.py
+tests/test_prompt_loader.py
+tests/test_time_utils.py
+tests/test_tool_declarations.py
+tests/test_tool_registry.py

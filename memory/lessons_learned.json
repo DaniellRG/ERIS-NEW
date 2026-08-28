@@ -1,0 +1,233 @@
+[
+  {
+    "time": "2026-07-29T11:43:46.090353",
+    "module": "web_generator",
+    "error": "Error en web_generator: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-29T12:24:00.311981",
+    "module": "file_controller",
+    "error": "Error: 'C:\\Users\\danie\\OneDrive\\Desktop\\historia_colombia.html' no existe.",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-29T21:07:27.144194",
+    "module": "code_helper",
+    "error": "Error: Se requiere 'description' para generar código.",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-29T21:27:33.921134",
+    "module": "document_generator",
+    "error": "Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-29T21:28:54.436439",
+    "module": "document_generator",
+    "error": "Error creando documento: [Errno 2] No such file or directory: 'C:\\\\Users\\\\Daniel Gomez\\\\Desktop\\\\Historia_Simon_Bolivar.docx'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-09T18:26:42.351577",
+    "module": "computer_control",
+    "error": "Error: Se requiere titulo de ventana.",
+    "solution": "Auto-registered from tool error",
+    "count": 3
+  },
+  {
+    "time": "2026-07-29T21:52:19.077304",
+    "module": "document_handler",
+    "error": "Error en document_handler: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-29T23:15:22.513602",
+    "module": "file_controller",
+    "error": "Error: [WinError 5] Acceso denegado: 'C:\\\\Users\\\\Daniel'",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-07-29T23:12:34.504486",
+    "module": "computer_control",
+    "error": "Error: No se proporciono combinacion.",
+    "solution": "Auto-registered from tool error",
+    "count": 3
+  },
+  {
+    "time": "2026-07-29T23:42:17.122087",
+    "module": "skill_manage",
+    "error": "Error en skill_manage: skill_manage() got an unexpected keyword argument 'player'",
+    "solution": "Auto-registered from tool error",
+    "count": 3
+  },
+  {
+    "time": "2026-07-30T00:07:23.403653",
+    "module": "cancion_generator",
+    "error": "Error generando canción: [WinError 2] El sistema no puede encontrar el archivo especificado",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-08-05T22:10:26.699048",
+    "module": "deep_research",
+    "error": "Error en deep_research: HTTP Error 403: Forbidden",
+    "solution": "Auto-registered from tool error",
+    "count": 3
+  },
+  {
+    "time": "2026-07-30T12:40:34.984059",
+    "module": "terminal_agent",
+    "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"steam.exe\" -ErrorAction Stop\n",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-30T12:41:24.961025",
+    "module": "terminal_agent",
+    "error": "Error abriendo C:\\Program Files (x86)\\Steam\\steam.exe: Command '['powershell', '-NoProfile', '-Command', 'Start-Process \"C:\\\\Program Files (x86)\\\\Steam\\\\steam.exe\" -ErrorAction Stop']' timed out after",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-07-31T20:59:34.024324",
+    "module": "audio_transcriber",
+    "error": "Error: Unknown action 'transcribe_mic'. Available: transcribe, transcribe_clipboard, languages, history",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-01T20:39:51.669411",
+    "module": "computer_settings",
+    "error": "Error ajustando volumen absoluto: 'AudioDevice' object has no attribute 'Activate'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-01T21:33:20.676947",
+    "module": "game_companion",
+    "error": "Error vision: HTTP Error 402: Payment Required",
+    "solution": "Auto-registered from tool error",
+    "count": 3
+  },
+  {
+    "time": "2026-08-01T22:02:26.212131",
+    "module": "pc_control",
+    "error": "Error al suspender: Command '['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0']' timed out after 5 seconds",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-03T13:53:34.901997",
+    "module": "document_tool",
+    "error": "Error en document_tool: document_tool() got an unexpected keyword argument 'player'",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-08-07T12:55:19.854629",
+    "module": "screenshot_history",
+    "error": "Error capturando: region argument must be a tuple of four ints",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-08-08T14:20:46.311294",
+    "module": "next_designer",
+    "error": "Error en next_designer: '\\n  --bg'",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-08-08T19:48:58.583488",
+    "module": "desktop_control",
+    "error": "Error: se requiere 'query'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-11T12:55:58.905105",
+    "module": "telegram_bot",
+    "error": "Error: No Telegram bot token configured. Set in config/api_keys.json",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-13T12:00:27.481007",
+    "module": "self_edit",
+    "error": "Error: No se encontró el texto 'target' en 'actions/phone_control.py'. Asegurate de que sea exacto (incluyendo espacios e indentación).",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-13T12:00:34.893868",
+    "module": "self_edit",
+    "error": "Error: El archivo 'phone_control.py' no existe.",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-16T14:51:05.289018",
+    "module": "webfetch",
+    "error": "timeout en conexión",
+    "solution": "usar timeout mayor y reintentar",
+    "count": 4
+  },
+  {
+    "time": "2026-08-16T14:51:05.315056",
+    "module": "ollama_vision",
+    "error": "servicio no iniciado",
+    "solution": "verificar que ollama esté corriendo antes",
+    "count": 4
+  },
+  {
+    "time": "2026-08-16T14:51:05.364513",
+    "module": "tool_registry",
+    "error": "import dinámico lento",
+    "solution": "precargar tools al inicio",
+    "count": 4
+  },
+  {
+    "time": "2026-08-19T12:50:47.031146",
+    "module": "shell_executor",
+    "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  },
+  {
+    "time": "2026-08-16T15:21:20.997662",
+    "module": "video_analyzer",
+    "error": "Error getting info: No module named 'yt_dlp'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-19T00:08:40.372843",
+    "module": "browser_unified",
+    "error": "Error: Page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'button:contains(\"Buscar con Google\")' is not a valid selector.\n    at query (<anonymous>:5448:41)\n    at <anonymous",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-19T10:58:57.475534",
+    "module": "file_controller",
+    "error": "Error leyendo archivo: [Errno 13] Permission denied: 'D:\\\\Prueba'",
+    "solution": "Auto-registered from tool error",
+    "count": 1
+  },
+  {
+    "time": "2026-08-24T09:46:21.353625",
+    "module": "terminal_agent",
+    "error": "Error: [Errno 22] Invalid argument",
+    "solution": "Auto-registered from tool error",
+    "count": 2
+  }
+]

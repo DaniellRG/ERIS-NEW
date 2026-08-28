@@ -26,7 +26,7 @@ from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtGui import (
     QAction, QBrush, QColor, QConicalGradient, QDragEnterEvent, QDropEvent,
     QFont, QIcon, QImage, QKeySequence, QLinearGradient, QPainter,
-    QPainterPath, QPalette, QPen, QPixmap, QRadialGradient, QRegion,
+    QPainterPath, QPalette, QPen, QPixmap, QPolygonF, QRadialGradient, QRegion,
     QTransform, QWheelEvent, QWindow, QCursor, QFontDatabase,
 )
 from PyQt6.QtWidgets import (
@@ -34,12 +34,14 @@ from PyQt6.QtWidgets import (
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QPushButton, QScrollArea, QSplashScreen, QSystemTrayIcon,
     QTextEdit, QVBoxLayout, QWidget, QMenu, QTabWidget,
+    QSplitter, QSizePolicy,
 )
 from PyQt6.QtGui import QShortcut, QKeySequence
 # Nota: QtWebEngine (Chromium) se importa SOLO dentro de WebGLOrb.__init__
 # (lazy). Importarlo al top cargaba Chromium en cada proceso y causaba
 # crashes 0x80000003 en Qt6WebEngineCore aunque nunca se usara.
 from face_design import FaceWidget
+from core.ui_panels import TerminalOverlay, CommandDeckWidget, FloatingPermiso, apply_theme_from_ui
 
 try:
     from zoneinfo import ZoneInfo
@@ -267,6 +269,14 @@ class Particle:
         self.life -= 0.003
 
 
+# Micro-acentos del orbe según el sentimiento dominante
+_ORB_ACCENTS = {
+    "amor": "hearts", "gratitud": "hearts",
+    "asombro": "sparkles", "alegria": "sparkles", "orgullo": "sparkles",
+    "tristeza": "tears", "soledad": "tears",
+}
+
+
 class ParticleOrb(QWidget):
     """Pure PyQt painted particle orb (fallback if WebGL unavailable)."""
     states = ("IDLE", "LISTENING", "THINKING", "SPEAKING", "INITIATING", "MUTED", "ERROR")
@@ -296,6 +306,16 @@ class ParticleOrb(QWidget):
 
     def set_audio_level(self, level: float):
         self._audio_level = level * 0.5
+
+    def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
+        """Tiñe el orbe con el sentimiento dominante (blend con el color de estado)
+        y activa micro-acentos (corazones, chispas, lágrimas)."""
+        try:
+            self._emo_hex = hex_color
+            self._emo_strength = max(0.0, min(1.0, strength))
+            self._emo_name = str(emotion or "").lower()
+        except Exception:
+            pass
 
     def _apply_frame_rate(self):
         """FPS adaptativos: suaves en pantalla (60 FPS), ahorra CPU al ocultarse."""
@@ -409,7 +429,7 @@ class ParticleOrb(QWidget):
         super().resizeEvent(e)
 
     def _get_state_color(self):
-        return {
+        base = {
             "IDLE": QColor(C.PRI),
             "LISTENING": QColor(C.SUCCESS),
             "THINKING": QColor(C.PRI),
@@ -418,6 +438,21 @@ class ParticleOrb(QWidget):
             "MUTED": QColor("#666666"),
             "ERROR": QColor(C.ERROR),
         }.get(self._state, QColor(C.PRI))
+        emo = getattr(self, "_emo_hex", None)
+        strength = getattr(self, "_emo_strength", 0.0)
+        # El sentimiento tiñe solo estados "vivos" (no ERROR/MUTED) y respira con el pulso.
+        if emo and strength > 0 and self._state not in ("MUTED", "ERROR"):
+            try:
+                blend = min(1.0, strength * (0.75 + 0.35 * self._pulse))
+                ec = QColor(emo)
+                r = int(base.red() * (1 - blend) + ec.red() * blend)
+                g = int(base.green() * (1 - blend) + ec.green() * blend)
+                b = int(base.blue() * (1 - blend) + ec.blue() * blend)
+                return QColor(max(0, min(255, r)), max(0, min(255, g)),
+                              max(0, min(255, b)))
+            except Exception:
+                pass
+        return base
 
     def paintEvent(self, e):
         p = QPainter(self)
@@ -499,7 +534,71 @@ class ParticleOrb(QWidget):
             # Cometa giratorio de puntos (anillo doble): señal clara de "estoy trabajando"
             _comet(62, 4.0, n_dots=12, spread=8, base_alpha=40, max_alpha=190)
             _comet(40, -3.0, n_dots=12, spread=8, base_alpha=30, max_alpha=150)
+        self._draw_emotion_accent(p, cx, cy, state_color)
         p.end()
+
+    # ── Micro-acentos del sentimiento (corazones, chispas, lágrimas) ──────
+    def _draw_emotion_accent(self, p, cx, cy, state_color):
+        name = getattr(self, "_emo_name", "")
+        kind = _ORB_ACCENTS.get(name)
+        strength = getattr(self, "_emo_strength", 0.0)
+        if not kind or strength <= 0 or self._state in ("MUTED", "ERROR"):
+            return
+        alpha = int(50 + 130 * strength * (0.6 + 0.4 * self._pulse))
+        clr = QColor(state_color)
+        clr.setAlpha(alpha)
+        p.setBrush(QBrush(clr))
+        p.setPen(Qt.PenStyle.NoPen)
+        if kind == "hearts":
+            for i in range(3):
+                ang = self._phase * 0.9 + i * math.pi * 2 / 3
+                rr = 52 + 8 * math.sin(self._phase * 2 + i * 1.7)
+                hx = cx + math.cos(ang) * rr
+                hy = cy + math.sin(ang) * rr - 7
+                s = 3.0 + 2.5 * strength + 1.5 * math.sin(self._phase * 3 + i)
+                self._draw_heart(p, hx, hy, s)
+        elif kind == "sparkles":
+            for i in range(4):
+                ang = self._phase * 1.3 + i * math.pi / 2 + math.pi / 4
+                rr = 58 + 10 * math.sin(self._phase * 2.5 + i * 1.3)
+                sx = cx + math.cos(ang) * rr
+                sy = cy + math.sin(ang) * rr
+                s = 4.0 + 3.5 * strength + 2.0 * math.sin(self._phase * 4 + i)
+                self._draw_sparkle(p, sx, sy, s)
+        elif kind == "tears":
+            for i in range(2):
+                ang = math.pi / 2 + i * 1.1 + self._phase * 0.45
+                rr = 46 + 6 * math.sin(self._phase + i * 2.0)
+                tx = cx + math.cos(ang) * rr
+                ty = cy + math.sin(ang) * rr + 7
+                s = 2.5 + 2.0 * strength
+                self._draw_tear(p, tx, ty, s)
+
+    @staticmethod
+    def _draw_heart(p, x, y, s):
+        p.drawEllipse(QPointF(x - s * 0.5, y - s * 0.45), s * 0.55, s * 0.55)
+        p.drawEllipse(QPointF(x + s * 0.5, y - s * 0.45), s * 0.55, s * 0.55)
+        tri = QPolygonF([QPointF(x - s * 0.9, y - s * 0.15),
+                         QPointF(x + s * 0.9, y - s * 0.15),
+                         QPointF(x, y + s * 1.15)])
+        p.drawPolygon(tri)
+
+    @staticmethod
+    def _draw_sparkle(p, x, y, s):
+        pts = []
+        for k in range(8):
+            a = k * math.pi / 4
+            rad = s if k % 2 == 0 else s * 0.35
+            pts.append(QPointF(x + math.cos(a) * rad, y + math.sin(a) * rad))
+        p.drawPolygon(QPolygonF(pts))
+
+    @staticmethod
+    def _draw_tear(p, x, y, s):
+        p.drawEllipse(QPointF(x, y), s, s * 1.25)
+        tri = QPolygonF([QPointF(x - s, y - s * 0.25),
+                         QPointF(x + s, y - s * 0.25),
+                         QPointF(x, y - s * 1.8)])
+        p.drawPolygon(tri)
 
 
 # ── Glassmorphism Widget Base ───────────────────────────────────────────────────
@@ -923,7 +1022,7 @@ class SettingsDialog(QDialog):
 
     # ── UI Sections ─────────────────────────────────────────────────────────
     SECTIONS = [
-        ("⬡", "API KEYS", "Google Gemini · Ollama · Spotify · TMDB · OpenWeather"),
+        ("⬡", "API KEYS", "Google Gemini · Groq · OpenRouter · Cerebras · Ollama · TMDB · OpenWeather"),
         ("🎙", "VOICE & AUDIO", "TTS Engine · Voice Model · Mic/Speaker · Thinking Sound"),
         ("🎨", "APPEARANCE", "Theme · Colors · Glassmorphism · Orb Style"),
         ("⚙", "GENERAL", "Language · Timezone · Paths · Camera · Region"),
@@ -1162,12 +1261,24 @@ class SettingsDialog(QDialog):
         lbl_conv.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl.addWidget(lbl_conv)
         self._model_conv = QComboBox()
-        self._model_conv.addItems(["gemini-2.0-flash", "gemini-2.0-pro", "gemini-1.5-pro", "ollama"])
-        self._model_conv.setCurrentText(self._cfg.get("model_for_conversation", "gemini-2.0-flash"))
+        self._model_conv.addItems(["gemini-flash-latest", "gemini-3.1-flash-lite", "gemini-pro-latest", "ollama"])
+        self._model_conv.setCurrentText(self._cfg.get("model_for_conversation", "gemini-3.1-flash-lite"))
         hl.addWidget(self._model_conv)
         hl.addStretch()
         gb_layout.addLayout(hl)
         form.addWidget(gb)
+
+        # Backup providers: Groq, OpenRouter, Cerebras
+        gb_backup = QGroupBox("⚡  BACKUP PROVIDERS")
+        gb_backup_layout = QVBoxLayout(gb_backup)
+        gb_backup_layout.setSpacing(6)
+        self._groq_key = _NeonField("GROQ API KEY", "gsk_... (https://console.groq.com/keys)", password=True, default=self._cfg.get("groq_api_key", ""))
+        gb_backup_layout.addWidget(self._groq_key)
+        self._openrouter_key = _NeonField("OPENROUTER API KEY", "sk-or-... (https://openrouter.ai/keys)", password=True, default=self._cfg.get("openrouter_api_key", ""))
+        gb_backup_layout.addWidget(self._openrouter_key)
+        self._cerebras_key = _NeonField("CEREBRAS API KEY", "API key (https://cloud.cerebras.ai)", password=True, default=self._cfg.get("cerebras_api_key", ""))
+        gb_backup_layout.addWidget(self._cerebras_key)
+        form.addWidget(gb_backup)
 
         # Ollama
         gb2 = QGroupBox("🦙  OLLAMA (LOCAL)")
@@ -1176,6 +1287,14 @@ class SettingsDialog(QDialog):
         self._ollama_enabled = QCheckBox("Enable Ollama (local inference)")
         self._ollama_enabled.setChecked(self._cfg.get("ollama_enabled", False))
         gb2_layout.addWidget(self._ollama_enabled)
+        self._ollama_autostart = QCheckBox("\U0001F501  Auto-start Ollama on Windows boot (cerebro local de respaldo)")
+        try:
+            from core.ollama_autostart import is_autostart_enabled
+            _auto_default = self._cfg.get("ollama_autostart", is_autostart_enabled())
+        except Exception:
+            _auto_default = self._cfg.get("ollama_autostart", False)
+        self._ollama_autostart.setChecked(bool(_auto_default))
+        gb2_layout.addWidget(self._ollama_autostart)
         self._ollama_url = _NeonField("BASE URL", "http://localhost:11434", default=self._cfg.get("ollama_base_url", "http://localhost:11434"))
         gb2_layout.addWidget(self._ollama_url)
         self._ollama_model = _NeonField("MODEL", "llama3.2", default=self._cfg.get("ollama_model", "llama3.2"))
@@ -1231,22 +1350,73 @@ class SettingsDialog(QDialog):
         lbl_eng.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl.addWidget(lbl_eng)
         self._tts = QComboBox()
-        self._tts.addItems(["gemini", "system", "pykokoro"])
-        self._tts.setCurrentText(self._cfg.get("tts_backend", "gemini"))
+        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "pykokoro"])
+        self._tts.setCurrentText(self._cfg.get("tts_backend", "edge"))
         hl.addWidget(self._tts)
         hl.addStretch()
         gb_layout.addLayout(hl)
+
+        hl0 = QHBoxLayout()
+        lbl_vm = QLabel("Voice Mode:")
+        lbl_vm.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl0.addWidget(lbl_vm)
+        self._voice_mode = QComboBox()
+        self._voice_mode.addItems(["cloud (Gemini Live)", "local (TTS Engine)"])
+        _vm = self._cfg.get("voice_mode", "cloud")
+        self._voice_mode.setCurrentIndex(0 if _vm == "cloud" else 1)
+        hl0.addWidget(self._voice_mode)
+        hl0.addStretch()
+        gb_layout.addLayout(hl0)
 
         hl2 = QHBoxLayout()
         lbl_voice = QLabel("Voice Model:")
         lbl_voice.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl2.addWidget(lbl_voice)
         self._voice = QComboBox()
-        self._voice.addItems(["Zephyr", "Aoede", "Puck", "Charon", "ef_dora"])
-        self._voice.setCurrentText(self._cfg.get("tts_voice", "Zephyr"))
+        self._populate_voices_for_engine(self._tts.currentText())
         hl2.addWidget(self._voice)
         hl2.addStretch()
         gb_layout.addLayout(hl2)
+
+        # Update voices when engine changes
+        self._tts.currentTextChanged.connect(self._on_engine_changed)
+
+        hl3 = QHBoxLayout()
+        lbl_el = QLabel("ElevenLabs API Key:")
+        lbl_el.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl3.addWidget(lbl_el)
+        self._el_api_key = _NeonField("ELEVENLABS API KEY", "sk_...", password=True, default=self._cfg.get("elevenlabs_api_key", ""))
+        hl3.addWidget(self._el_api_key.entry)
+        hl3.addStretch()
+        gb_layout.addLayout(hl3)
+
+        hl4 = QHBoxLayout()
+        lbl_elv = QLabel("ElevenLabs Voice ID:")
+        lbl_elv.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl4.addWidget(lbl_elv)
+        self._el_voice_id = _NeonField("VOICE ID", "0ASlVJI7QecvFHVE5VQk", default=self._cfg.get("elevenlabs_voice_id", ""))
+        hl4.addWidget(self._el_voice_id.entry)
+        hl4.addStretch()
+        gb_layout.addLayout(hl4)
+
+        # Fish Audio fields
+        hl_fish1 = QHBoxLayout()
+        lbl_fish = QLabel("Fish Audio API Key:")
+        lbl_fish.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_fish1.addWidget(lbl_fish)
+        self._fish_api_key = _NeonField("FISH AUDIO API KEY", "sk-fish-...", password=True, default=self._cfg.get("fish_api_key", ""))
+        hl_fish1.addWidget(self._fish_api_key.entry)
+        hl_fish1.addStretch()
+        gb_layout.addLayout(hl_fish1)
+
+        hl_fish2 = QHBoxLayout()
+        lbl_fishv = QLabel("Fish Audio Voice ID:")
+        lbl_fishv.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_fish2.addWidget(lbl_fishv)
+        self._fish_voice_id = _NeonField("FISH VOICE ID", "d942b64244ef4c47b0d4a34d5301c796", default=self._cfg.get("fish_voice_id", ""))
+        hl_fish2.addWidget(self._fish_voice_id.entry)
+        hl_fish2.addStretch()
+        gb_layout.addLayout(hl_fish2)
 
         # TTS test button
         test_tts = QPushButton("▶  TEST VOICE")
@@ -1363,6 +1533,111 @@ class SettingsDialog(QDialog):
         i = self._spk_cb.findData(cur_spk)
         self._spk_cb.setCurrentIndex(i if i >= 0 else 0)
         self._spk_cb.blockSignals(False)
+
+    def _populate_voices_for_engine(self, engine: str):
+        """Populate voice combo based on selected TTS engine."""
+        self._voice.blockSignals(True)
+        self._voice.clear()
+        current_voice = self._cfg.get("tts_voice", "")
+        if engine == "edge":
+            voices = [
+                ("es-AR-TomasNeural", "ES-AR Tomas (Masc)"),
+                ("es-AR-ElenaNeural", "ES-AR Elena (Fem)"),
+                ("es-ES-ElviraNeural", "ES-ES Elvira (Fem)"),
+                ("es-ES-AlvaroNeural", "ES-ES Alvaro (Masc)"),
+                ("es-MX-DaliaNeural", "ES-MX Dalia (Fem)"),
+                ("es-MX-JorgeNeural", "ES-MX Jorge (Masc)"),
+                ("es-CO-GonzaloNeural", "ES-CO Gonzalo (Masc)"),
+                ("es-CO-SalomeNeural", "ES-CO Salome (Fem)"),
+                ("es-US-PalomaNeural", "ES-US Paloma (Fem)"),
+                ("es-US-AlonsoNeural", "ES-US Alonso (Masc)"),
+                ("es-VE-PaolaNeural", "ES-VE Paola (Fem)"),
+                ("es-VE-SebastianNeural", "ES-VE Sebastian (Masc)"),
+                ("es-CL-CatalinaNeural", "ES-CL Catalina (Fem)"),
+                ("es-CL-LorenzoNeural", "ES-CL Lorenzo (Masc)"),
+                ("es-PE-AlexNeural", "ES-PE Alex (Masc)"),
+                ("es-PE-CamilaNeural", "ES-PE Camila (Fem)"),
+                ("es-UY-MateoNeural", "ES-UY Mateo (Masc)"),
+                ("es-UY-ValentinaNeural", "ES-UY Valentina (Fem)"),
+                ("es-BO-MarceloNeural", "ES-BO Marcelo (Masc)"),
+                ("es-BO-SofiaNeural", "ES-BO Sofia (Fem)"),
+                ("es-CR-JuanNeural", "ES-CR Juan (Masc)"),
+                ("es-CR-MariaNeural", "ES-CR Maria (Fem)"),
+                ("es-DO-EmilioNeural", "ES-DO Emilio (Masc)"),
+                ("es-DO-RamonaNeural", "ES-DO Ramona (Fem)"),
+                ("es-EC-AndreaNeural", "ES-EC Andrea (Fem)"),
+                ("es-EC-LuisNeural", "ES-EC Luis (Masc)"),
+                ("es-GT-AndresNeural", "ES-GT Andres (Masc)"),
+                ("es-GT-MartaNeural", "ES-GT Marta (Fem)"),
+                ("es-HN-CarlosNeural", "ES-HN Carlos (Masc)"),
+                ("es-HN-KarlaNeural", "ES-HN Karla (Fem)"),
+                ("es-PR-KarinaNeural", "ES-PR Karina (Fem)"),
+                ("es-PR-VictorNeural", "ES-PR Victor (Masc)"),
+            ]
+            for v_id, v_label in voices:
+                self._voice.addItem(v_label, v_id)
+        elif engine == "elevenlabs":
+            try:
+                import json as _json
+                from core.logging_setup import API_CONFIG_PATH as _ap
+                cfg = _json.loads(_ap.read_text(encoding="utf-8"))
+                from elevenlabs.client import ElevenLabs
+                client = ElevenLabs(api_key=cfg.get("elevenlabs_api_key", ""))
+                el_voices = client.voices.get_all()
+                for v in el_voices.voices:
+                    label = f"{v.name} ({v.category})"
+                    self._voice.addItem(label, v.voice_id)
+            except Exception:
+                self._voice.addItem("Eris (Cloned)", "0ASlVJI7QecvFHVE5VQk")
+        elif engine == "system":
+            try:
+                import pyttsx3
+                e = pyttsx3.init()
+                for v in e.getProperty("voices"):
+                    self._voice.addItem(v.name, v.id)
+            except Exception:
+                self._voice.addItem("Default", "default")
+        elif engine == "pykokoro":
+            try:
+                from kokoro import KPipeline
+                _voices = [
+                    ("af_heart", "Heart (Fem EN)"),
+                    ("af_bella", "Bella (Fem EN)"),
+                    ("af_nicole", "Nicole (Fem EN)"),
+                    ("am_adam", "Adam (Masc EN)"),
+                    ("am_michael", "Michael (Masc EN)"),
+                ]
+                for v_id, v_label in _voices:
+                    self._voice.addItem(v_label, v_id)
+            except ImportError:
+                self._voice.addItem("PyKokoro not installed", "")
+        elif engine == "gemini":
+            from core.audio_config import ERIS_VOICES as _av
+            for _vk, (_vg, _vd) in _av.items():
+                self._voice.addItem(f"{_vk} ({_vg})", _vk)
+        elif engine == "fish":
+            fish_voices = [
+                ("d942b64244ef4c47b0d4a34d5301c796", "Mi Voz Personalizada (Fem ES)"),
+                ("9affd80294e9426d864d07f7bcb33d52", "Crumbs Sugar Cookie (Fem ES)"),
+                ("b252e3f24d4c41e4ad0892c582e4a03a", "Tempezt Shadow (Fem ES Latino)"),
+                ("a7ff580f68ae44c1baa1d77c93544495", "Malvatti (Fem ES Animada)"),
+                ("a672af99a1354a71a5ab7054c98c26be", "Mark Espanol (Masc Profesional)"),
+                ("6cdd04c077d245fe8c55827568e870b7", "Remastered Espanol (Masc Inspirador)"),
+                ("10c8d9574c4648ff862343d0f3f589e8", "Voz Espanol (Masc Calmado)"),
+            ]
+            for v_id, v_label in fish_voices:
+                self._voice.addItem(v_label, v_id)
+        else:
+            self._voice.addItem("Default", "default")
+        # Restore selection
+        idx = self._voice.findData(current_voice)
+        if idx >= 0:
+            self._voice.setCurrentIndex(idx)
+        self._voice.blockSignals(False)
+
+    def _on_engine_changed(self, engine: str):
+        """Update voice list when engine dropdown changes."""
+        self._populate_voices_for_engine(engine)
 
     def _detect_audio_devices(self):
         """Detecta el micro y el altavoz en uso y los selecciona en los combos."""
@@ -1607,7 +1882,11 @@ class SettingsDialog(QDialog):
         stats_layout.setContentsMargins(16, 12, 16, 12)
         stats_layout.setSpacing(6)
 
-        ver_lbl = QLabel(f"ERIS v2.7.6  —  Constellation Core")
+        try:
+            from core.version import ERIS_VERSION, ERIS_STAGE
+            ver_lbl = QLabel(f"ERIS v{ERIS_VERSION}  —  {ERIS_STAGE}")
+        except Exception:
+            ver_lbl = QLabel(f"ERIS v2.7.6  —  Constellation Core")
         ver_lbl.setStyleSheet(f"color: {C.PRI}; font-size: 16px; font-weight: bold; letter-spacing: 2px;")
         stats_layout.addWidget(ver_lbl)
 
@@ -1692,6 +1971,16 @@ class SettingsDialog(QDialog):
         except Exception:
             pass
 
+        # Sentimiento dominante del núcleo emocional sentiente
+        try:
+            from core.emotional_core import get_sentience
+            _s = get_sentience()
+            if _s.get("emotion") != "tranquilidad":
+                emo_text.setText(
+                    f"{emo_text.text()}\nSabés que estoy {_s['label']} ({_s['intensity']:.0%}) — {_s['cause']}")
+        except Exception:
+            pass
+
         form.addWidget(gb3)
 
         form.addStretch()
@@ -1737,7 +2026,11 @@ class SettingsDialog(QDialog):
             "model_for_conversation": self._model_conv.currentText(),
             "model_for_agents": self._cfg.get("model_for_agents", "gemini"),
             "model_for_search": self._cfg.get("model_for_search", "gemini"),
+            "groq_api_key": self._groq_key.entry.text(),
+            "openrouter_api_key": self._openrouter_key.entry.text(),
+            "cerebras_api_key": self._cerebras_key.entry.text(),
             "ollama_enabled": self._ollama_enabled.isChecked(),
+            "ollama_autostart": self._ollama_autostart.isChecked(),
             "ollama_base_url": self._ollama_url.entry.text(),
             "ollama_model": self._ollama_model.entry.text(),
             "ollama_vision_model": self._ollama_vision.entry.text(),
@@ -1746,8 +2039,13 @@ class SettingsDialog(QDialog):
             "spotify_redirect_uri": self._cfg.get("spotify_redirect_uri", "http://127.0.0.1:8888/callback"),
             "tmdb_api_key": self._tmdb_key.entry.text(),
             "openweather_api_key": self._weather_key.entry.text(),
+            "elevenlabs_api_key": self._el_api_key.entry.text(),
+            "elevenlabs_voice_id": self._el_voice_id.entry.text(),
+            "fish_api_key": self._fish_api_key.entry.text(),
+            "fish_voice_id": self._fish_voice_id.entry.text(),
             "tts_backend": self._tts.currentText(),
-            "tts_voice": self._voice.currentText(),
+            "voice_mode": "cloud" if self._voice_mode.currentIndex() == 0 else "local",
+            "tts_voice": self._voice.currentData() or self._voice.currentText(),
             "mic_device": _combo_idx(self._mic_cb),
             "mic_device_name": _combo_dev_name(self._mic_cb),
             "speaker_device": _combo_idx(self._spk_cb),
@@ -1775,6 +2073,12 @@ class SettingsDialog(QDialog):
             path = API_CONFIG_PATH
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(cfg, indent=4), encoding="utf-8")
+            # Aplicar autostart de Ollama segun el toggle (crear/quitar lanzador en Startup)
+            try:
+                from core.ollama_autostart import apply_autostart
+                apply_autostart(bool(cfg.get("ollama_autostart", False)))
+            except Exception as _e:
+                print(f"[Settings] ollama autostart apply skipped: {_e}")
             self._status_bar.setText("◆  CONFIGURATION COMMITTED  ◆")
             self.saved.emit(cfg)
             QTimer.singleShot(300, self.accept)
@@ -1876,6 +2180,9 @@ class FloatingOrb(QWidget):
     def set_audio_level(self, level: float):
         self._orb.set_audio_level(level)
 
+    def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
+        self._orb.set_emotional_color(hex_color, strength, emotion)
+
     def show_float(self):
         self._visible = True
         screen = QApplication.primaryScreen().geometry()
@@ -1905,24 +2212,39 @@ class MainWindow(QMainWindow):
         self._muted = False
         self._float_orb = float_orb
         self._eris_accum = ""
+        self._floating_permiso = FloatingPermiso()
+        self._drag_pos = None
 
         self._setup_window()
         self._setup_ui()
         self._setup_tray()
         self._setup_signals()
         self._setup_shortcuts()
-        self.showFullScreen()
-        self._try_acrylic()
+        self.show()
+        # Try acrylic only if frameless was enabled
+        try:
+            self._try_acrylic()
+        except Exception:
+            pass
 
     def _setup_window(self):
         self.setWindowTitle("ERIS")
-        self.setStyleSheet("QMainWindow { background: transparent; }")
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint
-            | Qt.WindowType.WindowStaysOnTopHint
-        )
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, False)
+        self.setMinimumSize(500, 400)
+        self.resize(1000, 750)
+        # Center on screen
+        screen = QApplication.primaryScreen().geometry()
+        self.move(max(0, (screen.width() - 1000) // 2), max(0, (screen.height() - 750) // 2))
+        # Dark background via palette (works with normal window)
+        palette = self.palette()
+        palette.setColor(QPalette.ColorRole.Window, QColor(C.BG))
+        palette.setColor(QPalette.ColorRole.WindowText, QColor(C.TEXT))
+        palette.setColor(QPalette.ColorRole.Base, QColor(C.BG2))
+        palette.setColor(QPalette.ColorRole.Text, QColor(C.TEXT))
+        self.setPalette(palette)
+        self.setStyleSheet(f"""
+            QMainWindow {{ background-color: {C.BG}; }}
+            QWidget {{ font-family: 'Segoe UI', sans-serif; }}
+        """)
         icon_path = str(_base_dir() / "assets" / "ICOERIS.ico")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
@@ -1956,11 +2278,49 @@ class MainWindow(QMainWindow):
 
     def _setup_ui(self):
         central = QWidget()
-        central.setStyleSheet(f"background: rgba(10,7,3,100);")
+        central.setStyleSheet(f"background: {C.BG};")
         self.setCentralWidget(central)
-        layout = QVBoxLayout(central)
+        root_layout = QVBoxLayout(central)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        # ── Splitter: main content | terminal panel (toggleable) ──
+        self._splitter = QSplitter(Qt.Orientation.Horizontal)
+        self._splitter.setStyleSheet(f"""
+            QSplitter::handle {{
+                background: {C.BORDER};
+                width: 1px;
+            }}
+            QSplitter::handle:hover {{
+                background: {C.PRI_LIGHT};
+                width: 2px;
+            }}
+        """)
+        self._splitter.setHandleWidth(1)
+
+        # Left side: main content
+        main_widget = QWidget()
+        main_widget.setStyleSheet(f"background: {C.BG};")
+        layout = QVBoxLayout(main_widget)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
+
+        # ── Terminal panel (right side of splitter) ──
+        self._term_panel = TerminalOverlay()
+        self._term_panel.hide()
+
+        # ── Command Deck panel (cola de intents, toggle Ctrl+D) ──
+        self._deck_panel = CommandDeckWidget()
+        self._deck_panel.hide()
+
+        self._splitter.addWidget(main_widget)
+        self._splitter.addWidget(self._term_panel)
+        self._splitter.addWidget(self._deck_panel)
+        self._splitter.setSizes([700, 0, 0])
+        self._splitter.setStretchFactor(0, 1)
+        self._splitter.setStretchFactor(1, 0)
+
+        root_layout.addWidget(self._splitter)
 
         # Top bar with settings gear
         top_bar = QWidget()
@@ -2101,11 +2461,16 @@ class MainWindow(QMainWindow):
     def _setup_shortcuts(self):
         QShortcut(QKeySequence("Ctrl+M"), self).activated.connect(self._toggle_mute)
         QShortcut(QKeySequence("Ctrl+,"), self).activated.connect(self._open_settings)
-        QShortcut(QKeySequence("Escape"), self).activated.connect(lambda: (
-            self._float_orb.show_float() if self._float_orb else None,
-            self.hide(),
-        ))
+        QShortcut(QKeySequence("Ctrl+T"), self).activated.connect(self._toggle_terminal)
+        QShortcut(QKeySequence("Ctrl+D"), self).activated.connect(self._toggle_deck)
+        QShortcut(QKeySequence("Escape"), self).activated.connect(self._go_to_orb)
         QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(self._quit_app)
+
+    def _go_to_orb(self):
+        """Oculta la ventana principal, muestra orbe flotante."""
+        if self._float_orb:
+            self._float_orb.show_float()
+        self.hide()
 
     def _setup_tray(self):
         icon_path = str(_base_dir() / "assets" / "ICOERIS.ico")
@@ -2114,12 +2479,12 @@ class MainWindow(QMainWindow):
         self._tray.setToolTip("ERIS")
         menu = QMenu()
         show_a = menu.addAction("Show")
-        show_a.triggered.connect(lambda: (self.showFullScreen(), self.raise_(), self.activateWindow()))
+        show_a.triggered.connect(lambda: (self.show(), self.raise_(), self.activateWindow()))
         quit_a = menu.addAction("Quit")
         quit_a.triggered.connect(self._quit_app)
         self._tray.setContextMenu(menu)
         self._tray.show()
-        self._tray.activated.connect(lambda r: (self.showFullScreen(), self.raise_(), self.activateWindow()) if r == QSystemTrayIcon.ActivationReason.DoubleClick else None)
+        self._tray.activated.connect(lambda r: (self.show(), self.raise_(), self.activateWindow()) if r == QSystemTrayIcon.ActivationReason.DoubleClick else None)
 
     def _setup_signals(self):
         self._state_sig.connect(self._apply_state)
@@ -2136,11 +2501,14 @@ class MainWindow(QMainWindow):
 
     def _apply_theme(self, theme: str):
         C.set_theme(theme)
+        apply_theme_from_ui(THEMES.get(theme, THEMES["gold"]))
         self._setup_window()
         self._setup_ui()
         self._apply_state(self._orb._state)
         self._orb.set_state(self._orb._state)
-        self.showFullScreen()
+        if hasattr(self, '_term_panel') and self._term_panel:
+            self._term_panel.refresh_theme()
+        self.show()
 
     def _central_visual_cfg(self) -> str:
         try:
@@ -2172,13 +2540,38 @@ class MainWindow(QMainWindow):
         self.set_state("MUTED" if self._muted else "IDLE")
         if self.on_mute_command:
             self.on_mute_command(self._muted)
-        self.showFullScreen()
+        self.show()
         self.raise_()
+
+    def _toggle_terminal(self):
+        if hasattr(self, '_term_panel') and self._term_panel:
+            deck_vis = self._deck_panel is not None and self._deck_panel._visible
+            if self._term_panel._visible:
+                self._term_panel.hide()
+                self._term_panel._visible = False
+                self._splitter.setSizes([1, 0, 1] if deck_vis else [1, 0, 0])
+            else:
+                self._term_panel.show()
+                self._term_panel._visible = True
+                self._splitter.setSizes([1, 1, 1] if deck_vis else [1, 1, 0])
+
+    def _toggle_deck(self):
+        if hasattr(self, '_deck_panel') and self._deck_panel:
+            term_vis = self._term_panel._visible
+            if self._deck_panel._visible:
+                self._deck_panel.hide()
+                self._deck_panel._visible = False
+                self._splitter.setSizes([1, 1 if term_vis else 0, 0])
+            else:
+                self._deck_panel.show()
+                self._deck_panel._visible = True
+                self._deck_panel.refresh()
+                self._splitter.setSizes([1, 1 if term_vis else 0, 1])
 
     def show_main(self):
         if self._float_orb:
             self._float_orb.hide_float()
-        self.showFullScreen()
+        self.show()
         self.raise_()
         self.activateWindow()
 
@@ -2313,6 +2706,37 @@ class MainWindow(QMainWindow):
             elif label == "ERR":
                 color = C.ERROR
             self._append_transcript(f"<span style='color:{color}'><b>{label}:</b> {msg}</span>")
+        # Also log to terminal panel
+        if hasattr(self, '_term_panel') and self._term_panel is not None:
+            if "ERR" in text or "error" in text.lower():
+                self._term_panel.log_error(clean)
+            else:
+                self._term_panel.log_info(clean)
+
+    def show_plan(self, steps, statuses=None):
+        """Muestra el plan del agente autónomo en el transcript con estados."""
+        if not steps:
+            return
+        statuses = statuses or []
+        rows = []
+        for i, step in enumerate(steps, 1):
+            desc = step if isinstance(step, str) else (step.get("description", "") if isinstance(step, dict) else str(step))
+            st = ""
+            if i - 1 < len(statuses) and statuses[i - 1]:
+                st = f" [{statuses[i - 1].upper()}]"
+            rows.append(f"<b>{i}.</b> {desc}{st}")
+        html = "<span style='color:#d4a94f'><b>AGENTE — PLAN</b></span><br/>" + "<br/>".join(rows)
+        self._append_transcript(html)
+
+    def _ask_dialog(self, question, options=None):
+        """Diálogo modal (se ejecuta en el hilo Qt vía ErisUI.ask)."""
+        from PyQt6.QtWidgets import QInputDialog
+        opts = [str(o) for o in (options or [])]
+        if opts:
+            text, ok = QInputDialog.getItem(None, "ERIS — Pregunta", question, opts, 0, False)
+        else:
+            text, ok = QInputDialog.getText(None, "ERIS — Pregunta", question)
+        return str(text if ok else "skip")
 
     def stream_eris_chunk(self, chunk: str):
         self._chunk_sig.emit(chunk)
@@ -2339,6 +2763,13 @@ class MainWindow(QMainWindow):
             self._orb.set_audio_level(level)
         if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_audio_level(level)
+
+    def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
+        """Tiñe el/los orbes con el sentimiento dominante de Eris."""
+        if self._orb.isVisible():
+            self._orb.set_emotional_color(hex_color, strength, emotion)
+        if self._float_orb:
+            self._float_orb.set_emotional_color(hex_color, strength, emotion)
 
     def set_music(self, level: float):
         face = getattr(self, "_face", None)
@@ -2397,7 +2828,14 @@ class ErisUI:
         pixmap.fill(QColor(C.BG))
         self._splash = QSplashScreen(pixmap)
         self._splash.show()
-        self._splash.showMessage("ERIS v2.7.6", Qt.AlignmentFlag.AlignCenter, QColor(C.PRI))
+        try:
+            from core.version import ERIS_VERSION, ERIS_STAGE
+            _ver = ERIS_VERSION
+            _stage = ERIS_STAGE
+        except Exception:
+            _ver = "2.7.6"
+            _stage = "Constellation Core"
+        self._splash.showMessage(f"ERIS v{_ver} — {_stage}", Qt.AlignmentFlag.AlignCenter, QColor(C.PRI))
         self._app.processEvents()
 
         self._float_orb = FloatingOrb()
@@ -2417,6 +2855,8 @@ class ErisUI:
         self._app.processEvents()
         self._splash.finish(self._win)
         self._win.show()
+        self._win.raise_()
+        self._win.activateWindow()
 
         class _RootShim:
             def mainloop(self):
@@ -2488,6 +2928,60 @@ class ErisUI:
     def write_log(self, text: str):
         self._marshal(self._win.write_log, text)
 
+    def show_plan(self, steps, statuses=None):
+        self._marshal(self._win.show_plan, steps, statuses)
+
+    def ask(self, question, options=None, timeout=90):
+        """Pregunta al usuario: si hay FloatingPermiso disponible, muestra ventana
+        flotante (funciona incluso en modo orbe). Si no, usa diálogo modal."""
+        # Try floating permission window first (works in orb mode)
+        fp = getattr(self._win, '_floating_permiso', None)
+        if fp is not None:
+            result_box = {}
+            done = threading.Event()
+
+            def _ask_float():
+                try:
+                    granted = fp.ask_permission(
+                        question,
+                        title="ERIS — Permiso Requerido",
+                        timeout=min(timeout, 60),
+                    )
+                    result_box["text"] = "si" if granted else "skip"
+                except Exception:
+                    result_box["text"] = "skip"
+                finally:
+                    done.set()
+
+            self._marshal(_ask_float)
+            if not done.wait(timeout + 5):
+                return "skip"
+            text = result_box.get("text", "skip")
+            # Log the authorization decision
+            self._marshal(self._win.write_log,
+                          f"SYS: Permiso {'AUTORIZADO' if text == 'si' else 'DENEGADO'}: {question[:80]}")
+            if hasattr(self._win, '_term_panel') and self._win._term_panel:
+                self._win._term_panel.log_permission(
+                    question[:120], text == "si")
+            return text
+
+        # Fallback to old modal dialog
+        box = {}
+        done = threading.Event()
+
+        def _show():
+            try:
+                box["text"] = self._win._ask_dialog(question, options)
+            except Exception:
+                box["text"] = "skip"
+            finally:
+                done.set()
+
+        self._marshal(_show)
+        if not done.wait(timeout):
+            return "skip"
+        return box.get("text", "skip")
+
     def wait_for_api_key(self):
         self._ready = True
 
@@ -2511,6 +3005,9 @@ class ErisUI:
         if now - self._last_vol > 0.08:
             self._last_vol = now
             self._marshal(self._win.set_orb_audio_level, level)
+
+    def set_orb_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
+        self._marshal(self._win.set_emotional_color, hex_color, strength, emotion)
 
     def set_face_speaking(self, value: bool):
         self._marshal(self._win.set_face_speaking, value)
@@ -2537,3 +3034,28 @@ class ErisUI:
 
     def clear_eris_response(self):
         self._marshal(self._win.clear_eris_response)
+
+    @property
+    def terminal_panel(self):
+        return getattr(self._win, '_term_panel', None)
+
+    def toggle_terminal(self):
+        self._marshal(self._win._toggle_terminal)
+
+    def log_terminal(self, msg: str, level: str = "info"):
+        """Log to terminal panel from any thread."""
+        tp = self.terminal_panel
+        if tp is None:
+            return
+        def _log():
+            if level == "error":
+                tp.log_error(msg)
+            elif level == "user":
+                tp.log_user(msg)
+            elif level == "speak":
+                tp.log_speak(msg)
+            elif level == "tool_start":
+                pass  # handled by tool_dispatcher directly
+            else:
+                tp.log_info(msg)
+        self._marshal(_log)

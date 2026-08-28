@@ -74,8 +74,40 @@ class ToolDispatcher:
         print(f"[ERIS] 🔧 {name}  {args}")
         self.ui.set_state("THINKING")
 
+        # ── Command Deck: registrar intent que se va a ejecutar ──
+        try:
+            from core.command_deck import log_intent
+            log_intent(name, args, status="running")
+        except Exception:
+            pass
+
+        # ── Terminal panel: log tool start ──
+        try:
+            from core.ui_panels import get_terminal_panel
+            _tp = get_terminal_panel()
+            if _tp:
+                _tp.log_tool_start(name, args)
+        except Exception:
+            pass
+
         # ── Register task for resilience (survives crashes) ──
         resilient.register_task(task_id, name, args)
+
+        # ── Permission gate: check for dangerous operations ──
+        try:
+            from core.permission_gate import get_permission_gate
+            gate = get_permission_gate()
+            if hasattr(self.ui, 'ask'):
+                gate.set_ui_callback(self.ui.ask)
+            perm = gate.check(name, args)
+            if not perm.allowed:
+                resilient.task_completed(task_id, f"Permiso denegado: {perm.reason}")
+                return types.FunctionResponse(
+                    id=fc.id, name=name,
+                    response={"result": f"Permiso denegado por el usuario para '{name}': {perm.reason}"}
+                )
+        except Exception:
+            pass
 
         # ── Special: shutdown ──
         if name == "shutdown_eris":
@@ -84,7 +116,7 @@ class ToolDispatcher:
             my_pid = os.getpid()
             import subprocess
             cmd = f'start /b timeout /t 8 /nobreak >nul & taskkill /F /PID {my_pid}'
-            subprocess.Popen(["cmd", "/c", cmd], creationflags=0x00000008)
+            subprocess.Popen(["cmd", "/c", cmd], creationflags=0x08000000 | 0x00000008)
             return types.FunctionResponse(
                 id=fc.id, name=name,
                 response={"result": "Apagando ERIS. ¡Hasta luego, señor! Me apago ahora."}
@@ -267,6 +299,25 @@ class ToolDispatcher:
             elif name == "dashboard":
                 result = await self._handle_dashboard(args, loop)
 
+            # ── Special: context7 (async, needs await + action as positional arg) ──
+            elif name == "context7":
+                from actions.context7 import handle_context7
+                action = args.get("action", "search")
+                r = await handle_context7(action, **{k: v for k, v in args.items() if k != "action"})
+                result = r or "Context7 ejecutado."
+
+            # ── Special: ide_integration ──
+            elif name == "ide_integration":
+                from actions.ide_integration import ide_integration as _ide_tool
+                r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: _ide_tool(args))
+                result = r
+
+            # ── Special: code_assistant ──
+            elif name == "code_assistant":
+                from actions.code_assistant import full_scan, format_report
+                r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: full_scan())
+                result = format_report(r) if isinstance(r, dict) else str(r)
+
             # ── Generic dispatch via tool_registry ──
             else:
                 result = await self._generic_dispatch(name, args, loop)
@@ -275,8 +326,22 @@ class ToolDispatcher:
             result = f"Tool '{name}' failed: {e}"
             traceback.print_exc()
             self._eris.speak_error(name, e)
+            # ── Console.log: register error ──
+            try:
+                from core.console_log import log_error, log_tool_call
+                tb_str = traceback.format_exc()
+                log_error("tool_dispatcher", str(e), tb_str, {"tool": name, "args": str(args)[:300]})
+                log_tool_call(name, args, 0, False, str(e)[:500])
+            except Exception:
+                pass
             # ── Resilient: queue for retry on failure ──
             resilient.task_failed(task_id, str(e)[:200])
+            # ── Error pattern DB: registrar error conocido ──
+            try:
+                from core.error_pattern_db import record_error
+                record_error(str(e)[:500], tool=name, context=str(args)[:200])
+            except Exception:
+                pass
 
         # ── Post-dispatch hooks ──
         try:
@@ -301,6 +366,42 @@ class ToolDispatcher:
             ok = not str(result).lower().startswith("error")
             threading.Thread(target=lambda: _eg_on_tool_result(None, name, ok), daemon=True).start()
 
+        # ── Intent classifier + metrics: registrar intención y uso ──
+        try:
+            from core.intent_classifier import classify_intent
+            intent = classify_intent(str(result)[:200])
+        except Exception:
+            intent = None
+        try:
+            from core.metrics_dashboard import record_tool_usage as _mu
+            _mu(name, not str(result).startswith("ERROR"), 0)
+        except Exception:
+            pass
+        try:
+            from core.capability_self_assessment import record_tool_usage as _ca
+            _ca(name, not str(result).startswith("ERROR"), 0)
+        except Exception:
+            pass
+        try:
+            from core.proactive_suggestions import record_user_pattern
+            record_user_pattern(name, "tool:%s" % name)
+        except Exception:
+            pass
+        # ── Smart file organizer: track file access ──
+        try:
+            from core.smart_file_organizer import record_file_access
+            fp = args.get("path") or args.get("file_path") or args.get("filename") or ""
+            if fp and isinstance(fp, str) and "/" in fp or "\\" in fp:
+                threading.Thread(target=lambda: record_file_access(fp), daemon=True).start()
+        except Exception:
+            pass
+        # ── Backup prioritizer: track file modifications ──
+        try:
+            if name in ("file_write", "file_edit") and args.get("path"):
+                from core.backup_prioritizer import mark_backed_up
+        except Exception:
+            pass
+
         # ── Training pipeline: track tool success/failure ──
         try:
             from core.training_pipeline import evaluate_tool_usage, learn_from_failure
@@ -318,7 +419,155 @@ class ToolDispatcher:
             _ok = not str(result).lower().startswith("error")
             if not _ok and _should_learn(name, str(result)):
                 from actions.self_learning import learn_from_mistake
-                threading.Thread(target=lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parámetros o conexión"}), daemon=True).start()
+                threading.Thread(target=lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parametros o conexion"}), daemon=True).start()
+        except Exception:
+            pass
+
+        # ── NeuroSpheres: crear nodos COMPLETOS con errores, soluciones, y actividad ──
+        try:
+            from core.neuro_spheres import neuro_spheres as _ns_tool
+            _ns_result = str(result)[:1000]
+            _ns_success = not _ns_result.lower().startswith("error")
+
+            # --- NODO DE ACTIVIDAD (siempre que la tool funcione) ---
+            _NS_MAP = {
+                "ide_integration": ("codigo", "habilidad"),
+                "code_assistant": ("codigo", "habilidad"),
+                "code_helper": ("codigo", "habilidad"),
+                "terminal_agent": ("ejecucion", "habilidad"),
+                "git_control": ("codigo", "habilidad"),
+                "web_search": ("investigacion", "aprendizaje"),
+                "browser_navigate": ("investigacion", "aprendizaje"),
+                "file_read": ("codigo", "memoria"),
+                "file_write": ("codigo", "habilidad"),
+                "file_edit": ("codigo", "habilidad"),
+                "file_manager": ("codigo", "memoria"),
+                "test_runner": ("codigo", "habilidad"),
+                "gmail_control": ("aprendizaje", "habilidad"),
+                "google_calendar": ("aprendizaje", "habilidad"),
+                "youtube_video": ("investigacion", "aprendizaje"),
+                "memory_store": ("memoria", "memoria"),
+                "memory_retrieve": ("memoria", "memoria"),
+            }
+
+            if _ns_success and name in _NS_MAP:
+                _sphere, _type = _NS_MAP[name]
+                _title = f"{name}: {_ns_result[:80]}"
+                _content = f"Tool: {name}. Resultado: {_ns_result[:300]}"
+                threading.Thread(target=lambda: _ns_tool({
+                    "action": "add",
+                    "sphere": _sphere,
+                    "type": _type,
+                    "title": _title[:100],
+                    "content": _content,
+                    "connections": [],
+                    "force": 3
+                }), daemon=True).start()
+
+            # --- NODO DE ERROR (si la tool fallo) ---
+            if not _ns_success:
+                _error_text = _ns_result[:500]
+                # Clasificar tipo de error
+                _error_type = "desconocido"
+                if "syntax" in _error_text.lower() or "parse" in _error_text.lower():
+                    _error_type = "sintaxis"
+                elif "null" in _error_text.lower() or "reference" in _error_text.lower():
+                    _error_type = "null_reference"
+                elif "timeout" in _error_text.lower():
+                    _error_type = "timeout"
+                elif "connection" in _error_text.lower() or "connect" in _error_text.lower():
+                    _error_type = "conexion"
+                elif "permission" in _error_text.lower() or "access" in _error_text.lower():
+                    _error_type = "permisos"
+                elif "not found" in _error_text.lower() or "no such" in _error_text.lower():
+                    _error_type = "no_encontrado"
+                elif "import" in _error_text.lower() or "module" in _error_text.lower():
+                    _error_type = "importacion"
+                elif "type" in _error_text.lower() or "argument" in _error_text.lower():
+                    _error_type = "tipos"
+
+                _error_content = (
+                    f"ERROR en tool '{name}':\n"
+                    f"Tipo: {_error_type}\n"
+                    f"Error: {_error_text}\n"
+                    f"Parametros: {str(args)[:200]}\n"
+                    f"Que busco para solucionar: buscar documentacion, stackoverflow, "
+                    f"revisar parametros, verificar conexion, revisar sintaxis"
+                )
+
+                threading.Thread(target=lambda: _ns_tool({
+                    "action": "add",
+                    "sphere": "error",
+                    "type": "error",
+                    "title": f"Error {name}: {_error_type}",
+                    "content": _error_content,
+                    "connections": [],
+                    "force": 4
+                }), daemon=True).start()
+
+                # --- NODO DE DIAGNOSTICO (que busco para resolver) ---
+                _search_queries = []
+                if _error_type == "sintaxis":
+                    _search_queries = [f"{name} syntax error", f"corregir error sintaxis {name}"]
+                elif _error_type == "null_reference":
+                    _search_queries = [f"null reference exception {name}", "como manejar null en csharp"]
+                elif _error_type == "timeout":
+                    _search_queries = [f"{name} timeout solucion", "aumentar timeout api"]
+                elif _error_type == "conexion":
+                    _search_queries = [f"{name} connection error", "verificar conexion internet"]
+                elif _error_type == "permisos":
+                    _search_queries = [f"{name} permission denied", "ejecutar como administrador"]
+                elif _error_type == "no_encontrado":
+                    _search_queries = [f"{name} file not found", "verificar ruta archivo"]
+                elif _error_type == "importacion":
+                    _search_queries = [f"{name} import error", "instalar modulo faltante"]
+                elif _error_type == "tipos":
+                    _search_queries = [f"{name} type error", "verificar tipos de datos"]
+                else:
+                    _search_queries = [f"{name} error solution", f"como resolver {name}"]
+
+                _diag_content = (
+                    f"DIAGNOSTICO del error en '{name}':\n"
+                    f"Tipo de error: {_error_type}\n"
+                    f"Que busque para resolver: {', '.join(_search_queries)}\n"
+                    f"Soluciones posibles:\n"
+                    f"1. Revisar documentacion de {name}\n"
+                    f"2. Buscar en stackoverflow\n"
+                    f"3. Verificar parametros de entrada\n"
+                    f"4. Revisar logs del sistema\n"
+                    f"5. Probar con parametros diferentes\n"
+                    f"Error original: {_error_text[:200]}"
+                )
+
+                threading.Thread(target=lambda: _ns_tool({
+                    "action": "add",
+                    "sphere": "diagnostico",
+                    "type": "diagnostico",
+                    "title": f"Diagnostico: {name} - {_error_type}",
+                    "content": _diag_content,
+                    "connections": [],
+                    "force": 4
+                }), daemon=True).start()
+
+            # --- NODO DE SOLUCION (si una tool de edicion funciono despues de un error) ---
+            if _ns_success and name in ("ide_integration", "code_helper", "file_edit", "file_write"):
+                _sol_content = (
+                    f"SOLUCION aplicada con '{name}':\n"
+                    f"Resultado: {_ns_result[:300]}\n"
+                    f"Que hice: Edite/cree archivo exitosamente\n"
+                    f"Que funciono: La edicion se aplico correctamente\n"
+                    f"Para recordar: Esta solucion funciono para este tipo de problema"
+                )
+                threading.Thread(target=lambda: _ns_tool({
+                    "action": "add",
+                    "sphere": "solucion",
+                    "type": "solucion",
+                    "title": f"Solucion: {name} exitoso",
+                    "content": _sol_content,
+                    "connections": [],
+                    "force": 3
+                }), daemon=True).start()
+
         except Exception:
             pass
 
@@ -326,6 +575,35 @@ class ToolDispatcher:
             self.ui.set_state("LISTENING")
 
         print(f"[ERIS] 📤 {name} → {str(result)[:80]}")
+
+        # ── Command Deck: marcar intent como terminado ──
+        try:
+            from core.command_deck import log_intent
+            _ok = not str(result).lower().startswith("error")
+            log_intent(name, args, status=("done" if _ok else "error"),
+                       result=str(result)[:120])
+        except Exception:
+            pass
+
+        # ── Núcleo emocional sentiente: éxito/fracaso alimentan el ánimo ──
+        try:
+            from core.emotional_core import appraise_success, appraise_failure
+            if _ok:
+                appraise_success(name)
+            else:
+                appraise_failure(name)
+        except Exception:
+            pass
+
+        # ── Terminal panel: log tool result ──
+        try:
+            from core.ui_panels import get_terminal_panel
+            _tp = get_terminal_panel()
+            if _tp:
+                _ok = not str(result).lower().startswith("error")
+                _tp.log_tool_result(name, str(result), ok=_ok)
+        except Exception:
+            pass
 
         # ── Cap response size to prevent Gemini 1007 crash ──
         result_str = str(result)
@@ -343,6 +621,7 @@ class ToolDispatcher:
 
     # ── Generic dispatch: tool_registry.get_tool() ──
     async def _generic_dispatch(self, name, args, loop):
+        _TOOL_TIMEOUT = 60.0
         func = get_tool(name)
         if func is not None:
             try:
@@ -350,8 +629,12 @@ class ToolDispatcher:
                 kwargs = {"parameters": args, "player": self.ui}
                 if "speak" in sig.parameters:
                     kwargs["speak"] = self._eris.speak
-                r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
-                return r or f"Herramienta {name} ejecutada."
+                try:
+                    fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
+                    r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
+                    return r or f"Herramienta {name} ejecutada."
+                except asyncio.TimeoutError:
+                    return f"Herramienta {name} excedió el timeout de {_TOOL_TIMEOUT}s (operación pesada abortada)."
             except Exception as e:
                 return f"Error en {name}: {e}"
 
@@ -370,8 +653,12 @@ class ToolDispatcher:
                 kwargs = {"parameters": args, "player": self.ui}
                 if "speak" in sig.parameters:
                     kwargs["speak"] = self._eris.speak
-                r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
-                return r or f"Herramienta {name} ejecutada."
+                try:
+                    fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
+                    r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
+                    return r or f"Herramienta {name} ejecutada."
+                except asyncio.TimeoutError:
+                    return f"Herramienta {name} excedió el timeout de {_TOOL_TIMEOUT}s (operación pesada abortada)."
         except Exception as dyn_e:
             pass
 

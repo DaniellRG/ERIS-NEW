@@ -1,0 +1,429 @@
+{
+  "nodes": {
+    "code_review": {
+      "category": "dev",
+      "dependents": [],
+      "dependencies": [
+        "file_read",
+        "codebase"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "file_read": {
+      "category": "other",
+      "dependents": [
+        "code_review",
+        "data_analyst"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "codebase": {
+      "category": "other",
+      "dependents": [
+        "code_review",
+        "code_generator"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "document_rag": {
+      "category": "rag",
+      "dependents": [],
+      "dependencies": [
+        "index_document"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "index_document": {
+      "category": "other",
+      "dependents": [
+        "document_rag"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "memory_consolidation": {
+      "category": "memory",
+      "dependents": [],
+      "dependencies": [
+        "episodic_add"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "episodic_add": {
+      "category": "other",
+      "dependents": [
+        "memory_consolidation",
+        "episodic_log"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "github_pr": {
+      "category": "dev",
+      "dependents": [],
+      "dependencies": [
+        "git_control",
+        "shell"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "git_control": {
+      "category": "other",
+      "dependents": [
+        "github_pr",
+        "github_push"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "shell": {
+      "category": "other",
+      "dependents": [
+        "github_pr",
+        "workflow_runner",
+        "self_healing_loop"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "github_push": {
+      "category": "dev",
+      "dependents": [],
+      "dependencies": [
+        "git_control"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "obsidian_note": {
+      "category": "knowledge",
+      "dependents": [],
+      "dependencies": [
+        "file_write"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "file_write": {
+      "category": "other",
+      "dependents": [
+        "obsidian_note",
+        "spreadsheet_generator"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "workflow_runner": {
+      "category": "automation",
+      "dependents": [],
+      "dependencies": [
+        "task_planner",
+        "shell"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "task_planner": {
+      "category": "other",
+      "dependents": [
+        "workflow_runner"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "task_scheduler": {
+      "category": "automation",
+      "dependents": [
+        "proactive_automation"
+      ],
+      "dependencies": [
+        "reminder"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "reminder": {
+      "category": "other",
+      "dependents": [
+        "task_scheduler"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "image_generation": {
+      "category": "creative",
+      "dependents": [],
+      "dependencies": [
+        "web_search"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "web_search": {
+      "category": "other",
+      "dependents": [
+        "image_generation",
+        "deep_research",
+        "super_search"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "voice_clone": {
+      "category": "voice",
+      "dependents": [],
+      "dependencies": [
+        "audio_transcriber"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "audio_transcriber": {
+      "category": "other",
+      "dependents": [
+        "voice_clone"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "deep_research": {
+      "category": "search",
+      "dependents": [],
+      "dependencies": [
+        "web_search",
+        "webfetch"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "webfetch": {
+      "category": "other",
+      "dependents": [
+        "deep_research"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "super_search": {
+      "category": "search",
+      "dependents": [],
+      "dependencies": [
+        "web_search"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "code_generator": {
+      "category": "dev",
+      "dependents": [],
+      "dependencies": [
+        "codebase"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "data_analyst": {
+      "category": "data",
+      "dependents": [],
+      "dependencies": [
+        "file_read"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "spreadsheet_generator": {
+      "category": "data",
+      "dependents": [],
+      "dependencies": [
+        "file_write"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "morning_brief": {
+      "category": "productivity",
+      "dependents": [],
+      "dependencies": [
+        "daily_digest",
+        "goals"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "daily_digest": {
+      "category": "other",
+      "dependents": [
+        "morning_brief"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "goals": {
+      "category": "other",
+      "dependents": [
+        "morning_brief"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "self_healing_loop": {
+      "category": "self",
+      "dependents": [],
+      "dependencies": [
+        "self_heal",
+        "shell"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "self_heal": {
+      "category": "other",
+      "dependents": [
+        "self_healing_loop"
+      ],
+      "dependencies": [],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "proactive_automation": {
+      "category": "automation",
+      "dependents": [],
+      "dependencies": [
+        "task_scheduler"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    },
+    "episodic_log": {
+      "category": "memory",
+      "dependents": [],
+      "dependencies": [
+        "episodic_add"
+      ],
+      "call_count": 0,
+      "error_count": 0
+    }
+  },
+  "edges": [
+    {
+      "from": "file_read",
+      "to": "code_review"
+    },
+    {
+      "from": "codebase",
+      "to": "code_review"
+    },
+    {
+      "from": "index_document",
+      "to": "document_rag"
+    },
+    {
+      "from": "episodic_add",
+      "to": "memory_consolidation"
+    },
+    {
+      "from": "git_control",
+      "to": "github_pr"
+    },
+    {
+      "from": "shell",
+      "to": "github_pr"
+    },
+    {
+      "from": "git_control",
+      "to": "github_push"
+    },
+    {
+      "from": "file_write",
+      "to": "obsidian_note"
+    },
+    {
+      "from": "task_planner",
+      "to": "workflow_runner"
+    },
+    {
+      "from": "shell",
+      "to": "workflow_runner"
+    },
+    {
+      "from": "reminder",
+      "to": "task_scheduler"
+    },
+    {
+      "from": "web_search",
+      "to": "image_generation"
+    },
+    {
+      "from": "audio_transcriber",
+      "to": "voice_clone"
+    },
+    {
+      "from": "web_search",
+      "to": "deep_research"
+    },
+    {
+      "from": "webfetch",
+      "to": "deep_research"
+    },
+    {
+      "from": "web_search",
+      "to": "super_search"
+    },
+    {
+      "from": "codebase",
+      "to": "code_generator"
+    },
+    {
+      "from": "file_read",
+      "to": "data_analyst"
+    },
+    {
+      "from": "file_write",
+      "to": "spreadsheet_generator"
+    },
+    {
+      "from": "daily_digest",
+      "to": "morning_brief"
+    },
+    {
+      "from": "goals",
+      "to": "morning_brief"
+    },
+    {
+      "from": "self_heal",
+      "to": "self_healing_loop"
+    },
+    {
+      "from": "shell",
+      "to": "self_healing_loop"
+    },
+    {
+      "from": "task_scheduler",
+      "to": "proactive_automation"
+    },
+    {
+      "from": "episodic_add",
+      "to": "episodic_log"
+    }
+  ]
+}

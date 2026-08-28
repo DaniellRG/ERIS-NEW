@@ -1,0 +1,32 @@
+[
+  {
+    "action": "open",
+    "source": "C:\\Users\\danie\\Desktop\\Historia_Simon_Bolivar.docx",
+    "dest": "",
+    "time": "2026-08-05T12:17:21.468757"
+  },
+  {
+    "action": "open",
+    "source": "C:\\Users\\danie\\Desktop\\Problema_Generacion_Texto.txt",
+    "dest": "",
+    "time": "2026-08-05T12:19:09.541662"
+  },
+  {
+    "action": "open_folder",
+    "source": "Desktop\\ERIS_Scripts",
+    "dest": "",
+    "time": "2026-08-07T12:41:56.696420"
+  },
+  {
+    "action": "open_folder",
+    "source": "data\\generated_projects\\Calculadora",
+    "dest": "",
+    "time": "2026-08-07T12:49:53.097834"
+  },
+  {
+    "action": "open",
+    "source": "D:\\PruebaEris\\hello.py",
+    "dest": "",
+    "time": "2026-08-19T12:08:38.005384"
+  }
+]

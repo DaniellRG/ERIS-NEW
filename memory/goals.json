@@ -1,0 +1,61 @@
+{
+  "goals": [
+    {
+      "id": "goal_fe29c224",
+      "title": "Realizar al menos 3 mejoras de codigo auto",
+      "priority": "medium",
+      "category": "self_improvement",
+      "status": "active",
+      "progress": 0,
+      "created": "2026-08-28T11:30:55.691206",
+      "deadline": "2026-09-04T11:30:55.691211",
+      "milestones": []
+    },
+    {
+      "id": "goal_d8cdd9d6",
+      "title": "Documentar todas las capacidades en Obsidian (30+ docs)",
+      "priority": "medium",
+      "category": "documentation",
+      "status": "active",
+      "progress": 0,
+      "created": "2026-08-28T11:30:55.698270",
+      "deadline": "2026-09-04T11:30:55.698278",
+      "milestones": []
+    },
+    {
+      "id": "goal_dab27bee",
+      "title": "Ejecutar limpieza de memoria semanal",
+      "priority": "low",
+      "category": "maintenance",
+      "status": "active",
+      "progress": 0,
+      "created": "2026-08-28T11:30:55.706182",
+      "deadline": "2026-09-04T11:30:55.706188",
+      "milestones": []
+    },
+    {
+      "id": "goal_e88297ad",
+      "title": "Consolidar memoria episodica y semantica",
+      "priority": "medium",
+      "category": "memory",
+      "status": "active",
+      "progress": 0,
+      "created": "2026-08-28T11:30:55.713875",
+      "deadline": "2026-09-04T11:30:55.713881",
+      "milestones": []
+    },
+    {
+      "id": "goal_9aff5fbf",
+      "title": "Mejorar personalidad de voz y expresion",
+      "priority": "low",
+      "category": "voice",
+      "status": "active",
+      "progress": 0,
+      "created": "2026-08-28T11:30:55.721041",
+      "deadline": "2026-09-04T11:30:55.721047",
+      "milestones": []
+    }
+  ],
+  "completed": [],
+  "auto_generated": []
+}

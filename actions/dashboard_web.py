@@ -137,12 +137,36 @@ function sendChat(){
   const input=document.getElementById('chatInput');
   const text=input.value.trim();if(!text)return;
   addMsg(text,true);input.value='';
-  setTimeout(()=>addMsg('[Dashboard] Mensaje enviado a ERIS: '+text,false),500);
+  addMsg('⏳ Pensando...',false);
+  fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})})
+    .then(r=>r.json())
+    .then(d=>{
+      const box=document.getElementById('chatBox');
+      if(box.lastChild && box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);
+      addMsg(d.response||'[sin respuesta]',false);
+    })
+    .catch(e=>{const box=document.getElementById('chatBox');if(box.lastChild&&box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);addMsg('[Error: '+e+']',false);});
 }
 function quickAction(tool,action){
-  addMsg('Running: '+tool+' ('+action+')',true);
-  setTimeout(()=>addMsg('[Quick] '+tool+': action "'+action+'" ejecutado',false),300);
+  addMsg('▶ '+tool+' ('+action+')',true);
+  addMsg('⏳ Ejecutando...',false);
+  fetch('/api/tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tool,action})})
+    .then(r=>r.json())
+    .then(d=>{
+      const box=document.getElementById('chatBox');
+      if(box.lastChild && box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);
+      addMsg(d.response||'[sin respuesta]',false);
+    })
+    .catch(e=>{const box=document.getElementById('chatBox');if(box.lastChild&&box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);addMsg('[Error: '+e+']',false);});
 }
+function refreshStatus(){
+  fetch('/api/status').then(r=>r.json()).then(d=>{
+    const dot=document.getElementById('statusDot');
+    const st=document.getElementById('statusText');
+    if(d.status==='ok'){dot.style.background='#4caf50';st.textContent='Online '+d.time;}else{st.textContent='Degraded';}
+  }).catch(()=>{});
+}
+setInterval(refreshStatus,5000);
 </script>
 </body>
 </html>""".replace("{tool_count}", str(29))
@@ -219,7 +243,8 @@ def dashboard_web(parameters: dict = None, player=None) -> str:
 
 def _start_dashboard(port):
     try:
-        from http.server import HTTPServer, SimpleHTTPRequestHandler
+        from http.server import BaseHTTPRequestHandler
+        from urllib.parse import urlparse
         import functools
 
         state = _load_state()
@@ -231,20 +256,97 @@ def _start_dashboard(port):
         dashboard_dir.mkdir(parents=True, exist_ok=True)
         (dashboard_dir / "index.html").write_text(DASHBOARD_HTML, encoding="utf-8")
 
-        class DashboardHandler(SimpleHTTPRequestHandler):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, directory=str(dashboard_dir), **kwargs)
+        def _call_agent(message: str) -> str:
+            """Envia el mensaje al motor de agente real de ERIS."""
+            try:
+                from core.agent_architecture import agent_loop
+                result = agent_loop({
+                    "action": "run",
+                    "goal": message,
+                    "max_steps": 4,
+                })
+                return str(result)[:3000]
+            except Exception as e:
+                return f"[Dashboard] Error del agente: {e}"
+
+        def _call_tool(name: str, action: str) -> str:
+            try:
+                from core.agent_architecture import _run_tool
+                return str(_run_tool(name, {"action": action}))[:1500]
+            except Exception as e:
+                return f"[Dashboard] Error tool {name}: {e}"
+
+        class DashboardHandler(BaseHTTPRequestHandler):
+            def _json(self, data: dict, code: int = 200):
+                body = json.dumps(data, ensure_ascii=False).encode("utf-8")
+                self.send_response(code)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
 
             def do_GET(self):
-                if self.path == "/":
-                    self.path = "/index.html"
-                return super().do_GET()
+                parsed = urlparse(self.path)
+                if parsed.path in ("/api/status", "/status"):
+                    self._json({"status": "ok", "time": datetime.now().isoformat()})
+                    return
+                if parsed.path in ("/api/health", "/health"):
+                    self._json({"status": "ok"})
+                    return
+                # Servir el dashboard HTML
+                html = (dashboard_dir / "index.html").read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(html)))
+                self.end_headers()
+                self.wfile.write(html)
+
+            def do_POST(self):
+                parsed = urlparse(self.path)
+                try:
+                    length = int(self.headers.get("Content-Length", 0))
+                    raw = self.rfile.read(length).decode("utf-8", errors="replace")
+                    data = json.loads(raw) if raw.strip() else {}
+                except Exception:
+                    data = {}
+
+                if parsed.path == "/api/chat":
+                    message = data.get("message", "")
+                    if not message:
+                        self._json({"error": "message required"}, 400)
+                        return
+                    state = _load_state()
+                    state.setdefault("chat_history", []).append({
+                        "user": message, "timestamp": datetime.now().isoformat(),
+                    })
+                    state["chat_history"] = state["chat_history"][-50:]
+                    _save_state(state)
+                    response = _call_agent(message)
+                    self._json({"response": response, "timestamp": datetime.now().isoformat()})
+                    return
+
+                if parsed.path == "/api/tool":
+                    name = data.get("tool", "")
+                    action = data.get("action", "status")
+                    if not name:
+                        self._json({"error": "tool required"}, 400)
+                        return
+                    response = _call_tool(name, action)
+                    self._json({"response": response})
+                    return
+
+                if parsed.path == "/api/health":
+                    self._json({"status": "ok"})
+                    return
+
+                self._json({"error": "not found"}, 404)
 
             def log_message(self, format, *args):
                 pass
 
         def _run():
             try:
+                from http.server import HTTPServer
                 server = HTTPServer(("0.0.0.0", port), DashboardHandler)
                 server.serve_forever()
             except Exception:
@@ -255,7 +357,7 @@ def _start_dashboard(port):
 
         return (
             f"Dashboard started at http://localhost:{port}\n"
-            f"Open in browser to see the ERIS dashboard."
+            f"Chat y quick actions conectados al agente real de ERIS."
         )
     except Exception as e:
         return f"Error starting dashboard: {e}"

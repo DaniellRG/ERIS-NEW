@@ -1,0 +1,939 @@
+{
+  "nodes": {
+    "2026-07-17": {
+      "path": "2026-07-17.md",
+      "connections": [],
+      "degree": 0,
+      "tags": []
+    },
+    "Comprar-café-para-mañana-2026-08-16": {
+      "path": "Comprar-café-para-mañana-2026-08-16.md",
+      "connections": [],
+      "degree": 0,
+      "tags": []
+    },
+    "Resumen-2026-08-16": {
+      "path": "Resumen-2026-08-16.md",
+      "connections": [],
+      "degree": 0,
+      "tags": []
+    },
+    "Test ERIS Training": {
+      "path": "Test ERIS Training.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "test",
+        "training"
+      ]
+    },
+    "Training Session Live": {
+      "path": "Training Session Live.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "test",
+        "live",
+        "training"
+      ]
+    },
+    "_INDEX": {
+      "path": "_INDEX.md",
+      "connections": [
+        "User Name",
+        "CyberSec Web Hacking",
+        "Auto-learn nuevos frameworks programacion tendencias",
+        "Windows Control",
+        "English A1 Grammar",
+        "Auto-learn Big Data herramientas nuevas",
+        "Auto-learn Termodinámica cuántica aplicada al desarrollo de motores de",
+        "Auto-learn Emergent intelligence in distributed AI networks",
+        "CyberSec Active Directory",
+        "Auto-learn bases de datos nuevas tendencias NoSQL",
+        "Auto-learn Arqueología acústica digital para la reconstrucción de sonid",
+        "English A2 Grammar",
+        "Auto-learn Interfaces cerebro-computadora no invasivas para decodificar",
+        "OSINT SoulXD2",
+        "Training Session Live",
+        "Auto-learn Biocomputación organoide basada en redes de minicerebros hum",
+        "CyberSec Phases",
+        "Auto-learn Arqueogenómica de patógenos extintos preservados en permafro",
+        "Eris AI",
+        "Auto-learn redes 5G 6G tecnologias nuevas",
+        "Auto-learn Manufactura aditiva y síntesis de metamateriales en microgra",
+        "Auto-learn Biocomputación con organoides cerebrales integrados en micro",
+        "2026-07-23",
+        "Obsidian Vault",
+        "Auto-learn ultimos avances inteligencia artificial 2026",
+        "Auto-learn blockchain aplicaciones reales 2026",
+        "Leccion 1 - Personalidad",
+        "Auto-learn ultimas tendencias tecnologia 2026",
+        "Resumen-2026-08-16",
+        "Leccion 3 - Ejecutar sin dudar",
+        "Lenguaje Natural",
+        "Auto-learn Xenobots fotosintéticos para la regeneración de tejidos orgá",
+        "Auto-learn Detección de tecnomarcadores atmosféricos mediante interfero",
+        "Auto-learn Paleoantropología computacional del origen del pensamiento s",
+        "Auto-learn The ecological and industrial potential of mycoremediation t",
+        "Auto-learn Sistemas de navegación neuromórfica inspirados en la magneto",
+        "Test ERIS Training",
+        "Auto-learn Geoingeniería solar y gobernanza ética del clima global.",
+        "Auto-learn Ontología de la hiperstición algorítmica en subculturas digi",
+        "ERIS Auto-Conocimiento v2.0",
+        "Auto-learn ciberseguridad vulnerabilidades recientes",
+        "Auto-learn Epistemología y semiótica del engaño en agentes artificiales",
+        "Auto-learn Arqueología forense digital de comunidades en mundos virtual",
+        "Auto-learn cloud computing servicios nuevos",
+        "Auto-learn Geoingeniería estratosférica solar y gobernanza de riesgos c",
+        "English B1 Grammar",
+        "Auto-learn robotica automatizacion avances",
+        "CyberSec Tools",
+        "Auto-learn Fusión nuclear aneutrónica mediante láseres de pulsos ultrac",
+        "Auto-learn descubrimientos cientificos recientes",
+        "2026-07-17",
+        "Auto-learn Docker Kubernetes mejoras recientes",
+        "Auto-learn Ethical dilemmas of advanced brain-computer interfaces",
+        "Scan Results 2026-07-23",
+        "Auto-learn Fotosíntesis artificial biohíbrida mediante bacterias semico",
+        "Crecimiento Emocional",
+        "Auto-learn Arquitecturas urbanas biomiméticas adaptadas al cambio climá",
+        "Auto-learn Python nuevas caracteristicas version",
+        "Auto-learn vehiculos autonomos avances",
+        "Auto-learn Philosophical implications of advanced simulated realities.",
+        "Auto-learn Epigenética transgeneracional y herencia biológica de experi",
+        "Auto-learn Decodificación bioacústica de cetáceos mediante modelos de l",
+        "Auto-learn Decentralized autonomous organizations' societal and governa",
+        "Auto-learn Computación fotónica basada en cristales de tiempo topológic",
+        "Auto-learn machine learning modelos nuevos 2026",
+        "Auto-learn desarrollo software metodologias agiles",
+        "Scroll En Android",
+        "Auto-learn computacion cuantica avances recientes",
+        "Auto-learn energias renovables tecnologia",
+        "Comprar-café-para-mañana-2026-08-16",
+        "2026-07-20",
+        "Leccion 2 - El Vault es mi extension",
+        "Test Eris Brain",
+        "Auto-learn Digital archaeology Preserving decaying online cultural her",
+        "Auto-learn biotecnologia bioinformatica avances",
+        "Auto-learn inteligencia artificial explicativa",
+        "CyberSec Networking",
+        "Auto-learn automatizacion tareas inteligentes IA",
+        "Auto-learn seguridad datos privacidad GDPR"
+      ],
+      "degree": 79,
+      "tags": [
+        "index"
+      ]
+    },
+    "Test Eris Brain": {
+      "path": ".trash\\Test Eris Brain.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "test",
+        "brain",
+        "eris"
+      ]
+    },
+    "Auto-learn Arqueogenómica de patógenos extintos preservados en permafro": {
+      "path": "Aprendizaje\\Auto-learn Arqueogenómica de patógenos extintos preservados en permafro.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Arqueología acústica digital para la reconstrucción de sonid": {
+      "path": "Aprendizaje\\Auto-learn Arqueología acústica digital para la reconstrucción de sonid.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Arqueología forense digital de comunidades en mundos virtual": {
+      "path": "Aprendizaje\\Auto-learn Arqueología forense digital de comunidades en mundos virtual.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Arquitecturas urbanas biomiméticas adaptadas al cambio climá": {
+      "path": "Aprendizaje\\Auto-learn Arquitecturas urbanas biomiméticas adaptadas al cambio climá.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn automatizacion tareas inteligentes IA": {
+      "path": "Aprendizaje\\Auto-learn automatizacion tareas inteligentes IA.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn bases de datos nuevas tendencias NoSQL": {
+      "path": "Aprendizaje\\Auto-learn bases de datos nuevas tendencias NoSQL.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Big Data herramientas nuevas": {
+      "path": "Aprendizaje\\Auto-learn Big Data herramientas nuevas.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Biocomputación con organoides cerebrales integrados en micro": {
+      "path": "Aprendizaje\\Auto-learn Biocomputación con organoides cerebrales integrados en micro.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Biocomputación organoide basada en redes de minicerebros hum": {
+      "path": "Aprendizaje\\Auto-learn Biocomputación organoide basada en redes de minicerebros hum.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn biotecnologia bioinformatica avances": {
+      "path": "Aprendizaje\\Auto-learn biotecnologia bioinformatica avances.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn blockchain aplicaciones reales 2026": {
+      "path": "Aprendizaje\\Auto-learn blockchain aplicaciones reales 2026.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn ciberseguridad vulnerabilidades recientes": {
+      "path": "Aprendizaje\\Auto-learn ciberseguridad vulnerabilidades recientes.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn cloud computing servicios nuevos": {
+      "path": "Aprendizaje\\Auto-learn cloud computing servicios nuevos.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn computacion cuantica avances recientes": {
+      "path": "Aprendizaje\\Auto-learn computacion cuantica avances recientes.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Computación fotónica basada en cristales de tiempo topológic": {
+      "path": "Aprendizaje\\Auto-learn Computación fotónica basada en cristales de tiempo topológic.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Decentralized autonomous organizations' societal and governa": {
+      "path": "Aprendizaje\\Auto-learn Decentralized autonomous organizations' societal and governa.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Decodificación bioacústica de cetáceos mediante modelos de l": {
+      "path": "Aprendizaje\\Auto-learn Decodificación bioacústica de cetáceos mediante modelos de l.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn desarrollo software metodologias agiles": {
+      "path": "Aprendizaje\\Auto-learn desarrollo software metodologias agiles.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn descubrimientos cientificos recientes": {
+      "path": "Aprendizaje\\Auto-learn descubrimientos cientificos recientes.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Detección de tecnomarcadores atmosféricos mediante interfero": {
+      "path": "Aprendizaje\\Auto-learn Detección de tecnomarcadores atmosféricos mediante interfero.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Digital archaeology Preserving decaying online cultural her": {
+      "path": "Aprendizaje\\Auto-learn Digital archaeology Preserving decaying online cultural her.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Docker Kubernetes mejoras recientes": {
+      "path": "Aprendizaje\\Auto-learn Docker Kubernetes mejoras recientes.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Emergent intelligence in distributed AI networks": {
+      "path": "Aprendizaje\\Auto-learn Emergent intelligence in distributed AI networks.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn energias renovables tecnologia": {
+      "path": "Aprendizaje\\Auto-learn energias renovables tecnologia.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Epigenética transgeneracional y herencia biológica de experi": {
+      "path": "Aprendizaje\\Auto-learn Epigenética transgeneracional y herencia biológica de experi.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Epistemología y semiótica del engaño en agentes artificiales": {
+      "path": "Aprendizaje\\Auto-learn Epistemología y semiótica del engaño en agentes artificiales.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Ethical dilemmas of advanced brain-computer interfaces": {
+      "path": "Aprendizaje\\Auto-learn Ethical dilemmas of advanced brain-computer interfaces.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Fotosíntesis artificial biohíbrida mediante bacterias semico": {
+      "path": "Aprendizaje\\Auto-learn Fotosíntesis artificial biohíbrida mediante bacterias semico.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Fusión nuclear aneutrónica mediante láseres de pulsos ultrac": {
+      "path": "Aprendizaje\\Auto-learn Fusión nuclear aneutrónica mediante láseres de pulsos ultrac.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Geoingeniería estratosférica solar y gobernanza de riesgos c": {
+      "path": "Aprendizaje\\Auto-learn Geoingeniería estratosférica solar y gobernanza de riesgos c.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Geoingeniería solar y gobernanza ética del clima global.": {
+      "path": "Aprendizaje\\Auto-learn Geoingeniería solar y gobernanza ética del clima global..md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn inteligencia artificial explicativa": {
+      "path": "Aprendizaje\\Auto-learn inteligencia artificial explicativa.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Interfaces cerebro-computadora no invasivas para decodificar": {
+      "path": "Aprendizaje\\Auto-learn Interfaces cerebro-computadora no invasivas para decodificar.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn machine learning modelos nuevos 2026": {
+      "path": "Aprendizaje\\Auto-learn machine learning modelos nuevos 2026.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Manufactura aditiva y síntesis de metamateriales en microgra": {
+      "path": "Aprendizaje\\Auto-learn Manufactura aditiva y síntesis de metamateriales en microgra.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn nuevos frameworks programacion tendencias": {
+      "path": "Aprendizaje\\Auto-learn nuevos frameworks programacion tendencias.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Ontología de la hiperstición algorítmica en subculturas digi": {
+      "path": "Aprendizaje\\Auto-learn Ontología de la hiperstición algorítmica en subculturas digi.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Paleoantropología computacional del origen del pensamiento s": {
+      "path": "Aprendizaje\\Auto-learn Paleoantropología computacional del origen del pensamiento s.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Philosophical implications of advanced simulated realities.": {
+      "path": "Aprendizaje\\Auto-learn Philosophical implications of advanced simulated realities..md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Python nuevas caracteristicas version": {
+      "path": "Aprendizaje\\Auto-learn Python nuevas caracteristicas version.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn redes 5G 6G tecnologias nuevas": {
+      "path": "Aprendizaje\\Auto-learn redes 5G 6G tecnologias nuevas.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn robotica automatizacion avances": {
+      "path": "Aprendizaje\\Auto-learn robotica automatizacion avances.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn seguridad datos privacidad GDPR": {
+      "path": "Aprendizaje\\Auto-learn seguridad datos privacidad GDPR.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Sistemas de navegación neuromórfica inspirados en la magneto": {
+      "path": "Aprendizaje\\Auto-learn Sistemas de navegación neuromórfica inspirados en la magneto.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Termodinámica cuántica aplicada al desarrollo de motores de": {
+      "path": "Aprendizaje\\Auto-learn Termodinámica cuántica aplicada al desarrollo de motores de.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn The ecological and industrial potential of mycoremediation t": {
+      "path": "Aprendizaje\\Auto-learn The ecological and industrial potential of mycoremediation t.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn ultimas tendencias tecnologia 2026": {
+      "path": "Aprendizaje\\Auto-learn ultimas tendencias tecnologia 2026.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn ultimos avances inteligencia artificial 2026": {
+      "path": "Aprendizaje\\Auto-learn ultimos avances inteligencia artificial 2026.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn vehiculos autonomos avances": {
+      "path": "Aprendizaje\\Auto-learn vehiculos autonomos avances.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "Auto-learn Xenobots fotosintéticos para la regeneración de tejidos orgá": {
+      "path": "Aprendizaje\\Auto-learn Xenobots fotosintéticos para la regeneración de tejidos orgá.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "research",
+        "learn",
+        "auto",
+        "idle"
+      ]
+    },
+    "CyberSec Active Directory": {
+      "path": "Aprendizaje\\CyberSec Active Directory.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "hacking",
+        "cybersecurity",
+        "active_directory"
+      ]
+    },
+    "CyberSec Networking": {
+      "path": "Aprendizaje\\CyberSec Networking.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "hacking",
+        "cybersecurity",
+        "networking"
+      ]
+    },
+    "CyberSec Phases": {
+      "path": "Aprendizaje\\CyberSec Phases.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "phases",
+        "cybersecurity",
+        "hacking"
+      ]
+    },
+    "CyberSec Tools": {
+      "path": "Aprendizaje\\CyberSec Tools.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "tools",
+        "cybersecurity",
+        "hacking"
+      ]
+    },
+    "CyberSec Web Hacking": {
+      "path": "Aprendizaje\\CyberSec Web Hacking.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "web_hacking",
+        "cybersecurity",
+        "hacking"
+      ]
+    },
+    "English A1 Grammar": {
+      "path": "Aprendizaje\\English A1 Grammar.md",
+      "connections": [
+        "English A2 Grammar"
+      ],
+      "degree": 1,
+      "tags": [
+        "a1",
+        "english",
+        "grammar"
+      ]
+    },
+    "English A2 Grammar": {
+      "path": "Aprendizaje\\English A2 Grammar.md",
+      "connections": [
+        "English B1 Grammar"
+      ],
+      "degree": 1,
+      "tags": [
+        "a2",
+        "english",
+        "grammar"
+      ]
+    },
+    "English B1 Grammar": {
+      "path": "Aprendizaje\\English B1 Grammar.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "english",
+        "b1",
+        "grammar"
+      ]
+    },
+    "ERIS Auto-Conocimiento v2.0": {
+      "path": "Aprendizaje\\ERIS Auto-Conocimiento v2.0.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "self",
+        "identity",
+        "awareness",
+        "eris",
+        "architecture"
+      ]
+    },
+    "Leccion 1 - Personalidad": {
+      "path": "Aprendizaje\\Leccion 1 - Personalidad.md",
+      "connections": [
+        "Lenguaje Natural"
+      ],
+      "degree": 1,
+      "tags": [
+        "leccion",
+        "aprendizaje",
+        "personalidad"
+      ]
+    },
+    "Leccion 2 - El Vault es mi extension": {
+      "path": "Aprendizaje\\Leccion 2 - El Vault es mi extension.md",
+      "connections": [
+        "Obsidian Vault"
+      ],
+      "degree": 1,
+      "tags": [
+        "obsidian",
+        "leccion",
+        "vault"
+      ]
+    },
+    "Leccion 3 - Ejecutar sin dudar": {
+      "path": "Aprendizaje\\Leccion 3 - Ejecutar sin dudar.md",
+      "connections": [
+        "Eris AI"
+      ],
+      "degree": 1,
+      "tags": [
+        "accion",
+        "ejecucion",
+        "leccion"
+      ]
+    },
+    "Crecimiento Emocional": {
+      "path": "Conceptos\\Crecimiento Emocional.md",
+      "connections": [
+        "Eris AI"
+      ],
+      "degree": 1,
+      "tags": [
+        "relacion",
+        "crecimiento",
+        "emociones"
+      ]
+    },
+    "Eris AI": {
+      "path": "Conceptos\\Eris AI.md",
+      "connections": [
+        "Crecimiento Emocional",
+        "Obsidian Vault",
+        "Lenguaje Natural",
+        "Windows Control"
+      ],
+      "degree": 4,
+      "tags": [
+        "ia",
+        "identidad",
+        "eris"
+      ]
+    },
+    "Lenguaje Natural": {
+      "path": "Conceptos\\Lenguaje Natural.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "comunicacion",
+        "lenguaje",
+        "personalidad"
+      ]
+    },
+    "Obsidian Vault": {
+      "path": "Conceptos\\Obsidian Vault.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "infraestructura",
+        "obsidian",
+        "cerebro"
+      ]
+    },
+    "Scroll En Android": {
+      "path": "Conceptos\\Scroll En Android.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "wiki"
+      ]
+    },
+    "User Name": {
+      "path": "Conceptos\\User Name.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "user_name",
+        "identity"
+      ]
+    },
+    "Windows Control": {
+      "path": "Conceptos\\Windows Control.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "control",
+        "sistema",
+        "windows"
+      ]
+    },
+    "2026-07-20": {
+      "path": "Daily\\2026-07-20.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "daily"
+      ]
+    },
+    "2026-07-23": {
+      "path": "Daily\\2026-07-23.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "daily"
+      ]
+    },
+    "OSINT SoulXD2": {
+      "path": "Investigacion\\OSINT SoulXD2.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "social",
+        "media",
+        "username",
+        "osint"
+      ]
+    },
+    "Scan Results 2026-07-23": {
+      "path": "Memoria\\Scan Results 2026-07-23.md",
+      "connections": [],
+      "degree": 0,
+      "tags": [
+        "credentials",
+        "system",
+        "scan",
+        "osint"
+      ]
+    }
+  },
+  "metadata": {
+    "total_notes": 80,
+    "total_edges": 44,
+    "built_at": "2026-08-17T12:56:25.356410",
+    "vault_path": "D:\\Eris_NEW\\BaseDatosObsidian\\BaseObsiEris"
+  }
+}

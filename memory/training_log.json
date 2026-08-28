@@ -1,0 +1,1402 @@
+[
+  {
+    "time": "2026-08-16T13:24:57.964754",
+    "module": "screen_vision",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:57.992505",
+    "module": "smart_file_organizer",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.017985",
+    "module": "spreadsheet_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.047698",
+    "module": "task_planner",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.071935",
+    "module": "vision_guardian",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.099293",
+    "module": "visual_click",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.123918",
+    "module": "web_scraper",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.151517",
+    "module": "web_search",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.231827",
+    "module": "webfetch",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.261852",
+    "module": "youtube_video",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.290004",
+    "module": "lesson_1",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T13:24:58.331716",
+    "module": "lesson_2",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T13:24:58.372164",
+    "module": "lesson_3",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:03.801683",
+    "module": "feedback_record_positivo",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:03.828661",
+    "module": "feedback_record_negativo",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:03.863382",
+    "module": "feedback_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:03.888649",
+    "module": "feedback_style",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:03.916926",
+    "module": "mistake_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:03.950177",
+    "module": "mistake_record2",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:03.982591",
+    "module": "mistake_analysis",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:04.006722",
+    "module": "mistake_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:04.035820",
+    "module": "error_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:04.081843",
+    "module": "error_solution",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:04.123734",
+    "module": "error_find",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:04.150051",
+    "module": "error_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.352977",
+    "module": "prompt_learn",
+    "success": true,
+    "error": "",
+    "duration": 2.13
+  },
+  {
+    "time": "2026-08-16T14:50:06.379295",
+    "module": "prompt_rules",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.405766",
+    "module": "prompt_suffix",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.431843",
+    "module": "curriculum_init",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.457657",
+    "module": "curriculum_next",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.482515",
+    "module": "curriculum_complete",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.515531",
+    "module": "curriculum_focus",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:06.540590",
+    "module": "curriculum_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.567493",
+    "module": "dream_consolidate",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.600815",
+    "module": "dream_log",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:06.628595",
+    "module": "cap_record_ok",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:06.664689",
+    "module": "cap_record_fail",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:06.698349",
+    "module": "cap_overall",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:06.730827",
+    "module": "cap_weak",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:06.779184",
+    "module": "cap_format",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:08.036117",
+    "module": "autonomous_status",
+    "success": true,
+    "error": "",
+    "duration": 1.23
+  },
+  {
+    "time": "2026-08-16T14:50:12.843127",
+    "module": "meta_analyze",
+    "success": true,
+    "error": "",
+    "duration": 4.78
+  },
+  {
+    "time": "2026-08-16T14:50:12.868285",
+    "module": "meta_quick",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:12.896991",
+    "module": "confidence_single",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:12.925652",
+    "module": "confidence_multi",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:12.950346",
+    "module": "verifier_single",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:12.975891",
+    "module": "verifier_batch",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.002296",
+    "module": "graph_nodes",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.035624",
+    "module": "graph_nodes2",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:13.060877",
+    "module": "graph_edges",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.092421",
+    "module": "graph_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:13.117751",
+    "module": "graph_related",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.145993",
+    "module": "goal_create",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.179532",
+    "module": "goal_summary",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:13.206701",
+    "module": "goal_next",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.234461",
+    "module": "goal_milestone",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.261969",
+    "module": "scheduler_task",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.299045",
+    "module": "scheduler_reminder",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:13.330560",
+    "module": "scheduler_active",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:13.357616",
+    "module": "scheduler_reminders",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:13.383307",
+    "module": "scheduler_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:17.098036",
+    "module": "anomaly_sizes",
+    "success": true,
+    "error": "",
+    "duration": 3.68
+  },
+  {
+    "time": "2026-08-16T14:50:17.329968",
+    "module": "anomaly_code",
+    "success": true,
+    "error": "",
+    "duration": 0.2
+  },
+  {
+    "time": "2026-08-16T14:50:17.358055",
+    "module": "anomaly_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:17.384758",
+    "module": "bridge_save",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:17.418081",
+    "module": "bridge_resume",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:17.446503",
+    "module": "bridge_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:17.480421",
+    "module": "bridge_summary",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:17.523328",
+    "module": "profile_file",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:18.020145",
+    "module": "profile_project",
+    "success": true,
+    "error": "",
+    "duration": 0.46
+  },
+  {
+    "time": "2026-08-16T14:50:18.056292",
+    "module": "profile_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:18.094150",
+    "module": "analytics_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:18.136094",
+    "module": "analytics_patterns",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:18.170726",
+    "module": "analytics_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:19.142508",
+    "module": "resources_system",
+    "success": true,
+    "error": "",
+    "duration": 0.93
+  },
+  {
+    "time": "2026-08-16T14:50:24.264387",
+    "module": "resources_suggestions",
+    "success": true,
+    "error": "",
+    "duration": 5.08
+  },
+  {
+    "time": "2026-08-16T14:50:30.126609",
+    "module": "resources_format",
+    "success": true,
+    "error": "",
+    "duration": 5.82
+  },
+  {
+    "time": "2026-08-16T14:50:30.165196",
+    "module": "browser_control",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.200950",
+    "module": "computer_use_agent",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.236559",
+    "module": "document_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.280608",
+    "module": "emotional_state",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:30.316581",
+    "module": "file_monitor",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.352080",
+    "module": "file_organizer",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.388514",
+    "module": "human_mouse",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.526787",
+    "module": "image_analyzer",
+    "success": true,
+    "error": "",
+    "duration": 0.1
+  },
+  {
+    "time": "2026-08-16T14:50:30.572879",
+    "module": "inner_monologue",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.606842",
+    "module": "mouse_control",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.641476",
+    "module": "ollama_vision",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.676647",
+    "module": "presentation_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.718725",
+    "module": "screen_processor",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:30.758894",
+    "module": "screen_vision",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.793165",
+    "module": "smart_file_organizer",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.827580",
+    "module": "spreadsheet_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.865169",
+    "module": "task_planner",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.899475",
+    "module": "vision_guardian",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.934464",
+    "module": "visual_click",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:30.968820",
+    "module": "web_scraper",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:31.004924",
+    "module": "web_search",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:31.038805",
+    "module": "webfetch",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:31.075466",
+    "module": "youtube_video",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:31.112025",
+    "module": "lesson_1",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:31.162786",
+    "module": "lesson_2",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:31.214714",
+    "module": "lesson_3",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.265006",
+    "module": "feedback_record_positivo",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:35.311308",
+    "module": "feedback_record_negativo",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.354463",
+    "module": "feedback_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.394493",
+    "module": "feedback_style",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:35.429989",
+    "module": "mistake_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:35.474120",
+    "module": "mistake_record2",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.521347",
+    "module": "mistake_analysis",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.564248",
+    "module": "mistake_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:35.600563",
+    "module": "error_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:35.651806",
+    "module": "error_solution",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:35.695068",
+    "module": "error_find",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:35.733393",
+    "module": "error_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:38.926468",
+    "module": "prompt_learn",
+    "success": true,
+    "error": "",
+    "duration": 3.1
+  },
+  {
+    "time": "2026-08-16T14:50:38.960818",
+    "module": "prompt_rules",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:38.997314",
+    "module": "prompt_suffix",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.034945",
+    "module": "curriculum_init",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.069099",
+    "module": "curriculum_next",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.102934",
+    "module": "curriculum_complete",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.141642",
+    "module": "curriculum_focus",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.173615",
+    "module": "curriculum_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.207057",
+    "module": "dream_consolidate",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:39.239063",
+    "module": "dream_log",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.271986",
+    "module": "cap_record_ok",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.316677",
+    "module": "cap_record_fail",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.349381",
+    "module": "cap_overall",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.382243",
+    "module": "cap_weak",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:39.434580",
+    "module": "cap_format",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T14:50:40.651357",
+    "module": "autonomous_status",
+    "success": true,
+    "error": "",
+    "duration": 1.19
+  },
+  {
+    "time": "2026-08-16T14:50:47.453283",
+    "module": "meta_analyze",
+    "success": true,
+    "error": "",
+    "duration": 6.77
+  },
+  {
+    "time": "2026-08-16T14:50:47.478822",
+    "module": "meta_quick",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.509666",
+    "module": "confidence_single",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.533976",
+    "module": "confidence_multi",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.559313",
+    "module": "verifier_single",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.586905",
+    "module": "verifier_batch",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.612181",
+    "module": "graph_nodes",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.646254",
+    "module": "graph_nodes2",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:47.671319",
+    "module": "graph_edges",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.706112",
+    "module": "graph_stats",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:47.732452",
+    "module": "graph_related",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.759553",
+    "module": "goal_create",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.794736",
+    "module": "goal_summary",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:47.821226",
+    "module": "goal_next",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.847439",
+    "module": "goal_milestone",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.874301",
+    "module": "scheduler_task",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:47.907953",
+    "module": "scheduler_reminder",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:47.947444",
+    "module": "scheduler_active",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:47.973133",
+    "module": "scheduler_reminders",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:48.000486",
+    "module": "scheduler_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:51.689118",
+    "module": "anomaly_sizes",
+    "success": true,
+    "error": "",
+    "duration": 3.66
+  },
+  {
+    "time": "2026-08-16T14:50:51.915801",
+    "module": "anomaly_code",
+    "success": true,
+    "error": "",
+    "duration": 0.2
+  },
+  {
+    "time": "2026-08-16T14:50:51.941991",
+    "module": "anomaly_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:51.975583",
+    "module": "bridge_save",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.008116",
+    "module": "bridge_resume",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:52.034322",
+    "module": "bridge_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.063058",
+    "module": "bridge_summary",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.093874",
+    "module": "profile_file",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.575064",
+    "module": "profile_project",
+    "success": true,
+    "error": "",
+    "duration": 0.46
+  },
+  {
+    "time": "2026-08-16T14:50:52.599681",
+    "module": "profile_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.627339",
+    "module": "analytics_record",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:52.661346",
+    "module": "analytics_patterns",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:50:52.686852",
+    "module": "analytics_format",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:50:53.647416",
+    "module": "resources_system",
+    "success": true,
+    "error": "",
+    "duration": 0.93
+  },
+  {
+    "time": "2026-08-16T14:50:58.582597",
+    "module": "resources_suggestions",
+    "success": true,
+    "error": "",
+    "duration": 4.9
+  },
+  {
+    "time": "2026-08-16T14:51:04.523698",
+    "module": "resources_format",
+    "success": true,
+    "error": "",
+    "duration": 5.91
+  },
+  {
+    "time": "2026-08-16T14:51:04.550723",
+    "module": "browser_control",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.577676",
+    "module": "computer_use_agent",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.603249",
+    "module": "document_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.644341",
+    "module": "emotional_state",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:51:04.672074",
+    "module": "file_monitor",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.695988",
+    "module": "file_organizer",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.723101",
+    "module": "human_mouse",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.848524",
+    "module": "image_analyzer",
+    "success": true,
+    "error": "",
+    "duration": 0.1
+  },
+  {
+    "time": "2026-08-16T14:51:04.877690",
+    "module": "inner_monologue",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.903501",
+    "module": "mouse_control",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.935042",
+    "module": "ollama_vision",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.960834",
+    "module": "presentation_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:04.995822",
+    "module": "screen_processor",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:51:05.023167",
+    "module": "screen_vision",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.050697",
+    "module": "smart_file_organizer",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.075968",
+    "module": "spreadsheet_generator",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.104372",
+    "module": "task_planner",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.129923",
+    "module": "vision_guardian",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.156520",
+    "module": "visual_click",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.181916",
+    "module": "web_scraper",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.208763",
+    "module": "web_search",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.235348",
+    "module": "webfetch",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.261986",
+    "module": "youtube_video",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.290986",
+    "module": "lesson_1",
+    "success": true,
+    "error": "",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T14:51:05.336439",
+    "module": "lesson_2",
+    "success": true,
+    "error": "",
+    "duration": 0.01
+  },
+  {
+    "time": "2026-08-16T14:51:05.381057",
+    "module": "lesson_3",
+    "success": true,
+    "error": "",
+    "duration": 0.02
+  },
+  {
+    "time": "2026-08-16T15:05:35.466583",
+    "module": "shell_executor",
+    "success": false,
+    "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-16T15:21:20.997463",
+    "module": "video_analyzer",
+    "success": false,
+    "error": "Error getting info: No module named 'yt_dlp'",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-19T00:08:40.358474",
+    "module": "browser_unified",
+    "success": false,
+    "error": "Error: Page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'button:contains(\"Buscar con Google\")' is not a valid selector.\n    at query (<anonymous>:5448:41)\n    at <anonymous",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-19T10:58:57.460482",
+    "module": "file_controller",
+    "success": false,
+    "error": "Error leyendo archivo: [Errno 13] Permission denied: 'D:\\\\Prueba'",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-19T12:50:47.032741",
+    "module": "shell_executor",
+    "success": false,
+    "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"obsidian\" -ErrorAction Stop\n+",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-21T23:39:21.356894",
+    "module": "terminal_agent",
+    "success": false,
+    "error": "Error: [Errno 22] Invalid argument",
+    "duration": 0.0
+  },
+  {
+    "time": "2026-08-24T09:46:21.351987",
+    "module": "terminal_agent",
+    "success": false,
+    "error": "Error: [Errno 22] Invalid argument",
+    "duration": 0.0
+  }
+]

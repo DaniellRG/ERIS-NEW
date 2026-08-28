@@ -1,0 +1,20 @@
+{
+  "sequences": {
+    "file_read|file_write": {
+      "count": 3,
+      "contexts": [],
+      "last_seen": 1786899977.6805835
+    },
+    "file_write|shell": {
+      "count": 3,
+      "contexts": [],
+      "last_seen": 1786899977.6805851
+    },
+    "file_read|file_write|shell": {
+      "count": 3,
+      "contexts": [],
+      "last_seen": 1786899977.680587
+    }
+  },
+  "tool_combos": {}
+}

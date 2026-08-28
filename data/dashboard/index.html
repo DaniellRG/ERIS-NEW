@@ -124,12 +124,36 @@ function sendChat(){
   const input=document.getElementById('chatInput');
   const text=input.value.trim();if(!text)return;
   addMsg(text,true);input.value='';
-  setTimeout(()=>addMsg('[Dashboard] Mensaje enviado a ERIS: '+text,false),500);
+  addMsg('⏳ Pensando...',false);
+  fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})})
+    .then(r=>r.json())
+    .then(d=>{
+      const box=document.getElementById('chatBox');
+      if(box.lastChild && box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);
+      addMsg(d.response||'[sin respuesta]',false);
+    })
+    .catch(e=>{const box=document.getElementById('chatBox');if(box.lastChild&&box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);addMsg('[Error: '+e+']',false);});
 }
 function quickAction(tool,action){
-  addMsg('Running: '+tool+' ('+action+')',true);
-  setTimeout(()=>addMsg('[Quick] '+tool+': action "'+action+'" ejecutado',false),300);
+  addMsg('▶ '+tool+' ('+action+')',true);
+  addMsg('⏳ Ejecutando...',false);
+  fetch('/api/tool',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tool,action})})
+    .then(r=>r.json())
+    .then(d=>{
+      const box=document.getElementById('chatBox');
+      if(box.lastChild && box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);
+      addMsg(d.response||'[sin respuesta]',false);
+    })
+    .catch(e=>{const box=document.getElementById('chatBox');if(box.lastChild&&box.lastChild.textContent.startsWith('⏳'))box.removeChild(box.lastChild);addMsg('[Error: '+e+']',false);});
 }
+function refreshStatus(){
+  fetch('/api/status').then(r=>r.json()).then(d=>{
+    const dot=document.getElementById('statusDot');
+    const st=document.getElementById('statusText');
+    if(d.status==='ok'){dot.style.background='#4caf50';st.textContent='Online '+d.time;}else{st.textContent='Degraded';}
+  }).catch(()=>{});
+}
+setInterval(refreshStatus,5000);
 </script>
 </body>
 </html>

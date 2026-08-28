@@ -1,0 +1,11 @@
+[
+  {
+    "failure_type": "incomplete",
+    "root_cause": "Falta de claridad en la explicación",
+    "rule": "Utilizar analogías simples para explicar conceptos complejos",
+    "severity": "medium",
+    "created_at": 1786904601.296949,
+    "uses": 3,
+    "last_seen": 1786909838.9026532
+  }
+]

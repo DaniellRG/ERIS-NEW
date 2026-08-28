@@ -50,7 +50,9 @@ def memory_consolidate(parameters: dict = None, player=None) -> str:
         return _get_status()
     elif action == "auto":
         return _auto_consolidate()
-    return "Acciones: full, episodic, semantic, long_term, status, auto"
+    elif action == "deep":
+        return _consolidate_episodic_deep()
+    return "Acciones: full, episodic, semantic, long_term, status, auto, deep"
 
 
 def _consolidate_all() -> str:
@@ -93,6 +95,57 @@ def _clean_episodic() -> str:
     removed = original_count - len(cleaned)
     return "Episodic: {} → {} ({} removidos: vacíos, errores, viejos)".format(
         original_count, len(cleaned), removed)
+
+
+def _consolidate_episodic_deep() -> str:
+    """Consolidación profunda: agrupa episodios por tema y crea resúmenes
+    compactos que preservan la información importante sin el ruido."""
+    episodes = _load_json(_EPISODIC_FILE)
+    if not isinstance(episodes, list) or len(episodes) < 10:
+        return "Episodic: pocos episodios, no necesita consolidación profunda"
+
+    # Agrupar por contexto/tema
+    from collections import defaultdict
+    groups = defaultdict(list)
+    for ep in episodes:
+        ctx = ep.get("context", "general")
+        groups[ctx].append(ep)
+
+    consolidated = []
+    total_before = len(episodes)
+
+    for ctx, eps in groups.items():
+        if len(eps) <= 5:
+            consolidated.extend(eps)
+            continue
+
+        # Tomar los más recientes y los de mayor importancia
+        eps.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
+        keep = eps[:5]  # Mantener 5 recientes
+        rest = eps[5:]
+
+        # Consolidar el resto en un resumen
+        events = [e.get("event", "")[:200] for e in rest if e.get("event")]
+        if events:
+            summary_text = "Resumen de {} episodios previos en '{}': {}".format(
+                len(rest), ctx, "; ".join(events[:10]))
+            summary_ep = {
+                "id": f"consolidated_{ctx}_{int(time.time())}",
+                "event": summary_text,
+                "context": ctx,
+                "importance": 0.6,
+                "timestamp": time.time(),
+                "datetime": datetime.now().isoformat(),
+                "consolidated": True,
+                "original_count": len(rest),
+            }
+            keep.append(summary_ep)
+
+        consolidated.extend(keep)
+
+    _save_json(_EPISODIC_FILE, consolidated)
+    return "Episodic consolidación profunda: {} → {} episodios ({} grupos)".format(
+        total_before, len(consolidated), len(groups))
 
 
 def _clean_semantic() -> str:

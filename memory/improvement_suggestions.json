@@ -1,0 +1,64 @@
+[
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: type_error (5 veces)",
+    "detail": "TypeError: __init__() should return None, not 'NoneType'",
+    "code_action": null,
+    "timestamp": 1785684564.179188
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: attribute_error (5 veces)",
+    "detail": "AttributeError: 'NoneType' object has no attribute 'partition'",
+    "code_action": null,
+    "timestamp": 1785684564.179188
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: type_error (3 veces)",
+    "detail": "TypeError: __init__() should return None, not 'NoneType'",
+    "context": "  File \"C:\\Python314\\Lib\\asyncio\\futures.py\", line 323, in _set_result_unless_cancelled\n    fut.set_result(result)\n  File \"C:\\Python314\\Lib\\asyncio\\base_events.py\", line 831, in call_soon\n    handle = self._call_soon(callback, args, context)\n  File \"C:\\Python314\\Lib\\asyncio\\base_events.py\", line 847, in _call_soon\n    handle = events.Handle(callback, args, self, context)",
+    "code_action": null,
+    "timestamp": 1786037811.2843192
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: attribute_error (5 veces)",
+    "detail": "AttributeError: 'NoneType' object has no attribute 'partition'",
+    "context": "  File \"C:\\Python314\\Lib\\traceback.py\", line 1059, in __init__\n    self.stack = StackSummary._extract_from_extended_frame_gen(\n  File \"C:\\Python314\\Lib\\traceback.py\", line 506, in _extract_from_extended_frame_gen\n    f.line\n  File \"C:\\Python314\\Lib\\traceback.py\", line 379, in line\n    return self._lines.partition(\"\\n\")[0].strip()",
+    "code_action": null,
+    "timestamp": 1786037811.2843192
+  },
+  {
+    "type": "performance",
+    "severity": "media",
+    "title": "quality_drop",
+    "detail": "Calidad de respuestas bajando: 63% → 52% en las últimas 10 interacciones",
+    "code_action": null,
+    "timestamp": 1786551642.2475586
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: type_error (4 veces)",
+    "detail": "TypeError: __init__() should return None, not 'NoneType'",
+    "context": "  File \"C:\\Python314\\Lib\\asyncio\\timeouts.py\", line 127, in _on_timeout\n    self._task.cancel()\n  File \"C:\\Python314\\Lib\\asyncio\\base_events.py\", line 831, in call_soon\n    handle = self._call_soon(callback, args, context)\n  File \"C:\\Python314\\Lib\\asyncio\\base_events.py\", line 847, in _call_soon\n    handle = events.Handle(callback, args, self, context)",
+    "code_action": null,
+    "timestamp": 1787600558.4949932,
+    "count": 3
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: attribute_error (6 veces)",
+    "detail": "AttributeError: 'NoneType' object has no attribute 'partition'",
+    "context": "  File \"C:\\Python314\\Lib\\traceback.py\", line 1059, in __init__\n    self.stack = StackSummary._extract_from_extended_frame_gen(\n  File \"C:\\Python314\\Lib\\traceback.py\", line 506, in _extract_from_extended_frame_gen\n    f.line\n  File \"C:\\Python314\\Lib\\traceback.py\", line 379, in line\n    return self._lines.partition(\"\\n\")[0].strip()",
+    "code_action": null,
+    "timestamp": 1787600558.4949932,
+    "count": 3
+  }
+]

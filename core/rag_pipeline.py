@@ -18,6 +18,9 @@ _INDEX_LOG = _BASE / "data" / "rag_index.json"
 
 SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
 
+_EPISODIC_FILE = _BASE / "memory" / "episodic.json"
+_EPISODIC_INDEX_PREFIX = "episodic_chunk"
+
 # Lazy imports — ChromaDB may not be installed
 _chromadb = None
 
@@ -152,6 +155,90 @@ def _doc_id(path: Path) -> str:
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
+
+def index_vault(vault_path: str | Path | None = None, folders: str = "wiki,outputs,raw") -> str:
+    """
+    Indexa las notas Markdown del vault de Obsidian (obsidian_note) en ChromaDB.
+    Cada nota se guarda como un fragmento con fuente 'vault://<ruta-relativa>'.
+    folders: lista separada por coma de carpetas a indexar (raw, wiki, outputs,
+    y vacio = raiz). Default 'wiki,outputs,raw'. Usá folders='' (vacío) para
+    indexar también la raíz (daily notes).
+    """
+    import datetime as _dt
+
+    vault = Path(vault_path or (_BASE / "vault")).expanduser().resolve()
+    if not vault.exists():
+        return f"Vault no encontrado: {vault}"
+
+    wanted = [f.strip().strip("/") for f in folders.split(",") if f.strip()]
+
+    def _iter_files():
+        if not wanted:
+            yield from sorted(vault.rglob("*.md"))
+            return
+        if "" in wanted:
+            yield from sorted(vault.glob("*.md"))
+        for folder in wanted:
+            if not folder:
+                continue
+            d = vault / folder
+            if d.exists():
+                yield from sorted(d.glob("*.md"))
+
+    notes = sorted({p.resolve() for p in _iter_files()})
+    if not notes:
+        return f"No hay notas .md en el vault ({vault})."
+
+    collection = _get_collection()
+    indexed = 0
+    for path in notes:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        # Saltar archivos de convenciones
+        if path.stem in ("CLAUDE", "AGENTS", "_INDEX"):
+            continue
+        if not text.strip():
+            continue
+        rel = path.relative_to(vault).as_posix()
+        source = f"vault://{rel}"
+        title = path.stem
+        body = text
+        # Extraer frontmatter y body
+        if body.startswith("---"):
+            end = body.find("---", 3)
+            if end > 0:
+                body = body[end + 3:].lstrip("\n")
+        body = body.strip()
+        if not body:
+            body = f"# {title}"
+        chunks = _chunk_text(body)
+        if not chunks:
+            chunks = [body[:1000]]
+        # Remover chunks previos de esta nota
+        try:
+            collection.delete(where={"source": source})
+        except Exception:
+            pass
+        nid = hashlib.sha256(rel.encode()).hexdigest()[:16]
+        ids = [f"vault_{nid}_chunk_{i}" for i in range(len(chunks))]
+        metadatas = [{"source": source, "filename": rel, "title": title,
+                      "chunk": i, "kind": "vault"} for i in range(len(chunks))]
+        embeddings = [_get_embedding(c) for c in chunks]
+        collection.add(ids=ids, documents=chunks, metadatas=metadatas, embeddings=embeddings)
+        indexed += 1
+
+    return f"Vault indexado: {indexed} notas de {len(notes)} en RAG (fuente vault://)."
+
+
+def query_vault(query: str, top_k: int = 5) -> list[dict]:
+    """
+    Busqueda semantica restringida a notas del vault (fuente vault://).
+    """
+    hits = query_documents(query, top_k=top_k * 3)
+    return [h for h in hits if h.get("source", "").startswith("vault://")][:top_k]
+
 
 def index_document(path: str | Path) -> str:
     """
@@ -294,6 +381,169 @@ def clear_all() -> str:
     if _INDEX_LOG.exists():
         _INDEX_LOG.unlink()
     return "Índice de documentos eliminado por completo."
+
+
+def index_episodic(max_entries: int = 0) -> str:
+    """
+    Indexa la memoria episodica (memory/episodic.json) en ChromaDB.
+    Cada episodio se guarda como un fragmento con fuente 'episodic://<id>'.
+    max_entries > 0 limita a los N episodios mas recientes.
+    """
+    import datetime as _dt
+
+    if not _EPISODIC_FILE.exists():
+        return "No hay archivo de memoria episodica (memory/episodic.json)."
+
+    try:
+        entries = json.loads(_EPISODIC_FILE.read_text(encoding="utf-8"))
+    except Exception as e:
+        return f"Error leyendo memoria episodica: {e}"
+    if not isinstance(entries, list) or not entries:
+        return "Memoria episodica vacia."
+
+    def _when(e):
+        try:
+            return e.get("datetime") or e.get("timestamp") or ""
+        except Exception:
+            return ""
+    entries.sort(key=_when, reverse=True)
+    if max_entries and len(entries) > max_entries:
+        entries = entries[:max_entries]
+
+    collection = _get_collection()
+    new_chunks = 0
+    existing = set()
+    try:
+        # ids ya indexados de episodicos (prefix) para evitar duplicar
+        res = collection.get(ids=[], include=[])
+        all_ids = res.get("ids", []) if res else []
+        existing = {i for i in all_ids if i.startswith(_EPISODIC_INDEX_PREFIX + "_")}
+    except Exception:
+        pass
+
+    batch_ids, batch_docs, batch_meta, batch_emb = [], [], [], []
+    for e in entries:
+        eid = str(e.get("id", ""))
+        event = str(e.get("event", "")).strip()
+        if not event:
+            continue
+        doc_id = f"{_EPISODIC_INDEX_PREFIX}_{eid}"
+        if doc_id in existing:
+            continue
+        context = str(e.get("context", ""))[:100]
+        importance = float(e.get("importance", 0.5))
+        when = str(e.get("datetime") or "")[:19]
+        text = f"[Episodio {when} | contexto: {context}]\n{event}"
+        batch_ids.append(doc_id)
+        batch_docs.append(text)
+        batch_meta.append({"source": f"episodic://{eid}", "filename": "episodic.json",
+                           "context": context, "importance": importance,
+                           "when": when, "kind": "episodic"})
+        batch_emb.append(_get_embedding(event[:2000]))
+        new_chunks += 1
+        if len(batch_ids) >= 100:
+            collection.add(ids=batch_ids, documents=batch_docs,
+                           metadatas=batch_meta, embeddings=batch_emb)
+            batch_ids, batch_docs, batch_meta, batch_emb = [], [], [], []
+    if batch_ids:
+        collection.add(ids=batch_ids, documents=batch_docs,
+                       metadatas=batch_meta, embeddings=batch_emb)
+
+    total = len(entries)
+    return f"Memoria episodica indexada: {new_chunks} nuevos de {total} episodios"
+
+
+def compact_episodic(older_than_days: int = 30, keep_contexts: bool = True) -> str:
+    """
+    Compresion de memoria episodica: agrupa episodios antiguos (> N dias) y los
+    condensa en resumenes diarios/semanales consolidados que se guardan en
+    memory/compacted_episodic.json y se indexan en RAG.
+    """
+    import datetime as _dt
+    from collections import defaultdict
+
+    if not _EPISODIC_FILE.exists():
+        return "No hay memoria episodica."
+    try:
+        entries = json.loads(_EPISODIC_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return "Error leyendo memoria episodica."
+
+    cutoff = _dt.datetime.now() - _dt.timedelta(days=older_than_days)
+    old, fresh = [], []
+    for e in entries:
+        try:
+            when = _dt.datetime.fromisoformat(str(e.get("datetime", "")))
+        except Exception:
+            try:
+                when = _dt.datetime.fromtimestamp(float(e.get("timestamp", 0)))
+            except Exception:
+                fresh.append(e)
+                continue
+        (old if when < cutoff else fresh).append(e)
+
+    if not old:
+        return f"No hay episodios mayores a {older_than_days} dias para comprimir."
+
+    # Agrupar por dia
+    by_day = defaultdict(list)
+    for e in old:
+        try:
+            day = str(e.get("datetime", ""))[:10]
+        except Exception:
+            day = "desconocido"
+        by_day[day].append(e)
+
+    _COMPACT_DIR = _BASE / "memory"
+    compact_file = _COMPACT_DIR / "compacted_episodic.json"
+    existing = {}
+    if compact_file.exists():
+        try:
+            existing = json.loads(compact_file.read_text(encoding="utf-8"))
+        except Exception:
+            existing = {}
+
+    summary_ids = []
+    for day in sorted(by_day):
+        day_entries = by_day[day]
+        texts = [str(e.get("event", "")).strip() for e in day_entries if str(e.get("event", "")).strip()]
+        # Consolidar: unir con tope de chars para no explotar
+        combined = " ".join(texts)
+        combined = combined[:2500]
+        if not combined:
+            continue
+        summary_id = f"compact_{day}"
+        existing[summary_id] = {
+            "summary": combined,
+            "day": day,
+            "entries": len(day_entries),
+            "compacted_at": _dt.datetime.now().isoformat(),
+        }
+        summary_ids.append((summary_id, combined, day))
+
+    compact_file.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Indexar resumenes en RAG
+    indexed = 0
+    try:
+        collection = _get_collection()
+        for sid, text, day in summary_ids:
+            doc_id = f"episodic_compact_{sid}"
+            meta = {"source": f"episodic_compact://{sid}", "filename": "compacted_episodic.json",
+                    "when": day, "kind": "episodic_compact"}
+            try:
+                collection.delete(where={"source": f"episodic_compact://{sid}"})
+            except Exception:
+                pass
+            collection.add(ids=[doc_id], documents=[f"[Resumen episodico {day}]\n{text}"],
+                           metadatas=[meta], embeddings=[_get_embedding(text[:2000])])
+            indexed += 1
+    except Exception:
+        pass
+
+    return (f"Memoria episodica comprimida: {len(summary_ids)} resumenes diarios de "
+            f"{len(old)} episodios antiguos ({older_than_days}+ dias). "
+            f"Indexados en RAG: {indexed}. Guardado en memory/compacted_episodic.json")
 
 
 def stats() -> dict:

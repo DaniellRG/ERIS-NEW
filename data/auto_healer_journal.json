@@ -1,0 +1,41 @@
+{
+  "entries": [
+    {
+      "error_type": "ModuleNotFoundError",
+      "message": "No module named core.bar",
+      "file": "",
+      "line": 0,
+      "timestamp": "2026-08-17T12:55:21.631546",
+      "suggestions": [
+        "Modulo 'core.bar' no encontrado.",
+        "Intentar: pip install core",
+        "No se encontro como modulo local en D:\\Eris_Source.",
+        "Modulo 'core.bar' parece ser parte del proyecto. Verificar que el archivo existe y tiene syntax correcta."
+      ],
+      "fix_applied": false,
+      "fix_success": false,
+      "occurrence_count": 1
+    },
+    {
+      "error_type": "ModuleNotFoundError",
+      "message": "No module named core.bar",
+      "file": "",
+      "line": 0,
+      "timestamp": "2026-08-17T12:55:21.631546",
+      "suggestions": [
+        "Modulo 'core.bar' no encontrado.",
+        "Intentar: pip install core",
+        "No se encontro como modulo local en D:\\Eris_Source.",
+        "Modulo 'core.bar' parece ser parte del proyecto. Verificar que el archivo existe y tiene syntax correcta."
+      ],
+      "fix_applied": false,
+      "fix_success": false,
+      "occurrence_count": 1
+    }
+  ],
+  "stats": {
+    "total_analyzed": 1,
+    "total_fixed": 0,
+    "total_suggested": 0
+  }
+}

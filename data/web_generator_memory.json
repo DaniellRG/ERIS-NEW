@@ -1,0 +1,301 @@
+{
+  "used_palettes": [
+    "amber-warm",
+    "blue-ocean",
+    "purple-cosmic",
+    "sky",
+    "cyan-deep",
+    "sunset",
+    "teal-aurora",
+    "pink-rose",
+    "magenta",
+    "emerald-forest",
+    "ruby",
+    "violet-neon",
+    "lime",
+    "purple-cosmic",
+    "magenta",
+    "sky",
+    "pink-rose"
+  ],
+  "used_fonts": [
+    "Space+Grotesk",
+    "Inter",
+    "Poppins",
+    "Sora",
+    "Outfit",
+    "Syne",
+    "Clash+Grotesk",
+    "Epilogue",
+    "Plus+Jakarta+Sans",
+    "Cabinet+Grotesk",
+    "Figtree",
+    "Archivo",
+    "Manrope",
+    "Poppins",
+    "Inter",
+    "Be+Vietnam+Pro",
+    "Outfit"
+  ],
+  "used_effects": [],
+  "used_hero_layouts": [
+    "center",
+    "left",
+    "gradient_radial",
+    "split",
+    "minimal",
+    "center",
+    "left",
+    "gradient_radial",
+    "split",
+    "minimal",
+    "center",
+    "left",
+    "gradient_radial",
+    "split",
+    "minimal",
+    "center",
+    "left"
+  ],
+  "pages_created": 17,
+  "history": [
+    {
+      "id": "948683c0",
+      "title": "NovaTech",
+      "palette": "amber-warm",
+      "font": "Space+Grotesk",
+      "hero": "center",
+      "category": "tech",
+      "features": [
+        "Seguridad Total",
+        "Colaboracion",
+        "Conectividad"
+      ],
+      "timestamp": 1785263414.483618
+    },
+    {
+      "id": "d3767a68",
+      "title": "CafeAroma",
+      "palette": "blue-ocean",
+      "font": "Inter",
+      "hero": "left",
+      "category": "food",
+      "features": [
+        "Sostenibilidad",
+        "Ingredientes Frescos",
+        "Recetas Originales"
+      ],
+      "timestamp": 1785263414.6132493
+    },
+    {
+      "id": "4adf18a8",
+      "title": "FitZone",
+      "palette": "purple-cosmic",
+      "font": "Poppins",
+      "hero": "gradient_radial",
+      "category": "fitness",
+      "features": [
+        "Salud Integral",
+        "Nutricion",
+        "Competencias"
+      ],
+      "timestamp": 1785263414.9427927
+    },
+    {
+      "id": "6c652ae5",
+      "title": "ArteVivo",
+      "palette": "sky",
+      "font": "Sora",
+      "hero": "split",
+      "category": "art",
+      "features": [
+        "Talleres Creativos",
+        "Curaduria Experta",
+        "Visitas Guiadas"
+      ],
+      "timestamp": 1785263415.2512405
+    },
+    {
+      "id": "c444cb5e",
+      "title": "ERIS AI",
+      "palette": "cyan-deep",
+      "font": "Outfit",
+      "hero": "minimal",
+      "category": "tech",
+      "features": [
+        "Seguridad Total",
+        "Conectividad",
+        "Escalabilidad"
+      ],
+      "timestamp": 1785263477.899242
+    },
+    {
+      "id": "7dbabbc5",
+      "title": "ERIS AI",
+      "palette": "sunset",
+      "font": "Syne",
+      "hero": "center",
+      "category": "tech",
+      "features": [
+        "IA Avanzada",
+        "Colaboracion",
+        "Automatizacion"
+      ],
+      "timestamp": 1785263567.844278
+    },
+    {
+      "id": "a24f76eb",
+      "title": "ERIS AI",
+      "palette": "teal-aurora",
+      "font": "Clash+Grotesk",
+      "hero": "left",
+      "category": "tech",
+      "features": [
+        "Escalabilidad",
+        "Conectividad",
+        "IA Avanzada"
+      ],
+      "timestamp": 1785263761.760826
+    },
+    {
+      "id": "c562aa4d",
+      "title": "ERIS AI",
+      "palette": "pink-rose",
+      "font": "Epilogue",
+      "hero": "gradient_radial",
+      "category": "tech",
+      "features": [
+        "Rendimiento",
+        "Seguridad Total",
+        "Analitica"
+      ],
+      "timestamp": 1785263776.2061846
+    },
+    {
+      "id": "57185a8a",
+      "title": "El Barco de Teseo",
+      "palette": "magenta",
+      "font": "Plus+Jakarta+Sans",
+      "hero": "split",
+      "category": "custom",
+      "features": [
+        "Disponibilidad Total",
+        "Calidad Premium",
+        "Confianza y Transparencia"
+      ],
+      "timestamp": 1785264011.4322276
+    },
+    {
+      "id": "78e0c243",
+      "title": "Peluquería Stylos",
+      "palette": "emerald-forest",
+      "font": "Cabinet+Grotesk",
+      "hero": "minimal",
+      "category": "architecture",
+      "features": [
+        "Diseno Moderno",
+        "Gestion de Permisos",
+        "Planos 3D"
+      ],
+      "timestamp": 1785343428.3462691
+    },
+    {
+      "id": "56988177",
+      "title": "Mi Pagina Web",
+      "palette": "ruby",
+      "font": "Figtree",
+      "hero": "center",
+      "category": "tech",
+      "features": [
+        "Integracion Total",
+        "IA Avanzada",
+        "Seguridad Total"
+      ],
+      "timestamp": 1785389997.947468
+    },
+    {
+      "id": "8aab4dd7",
+      "title": "Mi Pagina Web",
+      "palette": "violet-neon",
+      "font": "Archivo",
+      "hero": "left",
+      "category": "custom",
+      "features": [
+        "Atencion Personalizada",
+        "Innovacion Constante",
+        "Calidad Premium"
+      ],
+      "timestamp": 1785389998.1236596
+    },
+    {
+      "id": "60f97f2c",
+      "title": "Peluquería Glamour Style",
+      "palette": "lime",
+      "font": "Manrope",
+      "hero": "gradient_radial",
+      "category": "fashion",
+      "features": [
+        "Club Exclusivo",
+        "Moda Sostenible",
+        "Envio Mundial"
+      ],
+      "timestamp": 1786114714.0470946
+    },
+    {
+      "id": "1caa8858",
+      "title": "Peluquería Glamour Style V2",
+      "palette": "purple-cosmic",
+      "font": "Poppins",
+      "hero": "split",
+      "category": "fashion",
+      "features": [
+        "Envio Mundial",
+        "Diseno Exclusivo",
+        "Taller a Medida"
+      ],
+      "timestamp": 1786114748.6051888
+    },
+    {
+      "id": "e6203f4e",
+      "title": "Peluquería Glamour Style V3",
+      "palette": "magenta",
+      "font": "Inter",
+      "hero": "minimal",
+      "category": "fashion",
+      "features": [
+        "Moda Sostenible",
+        "Taller a Medida",
+        "Club Exclusivo"
+      ],
+      "timestamp": 1786114804.15359
+    },
+    {
+      "id": "03a4f919",
+      "title": "White Mirror Lab - Descargar",
+      "palette": "sky",
+      "font": "Be+Vietnam+Pro",
+      "hero": "center",
+      "category": "custom",
+      "features": [
+        "Equipo Experto",
+        "Innovacion Constante",
+        "Calidad Premium"
+      ],
+      "timestamp": 1786202987.2087874
+    },
+    {
+      "id": "cb134598",
+      "title": "Prueba Web Generator",
+      "palette": "pink-rose",
+      "font": "Outfit",
+      "hero": "left",
+      "category": "custom",
+      "features": [
+        "Atencion Personalizada",
+        "Disponibilidad Total",
+        "Confianza y Transparencia"
+      ],
+      "timestamp": 1786203367.7663567
+    }
+  ]
+}

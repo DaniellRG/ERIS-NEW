@@ -1,109 +1,63 @@
 {
-  "current_topic": null,
+  "current_topic": "mejora de sistemas de memoria de Eris",
   "recent_entities": [
     {
-      "name": "Estamos",
-      "type": "entity",
-      "added_at": 1786122551.2261755
-    },
-    {
-      "name": "Alkomprar",
-      "type": "entity",
-      "added_at": 1786126842.9237354
-    },
-    {
-      "name": "Alkomprar**",
-      "type": "entity",
-      "added_at": 1786126842.9247634
-    },
-    {
-      "name": "Aniversario",
-      "type": "entity",
-      "added_at": 1786126842.9365363
-    },
-    {
-      "name": "Compratecnologíacon",
-      "type": "entity",
-      "added_at": 1786127958.0166633
-    },
-    {
-      "name": "Crédito",
-      "type": "entity",
-      "added_at": 1786127958.0171404
-    },
-    {
-      "name": "NASA",
-      "type": "entity",
-      "added_at": 1786127966.9635966
-    },
-    {
-      "name": "Ciencia**",
-      "type": "entity",
-      "added_at": 1786127966.9642508
-    },
-    {
-      "name": "Últimas",
-      "type": "entity",
-      "added_at": 1786127966.964591
-    },
-    {
-      "name": "Explora",
-      "type": "entity",
-      "added_at": 1786127966.9804544
-    },
-    {
-      "name": "Compra",
-      "type": "entity",
-      "added_at": 1786152291.666314
-    },
-    {
-      "name": "Descuentos",
-      "type": "entity",
-      "added_at": 1786152291.680025
-    },
-    {
-      "name": "Alkomprar.",
-      "type": "entity",
-      "added_at": 1786152291.694851
-    },
-    {
-      "name": "Encuentra",
-      "type": "entity",
-      "added_at": 1786154113.6640143
-    },
-    {
-      "name": "Ahorra",
-      "type": "entity",
-      "added_at": 1786154113.6648366
-    },
-    {
-      "name": "Tecnologia",
-      "type": "entity",
-      "added_at": 1786200568.9638538
-    },
-    {
-      "name": "Aprendi",
-      "type": "entity",
-      "added_at": 1786200577.9124928
-    },
-    {
-      "name": "Resultados",
-      "type": "entity",
-      "added_at": 1786200577.9128187
-    },
-    {
       "name": "Daniel",
-      "type": "entity",
-      "added_at": 1786201823.1467113
+      "type": "person",
+      "added_at": 1787245000
     },
     {
-      "name": "ERIS",
-      "type": "entity",
-      "added_at": 1786201823.147143
+      "name": "Eris",
+      "type": "self",
+      "added_at": 1787245000
+    },
+    {
+      "name": "NeuroSpheres",
+      "type": "system",
+      "added_at": 1787245113
+    },
+    {
+      "name": "Neural Bridge",
+      "type": "system",
+      "added_at": 1787245000
+    },
+    {
+      "name": "Emotional RL",
+      "type": "system",
+      "added_at": 1787245000
+    },
+    {
+      "name": "Obsidian",
+      "type": "tool",
+      "added_at": 1787245000
+    },
+    {
+      "name": "Santa Marta",
+      "type": "location",
+      "added_at": 1784000000
+    },
+    {
+      "name": "Inteligencia Artificial",
+      "type": "concept",
+      "added_at": 1785092785
+    },
+    {
+      "name": "Biocomputacion",
+      "type": "concept",
+      "added_at": 1786913739
+    },
+    {
+      "name": "Epigenetica",
+      "type": "concept",
+      "added_at": 1786512036
     }
   ],
-  "active_goals": [],
+  "active_goals": [
+    "Mejorar calidad de memoria y reflexion",
+    "Hacer que NeuroSpheres crezca con interacciones reales",
+    "Integrar modulos cognitivos en conversaciones"
+  ],
   "conversation_turns": [],
-  "user_intent": null,
-  "last_updated": 1784916076.4263458
+  "user_intent": "mejorar a Eris",
+  "last_updated": 1787245000
 }

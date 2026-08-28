@@ -55,6 +55,10 @@ def file_controller(parameters: dict, player=None) -> str:
     new_text = parameters.get("new_text", "")
     mode = parameters.get("mode", "replace")
     confirm = parameters.get("confirm", False)
+    offset = parameters.get("offset", None)
+    limit = parameters.get("limit", None)
+    pattern = parameters.get("pattern", "")
+    glob_pattern = parameters.get("glob_pattern", "")
 
     if not action:
         return "Error: Se requiere 'action'."
@@ -65,25 +69,32 @@ def file_controller(parameters: dict, player=None) -> str:
         if action == "list":
             return _list_dir(resolved_path, count)
         elif action == "create_folder":
-            return _create_folder(resolved_path)
+            return _log_mut("create_folder", resolved_path, _create_folder(resolved_path))
         elif action == "create_file":
-            return _create_file(resolved_path, content)
+            return _log_mut("create_file", resolved_path, _create_file(resolved_path, content))
         elif action == "delete":
-            return _delete(resolved_path, confirm)
+            return _log_mut("delete", resolved_path, _delete(resolved_path, confirm))
         elif action == "move":
-            return _move(resolved_path, resolve_path(destination_raw))
+            return _log_mut("move", resolved_path, _move(resolved_path, resolve_path(destination_raw)), resolve_path(destination_raw))
         elif action == "copy":
-            return _copy(resolved_path, resolve_path(destination_raw))
+            return _log_mut("copy", resolved_path, _copy(resolved_path, resolve_path(destination_raw)), resolve_path(destination_raw))
         elif action == "rename":
-            return _rename(resolved_path, new_name)
+            return _log_mut("rename", resolved_path, _rename(resolved_path, new_name), new_name)
         elif action == "read":
-            return _read_file(resolved_path)
+            return _read_file(resolved_path, offset, limit)
+        elif action == "grep":
+            return _grep(resolved_path, pattern)
         elif action == "write":
-            return _write_file(resolved_path, content)
+            return _log_mut("write", resolved_path, _write_file(resolved_path, content))
         elif action == "edit":
-            return _edit_file(resolved_path, old_text, new_text, mode)
+            return _log_mut("edit", resolved_path, _edit_file(resolved_path, old_text, new_text, mode))
+        elif action == "journal":
+            from core.edit_journal import recent as _jrecent
+            return _jrecent(int(count or 20))
         elif action == "find":
             return _find_file(name, extension, resolved_path or os.path.expanduser("~"))
+        elif action == "glob":
+            return _glob_files(resolved_path or os.path.expanduser("~"), glob_pattern)
         elif action == "largest":
             return _largest_files(resolved_path or "C:\\", count)
         elif action == "disk_usage":
@@ -178,26 +189,81 @@ def _rename(path: str, new_name: str) -> str:
     return f"Renombrado: {os.path.basename(path)} → {new_name}"
 
 
-def _read_file(path: str) -> str:
+def _read_file(path: str, offset=None, limit=None) -> str:
     if not os.path.exists(path):
         return f"Error: '{path}' no existe."
-    if os.path.getsize(path) > 5 * 1024 * 1024:
-        return f"Error: Archivo muy grande ({os.path.getsize(path) / (1024**2):.1f} MB). Usá un lector específico."
+    size = os.path.getsize(path)
+    if size > 5 * 1024 * 1024:
+        return f"Error: Archivo muy grande ({size / (1024**2):.1f} MB). Usá offset/limit para leerlo por partes."
     try:
         with open(path, "r", encoding="utf-8", errors="replace") as f:
-            text = f.read(10000)
-        if os.path.getsize(path) > 10000:
-            text += f"\n\n... [truncado, total: {os.path.getsize(path)} bytes]"
-        return text
+            lines = f.readlines()
     except Exception as e:
         return f"Error leyendo archivo: {e}"
+
+    total = len(lines)
+
+    if offset is not None or limit is not None:
+        start = int(offset) if offset is not None else 0
+        count = int(limit) if limit is not None else 50
+        start = max(0, start - 1)
+        chunk = lines[start:start + count]
+        out = "".join(
+            f"{i + 1}: {ln}" for i, ln in enumerate(chunk, start=start)
+        )
+        more = " (más líneas disponibles: usá offset=...) " if start + count < total else ""
+        return f"Archivo '{path}' ({total} líneas). Líneas {start + 1}-{min(start + count, total)}:{more}\n" + out
+
+    if total > 250:
+        head = "".join(f"{i + 1}: {ln}" for i, ln in enumerate(lines[:250], start=1))
+        return f"Archivo '{path}' ({total} líneas). Mostrando primeras 250: usá offset/limit para ver más.\n" + head
+
+    return "".join(f"{i + 1}: {ln}" for i, ln in enumerate(lines, start=1))
+
+
+def _grep(path: str, pattern: str) -> str:
+    """Busca un patrón en un archivo o directorio y devuelve SOLO las líneas que coinciden (file:line)."""
+    if not pattern:
+        return "Error: se requiere 'pattern' para grep."
+    try:
+        rx = re.compile(pattern, re.IGNORECASE)
+    except re.error as e:
+        return f"Error en el patrón regex: {e}"
+
+    matches = []
+    if os.path.isdir(path):
+        targets = [os.path.join(root, f) for root, _, files in os.walk(path)
+                   for f in files if not f.startswith(".")]
+        targets = [t for t in targets if t.lower().endswith((".py", ".js", ".ts", ".tsx", ".json", ".md", ".txt", ".html", ".css", ".bat", ".ps1", ".sh"))][:2000]
+    else:
+        targets = [path]
+
+    for target in targets:
+        try:
+            with open(target, "r", encoding="utf-8", errors="replace") as f:
+                for ln_no, line in enumerate(f, start=1):
+                    if rx.search(line):
+                        matches.append(f"{target}:{ln_no}: {line.rstrip()[:160]}")
+                        if len(matches) >= 60:
+                            break
+        except Exception:
+            continue
+        if len(matches) >= 60:
+            break
+
+    if not matches:
+        return f"Sin coincidencias para /{pattern}/ en {path}."
+    return f"Coincidencias de /{pattern}/ ({len(matches)}):\n" + "\n".join(matches)
 
 
 def _write_file(path: str, content: str) -> str:
     os.makedirs(os.path.dirname(path) if os.path.dirname(path) else ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content or "")
-    return f"Archivo escrito: {path} ({len(content or '')} caracteres)"
+    result = f"Archivo escrito: {path} ({len(content or '')} caracteres)"
+    if path.lower().endswith(".py"):
+        result += _pycheck(path)
+    return result
 
 
 def _edit_file(path: str, old_text: str, new_text: str, mode: str = "replace") -> str:
@@ -222,7 +288,29 @@ def _edit_file(path: str, old_text: str, new_text: str, mode: str = "replace") -
 
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-    return f"Archivo editado ({mode}): {path}"
+    result = f"Archivo editado ({mode}): {path}"
+    if path.lower().endswith(".py"):
+        result += _pycheck(path)
+    return result
+
+
+def _pycheck(path: str) -> str:
+    try:
+        import py_compile
+        py_compile.compile(path, doraise=True)
+        return "\n[PY_COMPILE] ✅ Sintaxis válida."
+    except py_compile.PyCompileError as e:
+        return f"\n[PY_COMPILE] ⚠️ ERROR DE SINTAXIS: {str(e)[:300]}"
+
+
+def _log_mut(action: str, path: str, result: str, extra: str = "") -> str:
+    try:
+        from core.edit_journal import log as _jlog
+        detail = extra if extra else str(result).split("\n")[0][:80]
+        _jlog(action, path, detail)
+    except Exception:
+        pass
+    return result
 
 
 def _find_file(name: str, extension: str, search_path: str) -> str:
@@ -245,6 +333,31 @@ def _find_file(name: str, extension: str, search_path: str) -> str:
     lines = [f"Encontrados {len(results)} archivos:"]
     for r in results[:15]:
         lines.append(f"  {r}")
+    return "\n".join(lines)
+
+
+def _glob_files(search_path: str, glob_pattern: str) -> str:
+    """Búsqueda de archivos por patrón glob recursivo (ej: **/*.py, **/*.log)."""
+    if not glob_pattern:
+        return "Error: Se requiere 'glob_pattern' (ej: **/*.py)."
+    try:
+        matches = glob.glob(os.path.join(search_path, glob_pattern), recursive=True)
+    except Exception as e:
+        return f"Error: patrón inválido: {e}"
+    if not matches:
+        return f"No se encontraron archivos con '{glob_pattern}' en {search_path}."
+    if len(matches) > 60:
+        lines = [f"Encontrados {len(matches)} archivos (mostrando 60):"]
+        shown = matches[:60]
+    else:
+        lines = [f"Encontrados {len(matches)} archivos:"]
+        shown = matches
+    for m in shown:
+        try:
+            rel = os.path.relpath(m, search_path)
+        except Exception:
+            rel = m
+        lines.append(f"  {rel}")
     return "\n".join(lines)
 
 

@@ -5,6 +5,37 @@ from pathlib import Path
 from PyPDF2 import PdfReader, PdfWriter
 
 
+def _normalize_params(parameters: dict | None) -> dict:
+    """Alias de parámetros para alinear la declaración con la implementación."""
+    params = dict(parameters or {})
+    if "path" not in params and params.get("file_path"):
+        params["path"] = params["file_path"]
+    if "output" not in params and params.get("output_path"):
+        params["output"] = params["output_path"]
+    if "fields" not in params and params.get("form_data"):
+        params["fields"] = params["form_data"]
+    return params
+
+
+def pdf_editor(parameters: dict = None, player=None) -> str:
+    """Dispatcher: enruta por action a la función correcta (read/merge/split/fill/info)."""
+    params = _normalize_params(parameters)
+    action = str(params.get("action", "read")).lower().strip()
+    if action in ("read", "leer"):
+        return read_pdf(params, player)
+    if action in ("merge", "unir", "fusion"):
+        return merge_pdfs(params, player)
+    if action in ("split", "dividir"):
+        return split_pdf(params, player)
+    if action in ("fill_form", "fill", "llenar"):
+        return fill_form(params, player)
+    if action in ("info", "metadata"):
+        return pdf_info(params, player)
+    if action in ("extract_images",):
+        return extract_images(params, player)
+    return f"Accion '{action}' desconocida. Usa: read, merge, split, fill_form, extract_images, info."
+
+
 def _get_pdf_path(path: str) -> str:
     if os.path.isfile(path):
         return path
@@ -175,6 +206,59 @@ def fill_form(parameters: dict = None, player=None) -> str:
         return f"Formulario rellenado: {out_path}"
     except Exception as e:
         return f"Error al rellenar formulario: {e}"
+
+
+def extract_images(parameters: dict = None, player=None) -> str:
+    """Extrae las imagenes de un PDF a una carpeta (PNG/JPG segun su formato)."""
+    params = parameters or {}
+    path = _get_pdf_path(params.get("path", ""))
+    if not os.path.isfile(path):
+        return f"Archivo no encontrado: {path}"
+
+    out_dir = params.get("output", "")
+    if not out_dir:
+        base = os.path.splitext(path)[0]
+        out_dir = f"{base}_imagenes"
+    os.makedirs(out_dir, exist_ok=True)
+
+    try:
+        reader = PdfReader(path)
+        extracted = 0
+        for pno, page in enumerate(reader.pages):
+            if "/Resources" not in page or "/XObject" not in page["/Resources"]:
+                continue
+            for obj in page["/Resources"]["/XObject"].values():
+                try:
+                    obj = obj.get_object()
+                    if obj.get("/Subtype") != "/Image":
+                        continue
+                    width = obj.get("/Width", 0)
+                    height = obj.get("/Height", 0)
+                    filt = obj.get("/Filter", "")
+                    raw = obj.get_data()
+                    if filt == "/DCTDecode":
+                        ext = ".jpg"
+                        mode = "RGB"
+                    elif filt == "/JPXDecode":
+                        ext = ".jp2"
+                        mode = "RGB"
+                    elif filt == "/FlateDecode":
+                        ext = ".png"
+                        mode = "RGBA" if obj.get("/ColorSpace") == "/DeviceCMYK" else "RGB"
+                    else:
+                        ext = ".png"
+                        mode = "RGB"
+                    fname = os.path.join(out_dir, f"pagina{pno+1}_img{extracted+1}{ext}")
+                    with open(fname, "wb") as f:
+                        f.write(raw)
+                    extracted += 1
+                except Exception:
+                    continue
+        if extracted == 0:
+            return f"No se encontraron imagenes en {os.path.basename(path)}"
+        return f"Extraidas {extracted} imagenes a: {out_dir}"
+    except Exception as e:
+        return f"Error extrayendo imagenes: {e}"
 
 
 def add_signature(parameters: dict = None, player=None) -> str:

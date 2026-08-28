@@ -1,0 +1,414 @@
+{
+  "sessions": [],
+  "tool_stats": {
+    "file_controller": {
+      "total": 9,
+      "success": 9,
+      "failures": 0,
+      "total_duration": 1.8134450912475586,
+      "avg_duration": 0.2014938990275065
+    },
+    "file_manager": {
+      "total": 7,
+      "success": 7,
+      "failures": 0,
+      "total_duration": 0.6825528144836426,
+      "avg_duration": 0.09750754492623466
+    },
+    "shell": {
+      "total": 4,
+      "success": 4,
+      "failures": 0,
+      "total_duration": 2.0,
+      "avg_duration": 0.5
+    },
+    "webfetch": {
+      "total": 4,
+      "success": 0,
+      "failures": 4,
+      "total_duration": 8.0,
+      "avg_duration": 2.0
+    },
+    "show_expression": {
+      "total": 106,
+      "success": 106,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "browser_control": {
+      "total": 6,
+      "success": 6,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "deep_research": {
+      "total": 7,
+      "success": 7,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "multi_search": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "whatsapp": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "phone_control": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "screen_see": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "obsidian_note": {
+      "total": 6,
+      "success": 6,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "shell_executor": {
+      "total": 6,
+      "success": 6,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "program_manager": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "video_analyzer": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "dependency_manager": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "openrouter_agent": {
+      "total": 12,
+      "success": 12,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "computer_settings": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "calculator": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "game_companion": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "web_search": {
+      "total": 7,
+      "success": 7,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "emotional_state": {
+      "total": 15,
+      "success": 15,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "morning_brief": {
+      "total": 75,
+      "success": 75,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "system_volume": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "system_monitor": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 1.1662745475769043,
+      "avg_duration": 1.1662745475769043
+    },
+    "window_manager": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "browser_unified": {
+      "total": 25,
+      "success": 25,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "super_search": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "open_app": {
+      "total": 5,
+      "success": 5,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "screen_vision": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "code_engineer": {
+      "total": 22,
+      "success": 22,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "app_discovery": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "memory_rag": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "relationship": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "image_generation": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "learning_pipeline": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "ide_integration": {
+      "total": 42,
+      "success": 42,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "desktop_control": {
+      "total": 4,
+      "success": 4,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "codebase_explorer": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "self_awareness": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "image_analyzer": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "terminal_agent": {
+      "total": 4,
+      "success": 4,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "autonomy": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "code_helper": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "camera_bus": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "emotional_rl": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "neuro_spheres": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "contextual_awareness": {
+      "total": 2,
+      "success": 2,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "project_builder": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "meta_cognition": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "meta_communication": {
+      "total": 3,
+      "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    }
+  },
+  "category_scores": {
+    "coding": {
+      "success_rate": 0.0,
+      "total_operations": 0,
+      "description": "Escritura y edición de código",
+      "weight": 1.0,
+      "grade": "F"
+    },
+    "debugging": {
+      "success_rate": 100.0,
+      "total_operations": 4,
+      "description": "Resolución de errores",
+      "weight": 1.2,
+      "grade": "A+"
+    },
+    "research": {
+      "success_rate": 0.0,
+      "total_operations": 4,
+      "description": "Búsqueda y análisis de información",
+      "weight": 0.8,
+      "grade": "F"
+    },
+    "file_management": {
+      "success_rate": 0.0,
+      "total_operations": 0,
+      "description": "Gestión de archivos y directorios",
+      "weight": 0.9,
+      "grade": "F"
+    },
+    "git": {
+      "success_rate": 0.0,
+      "total_operations": 0,
+      "description": "Control de versiones",
+      "weight": 1.0,
+      "grade": "F"
+    },
+    "memory": {
+      "success_rate": 0.0,
+      "total_operations": 0,
+      "description": "Gestión de memoria y conocimiento",
+      "weight": 1.1,
+      "grade": "F"
+    },
+    "planning": {
+      "success_rate": 0.0,
+      "total_operations": 0,
+      "description": "Planificación y ejecución",
+      "weight": 1.0,
+      "grade": "F"
+    }
+  },
+  "last_assessment": 1786909839.4192863
+}

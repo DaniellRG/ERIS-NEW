@@ -73,7 +73,8 @@ def _capture_screenshot(params: dict) -> str:
     try:
         import pyautogui
         if region:
-            img = pyautogui.screenshot(region=tuple(region))
+            reg = tuple(int(x) for x in region) if not isinstance(region, (int, float)) else (int(region),)
+            img = pyautogui.screenshot(region=reg)
         else:
             img = pyautogui.screenshot()
     except ImportError:

@@ -267,7 +267,7 @@ def get_plan_status(plan_id: str = "") -> str:
     return "\n".join(lines)
 
 
-def task_planner_tool(parameters: dict) -> str:
+def task_planner_tool(parameters: dict, player=None) -> str:
     action = (parameters.get("action") or "plan").lower()
     if action == "plan":
         goal = parameters.get("goal", "")

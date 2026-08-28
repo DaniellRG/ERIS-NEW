@@ -28,6 +28,14 @@ def _calculate(expr):
     expr = expr.replace("x", "*").replace("×", "*").replace("÷", "/")
     expr = expr.replace("^", "**").replace("elevado a", "**")
 
+    # Porcentajes: "15 por ciento de 800" -> "(15/100)*800", "15%" -> "(15/100)"
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*por\s*ciento\s*de", r"(\1/100)*", expr)
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*porciento\s*de", r"(\1/100)*", expr)
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*%\s*de", r"(\1/100)*", expr)
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*por\s*ciento", r"(\1/100)", expr)
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*porciento", r"(\1/100)", expr)
+    expr = re.sub(r"(\d+(?:\.\d+)?)\s*%", r"(\1/100)", expr)
+
     replacements = {
         "raiz cuadrada de": "math.sqrt",
         "raiz de": "math.sqrt",
@@ -50,6 +58,10 @@ def _calculate(expr):
     processed = expr
     for key, val in replacements.items():
         processed = processed.replace(key, val)
+
+    # "raiz cuadrada de 144" -> "math.sqrt(144)", "abs 5" -> "abs(5)"
+    processed = re.sub(r"math\.(sqrt|sin|cos|tan|log10|log|factorial)\s+(\d+(?:\.\d+)?)", r"math.\1(\2)", processed)
+    processed = re.sub(r"\babs\s+(\d+(?:\.\d+)?)", r"abs(\1)", processed)
 
     safe_chars = set("0123456789+-*/()., math.sqrtabsfloorceilroundlogsincoantPIE,")
     if not all(c in safe_chars for c in processed.replace("math.sqrt", "").replace("math.sin", "")):

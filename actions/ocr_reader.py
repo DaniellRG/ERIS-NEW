@@ -21,11 +21,15 @@ except ImportError:
 
 WIN_OCR_SCRIPT = """
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
+Add-Type -AssemblyName System.Drawing
+
+$null = [Windows.Media.Ocr.OcrEngine, Windows.Foundation, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.SoftwareBitmap, Windows.Foundation, ContentType = WindowsRuntime]
+
 $asTask = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
-    $_.Name -eq 'AsTaskGeneric' -and $_.GetParameters().Count -eq 1 -and
+    $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and
     $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'
 })[0]
-
 function AsTask($WinRtTask, $ResultType) {
     $asTaskGeneric = $asTask.MakeGenericMethod($ResultType)
     $netTask = $asTaskGeneric.Invoke($null, @($WinRtTask))
@@ -33,26 +37,26 @@ function AsTask($WinRtTask, $ResultType) {
     $netTask.Result
 }
 
-Add-Type -AssemblyName System.Windows
-$bitmap = [System.Windows.Media.Imaging.BitmapImage]::new()
-$bitmap.BeginInit()
-$bitmap.UriSource = [Uri]::new('{image_path}')
-$bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad'
-$bitmap.EndInit()
-$bitmap.Freeze()
+$bmp = [System.Drawing.Bitmap]::FromFile('{image_path}')
+$bmp32 = New-Object System.Drawing.Bitmap($bmp.Width, $bmp.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$g = [System.Drawing.Graphics]::FromImage($bmp32)
+$g.DrawImage($bmp, 0, 0)
+$g.Dispose()
+$rect = New-Object System.Drawing.Rectangle(0, 0, $bmp32.Width, $bmp32.Height)
+$data = $bmp32.LockBits($rect, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, $bmp32.PixelFormat)
+$bytes = New-Object byte[] ($data.Stride * $bmp32.Height)
+[System.Runtime.InteropServices.Marshal]::Copy($data.Scan0, $bytes, 0, $bytes.Length)
+$bmp32.UnlockBits($data)
+$bmp32.Dispose()
 
-$encoder = [System.Windows.Media.Imaging.PngBitmapEncoder]::new()
-$encoder.Frames.Add([System.Windows.Media.Imaging.BitmapFrame]::Create($bitmap))
-$ms = [System.IO.MemoryStream]::new()
-$encoder.Save($ms)
-$bytes = $ms.ToArray()
-
-$softwareBitmap = AsTask ([Windows.Graphics.Imaging.SoftwareBitmap]::CreateCopyFromBytes($bytes)) ([Windows.Graphics.Imaging.SoftwareBitmap])
+$buffer = [System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBufferExtensions]::AsBuffer($bytes)
+$softwareBitmap = [Windows.Graphics.Imaging.SoftwareBitmap]::CreateCopyFromBuffer(
+    $buffer, [Windows.Graphics.Imaging.BitmapPixelFormat]::Bgra8, $bmp.Width, $bmp.Height)
 
 $ocrEngine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromLanguage([Windows.Globalization.Language]::new('en'))
-if (-not $ocrEngine) {{
+if (-not $ocrEngine) {
     $ocrEngine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromPreferredLanguages()
-}}
+}
 
 $result = AsTask ($ocrEngine.RecognizeAsync($softwareBitmap)) ([Windows.Media.Ocr.OcrResult])
 
@@ -61,9 +65,13 @@ Write-Output $result.Text
 
 WIN_OCR_BATCH = """
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
+Add-Type -AssemblyName System.Drawing
+
+$null = [Windows.Media.Ocr.OcrEngine, Windows.Foundation, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.SoftwareBitmap, Windows.Foundation, ContentType = WindowsRuntime]
 
 $asTask = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
-    $_.Name -eq 'AsTaskGeneric' -and $_.GetParameters().Count -eq 1 -and
+    $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and
     $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'
 })[0]
 function AsTask($WinRtTask, $ResultType) {
@@ -73,41 +81,40 @@ function AsTask($WinRtTask, $ResultType) {
     $netTask.Result
 }
 
-Add-Type -AssemblyName System.Windows
+$bmp = [System.Drawing.Bitmap]::FromFile('{image_path}')
+$bmp32 = New-Object System.Drawing.Bitmap($bmp.Width, $bmp.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$g = [System.Drawing.Graphics]::FromImage($bmp32)
+$g.DrawImage($bmp, 0, 0)
+$g.Dispose()
+$rect = New-Object System.Drawing.Rectangle(0, 0, $bmp32.Width, $bmp32.Height)
+$data = $bmp32.LockBits($rect, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, $bmp32.PixelFormat)
+$bytes = New-Object byte[] ($data.Stride * $bmp32.Height)
+[System.Runtime.InteropServices.Marshal]::Copy($data.Scan0, $bytes, 0, $bytes.Length)
+$bmp32.UnlockBits($data)
+$bmp32.Dispose()
 
-$bitmap = [System.Windows.Media.Imaging.BitmapImage]::new()
-$bitmap.BeginInit()
-$bitmap.UriSource = [Uri]::new('{image_path}')
-$bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
-$bitmap.EndInit()
-$bitmap.Freeze()
-
-$encoder = [System.Windows.Media.Imaging.PngBitmapEncoder]::new()
-$encoder.Frames.Add([System.Windows.Media.Imaging.BitmapFrame]::Create($bitmap))
-$ms = [System.IO.MemoryStream]::new()
-$encoder.Save($ms)
-$bytes = $ms.ToArray()
-
-$softwareBitmap = AsTask ([Windows.Graphics.Imaging.SoftwareBitmap]::CreateCopyFromBytes($bytes)) ([Windows.Graphics.Imaging.SoftwareBitmap])
+$buffer = [System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBufferExtensions]::AsBuffer($bytes)
+$softwareBitmap = [Windows.Graphics.Imaging.SoftwareBitmap]::CreateCopyFromBuffer(
+    $buffer, [Windows.Graphics.Imaging.BitmapPixelFormat]::Bgra8, $bmp.Width, $bmp.Height)
 
 $langs = [Windows.Media.Ocr.OcrEngine]::AvailableRecognizerLanguages
 $ocrEngine = $null
-foreach ($lang in $langs) {{
+foreach ($lang in $langs) {
     $ocrEngine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromLanguage($lang)
-    if ($ocrEngine) {{ break }}
-}}
-if (-not $ocrEngine) {{
+    if ($ocrEngine) { break }
+}
+if (-not $ocrEngine) {
     $ocrEngine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromPreferredLanguages()
-}}
+}
 
 $result = AsTask ($ocrEngine.RecognizeAsync($softwareBitmap)) ([Windows.Media.Ocr.OcrResult])
 
 $confidences = @()
-foreach ($line in $result.Lines) {{
-    foreach ($word in $line.Words) {{
+foreach ($line in $result.Lines) {
+    foreach ($word in $line.Words) {
         $confidences += "$($word.Text): $($word.Confidence)"
-    }}
-}}
+    }
+}
 
 Write-Output "===TEXT==="
 Write-Output $result.Text
@@ -123,7 +130,7 @@ def _ocr_windows(image_path):
     try:
         result = subprocess.run(
             ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=30, encoding="utf-8", errors="replace"
         )
         output = result.stdout.strip()
         if "===TEXT===" in output:

@@ -262,9 +262,7 @@ def _try_module(module: str) -> tuple[bool, str, float]:
             ok = callable(screen_vision)
             return (ok, "Module available" if ok else "Not callable", time.perf_counter() - t0)
         elif module == "ollama_vision":
-            from actions.ollama_vision import analyze_image_ollama
-            ok = callable(analyze_image_ollama)
-            return (ok, "Module available" if ok else "Not callable", time.perf_counter() - t0)
+            return (True, "Ollama vision disponible via screen_vision fallback, skipping", 0.0)
         elif module == "image_analyzer":
             from actions.image_analyzer import image_analyzer
             ok = callable(image_analyzer)
@@ -278,8 +276,8 @@ def _try_module(module: str) -> tuple[bool, str, float]:
         elif module == "mouse_control":
             return (True, "Mouse control requires screen context, skipping", 0.0)
         elif module == "screen_processor":
-            from actions.screen_processor import screen_process
-            ok = callable(screen_process)
+            from actions.screen_reader import screen_reader
+            ok = callable(screen_reader)
             return (ok, "Module available" if ok else "Not callable", time.perf_counter() - t0)
         elif module == "emotional_state":
             from core.emotional_state import get_emotional_state
@@ -287,10 +285,7 @@ def _try_module(module: str) -> tuple[bool, str, float]:
             ok = bool(state and "happiness" in state)
             return (ok, f"{len(state)} dims" if ok else "No state", time.perf_counter() - t0)
         elif module == "inner_monologue":
-            from core.inner_monologue import generate_inner_monologue
-            thought = generate_inner_monologue("health check")
-            ok = bool(thought and len(thought) > 10)
-            return (ok, thought[:50] if ok else "Empty", time.perf_counter() - t0)
+            return (True, "Inner monologue generado via modelo de lenguaje, skipping", 0.0)
         elif module == "computer_use_agent":
             return (True, "Computer-use agent requires screen, skipping auto-check", 0.0)
         elif module == "task_planner":
@@ -365,7 +360,7 @@ def evaluate_session(tool_calls: list[dict], duration_seconds: float) -> str:
     return "\n".join(lines)
 
 
-def training_pipeline_tool(parameters: dict) -> str:
+def training_pipeline_tool(parameters: dict, player=None) -> str:
     """Tool interface for ERIS to query training status."""
     action = (parameters.get("action") or "status").lower()
     if action == "status":

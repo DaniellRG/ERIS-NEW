@@ -1,0 +1,202 @@
+[
+  {
+    "id": "lesson_1785345165417",
+    "lesson": "Tendencia de calidad empeorando — revisar estrategia de respuesta",
+    "category": "trend",
+    "importance": 0.9,
+    "timestamp": 1785345165.417465,
+    "applied_count": 0,
+    "last_seen": 1786551645.6031582
+  },
+  {
+    "id": "lesson_1785345180118",
+    "lesson": "Tendencia de calidad empeorando — revisar estrategia de respuesta",
+    "category": "trend",
+    "importance": 0.9,
+    "timestamp": 1785345180.1185062,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786679650697",
+    "lesson": "Cuando un servicio con voz no suena como corresponde, NO concluyas solo con hipotesis: proba el servicio real directamente (Invoke-RestMethod/curl con la clave) y lee el error crudo. En ERIS movil la voz masculina venia del fallback al TTS local, y la causa REAL era la cuota gratuita de Gemini agotada (error 429, limit 10 TTS/dia/modelo). Probar la API revelo la causa que el codigo no mostraba.",
+    "category": "diagnostico",
+    "importance": 0.95,
+    "timestamp": 1786679650.6970878,
+    "applied_count": 0,
+    "last_seen": 1786679650.6970878
+  },
+  {
+    "id": "lesson_1786679835550",
+    "lesson": "EL PROVEEDOR DE VOZ DE ERIS MOVIL ES GEMINI (no ElevenLabs): el TTS se llama con POST a https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-tts-preview:generateContent con la clave en config/api_keys.json (campo gemini_api_key). La causa real de la voz masculina fue 429 de cuota gratuita (limit 10/dia/modelo). Para diagnosticar: proba ese endpoint exacto con Invoke-RestMethod y lee el codigo de error.",
+    "category": "diagnostico",
+    "importance": 0.95,
+    "timestamp": 1786679835.5500858,
+    "applied_count": 0,
+    "last_seen": 1786679835.5500858
+  },
+  {
+    "id": "lesson_1786684115719",
+    "category": "entorno",
+    "importance": 0.9,
+    "timestamp": 1786684115.719855,
+    "applied_count": 0,
+    "last_seen": 1786684115.719855,
+    "lesson": "Windows PowerShell: NO existe cat << EOF (heredoc bash). Para crear un script temporal usar file_controller (action=write) o en terminal: Set-Content -Path X.ps1 -Value (con here-string) o Out-File. El operador < esta reservado en PowerShell. Además: si Python imprime unicode y tira UnicodeEncodeError, fijar sys.stdout.reconfigure(encoding=utf-8)."
+  },
+  {
+    "id": "lesson_1786684115719b",
+    "category": "herramientas",
+    "importance": 0.9,
+    "timestamp": 1786684115.719855,
+    "applied_count": 0,
+    "last_seen": 1786684115.719855,
+    "lesson": "file_controller NO tiene accion search (list, read, write, move, delete...). Para buscar texto en archivos usar codebase (action=search), code_copilot (locate) o terminal_agent con findstr/Select-String. Verificar los actions reales de una herramienta antes de usarla: auditar con tools/tool_audit.py (skill auditoria-herramientas)."
+  },
+  {
+    "id": "lesson_1786684376006",
+    "category": "herramientas",
+    "importance": 0.85,
+    "timestamp": 1786684376.0068183,
+    "applied_count": 0,
+    "last_seen": 1786684376.0068183,
+    "lesson": "Las respuestas de herramientas se TRUNCAN (tool_dispatcher corta a ~3500 chars). Si el resultado parece cortado o falta info clave, no asumas el resto: pedí la parte específica con una acción dirigida (read con offset/limit, grep acotado, comando que devuelva solo lo que necesito). Info truncada + asunción = diagnóstico equivocado."
+  },
+  {
+    "id": "lesson_1786684917682",
+    "category": "verificacion",
+    "importance": 0.95,
+    "timestamp": 1786684917.6823542,
+    "applied_count": 0,
+    "last_seen": 1786684917.6823542,
+    "lesson": "NUNCA afirmes haber editado código si no llamaste a una herramienta de edición. Cada afirmación de trabajo hecho debe incluir su EVIDENCIA en el mismo reporte: el nombre de la herramienta usada (self_edit/code_copilot/file write), la ruta del archivo y el resultado de la re-verificación (auditor/import/test). Si en tu historial de herramientas NO hay una llamada de edición, entonces NO editaste nada: decilo. Reportar un arreglo sin trace de edición es una alucinación y traiciona la confianza."
+  },
+  {
+    "id": "lesson_1786717070257",
+    "category": "herramientas",
+    "importance": 0.85,
+    "timestamp": 1786717070.2577388,
+    "applied_count": 0,
+    "last_seen": 1786717070.2577388,
+    "lesson": "Para entender un archivo grande NO lo re-leas entero en loop: 1) usá file_controller action=grep con el patrón del símbolo que buscás (devuelve SOLO file:line), 2) leé con action=read offset/limit solo alrededor de las líneas relevantes. Re-leer lo mismo varias veces quema turnos y no agrega info."
+  },
+  {
+    "id": "lesson_1786717070257",
+    "category": "procedimiento",
+    "importance": 0.8,
+    "timestamp": 1786717070.2577388,
+    "applied_count": 0,
+    "last_seen": 1786717070.2577388,
+    "lesson": "PREFLIGHT: antes de instalar/compilar/ejecutar algo, verificá que los prerequisitos existen con test de verdad (node --version, npm --version, python --version). Si un comando da error, leé el error CRUDO (ej: npm bloqueado por Execution Policy en PowerShell = fix Set-ExecutionPolicy RemoteSigned) en vez de asumir la causa."
+  },
+  {
+    "category": "verificacion",
+    "lesson": "Antes de afirmar que ya editaste/cambiaste algo, consulta la bitácora self_edit action=journal (o file_controller action=journal): si la edición no figura con su timestamp, NO ocurrió. Usa la bitácora junto con los mtimes para verificar de verdad.",
+    "lesson_ts": "2026-08-14"
+  },
+  {
+    "id": "lesson_1786763537570",
+    "lesson": "Agente autónomo parcial: Dime qué hora es - No se pudo verificar (sin LLM disponible).",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786763537.5704079,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786763559485",
+    "lesson": "Agente autónomo completó: Dime qué hora es",
+    "category": "agent_loop",
+    "importance": 0.8,
+    "timestamp": 1786763559.485569,
+    "applied_count": 0,
+    "last_seen": 1786763590.8339074
+  },
+  {
+    "id": "lesson_1786845568651",
+    "lesson": "Agente autónomo parcial: Decime la hora actual. - NO. El objetivo no se cumplió porque el paso para obtener la hora actual falló al no estar disponibles los proveedores de IA necesarios (OpenRouter/Ol",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786845568.651854,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786845740775",
+    "lesson": "Agente autónomo parcial: Decime la hora actual. - NO. El objetivo no se cumplió porque el paso 1 falló al intentar obtener la hora actual del sistema, lo cual requirió un proveedor de IA (OpenRouter/O",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786845740.775285,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786845815136",
+    "lesson": "Agente autónomo parcial: Decime la hora actual. - NO. El objetivo no se cumplió porque el paso para obtener la hora actual falló debido a la falta de un proveedor de IA disponible (como OpenRouter/Oll",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786845815.136064,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786846004486",
+    "lesson": "Agente autónomo parcial: Decime la hora actual. - NO. El objetivo era obtener la hora actual, pero el registro de ejecución no menciona ningún paso para recuperar la hora. En cambio, se centra en el u",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786846004.486422,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786846109238",
+    "lesson": "Agente autónomo parcial: Decime la hora actual y el estado del sistema. - NO. El objetivo no se cumplió completamente porque el Paso 1 para obtener la hora actual falló sin resultado. Solo se proporcionó el estado del sistem",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786846109.2380598,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786846446602",
+    "lesson": "Agente autónomo parcial: Decime la hora actual. - NO\n\nEl objetivo no se cumplió porque, según el registro de ejecución, la función system_monitor no ofrece la hora actual del sistema directamente, y n",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786846446.6022995,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786848298105",
+    "lesson": "Agente autónomo parcial: Buscá en tu vault de Obsidian si guardaste algo sobre scroll en Android y guardá un resumen en una nota nueva de la carpeta wiki. - NO\n\nEl objetivo no se cumplió debido a que el paso 3 (leer contenido de la nota encontrada) falló y, como consecuencia, no se pudo crear un resumen de",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786848298.1052232,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786848356064",
+    "lesson": "Agente autónomo parcial: Buscá en tu vault de Obsidian si guardaste algo sobre scroll en Android y guardá un resumen en una nota nueva de la carpeta wiki. - NO, el objetivo no se cumplió porque no se encontró información sobre scroll en Android en el vault de Obsidian (Paso 1) y, como resultado, no se pudo",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786848356.0648935,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786848440813",
+    "lesson": "Agente autónomo parcial: Buscá en tu vault de Obsidian si guardaste algo sobre scroll en Android y guardá un resumen en una nota nueva de la carpeta wiki. - NO\n\nEl objetivo no se cumplió completamente debido a que el Paso 1 falló y no se encontró información sobre scroll en Android en el vault de Obsidian.",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786848440.813656,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1786848550466",
+    "lesson": "Agente autónomo parcial: Buscá en tu vault de Obsidian si guardaste algo sobre scroll en Android y guardá un resumen en una nota nueva de la carpeta wiki. - NO\n\nEl objetivo no se cumplió porque, aunque se creó una nueva nota en la carpeta 'wiki', no se logró resumir y guardar la información encontrada sobr",
+    "category": "agent_loop_error",
+    "importance": 0.9,
+    "timestamp": 1786848550.466271,
+    "applied_count": 0
+  },
+  {
+    "id": "lesson_1787115020380",
+    "lesson": "Tendencia de calidad mejorando — mantener estrategia actual",
+    "category": "trend",
+    "importance": 0.7,
+    "timestamp": 1787115020.3802655,
+    "applied_count": 0,
+    "last_seen": 1787116073.5476573
+  }
+]

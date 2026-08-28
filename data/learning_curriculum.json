@@ -1,0 +1,116 @@
+{
+  "categories": {
+    "coding": {
+      "description": "Mejorar calidad de código generado",
+      "targets": [
+        "Crear tests para cada función nueva",
+        "Usar type hints consistentemente",
+        "Manejar edge cases explícitamente",
+        "Seguir PEP 8 / estilo del proyecto"
+      ],
+      "exercises": [
+        "Refactorizar un archivo existente manteniendo compatibilidad",
+        "Escribir 3 tests unitarios para una función",
+        "Detectar y fixear un code smell"
+      ],
+      "completed": [
+        "ejercicio de prueba"
+      ],
+      "score": 1,
+      "total": 3
+    },
+    "debugging": {
+      "description": "Mejorar resolución de bugs",
+      "targets": [
+        "Diagnosticar errores en <2 intentos",
+        "Usar error_pattern_db para errores conocidos",
+        "Crear test de regresión al fixear"
+      ],
+      "exercises": [
+        "Simular debugging de un error de importación",
+        "Reproducir un bug aisladamente antes de fixear"
+      ],
+      "completed": [],
+      "score": 0,
+      "total": 2
+    },
+    "research": {
+      "description": "Mejorar búsqueda de información",
+      "targets": [
+        "Usar múltiples fuentes para verificar",
+        "Distinguir fuentes confiables de no confiables",
+        "Sintetizar findings en actionable items"
+      ],
+      "exercises": [
+        "Investigar una tecnología nueva y crear un resumen ejecutivo",
+        "Comparar 2 approaches para resolver un problema"
+      ],
+      "completed": [],
+      "score": 0,
+      "total": 2
+    },
+    "planning": {
+      "description": "Mejorar planificación de tareas",
+      "targets": [
+        "Descomponer tareas grandes en pasos accionables",
+        "Estimar complejidad realistas",
+        "Identificar dependencias entre pasos"
+      ],
+      "exercises": [
+        "Crear un plan de 5+ pasos para un feature complejo",
+        "Re-planificar cuando algo falla a mitad de camino"
+      ],
+      "completed": [],
+      "score": 0,
+      "total": 2
+    },
+    "communication": {
+      "description": "Mejorar comunicación con el usuario",
+      "targets": [
+        "Explicar decisiones con self_explainer",
+        "Adaptar estilo según feedback del usuario",
+        "Ser conciso sin perder información clave"
+      ],
+      "exercises": [
+        "Explicar un concepto técnico a alguien no técnico",
+        "Resumir una solución compleja en 3 oraciones"
+      ],
+      "completed": [],
+      "score": 0,
+      "total": 2
+    }
+  },
+  "completed_exercises": [
+    {
+      "category": "coding",
+      "exercise": "ejercicio de prueba",
+      "success": true,
+      "notes": "completado en el test",
+      "timestamp": 1786904601.4406095
+    },
+    {
+      "category": "coding",
+      "exercise": "ejercicio de prueba",
+      "success": true,
+      "notes": "completado en el test",
+      "timestamp": 1786904664.6156478
+    },
+    {
+      "category": "coding",
+      "exercise": "ejercicio de prueba",
+      "success": true,
+      "notes": "completado en el test",
+      "timestamp": 1786909806.46683
+    },
+    {
+      "category": "coding",
+      "exercise": "ejercicio de prueba",
+      "success": true,
+      "notes": "completado en el test",
+      "timestamp": 1786909839.088776
+    }
+  ],
+  "current_focus": "",
+  "start_date": 1786903896.069103,
+  "last_updated": 1786909839.0887773
+}

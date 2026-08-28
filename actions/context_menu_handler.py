@@ -35,8 +35,9 @@ def handle_action(action: str, file_path: str = "") -> str:
                 if not key:
                     return "[ERIS] No hay API key de Gemini configurada."
                 client = genai.Client(api_key=key)
+                from core.model_config import get_model
                 resp = client.models.generate_content(
-                    model="gemini-2.0-flash",
+                    model=get_model("fast"),
                     contents=[{"role": "user", "parts": [{"text": f"Resume este texto en 3 lineas:\n\n{text}"}]}],
                 )
                 return f"[ERIS] Resumen:\n{resp.text}"

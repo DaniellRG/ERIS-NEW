@@ -75,14 +75,14 @@ def _create_event(params: dict) -> str:
         return "Error: se requiere 'title'"
 
     now = datetime.now()
-    start_str = params.get("start", now.isoformat())
+    start_str = params.get("start") or params.get("date") or now.isoformat()
     try:
         start = datetime.fromisoformat(start_str.replace("Z", "+00:00").replace("+00:00", ""))
     except Exception:
         start = now
 
-    duration_hours = params.get("duration_hours", 1)
-    end_str = params.get("end", (start + timedelta(hours=duration_hours)).isoformat())
+    duration_hours = float(params.get("duration_hours") or params.get("duration") or 1)
+    end_str = params.get("end") or (start + timedelta(hours=duration_hours)).isoformat()
 
     event = {
         "id": "evt_{}_{}".format(int(now.timestamp()), hash(title) % 10000),

@@ -231,7 +231,9 @@ CASUAL_GREETINGS = [
 def curiosity_tell_joke(player=None) -> str:
     return random.choice(JOKES)
 
-def curiosity_tell_fact(topic: str = None, player=None) -> str:
+def curiosity_tell_fact(topic: str = None, player=None, parameters: dict = None) -> str:
+    params = parameters or (topic if isinstance(topic, dict) else {})
+    topic = params.get("topic") or topic
     if topic:
         candidates = [f for f in FUN_FACTS if topic.lower() in f["topic"].lower()]
         if candidates:

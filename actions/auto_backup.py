@@ -20,7 +20,7 @@ _DEFAULT_CONFIG = {
     "interval_hours": 6,
     "max_backups": 10,
     "backup_items": [
-        {"name": "memory", "path": "data/memory", "type": "dir"},
+        {"name": "memory", "path": "memory", "type": "dir"},
         {"name": "knowledge", "path": "data/knowledge", "type": "dir"},
         {"name": "self", "path": "data/self", "type": "dir"},
         {"name": "config", "path": "config", "type": "dir"},
@@ -28,8 +28,10 @@ _DEFAULT_CONFIG = {
         {"name": "prompt", "path": "core/prompt.txt", "type": "file"},
         {"name": "tool_declarations", "path": "core/tool_declarations.py", "type": "file"},
         {"name": "action_imports", "path": "core/action_imports.py", "type": "file"},
+        {"name": "version", "path": "core/version.py", "type": "file"},
         {"name": "rag_index", "path": "data/rag_index.json", "type": "file"},
         {"name": "idle_learning", "path": "data/idle_learning.json", "type": "file"},
+        {"name": "auto_backup_state", "path": "data/auto_backup_state.json", "type": "file"},
     ],
 }
 
@@ -224,3 +226,42 @@ def auto_backup(parameters: dict = None, player=None) -> str:
         return f"Removed backup item: {name}"
 
     return "Actions: backup, status, history, config, list, start, stop, add_item, remove_item"
+
+
+def _scheduler_loop():
+    """Loop daemon: corre un backup cada interval_hours si enabled."""
+    global _running
+    _running = True
+    while _running:
+        try:
+            time.sleep(3600)
+            config = _load_config()
+            if not config.get("enabled", True):
+                continue
+            state = _load_state()
+            last = state.get("last_backup")
+            interval = config.get("interval_hours", 6)
+            fmt = "%Y-%m-%dT%H:%M:%S"
+            due = True
+            if last:
+                try:
+                    last_dt = datetime.strptime(last[:19], fmt)
+                    due = (datetime.now() - last_dt).total_seconds() >= interval * 3600
+                except Exception:
+                    due = True
+            if due:
+                meta, details = _do_backup()
+                print(f"[AutoBackup] {meta['timestamp']} — {meta['items_backed']} OK, {meta['items_failed']} FAIL")
+        except Exception as e:
+            print(f"[AutoBackup] scheduler error: {e}")
+
+
+def start_auto_backup_scheduler() -> bool:
+    """Inicia (una sola vez) el scheduler de backups en background. Devuelve si está activo."""
+    global _thread, _running
+    if _thread and _thread.is_alive():
+        return True
+    _running = True
+    _thread = threading.Thread(target=_scheduler_loop, daemon=True)
+    _thread.start()
+    return True

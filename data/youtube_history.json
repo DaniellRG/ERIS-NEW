@@ -82,5 +82,11 @@
     "target": "musica relajante para estudiar",
     "url": "https://www.youtube.com/watch?v=VzmtIUmjkTo",
     "time": "2026-07-30T00:31:46.228435"
+  },
+  {
+    "action": "play_search",
+    "target": "Coldplay - Viva La Vida",
+    "url": "https://www.youtube.com/results?search_query=Coldplay%20-%20Viva%20La%20Vida&sp=EgIQAQ%3D%3D",
+    "time": "2026-08-11T22:57:58.229602"
   }
 ]

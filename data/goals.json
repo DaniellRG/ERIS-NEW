@@ -1,0 +1,163 @@
+{
+  "goals": [
+    {
+      "id": "goal_1786903010_0",
+      "title": "Test",
+      "description": "",
+      "priority": "low",
+      "state": "active",
+      "progress": 0,
+      "subtasks": [],
+      "milestones": [],
+      "notes": [],
+      "created_at": 1786903010.1784258,
+      "updated_at": 1786903010.1784258,
+      "completed_at": null
+    },
+    {
+      "id": "goal_1786904611_1",
+      "title": "Aprender Python avanzado",
+      "description": "Curso completo",
+      "priority": "high",
+      "state": "active",
+      "progress": 0,
+      "subtasks": [
+        {
+          "id": "st_0",
+          "text": "tema1",
+          "done": false
+        },
+        {
+          "id": "st_1",
+          "text": "tema2",
+          "done": false
+        }
+      ],
+      "milestones": [
+        {
+          "id": "ms_0",
+          "text": "dominio básico",
+          "reached": false
+        },
+        {
+          "id": "ms_1",
+          "text": "proyecto final",
+          "reached": false
+        }
+      ],
+      "notes": [],
+      "created_at": 1786904611.796847,
+      "updated_at": 1786904611.7968473,
+      "completed_at": null
+    },
+    {
+      "id": "goal_1786904680_2",
+      "title": "Aprender Python avanzado",
+      "description": "Curso completo",
+      "priority": "high",
+      "state": "active",
+      "progress": 0,
+      "subtasks": [
+        {
+          "id": "st_0",
+          "text": "tema1",
+          "done": false
+        },
+        {
+          "id": "st_1",
+          "text": "tema2",
+          "done": false
+        }
+      ],
+      "milestones": [
+        {
+          "id": "ms_0",
+          "text": "dominio básico",
+          "reached": false
+        },
+        {
+          "id": "ms_1",
+          "text": "proyecto final",
+          "reached": false
+        }
+      ],
+      "notes": [],
+      "created_at": 1786904680.598491,
+      "updated_at": 1786904680.598491,
+      "completed_at": null
+    },
+    {
+      "id": "goal_1786909813_3",
+      "title": "Aprender Python avanzado",
+      "description": "Curso completo",
+      "priority": "high",
+      "state": "active",
+      "progress": 0,
+      "subtasks": [
+        {
+          "id": "st_0",
+          "text": "tema1",
+          "done": false
+        },
+        {
+          "id": "st_1",
+          "text": "tema2",
+          "done": false
+        }
+      ],
+      "milestones": [
+        {
+          "id": "ms_0",
+          "text": "dominio básico",
+          "reached": false
+        },
+        {
+          "id": "ms_1",
+          "text": "proyecto final",
+          "reached": false
+        }
+      ],
+      "notes": [],
+      "created_at": 1786909813.1288188,
+      "updated_at": 1786909813.1288188,
+      "completed_at": null
+    },
+    {
+      "id": "goal_1786909847_4",
+      "title": "Aprender Python avanzado",
+      "description": "Curso completo",
+      "priority": "high",
+      "state": "active",
+      "progress": 0,
+      "subtasks": [
+        {
+          "id": "st_0",
+          "text": "tema1",
+          "done": false
+        },
+        {
+          "id": "st_1",
+          "text": "tema2",
+          "done": false
+        }
+      ],
+      "milestones": [
+        {
+          "id": "ms_0",
+          "text": "dominio básico",
+          "reached": false
+        },
+        {
+          "id": "ms_1",
+          "text": "proyecto final",
+          "reached": false
+        }
+      ],
+      "notes": [],
+      "created_at": 1786909847.7441554,
+      "updated_at": 1786909847.7441554,
+      "completed_at": null
+    }
+  ],
+  "completed_count": 0
+}

@@ -10,5 +10,41 @@
     "type": "defender",
     "severity": "CRITICAL",
     "message": "Windows Defender real-time protection is OFF"
+  },
+  {
+    "time": "2026-08-12T11:15:59.071736",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
+  },
+  {
+    "time": "2026-08-12T11:16:41.844080",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
+  },
+  {
+    "time": "2026-08-12T11:33:00.097730",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
+  },
+  {
+    "time": "2026-08-14T09:43:03.631752",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
+  },
+  {
+    "time": "2026-08-14T09:46:39.555848",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
+  },
+  {
+    "time": "2026-08-14T09:53:15.838304",
+    "type": "full_scan",
+    "severity": "INFO",
+    "message": "Security scan completed. Score: 40/100"
   }
 ]

@@ -76,7 +76,7 @@ def _call_gemini(image_base64, prompt, mime_type="image/png"):
     api_key = _get_gemini_key()
     if not api_key:
         return "Error: Gemini API key not found. Configure it in opencode.json or set GEMINI_API_KEY environment variable."
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
     payload = {
         "contents": [{
             "parts": [
@@ -202,16 +202,33 @@ def _is_error_result(result):
 
 
 def _analyze_vision(image_base64, prompt, mime_type="image/png"):
-    """Chain: Gemini -> OpenRouter -> Ollama local. Returns (result, source)."""
-    result = _call_gemini(image_base64, prompt, mime_type)
-    if result and not _is_error_result(result):
-        return result, "Gemini"
-    result = _call_openrouter(image_base64, prompt, mime_type)
-    if result:
-        return result, "OpenRouter"
-    result = _call_ollama(image_base64, prompt)
-    if result:
-        return result, "Ollama (local)"
+    """Chain según vision_mode. local_first: Ollama local → Gemini → OpenRouter."""
+    mode = "local_first"
+    try:
+        API_FILE = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        mode = json.loads(API_FILE.read_text("utf-8")).get("vision_mode", "local_first").lower()
+    except Exception:
+        pass
+
+    chain = [
+        (_call_gemini, "Gemini"),
+        (_call_openrouter, "OpenRouter"),
+        (_call_ollama, "Ollama (local)"),
+    ]
+    if mode == "local_first":
+        chain = [
+            (_call_ollama, "Ollama (local)"),
+            (_call_gemini, "Gemini"),
+            (_call_openrouter, "OpenRouter"),
+        ]
+
+    for fn, source in chain:
+        try:
+            result = fn(image_base64, prompt, mime_type) if fn is not _call_ollama else fn(image_base64, prompt)
+            if result and not _is_error_result(result):
+                return result, source
+        except Exception:
+            continue
     return "Error: No se pudo analizar la imagen (Gemini, OpenRouter y Ollama fallaron).", None
 
 
@@ -262,7 +279,12 @@ def _compare_images(path1, path2):
                 f"Image 2: {path2} ({s2:,} bytes)\n"
                 f"Files {'are identical' if open(path1, 'rb').read() == open(path2, 'rb').read() else 'are different'}."
             )
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        try:
+            from core.model_config import get_model as _gm
+            _imodel = _gm("vision")
+        except Exception:
+            _imodel = "gemini-flash-latest"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{_imodel}:generateContent?key={api_key}"
         payload = {
             "contents": [{
                 "parts": [

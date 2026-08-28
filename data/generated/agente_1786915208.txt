@@ -1,0 +1,46 @@
+**Dropshipping** es un modelo de negocio en el que el vendedor no almacena productos físicos. Al recibir un pedido de un cliente, el vendedor compra el producto de un proveedor tercero (generalmente en línea) y el proveedor envía directamente el producto al cliente. Este modelo permite iniciar un negocio sin necesidad de invertir en inventario.
+
+### **Pasos clave para empezar:**
+1. **Investiga y elige un nicho:**  
+   - Identifica un mercado con demanda (ej.: productos de belleza, tecnología, ropa).  
+   - Usa herramientas como Google Trends, Instagram o TikTok para validar la demanda.  
+
+2. **Valida el producto:**  
+   - Asegúrate de que el producto tenga ventas reales (ej.: verifica en AliExpress, Amazon o marketplaces).  
+   - Compara precios, calificaciones y comentarios de clientes.  
+
+3. **Elige una plataforma de comercio electrónico:**  
+   - **Shopify** es ideal para principiantes.  
+   - Otras opciones: WooCommerce (para WordPress), BigCommerce o Etsy (si vendes artesanías).  
+
+4. **Configura tu tienda:**  
+   - Selecciona un tema profesional y optimiza la experiencia del usuario.  
+   - Configura métodos de pago (PayPal, Stripe) y opciones de envío.  
+
+5. **Encuentra proveedores confiables:**  
+   - Usa **AliExpress**, **Spocket**, **Oberlo** o **Dropship.com** para encontrar proveedores.  
+   - Verifica que ofrezcan envíos rápidos, precios competitivos y soporte al cliente.  
+
+6. **Crea listados de productos:**  
+   - Incluye imágenes de alta calidad, descripciones claras y precios competitivos.  
+   - Optimiza títulos y descripciones para SEO (ej.: palabras clave relevantes).  
+
+7. **Implementa estrategias de marketing:**  
+   - Usa redes sociales (Instagram, Facebook) para publicidad pagada.  
+   - Crea contenido útil (blogs, videos) para atraer tráfico orgánico.  
+   - Ofrece descuentos o promociones para generar ventas iniciales.  
+
+8. **Gestiona pedidos y atención al cliente:**  
+   - Automatiza el proceso de compra y envío con herramientas como **Dropship.io**.  
+   - Respuesta rápida a consultas y seguimiento de envíos para mantener la confianza del cliente.  
+
+9. **Analiza y optimiza:**  
+   - Usa herramientas como **Google Analytics** para medir el rendimiento.  
+   - Prueba diferentes estrategias (precios, publicidad, diseño de la tienda) para mejorar resultados.  
+
+10. **Sé paciente y adapta tu estrategia:**  
+    - El dropshipping requiere tiempo para generar ingresos.  
+    - Ajusta tu enfoque según los datos y las tendencias del mercado.  
+
+**Riesgos:** Margen de ganancia bajo, competencia intensa y dependencia de proveedores.  
+**Consejo clave:** Invierte en un plan de marketing sólido y prioriza la experiencia del cliente.

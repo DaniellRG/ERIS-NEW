@@ -255,7 +255,7 @@ def get_tone_instruction() -> str:
     return " ".join(lines)
 
 
-def emotional_state_tool(parameters: dict) -> str:
+def emotional_state_tool(parameters: dict, player=None) -> str:
     action = (parameters.get("action") or "status").lower()
     if action == "status":
         state = get_emotional_state()

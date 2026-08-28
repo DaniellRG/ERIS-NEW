@@ -1,0 +1,14 @@
+/* Blog Testblog */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; }
+.navbar { background: rgba(10,10,15,0.95) !important; backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.blog-header { padding: 120px 0 60px; background: radial-gradient(ellipse at center, #1a1a2e, #0a0a0f); }
+.blog-card { background: rgba(255,255,255,0.02); border-radius: 20px; padding: 1.5rem; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05); }
+.blog-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-3px); }
+.sidebar-card { background: rgba(255,255,255,0.02); border-radius: 15px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); }
+.form-control { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e0e0e0; }
+.form-control:focus { border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.15); }
+a { transition: color 0.3s; }
+a:hover { color: #a78bfa !important; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }

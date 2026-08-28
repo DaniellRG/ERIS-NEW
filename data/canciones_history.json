@@ -1,0 +1,13 @@
+{
+  "canciones": [
+    {
+      "titulo": "Dulce Pop de Amor",
+      "genero": "pop",
+      "estilo_voz": "dulce",
+      "metodo": "bark",
+      "archivo": "C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Canciones\\Dulce_Pop_de_Amor_20260729_235412.wav",
+      "created_at": "2026-07-29T23:55:34.853192",
+      "tiempo_generacion": 81.9
+    }
+  ]
+}

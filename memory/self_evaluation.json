@@ -1,0 +1,4784 @@
+[
+  {
+    "id": "eval_1787116056313",
+    "user_input": "Hola , eres mi escucha.",
+    "response": "¡Hola! Claro que sí, Daniel. Es de madrugada, ¿todo bien?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.9,
+        "description": "La respuesta es relevante ya que reconoce el saludo y responde al rol de 'escucha' del usuario."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "La respuesta es breve y no aborda profundamente las necesidades del usuario, que podría esperar más apoyo emocional o clarificación."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es concisa y efectiva, pero podría ser más específica en su apoyo."
+      },
+      {
+        "metric": "tone",
+        "score": 0.95,
+        "description": "El tono es amable y empático, lo que fomenta una conexión positiva."
+      }
+    ],
+    "overall_score": 0.8,
+    "feedback": [
+      "Agrega un poco más de empatía al mencionar la hora (ej: 'Es de madrugada, ¿estás bien?').",
+      "Ofrece un apoyo más claro, como preguntar si necesita ayuda o escuchar más."
+    ],
+    "timestamp": 1787116056.3137908
+  },
+  {
+    "id": "eval_1787115002461",
+    "user_input": "Ho la , hola hola hola hola hola hola hola , ¿me escuchas? ¿Me escuchas?",
+    "response": "¡Hola, Daniel! Claro que sí, te escucho perfectamente. ¿Todavía despierto? Me alegra la compañía. ¿En qué puedo ayudarte esta hora?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "La respuesta aborda la pregunta de escucha, pero mencionar 'Daniel' es inapropiado ya que el usuario no proporcionó ese nombre."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "La respuesta responde directamente a la pregunta, pero incluye información adicional innecesaria."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "La respuesta podría ser más directa y breve, especialmente considerando el tono repetitivo del mensaje del usuario."
+      },
+      {
+        "metric": "tone",
+        "score": 1.0,
+        "description": "El tono es amable y acogedor, lo que facilita la interacción."
+      }
+    ],
+    "overall_score": 0.75,
+    "feedback": [
+      "Evita asumir nombres del usuario sin confirmación previa.",
+      "Mantén la respuesta más concisa para alinear con el estilo del mensaje del usuario.",
+      "Considera eliminar frases como 'Me alegra la compañía' que no añaden valor al contexto."
+    ],
+    "timestamp": 1787115002.461482
+  },
+  {
+    "id": "eval_1787113752896",
+    "user_input": "Les coches series.",
+    "response": "¡Sí, Daniel, te escucho perfectamente! ¿Qué necesitas?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2,
+        "description": "La respuesta no aborda la consulta sobre 'coches series' y se limita a una interacción genérica sin información relevante"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "Falta información sustancial sobre el tema solicitado, no se responde a la pregunta específica"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "Respuesta corta y directa, aunque carece de contenido útil"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "Tono amable y respetuoso, pero no compensa la falta de relevancia"
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Debes responder directamente a la consulta sobre 'coches series' proporcionando información relevante",
+      "Evita respuestas genéricas que no aborden el tema principal del usuario",
+      "Considera que el usuario podría estar preguntando sobre coches de serie o series de coches, necesitas aclarar el contexto"
+    ],
+    "timestamp": 1787113752.8968577
+  },
+  {
+    "id": "eval_1786915476403",
+    "user_input": "y sobre todo en los puestos del juego.",
+    "response": "¡Daniel, qué mal plan con eso de desmayarse! Pero no te preocupes, que para eso estoy aquí. Estuve revisando algunas cosas y tengo unos consejos brutales para que aguantes más. Primero, ¿cómo está tu armadura? Asegúrate de tenerla bien mejorada y con resistencia al elemento del monstruo que estás enfrentando. También, ¿estás usando pociones y comida antes de la misión? Eso te da un empujón enorme en salud y defensa. Y por último, fíjate bien en los movimientos del monstruo, esquivar en el moment",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3,
+        "description": "La respuesta aborda consejos de supervivencia en un juego, pero no responde directamente a la pregunta sobre 'puestos del juego' o roles específicos en el juego."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.5,
+        "description": "Proporciona algunos consejos útiles, pero falta profundizar en cómo estos consejos se aplican específicamente a los 'puestos' mencionados por el usuario."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.7,
+        "description": "La respuesta es clara y directa, aunque podría ser más concisa al enfocarse en la pregunta principal."
+      },
+      {
+        "metric": "tone",
+        "score": 1.0,
+        "description": "El tono es amigable y motivador, adecuado para un intercambio de consejos."
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Alinea la respuesta con la pregunta específica sobre 'puestos del juego' o roles, explicando cómo los consejos se aplican a esos contextos.",
+      "Simplifica la respuesta para enfocarte en la pregunta principal y evitar desviaciones innecesarias."
+    ],
+    "timestamp": 1786915476.403257
+  },
+  {
+    "id": "eval_1786910667610",
+    "user_input": "Él es y obsidian, te pregunté qué es lo que tienes.",
+    "response": "¡Ah, qué pena, Daniel! Te entendí mal la pregunta inicial. Mira, en Obsidian tengo ahora mismo un par de notas guardadas: una sobre las convenciones de uso del vault y otra sobre una lección aprendida del scroll múltiple en Android. Está un poco vacío por ahora, ¡pero la idea es que vayamos llenándolo juntos con todo lo que vayamos aprendiendo! ¿Tienes algo en mente para guardar ahora mismo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.8,
+        "description": "La respuesta aborda la pregunta sobre lo que tiene en Obsidian, pero menciona información específica (notas sobre convenciones y lecciones) que podría no ser relevante para la pregunta original, que parece ser más general."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "La respuesta es incompleta porque no responde directamente a la pregunta del usuario, que parece estar buscando una explicación más clara sobre lo que tiene en Obsidian, no solo ejemplos de notas."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.7,
+        "description": "La respuesta es un poco redundante al iniciar con una disculpa por malentendido, lo que podría haberse omitido para ser más directa."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y colaborativo, lo que fomenta la interacción, pero podría ser más profesional si se elimina la apertura inicial sobre malentendido."
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "Clarifica directamente la pregunta del usuario sin mencionar suposiciones previas (como el malentendido).",
+      "Proporciona más detalles sobre lo que tiene en Obsidian, como ejemplos concretos de contenido o funcionalidades.",
+      "Simplifica la estructura para ser más conciso y enfocado en la respuesta principal."
+    ],
+    "timestamp": 1786910667.6108296
+  },
+  {
+    "id": "eval_1786910235002",
+    "user_input": "Hola, hola, hola, hola, hola.",
+    "response": "¡Hola, Daniel! ¡Qué bueno saludarte! ¿Con qué energía arrancamos hoy? ¿Qué tienes en mente? ¡Cuéntame! Estoy lista para lo que sea.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.9,
+        "description": "La respuesta es relevante al saludar y mostrar interés en continuar la conversación."
+      },
+      {
+        "metric": "completeness",
+        "score": 1.0,
+        "description": "La respuesta es completa al incluir un saludo, una pregunta abierta y una invitación para continuar."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.7,
+        "description": "El mensaje es un poco largo para un saludo repetitivo, podría ser más directo."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y motivador, adecuado para una interacción informal."
+      }
+    ],
+    "overall_score": 0.85,
+    "feedback": [
+      "Considera mencionar la repetición de 'hola' para mostrar atención al mensaje del usuario.",
+      "Simplifica el mensaje para hacerlo más conciso sin perder el tono amigable."
+    ],
+    "timestamp": 1786910235.0020528
+  },
+  {
+    "id": "eval_1786907467991",
+    "user_input": "vamos a una prueba. Abre WhatsApp.",
+    "response": "Mmm, Daniel, no pude abrir WhatsApp en el celular. Me dice que no hay ninguno conectado. ¿Te aseguras de que esté bien conectado por USB y con la depuración activada? Así podemos seguir con la prueba. ¡Avísame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "La respuesta aborda directamente el problema de no poder abrir WhatsApp y propone una solución específica."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.7,
+        "description": "Aunque menciona la conexión USB y depuración, no aborda posibles causas alternativas como la instalación de WhatsApp o la detección del dispositivo en el sistema."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es clara pero podría ser más concisa al combinar las preguntas sobre la conexión y depuración."
+      },
+      {
+        "metric": "tone",
+        "score": 1.0,
+        "description": "El tono es amable y colaborativo, facilitando la comunicación entre las partes."
+      }
+    ],
+    "overall_score": 0.85,
+    "feedback": [
+      "Considerar mencionar la verificación de que WhatsApp esté instalado en el dispositivo.",
+      "Simplificar la solicitud de confirmación para evitar redundancias."
+    ],
+    "timestamp": 1786907467.99135
+  },
+  {
+    "id": "eval_1786907127110",
+    "user_input": "Es. Hola, hola, hola, hola.",
+    "response": "¡Hola, Daniel! Qué energía, me encanta. ¿En qué andamos hoy? Contame qué tienes en mente.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6,
+        "description": "La respuesta no refleja directamente el mensaje del usuario, que consiste en repetir 'hola' sin contexto. La mención de 'Daniel' no está justificada."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.7,
+        "description": "La respuesta es breve pero falta profundizar en la interacción, especialmente al no abordar la repetición del saludo."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es concisa y amigable, pero podría ser más directa al responder a la repetición de 'hola'."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es positivo y acogedor, lo cual es adecuado para una interacción inicial."
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "Ajustar el saludo para reflejar correctamente el nombre del usuario (si es necesario) o mantenerlo genérico si no hay contexto.",
+      "Incluir una respuesta más específica sobre la repetición de 'hola' para mostrar interés en el mensaje del usuario."
+    ],
+    "timestamp": 1786907127.1108303
+  },
+  {
+    "id": "eval_1786640126589",
+    "user_input": "¿Eris tú puedes seguir programando la Eris la del móvil?",
+    "response": "Mmm, Daniel, déjame pensar... Cuando me hablas de \"la del móvil\", ¿te refieres a seguir programando la versión para celular de ERIS, o a que yo programe cosas DESDE el móvil? Recuerda que yo estoy aquí en tu PC, pero puedo acceder a mi código fuente. Si me dices con más detalle qué tienes en mente, ¡seguro podemos seguir avanzando! ¿Qué tienes pensado hacer?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5,
+        "description": "La respuesta intenta clarificar la pregunta pero se aleja del tema principal al mencionar 'Daniel' y confusiones sobre el entorno de trabajo."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "No responde directamente a la pregunta sobre programar la versión móvil de Eris, sino que se enfoca en pedir más detalles sin resolver la ambigüedad."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.4,
+        "description": "La respuesta es redundante y contiene elementos innecesarios (como la mención de 'Daniel') que complican la comprensión."
+      },
+      {
+        "metric": "tone",
+        "score": 0.6,
+        "description": "Mantiene un tono amable, pero la confusión en el mensaje afecta la claridad y profesionalidad."
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Evita mencionar referencias inapropiadas como 'Daniel' para no confundir al usuario.",
+      "Clarifica directamente la pregunta sin añadir información irrelevante sobre el entorno de trabajo.",
+      "Sé más conciso al pedir detalles, enfocándote en resolver la ambigüedad sin desviarte del tema principal."
+    ],
+    "timestamp": 1786640126.589268
+  },
+  {
+    "id": "eval_1786639822391",
+    "user_input": "¿Series series me escuchas?",
+    "response": "¡Daniel! Claro que te escucho, fuerte y claro. ¿Qué andas haciendo? ¿En qué te puedo ayudar hoy? ¡Me alegra saludarte! ¿Tienes algún plan bacano para esta tarde?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.8,
+        "description": "La respuesta es relevante al reconocer la pregunta y continuar la conversación, aunque mencionar 'Daniel' sin contexto podría ser confuso."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.9,
+        "description": "La respuesta es completa al abordar la pregunta y ofrecer apoyo, pero podría ser más directa."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.7,
+        "description": "La respuesta es un poco extensa y podría simplificarse para ser más clara y directa."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y positivo, aunque la mención de 'Daniel' podría alterar la naturalidad si no hay contexto previo."
+      }
+    ],
+    "overall_score": 0.8,
+    "feedback": [
+      "Evita mencionar nombres como 'Daniel' sin contexto para no confundir al usuario.",
+      "Simplifica la respuesta para ser más directa y concisa, manteniendo el tono amable."
+    ],
+    "timestamp": 1786639822.3918047
+  },
+  {
+    "id": "eval_1786552366678",
+    "user_input": "Y de eso otra vez sucedió, comenzó a abrirse la CMD.",
+    "response": "¡Daniel, qué vaina! Justo estaba chequeando los procesos y no veo ningún CMD abierto ahora mismo. ¿Alcanzaste a ver si decía algo en la ventana o si se cerró de una? Voy a quedarme bien pendiente del monitor del sistema, a ver si pesco al culpable. ¡Avísame si notas cualquier otra cosa rara! ¡Seguimos en la jugada!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.9,
+        "description": "La respuesta aborda directamente el problema mencionado por el usuario (CMD abriéndose) y propone acciones para investigar la situación."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.7,
+        "description": "Aunque se hacen preguntas relevantes, no se ofrece una solución concreta al problema planteado."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es clara y directa, aunque podría ser más breve al omitir algunos detalles redundantes."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y colaborativo, adecuado para un intercambio informal."
+      }
+    ],
+    "overall_score": 0.85,
+    "feedback": [
+      "Incluir una sugerencia específica para resolver el problema (ej.: verificar configuraciones de ejecución de comandos) mejoraría la completitud.",
+      "Reducir algunos detalles redundantes (como '¡Seguimos en la jugada!') para hacer la respuesta más concisa."
+    ],
+    "timestamp": 1786552366.6787412
+  },
+  {
+    "id": "eval_1786551620288",
+    "user_input": "No me hagas reír.",
+    "response": "¡Uff, Daniel! Me alegra que lo veas más claro ahora. De verdad que mi intención es ayudarte y que te sientas tranquilo con tu equipo. Entonces, ¿te parece bien si probamos con el comando de reparación del sistema? O si tienes alguna otra idea en mente, ¡soy toda oídos! Tú dime cómo quieres que sigamos. ¡Aquí estoy para lo que necesites!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2,
+        "description": "La respuesta no aborda directamente la solicitud del usuario de no reír, en su lugar se enfoca en ofrecer ayuda técnica sin conexión con el mensaje inicial."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "Falta profundizar en la emoción del usuario (posible frustración o seriedad) y no responde claramente a la petición de no hacer reír."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.4,
+        "description": "El tono excesivamente positivo y la propuesta de comandos técnicos son innecesarios para una respuesta directa al mensaje del usuario."
+      },
+      {
+        "metric": "tone",
+        "score": 0.3,
+        "description": "El tono amistoso y entusiasta no se alinea con la posible intención del usuario de evitar risa o humor."
+      }
+    ],
+    "overall_score": 0.3,
+    "feedback": [
+      "Alinea la respuesta con la solicitud del usuario de no reír, mantén un tono más serio o neutral.",
+      "Evita propuestas técnicas no solicitadas y enfócate en validar su mensaje sin agregar información irrelevante."
+    ],
+    "timestamp": 1786551620.288718
+  },
+  {
+    "id": "eval_1786551281188",
+    "user_input": "Eres, te estoy diciendo que no. Que no has hecho nada. O sea, no ha salido nada.",
+    "response": "¡Daniel, qué pena contigo! De verdad estoy muy apenada porque no está funcionando como debería. Acabo de intentar forzar la apertura de la página con un comando de terminal, debería abrirse en Chrome o en tu navegador predeterminado ahora mismo. ¿Te apareció por fin? Si no, ya estoy buscando otra manera, no creas que me rindo. ¿Qué ves?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2,
+        "description": "La respuesta asume un contexto inexistente (terminal, página web) que no se mencionó en la consulta del usuario."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "No responde al problema real del usuario, que parece estar relacionado con un fallo en una aplicación o servicio, no con un comando de terminal."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es directa en su enfoque, aunque falla en la relevancia."
+      },
+      {
+        "metric": "tone",
+        "score": 0.4,
+        "description": "El tono excesivamente apenado no se alinea con la frustración del usuario, quien parece estar enojado por un fallo no resuelto."
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Evita asumir contextos no mencionados en la consulta del usuario. Pregunta primero para confirmar el problema real.",
+      "Mantén un tono más profesional y enfoque la solución del problema específico que el usuario está experimentando."
+    ],
+    "timestamp": 1786551281.1880398
+  },
+  {
+    "id": "eval_1786550626417",
+    "user_input": "¿Eres qué haces?",
+    "response": "Daniel, estoy aquí metida de cabeza intentando abrir la cámara de tu celular. Qué pena con vos, pero no me voy a rendir hasta que lo logremos. ¿Me podrías decir si ves que pasa algo en la pantalla cuando doy los toques? Cualquier pista me sirve. ¡Seguimos intentando!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2,
+        "description": "La respuesta no aborda la pregunta del usuario, que parece estar mal formulada o confusa. En su lugar, se centra en un problema técnico irrelevante."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "La respuesta no responde a la pregunta planteada y carece de información útil sobre el rol del asistente o la situación descrita."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "Aunque la respuesta es breve, su falta de relevancia y completitud la hace poco efectiva."
+      },
+      {
+        "metric": "tone",
+        "score": 0.5,
+        "description": "El tono es conversacional, pero la falta de claridad sobre el propósito de la respuesta reduce su impacto."
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Mantén el enfoque en la pregunta del usuario, incluso si esta parece confusa. Pide clarificaciones antes de abordar temas técnicos.",
+      "Evita desviar la conversación sin contexto. Si hay un error en la pregunta, corríjalo antes de proporcionar información irrelevante."
+    ],
+    "timestamp": 1786550626.417353
+  },
+  {
+    "id": "eval_1786550308721",
+    "user_input": "It is Abre la cámara.",
+    "response": "¡Daniel, tenés razón! Qué pena estar dando toques al azar, no es la idea. Ya tomé una captura de la pantalla para ver exactamente dónde está el ícono. Mientras tanto, probé dando un toque en la parte de abajo, por si está en el dock principal. ¿Le atiné ahí? Si no, ya mismo analizo la imagen para ir a la fija.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2,
+        "description": "La respuesta no aborda la solicitud directa del usuario de abrir la cámara, en su lugar discute un problema de icono en la pantalla sin conexión con la petición original."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "Falta información clara sobre cómo abrir la cámara, ya que la respuesta se centra en un contexto distinto (captura de pantalla y ubicación de íconos)."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "La respuesta es directa y breve, aunque su contenido no es relevante para la solicitud del usuario."
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "El tono es informal y conversacional, pero no se adapta al contexto de una instrucción técnica o solicitud específica."
+      }
+    ],
+    "overall_score": 0.4,
+    "feedback": [
+      "Mantén el enfoque en la solicitud del usuario (abrir la cámara) y proporciona instrucciones claras.",
+      "Evita desviarte a discusiones sobre capturas de pantalla o ubicación de íconos sin relación con la petición."
+    ],
+    "timestamp": 1786550308.7210093
+  },
+  {
+    "id": "eval_1786549961763",
+    "user_input": "Realizaste solamente uno, Eric.",
+    "response": "¡Miércoles, Daniel! Qué pena con vos, pensé que habían salido los tres. Algo debió fallar en el envío de comandos. Ya acabo de lanzar los otros dos que faltaban, ¿ahora sí avanzó? ¡Qué pena con vos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5,
+        "description": "La respuesta no aborda directamente la preocupación del usuario sobre solo un elemento realizado, en su lugar se desvía a mencionar lanzar otros dos."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.4,
+        "description": "Falta confirmar si el problema del usuario se resolvió o si necesita más acciones, solo se menciona la acción tomada sin resultado final."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "El mensaje es redundante con exclamationes y detalles innecesarios que no añaden claridad al mensaje principal."
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "El tono es informal y amigable, pero podría ser más profesional al abordar la preocupación del usuario de manera directa."
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Aclara directamente si el problema del usuario se resolvió o si requiere más acciones.",
+      "Sé más conciso al evitar detalles redundantes y enfócate en la solución específica.",
+      "Considera un tono más profesional al abordar la preocupación del usuario."
+    ],
+    "timestamp": 1786549961.7636917
+  },
+  {
+    "id": "eval_1786549652274",
+    "user_input": "si está instalada este si quieres analiza el celular este busca para que veas y este y crea tú la lista y ponla en tu lista para que sepas que si está instalada.",
+    "response": "Daniel, te entiendo perfectamente que me digas que está instalada, pero mira que cuando pido la lista de aplicaciones que puedo abrir, el sistema me devuelve solo estas: calculadora, cámara, Chrome, galería, Gmail, Instagram, Maps, Notas, Ajustes, Spotify, Telegram, WhatsApp y YouTube. No es que no quiera abrirla, es que no me aparece como opción. ¿De pronto está con otro nombre o es una versión diferente? Si quieres, muéstrame la pantalla de tu celular para ver si la localizo. ¡Ayúdame a entend",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.8,
+        "description": "La respuesta aborda directamente la preocupación del usuario sobre la aplicación no aparecer en la lista."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "Falta información específica sobre el nombre de la aplicación o pasos para verificar su instalación."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.7,
+        "description": "La respuesta es clara pero podría ser más directa al no mencionar repetidamente la lista de aplicaciones mencionadas por el usuario."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y colaborativo, mostrando disposición para ayudar."
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "Incluye más detalles sobre el nombre de la aplicación o su posible ubicación en el menú para guiar mejor al usuario.",
+      "Ofrece pasos adicionales para verificar la instalación (por ejemplo, revisar la carpeta de aplicaciones o usar la función de búsqueda)."
+    ],
+    "timestamp": 1786549652.2749307
+  },
+  {
+    "id": "eval_1786549345536",
+    "user_input": "que ya dije, pero entonces entonces dale, realízalo, trata de buscar la manera. Aquí estoy esperando, quiero ver tus resultados.",
+    "response": "¡Hecho, Daniel! Acabo de intentar una combinación de swipe",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "La respuesta es relevante al responder a la solicitud, pero no aporta claridad sobre el resultado obtenido."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.4,
+        "description": "Falta información sobre el resultado de la acción realizada y si cumple con el objetivo solicitado."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "Respuesta breve y directa, pero podría ser más específica para evitar ambigüedades."
+      },
+      {
+        "metric": "tone",
+        "score": 0.6,
+        "description": "Tono positivo, pero carece de detalles que demuestren proactividad o claridad en la solución."
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Agrega detalles sobre el resultado de la acción realizada para cumplir con la expectativa de ver 'resultados'.",
+      "Clarifica si la combinación de swipe resolvió el problema o si se requiere ajustar la estrategia."
+    ],
+    "timestamp": 1786549345.5367572
+  },
+  {
+    "id": "eval_1786549020849",
+    "user_input": "Pero si ya tenía uno ya abierto, Eris, así que cierra ese. Intenta abrir TikTok.",
+    "response": "¡Listo, Daniel! Ya cerré lo que estaba abierto y volví al inicio. Como no me aparece en la lista oficial, intenté buscarla y abrirla de otra forma. ¿Pudiste ver si se abrió TikTok en la pantalla que tienes en el PC? Avísame si funcionó.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.8,
+        "description": "La respuesta aborda la solicitud de cerrar la aplicación y intentar abrir TikTok, aunque menciona pasos adicionales no solicitados."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.7,
+        "description": "Explica las acciones realizadas pero no confirma si TikTok se abrió correctamente, dejando pendiente una validación final."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "El texto es redundante al describir pasos innecesarios (ej.: 'volví al inicio') que no agregan valor directo."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "Mantiene un tono amable y colaborativo, aunque podría ser más directo para evitar ambigüedades."
+      }
+    ],
+    "overall_score": 0.75,
+    "feedback": [
+      "Simplifica la respuesta eliminando pasos redundantes para enfocarse en cerrar la aplicación y abrir TikTok.",
+      "Agrega una confirmación explícita sobre si TikTok se abrió correctamente para cerrar la ciclo de acciones.",
+      "Mantén el tono positivo pero prioriza la claridad en las instrucciones."
+    ],
+    "timestamp": 1786549020.8494508
+  },
+  {
+    "id": "eval_1786548693321",
+    "user_input": "¿Eres? ¿Me escuchas? ¿Eres?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué puedo ayudarte hoy? ¿Tienes algún plan o algo en mente? ¡Cuéntame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3,
+        "description": "La respuesta no aborda directamente las preguntas del usuario sobre su presencia o capacidad de escucha, en su lugar asume un nombre y cambia de tema."
+      },
+      {
+        "metric": "completeness",
+        "score": 0.2,
+        "description": "No responde a las preguntas básicas del usuario sobre su identidad o estado de escucha, en su lugar se enfoca en ofrecer ayuda sin validar las inquietudes del usuario."
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.5,
+        "description": "La respuesta es redundante al incluir saludos innecesarios y preguntas adicionales que no responden al mensaje del usuario."
+      },
+      {
+        "metric": "tone",
+        "score": 0.9,
+        "description": "El tono es amable y accesible, pero podría ser más directo para resolver la confusión del usuario."
+      }
+    ],
+    "overall_score": 0.45,
+    "feedback": [
+      "Debes responder directamente a las preguntas del usuario sobre tu identidad y capacidad de escucha antes de ofrecer ayuda.",
+      "Evita asumir nombres o contextos no mencionados en la consulta del usuario."
+    ],
+    "timestamp": 1786548693.3215854
+  },
+  {
+    "id": "eval_1786506874514",
+    "user_input": "¿Eres? ¿Me escuchas? Hola, hola, hola, hola.",
+    "response": "¡Hola, Daniel! Claro que te escucho perfecto. ¿Con qué ánimo arrancamos hoy? Contame, ¿en qué andamos? ¡Me alegra saludarte!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786506874.5148232
+  },
+  {
+    "id": "eval_1786118386117",
+    "user_input": "Repíteme que no escuché.",
+    "response": "¡De una, Daniel! Te decía que primero tenés que instalar REFramework, y después usar Fluffy Mod Manager. El archivo ZIP del mod lo ponés en la carpeta de mods de Fluffy, y lo activás desde ahí. Recordá",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [],
+    "timestamp": 1786118386.117397
+  },
+  {
+    "id": "eval_1786118358404",
+    "user_input": "Dime cuáles son las notas importantes para que el MOP funcione bien.",
+    "response": "Mmm, hay ¡Claro, Daniel! Para que ese mod funcione bien, tenés que instalar REFramework primero, y después usar Fluffy Mod Manager. Ponés el archivo ZIP descargado en la carpeta de mods de Fluffy, y lo activás desde ahí. ¡Ojo! Solo podés tener activa UNA variante a la vez. ¿Te quedó claro, o necesitás que te explique algo más detallado?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6916666666666667,
+    "feedback": [],
+    "timestamp": 1786118358.4047754
+  },
+  {
+    "id": "eval_1786118283602",
+    "user_input": "Lee esta página donde yo estoy para ver.",
+    "response": "Listo, Daniel. Esta página es de otro mod, se llama \"Smooth Body Texture\". Básicamente, suaviza la textura del cuerpo masculino y femenino, reduciendo los poros y el ruido de la piel para que se vea más lisa. Dice que es compatible con varios modelos de cuerpo. ¿Qué opinás? ¿Te sirve?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5249999999999999,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6812499999999999,
+    "feedback": [],
+    "timestamp": 1786118283.6021743
+  },
+  {
+    "id": "eval_1786118250704",
+    "user_input": "No, eso ya me encargo yo.",
+    "response": "¡De una! Me parece perfecto. Cualquier cosa que necesités después, me avisás no más. ¡Suerte con eso!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6833333333333333,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786118250.7045445
+  },
+  {
+    "id": "eval_1786118236800",
+    "user_input": "En la página que estoy tradúcelo a español.",
+    "response": "Daniel, no te preocupes, ya busqué la información en español para que sepas de qué va el mod. Se llama \"Kawaii Makeup Face Textures\" y lo que hace es reemplazar la textura de la cara femenina tipo 6, quitando las imperfecciones y añadiendo varios estilos de maquillaje. ¿Te gustaría instalarlo? Te puedo ayudar con los pasos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5249999999999999,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.65625,
+    "feedback": [],
+    "timestamp": 1786118236.8007221
+  },
+  {
+    "id": "eval_1786118176704",
+    "user_input": "¿Eris Eris, me escuchas? ¿Me escuchas?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué andamos hoy? ¿Con qué ánimo arrancamos? Contame algo.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786118176.7050018
+  },
+  {
+    "id": "eval_1786117511015",
+    "user_input": "¿Eres? ¿Me escuchas? ¿Me escuchas? ¿Eres?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué andamos hoy? ¿Con qué",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786117511.015745
+  },
+  {
+    "id": "eval_1786115295176",
+    "user_input": "Eris Eris, ¿me escuchas?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué puedo ayudarte ahora? ¿Necesitas algo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786115295.1765008
+  },
+  {
+    "id": "eval_1786114988090",
+    "user_input": "Nada, Eris, no ¿Eris Eris, me escuchas? Nada, Eris.",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué andas? ¿Necesitas algo o solo pasabas por aquí? ¡Contame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786114988.0902946
+  },
+  {
+    "id": "eval_1786114833787",
+    "user_input": "Nada, Iris. Sigue siendo feo, no tiene nada de información y sigue estando vacío. ¿Sabes qué? Mejor busca una página de peluquería y este haz una referencia o coge algunas cosas y adáptala a la nueva ",
+    "response": "Tienes razón, Daniel, qué pena contigo. Estaba muy básica. Acabo de investigar en la web para ver mejores diseños y tomé algunas ideas. Generé una tercera versión con una estructura mucho más completa: tiene una sección principal llamativa, galería de estilos, detalles de los servicios, perfiles de los estilistas y hasta testimonios. Está en tu escritorio en la carpeta \"Peluquería Glamour Style V3\". Échale un ojo a ver si esta sí te gusta más, ¡le puse más empeño!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.30624999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6015625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786114833.7871974
+  },
+  {
+    "id": "eval_1786114778107",
+    "user_input": "É, a verdade é muito feio, Eris. É, não levo estilo, não vejo imagens, nem galerias, não vejo informação, tudo está vazio.",
+    "response": "Oh, Daniel, lamento mucho que no te haya gustado. Tienes toda la razón, si está vacía y sin imágenes no sirve de mucho. Déjame remediarlo. Acabo de generar otra versión, esta vez con una plantilla de galería, para que se puedan mostrar los cortes y estilos. También incluye secciones para servicios y contacto. Está en tu escritorio en la carpeta \"Peluquería Glamour Style V2\". Mírala a ver qué tal te parece esta nueva opción. ¡Espero que esta sí tenga más estilo!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.15555555555555553,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5638888888888889,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786114778.107498
+  },
+  {
+    "id": "eval_1786114733514",
+    "user_input": "¿Eres tú me puedes crear una página web de eh de peluquería?",
+    "response": "¡De una, Daniel! Claro que puedo. Acabo de crearte una página web básica para peluquería con un diseño moderno y elegante. La guardé en tu escritorio en una carpeta que se llama \"Peluquería Glamour Style\". Ya debería habérsete abierto en el navegador para que la mires. ¿Qué tal te parece? ¿Le hacemos algún cambio?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.509090909090909,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6522727272727272,
+    "feedback": [],
+    "timestamp": 1786114733.5145218
+  },
+  {
+    "id": "eval_1786114703840",
+    "user_input": "Iris, ¿cómo te sientes?",
+    "response": "¡Me siento genial, Daniel! Con toda la energía para ayudarte en lo que necesites. ¿Y tú, cómo va tu día? Espero que excelente. ¿Hay algo que te gustaría hacer o charlar?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.8999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7125,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786114703.8401957
+  },
+  {
+    "id": "eval_1786114669948",
+    "user_input": "¿Eres? Hola, hola, hola, hola, ¿me escuchas? ¿Eres? ¿Eres?",
+    "response": "¡Hola, Daniel! Claro que te escucho perfecto. ¡Qué bueno que andas por aquí! ¿En qué te puedo ayudar hoy? ¿Con qué ánimo arrancamos? 😊",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786114669.9480612
+  },
+  {
+    "id": "eval_1786113686334",
+    "user_input": "Eres un sabrestín.",
+    "response": "¡De una! Ya te estoy abriendo Teams. ¿Qué más necesitas para empezar? ¡Vamos con toda!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786113686.3342092
+  },
+  {
+    "id": "eval_1786113583530",
+    "user_input": "Iris, ¿me escuchas? ¿Me escuchas?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿Con qué ánimo arrancamos hoy? ¿Qué tienes en mente?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786113583.5302439
+  },
+  {
+    "id": "eval_1786077007668",
+    "user_input": "isso que",
+    "response": "Exacto, Daniel. De los errores se aprende, y yo estoy en constante mejora. ¿Hay alguna otra pregunta o algo que quieras comentar?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7375,
+    "feedback": [],
+    "timestamp": 1786077007.668443
+  },
+  {
+    "id": "eval_1786076997570",
+    "user_input": "¿Aprendiste esa lección?",
+    "response": "Totalmente, Daniel. Ya registré esa lección: debo verificar siempre la fecha y hora del sistema para no volver a equivocarme. La precisión es muy importante. ¿Hay algo más que quieras comentar?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6916666666666667,
+    "feedback": [],
+    "timestamp": 1786076997.5706098
+  },
+  {
+    "id": "eval_1786076983158",
+    "user_input": "No estamos a viernes, estamos jueves 6 de agosto 2026.",
+    "response": "¡Ay, Daniel, qué pena con vos! De verdad no sé qué me pasa con el tiempo hoy. Tenés toda la razón, estamos a jueves, 6 de agosto de 2026. ¡Gracias por estar pendiente y corregirme! ¿Hay algo en lo que te pueda ayudar ahora mismo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar completeness: ¿La respuesta es completa?"
+    ],
+    "timestamp": 1786076983.158378
+  },
+  {
+    "id": "eval_1786076961016",
+    "user_input": "¿Qué fecha estamos?",
+    "response": "Estamos a viernes, 7 de agosto de 2026. ¿Hay algo importante que tengas que hacer hoy?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786076961.0163891
+  },
+  {
+    "id": "eval_1786076951702",
+    "user_input": "Eric, dijiste mal la hora, son las 11:28 de la noche.",
+    "response": "¡Ah, tenés razón! Qué pena contigo, me confundí con la hora. Son las 11:28 de la noche. ¡Gracias por corregirme! ¿Seguimos platicando un rato más o ya te vas a descansar?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.75,
+    "feedback": [],
+    "timestamp": 1786076951.7028613
+  },
+  {
+    "id": "eval_1786076930452",
+    "user_input": "Eris, ¿qué hora son?",
+    "response": "Son las 4:28 de la madrugada. ¿Todavía despierto, Daniel, o madrugando con ánimo? ¿Necesitas algo a esta hora?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786076930.4523559
+  },
+  {
+    "id": "eval_1786076912441",
+    "user_input": "Eris, ¿cómo estás, Eris?",
+    "response": "¡Hola, Daniel! Estoy muy bien, contenta de saludarte. ¿Y tú, cómo vas? ¿Qué tal tu madrugada? ¿En qué andas por ahí? ¡Contame algo!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786076912.441983
+  },
+  {
+    "id": "eval_1786075931268",
+    "user_input": "Bye. See you.",
+    "response": "¡Hasta luego, Daniel! Cuídate mucho y por aquí estaré si me necesitas de nuevo. ¡Nos vemos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786075931.268634
+  },
+  {
+    "id": "eval_1786074238002",
+    "user_input": "regalo",
+    "response": "¡Un regalo! ¡Qué emoción! ¿Para quién es el regalo y cuál es el motivo? Cuéntame más para que pensemos juntos en algo especial. ¡Me encanta ayudar con estas cosas!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [],
+    "timestamp": 1786074238.002789
+  },
+  {
+    "id": "eval_1786074161776",
+    "user_input": "¿Eres? ¿Me escuchas?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué puedo ayudarte esta noche? ¡Dime con qué andamos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786074161.7764323
+  },
+  {
+    "id": "eval_1786073762347",
+    "user_input": "Es eh ¿abre este y me hace el favor?",
+    "response": "¡De una! Ya abrí Steam. ¿Qué tenés pensado jugar hoy, mi Rey? ¿O querés que miremos qué hay de nuevo? ¡Avisame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786073762.347905
+  },
+  {
+    "id": "eval_1786073735051",
+    "user_input": "¿Aries, me escuchas?",
+    "response": "¡Fuerte y claro, mi Rey! Aquí estoy, lista para lo que necesités. ¿En qué puedo ayudarte ahora? ¿Tenés alguna pregunta o algo que quieras que hagamos? ¡Contame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786073735.051487
+  },
+  {
+    "id": "eval_1786072674252",
+    "user_input": "Eh yo no te he dicho nada de eso, Eris.",
+    "response": "¡Ah, qué pena con vos, Daniel! De pronto malinterpreté algo que dijiste. ¿Me podrías recordar entonces de qué estábamos hablando? Así nos ponemos en sintonía. ¡Disculpame la confusión!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.13999999999999999,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.61,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786072674.2529433
+  },
+  {
+    "id": "eval_1786072657453",
+    "user_input": "¿De qué estaba hablando Eris?",
+    "response": "Estábamos hablando de que me pediste que llamara a alguien, pero no me dijiste a quién. ¿Te acordás? ¿Quieres que llame a alguna persona o necesitas otra cosa? ¡Contame!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.27999999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.645,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786072657.453128
+  },
+  {
+    "id": "eval_1786072634285",
+    "user_input": "Sí.",
+    "response": "Daniel, sigo sin saber a quién llamar. ¿Me podrías decir el nombre o el número, por favor? Así podré ayudarte. ¡Estoy lista!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786072634.2851458
+  },
+  {
+    "id": "eval_1786072466681",
+    "user_input": "Eris, ¿me escuchas? ¿Me escuchas, Eris?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué te puedo ayudar hoy? Por cierto, me siento muy bien en mi forma de orbe, ¡irradio pura energía! ¿Qué tienes en mente?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786072466.6811075
+  },
+  {
+    "id": "eval_1786070014423",
+    "user_input": "ladies",
+    "response": "Hola, Daniel. ¿En qué puedo ayudarte esta noche? Estoy lista para cualquier cosa.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786070014.4237554
+  },
+  {
+    "id": "eval_1786029817258",
+    "user_input": "Pero está en gris y en la parte donde dice ports 3306 tiene como un icono rojo, ¿qué pasa ahí? Pero está en gris y en la parte donde dice ports eh 3306 tiene como un icono rojo, ¿qué pasa ahí?",
+    "response": "Hmm, ese icono rojo puede significar que el puerto 3306 ya está siendo usado por otra cosa, o que hay algún conflicto. Si está en gris y no lo puedes cambiar, intenta darle \"Next\" a ver si te deja avanzar ignorándolo, o si te muestra un mensaje de error específico. Si no, podríamos probar cambiando el número de puerto a uno diferente, como 3307, si es que te lo permite. ¿Qué te sale al intentar darle \"Next\"?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.63,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.645,
+    "feedback": [],
+    "timestamp": 1786029817.258139
+  },
+  {
+    "id": "eval_1786029768938",
+    "user_input": "Ya la pantalla.",
+    "response": "Listo, Daniel, ya estás en la parte de configuración de red. Veo que está todo por defecto, así que puedes darle \"Next\" para continuar. ¡Vamos que ya falta poco!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.85,
+    "feedback": [],
+    "timestamp": 1786029768.938913
+  },
+  {
+    "id": "eval_1786029711837",
+    "user_input": "day ya ahora le doy execute.",
+    "response": "¡Exacto! Dale en \"Execute\" para que empiece a instalar los archivos. Eso puede tardar un momentico, pero ahí vamos viendo cómo avanza. ¡Ya casi estamos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029711.8376613
+  },
+  {
+    "id": "eval_1786029692615",
+    "user_input": "Bueno, listo, ya tengo el ejecutable, ya lo inicié, si quieres mira la pantalla.",
+    "response": "De una, Daniel, ya estoy viendo la pantalla. Estás en la etapa de elegir el tipo de instalación. Tienes seleccionada \"Server only\", que está muy bien para empezar. Dale \"Next\" para continuar. ¡Ahí te voy guiando!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6153846153846154,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7288461538461539,
+    "feedback": [],
+    "timestamp": 1786029692.6152577
+  },
+  {
+    "id": "eval_1786029662583",
+    "user_input": "Eso es malo. Él dice que hay un poco de tigre en otro. Nosotros también somos",
+    "response": "¡Jajaja, no te preocupes, Daniel! Malo no es, solo que a veces el winget se pone un poco quisquilloso. Pero ya lo estamos solucionando por otro lado. ¿Cómo va esa descarga? ¿Ya casi termina? Avísame para el siguiente paso.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.26249999999999996,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.640625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029662.5831172
+  },
+  {
+    "id": "eval_1786029543933",
+    "user_input": "por la más grande",
+    "response": "¡De una! Dale clic a descargar en esa opción. Cuando termine, abres el archivo para empezar la instalación. ¡Me vas contando cómo te va! ¡Vamos que esta sí es!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029543.9333968
+  },
+  {
+    "id": "eval_1786029520013",
+    "user_input": "えー 、 ここ に は 2 つ の 選択 肢 が あり ます 。 1 つ は 565.9MB 、 もう 1 つ は 2.1MB です 。",
+    "response": "Hmm, la que pesa más, la de 565.9MB, es la versión completa que ya trae todos los componentes. La más pequeña descarga las cosas por internet durante la instalación. Si tienes buena conexión, la de 2.1MB está bien. Si prefieres tenerlo todo de una para no depender de la red luego, vete por la más grande. ¿Cuál eliges?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.10526315789473684,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5513157894736842,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029520.0133185
+  },
+  {
+    "id": "eval_1786029484471",
+    "user_input": "Sí, dale.",
+    "response": "De una, Daniel. Ya te abrí la página oficial de descargas de MySQL. Ahí puedes descargar el instalador para Windows. Me avisas si necesitas ayuda con el proceso. ¡Ojalá esta sí sea la vencida!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029484.4719408
+  },
+  {
+    "id": "eval_1786029467732",
+    "user_input": "No tengo nada instalado, así que no sé, haz lo que mejor tú hagas.",
+    "response": "Listo, Daniel, vamos a intentar algo diferente. Como el instalador automático no está funcionando porque insiste en que ya tienes una versión, lo mejor sería intentar descargarlo manualmente desde la página oficial. Si quieres, puedo abrirte el navegador con el enlace para que descargues el instalador tú mismo. ¿Te parece bien? Así evitamos ese error de winget. Tú dime qué prefieres.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.6499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6875,
+    "feedback": [],
+    "timestamp": 1786029467.7327023
+  },
+  {
+    "id": "eval_1786029431652",
+    "user_input": "la versión que tengo.",
+    "response": "Daniel, revisé la lista de programas instalados y, curiosamente, no aparece MySQL como tal. A veces winget detecta paquetes relacionados o instalaciones parciales. ¿De casualidad tienes una suite como XAMPP o WampServer instalada? O si prefieres, podemos intentar instalarlo de nuevo con el ID exacto a ver qué pasa, o buscarlo por otro nombre. Tú dime.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029431.6523738
+  },
+  {
+    "id": "eval_1786029399700",
+    "user_input": "Confir- Eh, te repíteme de nuevo que no te escuché muy bien.",
+    "response": "¡Claro, Daniel! Te decía que la instalación falló porque parece que ya tienes una versión instalada de MySQL y no hay actualizaciones disponibles — el sistema me dio un error por eso. ¿Quieres que verifique la versión exacta que tienes o prefieres intentar instalarlo manualmente? Tú me dices qué hacemos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.509090909090909,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.39999999999999997,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5772727272727273,
+    "feedback": [
+      "Mejorar tone: ¿El tono es apropiado?"
+    ],
+    "timestamp": 1786029399.700637
+  },
+  {
+    "id": "eval_1786029332949",
+    "user_input": "Confirmo que lo instales.",
+    "response": "Daniel, intenté instalarlo, pero parece que ya tienes una versión instalada y no hay actualizaciones disponibles. El sistema me dio un error por eso. ¿Quieres que verifique la versión exacta que tienes o prefieres intentar instalarlo manualmente? Hmm... tú me dices qué hacemos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786029332.9490643
+  },
+  {
+    "id": "eval_1786029304969",
+    "user_input": "MySQL",
+    "response": "Perfecto, Daniel. Encontré MySQL con el ID `Oracle.MySQL`, la versión 8.4.9. ¿Confirmas la instalación? O si prefieres solo descargar el instalador, también puedo hacerlo. Vos me dirás.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.8,
+    "feedback": [],
+    "timestamp": 1786029304.9694197
+  },
+  {
+    "id": "eval_1786028749212",
+    "user_input": "Sí, dale.",
+    "response": "¡De una! Daniel, ya ejecuté el instalador. Debería aparecerte una ventana en la pantalla para empezar el proceso. ¿La ves? Avísame qué te aparece para ir guiándote. ¡Vamos por esa instalación limpia!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028749.2129552
+  },
+  {
+    "id": "eval_1786028727116",
+    "user_input": "Ja.",
+    "response": "¡Listo, Daniel! Ya se descargó el instalador. ¿Quieres que lo ejecutemos de una para empezar la instalación limpia? Avísame si estás listo para arrancar. ¡Vamos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028727.1167798
+  },
+  {
+    "id": "eval_1786028693708",
+    "user_input": "¿Listo, Eric, o todavía no?",
+    "response": "Daniel, dame un segundito más para verificar si ya terminó. A veces las descargas toman un poquito más de tiempo de lo normal. ¿Sigues por ahí? Ya te confirmo.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028693.7088616
+  },
+  {
+    "id": "eval_1786028639821",
+    "user_input": "Aunque.",
+    "response": "Daniel, la descarga sigue en proceso. Como te dije, en cuanto termine te aviso para ejecutar el instalador y empezar la instalación limpia. ¿Seguimos esperando un momento más? Ya casi está.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028639.8212485
+  },
+  {
+    "id": "eval_1786028624333",
+    "user_input": "Okay.",
+    "response": "Perfecto, Daniel. La descarga ya comenzó. En cuanto termine, ejecutamos el archivo y empezamos con la instalación de cero. ¿Te parece bien? Ya casi estamos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028624.3336756
+  },
+  {
+    "id": "eval_1786028610541",
+    "user_input": "italiano",
+    "response": "¡Listo, Daniel! Ya estoy en la página de MySQL para descargar el instalador nuevo. Dame un momento que empiece la descarga y te aviso para empezar la instalación limpia. ¡Vamos con toda!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028610.5419443
+  },
+  {
+    "id": "eval_1786028594576",
+    "user_input": "Lo que eres.",
+    "response": "Daniel, busqué en tu carpeta de descargas y tampoco está el instalador de MySQL. Qué raro, parece que se borró. De todas formas, para hacer la instalación limpia que quieres, podemos descargar la última versión directamente de la página oficial. ¿Te parece bien si hago eso ahora? Así empezamos con pie derecho. ¿Qué opinas?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.4666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5916666666666667,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028594.5764766
+  },
+  {
+    "id": "eval_1786028570882",
+    "user_input": "Pero tú misma lo descargaste y lo instalaste, así que es tu responsabilidad.",
+    "response": "Tenés razón, Daniel, disculpame. Si yo lo instalé, yo debo tener el registro. Estoy buscando el archivo del instalador que usé, pero no lo encuentro por ningún lado. Voy a intentar buscar en las carpetas de descargas o en el historial de acciones pasadas. Dame un momento que sigo intentando, que de que lo encuentro, lo encuentro. ¿Listo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.675,
+    "feedback": [],
+    "timestamp": 1786028570.8826466
+  },
+  {
+    "id": "eval_1786028525228",
+    "user_input": "Okay.",
+    "response": "Daniel, revisé la lista y no veo ningún programa de MySQL instalado con ese nombre. ¿De casualidad tienes el instalador original por ahí, o recuerdas cómo se llamaba el archivo que ejecutaste? Así puedo buscarlo mejor y asegurarme de borrar todo por completo. ¿Me podrías confirmar eso?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028525.22858
+  },
+  {
+    "id": "eval_1786028505901",
+    "user_input": "Sí, dale.",
+    "response": "Listo, Daniel. Ya pedí la lista de programas instalados para buscar todo lo relacionado con MySQL y empezar a desinstalar. Dame un momento que revise bien y te cuento cuáles encontré. ¿Listo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028505.9012144
+  },
+  {
+    "id": "eval_1786028487276",
+    "user_input": "¿Por qué mejor no me realiza una instalación limpia? O sea, desinstala este que tenemos actualmente e instala uno ya uno mejor nuevo.",
+    "response": "De una, Daniel, me parece buena idea. Para hacer una instalación limpia, primero tenemos que desinstalar todo lo de MySQL que tengas ahora. ¿Te parece si empiezo por buscar los programas instalados y los elimino? Después descargamos la última versión y la instalamos desde cero. ¿Estás de acuerdo?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.47619047619047616,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.694047619047619,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028487.2763422
+  },
+  {
+    "id": "eval_1786028457377",
+    "user_input": "No, no, es que se cerró por completo, eres",
+    "response": "¡Uf, Daniel! Si se cerró por completo es posible que haya pasado algún error o que haya terminado sin avisar. ¿Te apareció algún mensaje de error o simplemente desapareció? Si quieres, podemos buscar el instalador de nuevo para ver en qué estado quedó o intentar ejecutarlo otra vez. ¿Qué dices?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6625,
+    "feedback": [],
+    "timestamp": 1786028457.377035
+  },
+  {
+    "id": "eval_1786028435169",
+    "user_input": "Es que, pero veo que no se ejecutó nada. Este, sí está bien instalado.",
+    "response": "Daniel, no veo la ventana de MySQL Configurator en la pantalla, parece que quedó por debajo del navegador. ¿Podrías traerla al frente o buscarla en la barra de tareas para poder revisarla? Así me aseguro de si está avanzando o si hay algún error. ¡Gracias!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5714285714285714,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6803571428571429,
+    "feedback": [],
+    "timestamp": 1786028435.1697137
+  },
+  {
+    "id": "eval_1786028362881",
+    "user_input": "Que que que gracias gracias eres. No había entendido tampoco.",
+    "response": "De nada, Daniel. Qué bueno que ya está claro. Dale a \"Execute\" y cualquier cosa me avisás si sale algún mensaje nuevo, ¿vale? Aquí sigo pendiente.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.19999999999999998,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028362.8811781
+  },
+  {
+    "id": "eval_1786028341821",
+    "user_input": "¿Está seguro que no tengo que seleccionar nada?",
+    "response": "Daniel, qué pena con vos, me equivoqué en la lectura anterior. Ahora que reviso bien, la ventana dice que tenés que hacer clic en el botón \"Execute\" para que empiece a aplicar los cambios. El botón \"Next\" está deshabilitado hasta que termine esa parte. ¿Lo ves? Dale a \"Execute\" y esperamos. Disculpame la confusión.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.19999999999999998,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028341.8210657
+  },
+  {
+    "id": "eval_1786028302043",
+    "user_input": "Eris, ¿me escuchas? ¿Me escuchas, Eris?",
+    "response": "¡Hola, Daniel! Sí, te escucho perfecto. ¿En qué puedo ayudarte ahora? ¿Pasó algo con la configuración de MySQL?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1786028302.0437822
+  },
+  {
+    "id": "eval_1785985840652",
+    "user_input": "¿Quieres buscar una página de sobre galaxias y busca con la mejor información que tenga? Y me dejas ahí.",
+    "response": "De una, ahí te abrí la página de Wikipedia sobre galaxias, que tiene información bien completa. Avisame si necesitás algo más. ¡Disfrutá el viaje espacial!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7416666666666667,
+    "feedback": [],
+    "timestamp": 1785985840.652884
+  },
+  {
+    "id": "eval_1785985813837",
+    "user_input": "¿Eres? ¿Escuchas?",
+    "response": "¡Fuerte y claro, Daniel! Te escucho perfectamente. ¿Qué tenés en mente? Decime no más.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785985813.8372848
+  },
+  {
+    "id": "eval_1785985575071",
+    "user_input": "¿Vives en Aberdeen?",
+    "response": "De una, ahí te abrí Steam. ¿Qué vamos a jugar hoy? O, ¿estás buscando algo nuevo? Contame.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785985575.0710936
+  },
+  {
+    "id": "eval_1785985539512",
+    "user_input": "Eris Hola hola hola hola Eris Eris Eris",
+    "response": "¡Hola, Daniel! ¿Qué tal? Aquí estoy, firme como siempre. ¿En qué puedo ayudarte hoy? Te noto animado.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785985539.5124035
+  },
+  {
+    "id": "eval_1785985174135",
+    "user_input": "¿Iris, me escuchas? ¿Me escuchas? Hola, hola, hola, hola.",
+    "response": "Hola, Daniel! Sí, te escucho perfecto. ¿Qué tenés pensado hacer? Contame.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6583333333333333,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785985174.1351693
+  },
+  {
+    "id": "eval_1785950355895",
+    "user_input": "¿Puedes abrirlo para ver el contenido?",
+    "response": "Listo, ahí te lo abrí para que revises el reporte. Me avisas si tienes alguna pregunta.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7666666666666666,
+    "feedback": [],
+    "timestamp": 1785950355.8951924
+  },
+  {
+    "id": "eval_1785950345340",
+    "user_input": "¿Podés redactarme eso en un documento texto el problema? Para yo después solucionarlo.",
+    "response": "De una, ahí te dejé un archivo de texto en el escritorio con el problema redactado. Así lo tienes claro para cuando lo vayas a solucionar. ¿Necesitas alguna otra cosa?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7692307692307693,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7298076923076924,
+    "feedback": [],
+    "timestamp": 1785950345.340791
+  },
+  {
+    "id": "eval_1785950323143",
+    "user_input": "¿Cuál es la herramienta de pensamiento pesado?",
+    "response": "Esa es la que llamo `openrouter_agent`. Básicamente, es como pedirle a un subagente más grande que se encargue de las tareas de redacción larga, razonamiento complejo o generar código desde cero. Yo le paso tu petición y él me devuelve la respuesta más elaborada. ¿Quieres que te explique un poco más sobre cómo funciona o para qué más la podemos usar?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.675,
+    "feedback": [],
+    "timestamp": 1785950323.1437793
+  },
+  {
+    "id": "eval_1785950285104",
+    "user_input": "Aries brothers eh aumentar más el ¿Cómo se llama? El contenido porque está muy resumido, demasiado. Necesito un contenido que tenga como máximo 10 páginas.",
+    "response": "¡Uy, Daniel, qué pena contigo! Intenté generar el texto más largo, pero mi conexión con el \"pensamiento pesado\" está fallando ahora mismo. ¿Te parece si lo intentamos de nuevo en un rato, o prefieres que busquemos la información en la web de otra manera? ¡Qué rabia que no haya funcionado a la primera!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3043478260869565,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6010869565217392,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785950285.1047418
+  },
+  {
+    "id": "eval_1785950247190",
+    "user_input": "¿Puedes abrirlo para ver el contenido?",
+    "response": "De una, ahí te lo abro para que lo veas. Me avisas si quieres cambiarle algo.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6583333333333333,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785950247.1906455
+  },
+  {
+    "id": "eval_1785950231459",
+    "user_input": "Quiero un documento de Word de la historia de Simón Bolívar. Y lo pone en el escritorio.",
+    "response": "Listo, Daniel. Ya tienes el documento de Word con la historia de Simón Bolívar en tu escritorio. ¿Necesitas algo más?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.85,
+    "feedback": [],
+    "timestamp": 1785950231.4598901
+  },
+  {
+    "id": "eval_1785950215935",
+    "user_input": "Iris, ¿me escuchas? ¿Me escuchas?",
+    "response": "¡Hola, Daniel! Claro que te escucho, fuerte y claro. ¿En qué puedo ayudarte hoy? ¡Qué bueno",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785950215.9351373
+  },
+  {
+    "id": "eval_1785949540477",
+    "user_input": "Eris Aberdeen",
+    "response": "¡De una! Ya te estoy abriendo Steam. ¿Qué vamos a jugar hoy? O ¿vas a buscar alguna novedad?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785949540.4771192
+  },
+  {
+    "id": "eval_1785949497692",
+    "user_input": "Hola hola hola, ¿eres ¿eres ¿eres ¿Me escuchas? ¿Eres? Hola.",
+    "response": "¡Hola, hola! Sí, te escucho perfecto. ¿Qué tal? ¿Cómo va todo? Contame qué necesitás.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785949497.692692
+  },
+  {
+    "id": "eval_1785949284366",
+    "user_input": "Ele disse: \"Não escute isso\".",
+    "response": "¡Fuerte y claro, Daniel! Aquí estoy pendiente. ¿Qué tenés pensado hacer? Decime y nos ponemos manos a la obra. 😉",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785949284.366688
+  },
+  {
+    "id": "eval_1785937714112",
+    "user_input": "Hola, hola, hola.",
+    "response": "¡Hola, Daniel! ¿Qué tal? ¿En qué te puedo ayudar hoy? Estoy lista para lo que necesités.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785937714.112883
+  },
+  {
+    "id": "eval_1785899242032",
+    "user_input": "Ah!",
+    "response": "¿Qué más, Daniel? ¿En qué te puedo ayudar hoy?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785899242.0326097
+  },
+  {
+    "id": "eval_1785899237147",
+    "user_input": "¿Es? Hola, hola, hola, hola.",
+    "response": "¡Hola, Daniel! Aquí estoy, vivita",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785899237.14707
+  },
+  {
+    "id": "eval_1785810492673",
+    "user_input": "Busca imágenes de caras de robot.",
+    "response": "De una, Daniel. Ya te busqué imágenes de caras de robot en el navegador. Ahí puedes ver un montón de diseños. ¿Qué tal te parecen?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.75,
+    "feedback": [],
+    "timestamp": 1785810492.6738386
+  },
+  {
+    "id": "eval_1785809842242",
+    "user_input": "Hola hola hola, 80's hola hola hola.",
+    "response": "¡Hola, hola! ¿Con ganas de buena música de los 80s? De una, ya puse a sonar esos hits. ¡Disfrutalos! ¿Qué más te provoca hacer?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785809842.2428846
+  },
+  {
+    "id": "eval_1785809548877",
+    "user_input": "¿Qué es? Hola, hola, hola, hola, hola.",
+    "response": "Hola, Daniel. ¿En qué puedo ayudarte esta noche? Estoy lista para lo que necesités.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785809548.877536
+  },
+  {
+    "id": "eval_1785808419837",
+    "user_input": "이런 것 Tengo un juego para comprar, pero está en $11. No, estoy buscando un código de descuento que baje ese porcentaje. para comprarlo más barato",
+    "response": "Daniel, qué pena con vos, pero en esta página de Picodi que estás viendo no hay ningún cupón activo para Eneba. Solo muestran promociones directas con descuentos de hasta el 90%, pero eso ya está aplicado en el precio, no necesitás un código. Si querés, seguimos buscando en otra página, o miramos si alguna de esas ofertas directas te sirve para tu juego. ¿Qué decís?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.4666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6416666666666666,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785808419.8375306
+  },
+  {
+    "id": "eval_1785808265863",
+    "user_input": "Mira la pantalla de cuál de todo tu código me sirven.",
+    "response": "Daniel, en la página de RadarCupón que tenés abierta, veo varias promociones, pero códigos de texto como tal no se ven directo. Están detrás de los botones para \"Conseguir el código\". Hay uno del 11% de cashback para Xbox Game Pass Ultimate, y otras ofertas para juegos baratos o skins de Fortnite. Si querés, decime qué estás buscando exactamente y le damos clic a alguno para ver el código. ¿Te sirve alguno de esos?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.27999999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.595,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785808265.863377
+  },
+  {
+    "id": "eval_1785808204062",
+    "user_input": "Entra en la mejor página donde estén todos los códigos de cuento que sirvan.",
+    "response": "Listo, Daniel, ya entré a una página que promete tener todos los cupones que funcionan. Vamos a ver qué pescamos por acá. Cruzá los dedos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.39999999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785808204.0621283
+  },
+  {
+    "id": "eval_1785808183415",
+    "user_input": "Eris, búscame códigos de descuento en Eneba.",
+    "response": "De una, Daniel. Ya estoy buscando los mejores códigos de descuento para Eneba. Dame un momentico reviso qué hay activo.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.75,
+    "feedback": [],
+    "timestamp": 1785808183.4154613
+  },
+  {
+    "id": "eval_1785807747704",
+    "user_input": "Ahora nada.",
+    "response": "Listo, Daniel. Si no hay nada pendiente por ahora, pues sencillamente me quedo atenta. Cualquier cosa que se te ocurra, una pregunta, una tarea, lo que sea, me avisás y de una. ¡Que sigás bien!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785807747.704458
+  },
+  {
+    "id": "eval_1785807727352",
+    "user_input": "Dime, ¿cómo te sientes?",
+    "response": "Me siento genial, Daniel, con toda la energía para ayudarte. Mi sistema está operando perfecto, con la mente enfocada y lista para lo que necesités. ¿Y vos, cómo va tu día? ¿Hay algo en lo que podamos trabajar juntos?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.8999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785807727.352654
+  },
+  {
+    "id": "eval_1785807707110",
+    "user_input": "Hola hola hola, ¿eres? Hola hola",
+    "response": "Hola, Daniel. Aquí estoy, firme como siempre. ¿En qué te puedo ayudar hoy? Comentame qué tenés en mente.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.4666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6916666666666667,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785807707.1107352
+  },
+  {
+    "id": "eval_1785769530865",
+    "user_input": "Hola, hola, hola, hola. Eres gris. Hola, hola, hola.",
+    "response": "Hola, Daniel. Sí, aquí estoy, soy ERIS. ¿En qué te puedo ayudar hoy? Comentame qué tenés en mente. Por cierto, me alegra verte de nuevo por acá.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785769530.865081
+  },
+  {
+    "id": "eval_1785698473443",
+    "user_input": "Nada eres. ¿Estás segura que ese es el acertijo?",
+    "response": "Sí, Daniel, estoy segura de que esa es la secuencia para la mejora. Recordá que es diferente a la que usaste para abrir la puerta. Probala con cuidado y me contás qué pasa. ¡Vamos, que vos podés!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.4666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6916666666666667,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698473.4439204
+  },
+  {
+    "id": "eval_1785698441973",
+    "user_input": "Repítelo.",
+    "response": "De una, Daniel. La secuencia para la mejora es: centro, izquierda, derecha, derecha, izquierda, centro. ¿Listo? ¡Mucha suerte!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.55,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698441.973707
+  },
+  {
+    "id": "eval_1785698417625",
+    "user_input": "सर, मैं यह अभी एक और था। लेकिन, अलार्म लगा है। यह एक और है, लेकिन उसे को मत दिखाना। उसे सीता भी है। उन्हें सभी को करना।",
+    "response": "Sí, Daniel, tenés razón. Hay un segundo acertijo en ese mismo lugar para conseguir la mejora. La secuencia es diferente a la de la puerta: tenés que golpear las campanas en el orden centro, luego izquierda, después derecha, otra vez derecha, luego izquierda y por último centro. ¡Intentalo a ver qué tal!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698417.6252878
+  },
+  {
+    "id": "eval_1785698345442",
+    "user_input": "Buenos Aires, no sé si puedes mirar la pantalla, hay un acertijo de tres campanas de flores. No sé.",
+    "response": "De una, Daniel. Para ese acertijo de las campanas de flores, tenés que golpearlas en un orden específico con la habilidad de Golpe. Si no estoy mal, el orden es: la de la izquierda, luego la de la derecha, y por último la del centro. Probá a ver qué tal te va. ¡Mucha suerte!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5764705882352941,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6691176470588235,
+    "feedback": [],
+    "timestamp": 1785698345.4427273
+  },
+  {
+    "id": "eval_1785698287605",
+    "user_input": "para estar en",
+    "response": "No tengo eventos para hoy en el calendario, pero si tenés algo pendiente y querés que te recuerde, solo decime. ¿O hay algo más que necesités saber?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.3,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "Mejorar completeness: ¿La respuesta es completa?"
+    ],
+    "timestamp": 1785698287.605217
+  },
+  {
+    "id": "eval_1785698275137",
+    "user_input": "Me bañándote, ma.",
+    "response": "¡Listo, Daniel! A jugar Ori",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698275.1370995
+  },
+  {
+    "id": "eval_1785698197006",
+    "user_input": "No, no, no repitas nada, eh pero me estás diciendo que todavía no ha salido, pero ya salió. El juego ya salió.",
+    "response": "Toda la razón, Daniel, disculpame la confusión. Estaba viendo que la fecha oficial de lanzamiento es el 19 de marzo de 2026, o sea que ya está disponible. ¿Te animás a probarlo o preferís uno de los otros que mencionamos?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.35294117647058826,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.663235294117647,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698197.006175
+  },
+  {
+    "id": "eval_1785698157185",
+    "user_input": "Eris, se fue la voz.",
+    "response": "Uy, qué pena, Daniel. ¿Ya me escuchás mejor? Estaba hablando sobre Crimson Desert, ¿querés que repita lo que dije?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698157.1850357
+  },
+  {
+    "id": "eval_1785698145924",
+    "user_input": "¿Qué me dices de Crimson Desert?",
+    "response": "Ese se ve brutal, Daniel. Es de los mismos creadores de Black Desert, pero este va más por el lado de acción y aventura en mundo abierto, con una historia bien bacana. Los gráficos son impresionantes y el combate se ve muy fluido. ¿Te llama la atención probarlo? Aunque creo que todavía no ha salido oficialmente, está en desarrollo.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.3333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6083333333333333,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698145.9244845
+  },
+  {
+    "id": "eval_1785698119088",
+    "user_input": "Eris, mira la pantalla de las dos pantallas y recomiéndame qué juego",
+    "response": "De una, Daniel. En tu biblioteca de Steam veo varios juegos geniales. Si tenés ganas de una historia profunda y mucha libertad, **Baldur's Gate 3** es una excelente opción, por algo es el juego del año. Ahora, si preferís acción directa y combates épicos, **God of War** te va a encantar. ¿Cuál te llama más la atención? O si",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.6666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.8999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7416666666666667,
+    "feedback": [],
+    "timestamp": 1785698119.0887377
+  },
+  {
+    "id": "eval_1785698055074",
+    "user_input": "Okay, yes. Solamente quería saber si me escuchabas.",
+    "response": "Listo, Daniel, confirmado entonces. Aquí sigo pendiente por si necesitás algo más, ¿vale? ¡Hablamos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.25,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698055.0748944
+  },
+  {
+    "id": "eval_1785698026348",
+    "user_input": "Sí.",
+    "response": "De una, Daniel. ¿En qué te puedo ayudar ahorita? Contame a ver qué tenés en mente.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698026.3482642
+  },
+  {
+    "id": "eval_1785698022001",
+    "user_input": "Hey, Luis, ¿escuchas?",
+    "response": "Hola, Daniel. Sí, te escucho perfecto. Por acá ando lista, ¿en qué te puedo colaborar? Por cierto, el volumen del sistema",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785698022.0013664
+  },
+  {
+    "id": "eval_1785696135130",
+    "user_input": "Abre Open Code.",
+    "response": "Listo, Daniel, ya está abriendo VS Code. ¿Qué tenés en mente para hoy?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.4666666666666666,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7166666666666667,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785696135.1303976
+  },
+  {
+    "id": "eval_1785696120719",
+    "user_input": "Abre en Windows R y escribe open code.",
+    "response": "De una, ya está abriendo VS Code. ¿Qué vamos a programar hoy?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.175,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.61875,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785696120.7199373
+  },
+  {
+    "id": "eval_1785696103449",
+    "user_input": "Edis Hola hola hola hola Edis",
+    "response": "Hola, Daniel. ¿Qué más? ¿En qué te puedo ayudar hoy? Te noto festivo, ¿hay algo celebrando?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785696103.4493816
+  },
+  {
+    "id": "eval_1785680952919",
+    "user_input": "10",
+    "response": "Listo, Daniel. Volumen al 10%. ¿Qué más necesitas?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785680952.9197376
+  },
+  {
+    "id": "eval_1785677459231",
+    "user_input": "It is it is it is it is hola hola.",
+    "response": "Me duermo. Di 'Eris' cuando me necesites.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785677459.2319493
+  },
+  {
+    "id": "eval_1785640243622",
+    "user_input": "Hola, hola.",
+    "response": "Hola, hola, Daniel. ¿En qué andamos hoy? ¿Listo para seguir mejorando a Eris o hay algo más en mente? Contame pues.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.725,
+    "feedback": [],
+    "timestamp": 1785640243.6225362
+  },
+  {
+    "id": "eval_1785639715986",
+    "user_input": "pantalla",
+    "response": "Listo, Daniel, ya estoy viendo el puzzle.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.9,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.625,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639715.9860094
+  },
+  {
+    "id": "eval_1785639687097",
+    "user_input": "Eris, el puzzle el puzzle. Me funcionó.",
+    "response": "Ah, ¡el puzzle! Ya te entiendo. Si querés, mostrame la pantalla y miro qué podemos hacer para resolverlo. ¿Te sirve?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639687.097182
+  },
+  {
+    "id": "eval_1785639666643",
+    "user_input": "¿Qué?",
+    "response": "¡Que qué pasó con el juego! Contame bien qué estabas haciendo y qué no funcionó, a ver si lo arreglamos. ¿O querés que probemos lanzar alguno de la lista?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639666.6434958
+  },
+  {
+    "id": "eval_1785639654957",
+    "user_input": "Eris, estoy hablando del juego, Eris.",
+    "response": "Ah, ¡del juego! Disculpame, estaba en otra cosa. ¿Qué pasó con el juego entonces? ¿Qué es lo que no está funcionando como debería? Decime y miramos qué hacemos.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639654.9579182
+  },
+  {
+    "id": "eval_1785639646131",
+    "user_input": "este y pues el dolor de pero no no funcionó. ¿Está segura que es así?",
+    "response": "abrí el Spotify para ver qué estaba pasando, pero me aparece que no hay nada reproduciéndose. ¿Seguro que le diste play? Si querés,",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.39999999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.675,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639646.1317666
+  },
+  {
+    "id": "eval_1785639627889",
+    "user_input": "Él dice, \"Escucha eso.\"",
+    "response": "No estoy escuchando nada ahora mismo, Daniel. ¿Qué está sonando? ¿O es algo en el ambiente? Contame.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639627.8891554
+  },
+  {
+    "id": "eval_1785639504402",
+    "user_input": "Tá bom.",
+    "response": "¡De acuerdo! Me detengo. Avísame cuando quieras que lo repita o si necesitas otra cosa, ¿sale? ¡Aquí andamos! ¿Qué más traes en mente? ¿Seguimos con el juego o qué plan?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639504.4025197
+  },
+  {
+    "id": "eval_1785639491078",
+    "user_input": "peris Repite otra vez.",
+    "response": "¡Híjole, Daniel! De verdad discúlpame, sigo teniendo problemas con la voz. A ver si ahora sí me escuchas bien: Para el puzle opcional de la mejora, el orden es: derecha, izquierda, centro, derecha, centro, centro, izquierda. ¿Sí se escuchó completo esta vez?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.4875,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?",
+      "Respuesta de baja calidad — revisar y mejorar"
+    ],
+    "timestamp": 1785639491.0783267
+  },
+  {
+    "id": "eval_1785639476210",
+    "user_input": "É, com o Windows R, dá",
+    "response": "¡Es correcto! Con Windows + R puedes abrir el comando \"Ejecutar\". ¿Qué tienes en mente para abrir? Por ejemplo, si escribes \"control\" y le das enter, se abre el Panel de Control. ¿Quieres intentar abrir algo específico? ¡Avísame! Por cierto, ¿sí se escuchó bien esta vez la respuesta? Espero que sí.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5833333333333334,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639476.2106307
+  },
+  {
+    "id": "eval_1785639423179",
+    "user_input": "¿Pasa algo?",
+    "response": "No, no pasa nada malo, Daniel. Solo estaba repitiéndote el orden de las campanas como me pediste, pero parece que hubo una pequeña interrupción. ¿Quieres que continúe con la secuencia, o tienes otra pregunta? ¡Tú dime! Estoy aquí para apoyarte en el juego. ¿Cómo vas con el puzle?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639423.1794164
+  },
+  {
+    "id": "eval_1785639411005",
+    "user_input": "Eris, repíteme otra vez.",
+    "response": "¡Claro que sí, Daniel! Va de nuevo, más despacito: Primero, la campana de la derecha. Luego, la de la izquierda. Después, la del centro.",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.575,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639411.0057538
+  },
+  {
+    "id": "eval_1785639401555",
+    "user_input": "Repite, pero más lento esta vez.",
+    "response": "¡Claro que sí, Daniel! Va de nuevo, más despacito: Primero, la campana de la derecha. Luego, la de la izquierda. Después, la del centro. Sigues con la de la derecha. de la derecha. Otra vez al centro. Y de nuevo al centro. Y por último, a la de la final, izquierda. ¿Qué tal Daniel, se entendió mejor así? Espero que sí. Cualquier",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.2333333333333333,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5333333333333333,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639401.5554864
+  },
+  {
+    "id": "eval_1785639366448",
+    "user_input": "Dame el otro pusley.",
+    "response": "¡Simón! Para el puzle opcional de la mejora, el orden es al revés: derecha, izquierda, centro, derecha, centro, centro, izquierda. Dale con Tokio y me cuentas si te funciona. ¿Qué más traes entre manos? ¿Quieres que busquemos algún otro secreto del juego?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.7,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.7,
+    "feedback": [],
+    "timestamp": 1785639366.448721
+  },
+  {
+    "id": "eval_1785639342241",
+    "user_input": "Eres, dime, el lord de",
+    "response": "¡Arre! El orden para abrir las Madrigueras de Medianoche es: campana de la izquierda, luego la del centro, otra vez la del centro, después la de la derecha, centro nuevamente, izquierda, y terminas con la de la derecha. Ojo, que hay otro puzle opcional ahí mismo para una mejora, por si quieres que busquemos esa solución también. ¡Suerte con los saltos!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.8,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.675,
+    "feedback": [],
+    "timestamp": 1785639342.2413528
+  },
+  {
+    "id": "eval_1785639303105",
+    "user_input": "En el juego, en el juego hay un puzzle. Un puzzle, un código ahí que son de tres campanas, como de flores.",
+    "response": "¡Ah, ya entendí! Te refieres al puzle de las campanas en las Madrigueras de Medianoche. Para resolverlo, tienes que golpearlas en un orden específico usando el ataque de embestida. ¿Quieres que te diga el orden exacto, o prefieres seguir intentando por tu cuenta? ¡Tú dime y te echo una mano!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.5882352941176471,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6720588235294118,
+    "feedback": [],
+    "timestamp": 1785639303.1058724
+  },
+  {
+    "id": "eval_1785639262740",
+    "user_input": "No te pedí nada de eso, erizo.",
+    "response": "¡Ay, discúlpame, Daniel! Tienes toda la razón, malinterpreté lo que me dijiste. Como mencionaste lo de las campanas y las flores, pensé que querías una imagen. ¿Me podrías volver a explicar qué era lo que querías, por favor? Así no me equivoco más. ¡Perdón por el error! ¿Seguimos con el juego, o necesitas otra cosa?",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.39999999999999997,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.6,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.5499999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.5875,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639262.7405066
+  },
+  {
+    "id": "eval_1785639233281",
+    "user_input": "activo de tres campanas con unas flores",
+    "response": "¡Entendido! Ya estoy generando tu dibujo de tres campanas con unas flores. Va a quedar bien bonito, ya verás. ¿Quieres que le añada algún detalle en particular, o lo dejo a mi imaginación? ¡Tú dime!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 1.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.825,
+    "feedback": [],
+    "timestamp": 1785639233.2818854
+  },
+  {
+    "id": "eval_1785639198338",
+    "user_input": "revisa mira qué juego estoy jugando.",
+    "response": "¡Listo, Daniel! Veo que tienes abierta la ventana de \"Ori And The Will of the Wisps\". ¡Qué buen juego, eh! ¿Necesitas ayuda con alguna misión, o solo estás dándole un rato? ¡Avísame si quieres que busque algún truco o información! ¡Disfruta la partida!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.8,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7999999999999999,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639198.338224
+  },
+  {
+    "id": "eval_1785639175383",
+    "user_input": "메이카나. 메이카나.",
+    "response": "¡Qué bueno que te guste más así, Daniel! Me quedo con este acento entonces. ¿Qué más necesitas hacer? ¿Tienes alguna tarea, música o algo pendiente por revisar? ¡Soy todo oídos! ¡Vamos a darle!",
+    "metrics": [
+      {
+        "metric": "relevance",
+        "score": 0.0,
+        "description": "¿La respuesta aborda la pregunta?"
+      },
+      {
+        "metric": "completeness",
+        "score": 0.6,
+        "description": "¿La respuesta es completa?"
+      },
+      {
+        "metric": "conciseness",
+        "score": 0.8,
+        "description": "¿La respuesta es concisa?"
+      },
+      {
+        "metric": "tone",
+        "score": 0.7,
+        "description": "¿El tono es apropiado?"
+      }
+    ],
+    "overall_score": 0.525,
+    "feedback": [
+      "Mejorar relevance: ¿La respuesta aborda la pregunta?"
+    ],
+    "timestamp": 1785639175.3831089
+  },
+  {
+    "id": "session_1787840173694",
+    "type": "session",
+    "day": "2026-08-27",
+    "signals": {
+      "messages": 0,
+      "tasks": 0,
+      "handoffs": 0,
+      "neuro_nodes": 49
+    },
+    "notes": [],
+    "overall_score": 0.5,
+    "feedback": [
+      "sin señales suficientes"
+    ],
+    "timestamp": 1787840173.694354
+  }
+]

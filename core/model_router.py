@@ -10,7 +10,7 @@ Task types:
   search        — quick text queries (web_search, knowledge_base, etc.)
   vision        — screen_vision, image analysis
 
-Fallback chain on quota/error: Gemini -> Groq -> OpenRouter -> Ollama.
+Fallback chain on quota/error: Gemini -> Groq -> Cerebras -> OpenRouter -> Ollama.
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ _DEFAULTS: dict[str, str] = {
     "model_for_vision":       "gemini",
 }
 
-_VALID_PROVIDERS = ("gemini", "groq", "openrouter", "ollama")
+_VALID_PROVIDERS = ("gemini", "groq", "cerebras", "openrouter", "ollama")
 
 # Gemini error strings that indicate quota / billing exhaustion
 _QUOTA_ERRORS = (
@@ -47,9 +47,22 @@ _QUOTA_ERRORS = (
     "free tier",
 )
 
+# Auth/blocking errors: provider cannot serve right now -> hard fail & fallback
+_HARD_FAIL_ERRORS = (
+    "401",
+    "402",
+    "403",
+    "unauthorized",
+    "forbidden",
+    "invalid api key",
+    "authentication",
+    "not found",
+)
+
 # ── Fallback state ────────────────────────────────────────────────────────────
 _gemini_failed = False   # set True on quota error; resets on restart
 _groq_failed   = False
+_cerebras_failed = False
 _openrouter_failed = False
 
 
@@ -92,6 +105,16 @@ def _groq_available(cfg: dict | None = None) -> bool:
         return False
 
 
+def _cerebras_available(cfg: dict | None = None) -> bool:
+    if cfg is None:
+        cfg = _cfg()
+    try:
+        from actions.cerebras_provider import is_available as _c_avail
+        return _c_avail()
+    except Exception:
+        return False
+
+
 def _openrouter_available(cfg: dict | None = None) -> bool:
     if cfg is None:
         cfg = _cfg()
@@ -110,7 +133,7 @@ def get_model_for(task: str) -> str:
     If the configured provider is failing, falls back down the chain:
     gemini -> groq -> openrouter -> ollama.
     """
-    global _gemini_failed, _groq_failed, _openrouter_failed
+    global _gemini_failed, _groq_failed, _cerebras_failed, _openrouter_failed
     cfg = _cfg()
 
     # Check user's configured preference
@@ -118,7 +141,7 @@ def get_model_for(task: str) -> str:
     configured   = cfg.get(key, _DEFAULTS.get(key, "gemini"))
 
     # Build fallback chain starting from configured provider
-    chain = ["gemini", "groq", "openrouter", "ollama"]
+    chain = ["gemini", "groq", "cerebras", "openrouter", "ollama"]
     try:
         start_idx = chain.index(configured)
     except ValueError:
@@ -130,6 +153,8 @@ def get_model_for(task: str) -> str:
             return "gemini"
         if provider == "groq" and not _groq_failed and _groq_available(cfg):
             return "groq"
+        if provider == "cerebras" and not _cerebras_failed and _cerebras_available(cfg):
+            return "cerebras"
         if provider == "openrouter" and not _openrouter_failed and _openrouter_available(cfg):
             return "openrouter"
         if provider == "ollama" and _ollama_reachable(cfg):
@@ -157,9 +182,9 @@ def report_gemini_error(error_text: str) -> bool:
     """
     global _gemini_failed
     et = str(error_text).lower()
-    if any(kw in et for kw in _QUOTA_ERRORS):
+    if any(kw in et for kw in _QUOTA_ERRORS) or any(kw in et for kw in _HARD_FAIL_ERRORS):
         _gemini_failed = True
-        print(f"[ModelRouter] Gemini quota/billing error — fallback to next provider")
+        print(f"[ModelRouter] Gemini quota/auth error — fallback to next provider")
         return True
     return False
 
@@ -169,26 +194,32 @@ def report_provider_error(provider: str, error_text: str) -> bool:
     Mark a provider as failed (quota/auth) so fallback chain activates.
     Returns True if the error looks like a quota issue.
     """
-    global _gemini_failed, _groq_failed, _openrouter_failed
+    global _gemini_failed, _groq_failed, _cerebras_failed, _openrouter_failed
     et = str(error_text).lower()
     is_quota = any(kw in et for kw in _QUOTA_ERRORS)
+    is_hard = any(kw in et for kw in _HARD_FAIL_ERRORS)
 
-    if provider == "groq" and is_quota:
+    if provider == "groq" and (is_quota or is_hard):
         _groq_failed = True
-        print(f"[ModelRouter] Groq quota/billing error — fallback to next provider")
+        print(f"[ModelRouter] Groq quota/auth error — fallback to next provider")
         return True
-    if provider == "openrouter" and is_quota:
+    if provider == "cerebras" and (is_quota or is_hard):
+        _cerebras_failed = True
+        print(f"[ModelRouter] Cerebras quota/auth error — fallback to next provider")
+        return True
+    if provider == "openrouter" and (is_quota or is_hard):
         _openrouter_failed = True
-        print(f"[ModelRouter] OpenRouter quota/billing error — fallback to next provider")
+        print(f"[ModelRouter] OpenRouter quota/auth error — fallback to next provider")
         return True
     return False
 
 
 def reset_provider_fallbacks():
     """Clear all fallback flags (e.g. when API key is updated)."""
-    global _gemini_failed, _groq_failed, _openrouter_failed
+    global _gemini_failed, _groq_failed, _cerebras_failed, _openrouter_failed
     _gemini_failed = False
     _groq_failed = False
+    _cerebras_failed = False
     _openrouter_failed = False
 
 
@@ -215,6 +246,16 @@ def quick_chat(
         except Exception as e:
             if report_provider_error("groq", str(e)):
                 print(f"[ModelRouter] Groq quota error, falling back: {e}")
+                return quick_chat(prompt, system=system, task=task)
+            raise
+
+    if provider == "cerebras":
+        try:
+            from actions.cerebras_provider import chat as _cerebras_chat
+            return _cerebras_chat(prompt, system=system)
+        except Exception as e:
+            if report_provider_error("cerebras", str(e)):
+                print(f"[ModelRouter] Cerebras quota error, falling back: {e}")
                 return quick_chat(prompt, system=system, task=task)
             raise
 
@@ -252,8 +293,9 @@ def _quick_gemini(prompt: str, system: str = "") -> str:
         if system:
             parts.append(system + "\n\n")
         parts.append(prompt)
+        from core.model_config import get_model
         resp = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model=get_model("agent"),
             contents=[{"role": "user", "parts": [{"text": "".join(parts)}]}],
         )
         return resp.text or ""
@@ -264,7 +306,7 @@ def _quick_gemini(prompt: str, system: str = "") -> str:
         raise
 
 
-def status() -> dict:
+def status(parameters: dict = None, player=None) -> dict:
     """Return current routing status for display in UI."""
     cfg = _cfg()
     return {
@@ -272,6 +314,8 @@ def status() -> dict:
         "gemini_failed":     _gemini_failed,
         "groq_available":    _groq_available(cfg),
         "groq_failed":       _groq_failed,
+        "cerebras_available": _cerebras_available(cfg),
+        "cerebras_failed":   _cerebras_failed,
         "openrouter_available": _openrouter_available(cfg),
         "openrouter_failed": _openrouter_failed,
         "ollama_enabled":    cfg.get("ollama_enabled", False),

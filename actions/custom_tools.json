@@ -1,0 +1,25 @@
+[
+    {
+        "name": "calc_test",
+        "description": "Calculadora de prueba",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "a": {
+                    "type": "NUMBER"
+                },
+                "b": {
+                    "type": "NUMBER"
+                },
+                "action": {
+                    "type": "STRING"
+                }
+            },
+            "required": [
+                "a",
+                "b",
+                "action"
+            ]
+        }
+    }
+]

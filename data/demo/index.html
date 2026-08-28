@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ERIS AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900&display=swap" rel="stylesheet">
+<style>
+/* Design: pink-rose | Font: Epilogue | Hero: gradient_radial */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Epilogue','Segoe UI',system-ui,sans-serif;background:#130a0f;color:#fce7f3;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+.container{max-width:1140px;margin:0 auto;padding:0 1.5rem;}
+.row{display:flex;flex-wrap:wrap;margin:0 -0.75rem;}
+.col-md-4{flex:0 0 33.333%;max-width:33.333%;padding:0 0.75rem;}
+@media(max-width:768px){.col-md-4{flex:0 0 100%;max-width:100%;}}
+.d-flex{display:flex;}.flex-wrap{flex-wrap:wrap;}.gap-3{gap:1rem;}
+.justify-content-center{justify-content:center;}
+.text-center{text-align:center;}
+.w-100{width:100%;}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;padding:0.8rem 1.5rem;background:#130a0fcc;backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.05);}
+.navbar-brand{font-weight:700;font-size:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.navbar-toggler{display:none;background:none;border:1px solid rgba(255,255,255,0.3);color:white;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:1.2rem;}
+.navbar-collapse{display:flex;}
+.navbar-nav{display:flex;list-style:none;margin-left:auto;gap:0.5rem;}
+.nav-link{padding:0.5rem 1rem;color:rgba(255,255,255,0.6);transition:color 0.3s;position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:#ec4899;transition:all 0.3s;transform:translateX(-50%);}
+.nav-link:hover,.nav-link.active{color:#ec4899;}.nav-link:hover::after,.nav-link.active::after{width:80%;}
+@media(max-width:768px){.navbar-toggler{display:block;}.navbar-collapse{display:none;flex-direction:column;width:100%;}.navbar-collapse.show{display:flex;}.navbar-nav{flex-direction:column;width:100%;}}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;}
+.hero-center{text-align:center;justify-content:center;}
+.hero-left{text-align:left;}
+.hero-gradient{background:radial-gradient(ellipse at center,#ec489911 0%,#130a0f 70%);}
+.hero-split{background:linear-gradient(180deg,#130a0f 0%,#130a0f 50%,#ec489911 100%);}
+.hero-minimal{background:#130a0f;}
+.hero h1{font-weight:800;line-height:1.1;background:linear-gradient(180deg,#ec4899,#db2777,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-center h1{font-size:clamp(2.5rem,8vw,5rem);}
+.hero-left h1{font-size:clamp(2rem,6vw,4rem);}
+.hero p.lead{font-size:1.25rem;margin-bottom:1.5rem;max-width:600px;}
+.text-uppercase{text-transform:uppercase;letter-spacing:6px;font-size:0.8rem;opacity:0.5;margin-bottom:1rem;}
+.btn{display:inline-block;padding:14px 36px;font-weight:600;border-radius:8px;transition:all 0.4s cubic-bezier(.175,.885,.32,1.275);cursor:pointer;border:none;font-size:1rem;}
+.btn-primary{background:linear-gradient(180deg,#ec4899,#db2777);color:#fff;box-shadow:0 4px 20px rgba(236,72,153,0.25);}
+.btn-primary:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(236,72,153,0.35);}
+.btn-outline-light{background:transparent;border:2px solid rgba(255,255,255,0.4);color:#fff;}
+.btn-outline-light:hover{background:rgba(255,255,255,0.1);}
+section{padding:5rem 0;}
+section h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin-bottom:3rem;}
+.feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:2rem;transition:all 0.5s cubic-bezier(.175,.885,.32,1.275);}
+.feature-card:hover{transform:translateY(-12px);border-color:#ec489944;box-shadow:0 25px 60px rgba(236,72,153,0.25);}
+.feature-icon{width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:1.8rem;background:linear-gradient(180deg,#ec489922,#db277722);color:#ec4899;margin-bottom:1rem;}
+.feature-card h3{margin-bottom:0.5rem;}
+.feature-card p{opacity:0.7;}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;height:100%;}
+.card-body{padding:0;}.card-text{margin:0.5rem 0;}.fw-bold{font-weight:700;}.mb-0{margin-bottom:0;}.mb-3{margin-bottom:1rem;}.mb-4{margin-bottom:1.5rem;}.mb-5{margin-bottom:3rem;}
+.form-control{width:100%;padding:0.8rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fce7f3;border-radius:12px;font-size:1rem;outline:none;}
+.form-control:focus{border-color:#ec4899;box-shadow:0 0 0 3px #ec489933;}
+footer{padding:1.5rem 0;text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);}
+[data-aos]{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+[data-aos].aos-animate{opacity:1;transform:translateY(0);}
+[data-aos=fade-left]{transform:translateX(-30px);}[data-aos=fade-left].aos-animate{transform:translateX(0);}
+[data-aos=zoom-in]{transform:scale(0.9);}[data-aos=zoom-in].aos-animate{transform:scale(1);}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:#130a0f;}::-webkit-scrollbar-thumb{background:#ec4899;border-radius:10px;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="#" style="color:#ec4899;">ERIS AI</a>
+  <button class="navbar-toggler" onclick="document.getElementById('nav').classList.toggle('show')">☰</button>
+  <div class="navbar-collapse" id="nav">
+    <ul class="navbar-nav">
+      <li><a class="nav-link active" href="#inicio">Inicio</a></li>
+      <li><a class="nav-link" href="#caracteristicas">Caracteristicas</a></li>
+      <li><a class="nav-link" href="#testimonios">Testimonios</a></li>
+      <li><a class="nav-link" href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="inicio" class="hero hero-gradient_radial">
+  <div class="container">
+    <div data-aos="zoom-in">
+      <div class="text-uppercase">Tecnologia con proposito</div>
+      <h1>ERIS AI</h1>
+      <p class="lead" style="">Asistente inteligente con capacidades de desarrollo automatico</p>
+      <div class="d-flex gap-3">
+        <a href="#caracteristicas" class="btn btn-primary">Comenzar</a>
+        <a href="#contacto" class="btn btn-outline-light">Contacto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="caracteristicas">
+  <div class="container">
+    <h2 class="text-center" data-aos="fade-left">Caracteristicas</h2>
+    <div class="row"><div class="col-md-4" data-aos="zoom-in" data-aos-delay="0"><div class="feature-card"><div class="feature-icon">◆</div><h3>Rendimiento</h3><p>Optimizacion extrema con tiempos de respuesta inferiores a 50ms.</p></div></div><div class="col-md-4" data-aos="zoom-in" data-aos-delay="100"><div class="feature-card"><div class="feature-icon">◆</div><h3>Seguridad Total</h3><p>Encriptacion de extremo a extremo con protocolos militares. Tus datos protegidos siempre.</p></div></div><div class="col-md-4" data-aos="zoom-in" data-aos-delay="200"><div class="feature-card"><div class="feature-icon">◆</div><h3>Analitica</h3><p>Dashboard interactivo con metricas en vivo. Decisiones basadas en datos reales.</p></div></div></div>
+  </div>
+</section>
+
+<section id="testimonios" style="background:#130a0f08;">
+  <div class="container">
+    <h2 class="text-center" data-aos="fade-left">Testimonios</h2>
+    <div class="row"><div class="col-md-4" data-aos="zoom-in" data-aos-delay="0"><div class="card"><div class="card-body"><div style="color:#fbbf24;">★★★★★</div><p class="card-text">“Implementacion en tiempo record. En dos semanas ya estabamos operativos.”</p><p class="fw-bold mb-0">— Maria L., PM StartUp</p></div></div></div><div class="col-md-4" data-aos="zoom-in" data-aos-delay="100"><div class="card"><div class="card-body"><div style="color:#fbbf24;">★★★★★</div><p class="card-text">“Transformaron nuestra infraestructura tecnologica por completo. Resultados impresionantes.”</p><p class="fw-bold mb-0">— Laura M., CTO TechCorp</p></div></div></div><div class="col-md-4" data-aos="zoom-in" data-aos-delay="200"><div class="card"><div class="card-body"><div style="color:#fbbf24;">★★★★★</div><p class="card-text">“El equipo de soporte es increible. Siempre disponibles y resolutivos.”</p><p class="fw-bold mb-0">— Pedro S., Lead Developer</p></div></div></div></div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="text-center" data-aos="fade-left">Contacto</h2>
+        <form id="contactForm" data-aos="zoom-in">
+          <div class="mb-4"><input class="form-control" placeholder="Nombre" required></div>
+          <div class="mb-4"><input class="form-control" type="email" placeholder="Email" required></div>
+          <div class="mb-4"><textarea class="form-control" rows="4" placeholder="Mensaje" required></textarea></div>
+          <button type="submit" class="btn btn-primary w-100">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>&copy; 2026 ERIS AI - Creado por ERIS AI</footer>
+
+<script>
+(function(){var els=document.querySelectorAll('[data-aos]');function check(){els.forEach(function(el){var r=el.getBoundingClientRect();if(r.top<window.innerHeight-80)el.classList.add('aos-animate');});}check();window.addEventListener('scroll',check);window.addEventListener('resize',check);})();document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});});});function showToast(m){var t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:2rem;right:2rem;background:#ec4899;color:#fff;padding:1rem 2rem;border-radius:12px;z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.4s';document.body.appendChild(t);requestAnimationFrame(function(){t.style.transform='translateY(0)';t.style.opacity='1';});setTimeout(function(){t.style.transform='translateY(100px)';t.style.opacity='0';setTimeout(function(){t.remove();},400);},3000);}document.getElementById('contactForm').addEventListener('submit',function(e){e.preventDefault();if(this.checkValidity()){showToast('Mensaje enviado correctamente.');this.reset();}this.classList.add('was-validated');});<div id="gridbg"></div>
+<style>
+#gridbg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+background-size:50px 50px;animation:gridMove 20s linear infinite;}
+@keyframes gridMove{0%{transform:translate(0,0);}100%{transform:translate(50px,50px);}}
+</style>
+</script>
+</body>
+</html>

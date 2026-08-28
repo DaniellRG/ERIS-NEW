@@ -19,9 +19,6 @@
     "address_form": {
       "value": "Daniel",
       "updated": "2026-05-17"
-    },
-    "current_game": {
-      "value": "none"
     }
   },
   "projects": {
@@ -52,14 +49,15 @@
     "juego_actual": {
       "value": "Ya no juego Aion2, lo desinstale"
     },
-    "activity": {
-      "value": "none"
-    },
     "current_activity": {
       "value": "Improving Eris"
     },
-    "materias_actuales": "Inteligencia Artificial Aplicada; Tecnologia .NET I; Introduccion a JAVA; Base de Datos I; Diseno Web I; Programacion Orientada a Objetos I; Analisis y Diseno de Sistemas; Arquitectura de Computadores",
-    "materias_avanzadas": "Tecnologia .NET II; Java Avanzado; Base de Datos II; Diseno Web II; Programacion Orientada a Objetos II; Redes y Sistemas Distribuidos"
+    "materias_actuales": {
+      "value": "Inteligencia Artificial Aplicada; Tecnologia .NET I; Introduccion a JAVA; Base de Datos I; Diseno Web I; Programacion Orientada a Objetos I; Analisis y Diseno de Sistemas; Arquitectura de Computadores"
+    },
+    "materias_avanzadas": {
+      "value": "Tecnologia .NET II; Java Avanzado; Base de Datos II; Diseno Web II; Programacion Orientada a Objetos II; Redes y Sistemas Distribuidos"
+    }
   },
   "capabilities": {
     "advanced_data_analysis": {

@@ -58,7 +58,20 @@ def code_helper(parameters: dict, player=None) -> str:
             return f"Error: '{file_path}' no existe."
         return _build_file(file_path, language, args, timeout)
 
-    return f"Acción '{action}' no reconocida. Usa: write, edit, explain, run, build, auto"
+    elif action == "help":
+        return (
+            "Puedo ayudarte con programación:\n"
+            "- write: generar código desde descripción\n"
+            "- edit: modificar archivos existentes\n"
+            "- explain: explicar código existente\n"
+            "- run: ejecutar scripts\n"
+            "- build: compilar proyectos\n"
+            "- auto: decidir automáticamente\n\n"
+            "Lenguajes soportados: Python, JavaScript, TypeScript, C#, Java, C, C++, Go, Rust, HTML, CSS, SQL.\n"
+            "Pedime directamente lo que necesites."
+        )
+
+    return f"Acción '{action}' no reconocida. Usa: write, edit, explain, run, build, auto, help"
 
 
 def _generate_and_save(description: str, language: str, output_path: str) -> str:

@@ -1,116 +1,80 @@
-# AGENTS.md — ERIS (D:\Eris_Source)
+﻿# AGENTS.md — ERIS AI
 
-Asistente de voz de escritorio (Windows) en Python. Conversación en vivo con Google
-Gemini (modelo live `gemini-3.1-flash-live-preview`), voz TTS offline (edge-tts), y
-herramientas declaradas al modelo mediante la API de Gemini Live.
+Windows desktop assistant (Python 3.14, PyQt6). 448 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Fish Audio TTS.
 
-## Comandos clave
+## Quick start
 
 ```powershell
-# Arrancar ERIS
-Start-Process -FilePath "D:\Eris_Source\.venv\Scripts\python.exe" -ArgumentList "main.py" -WorkingDirectory "D:\Eris_Source" -WindowStyle Hidden
+# GUI
+D:\Eris_Source\.venv\Scripts\pythonw.exe main.py
 
-# Reinicio completo (OJO: mata TODOS los procesos python)
-Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force
-Remove-Item -LiteralPath "D:\Eris_Source\data\.eris_lock" -Force
-Start-Process -FilePath "D:\Eris_Source\.venv\Scripts\python.exe" -ArgumentList "main.py" -WorkingDirectory "D:\Eris_Source" -WindowStyle Hidden
+# CLI (from anywhere after PATH setup)
+eris
 
-# Tests
-D:\Eris_Source\.venv\Scripts\python.exe test_all.py        # esperar: PASS>=99, FAIL=0
+# Tests (must pass: 56 PASS, 0 FAIL)
+D:\Eris_Source\.venv\Scripts\python.exe test_all.py
 
-# Probar una tool del registro
-$env:PYTHONIOENCODING="utf-8"; & .venv\Scripts\python.exe -c "import sys; sys.path.insert(0,'.'); from core.tool_registry import get_tool; print(get_tool('NOMBRE')({'action':'get'}))"
+# Run a single tool
+$env:PYTHONIOENCODING="utf-8"
+& .venv\Scripts\python.exe -c "from core.tool_registry import get_tool; print(get_tool('NOMBRE')({'action':'get'}))"
 ```
 
-## Reglas críticas (lecciones aprendidas — NO repetir errores)
+## Non-obvious constraints
 
-1. **Consola cp1252**: imprimir emojis lanza `UnicodeEncodeError`. Si un script imprime
-   texto no ASCII, ejecutarlo con `$env:PYTHONIOENCODING="utf-8"` o escribir a archivo.
-2. **`config/api_keys.json` debe escribirse SIN BOM** (UTF-8 sin firma). Con BOM,
-   `main.py` muere con "Unexpected UTF-8 BOM". Al editar desde PowerShell usar:
-   `[System.IO.File]::WriteAllText($p, $json, (New-Object System.Text.UTF8Encoding($false)))`.
-   En Python usar `Path.write_text(json, encoding="utf-8")` (sin BOM).
-3. **Error 1008 = CUOTA AGOTADA** (confirmado 2026-08-01): el websocket LIVE cierra con
-   `1008 policy violation. The operation was aborted` y ERIS entra en bucle de reconexión
-   ("Reconectando en 1.0s..."). Es la MISMA causa que el `429 RESOURCE_EXHAUSTED` de
-   `generateContent` con `gemini-2.0-flash`: la key `gemini_api_key` no tiene cuota.
-   NO es bug de código. Diagnóstico definitivo:
-   ```powershell
-   $env:PYTHONIOENCODING="utf-8"; & .venv\Scripts\python.exe -c "import json;from pathlib import Path;from google import genai;k=json.loads(Path('config/api_keys.json').read_text(encoding='utf-8-sig'))['gemini_api_key'];genai.Client(api_key=k).models.generate_content(model='gemini-2.0-flash',contents='hola')"
-   ```
-   Si da `429`, hay que: revisar plan/billing en https://aistudio.google.com/apikey,
-   crear key nueva, o esperar reset de cuota. El bucle se auto-recupera al volver la cuota.
-4. **Convención de declaraciones** (`core/tool_declarations.py`): el tipo `ARRAY` es
-   rechazado por la API de Gemini (error 1007 "items: missing field"). Usar `STRING`
-   con JSON codificado (patrón de `spreadsheet_generator` y `office_docs`). Helper
-   `_as_list()` en `actions/office_tools.py` convierte JSON string / listas / texto.
-5. **pycaw (volumen)** usa la API nueva: `AudioUtilities.GetSpeakers()` devuelve un
-   `pycaw.utils.AudioDevice` con atributos `EndpointVolume`, `FriendlyName`, `id`.
-   NO existe `Activate()` ni `MMDeviceEnumerator`. Usar
-   `AudioUtilities.GetAllDevices()` (lista) y `AudioUtilities.SetDefaultDevice(id)`.
-6. **Tras agregar/quitar tools**: editar SIEMPRE en paralelo `core/tool_registry.py`
-   (registro en memoria) y `core/tool_declarations.py` (declaraciones para la API),
-   luego verificar: `len(registradas)==len(declaradas)` y 0 duplicados, y REINICIAR ERIS.
-7. **Ollama**: exe en `C:\Users\danie\AppData\Local\Programs\Ollama\ollama.exe`
-   (serve v0.30.8). Modelos: `phi`, `tinyllama`, `nomic-embed-text`, `minicpm-v`,
-   `qwen3:14b` (9.3GB, ~10 tok/s — MUY lento) y **`qwen3:8b`** (37-63 tok/s, el bueno).
-   No usar modelos no instalados (p.ej. `llama3.2`). Si el serve no corre:
-   `Start-Process "C:\Users\danie\AppData\Local\Programs\Ollama\ollama.exe" serve`.
-8. **Ollama tool_calls**: `tool_calls[].function.arguments` llega como **dict** (no
-   string) → no hacer `json.loads` directo; parsear con `isinstance(raw_args, dict)`.
-9. **edge-tts** (`core/tts_engine.py`): `synthesize()` es **asíncrono** — llamarlo con
-   `asyncio.run(...)`. Requiere `imageio-ffmpeg` instalado (ffmpeg estático; no hay
-   ffmpeg en el sistema). `get_voice()` devuelve la voz de otro backend (p.ej.
-   "Zephyr") que edge rechaza → `_synthesize_edge` valida contra `_EDGE_VOICES.values()`
-   y cae a `es-AR-ElenaNeural`. PCM resultante: s16le 24000 Hz mono.
-10. **Vosk** (`core/offline_voice.py`): `vosk.KaldiRecognizer` recibe un objeto
-    `vosk.Model(...)`, NO la ruta string (si no: `'str' object has no attribute '_handle'`).
-    Modelo es: `data/vosk-model-es`.
+- **Console is cp1252**: emojis → `UnicodeEncodeError`. Use `$env:PYTHONIOENCODING="utf-8"` or write to file.
+- **config/api_keys.json**: must be UTF-8 **without BOM**. BOM → crash on load. Write with `Path.write_text(json, encoding="utf-8")` or PowerShell: `[System.IO.File]::WriteAllText($p, $json, (New-Object System.Text.UTF8Encoding($false)))`.
+- **Tool sync is sacred**: after adding/removing tools, edit BOTH `core/tool_registry.py` AND `core/tool_declarations.py`, then verify `len(registry) == len(declarations)` and 0 duplicates. Restart Eris.
+- **ARRAY type rejected by Gemini**: use `STRING` with JSON-encoded content in declarations (see `actions/office_tools.py` for pattern).
+- **Ollama tool_calls**: `arguments` arrives as `dict` (not string) — check `isinstance(raw_args, dict)` before `json.loads`.
+- **edge-tts `synthesize()` is async**: call with `asyncio.run(...)`.
+- **Vosk**: `KaldiRecognizer` takes a `Model` object, not a string path.
+- **pycaw**: use `AudioUtilities.GetSpeakers()` → `.EndpointVolume`. No `Activate()` or `MMDeviceEnumerator`.
+- **weather_report**: requires User-Agent `curl/8.0` (Mozilla returns HTML from wttr.in).
 
-## Arquitectura
+## Architecture
 
-- `main.py` — bucle principal: sesión live Gemini, audio, wake word, `_announce()`
-  (avisos por voz offline con edge-tts en hilo daemon).
-- `actions/` — UNA tool por archivo, función `nombre(parameters: dict, player=None) -> str`.
-  Firmas sin depender de scipy (no instalado). Ejemplos a copiar: `system_volume.py`,
-  `office_tools.py`, `curiosity_engine.py`.
-- `core/tool_registry.py` — registro central (245 tools). `get_tool(nombre)` devuelve el callable.
-- `core/tool_declarations.py` — `TOOL_DECLARATIONS` (245) para la API.
-- `core/rag_pipeline.py` — `RAGPipeline` + singleton `rag` (27 docs / 103 chunks).
-- `core/training_pipeline.py` — `full_training` (56 módulos con puntajes).
-- `config/` — `api_keys.json` (claves), `email_credentials.json` (IMAP/SMTP), estados.
-- `data/` — logs de runtime, transcripts, `eris_tasks.json`, `.eris_lock`.
-- `tests/` + `test_all.py` — suite de integración (99 PASS).
+| File | Role |
+|------|------|
+| `main.py` | GUI entry point (PyQt6, 3572 lines) |
+| `eris_cli.py` | CLI entry point (terminal, Ollama/Gemini chat) |
+| `ui.py` | PyQt6 UI (2908 lines, ErisUI class) |
+| `core/tool_registry.py` | 442 tool callables |
+| `core/tool_declarations.py` | 444 LLM-facing declarations |
+| `core/tool_dispatcher.py` | Executes tools by name |
+| `core/action_imports.py` | Imports all 295 action modules |
+| `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
+| `core/neuro_spheres.py` | Visual brain: 91+ nodes, `learn_from_sessions()` |
+| `core/prompt.txt` | System prompt (~1790 lines) |
+| `core/emotional_core.py` | Núcleo emocional sentiente: 12 emociones discretas, appraisal propio, [SENTIR] por turno, tono de cara/voz/orbe, diario emocional nocturno + [ANOCHE], sentimiento por persona, gustos aprendidos y expectativas/promesas. Aprende su carácter cada día (drift de baselines + polaridad de trato + rachas + buffer de soledad) → `memory/emotional_core.json` |
+| `core/observer.py` | Sentidos de Eris: ventana en foco + programas abiertos (ctypes), clasifica actividad (programación/terminal/navegación/sensible…), detecta eventos (start_coding, long_coding, app_switch), expone contexto para comentarios espontáneos por voz. Mimo si no le contestan y "tiempo de ella". Puede MIRAR/LEER la ventana en foco (`observer action=mirar|mirar_leer`, captura de región + visión IA) solo con permiso del usuario (`mirar_ok`) y NUNCA pantallas sensibles; mirada leve automática `maybe_glimpse()` (cada mirar_interval_min) queda como contexto `[VISTA]`. → `memory/observer.json` |
+| `core/code_guard.py` | El ojo guardián: detecta en tiempo real errores (rojo: py_compile/ruff E/F/B) y advertencias (amarillo: W/I/etc) del archivo en foco del usuario (títle→cwd→glob). Corrige SOLO las líneas señaladas vía LLM (Gemini/Ollama) con backup + validación + rollback y tope de 25% de líneas tocadas (`fix_file`, `guardian_tick`). Tool `code_guard` (status/scan/fix/fix_w/config). Auto-fix en loop `_code_guard_loop` de main. → `memory/code_guard.json`, backups en `memory/code_guard_backups/` |
+| `core/mission_agent.py` | PROTOCOLO OPERATIVO global (estilo opencode): cuaderno de misión persistido (`mission`: start/plan/explore/read/edit/verify/step/learn/close). EDITAR = cambios mínimos con backup + validación + rollback (reutiliza maquinaria de code_guard); VERIFICAR = ruff/py_compile/pytest y no declara "listo" si queda rojo; APRENDER = memoria por proyecto en `memory/proyectos/*.json`; al cerrar, espeja la misión en Obsidian `Proyectos/`. Tool `mission`. |
+| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 448 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
+| `core/command_deck.py` | Cola de comandos (intents del LLM) → `data/command_deck.json` |
+| `config/api_keys.json` | All API keys and settings |
+| `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
+| `data/knowledge/` | 62 .md knowledge files |
+| `actions/` | 295 action modules (one tool per file) |
+| `agents/` | 9 specialist agents |
+| `skills/` | 39 installed skills (21 builtin + 18 user_created) |
+| `vault/` | Memoria charra: `raw/` capturas → `wiki/` destilado → `outputs/` productos |
 
-## Estado de integraciones (2026-08-01)
+## Model routing
 
-| Integración | Estado | Key/archivo requerido |
-|---|---|---|
-| OpenAI / Gemini | OK | `api_keys.json` (`gemini_api_key`, `openrouter_api_key`) |
-| Cerebro dual (fallback) | OK | `local_brain_enabled=true`, `local_brain_model=qwen3:8b`, `cloud_brain_model=google/gemini-2.5-pro`, `local_tools_enabled=true` |
-| Voz local (fallback) | OK | `core/offline_voice.py`: Vosk→cerebro dual→edge-tts; se activa al entrar fallback (≥5 fails de cuota) |
-| Spotify | OK | `spotify_token.json` |
-| Ollama (respaldo LLM) | OK | `ollama_enabled=true`, `ollama_model=phi` |
-| RAG (memoria) | OK | 27 docs indexados |
-| Telegram | PENDIENTE | `telegram_bot_token` (vía @BotFather) |
-| Gmail (email_manager) | PENDIENTE | `config/email_credentials.json` (app password) |
-| Gmail/Calendar/Drive | PENDIENTE | OAuth client |
-| SMS | PENDIENTE | Twilio (`twilio_account_sid`, `twilio_auth_token`, `twilio_from`) o `sms_gateway_url` |
-| TMDB / OpenWeather | OPCIONAL | `tmdb_api_key`, `openweather_api_key` (clima ya funciona con wttr.in) |
+- **Default**: Ollama local (`qwen3:8b`) — no rate limits
+- **Fallback**: Gemini API (`gemini-3.1-flash-lite`) — low free-tier quota
+- **TTS**: Fish Audio (`s2.1-pro-free`) with custom voice
+- **Config**: `config/api_keys.json`
 
-Cerebro dual: `core/local_brain.py` enruta por heurística (largo>260 o regex
-`_CLOUD_HINTS` → OpenRouter nube; sino → Ollama local `qwen3:8b` con tool-calling de
-14 tools del registry). Fallback de chat en `main.py` → `get_brain().respond(text)` +
-`_announce()`. Requiere `quick_check()` (verifica que Ollama esté arriba).
-`weather_report` necesita User-Agent `curl/8.0` (Mozilla devuelve HTML de wttr.in).
+## Ollama
 
-Asistente interactivo para integrar: `.venv\Scripts\python.exe config\setup_integrations.py`
+- Exe: `C:\Users\danie\AppData\Local\Programs\Ollama\ollama.exe`
+- Models installed: `qwen3:8b` (primary), `qwen3:14b`, `qwen2.5-coder:3b`, `minicpm-v`, others
+- Not always running — start with: `ollama serve`
+- Best model: `qwen3:8b` (37-66 tok/s). `qwen3:14b` is ~10 tok/s (slow).
 
-## Notas del entorno
+## Testing
 
-- Windows 11, consola cp1252, PC desktop (SIN batería y SIN sensor WMI de brillo →
-  `screen_control` brillo reporta limitación correctamente).
-- Python: `.venv` en `D:\Eris_Source\.venv`. También existe `C:\Python314`.
-- El sandbox (`actions/sandbox.py`) ejecuta código; usar `PYTHONIOENCODING=utf-8`.
-- `test_all.py` consulta `eris.log` para errores 1008 — trazas antiguas generan WARN
-  (no bloquean; confirmar que no haya 1008 nuevos tras reinicio).
+`test_all.py` verifies: tool registry (442), declarations (442), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window.
+
+Run after any structural change. Expected: **56 PASS, 0 FAIL**.

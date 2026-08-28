@@ -1,7 +1,6 @@
 """
-terminal_agent.py — ERIS puede abrir, usar y leer terminales CMD y PowerShell.
-Ejecuta comandos reales y devuelve el output.
-Soporta: ejecución normal, admin (UAC), Win+R, abrir apps/carpetas/URLs.
+terminal_agent.py — Terminal interactiva persistente para ERIS.
+Shell PowerShell/CMD persistente con streaming, cambio de directorio, y memoria de sesión.
 """
 import subprocess
 import os
@@ -13,6 +12,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TERMINAL_STATE = BASE_DIR / "data" / "terminal_state.json"
+
+from core.shell_session import get_session, close_session
 
 # ── SendInput helpers for Win+R simulation ──
 user32 = ctypes.windll.user32 if os.name == "nt" else None
@@ -89,72 +90,9 @@ def _type_unicode(text: str):
 
 
 def _run_command(cmd: str, shell_type: str = "powershell", timeout: int = 30, elevated: bool = False) -> str:
-    """Ejecuta un comando en CMD o PowerShell. elevated=True → admin via UAC."""
-    flags = 0x08000000  # CREATE_NO_WINDOW
-
-    if not elevated:
-        try:
-            if shell_type.lower() == "cmd":
-                result = subprocess.run(
-                    ["cmd", "/c", cmd], capture_output=True, text=True,
-                    timeout=timeout, cwd=str(BASE_DIR), creationflags=flags
-                )
-            else:
-                result = subprocess.run(
-                    ["powershell", "-NoProfile", "-Command", cmd],
-                    capture_output=True, text=True,
-                    timeout=timeout, cwd=str(BASE_DIR), creationflags=flags
-                )
-            output = result.stdout
-            if result.stderr:
-                output += f"\n[STDERR]\n{result.stderr}" if output else result.stderr
-            return output.strip() if output.strip() else "(comando ejecutado sin output)"
-        except subprocess.TimeoutExpired:
-            return f"Timeout: el comando tardó más de {timeout}s"
-        except Exception as e:
-            return f"Error: {e}"
-
-    # ── ELEVATED (admin via UAC) ──
-    tmp_dir = tempfile.gettempdir()
-    ts = os.getpid()
-    script_file = os.path.join(tmp_dir, f"eris_elev_{ts}.ps1")
-    output_file = os.path.join(tmp_dir, f"eris_elev_out_{ts}.txt")
-
-    try:
-        with open(script_file, "w", encoding="utf-8") as f:
-            if shell_type.lower() == "cmd":
-                f.write(f'cmd /c "{cmd}" | Out-File -FilePath "{output_file}" -Encoding utf8\n')
-            else:
-                f.write(f'try {{ {cmd} | Out-File -FilePath "{output_file}" -Encoding utf8 }} ')
-                f.write(f'catch {{ $_.Exception.Message | Out-File -FilePath "{output_file}" -Encoding utf8 }}\n')
-
-        ps_cmd = (
-            f'Start-Process powershell '
-            f'-ArgumentList "-NoProfile -ExecutionPolicy Bypass -File \\"{script_file}\\"" '
-            f'-Verb RunAs -Wait'
-        )
-        subprocess.run(
-            ["powershell", "-NoProfile", "-Command", ps_cmd],
-            capture_output=True, text=True, timeout=timeout + 20,
-            creationflags=flags
-        )
-        time.sleep(2)
-
-        output = ""
-        if os.path.exists(output_file):
-            with open(output_file, "r", encoding="utf-8", errors="replace") as f:
-                output = f.read().strip()
-            try: os.remove(output_file)
-            except: pass
-        return output if output else "(comando ejecutado como admin — aceptá el UAC)"
-    except subprocess.TimeoutExpired:
-        return f"Timeout elevado: más de {timeout}s"
-    except Exception as e:
-        return f"Error elevado: {e}"
-    finally:
-        try:
-            if os.path.exists(script_file): os.remove(script_file)
-        except: pass
+    """Ejecuta un comando en shell persistente. Mantiene estado entre comandos."""
+    session = get_session(shell=shell_type)
+    return session.run(cmd, timeout=timeout)
 
 
 def _open_with_start_process(target: str) -> str:
@@ -175,8 +113,9 @@ def _open_with_start_process(target: str) -> str:
 
 def terminal_agent(parameters: dict, player=None) -> str:
     """
-    Terminal CMD/PowerShell + Win+R para ERIS.
-    Actions: run_cmd, run_ps, run, elevated, open, win_r, shell_execute, list_history, clear, info
+    Terminal interactiva persistente para ERIS.
+    Actions: run, run_cmd, run_ps, elevated, open, win_r, shell_execute,
+             stream, session_info, session_reset, list_history, clear, info
     """
     action = parameters.get("action", "run")
     cmd = parameters.get("command", "") or parameters.get("cmd", "")
@@ -223,6 +162,46 @@ def terminal_agent(parameters: dict, player=None) -> str:
         state["history"] = []
         _save_state(state)
         return "Historial limpiado."
+
+    # ── SESSION INFO ──
+    if action == "session_info":
+        session = get_session(shell=shell)
+        return (
+            f"Shell: {session.shell}\n"
+            f"CWD: {session.cwd}\n"
+            f"Viva: {session.is_alive()}\n"
+            f"Histórico: {len(state.get('history', []))} comandos"
+        )
+
+    # ── SESSION RESET ──
+    if action == "session_reset":
+        close_session()
+        state["history"] = []
+        _save_state(state)
+        return "Sesión reiniciada."
+
+    # ── STREAM: ejecuta con output en tiempo real ──
+    if action == "stream":
+        if not cmd:
+            return "Falta 'command'."
+
+        def _on_line(line):
+            if player:
+                player.write_log(f"  {line}")
+
+        if elevated:
+            return _run_command(cmd, shell, timeout, elevated=True)
+        session = get_session(shell=shell)
+        output = session.run_streaming(cmd, timeout=timeout, callback=_on_line)
+        state["history"].append({
+            "cmd": cmd, "shell": shell, "elevated": False,
+            "output": output[:500], "time": time.strftime("%Y-%m-%d %H:%M:%S")
+        })
+        state["history"] = state["history"][-50:]
+        state["last_cmd"] = cmd
+        state["last_output"] = output[:1000]
+        _save_state(state)
+        return output[:3000] if output else "(ejecutado sin output)"
 
     # ── PREVIEW: abre archivo HTML en el navegador ──
     if action in ("preview", "vista_previa"):
@@ -319,7 +298,7 @@ def terminal_agent(parameters: dict, player=None) -> str:
     if action == "elevated":
         elevated = True
 
-    # ── TERMINAL COMMANDS ──
+    # ── TERMINAL COMMANDS (persistent shell) ──
     if not cmd:
         return "Falta el parámetro 'command'."
 

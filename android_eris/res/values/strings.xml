@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ERIS</string>
+    <string name="accesibilidad_desc">Permite a ERIS ver la pantalla (leer textos), tocar, deslizar y escribir en las apps del teléfono para ayudarte a manejarlo por voz o por chat.</string>
+    <string name="msg_send">Enviar</string>
+    <string name="hint_input">Escribí un mensaje…</string>
+    <string name="tagline">Tu asistente en tu teléfono</string>
+</resources>

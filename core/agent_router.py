@@ -23,197 +23,256 @@ _REGISTRY_PATH = _BASE / "core" / "agent_registry.json"
 #   handler: function to call (registered at runtime)
 
 AGENT_DEFINITIONS = {
-    "vision": {
-        "name": "VisionAgent",
-        "description": "Handles all image and screen analysis: screenshots, uploaded images, vision monitoring, game screenshots, Ollama vision fallback.",
+    # ── 1. CORE — System basics, apps, desktop, settings ──
+    "core": {
+        "name": "CoreAgent",
+        "description": "Operaciones básicas: abrir apps, escritorio, ventanas, volumen, clipboard, sistema, calculator, screenshots",
         "keywords": [
-            "pantalla", "screen", "imagen", "image", "foto", "photo", "captura",
-            "screenshot", "vision", "ver", "mirar", "analizar imagen", "describe la imagen",
-            "que ves", "que hay en", "guardian", "vigila", "game screenshot",
-            "ollama vision", "llava", "vision local", "modo gaming", "juego pantalla",
-            "camara", "camera", "webcam", "vigilancia", "mirar por la camara",
-            "que ves por la camara", "que hay por la camara", "detectar movimiento"
-        ],
-        "tools": [
-            "screen_vision", "image_analyzer", "vision_guardian",
-            "game_companion", "ollama_vision", "camera_bus"
-        ],
-    },
-    "home": {
-        "name": "HomeAgent",
-        "description": "Handles smart home and domotics: lights, climate, TV, scenes via Home Assistant, MQTT or simulation.",
-        "keywords": [
-            "domotica", "smart home", "luces", "luz de", "apaga la luz", "enciende la luz",
-            "prende la luz", "apagar la luz", "encender la luz", "aire acondicionado",
-            "apaga todo", "encender", "apagar", "escena", "temperatura de la",
-            "dispositivos inteligentes", "casa inteligente", "camara de entrada"
+            "abrir", "abre", "abri", "iniciar", "lanzar", "ejecutar app",
+            "escritorio", "desktop", "ventana", "window", "minimizar", "maximizar",
+            "volumen", "sonido", "audio", "mute", "silenciar",
+            "clipboard", "copiar", "pegar", "portapapeles",
+            "monitor", "sistema", "cpu", "ram", "disco", "procesos",
+            "configuracion", "settings", "config",
+            "calculadora", "calc", "notepad", "bloc de notas",
+            "captura", "screenshot", "pantalla",
+            "control", "pc", "computadora",
         ],
         "penalty_keywords": [
-            "musica", "music", "cancion", "youtube", "video", "spotify",
-            "pantalla", "brillo", "codigo", "git",
+            "spotify", "musica", "codigo", "git", "virus", "email",
+            "calendario", "documento", "buscar", "browser",
         ],
         "tools": [
-            "smart_home"
+            "open_app", "app_discovery", "desktop_control", "window_manager",
+            "system_monitor", "system_volume", "computer_settings", "computer_control",
+            "clipboard_manager", "screen_control", "screen_see", "shell_executor",
+            "process_manager", "action_history", "windows_settings", "driver_manager",
+            "pc_control", "quick_actions", "context_menu", "desktop_notifications",
         ],
     },
-    "reverse": {
-        "name": "ReverseEngineeringAgent",
-        "description": "Handles reverse engineering: binary analysis, disassembly, strings, hashes, PE analysis, hexdump, entropy, black-box testing, malware triage.",
+
+    # ── 2. WEB — Search, browse, fetch, research ──
+    "web": {
+        "name": "WebAgent",
+        "description": "Búsqueda web, navegación, scraping, investigación profunda, fetch de páginas",
         "keywords": [
-            "ingenieria inversa", "reverse engineering", "desensamblar", "disassembler",
-            "desensamblado", "hexdump", "hex dump", "analizar binario", "binario",
-            "analizar ejecutable", "ejecutable", "extraer strings", "strings",
-            "analizar malware", "malware", "triage", "entropia", "caja negra",
-            "black box", "pe info", "analizar exe", "analizar dll", "huellas del archivo"
+            "buscar", "busca", "buscá", "search", "google", "encontrar",
+            "navegador", "browser", "abrir pagina", "web", "sitio",
+            "scraping", "scrapear", "extraer", "raspar",
+            "investigar", "investiga", "research", "profundo", "deep",
+            "url", "enlace", "link", "pagina", "page",
+            "resumir pagina", "resumen web", "summarize",
+            "fetch", "contenido web",
+            "duckduckgo", "ddg", "bing",
         ],
         "penalty_keywords": [
-            "spotify", "musica", "youtube", "instalar", "desinstalar", "codigo", "git",
+            "spotify", "musica", "codigo", "git", "virus",
+            "calendario", "email", "documento", "abrir app",
         ],
         "tools": [
-            "reverse_engineering"
+            "web_search", "super_search", "deep_research", "webfetch",
+            "web_navigation", "browser_control", "browser_auto", "browser_unified",
+            "page_summarizer", "smart_browser", "web_scraper", "multi_search",
+            "search_info", "research", "rss_reader", "browser_history",
         ],
     },
-    "self": {
-        "name": "SelfEvolutionAgent",
-        "description": "Handles ERIS self-evolution: reflection, consciousness simulation, lessons learned, personal goals, experiences and identity.",
+
+    # ── 3. FILE — File operations, editing, AST, organization ──
+    "file": {
+        "name": "FileAgent",
+        "description": "Operaciones con archivos: leer, escribir, editar, organizar, buscar, copiar, mover",
         "keywords": [
-            "reflexiona", "reflexionar", "conciencia", "evoluciona", "evolucionar",
-            "mejorarte", "mejorame", "aprende de tus errores", "que has aprendido",
-            "tu existencia", "autoconocimiento", "auto-mejora", "crecimiento",
-            "que piensas de ti", "como te sientes", "que has aprendido de mi",
-            "tus metas", "tu evolucion", "eris evoluciona"
+            "archivo", "carpeta", "directorio", "folder", "file",
+            "leer archivo", "escribir archivo", "editar archivo",
+            "copiar archivo", "mover archivo", "renombrar", "eliminar archivo",
+            "buscar archivo", "encontrar archivo", "listar archivos",
+            "organizar archivos", "organiza",
+            "backup", "respaldo", "copia de seguridad",
         ],
         "penalty_keywords": [
-            "spotify", "musica", "youtube", "codigo", "git", "virus",
-            "instalar", "pantalla", "screenshot",
+            "spotify", "musica", "virus", "email", "calendario",
+            "codigo", "git", "navegador", "browser",
         ],
         "tools": [
-            "self_evolution"
+            "file_api", "file_manager", "file_editor", "file_processor",
+            "file_controller", "ast_analyze", "ast_edit",
+            "smart_file_organizer", "file_organizer", "file_monitor",
+            "file_profiler", "backup_system", "auto_backup",
+            "save_everywhere", "clipboard_history",
         ],
     },
-    "search": {
-        "name": "SearchAgent",
-        "description": "Handles all search operations: web search, file search, session search, super search, HuggingFace models/datasets.",
-        "keywords": [
-            "busca", "buscar", "search", "encontrar", "find", "donde esta",
-            "donde queda", "sesiones anteriores", "historial", "buscar archivo",
-            "buscar en mis sesiones", "super search", "search file",
-            "huggingface", "hugging face", "dataset", "modelo ia", "ia modelo"
-        ],
-        "penalty_keywords": [
-            "virus", "malware", "seguridad", "instalar", "desinstalar",
-            "spotify", "youtube", "calendario", "email", "codigo", "git",
-        ],
-        "tools": [
-            "web_search", "super_search", "deep_research", "session_search",
-            "huggingface", "research"
-        ],
-    },
-    "security": {
-        "name": "SecurityAgent",
-        "description": "Handles security scanning, program installation/uninstallation with safety gates.",
-        "keywords": [
-            "escanear", "scan", "virus", "malware", "seguridad", "security",
-            "instalar", "install", "desinstalar", "uninstall", "programa",
-            "aplicacion", "app", "winget", "choco", "defender", "usb scan",
-            "instalar programa", "quitar programa",
-            # Linux keywords
-            "apt", "dnf", "pacman", "flatpak", "snap",
-            "clamav", "rkhunter", "chkrootkit",
-            "instalar apt", "instalar flatpak", "instalar snap",
-        ],
-        "penalty_keywords": [
-            "spotify", "youtube", "calendario", "email", "codigo", "git",
-            "pantalla", "screenshot", "volumen", "brillo",
-        ],
-        "tools": [
-            "security_scanner", "program_manager"
-        ],
-    },
-    "system": {
-        "name": "SystemAgent",
-        "description": "Handles system operations: computer control, desktop automation, system monitoring, Windows/Linux settings, Hyprland, Omarchy.",
-        "keywords": [
-            "computadora", "computer", "sistema", "system", "escritorio", "desktop",
-            "ventana", "window", "configuracion", "settings", "monitor", "cpu",
-            "ram", "memoria", "disco", "disk", "bateria", "battery", "red", "network",
-            "abrir app", "cerrar app", "minimizar", "maximizar", "teclado",
-            "mouse", "click", "escribir", "typing", "volumen", "brillo",
-            "como esta el sistema", "estado del sistema", "estado del cpu",
-            "hyprland", "omarchy", "workspace", "monitor", "tema", "fondo de pantalla",
-            "wallpaper", "captura", "screenshot", "grabar pantalla", "tema",
-            "linux", "linux settings", "pipewire", "wpctl", "notify-send",
-            "bluetooth", "wifi", "nmcli", "brightnessctl", "pactl", "paru", "pacman"
-        ],
-        "penalty_keywords": [
-            "spotify", "youtube", "calendario", "email", "codigo", "git",
-            "virus", "instalar programa", "desinstalar programa",
-        ],
-        "tools": [
-            "computer_control", "desktop_control", "system_monitor",
-            "windows_settings", "computer_settings", "accessibility",
-            "screen_reader", "accessibility_overlay",
-            "linux_settings", "hyprland_control", "omarchy_control",
-            "shell_executor",
-            "file_organizer", "file_monitor", "smart_file_organizer"
-        ],
-    },
-    "media": {
-        "name": "MediaAgent",
-        "description": "Handles media: Spotify, YouTube, image generation, TikTok analysis.",
-        "keywords": [
-            "spotify", "musica", "music", "cancion", "song", "playlist",
-            "youtube", "video", "tiktok", "generar imagen", "generate image",
-            "crear imagen", "reproducir", "play", "pausar", "pause",
-            "siguiente", "next", "anterior", "previous", "volumen musica"
-        ],
-        "penalty_keywords": [
-            "calendario", "email", "codigo", "git", "virus", "instalar programa",
-        ],
-        "tools": [
-            "spotify_control", "youtube_video", "image_generation",
-            "tiktok_analyzer"
-        ],
-    },
-    "productivity": {
-        "name": "ProductivityAgent",
-        "description": "Handles productivity: calendar, email, drive, documents, projects, goals.",
-        "keywords": [
-            "calendario", "calendar", "email", "correo", "gmail", "drive",
-            "documento", "document", "crear doc", "proyecto", "project",
-            "meta", "goal", "tarea", "task", "agenda", "schedule",
-            "reunion", "meeting", "evento", "event", "recordatorio", "reminder"
-        ],
-        "penalty_keywords": [
-            "spotify", "youtube", "virus", "instalar programa",
-            "pantalla", "screenshot", "volumen", "brillo",
-        ],
-        "tools": [
-            "google_calendar", "gmail_control", "google_drive",
-            "document_creator", "document_generator", "document_handler",
-            "presentation_generator", "spreadsheet_generator", "project_manager", "goals", "reminder",
-            "scheduler", "document_tool"
-        ],
-    },
+
+    # ── 4. DEV — Code, git, programming, DevOps ──
     "dev": {
         "name": "DevAgent",
-        "description": "Handles development: code help, git, codebase analysis, knowledge base, dev agent tasks.",
+        "description": "Programación, código, git, codebase, DevOps, refactoring, testing, creación de scripts/proyectos",
         "keywords": [
-            "codigo", "code", "programar", "program", "git", "commit", "push",
-            "pull", "branch", "repo", "repositorio", "codebase", "desarrollo",
-            "development", "debug", "error", "bug", "funcion", "function",
-            "clase", "class", "api", "endpoint", "server", "database",
-            "knowledge base", "base de conocimiento"
+            "codigo", "code", "programar", "programa", "script",
+            "funcion", "function", "clase", "class", "metodo",
+            "git", "commit", "push", "pull", "branch", "repositorio", "repo",
+            "python", "javascript", "html", "css", "react", "node",
+            "compilar", "compile", "build", "npm", "pip",
+            "debug", "error", "bug", "fix", "arreglar codigo",
+            "refactor", "refactorizar", "optimizar codigo",
+            "test", "testing", "prueba", "unittest",
+            "docker", "deploy", "desplegar", "ci/cd",
+            "downloader", "scraper", "bot", "proyecto",
+            "dependencias", "instalar paquete", "requirements",
+            "crear archivo", "creá archivo", "escribir archivo",
+            "hacer un programa", "hacé un programa", "make a",
         ],
         "penalty_keywords": [
-            "spotify", "youtube", "virus", "calendario", "email",
+            "spotify", "virus", "calendario", "email",
+            "pantalla", "screenshot", "volumen", "brillo",
+            "reproducir", "cancion", "playlist",
+        ],
+        "tools": [
+            "code_helper", "code_generator", "code_analyzer", "code_review",
+            "code_engineer", "codebase_explorer", "code_validator",
+            "git_control", "git_smart", "git_daily", "github_pr",
+            "devops_pipeline", "refactoring_engine", "test_generator",
+            "dependency_manager", "vscode_controller", "dev_agent",
+            "web_generator", "web_designer", "react_designer",
+            "angular_designer", "vue_designer", "next_designer",
+            "tool_creator", "code_sandbox", "shell_session",
+        ],
+    },
+
+    # ── 5. MEDIA — Music, YouTube, images, entertainment ──
+    "media": {
+        "name": "MediaAgent",
+        "description": "Música, YouTube, generación de imágenes, entretenimiento, games",
+        "keywords": [
+            "musica", "music", "spotify", "cancion", "song", "playlist",
+            "youtube", "video", "yt", "descargar video",
+            "imagen", "image", "foto", "dibujar", "generar imagen",
+            "juego", "game", "gaming", "jugar",
+            "tiktok", "reel", "short",
+            "radio", "podcast", "audio",
+            "pelicula", "movie", "serie", "anime",
+        ],
+        "penalty_keywords": [
+            "calendario", "email", "codigo", "git", "virus",
+            "instalar", "archivo", "carpeta", "buscar",
+        ],
+        "tools": [
+            "music_player", "play_direct", "spotify_control",
+            "youtube_video", "image_generation", "image_generator",
+            "image_analyzer", "video_analyzer", "game_companion",
+            "game_agent", "game_launcher", "audio_transcriber",
+            "voice_recognition", "tts_set_voice",
+        ],
+    },
+
+    # ── 6. COMM — Email, calendar, messaging, documents ──
+    "comm": {
+        "name": "CommAgent",
+        "description": "Email, calendario, mensajería, documentos, notificaciones, productividad",
+        "keywords": [
+            "email", "correo", "gmail", "mail", "enviar mensaje",
+            "calendario", "calendar", "evento", "reunion", "meeting",
+            "whatsapp", "telegram", "sms", "mensaje",
+            "documento", "document", "pdf", "word", "excel", "powerpoint",
+            "notificacion", "notification", "alerta",
+            "recordatorio", "reminder", "alarma",
+            "tarea", "task", "todo", "pendiente",
+            "agenda", "schedule", "planificar",
+            "hoja de calculo", "spreadsheet", "presentacion",
+        ],
+        "penalty_keywords": [
+            "spotify", "youtube", "virus", "codigo", "git",
+            "pantalla", "screenshot", "volumen", "abrir app",
+        ],
+        "tools": [
+            "email_manager", "gmail_control", "send_message", "send_sms",
+            "whatsapp", "whatsapp_web", "telegram_bot",
+            "google_calendar", "calendar_manager", "reminder", "reminders",
+            "document_creator", "document_handler", "document_manager", "document_tool",
+            "document_generator", "document_rag",
+            "presentation_generator", "spreadsheet_generator",
+            "pdf_editor", "pdf_manager", "pdf_generator",
+            "office_docs", "notification_center", "notifications",
+            "task_manager", "task_scheduler", "goals",
+            "scheduler", "alarm_manager", "meeting_transcriber",
+            "obsidian_note", "i18n",
+        ],
+    },
+
+    # ── 7. VISION — Screen analysis, OCR, images, perception ──
+    "vision": {
+        "name": "VisionAgent",
+        "description": "Análisis de pantalla, OCR, visión por computadora, análisis de imágenes",
+        "keywords": [
+            "ver pantalla", "que se ve", "que hay en pantalla",
+            "capturar pantalla", "screenshot para analizar",
+            "ocr", "leer texto imagen", "texto en imagen",
+            "analizar imagen", "analizar foto", "que hay en la foto",
+            "vision", "ver imagen", "mirar imagen",
+            "reconocer texto", "detectar", "identificar imagen",
+            "cámara", "camera", "webcam", "vigilancia",
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "virus", "email", "calendario",
+            "codigo", "git", "navegador", "abrir app",
+        ],
+        "tools": [
+            "screen_vision", "image_analyzer", "ocr_reader",
+            "screen_see", "camera_bus", "vision_guardian",
+            "screen_context", "screen_recorder",
+        ],
+    },
+
+    # ── 8. SECURITY — Scanning, firewall, protection ──
+    "security": {
+        "name": "SecurityAgent",
+        "description": "Seguridad del sistema, escaneo, firewall, protección, criptografía, OSINT",
+        "keywords": [
+            "seguridad", "security", "escanear", "scan", "virus", "malware",
+            "firewall", "proteccion", "protect", "amenaza", "threat",
+            "encriptar", "encrypt", "cifrar", "descifrar",
+            "contraseña", "password", "credential", "clave",
+            "hack", "vulnerabilidad", "vulnerability",
+            "osint", "investigar persona", "whois",
+            "usb", "dispositivo", "periferico",
+            "ransomware", "spyware",
+            "instalar programa", "desinstalar programa",
+        ],
+        "penalty_keywords": [
+            "spotify", "youtube", "calendario", "email",
             "pantalla", "screenshot", "volumen", "brillo",
         ],
         "tools": [
-            "code_helper", "dev_agent", "git_control", "codebase",
-            "knowledge_base", "agent_task", "vscode_controller",
-            "todowrite", "subagent_task", "webfetch", "web_search",
-            "code_analyzer", "code_generator", "web_generator", "web_designer"
+            "security_scanner", "security_shield", "eris_guardian",
+            "active_firewall", "ransomware_shield", "self_protection",
+            "osint_agent", "cybersecurity", "credential_recovery",
+            "keylogger_detector", "usb_monitor", "darkweb_monitor",
+            "disk_wiper", "file_encryptor", "program_manager",
+        ],
+    },
+
+    # ── 9. STUDY — Aprendizaje, explicaciones, planes, quizzes ──
+    "study": {
+        "name": "StudiesAgent",
+        "description": "Estudios y aprendizaje: explica conceptos, resume material, arma planes de estudio, genera quizzes y flashcards, guarda notas de estudio",
+        "keywords": [
+            "explica", "explicame", "explicá", "qué es", "que es", "que son",
+            "explicar", "define", "sobre", "acerca de", "contame",
+            "estudiar", "estudio", "aprender", "aprendizaje",
+            "plan de estudio", "plan de estudios", "cronograma",
+            "resume", "resumi", "resumen", "sintetiza",
+            "quiz", "flashcard", "repaso", "examen", "evaluame", "autoevaluaci",
+            "anota", "anotá", "apunte", "nota de estudio", "material de estudio",
+            "tesis", "materia", "facultad", "universidad", "clase", "carrera",
+        ],
+        "penalty_keywords": [
+            "spotify", "youtube", "virus", "email", "calendario",
+            "pantalla", "screenshot", "volumen", "abrir app",
+        ],
+        "tools": [
+            "web_search", "super_search", "deep_research", "webfetch",
+            "file_api", "file_manager", "save_memory",
+            "db_tasks", "task_scheduler", "reminders",
+            "document_creator", "document_generator", "pdf_generator",
         ],
     },
 }
@@ -272,9 +331,16 @@ class AgentRouter:
         - Exact phrase matches scored higher than substring
         - Penalty keywords reduce false positives
         - Recent handoff context prevents agent bouncing
+        - Accent normalization (creá → crear)
         Returns None if no agent matches (handled by main ERIS).
         """
+        import unicodedata
+        def _norm(s):
+            nfkd = unicodedata.normalize('NFKD', s)
+            return ''.join(c for c in nfkd if not unicodedata.combining(c))
+
         text_lower = text.lower()
+        text_norm = _norm(text_lower)
         scores: dict[str, float] = {}
 
         for agent_key, agent_info in self._registry.get("agents", {}).items():
@@ -284,11 +350,19 @@ class AgentRouter:
             score = 0.0
             for keyword in agent_info.get("keywords", []):
                 kw_lower = keyword.lower()
-                if kw_lower in text_lower:
+                kw_norm = _norm(kw_lower)
+                matched = False
+                # Try normalized match first (handles accents: creá → crear)
+                if kw_norm in text_norm:
+                    matched = True
+                elif kw_lower in text_lower:
+                    matched = True
+
+                if matched:
                     # Base weight: longer keywords are more specific
-                    base = len(kw_lower)
+                    base = max(len(kw_lower), len(kw_norm))
                     # Bonus for exact word boundary matches (not substring)
-                    if f" {kw_lower} " in f" {text_lower} " or text_lower.startswith(kw_lower) or text_lower.endswith(kw_lower):
+                    if f" {kw_norm} " in f" {text_norm} " or text_norm.startswith(kw_norm) or text_norm.endswith(kw_norm):
                         base *= 1.5
                     # Bonus for multi-word phrases (more specific = more reliable)
                     if " " in kw_lower:
@@ -297,7 +371,8 @@ class AgentRouter:
 
             # Penalty keywords: if present, reduce this agent's score
             for penalty_kw in agent_info.get("penalty_keywords", []):
-                if penalty_kw.lower() in text_lower:
+                pen_norm = _norm(penalty_kw.lower())
+                if pen_norm in text_norm or penalty_kw.lower() in text_lower:
                     score *= 0.3
 
             if score > 0:
