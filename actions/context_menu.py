@@ -1,7 +1,15 @@
 """Gestion del menu contextual de Windows para ERIS."""
 import sys
 import os
-import winreg
+
+try:
+    import winreg
+except ImportError:
+    winreg = None
+    def _no_windows(_name):  # type: ignore[misc]
+        return lambda *a, **k: "Solo disponible en Windows"
+    if sys.platform != "win32":
+        winreg = type("winreg", (), {"CreateKey": _no_windows, "OpenKey": _no_windows, "SetValueEx": _no_windows, "CloseKey": _no_windows, "QueryValueEx": _no_windows, "DeleteKey": _no_windows, "HKEY_CURRENT_USER": object()})()
 
 ERIS_EXE = sys.executable or "ERIS.exe"
 MENU_NAME = "ERIS"

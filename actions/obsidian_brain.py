@@ -12,8 +12,9 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
+from core.logging_setup import get_obsidian_vault
 
-VAULT_PATH = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
+VAULT_PATH = get_obsidian_vault()
 VAULT_PATH.mkdir(parents=True, exist_ok=True)
 
 # Ensure .obsidian config folder exists

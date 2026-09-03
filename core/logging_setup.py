@@ -1,4 +1,5 @@
 import sys
+import os
 from pathlib import Path
 
 
@@ -12,6 +13,31 @@ BASE_DIR        = get_base_dir()
 API_CONFIG_PATH = BASE_DIR / "config" / "api_keys.json"
 PROMPT_PATH     = BASE_DIR / "core" / "prompt.txt"
 LOG_PATH        = BASE_DIR / "eris.log"
+
+
+def get_obsidian_vault() -> Path:
+    """Devuelve la ruta al vault de Obsidian (memoria persistente de ERIS).
+
+    Resuelve de forma portable (funciona en Windows y Linux): primero busca
+    la variable de entorno ERIS_OBSIDIAN_VAULT; si no está, usa la carpeta
+    hermana 'Eris_NEW/BaseDatosObsidian/BaseObsiEris' junto a BASE_DIR; y
+    como último recurso, una carpeta local 'obsidian_vault' dentro del repo
+    para que el sistema nunca dependa de una ruta absoluta hardcodeada.
+    """
+    env = os.environ.get("ERIS_OBSIDIAN_VAULT")
+    if env:
+        _p = Path(env)
+        if _p.is_dir():
+            return _p
+    candidates = [
+        BASE_DIR.parent / "Eris_NEW" / "BaseDatosObsidian" / "BaseObsiEris",
+        Path("D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris"),
+        BASE_DIR / "obsidian_vault",
+    ]
+    for c in candidates:
+        if c.is_dir():
+            return c
+    return candidates[0]
 
 
 def setup_logging():

@@ -6,9 +6,10 @@ import json
 from pathlib import Path
 from datetime import datetime
 from collections import defaultdict, deque
+from core.logging_setup import get_obsidian_vault, BASE_DIR
 
-_VAULT = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
-_DATA_FILE = Path(r"D:\Eris_Source\data\knowledge_graph_vault.json")
+_VAULT = get_obsidian_vault()
+_DATA_FILE = BASE_DIR / "data" / "knowledge_graph_vault.json"
 _WIKILINK_RE = re.compile(r"\[\[([^\]|]+?)(?:\|[^\]]+)?\]\]")
 _MD_LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+\.md)\)")
 _TAG_RE = re.compile(r"^(?:tags?:\s*(.+)|#\w+)", re.MULTILINE)

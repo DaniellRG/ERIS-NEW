@@ -10,9 +10,10 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, Any, List
+from core.logging_setup import get_obsidian_vault
 
 _BASE = Path(__file__).resolve().parent.parent
-_OBSIDIAN_VAULT = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
+_OBSIDIAN_VAULT = get_obsidian_vault()
 _NEURO_DIR = _OBSIDIAN_VAULT / "NeuroSpheres"
 _STATE_FILE = _BASE / "memory" / "neuro_spheres_state.json"
 

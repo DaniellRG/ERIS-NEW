@@ -12,7 +12,8 @@ from datetime import datetime
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-VAULT_DIR = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
+from core.logging_setup import get_obsidian_vault
+VAULT_DIR = get_obsidian_vault()
 
 
 def _run_tool(name: str, params: dict, player=None) -> str:

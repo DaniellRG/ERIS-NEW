@@ -16,7 +16,8 @@ _STATE_FILE = _MEMORY / "learning_pipeline_state.json"
 _QUEUE_FILE = _MEMORY / "learning_queue.json"
 _LOG_FILE = _MEMORY / "learning_pipeline_log.json"
 
-_OBSIDIAN_VAULT = Path("D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris")
+from core.logging_setup import get_obsidian_vault
+_OBSIDIAN_VAULT = get_obsidian_vault()
 KNOWLEDGE_DIR = _OBSIDIAN_VAULT / "Conocimiento-Profundo"
 
 

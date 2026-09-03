@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
 import subprocess
-import pygetwindow as gw
 import psutil
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+try:
+    import pygetwindow as gw
+except ImportError:
+    gw = None
+
+
+def _pycaw():
+    """Importacion perezosa de pycaw/comtypes (solo Windows). En Linux devuelve None."""
+    try:
+        from ctypes import cast, POINTER
+        from comtypes import CLSCTX_ALL
+        from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+        return cast, POINTER, CLSCTX_ALL, AudioUtilities, IAudioEndpointVolume
+    except Exception:
+        return None
+
 
 def set_master_volume(volume_percent: int) -> bool:
     """Ajusta el volumen maestro del sistema usando pycaw (0-100)."""
     try:
+        _p = _pycaw()
+        if not _p:
+            return False
+        cast, POINTER, CLSCTX_ALL, AudioUtilities, IAudioEndpointVolume = _p
         devices = AudioUtilities.GetSpeakers()
         interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         volume = cast(interface, POINTER(IAudioEndpointVolume))
@@ -21,6 +38,10 @@ def set_master_volume(volume_percent: int) -> bool:
 def get_master_volume() -> int:
     """Obtiene el volumen maestro actual."""
     try:
+        _p = _pycaw()
+        if not _p:
+            return 50
+        cast, POINTER, CLSCTX_ALL, AudioUtilities, IAudioEndpointVolume = _p
         devices = AudioUtilities.GetSpeakers()
         interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         volume = cast(interface, POINTER(IAudioEndpointVolume))
@@ -103,11 +124,13 @@ def contextual_control(parameters: dict, player=None) -> str:
 
     elif action == "adjust_context":
         # Detección inteligente por ventana en foco
+        title = ""
         try:
-            win = gw.getActiveWindow()
-            title = win.title.lower() if win and win.title else ""
+            if gw is not None:
+                win = gw.getActiveWindow()
+                title = win.title.lower() if win and win.title else ""
         except Exception:
-            title = ""
+            pass
             
         if not title:
             # Fallback a buscar procesos activos de interés

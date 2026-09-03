@@ -9,11 +9,13 @@ import time
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
+from core.logging_setup import get_obsidian_vault
 
 _BASE = Path(__file__).resolve().parent.parent
 _MEMORY = _BASE / "memory"
 _STATE_FILE = _MEMORY / "goals.json"
 _LOG_FILE = _MEMORY / "goals_log.json"
+_OBSIDIAN_VAULT = get_obsidian_vault()
 
 PRIORITY_WEIGHTS = {"critical": 4, "high": 3, "medium": 2, "low": 1}
 
@@ -168,7 +170,7 @@ def auto_generate_goals() -> list:
             existing_titles.add(title)
 
     # Meta 3: Documentar capacidades en Obsidian
-    obsidian_caps = (_BASE.parent / "Eris_NEW" / "BaseDatosObsidian" / "BaseObsiEris" / "Capacidades")
+    obsidian_caps = (_OBSIDIAN_VAULT / "Capacidades")
     if obsidian_caps.exists():
         docs = list(obsidian_caps.glob("*.md"))
         if len(docs) < 30:

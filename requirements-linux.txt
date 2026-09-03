@@ -1,0 +1,64 @@
+# ============================================================
+#  ERIS - Dependencias para LINUX (CachyOS / Arch / cualquier)
+#  Sin los 5 paquetes Windows-only: pycaw, comtypes, win10toast,
+#  pywinauto, pygetwindow (el codigo ya los tolera con guards).
+# ------------------------------------------------------------
+#  PAQUETES DE SISTEMA (instalar con sudo pacman -S):
+#    python python-pip python-virtualenv portaudio pipewire-pulse
+#    python-pyaudio curl git
+# ============================================================
+
+# Audio / voz
+sounddevice
+vosk
+
+# Google Gemini (nube)
+google-genai
+google-auth-oauthlib
+google-api-python-client
+
+# UI (multiplataforma)
+pyqt6
+pyqt6-webengine
+qtawesome
+
+# Vision / imagen
+opencv-python
+pillow
+mss
+
+# Automatizacion (pyautogui funciona en X11; en Wayland usar ydotool)
+pyautogui
+
+# Utilidades del sistema
+psutil
+pyperclip
+send2trash
+
+# Web / busqueda
+requests
+beautifulsoup4
+duckduckgo-search
+playwright
+youtube-transcript-api
+
+# Oficina / documentos
+python-pptx
+python-docx
+openpyxl
+
+# Servidor / API local
+flask
+flask-socketio
+eventlet
+
+# TTS
+edge-tts
+gtts
+
+# Entretenimiento / integraciones
+spotipy
+openrgb-python
+
+# Seguridad
+cryptography
