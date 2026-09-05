@@ -74,6 +74,24 @@ Eris_Source/
 
 ## 3. Lanzamiento
 
+### Instalacion one-liner (recomendada para cualquier PC)
+
+**Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.ps1 | iex"
+```
+
+Instalan en `~/.eris/ERIS-NEW` (no tocan el workspace de desarrollo), crean
+el venv, instalan deps, dejan el comando `eris` y abren el **wizard de
+bienvenida** (API keys: REQUERIDA la de Gemini para chatear por internet;
+las OPCIONALES pueden quedarse vacias). Nada descarga modelos de IA — el
+uso local con Ollama es aparte y opcional. Actualizar: `eris --update`.
+
 ### Windows (PC de escritorio)
 ```cmd
 cd D:\Eris_Source
