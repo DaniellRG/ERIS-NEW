@@ -47,7 +47,9 @@ if [ "$1" = "--update" ]; then
 fi
 
 # 5) Config OS
-export ERIS_OBSIDIAN_VAULT="${ERIS_OBSIDIAN_VAULT:-$HOME/Eris_NEW/BaseDatosObsidian/BaseObsiEris}"
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+PARENT_DIR="$(dirname "$REPO_DIR")"
+export ERIS_OBSIDIAN_VAULT="${ERIS_OBSIDIAN_VAULT:-$PARENT_DIR/Eris_NEW/BaseDatosObsidian/BaseObsiEris}"
 export PYTHONIOENCODING="utf-8"
 
 echo "==> Lanzando ERIS en Linux..."
