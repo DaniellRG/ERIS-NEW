@@ -54,7 +54,12 @@ def _get_embedding(text: str) -> list[float]:
 
 
 def _get_chroma():
-    import chromadb
+    # chromadb es OPCIONAL: si no esta, degrada a "no disponible" en vez
+    # de crashear el arranque del GUI (patron de deps opcionales de AGENTS).
+    try:
+        import chromadb
+    except Exception:
+        raise RuntimeError("chromadb no instalado (pip install chromadb)")
     _ensure_dirs()
     client = chromadb.PersistentClient(path=str(_DB_DIR))
     return client.get_or_create_collection(
@@ -84,6 +89,15 @@ def _generate_id(title: str) -> str:
 
 def knowledge_base(parameters: dict = None, player=None) -> str:
     """Gestiona la base de conocimiento personal con búsqueda semántica."""
+    try:
+        return _kb_entry(parameters, player)
+    except RuntimeError as e:
+        return f"Knowledge Base no disponible: {e}"
+    except Exception as e:
+        return f"Error en Knowledge Base: {e}"
+
+
+def _kb_entry(parameters: dict = None, player=None) -> str:
     params = parameters or {}
     action = params.get("action", "search")
 

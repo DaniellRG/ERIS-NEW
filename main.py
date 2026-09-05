@@ -14,8 +14,8 @@ import re
 import threading
 try:
     import pygetwindow as gw
-except ImportError:
-    gw = None
+except Exception:
+    gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux (Wayland)
 from PyQt6.QtCore import QMetaObject, Qt
 
 import traceback
@@ -3638,7 +3638,6 @@ def main():
             except Exception:
                 pass
             # Arrancar Ollama en segundo plano (no bloqueante: hilo daemon)
-            import threading
             threading.Thread(target=ensure_ollama_running, kwargs={"wait_secs": 10.0}, daemon=True).start()
     except Exception as _e:
         print(f"[ERIS] ollama boot skip: {_e}")
