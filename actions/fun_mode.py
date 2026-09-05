@@ -133,7 +133,7 @@ def _check_answer(answer):
             if 0 <= idx < len(current["opts"]) and current["opts"][idx] == correct:
                 _trivia_state["correct"] += 1
                 return f"✅ ¡Correcto! La respuesta es: {correct}\n\nPuntaje: {_trivia_state['correct']}/{_trivia_state['total']}"
-        except:
+        except (ValueError, IndexError):
             pass
         if answer.strip().lower() == correct.lower():
             _trivia_state["correct"] += 1

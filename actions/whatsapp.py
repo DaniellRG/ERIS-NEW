@@ -7,7 +7,7 @@ from pathlib import Path
 # Try to import pyautogui, if not available we will gracefully fail/log
 try:
     import pyautogui
-except ImportError:
+except Exception:
     pyautogui = None
 
 BASE_DIR = Path(__file__).resolve().parent.parent

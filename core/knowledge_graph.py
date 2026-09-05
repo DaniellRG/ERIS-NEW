@@ -497,7 +497,7 @@ def _export(params: dict) -> str:
         "exported_at": datetime.now().isoformat(),
     }
 
-    out = Path(r"D:\Eris_Source\data\knowledge_graph_vault_export.json")
+    out = Path(__file__).resolve().parent.parent / "data" / "knowledge_graph_vault_export.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(export_data, ensure_ascii=False, indent=2), encoding="utf-8")
 

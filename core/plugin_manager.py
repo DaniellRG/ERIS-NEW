@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 PLUGINS_DIR = Path(__file__).resolve().parent.parent / "plugins"
-POLL_INTERVAL = 5.0  # seconds between mtime checks
+POLL_INTERVAL = 15.0  # seconds between mtime checks
 
 
 class Plugin:

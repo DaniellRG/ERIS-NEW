@@ -1,4 +1,5 @@
 import json
+import time
 
 from core.logging_setup import API_CONFIG_PATH
 
@@ -18,12 +19,24 @@ PLAY_CHUNK_SIZE     = 240      # 10ms chunks — playback (smaller = lower laten
 
 _cached_api_key: str | None = None
 
+_device_cache: dict = {"ts": 0.0, "devs": None}
+_DEVICE_CACHE_TTL = 5.0
+
+
+def _cached_devices() -> list[dict]:
+    """Lista de dispositivos de audio con cache TTL (enumerar es costoso)."""
+    import sounddevice as sd
+    now = time.monotonic()
+    c = _device_cache
+    if c["devs"] is None or now - c["ts"] > _DEVICE_CACHE_TTL:
+        c["devs"] = sd.query_devices()
+        c["ts"] = now
+    return c["devs"]
+
 
 def resolve_device(name_sub: str, kind: str = "input") -> int | None:
     """Find a device index by name substring (e.g. 'HAYLOU'). Returns None if not found."""
-    import sounddevice as sd
-    for i in range(len(sd.query_devices())):
-        d = sd.query_devices(i)
+    for i, d in enumerate(_cached_devices()):
         if name_sub.lower() in d["name"].lower():
             if kind == "input" and d["max_input_channels"] > 0:
                 return i
@@ -35,10 +48,8 @@ def resolve_device(name_sub: str, kind: str = "input") -> int | None:
 def _find_input_by_name(name_sub: str) -> int | None:
     if not name_sub:
         return None
-    import sounddevice as sd
     try:
-        for i in range(len(sd.query_devices())):
-            d = sd.query_devices(i)
+        for i, d in enumerate(_cached_devices()):
             if name_sub.lower() in d["name"].lower() and d["max_input_channels"] > 0:
                 return i
     except Exception:
@@ -87,6 +98,12 @@ def _can_open_out(idx: int | None) -> bool:
 def _device_name(idx: int | None) -> str:
     if idx is None:
         return ""
+    try:
+        devs = _cached_devices()
+        if 0 <= idx < len(devs):
+            return str(devs[idx]["name"])
+    except Exception:
+        pass
     import sounddevice as sd
     try:
         return str(sd.query_devices(idx)["name"])
@@ -140,7 +157,6 @@ def _ordered_candidates(kind: str, cfg: dict) -> list[int]:
     El resto se puntúa (físicos y con nombre sugestivo primero); no depende de
     marcas concretas, así que funciona en cualquier máquina/micro conectado.
     """
-    import sounddevice as sd
     idx_key = "mic_device" if kind == "input" else "speaker_device"
     name_key = "mic_device_name" if kind == "input" else "speaker_device_name"
 
@@ -161,8 +177,7 @@ def _ordered_candidates(kind: str, cfg: dict) -> list[int]:
 
     scored = []
     try:
-        for i in range(len(sd.query_devices())):
-            d = sd.query_devices(i)
+        for i, d in enumerate(_cached_devices()):
             if kind == "input" and d["max_input_channels"] <= 0:
                 continue
             if kind == "output" and d["max_output_channels"] <= 0:
@@ -235,10 +250,9 @@ def resolve_speaker() -> int | None:
 
 def describe_audio_devices() -> list[str]:
     """Resumen legible de todos los dispositivos de audio conectados."""
-    import sounddevice as sd
     out = []
     try:
-        devs = sd.query_devices()
+        devs = _cached_devices()
         for i, d in enumerate(devs):
             inn = d["max_input_channels"] > 0
             outn = d["max_output_channels"] > 0
@@ -258,11 +272,10 @@ def audio_device_options(kind: str) -> list[tuple[str, str]]:
     kind: "input" (micros) o "output" (altavoces/audífonos). Devuelve todas
     las opciones detectadas; el elemento "Auto" se agrega aparte en la UI.
     """
-    import sounddevice as sd
     opts: list[tuple[str, str]] = []
     seen: set[str] = set()
     try:
-        devs = sd.query_devices()
+        devs = _cached_devices()
         for i, d in enumerate(devs):
             inn = d["max_input_channels"] > 0
             outn = d["max_output_channels"] > 0

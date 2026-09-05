@@ -66,7 +66,7 @@ def _export_config(params: dict) -> str:
             try:
                 content = full_path.read_text(encoding="utf-8")
                 export_data["files"][rel_path] = content
-            except:
+            except OSError:
                 pass
 
     if include in ("all", "memory"):
@@ -75,7 +75,7 @@ def _export_config(params: dict) -> str:
             for f in mem_dir.glob("*.json"):
                 try:
                     export_data["files"]["memory/{}".format(f.name)] = f.read_text(encoding="utf-8")
-                except:
+                except OSError:
                     pass
 
     if include in ("all", "knowledge"):
@@ -84,7 +84,7 @@ def _export_config(params: dict) -> str:
             for f in kb_dir.glob("*.md"):
                 try:
                     export_data["files"]["knowledge/{}".format(f.name)] = f.read_text(encoding="utf-8")
-                except:
+                except OSError:
                     pass
 
     if include in ("all", "plugins"):
@@ -93,7 +93,7 @@ def _export_config(params: dict) -> str:
             for f in plugins_dir.glob("*.py"):
                 try:
                     export_data["files"]["plugins/{}".format(f.name)] = f.read_text(encoding="utf-8")
-                except:
+                except OSError:
                     pass
 
     _EXPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -180,7 +180,7 @@ def _list_exports_data() -> list:
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
             exports.append(data)
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return exports
 

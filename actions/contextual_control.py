@@ -4,8 +4,8 @@ import psutil
 
 try:
     import pygetwindow as gw
-except ImportError:
-    gw = None
+except Exception:
+    gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux
 
 
 def _pycaw():

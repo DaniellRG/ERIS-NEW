@@ -2,7 +2,15 @@
 import os
 import tempfile
 from pathlib import Path
-from PyPDF2 import PdfReader, PdfWriter
+
+try:
+    from PyPDF2 import PdfReader, PdfWriter
+except ImportError:
+    PdfReader = None  # type: ignore[assignment,misc]
+    PdfWriter = None  # type: ignore[assignment,misc]
+
+def _pypdf_ok() -> bool:
+    return PdfReader is not None and PdfWriter is not None
 
 
 def _normalize_params(parameters: dict | None) -> dict:
@@ -19,6 +27,8 @@ def _normalize_params(parameters: dict | None) -> dict:
 
 def pdf_editor(parameters: dict = None, player=None) -> str:
     """Dispatcher: enruta por action a la función correcta (read/merge/split/fill/info)."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = _normalize_params(parameters)
     action = str(params.get("action", "read")).lower().strip()
     if action in ("read", "leer"):
@@ -47,6 +57,8 @@ def _get_pdf_path(path: str) -> str:
 
 def read_pdf(parameters: dict = None, player=None) -> str:
     """Extrae texto de un PDF."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     path = _get_pdf_path(params.get("path", ""))
     if not os.path.isfile(path):
@@ -71,6 +83,8 @@ def read_pdf(parameters: dict = None, player=None) -> str:
 
 def merge_pdfs(parameters: dict = None, player=None) -> str:
     """Fusiona varios PDFs en uno."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     files = params.get("files", "")
     output = params.get("output", "fusionado.pdf")
@@ -103,7 +117,9 @@ def merge_pdfs(parameters: dict = None, player=None) -> str:
 
 
 def split_pdf(parameters: dict = None, player=None) -> str:
-    """Divide un PDF por paginas o rangos."""
+    """Divide un PDF en páginas o rangos."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     path = _get_pdf_path(params.get("path", ""))
     if not os.path.isfile(path):
@@ -144,6 +160,8 @@ def split_pdf(parameters: dict = None, player=None) -> str:
 
 def pdf_info(parameters: dict = None, player=None) -> str:
     """Muestra metadatos del PDF."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     path = _get_pdf_path(params.get("path", ""))
     if not os.path.isfile(path):
@@ -168,7 +186,9 @@ def pdf_info(parameters: dict = None, player=None) -> str:
 
 
 def fill_form(parameters: dict = None, player=None) -> str:
-    """Rellena campos de un formulario PDF."""
+    """Rellena campos de un PDF."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     path = _get_pdf_path(params.get("path", ""))
     if not os.path.isfile(path):
@@ -262,7 +282,9 @@ def extract_images(parameters: dict = None, player=None) -> str:
 
 
 def add_signature(parameters: dict = None, player=None) -> str:
-    """Anade una firma/imagen a una pagina del PDF."""
+    """Agrega una firma/imagen a una página."""
+    if not _pypdf_ok():
+        return "Error: PyPDF2 no está instalado. Ejecuta: pip install PyPDF2"
     params = parameters or {}
     pdf_path = _get_pdf_path(params.get("path", ""))
     sig_path = params.get("signature", "")

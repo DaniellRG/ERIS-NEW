@@ -13,22 +13,22 @@ API_FILE = BASE_DIR / "config" / "api_keys.json"
 def _get_key():
     if API_FILE.exists():
         try: return json.loads(API_FILE.read_text("utf-8")).get("openrouter_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     # Fallback: try relative to cwd
     alt = Path("config/api_keys.json")
     if alt.exists():
         try: return json.loads(alt.read_text("utf-8")).get("openrouter_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     return ""
 
 def _get_gemini_key():
     if API_FILE.exists():
         try: return json.loads(API_FILE.read_text("utf-8")).get("gemini_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     alt = Path("config/api_keys.json")
     if alt.exists():
         try: return json.loads(alt.read_text("utf-8")).get("gemini_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     return ""
 
 def _capture() -> str:
@@ -124,7 +124,7 @@ def game_companion(parameters: dict, player=None) -> str:
             r = _ur.Request(f"https://www.google.com/search?q={q}", headers={"User-Agent": "Mozilla/5.0"})
             with _ur.urlopen(r, timeout=10) as resp:
                 return f"Busca en Google: {game} guia consejos tips"
-        except:
+        except Exception:
             return f"Busca en internet: {game} guia tips trucos"
     
     elif action == "spot":

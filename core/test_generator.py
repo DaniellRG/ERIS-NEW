@@ -7,9 +7,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-_DATA_DIR = Path(r"D:\Eris_Source\data")
-_TESTS_DIR = Path(r"D:\Eris_Source\tests\generated")
-_PROJECT = Path(r"D:\Eris_Source")
+_PROJECT = Path(__file__).resolve().parent.parent
+_DATA_DIR = _PROJECT / "data"
+_TESTS_DIR = _PROJECT / "tests" / "generated"
 
 
 def test_generator(parameters: dict = None, player=None) -> str:

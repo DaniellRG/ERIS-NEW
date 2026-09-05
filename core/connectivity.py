@@ -17,7 +17,7 @@ _STATE_FILE = _DATA_DIR / "connectivity_state.json"
 
 # Default config
 _DEFAULTS = {
-    "check_interval": 5,          # seconds between checks
+    "check_interval": 15,         # seconds between checks
     "fail_threshold": 3,          # consecutive fails before going offline
     "recover_threshold": 2,       # consecutive OKs before going online
     "ping_urls": [

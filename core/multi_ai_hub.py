@@ -9,8 +9,9 @@ import urllib.error
 from pathlib import Path
 from typing import Any
 
-CONFIG_PATH = Path(r"D:\Eris_Source\data\multi_ai_config.json")
-API_KEYS_PATH = Path(r"D:\Eris_Source\config\api_keys.json")
+_BASE = Path(__file__).resolve().parent.parent
+CONFIG_PATH = _BASE / "data" / "multi_ai_config.json"
+API_KEYS_PATH = _BASE / "config" / "api_keys.json"
 
 DEFAULT_CONFIG = {
     "providers": {

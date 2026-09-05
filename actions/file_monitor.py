@@ -26,9 +26,9 @@ def file_monitor(parameters: dict, player=None) -> str:
                     try:
                         st = fp.stat()
                         files.append({"path": str(fp), "size": st.st_size, "modified": st.st_mtime})
-                    except: pass
+                    except OSError: pass
                 if len(files) > 200: break
-        except: pass
+        except OSError: pass
         
         files.sort(key=lambda x: x["modified"], reverse=True)
         lines = [f"Archivos recientes en {target}:"]
@@ -48,9 +48,9 @@ def file_monitor(parameters: dict, player=None) -> str:
                     fp = Path(root) / name
                     try:
                         files[str(fp)] = fp.stat().st_mtime
-                    except: pass
+                    except OSError: pass
                 if len(files) > 500: break
-        except: pass
+        except OSError: pass
         _STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         _STATE_FILE.write_text(json.dumps({"folder": str(target), "files": files, "time": time.time()}, indent=2))
         return f"Snapshot guardado: {len(files)} archivos en {target}"
@@ -63,7 +63,7 @@ def file_monitor(parameters: dict, player=None) -> str:
             prev = json.loads(_STATE_FILE.read_text())
             prev_files = prev.get("files", {})
             prev_time = prev.get("time", 0)
-        except:
+        except (json.JSONDecodeError, OSError):
             return "Error leyendo snapshot."
         
         new = []
@@ -79,7 +79,7 @@ def file_monitor(parameters: dict, player=None) -> str:
                     elif os.path.getmtime(fp) > prev_files[fp] + 1:
                         modified.append(fp)
                 if len(new) + len(modified) > 500: break
-        except: pass
+        except OSError: pass
         
         for fp in prev_files:
             if not os.path.exists(fp):
@@ -110,7 +110,7 @@ def file_monitor(parameters: dict, player=None) -> str:
                     if query.lower() in name.lower():
                         results.append(str(Path(root) / name))
                 if len(results) > 100: break
-        except: pass
+        except OSError: pass
         if not results:
             return f"No se encontro '{query}' en {target}"
         return f"Resultados para '{query}' ({len(results)}):\n" + "\n".join(results[:20])

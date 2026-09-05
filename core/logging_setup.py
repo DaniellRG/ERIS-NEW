@@ -31,7 +31,6 @@ def get_obsidian_vault() -> Path:
             return _p
     candidates = [
         BASE_DIR.parent / "Eris_NEW" / "BaseDatosObsidian" / "BaseObsiEris",
-        Path("D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris"),
         BASE_DIR / "obsidian_vault",
     ]
     for c in candidates:

@@ -12,7 +12,8 @@ import subprocess
 import time
 from pathlib import Path
 
-_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE", r"D:\Eris_Source"))
+_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE",
+                                 str(Path(__file__).resolve().parent.parent)))
 
 
 def _run_git(args: list, timeout: int = 30) -> dict:

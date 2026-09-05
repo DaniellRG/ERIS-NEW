@@ -979,10 +979,10 @@ class ErisLive:
                         import edge_tts, asyncio as _aio
                         async def _speak():
                             c = edge_tts.Communicate(response, voice="es-AR-TomasNeural")
-                            await c.save(r"D:\Eris_Source\data\_temp_speech.mp3")
+                            await c.save(str(BASE_DIR / "data" / "_temp_speech.mp3"))
                         _aio.run(_speak())
                         import os
-                        os.system(r'start /min "" "D:\Eris_Source\data\_temp_speech.mp3"')
+                        os.system(f'start /min "" "{BASE_DIR / "data" / "_temp_speech.mp3"}"')
             except Exception as _tts_e:
                 print(f"[ERIS] TTS error: {_tts_e}")
 
@@ -1069,7 +1069,7 @@ class ErisLive:
             # Guardar el analisis completo por si ERIS necesita mas detalle
             full_path = None
             try:
-                full_path = Path("D:/Eris_Source/snapshots") / f"{p.stem}_analysis.txt"
+                full_path = BASE_DIR / "snapshots" / f"{p.stem}_analysis.txt"
                 full_path.parent.mkdir(parents=True, exist_ok=True)
                 full_path.write_text(result, encoding="utf-8")
             except Exception:
@@ -1124,7 +1124,7 @@ class ErisLive:
 
             # Guardar el contenido completo en snapshots para ediciones posteriores
             try:
-                full_path = Path("D:/Eris_Source/snapshots") / f"{p.stem}_content.txt"
+                full_path = BASE_DIR / "snapshots" / f"{p.stem}_content.txt"
                 full_path.parent.mkdir(parents=True, exist_ok=True)
                 full_path.write_text(result, encoding="utf-8")
             except Exception:
@@ -1163,7 +1163,8 @@ class ErisLive:
                 import winsound
                 winsound.Beep(400, 200)
                 winsound.Beep(300, 200)
-            except: pass
+            except Exception:
+                pass
             return True
 
         # ── Activación por nombre (toggle) ───────────────────────────────────
@@ -2410,13 +2411,15 @@ class ErisLive:
                                         self.ui.tray_icon.icon(), 3000)
                                 from PyQt6.QtCore import QTimer
                                 QTimer.singleShot(0, _show)
-                            except: pass
+                            except Exception:
+                                pass
                             # Play wake sound
                             try:
                                 import winsound
                                 winsound.Beep(500, 200)
                                 winsound.Beep(700, 200)
-                            except: pass
+                            except Exception:
+                                pass
                     else:
                         # Detección incremental: despertar apenas reconoce el nombre
                         try:
@@ -3744,7 +3747,7 @@ def main():
                     try:
                         # Ocultar el contenedor completo del banner (incluye el botón PRO)
                         label.parentWidget().hide()
-                    except:
+                    except Exception:
                         label.hide()
 
             # 2. Add keyboard shortcut & Global Hotkey (INS / Insert key) to wake up ERIS

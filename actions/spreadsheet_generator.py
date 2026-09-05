@@ -17,13 +17,16 @@ try:
 except ImportError:
     _OPENPYXL_OK = False
 
-HEADER_FILL = PatternFill(start_color='1A3C6E', end_color='1A3C6E', fill_type='solid')
-HEADER_FONT = Font(name='Calibri', bold=True, color='FFFFFF', size=11)
-THIN_BORDER = Border(
-    left=Side(style='thin'), right=Side(style='thin'),
-    top=Side(style='thin'), bottom=Side(style='thin')
-)
-CENTER = Alignment(horizontal='center', vertical='center')
+if _OPENPYXL_OK:
+    HEADER_FILL = PatternFill(start_color='1A3C6E', end_color='1A3C6E', fill_type='solid')
+    HEADER_FONT = Font(name='Calibri', bold=True, color='FFFFFF', size=11)
+    THIN_BORDER = Border(
+        left=Side(style='thin'), right=Side(style='thin'),
+        top=Side(style='thin'), bottom=Side(style='thin')
+    )
+    CENTER = Alignment(horizontal='center', vertical='center')
+else:
+    HEADER_FILL = HEADER_FONT = THIN_BORDER = CENTER = None
 
 
 def spreadsheet_generator(parameters: dict, player=None) -> str:

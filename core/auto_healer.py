@@ -11,9 +11,9 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-_DATA_DIR = Path(r"D:\Eris_Source\data")
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_DATA_DIR = _PROJECT_ROOT / "data"
 _JOURNAL_FILE = _DATA_DIR / "auto_healer_journal.json"
-_PROJECT_ROOT = Path(r"D:\Eris_Source")
 
 _IGNORE_DIRS = {"__pycache__", ".venv", "venv", "site-packages", "node_modules", ".git", "backups"}
 

@@ -14,7 +14,7 @@ def _safe_read(path, default=""):
     try:
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
             return f.read(2000)
-    except:
+    except OSError:
         return default
 
 def system_reader(parameters=None, player=None, action: str = None, detail: str = None):
@@ -59,7 +59,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
                 info = p.info
                 if info["cpu_percent"] and info["cpu_percent"] > 0:
                     procs.append(info)
-            except:
+            except Exception:
                 pass
         procs.sort(key=lambda x: x.get("cpu_percent", 0) or 0, reverse=True)
         lines = ["Procesos activos por CPU:"]
@@ -73,7 +73,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
             try:
                 usage = psutil.disk_usage(part.mountpoint)
                 lines.append(f"  {part.device:4s} {part.mountpoint:10s} {usage.percent:3d}% usado  {usage.free//(1024**3)}GB libres")
-            except:
+            except OSError:
                 lines.append(f"  {part.device:4s} {part.mountpoint:10s} ?")
         return "\n".join(lines)
 
@@ -149,7 +149,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
         temps = []
         try:
             temps = psutil.sensors_temperatures()
-        except:
+        except Exception:
             pass
         if temps:
             lines = ["Temperaturas:"]

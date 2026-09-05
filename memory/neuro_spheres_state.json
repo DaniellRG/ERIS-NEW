@@ -1,5 +1,5 @@
 {
-  "total_nodes": 46,
+  "total_nodes": 57,
   "total_connections": 69,
   "nodes": {
     "aprendizaje_1787245113209": {
@@ -523,9 +523,119 @@
       "connections": [],
       "created": "2026-08-20T23:36:00.887243",
       "last_used": "2026-08-20T23:36:00.887249"
+    },
+    "aprendizaje_1788622664208": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788622664208",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:37:44.208474",
+      "last_used": "2026-09-05T10:37:44.208488"
+    },
+    "aprendizaje_1788622668263": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788622668263",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:37:48.263912",
+      "last_used": "2026-09-05T10:37:48.263926"
+    },
+    "aprendizaje_1788623076749": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788623076749",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:44:36.749278",
+      "last_used": "2026-09-05T10:44:36.749296"
+    },
+    "aprendizaje_1788623079216": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788623079216",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:44:39.216786",
+      "last_used": "2026-09-05T10:44:39.216798"
+    },
+    "aprendizaje_1788623079490": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788623079490",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:44:39.490384",
+      "last_used": "2026-09-05T10:44:39.490407"
+    },
+    "aprendizaje_1788623556627": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788623556627",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:52:36.627580",
+      "last_used": "2026-09-05T10:52:36.627594"
+    },
+    "aprendizaje_1788623556928": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788623556928",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T10:52:36.928746",
+      "last_used": "2026-09-05T10:52:36.928759"
+    },
+    "aprendizaje_1788625012931": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788625012931",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T11:16:52.931513",
+      "last_used": "2026-09-05T11:16:52.931524"
+    },
+    "aprendizaje_1788641317765": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788641317764",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T15:48:37.765016",
+      "last_used": "2026-09-05T15:48:37.765030"
+    },
+    "aprendizaje_1788641324425": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788641324424",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T15:48:44.425008",
+      "last_used": "2026-09-05T15:48:44.425022"
+    },
+    "aprendizaje_1788641415741": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788641415741",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T15:50:15.741401",
+      "last_used": "2026-09-05T15:50:15.741416"
     }
   },
-  "last_add": "2026-08-20T23:36:00.887253",
+  "last_add": "2026-09-05T15:50:15.741420",
   "last_connect": "2026-08-20T11:58:33.239791",
   "growth_history": [
     {
@@ -1045,6 +1155,83 @@
       "timestamp": "2026-08-20T23:36:00.887255",
       "action": "add",
       "node_id": "aprendizaje_1787286960887",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:37:44.208496",
+      "action": "add",
+      "node_id": "aprendizaje_1788622664208",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:37:48.263933",
+      "action": "add",
+      "node_id": "aprendizaje_1788622668263",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:44:36.749307",
+      "action": "add",
+      "node_id": "aprendizaje_1788623076749",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:44:39.216806",
+      "action": "add",
+      "node_id": "aprendizaje_1788623079216",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:44:39.490414",
+      "action": "add",
+      "node_id": "aprendizaje_1788623079490",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:52:36.627601",
+      "action": "add",
+      "node_id": "aprendizaje_1788623556627",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T10:52:36.928766",
+      "action": "add",
+      "node_id": "aprendizaje_1788623556928",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T11:16:52.931534",
+      "action": "add",
+      "node_id": "aprendizaje_1788625012931",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T15:48:37.765037",
+      "action": "add",
+      "node_id": "aprendizaje_1788641317765",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T15:48:44.425028",
+      "action": "add",
+      "node_id": "aprendizaje_1788641324425",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T15:50:15.741424",
+      "action": "add",
+      "node_id": "aprendizaje_1788641415741",
       "sphere": "aprendizaje",
       "type": "aprendizaje"
     }

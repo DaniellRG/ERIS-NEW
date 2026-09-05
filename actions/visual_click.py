@@ -15,7 +15,7 @@ def _get_api_key() -> str:
     try:
         data = json.loads(API_FILE.read_text(encoding="utf-8"))
         return data.get("openrouter_api_key", "")
-    except: return ""
+    except Exception: return ""
 
 def visual_click(parameters: dict, player=None) -> str:
     """
@@ -34,8 +34,8 @@ def visual_click(parameters: dict, player=None) -> str:
         import mss
         import pyautogui
         from PIL import Image
-    except ImportError:
-        return "Error: Faltan dependencias (mss, pyautogui, Pillow)."
+    except Exception:
+        return "Error: Faltan dependencias (mss, pyautogui, Pillow) o no hay display X11."
 
     if player:
         player.write_log(f"👁 Buscando coordenadas para: '{element_desc}'...")

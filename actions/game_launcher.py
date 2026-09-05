@@ -23,7 +23,7 @@ def _find_exe_in_folder(folder: str, max_depth=3):
             for f in files:
                 if f.endswith('.exe') and 'unins' not in f.lower() and 'crash' not in f.lower() and 'vcredist' not in f.lower():
                     results.append(str(Path(root) / f))
-    except: pass
+    except OSError: pass
     return results
 
 def game_launcher(parameters: dict, player=None) -> str:

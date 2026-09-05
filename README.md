@@ -41,28 +41,28 @@ Eris_Source/
 │   ├── tool_registry.py         # 448 tools registradas
 │   ├── tool_declarations.py     # Declaraciones para el LLM
 │   ├── tool_dispatcher.py       # Ejecutor de tools
-│   ├── action_imports.py        # Imports tolerantes de 295+ action modules
+│   ├── action_imports.py        # Imports tolerantes de 296 action modules
 │   ├── prompt.txt               # System prompt de ERIS
 │   ├── mission_agent.py         # Tool #447 "mission"
 │   ├── self_evolution.py        # Tool #448 "evolucion" (autoconocimiento vivo)
 │   ├── code_guard.py            # Auto-corrección de código (F401, backups, rollback)
 │   ├── logging_setup.py         # BASE_DIR + get_obsidian_vault() PORTABLE
 │   ├── platform.py              # Capa de abstracción cross-platform
-│   ├── neuro_spheres.py         # Cerebro visual (95+ nodos)
+│   ├── neuro_spheres.py         # Cerebro visual auto-creciente
 │   ├── emotional_state/emotional_core.py
 │   ├── gemini_text_chat.py      # Chat dual Ollama/Gemini
 │   ├── knowledge_graph.py       # Grafo de conocimiento (vault portable)
 │   ├── learning_pipeline.py     # Aprendizaje autónomo → Obsidian
 │   ├── goal_setting.py          # Metas autónomas
 │   └── ... (conectividad, self_healing, offline_voice, tts_engine...)
-├── actions/                 # 295+ módulos de acciones (volumen, apps, web...)
+├── actions/                 # 296 módulos de acciones (volumen, apps, web...)
 ├── agents/                  # 9 agentes especializados
 ├── skills/                  # 39 skills instaladas
 ├── eris_workspace/          # Workspace 3D (ursina/panda3d)
 ├── android_eris/            # Build APK Android (config con key → gitignored)
 ├── memory/                  # Estado de memoria, evolución, backups
 ├── data/                    # Conocimiento, sesiones, caches (parcial gitignored)
-│   └── knowledge/           # 62+ archivos .md de conocimiento
+│   └── knowledge/           # 69 archivos .md de conocimiento
 ├── test_all.py              # 57 tests (0 fallos)
 ├── requirements.txt         # Dependencias Windows
 ├── requirements-linux.txt   # Dependencias Linux (sin paquetes win-only)
@@ -93,7 +93,7 @@ eris
 
 ### Tests (ambos)
 ```cmd
-python test_all.py        # 57/57 PASS
+python test_all.py        # gate: 56 PASS, 0 FAIL
 ```
 
 ---
@@ -134,9 +134,10 @@ Las 448 tools están sincronizadas entre `tool_declarations.py`,
 
 ---
 
-## 6. NeuroSpheres (95+ nodos)
+## 6. NeuroSpheres
 
-Cerebro visual que crece con cada interacción. 11 esferas: **aprendizaje,
+Cerebro visual que crece con cada interacción (estado en
+`memory/neuro_spheres_state.json`). 11 esferas: **aprendizaje,
 memoria, emociones, habilidad, investigacion, codigo, error/bug/solucion,
 diagnostico**, y más. Cada sesión genera nodos automáticamente.
 
@@ -174,9 +175,10 @@ Contenido vivo: `Tools/`, `Capacidades/`, `Memoria/`, `Logs/`, `Aprendizaje/`,
 - ✅ Arranca y **chatea por texto** en Linux (Gemini/Ollama).
 - ✅ Memoria, emociones, NeuroSpheres, evolución, Obsidian.
 - ✅ UI PyQt6, TTS nube, Vosk.
-- ⚠️ **Pendiente (Fase 2)**: control de volumen (→ pulsectl), control de
-  ventanas (→ xdotool/ydotool), notificaciones (→ notify-send), brillo/energía
-  (→ systemctl/xrandr).
+- ✅ **Controles de sistema Linux** (mismos tools que Windows): volumen →
+  pactl/wpctl, ventanas → hyprctl (Hyprland, sintaxis Lua), notificaciones →
+  notify-send, monitor/wifi/bluetooth → hyprctl/nmcli/rfkill, brillo →
+  brightnessctl, captura → grim. Cero deps pip (solo paquetes de sistema).
 
 > Ver `README_LINUX.md` para la guía completa de despliegue en la laptop.
 
@@ -203,12 +205,13 @@ Reglas:
 
 ## 11. Estado actual (validado)
 
-- ✅ **57/57 tests** pass (`test_all.py`)
-- ✅ **448 tools** sincronizadas
-- ✅ **0 imports rotos** (verificado también en Linux-simulado: 26/26 + 72/72)
+- ✅ **56 PASS / 0 FAIL** en Windows (`test_all.py`)
+- ✅ **448 tools sincronizadas** (448 registry = 448 declarations, 0 duplicados)
+- ✅ **0 imports rotos** — `590 .py` compilan; `action_imports` importa limpio
+  incluso sin PyQt6/openpyxl (deps opcionales degradan con gracia)
 - ✅ **0 duplicados** / 0 stubs muertos / 0 BOMs
-- ✅ **95+ nodos NeuroSpheres** con contenido real
-- ✅ **62+ knowledge files**
+- ✅ **NeuroSpheres** creciendo por sesión (46 nodos al último sync)
+- ✅ **69 knowledge files**
 - ✅ **9/9 agents** en uso
 - ✅ **Árbol importa sin paquetes Windows** → listo para Linux
 

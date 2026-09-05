@@ -195,20 +195,19 @@ def _wipe_disk(parameters: dict):
     if method == "gutmann":
         passes = 35
 
-    zero_path = os.path.join(drive, "_wipe_zero.tmp")
-    random_path = os.path.join(drive, "_wipe_random.tmp")
+    temp_path = os.path.join(drive, "_wipe_temp.tmp")
 
     try:
         disk_size = _get_drive_size(drive)
     except Exception:
         disk_size = 50 * 1024 * 1024 * 1024
 
-    written = 0
     chunk_size = 1024 * 1024 * 10
 
     for p in range(passes):
+        written = 0
         try:
-            with open(zero_path, "wb") as f:
+            with open(temp_path, "wb") as f:
                 while written < disk_size:
                     try:
                         if p % 3 == 0:
@@ -218,18 +217,15 @@ def _wipe_disk(parameters: dict):
                         else:
                             f.write(os.urandom(chunk_size))
                         written += chunk_size
-                        if written % (1024 * 1024 * 100) == 0:
-                            pass
                     except OSError:
                         break
         except OSError:
             pass
 
-    for tmp in [zero_path, random_path]:
-        try:
-            os.remove(tmp)
-        except OSError:
-            pass
+    try:
+        os.remove(temp_path)
+    except OSError:
+        pass
 
     return f"Disk {drive} wiped ({passes} passes, method: {method})"
 

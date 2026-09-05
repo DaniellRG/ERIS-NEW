@@ -34,7 +34,7 @@ def _load_history():
     try:
         if HISTORY_FILE.exists():
             return json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
-    except:
+    except (json.JSONDecodeError, OSError):
         pass
     return []
 

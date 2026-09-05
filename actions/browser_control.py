@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 """browser_control.py — Browser control for ERIS."""
 import time
-import pyautogui
-import pygetwindow as gw
+try:
+    import pyautogui
+    pyautogui.FAILSAFE = True
+    pyautogui.PAUSE = 0.03
+except Exception:
+    pyautogui = None  # type: ignore[assignment]  # sin X11 (Wayland) no abre display
+try:
+    import pygetwindow as gw
+except Exception:
+    gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux
 import pyperclip
-
-pyautogui.FAILSAFE = True
-pyautogui.PAUSE = 0.03
 
 
 def _find_browser():

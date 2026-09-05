@@ -68,7 +68,7 @@ def _calculate(expr):
         try:
             result = eval(processed, {"math": math, "__builtins__": {}}, {})
             return f"{expr} = {result}"
-        except:
+        except Exception:
             pass
 
     try:

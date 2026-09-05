@@ -9,14 +9,14 @@ def _load_rules():
     try:
         if DATA_FILE.exists():
             return json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    except: pass
+    except (json.JSONDecodeError, OSError): pass
     return {"blocked_ips": [], "blocked_ports": [], "rules": []}
 
 def _save_rules(rules):
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
         DATA_FILE.write_text(json.dumps(rules, indent=2, ensure_ascii=False), encoding="utf-8")
-    except: pass
+    except OSError: pass
 
 def active_firewall(parameters: dict, player=None) -> str:
     action = (parameters.get("action") or "status").lower()
@@ -156,14 +156,14 @@ def _clear_rules(rules):
         try:
             subprocess.run(["netsh", "advfirewall", "firewall", "delete", "rule",
                            f"name={r.get('name', 'ERIS_Block')}_{r['ip']}"],
-                          capture_output=True, timeout=5)
-        except: pass
+                           capture_output=True, timeout=5)
+        except Exception: pass
     for r in rules.get("blocked_ports", []):
         try:
             subprocess.run(["netsh", "advfirewall", "firewall", "delete", "rule",
                            f"name=ERIS_Block_port{r['port']}"],
-                          capture_output=True, timeout=5)
-        except: pass
+                           capture_output=True, timeout=5)
+        except Exception: pass
     rules["blocked_ips"] = []
     rules["blocked_ports"] = []
     _save_rules(rules)

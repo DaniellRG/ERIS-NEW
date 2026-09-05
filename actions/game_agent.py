@@ -13,11 +13,11 @@ API_FILE = BASE_DIR / "config" / "api_keys.json"
 def _key():
     if API_FILE.exists():
         try: return json.loads(API_FILE.read_text("utf-8")).get("openrouter_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     alt = Path("config/api_keys.json")
     if alt.exists():
         try: return json.loads(alt.read_text("utf-8")).get("openrouter_api_key", "")
-        except: pass
+        except (json.JSONDecodeError, OSError): pass
     return ""
 
 def _capture():
@@ -34,7 +34,7 @@ def _capture():
             buf = io.BytesIO()
             img.save(buf, format="JPEG", quality=65)
             return base64.b64encode(buf.getvalue()).decode()
-    except:
+    except Exception:
         return ""
 
 def _ask(prompt: str) -> str:
@@ -58,8 +58,14 @@ def _ask(prompt: str) -> str:
     except Exception as e:
         return f"Vision error: {e}"
 
-import pyautogui
-import pygetwindow as gw
+try:
+    import pyautogui
+except Exception:
+    pyautogui = None  # type: ignore[assignment]
+try:
+    import pygetwindow as gw
+except Exception:
+    gw = None  # type: ignore[assignment]
 
 def _focus_game():
     """Find and focus the game window."""
@@ -72,7 +78,7 @@ def _focus_game():
                 win.activate()
                 time.sleep(0.3)
                 return True
-            except: pass
+            except Exception: pass
     return False
 
 # Game controls
@@ -254,7 +260,7 @@ def game_agent(parameters: dict, player=None) -> str:
             from actions.eris_db import episodic_add, know_add
             episodic_add(f"Game agent: {steps} pasos autonomos en {game or 'juego'}", "game", str(parameters), 0.7)
             know_add(f"game_{game or 'generico'}", f"Estrategia de juego autonomo: {instructions or 'exploracion y combate'}", "game_learning", 0.5)
-        except: pass
+        except Exception: pass
         
         return f"Modo autonomo: {min(steps, 20)} decisiones tomadas. Conocimiento guardado."
 
@@ -275,7 +281,7 @@ def game_agent(parameters: dict, player=None) -> str:
                 "category": "game_learning",
                 "importance": 0.8
             })
-        except: pass
+        except Exception: pass
         return f"Aprendizaje guardado para {game or 'este juego'}:\n{analysis[:500]}"
     
     return f"Accion '{action}' no reconocida. Usa: analyze, play, look_around, explore, fight, find, navigate, auto"

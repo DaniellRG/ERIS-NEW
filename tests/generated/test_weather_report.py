@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Tests automáticos para actions\weather_report.py"""
+"""Tests automáticos para actions/weather_report.py"""
 import pytest
 
 from actions.weather_report import weather_action

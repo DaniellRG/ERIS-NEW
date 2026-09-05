@@ -220,7 +220,7 @@ def _load() -> dict:
     if _THEME_FILE.exists():
         try:
             return json.loads(_THEME_FILE.read_text(encoding="utf-8"))
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return {"current": "dark"}
 

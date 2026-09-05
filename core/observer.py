@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import ctypes
 import json
+import os
 import random
 import threading
 import time
@@ -35,8 +36,12 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent.parent
 _STATE_FILE = _BASE / "memory" / "observer.json"
 
-_U32 = ctypes.windll.user32
-_PID = ctypes.windll.kernel32
+if os.name == "nt":
+    _U32 = ctypes.windll.user32
+    _PID = ctypes.windll.kernel32
+else:
+    _U32 = None
+    _PID = None
 
 _LOCK = threading.Lock()
 _cache = {"mtime": 0.0, "data": None}
@@ -96,6 +101,8 @@ _PERSONAL_ACTIVITIES = (
 
 # ── Win32 helpers ─────────────────────────────────────────────────────────
 def _fg_hwnd() -> int:
+    if _U32 is None:
+        return 0
     try:
         return _U32.GetForegroundWindow()
     except Exception:
@@ -145,8 +152,10 @@ def get_foreground() -> dict:
 
 
 def _list_visible_hwnds(max_n: int = 40) -> list:
+    if _U32 is None:
+        return []
     out: list = []
-    USER32 = ctypes.windll.user32
+    USER32 = _U32
 
     @ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
     def _cb(hwnd, lparam):
@@ -205,6 +214,8 @@ def _is_sensitive(proc: str, title: str) -> bool:
 
 # ── Mirar la ventana en foco (ver/leer sin espiar) ────────────────────────
 def _window_rect(hwnd: int) -> dict | None:
+    if _U32 is None:
+        return None
     class _RECT(ctypes.Structure):
         _fields_ = [("left", ctypes.c_long), ("top", ctypes.c_long),
                     ("right", ctypes.c_long), ("bottom", ctypes.c_long)]

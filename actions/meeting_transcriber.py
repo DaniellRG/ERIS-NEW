@@ -16,9 +16,12 @@ SAMPLE_RATE = 16000
 
 
 def _transcribe(duration: float) -> str:
-    import vosk
-    import sounddevice as sd
-    import numpy as np
+    try:
+        import vosk
+        import sounddevice as sd
+        import numpy as np
+    except ImportError as exc:
+        return f"Error: falta un paquete para transcribir ({exc.name}). Instala: pip install vosk sounddevice numpy"
 
     if not MODEL_PATH.exists():
         return "Error: No se encontro el modelo Vosk en data/vosk-model-es."

@@ -1,14 +1,33 @@
 """Window Manager - control de ventanas multi-monitor."""
-import pygetwindow as gw
-import pyautogui
+import json
+import re
+import shutil
+import subprocess
+import sys
 import time
-import ctypes
-from ctypes import wintypes
 
-_WIN32 = ctypes.windll.user32
+_IS_WINDOWS = sys.platform == "win32"
+_IS_LINUX = sys.platform.startswith("linux")
+
+# Lazy deps de Windows (evitan romper el import del módulo en Linux).
+gw = None
+pyautogui = None
+_WIN32 = None
+
 _SWP_NOZORDER = 0x0004
 _SWP_NOACTIVATE = 0x0010
 _SWP_SHOWWINDOW = 0x0040
+
+
+def _ensure_win32():
+    global gw, pyautogui, _WIN32
+    if gw is None:
+        import pyautogui as _pyautogui
+        import ctypes
+        import pygetwindow as _gw
+        gw = _gw
+        pyautogui = _pyautogui
+        _WIN32 = ctypes.windll.user32
 
 def _move_resize(hwnd, x, y, w, h):
     """Win32 SetWindowPos — no activate needed, no focus stealing."""
@@ -44,7 +63,7 @@ def _get_monitors():
                 result.append({"id": i, "left": m["left"], "top": m["top"], 
                               "width": m["width"], "height": m["height"]})
             return result
-    except:
+    except Exception:
         screen = pyautogui.size()
         return [{"id": 1, "left": 0, "top": 0, "width": screen[0], "height": screen[1]}]
 
@@ -208,9 +227,204 @@ def _preset_layout(windows, monitor, preset, name=None):
     return results
 
 
+# ── Backend Linux (Hyprland/Wayland vía hyprctl; X11 vía xdotool si existe) ──
+
+def _hypr_raw(lua_expr: str, timeout=8):
+    """Enviar expression Lua a hyprctl dispatch y devolver (rc, stdout, stderr)."""
+    try:
+        p = subprocess.run(["hyprctl", "dispatch", lua_expr],
+                           capture_output=True, text=True, timeout=timeout)
+        return p.returncode, (p.stdout or "").strip(), (p.stderr or "").strip()
+    except Exception as e:
+        return -1, "", str(e)
+
+
+def _hypr_json(*args):
+    """Invocar hyprctl <args> con formato JSON y parsear."""
+    try:
+        p = subprocess.run(["hyprctl", *args], capture_output=True, text=True, timeout=8)
+        if p.returncode != 0:
+            return None
+        return json.loads(p.stdout or "")
+    except Exception:
+        return None
+
+
+def _linux_clients():
+    data = _hypr_json("clients", "-j")
+    if not isinstance(data, list):
+        return []
+    return [c for c in data if c.get("mapped") and (c.get("title") or "").strip()]
+
+
+def _linux_list():
+    wins = _linux_clients()
+    if not wins:
+        return "No hay ventanas visibles."
+    lines = [f"  [{c['size'][0]}x{c['size'][1]}] {c['title'][:60]}" for c in wins]
+    return f"Ventanas ({len(wins)}):\n" + "\n".join(lines[:20])
+
+
+def _linux_list_monitors():
+    data = _hypr_json("monitors", "-j")
+    if not isinstance(data, list) or not data:
+        return "No se pudo listar monitores (hyprctl)."
+    lines = [f"Monitores ({len(data)}):"]
+    for m in data:
+        lines.append(
+            f"  Monitor {m['id']} ({m.get('name')}): "
+            f"{m['width']}x{m['height']} en ({m['x']},{m['y']})"
+        )
+    return "\n".join(lines)
+
+
+def _linux_find(name):
+    n = (name or "").lower()
+    return [c for c in _linux_clients() if n in (c.get("title") or "").lower()]
+
+
+def _linux_focus(name):
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    addr = wins[0]["address"]
+    rc, out, _ = _hypr_raw(f"hl.dsp.focus({{ window = \"address:{addr}\" }})")
+    if out.lower() == "ok" or "focus" in out.lower():
+        return f"Ventana '{wins[0]['title'][:40]}' enfocada."
+    return f"Error: {out}"
+
+
+def _linux_close(name):
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    addr = wins[0]["address"]
+    rc, out, _ = _hypr_raw(f"hl.dsp.window.close({{ window = \"address:{addr}\" }})")
+    if out.lower() == "ok":
+        return f"Cerrada: {wins[0]['title'][:40]}"
+    return f"Error: {out}"
+
+
+def _linux_minimize(name):
+    """Mueve la ventana a un workspace especial oculto (equivalente a minimize en tiling)."""
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    addr = wins[0]["address"]
+    # window.move to special:hides the window from visible workspaces
+    lua = f"hl.dsp.window.move({{ workspace = \"special:hider\", window = \"address:{addr}\" }})"
+    rc, out, _ = _hypr_raw(lua)
+    if out.lower() == "ok":
+        return f"Minimizada (special:hider): {wins[0]['title'][:40]}"
+    # fallback: restore then move
+    lua2 = f"hl.dsp.focus({{ window = \"address:{addr}\" }})"
+    _hypr_raw(lua2)
+    rc, out, _ = _hypr_raw(lua)
+    return f"Minimizada: {wins[0]['title'][:40]}" if out.lower() == "ok" else f"Error: {out}"
+
+
+def _linux_maximize(name):
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    addr = wins[0]["address"]
+    lua = f"hl.dsp.window.fullscreen({{ window = \"address:{addr}\", action = \"set\" }})"
+    rc, out, _ = _hypr_raw(lua)
+    return f"Maximizada: {wins[0]['title'][:40]}" if out.lower() == "ok" else f"Error: {out}"
+
+
+def _linux_snap(name, side):
+    """Anclar a la mitad de la pantalla (funciona en ventanas flotantes)."""
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    data = _hypr_json("monitors", "-j")
+    if not isinstance(data, list) or not data:
+        return "No se pudo obtener el monitor primario."
+    m = data[0]
+    mw, mh = m.get("width", 0), m.get("height", 0)
+    if not mw or not mh:
+        return "Monitor primario con geometria desconocida."
+    addr = wins[0]["address"]
+    side = side if side in ("left", "right") else "left"
+    half_w, target_x = mw // 2, (0 if side == "left" else mw // 2)
+    cur_w, cur_h = wins[0]["size"][0], wins[0]["size"][1]
+    dx, dy = half_w - cur_w, mh - cur_h
+    # resizewindow with deltas (works on tiled windows too)
+    move_lua = f"hl.dsp.window.move({{ x = {target_x}, y = 0, window = \"address:{addr}\" }})"
+    resize_lua = f"hl.dsp.window.resize({{ x = {dx}, y = {dy}, window = \"address:{addr}\" }})"
+    _hypr_raw(move_lua)
+    rc, out, _ = _hypr_raw(resize_lua)
+    if out.lower() == "ok":
+        return f"Ventana anclada a {side}."
+    return f"Ventana movida a {side}. Redimension no aplicable (ventana en tiling?): {out}"
+
+
+def _linux_move_to_monitor(name, monitor_id):
+    wins = _linux_find(name)
+    if not wins:
+        return f"No encontre ventana con '{name}'."
+    data = _hypr_json("monitors", "-j")
+    if not isinstance(data, list) or not data:
+        return "No se pudo listar monitores (hyprctl)."
+    if monitor_id < 1 or monitor_id > len(data):
+        return f"Monitor {monitor_id} no existe. Monitores: {len(data)}"
+    mon = data[monitor_id - 1]
+    ws_id = (mon.get("activeWorkspace") or {}).get("id")
+    if ws_id is None:
+        return f"Monitor {monitor_id} ({mon.get('name')}) sin workspace activo."
+    addr = wins[0]["address"]
+    lua = f"hl.dsp.window.move({{ workspace = {ws_id}, window = \"address:{addr}\" }})"
+    rc, out, _ = _hypr_raw(lua)
+    if out.lower() == "ok":
+        return f"Ventana '{wins[0]['title'][:30]}' -> Monitor {monitor_id} ({mon.get('name')})"
+    return f"Error: {out}"
+
+
+def _linux_window_manager(action, params):
+    name = params.get("name", "")
+    if action == "list":
+        return _linux_list()
+    if action == "list_monitors":
+        return _linux_list_monitors()
+    if action == "focus":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_focus(name)
+    if action == "close":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_close(name)
+    if action == "minimize":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_minimize(name)
+    if action == "maximize":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_maximize(name)
+    if action == "snap":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_snap(name, params.get("side", "left"))
+    if action == "move_to_monitor":
+        if not name:
+            return "Dime el nombre de la ventana (name)."
+        return _linux_move_to_monitor(name, int(params.get("monitor", 1)))
+    if action == "organize":
+        return ("Organizar layouts no aplica en Wayland (Hyprland usa tiling). "
+                "Disponibles: list, list_monitors, focus, close, minimize, maximize, snap, move_to_monitor.")
+    return "Acciones: list, list_monitors, focus, close, minimize, maximize, snap, move_to_monitor."
+
+
 def window_manager(parameters: dict, player=None) -> str:
     """Control de ventanas multi-monitor."""
     action = parameters.get("action", "list")
+    if _IS_LINUX:
+        return _linux_window_manager(action, parameters)
+    if _IS_WINDOWS:
+        _ensure_win32()
+
     name = parameters.get("name", "")
     monitor_id = int(parameters.get("monitor", 1))
     position = parameters.get("position", "center")  # center, left, right, top, bottom

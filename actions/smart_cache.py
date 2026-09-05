@@ -257,7 +257,7 @@ def _warm_cache() -> str:
                 result = f(parameters={"action": "status"})
                 _cache.set(key, str(result), ttl=600)
                 warmed += 1
-    except:
+    except Exception:
         pass
     return "Cache warmed: {} entries precargados".format(warmed)
 

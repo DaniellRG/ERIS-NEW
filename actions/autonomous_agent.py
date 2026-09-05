@@ -17,14 +17,14 @@ def _get_gemini_key():
     try:
         data = json.loads(API_FILE.read_text("utf-8"))
         return data.get("gemini_api_key", "")
-    except:
+    except (json.JSONDecodeError, OSError):
         return ""
 
 def _get_openrouter_key():
     try:
         data = json.loads(API_FILE.read_text("utf-8"))
         return data.get("openrouter_api_key", "")
-    except:
+    except (json.JSONDecodeError, OSError):
         return ""
 
 def capture_screen_b64() -> str:

@@ -23,6 +23,10 @@ from core.resilient import get_manager, generate_task_id
 
 TOOL_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="eris-tool")
 
+# Executor limitado para hooks post-dispatch (record-keeping). Evita la
+# explosion de ~12 threads OS por llamada de tool que agotaba la memoria.
+_HOOK_EXECUTOR = ThreadPoolExecutor(max_workers=2, thread_name_prefix="eris-hook")
+
 # ── Throttle de auto-aprendizaje: evita registrar cada fallo como lección ──
 _LEARN_LOCK = threading.Lock()
 _LEARN_LOG: dict[str, float] = {}      # "tool:error_prefix" -> last learn timestamp
@@ -148,7 +152,7 @@ class ToolDispatcher:
                     if hasattr(self.ui, 'tray_icon') and self.ui.tray_icon.isVisible():
                         self.ui.tray_icon.showMessage("ERIS", "Estoy en segundo plano. Di Eris y despierto.", self.ui.tray_icon.icon(), 3000)
                 QTimer.singleShot(0, _notify)
-            except: pass
+            except Exception: pass
             return types.FunctionResponse(
                 id=fc.id, name=name,
                 response={"result": "Modo suspenso activado. Di 'Eris' para despertarme."}
@@ -349,22 +353,22 @@ class ToolDispatcher:
         except ImportError:
             record_action = db_tool_log = react_to_success = react_to_failure = None
 
+        _ok = not str(result).lower().startswith("error")
+        _HOOKS = []
+
         if record_action:
-            threading.Thread(target=lambda: record_action(name, args), daemon=True).start()
+            _HOOKS.append(lambda: record_action(name, args))
 
         if db_tool_log:
-            ok = not str(result).lower().startswith("error")
-            threading.Thread(target=lambda: db_tool_log(
-                name, args, ok, str(result)[:200], 0, self._eris._session_id
-            ), daemon=True).start()
+            _HOOKS.append(lambda: db_tool_log(
+                name, args, _ok, str(result)[:200], 0, self._eris._session_id
+            ))
 
         if react_to_success and react_to_failure:
-            ok = not str(result).lower().startswith("error")
-            threading.Thread(target=lambda: react_to_success(name) if ok else react_to_failure(str(result)[:100]), daemon=True).start()
+            _HOOKS.append(lambda: react_to_success(name) if _ok else react_to_failure(str(result)[:100]))
 
         if _eg_on_tool_result:
-            ok = not str(result).lower().startswith("error")
-            threading.Thread(target=lambda: _eg_on_tool_result(None, name, ok), daemon=True).start()
+            _HOOKS.append(lambda: _eg_on_tool_result(None, name, _ok))
 
         # ── Intent classifier + metrics: registrar intención y uso ──
         try:
@@ -392,7 +396,7 @@ class ToolDispatcher:
             from core.smart_file_organizer import record_file_access
             fp = args.get("path") or args.get("file_path") or args.get("filename") or ""
             if fp and isinstance(fp, str) and "/" in fp or "\\" in fp:
-                threading.Thread(target=lambda: record_file_access(fp), daemon=True).start()
+                _HOOKS.append(lambda: record_file_access(fp))
         except Exception:
             pass
         # ── Backup prioritizer: track file modifications ──
@@ -405,21 +409,19 @@ class ToolDispatcher:
         # ── Training pipeline: track tool success/failure ──
         try:
             from core.training_pipeline import evaluate_tool_usage, learn_from_failure
-            _ok = not str(result).lower().startswith("error")
             _dur = 0.0
             if not _ok:
                 if _should_learn(name, str(result)):
-                    threading.Thread(target=lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur), daemon=True).start()
-                    threading.Thread(target=lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"), daemon=True).start()
+                    _HOOKS.append(lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur))
+                    _HOOKS.append(lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"))
         except Exception:
             pass
 
         # ── Self-learning: learn from mistakes ──
         try:
-            _ok = not str(result).lower().startswith("error")
             if not _ok and _should_learn(name, str(result)):
                 from actions.self_learning import learn_from_mistake
-                threading.Thread(target=lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parametros o conexion"}), daemon=True).start()
+                _HOOKS.append(lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parametros o conexion"}))
         except Exception:
             pass
 
@@ -454,7 +456,7 @@ class ToolDispatcher:
                 _sphere, _type = _NS_MAP[name]
                 _title = f"{name}: {_ns_result[:80]}"
                 _content = f"Tool: {name}. Resultado: {_ns_result[:300]}"
-                threading.Thread(target=lambda: _ns_tool({
+                _HOOKS.append(lambda: _ns_tool({
                     "action": "add",
                     "sphere": _sphere,
                     "type": _type,
@@ -462,7 +464,7 @@ class ToolDispatcher:
                     "content": _content,
                     "connections": [],
                     "force": 3
-                }), daemon=True).start()
+                }))
 
             # --- NODO DE ERROR (si la tool fallo) ---
             if not _ns_success:
@@ -495,7 +497,7 @@ class ToolDispatcher:
                     f"revisar parametros, verificar conexion, revisar sintaxis"
                 )
 
-                threading.Thread(target=lambda: _ns_tool({
+                _HOOKS.append(lambda: _ns_tool({
                     "action": "add",
                     "sphere": "error",
                     "type": "error",
@@ -503,7 +505,7 @@ class ToolDispatcher:
                     "content": _error_content,
                     "connections": [],
                     "force": 4
-                }), daemon=True).start()
+                }))
 
                 # --- NODO DE DIAGNOSTICO (que busco para resolver) ---
                 _search_queries = []
@@ -539,7 +541,7 @@ class ToolDispatcher:
                     f"Error original: {_error_text[:200]}"
                 )
 
-                threading.Thread(target=lambda: _ns_tool({
+                _HOOKS.append(lambda: _ns_tool({
                     "action": "add",
                     "sphere": "diagnostico",
                     "type": "diagnostico",
@@ -547,7 +549,7 @@ class ToolDispatcher:
                     "content": _diag_content,
                     "connections": [],
                     "force": 4
-                }), daemon=True).start()
+                }))
 
             # --- NODO DE SOLUCION (si una tool de edicion funciono despues de un error) ---
             if _ns_success and name in ("ide_integration", "code_helper", "file_edit", "file_write"):
@@ -558,7 +560,7 @@ class ToolDispatcher:
                     f"Que funciono: La edicion se aplico correctamente\n"
                     f"Para recordar: Esta solucion funciono para este tipo de problema"
                 )
-                threading.Thread(target=lambda: _ns_tool({
+                _HOOKS.append(lambda: _ns_tool({
                     "action": "add",
                     "sphere": "solucion",
                     "type": "solucion",
@@ -566,10 +568,17 @@ class ToolDispatcher:
                     "content": _sol_content,
                     "connections": [],
                     "force": 3
-                }), daemon=True).start()
+                }))
 
         except Exception:
             pass
+
+        # Ejecutar todos los hooks en el executor acotado (2 workers max)
+        for _hook in _HOOKS:
+            try:
+                _HOOK_EXECUTOR.submit(_hook)
+            except Exception:
+                pass
 
         if not self.ui.muted:
             self.ui.set_state("LISTENING")
@@ -742,7 +751,10 @@ class ToolDispatcher:
         if action == "volume":
             val = args.get("value", "")
             try:
-                import pyautogui
+                try:
+                    import pyautogui
+                except Exception:
+                    pyautogui = None  # type: ignore[assignment]  # sin X11 (Wayland) no abre display
                 if str(val).isdigit():
                     target = int(val)
                     try:
@@ -858,7 +870,7 @@ class ToolDispatcher:
             paction = args.get("plugin_action", "run")
             pparams = args.get("params", "{}")
             try: pparams = json.loads(pparams) if isinstance(pparams, str) else pparams
-            except: pparams = {}
+            except (json.JSONDecodeError, ValueError): pparams = {}
             plugin = pm.get_plugin(pname)
             if plugin:
                 r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: plugin.execute(paction, pparams))
@@ -878,68 +890,23 @@ class ToolDispatcher:
         return r or "Done."
 
     async def _handle_translator(self, args, loop):
-        from core.action_imports import translate_text, start_monitoring, stop_monitoring, translator_status
-        a = args.get("action", "status")
-        if a == "translate_text":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: translate_text(args, self.ui))
-        elif a == "start_monitoring":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: start_monitoring(args, self.ui))
-        elif a == "stop_monitoring":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: stop_monitoring(args, self.ui))
-        else:
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: translator_status(args, self.ui))
-        return r or "Done."
+        # La herramienta `translator` resuelve sus acciones internamente (translate/languages/batch).
+        # Despachar por sub-funciones legacy (translate_text/start_monitoring/...) ya no aplica.
+        return await self._generic_dispatch("translator", args, loop)
 
     async def _handle_meeting_transcriber(self, args, loop):
-        from core.action_imports import start_transcription, stop_transcription, summarize_transcription, transcription_status
-        a = args.get("action", "status")
-        if a == "start":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: start_transcription(args, self.ui))
-        elif a == "stop":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: stop_transcription(args, self.ui))
-        elif a == "summarize":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: summarize_transcription(args, self.ui))
-        else:
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: transcription_status(args, self.ui))
-        return r or "Done."
+        return await self._generic_dispatch("meeting_transcriber", args, loop)
 
     async def _handle_network_monitor(self, args, loop):
-        from core.action_imports import connections, bandwidth, wifi_info, ping_host, scan_network, monitor_start, monitor_stop, network_status
-        a = args.get("action", "status")
-        dispatch_map = {
-            "connections": connections, "bandwidth": bandwidth, "wifi": wifi_info,
-            "ping": ping_host, "scan": scan_network,
-            "monitor_start": monitor_start, "monitor_stop": monitor_stop,
-        }
-        fn = dispatch_map.get(a, network_status)
-        r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: fn(args, self.ui))
-        return r or "Done."
+        return await self._generic_dispatch("network_monitor", args, loop)
 
     async def _handle_quick_actions(self, args, loop):
-        from core.action_imports import add, update, remove, list_actions, qa_execute
-        a = args.get("action", "list")
-        dispatch_map = {"add": add, "update": update, "remove": remove, "list": list_actions, "run": qa_execute}
-        fn = dispatch_map.get(a)
-        if fn is None:
-            return "Accion no valida. Usa: add, update, remove, list, run"
-        if a == "run":
-            r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: fn(args, self.ui))
-            if isinstance(r, tuple):
-                _, cmd = r
-                return f"Ejecutando atajo: {cmd}"
-            return r or "Done."
-        r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: fn(args, self.ui))
-        return r or "Done."
+        # quick_actions se registra como `run` en el registry; también resuelve sus acciones internas.
+        return await self._generic_dispatch("quick_actions", args, loop)
 
     async def _handle_pdf_editor(self, args, loop):
-        from core.action_imports import read_pdf, merge_pdfs, split_pdf, pdf_info, fill_form, add_signature
-        a = args.get("action", "info")
-        dispatch_map = {"read": read_pdf, "merge": merge_pdfs, "split": split_pdf, "info": pdf_info, "fill_form": fill_form, "add_signature": add_signature}
-        fn = dispatch_map.get(a)
-        if fn is None:
-            return "Accion no valida."
-        r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: fn(args, self.ui))
-        return r or "Done."
+        # Las sub-funciones del módulo viven en actions/pdf_editor.py; la tool resuelve a la misma.
+        return await self._generic_dispatch("pdf_editor", args, loop)
 
     async def _handle_context_menu(self, args, loop):
         from core.action_imports import ctx_install, ctx_uninstall, ctx_status

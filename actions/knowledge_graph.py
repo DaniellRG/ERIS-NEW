@@ -68,7 +68,7 @@ def _load_knowledge_docs() -> list:
                     "bigrams": bigrams,
                     "word_list": word_list,
                 })
-            except:
+            except OSError:
                 pass
     return docs
 
@@ -426,7 +426,7 @@ def _load_graph() -> dict:
     if _KG_FILE.exists():
         try:
             return json.loads(_KG_FILE.read_text(encoding="utf-8"))
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return {"nodes": [], "edges": []}
 

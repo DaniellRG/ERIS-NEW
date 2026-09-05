@@ -90,14 +90,31 @@ PC escritorio (Windows)         Laptop (CachyOS / Linux)
 | UI PyQt6 (orbe, ventana) | ✅ Funciona |
 | TTS nube (edge-tts, gtts, Fish/Eleven) | ✅ Funciona |
 | Reconocimiento de voz (Vosk) | ✅ Funciona (portaudio) |
-| Control de volumen (pycaw) | ⚠️ Requiere pulsectl (fase 2) |
-| Control de ventanas/teclado (win32) | ⚠️ Requiere xdotool/ydotool (fase 2) |
-| Notificaciones (win10toast) | ⚠️ Requiere notify-send (fase 2) |
-| Control de energía/brillo (PowerShell/WMI) | ⚠️ Requiere systemctl/xrandr (fase 2) |
+| Control de volumen (pycaw → pactl/wpctl) | ✅ Funciona (PipeWire) |
+| Control de ventanas (win32 → hyprctl, Hyprland/0.55+ Lua) | ✅ Funciona |
+| Notificaciones (win10toast → notify-send) | ✅ Funciona (libnotify) |
+| Monitor/wifi/bluetooth (→ hyprctl dpms, nmcli, rfkill) | ✅ Funciona |
+| Brillo (`screen_control` → brightnessctl) | ✅ Funciona |
+| Captura de pantalla (→ grim en Wayland) | ✅ Funciona |
+| Monitor de red (`network_monitor`, → ip/ss/ping) | ✅ Funciona |
+| Editor PDF / transcriptor (PyPDF2, vosk) | ✅ Fallback elegante sin la dep (error claro, no crash) |
 
 **Fase 1 (MVP, ya hecha):** arrancar y chatear por texto en Linux con memoria
 + evolución + Obsidian.
-**Fase 2 (pendiente):** voz completa, control de sistema y notificaciones.
+**Fase 2 (ya hecha):** voz, control de sistema, notificaciones, ventanas y
+brillo — mismos tools que Windows, backend nativo Linux. Requiere paquetes de
+sistema: `wireplumber`, `hyprland`, `libnotify`, `brightnessctl`,
+`networkmanager` (nmcli), `rfkill`, `grim`.
+**Detalle Hyprland ≥0.55:** `hyprctl dispatch` ya no acepta la sintaxis
+legacy (`focuswindow address:...` → rc 7); los tools de ERIS usan la forma
+Lua (`hl.dsp.focus({ window = "address:0x..." })`).
+**Estado del venv (.venv-linux, creado por run_linux.sh):** `test_all.py` da
+**52 PASS / 2 FAIL** (eris.bat y api_keys.json, ambientales de Windows — se
+resuelven copiando la config). El 448/448 de tools carga completo: los 17
+deps pip (requests/psutil/flask/numpy/vosk/PIL…) quedan funcionales. **GUI
+automation (browser_control/computer_control/native_ui/desktop_control/screen_vision)
+queda degradada en Wayland** (pyautogui/pygetwindow requieren X11): no
+crashean, devuelven mensaje de error. Equivalente futuro: ydotool + grim/OCR.
 
 ## Resolver el popup de CFFI (solo Windows)
 

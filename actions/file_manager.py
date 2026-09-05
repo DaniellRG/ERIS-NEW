@@ -228,7 +228,7 @@ def _log_action(action, src, dst):
         })
         log = log[-100:]
         DATA_FILE.write_text(json.dumps(log, indent=2, ensure_ascii=False), encoding="utf-8")
-    except: pass
+    except (json.JSONDecodeError, OSError): pass
 
 def _open_file(path):
     if not path:

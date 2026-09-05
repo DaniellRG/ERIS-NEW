@@ -7,7 +7,10 @@ También lanza Obsidian al vault/nota específica.
 """
 import json
 import re
-import yaml
+try:
+    import yaml
+except ImportError:
+    yaml = None  # type: ignore[assignment]
 import subprocess
 from pathlib import Path
 from datetime import datetime

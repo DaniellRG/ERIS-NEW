@@ -101,7 +101,7 @@ def _load_jobs():
     try:
         if JOBS_FILE.exists():
             return json.loads(JOBS_FILE.read_text(encoding="utf-8"))
-    except:
+    except Exception:
         pass
     return {"pending": [], "completed": [], "failed": [], "total_completed": 0, "total_failed": 0}
 

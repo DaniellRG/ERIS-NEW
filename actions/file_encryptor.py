@@ -1,6 +1,8 @@
 import os
 import json
 import hashlib
+import hmac
+import secrets
 from pathlib import Path
 from datetime import datetime
 
@@ -29,8 +31,11 @@ def file_encryptor(parameters: dict, player=None) -> str:
     else:
         return "Acciones: encrypt, decrypt, folder, list, info, status"
 
-def _derive_key(password):
-    return hashlib.sha256(password.encode()).digest()
+def _derive_key(password, salt=None):
+    if salt is None:
+        salt = secrets.token_bytes(16)
+    key = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 200000)
+    return key, salt
 
 def _encrypt_file(filepath, password):
     if not filepath:
@@ -43,7 +48,7 @@ def _encrypt_file(filepath, password):
         return f"No encontré: {filepath}"
 
     try:
-        key = _derive_key(password)
+        key, salt = _derive_key(password)
         output_path = path.with_suffix(path.suffix + ".enc")
 
         with open(path, "rb") as f:
@@ -54,6 +59,7 @@ def _encrypt_file(filepath, password):
             encrypted.append(byte ^ key[i % len(key)])
 
         with open(output_path, "wb") as f:
+            f.write(salt)
             f.write(bytes(encrypted))
 
         _log_encrypted(filepath, str(output_path), "encrypt")
@@ -73,17 +79,19 @@ def _decrypt_file(filepath, password):
         return f"No encontré: {filepath}"
 
     try:
-        key = _derive_key(password)
+        with open(path, "rb") as f:
+            salt = f.read(16)
+            encrypted_data = f.read()
+
+        key, _ = _derive_key(password, salt)
+
         if path.suffix == ".enc":
             output_path = path.with_suffix("")
         else:
             output_path = path.with_suffix(path.suffix + ".dec")
 
-        with open(path, "rb") as f:
-            data = f.read()
-
         decrypted = bytearray()
-        for i, byte in enumerate(data):
+        for i, byte in enumerate(encrypted_data):
             decrypted.append(byte ^ key[i % len(key)])
 
         with open(output_path, "wb") as f:
@@ -127,7 +135,7 @@ def _list_encrypted():
                     lines.append(f"  [{item.get('time', '')[:16]}] {item.get('action', '')}: {item.get('source', '')}")
                 return f"Archivos encriptados recientes:\n" + "\n".join(lines)
         return "No hay registros de encriptación."
-    except:
+    except (json.JSONDecodeError, OSError, Exception):
         return "No hay registros."
 
 def _file_info(filepath):
@@ -164,7 +172,7 @@ def _status():
             decrypted = sum(1 for d in data if d.get("action") == "decrypt")
             return f"🔐 Encriptador: {encrypted} encriptados, {decrypted} desencriptados en historial."
         return "🔐 Encriptador listo. Sin actividad aún."
-    except:
+    except (json.JSONDecodeError, OSError, Exception):
         return "🔐 Encriptador listo."
 
 def _log_encrypted(source, dest, action):
@@ -178,4 +186,5 @@ def _log_encrypted(source, dest, action):
         })
         data = data[-100:]
         DATA_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    except: pass
+    except Exception:
+        pass

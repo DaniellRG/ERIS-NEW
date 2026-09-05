@@ -1,6 +1,12 @@
 import time
-import pygetwindow as gw
-import pyautogui
+try:
+    import pygetwindow as gw
+except Exception:
+    gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux
+try:
+    import pyautogui
+except Exception:
+    pyautogui = None  # type: ignore[assignment]  # sin X11 (Wayland) no abre display
 
 def native_ui(parameters: dict, player=None) -> str:
     """

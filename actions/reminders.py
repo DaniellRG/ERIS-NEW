@@ -12,14 +12,14 @@ def _load():
     try:
         if DATA_FILE.exists():
             _reminders = json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    except:
+    except (json.JSONDecodeError, OSError):
         _reminders = []
 
 def _save():
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
         DATA_FILE.write_text(json.dumps(_reminders, indent=2, ensure_ascii=False), encoding="utf-8")
-    except: pass
+    except OSError: pass
 
 def reminders(parameters: dict, player=None) -> str:
     action = (parameters.get("action") or "list").lower()

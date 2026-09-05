@@ -3,12 +3,16 @@
 Eris Emotional Core – Sistema de estados y emociones basado en carga del sistema.
 El estado emocional cambia según: carga de tareas, errores, tiempo de respuesta, RAM/CPU.
 """
-import psutil
 import time
 import json
 import os
 from pathlib import Path
 from datetime import datetime
+
+try:
+    import psutil
+except ImportError:
+    psutil = None  # type: ignore[assignment]
 
 STATE_FILE = Path(__file__).resolve().parent.parent / "config" / "eris_state.json"
 
@@ -25,6 +29,8 @@ EMOTIONS = {
 def _get_system_metrics():
     """Obtiene métricas actuales del sistema."""
     try:
+        if psutil is None:
+            return {"cpu_percent": 0, "ram_percent": 0, "ram_used_gb": 0, "ram_total_gb": 0, "disk_percent": 0}
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
         disk = psutil.disk_usage('/')

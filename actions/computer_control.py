@@ -7,12 +7,17 @@ import math
 import random
 import subprocess
 import json
-import pyautogui
+try:
+    import pyautogui
+    pyautogui.FAILSAFE = True
+    pyautogui.PAUSE = 0.02
+except Exception:
+    pyautogui = None  # type: ignore[assignment]  # sin X11 (Wayland) no abre display
 import pyperclip
-import pygetwindow as gw
-
-pyautogui.FAILSAFE = True
-pyautogui.PAUSE = 0.02
+try:
+    import pygetwindow as gw
+except Exception:
+    gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux
 
 _TABS_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "open_tabs.json")
 _open_tabs = []

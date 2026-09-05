@@ -6,7 +6,7 @@ PASS = 0
 FAIL = 0
 WARN = 0
 RESULTS = []
-BASE = Path(r"D:\Eris_Source")
+BASE = Path(__file__).resolve().parent
 
 def ok(section, msg):
     global PASS; PASS += 1; RESULTS.append(("PASS", section, msg))

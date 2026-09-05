@@ -6,18 +6,21 @@ bucle antir-estancamiento: cada tick aplica una micro-mejora real sobre su
 propio código (con backup + validación + rollback) o consolida conocimiento.
 """
 import json
+import os
 import re
 import sys
 from datetime import datetime
 from pathlib import Path
 
-_BASE = Path(r"D:\Eris_Source")
+_BASE = Path(__file__).resolve().parent.parent
 _MEM = _BASE / "memory"
 _STATE = _MEM / "self_evolution_state.json"
 _BACKUP_DIR = _MEM / "self_evol_backups"
 _KNOW = _BASE / "data" / "knowledge"
 _DOC = _KNOW / "eris_inventario_vivo.md"
-_VAULT = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
+
+_VAULT = Path(os.environ.get("ERIS_OBSIDIAN_VAULT",
+                             str(_BASE / "vault"))).expanduser()
 
 _OWN_SOURCES = [
     "core/code_guard.py",

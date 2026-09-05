@@ -14,7 +14,10 @@ MEMORY_PATH = BASE_DIR / "memory" / "long_term.json"
 
 MAX_VALUE_LENGTH = 500
 MEMORY_MAX_CHARS = 4000
-_lock = threading.Lock()
+_lock = threading.RLock()
+_SERIAL_QUEUE = None
+_pending_memory = None
+
 
 def _empty_memory() -> dict:
     return {
@@ -24,9 +27,63 @@ def _empty_memory() -> dict:
         "context": {}
     }
 
+
+def _atomic_write(path: Path, data: str) -> None:
+    """Escribe a archivo temporal y lo renombra: nunca deja el JSON a medio escribir."""
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(data, encoding="utf-8")
+    tmp.replace(path)
+
+
+def _debounced_save(memory: dict) -> None:
+    """Marcar el estado pendiente y despertar el hilo que hara el flush (coalesce)."""
+    global _pending_memory
+    _pending_memory = memory
+    global _SERIAL_QUEUE
+    if _SERIAL_QUEUE is None:
+        _SERIAL_QUEUE = _SerialQueue()
+    _SERIAL_QUEUE.push()
+
+
+def _flush_pending() -> None:
+    """Sincronico: vuelca el ultimo estado pendiente a disco (llamado bajo _lock)."""
+    global _pending_memory
+    memory = _pending_memory
+    _pending_memory = None
+    if memory is None:
+        return
+    try:
+        MEMORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _atomic_write(MEMORY_PATH, json.dumps(memory, indent=2, ensure_ascii=False))
+    except Exception as e:
+        print(f"[Memory] Error saving: {e}")
+
+
+class _SerialQueue:
+    """Hilo dedicado que ejecuta los flushes en orden y sin overlap."""
+
+    def __init__(self):
+        self._next = threading.Event()
+        self._run = True
+        self._thread = threading.Thread(target=self._loop, name="eris-memory-save", daemon=True)
+        self._thread.start()
+
+    def push(self):
+        self._next.set()
+
+    def _loop(self):
+        while self._run:
+            self._next.wait()
+            self._next.clear()
+            with _lock:
+                _flush_pending()
+
+
 def load_memory() -> dict:
     """Load long term memory file safely."""
     with _lock:
+        if _pending_memory is not None:
+            _flush_pending()      # no devolver estado viejo si hay uno pendiente
         if not MEMORY_PATH.exists():
             return _empty_memory()
         try:
@@ -35,13 +92,9 @@ def load_memory() -> dict:
             return _empty_memory()
 
 def save_memory(memory: dict) -> None:
-    """Save the memory state to disk."""
+    """Schedule a save to disk (atomic write, debounced, serialized)."""
     with _lock:
-        try:
-            MEMORY_PATH.parent.mkdir(parents=True, exist_ok=True)
-            MEMORY_PATH.write_text(json.dumps(memory, indent=2), encoding="utf-8")
-        except Exception as e:
-            print(f"[Memory] Error saving: {e}")
+        _debounced_save(memory)
 
 def _recursive_update(d: dict, u: dict) -> dict:
     for k, v in u.items():

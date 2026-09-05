@@ -13,7 +13,8 @@ from typing import Callable
 try:
     import pyautogui
     _PYAUTOGUI = True
-except ImportError:
+except Exception:
+    pyautogui = None  # type: ignore[assignment]
     _PYAUTOGUI = False
 
 # ── Bezier helpers ───────────────────────────────────────────────────────────

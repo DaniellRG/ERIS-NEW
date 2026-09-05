@@ -65,7 +65,7 @@ def _scan_plugins() -> str:
                 "size": len(content),
                 "valid": has_handler,
             })
-        except:
+        except OSError:
             found.append({"name": f.stem, "file": f.name, "valid": False})
 
     lines = ["═══ ESCANEO DE PLUGINS ═══", ""]
@@ -276,7 +276,7 @@ def _load_config() -> dict:
     if _PLUGIN_CONFIG.exists():
         try:
             return json.loads(_PLUGIN_CONFIG.read_text(encoding="utf-8"))
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return {"disabled": []}
 

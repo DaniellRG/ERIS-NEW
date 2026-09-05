@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-_OUTPUT_DIR = Path(r"D:\Eris_Source\data\voice_clones")
+_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data" / "voice_clones"
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 _coqui_model = None

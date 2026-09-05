@@ -229,12 +229,12 @@ def _get_status() -> str:
     try:
         subprocess.run([sys.executable, "--version"], capture_output=True, timeout=5)
         lines.append("  Python:         Disponible")
-    except:
+    except Exception:
         lines.append("  Python:         NO disponible")
     try:
         subprocess.run(["node", "--version"], capture_output=True, timeout=5)
         lines.append("  Node.js:        Disponible")
-    except:
+    except Exception:
         lines.append("  Node.js:        NO disponible")
     return "\n".join(lines)
 
@@ -286,7 +286,7 @@ def _load_history() -> list:
     if _HISTORY_FILE.exists():
         try:
             return json.loads(_HISTORY_FILE.read_text(encoding="utf-8"))
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return []
 

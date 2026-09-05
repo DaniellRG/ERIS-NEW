@@ -4,6 +4,7 @@ Eris Cybersecurity Module – Conocimiento profundo de ciberseguridad, hacking �
 redes, criptografía, herramientas y metodologías. Eris aprende, enseña y aplica.
 """
 import json
+import random
 from pathlib import Path
 from datetime import datetime
 
@@ -1386,5 +1387,4 @@ def cybersecurity(parameters: dict, player=None) -> str:
     return f"Action '{action}' not found. Available: {available}"
 
 
-# Needed for quiz
-import random
+

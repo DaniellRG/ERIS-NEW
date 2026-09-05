@@ -72,7 +72,7 @@ def tool_creator(parameters: dict, player=None, speak=None) -> str:
                 try:
                     # Esto forzará que ErisLive corte la sesión, reconstruya _build_config (con la nueva herramienta) y reconecte.
                     player.on_config_saved({}) 
-                except:
+                except Exception:
                     pass
             Timer(1.5, delayed_reload).start()
             return f"Herramienta '{tool_name}' programada e instalada con éxito. Reiniciando mis módulos cognitivos para integrarla..."

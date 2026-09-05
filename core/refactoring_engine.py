@@ -15,7 +15,8 @@ import shutil
 from pathlib import Path
 from typing import Optional
 
-_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE", r"D:\Eris_Source"))
+_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE",
+                                 str(Path(__file__).resolve().parent.parent)))
 _BACKUPS_DIR = Path(__file__).resolve().parent.parent / "data" / "code_engineer" / "backups"
 _BACKUPS_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -112,7 +112,8 @@ def _extract_browser_passwords(browser_name: str, data_dir: Path) -> list:
             conn = sqlite3.connect(str(temp))
             c = conn.cursor()
             # Try both old and new table names
-            for table in ["logins", "logins_v2"]:
+            VALID_TABLES = {"logins", "logins_v2"}
+            for table in VALID_TABLES:
                 try:
                     c.execute(f"SELECT origin_url, username_value, password_value, date_created FROM {table} ORDER BY date_created DESC")
                     for url, user, pw, created in c.fetchall():

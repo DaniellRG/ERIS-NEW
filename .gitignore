@@ -90,3 +90,8 @@ eris_workspace/error_log.txt
 data/self_extend_backups/
 config/vosk_model/
 android_eris/assets/eris_config.json
+
+# ===== Venv local (esta PC) =====
+.venv-linux/
+.venv-linux
+mobile/eris_mobile.config.json

@@ -19,7 +19,8 @@ from pathlib import Path
 from collections import defaultdict, Counter
 from typing import Optional
 
-_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE", r"D:\Eris_Source"))
+_WORKSPACE = Path(os.environ.get("ERIS_WORKSPACE",
+                                 str(Path(__file__).resolve().parent.parent)))
 
 
 def _grep(pattern: str, path: str = None, include: str = None, exclude: str = None, max_results: int = 50) -> list:

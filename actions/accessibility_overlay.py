@@ -42,7 +42,7 @@ except ImportError:
     HAS_PYQT6 = False
 
 
-class _Magnifier(QWidget):
+class _Magnifier(QWidget if HAS_PYQT6 else object):
     """Lupa flotante frameless que sigue al cursor y muestra la zona ampliada."""
 
     def __init__(self, zoom=3.0, size=300):

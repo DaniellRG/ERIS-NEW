@@ -22,7 +22,9 @@ try:
     pyautogui.FAILSAFE = True
     pyautogui.PAUSE    = 0.06
     _PYAUTOGUI = True
-except ImportError:
+except Exception:
+    # pyautogui levanta XauthError/DisplayError al importar sin pantalla X11 (Wayland)
+    pyautogui = None  # type: ignore[assignment]
     _PYAUTOGUI = False
 
 from core.platform import safe_print

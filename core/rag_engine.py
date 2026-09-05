@@ -18,8 +18,10 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
-_INDEX_DIR = Path(r"D:\Eris_Source\data")
-_VAULT_PATH = Path(r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris")
+_BASE = Path(__file__).resolve().parent.parent
+_INDEX_DIR = _BASE / "data"
+_VAULT_PATH = Path(os.environ.get("ERIS_OBSIDIAN_VAULT",
+                                  str(_BASE / "obsidian_vault")))
 _EMBED_FILE = _INDEX_DIR / "rag_embeddings.npz"
 _META_FILE = _INDEX_DIR / "rag_meta.json"
 

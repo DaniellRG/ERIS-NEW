@@ -38,7 +38,7 @@ def _load():
     try:
         if NUDGE_FILE.exists():
             return json.loads(NUDGE_FILE.read_text(encoding="utf-8"))
-    except:
+    except (json.JSONDecodeError, OSError):
         pass
     return {
         "last_nudge": None,
@@ -85,7 +85,7 @@ def memory_nudge(parameters: dict, player=None) -> str:
         try:
             done = status.count('completadas') if status else 10
             rate = random.randint(85, 100)
-        except:
+        except Exception:
             done, rate = 10, 95
         
         msg = msg.format(
@@ -147,7 +147,7 @@ def memory_nudge(parameters: dict, player=None) -> str:
                     if percent < 40:
                         name = line.split(']')[0].split('[')[-1].strip() if '[' in line else line.strip()
                         suggestions.append((name, percent))
-                except:
+                except (ValueError, IndexError):
                     pass
         
         if suggestions:

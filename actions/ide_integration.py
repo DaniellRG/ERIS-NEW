@@ -31,8 +31,8 @@ try:
     import pyautogui
     pyautogui.FAILSAFE = False
     pyautogui.PAUSE = 0.02
-except ImportError:
-    pyautogui = None
+except Exception:
+    pyautogui = None  # type: ignore[assignment]
 
 
 # ── IDE Detection Patterns ────────────────────────────────────────────────────

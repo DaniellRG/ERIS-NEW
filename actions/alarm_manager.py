@@ -11,19 +11,19 @@ def _timer_callback(name: str, message: str, player=None):
         for _ in range(5):
             winsound.Beep(800, 200)
             winsound.Beep(1000, 200)
-    except: pass
+    except Exception: pass
     
     if player:
         try:
             player.write_log(f"\n[ALARMA] {name}: {message}\n")
-        except: pass
+        except Exception: pass
     
     # Show notification
     try:
         from PyQt6.QtWidgets import QSystemTrayIcon
         if player and hasattr(player, '_win') and hasattr(player._win, 'tray_icon'):
             player._win.tray_icon.showMessage(f"ERIS - {name}", message, QSystemTrayIcon.MessageIcon.Information, 5000)
-    except: pass
+    except Exception: pass
     
     if name in _timers:
         del _timers[name]

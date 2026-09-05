@@ -5,8 +5,11 @@ Soporta Windows toast notifications, prioridades, agrupación.
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 from datetime import datetime
+
+_IS_LINUX = sys.platform.startswith("linux")
 
 _BASE = Path(__file__).resolve().parent.parent
 _NOTIF_FILE = _BASE / "data" / "desktop_notifications.json"
@@ -66,7 +69,7 @@ def _send_notification(params: dict) -> str:
         "delivered": False,
     }
 
-    delivered = _deliver_windows(title, message, priority, silent)
+    delivered = _deliver(title, message, priority, silent)
     notif["delivered"] = delivered
     _NOTIFICATIONS.append(notif)
     _save_history()
@@ -85,6 +88,29 @@ def _send_many(params: dict) -> str:
         results.append(r)
     return "Enviadas: {}/{} notificaciones".format(
         sum(1 for r in results if "entregada" in r), len(results))
+
+
+def _deliver(title: str, message: str, priority: str, silent: bool) -> bool:
+    """Envía la notificación con el backend nativo de la plataforma."""
+    if _IS_LINUX:
+        return _deliver_linux(title, message, priority, silent)
+    return _deliver_windows(title, message, priority, silent)
+
+
+def _deliver_linux(title: str, message: str, priority: str, silent: bool) -> bool:
+    """Envía notificación vía notify-send (libnotify)."""
+    try:
+        urgency = {
+            "low": "low", "normal": "normal", "high": "critical",
+            "critical": "critical", "urgent": "critical",
+        }.get((priority or "normal").lower(), "normal")
+        cmd = ["notify-send", "-a", "Eris", "-u", urgency, title, message]
+        if silent:
+            cmd += ["--hint", "int:transient:1"]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=8)
+        return result.returncode == 0
+    except Exception:
+        return False
 
 
 def _deliver_windows(title: str, message: str, priority: str, silent: bool) -> bool:
@@ -118,7 +144,7 @@ $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
             capture_output=True, text=True, timeout=10,
         )
         return result.returncode == 0
-    except:
+    except Exception:
         return False
 
 
@@ -137,7 +163,7 @@ def _get_status() -> str:
     lines = [
         "═══ DESKTOP NOTIFICATIONS STATUS ═══",
         "",
-        "  Plataforma:    Windows (Toast)",
+        "  Plataforma:    Linux (notify-send)" if _IS_LINUX else "  Plataforma:    Windows (Toast)",
         "  Habilitado:    {}".format("Si" if settings.get("enabled", True) else "No"),
         "  Sonido:        {}".format("Si" if settings.get("sound", True) else "No"),
         "  Total enviadas: {}".format(total),
@@ -234,7 +260,7 @@ def _load_settings() -> dict:
     if f.exists():
         try:
             return json.loads(f.read_text(encoding="utf-8"))
-        except:
+        except (json.JSONDecodeError, OSError):
             pass
     return {"enabled": True, "sound": True, "default_priority": "normal"}
 

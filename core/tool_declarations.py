@@ -2545,7 +2545,7 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "desktop_notifications",
-        "description": "Notificaciones nativas de Windows con prioridades y configuracion. Acciones: send (enviar notificacion), list_history (ver historial), clear (limpiar notificaciones), config (configurar preferencias).",
+        "description": "Notificaciones de escritorio nativas (Windows Toast / Linux notify-send) con prioridades y configuracion. Acciones: send (enviar notificacion), list_history (ver historial), clear (limpiar notificaciones), config (configurar preferencias).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
@@ -3382,11 +3382,11 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "pc_control",
-        "description": "Controla el PC en acciones SEGURAS que no tocan la energía: volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, screenshot, lock, status. IMPORTANTE: apagar, suspender, reiniciar, hibernar y cerrar sesion estan DESHABILITADOS por seguridad y devuelven error.",
+        "description": "Controla el PC en acciones SEGURAS que no tocan la energía: volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, brightness_get, brightness_set, brightness_up, brightness_down, screenshot, lock, status. IMPORTANTE: apagar, suspender, reiniciar, hibernar y cerrar sesion estan DESHABILITADOS por seguridad y devuelven error.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, screenshot, lock, status"},
+                "action": {"type": "STRING", "description": "volume_up, volume_down, volume_set, mute, unmute, monitor_on, monitor_off, wifi_on, wifi_off, wifi_status, bluetooth_on, bluetooth_off, bluetooth_status, brightness_get, brightness_set, brightness_up, brightness_down, screenshot, lock, status"},
                 "value": {"type": "STRING", "description": "Valor opcional (ej: nivel de volumen)"},
                 "command": {"type": "STRING", "description": "Comando a ejecutar (para acciones tipo volume_set)"},
                 "target": {"type": "STRING", "description": "Dispositivo o proceso objetivo (opcional)"},
@@ -5106,7 +5106,7 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "system_volume",
-        "description": "Control del volumen y audio del sistema Windows. Acciones: get (volumen actual), set (level 0-100), up/down (step), mute, unmute, toggle_mute, devices (listar dispositivos de audio), set_device (device: nombre o indice para cambiar el dispositivo de reproduccion).",
+        "description": "Control del volumen y audio del sistema (Windows: pycaw; Linux: pactl/wpctl). Acciones: get (volumen actual), set (level 0-100), up/down (step), mute, unmute, toggle_mute, devices (listar dispositivos de audio), set_device (device: nombre o indice para cambiar el dispositivo de reproduccion).",
         "parameters": {
             "type": "OBJECT",
             "properties": {

@@ -64,7 +64,7 @@ def _start_recording(params: dict) -> str:
         import pyautogui
         _start_keyboard_listener()
         _start_mouse_listener()
-    except ImportError:
+    except Exception:
         pass
 
     return "Grabación iniciada: '{}'. Di 'stop' cuando quieras parar".format(_ACTIVE_MACRO)
@@ -149,8 +149,8 @@ def _execute_actions(actions, speed, repeat, delay, name):
     try:
         import pyautogui
         pyautogui.FAILSAFE = True
-    except ImportError:
-        return "Error: pyautogui no instalado (pip install pyautogui)"
+    except Exception:
+        return "Error: pyautogui no disponible (en Wayland requiere display X11)"
 
     results = []
     for rep in range(repeat):
