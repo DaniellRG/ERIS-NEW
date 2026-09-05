@@ -13,6 +13,42 @@ from core.tool_declarations import TOOL_DECLARATIONS
 _MAX_RETRIES = 3
 _RETRY_DELAYS = [30, 60, 120]
 
+# Gemini limita a 128 function_declarations por request (429/400 si se pasa).
+# ERIS tiene 448 tools: enviamos un subconjunto priorizado <= 120.
+_GEMINI_TOOL_CAP = 120
+
+# Tools imprescindibles que SIEMPRE deben llegar a Gemini, aunque esten fuera
+# del bloque inicial de declaraciones (ordenadas por dominio).
+_GEMINI_PRIORITY_TOOLS = [
+    "system_monitor", "window_manager", "weather_report", "screen_vision",
+    "network_monitor", "emo_core", "obsidian_note", "send_message",
+    "whatsapp", "telegram_bot", "desktop_notifications", "reminder",
+    "scheduler", "goals", "knowledge_base", "user_profile", "git_control",
+    "code_assistant", "file_editor", "context_read", "morning_brief",
+    "document_handler", "image_analyzer", "translator", "web_jobs",
+]
+
+
+def _gemini_tools() -> list:
+    """Devuelve las declaraciones de tools para Gemini (<= _GEMINI_TOOL_CAP),
+    priorizando _GEMINI_PRIORITY_TOOLS y completando con el resto en orden.
+    """
+    picked = []
+    picked_names = set()
+    for name in _GEMINI_PRIORITY_TOOLS:
+        for decl in TOOL_DECLARATIONS:
+            if decl["name"] == name and name not in picked_names:
+                picked.append(decl)
+                picked_names.add(name)
+                break
+    for decl in TOOL_DECLARATIONS:
+        if len(picked) >= _GEMINI_TOOL_CAP:
+            break
+        if decl["name"] not in picked_names:
+            picked.append(decl)
+            picked_names.add(decl["name"])
+    return picked
+
 
 def _get_api_key() -> str:
     return json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))["gemini_api_key"]
@@ -250,7 +286,7 @@ class GeminiTextChat:
                             contents=self._history,
                             config=types.GenerateContentConfig(
                                 system_instruction=self._system,
-                                tools=[types.Tool(function_declarations=TOOL_DECLARATIONS)],
+                                tools=[types.Tool(function_declarations=_gemini_tools())],
                                 temperature=0.7,
                             ),
                         ):
@@ -264,7 +300,7 @@ class GeminiTextChat:
                             contents=self._history,
                             config=types.GenerateContentConfig(
                                 system_instruction=self._system,
-                                tools=[types.Tool(function_declarations=TOOL_DECLARATIONS)],
+                                tools=[types.Tool(function_declarations=_gemini_tools())],
                                 temperature=0.7,
                             ),
                         )
