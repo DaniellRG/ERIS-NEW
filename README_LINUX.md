@@ -11,13 +11,42 @@ trabajar en paralelo entre tus dos máquinas.
 
 ---
 
+## Instalacion one-liner (recomendada)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.sh | bash
+```
+
+Instala ERIS en `~/.eris/ERIS-NEW` (NO toca tu workspace de desarrollo),
+crea el venv, instala dependencias, deja el comando `eris` y abre la
+**ventana de bienvenida** (ERIS en grande + formulario de API keys:
+
+**REQUERIDAS** para poder chatear — la key de Gemini —, todo lo demás es
+**OPCIONAL** y puede quedar vacío: ERIS igual arranca en pleno).
+
+Comandos del launcher:
+
+```bash
+eris               # GUI (el primer uso abre el configurador)
+eris --cli         # chat por terminal
+eris --update      # trae la ultima version de GitHub (git pull + deps)
+eris --check       # estado de las API keys
+eris --wizard      # reabrir el configurador
+```
+
+> Por diseño, el one-liner **siempre instala el ultimo commit** de `main`, y
+> `eris --update` te mantiene al dia. La config (`api_keys.json`), `data/`,
+> `memory/` y el vault quedan **fuera de git**: nunca se pisan al actualizar.
+
+---
+
 ## Requisitos de sistema (una vez)
 
 ```bash
 sudo pacman -S python python-pip python-virtualenv portaudio pipewire-pulse git
 ```
 
-## Despliegue
+## Despliegue (desarrollo)
 
 ```bash
 cd Eris_Source          # clonado del repo (ver seccion git abajo)

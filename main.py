@@ -3575,14 +3575,19 @@ def main():
             print(f"[ERIS] Error en accion contextual: {e}")
         sys.exit(0)
 
-    # ── Single Instance Lock ──────────────────────────────────────────────────
-    import ctypes
+    # ── Single Instance Lock (solo Windows: mutex Win32) ─────────────────────
     global _single_instance_mutex
-    _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    _single_instance_mutex = _kernel32.CreateMutexW(None, False, "ERIS_AI_SINGLE_INSTANCE_MUTEX_v2")
-    if ctypes.get_last_error() == 183: # ERROR_ALREADY_EXISTS
-        print("[ERIS] Ya hay una instancia en ejecución. Cerrando.")
-        sys.exit(0)
+    _single_instance_mutex = None
+    if os.name == "nt":
+        import ctypes
+        try:
+            _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            _single_instance_mutex = _kernel32.CreateMutexW(None, False, "ERIS_AI_SINGLE_INSTANCE_MUTEX_v2")
+            if ctypes.get_last_error() == 183: # ERROR_ALREADY_EXISTS
+                print("[ERIS] Ya hay una instancia en ejecución. Cerrando.")
+                sys.exit(0)
+        except Exception as _lock_e:
+            print(f"[ERIS] single-instance skip: {_lock_e}")
 
     # ── License check ─────────────────────────────────────────────────────────
     # ──────────────────────────────────────────────────────────────────────────
@@ -3730,7 +3735,18 @@ def main():
         if result != QDialog.DialogCode.Accepted:
             sys.exit(0)
 
-    _ensure_both_api_keys()
+    if os.name == "nt":
+        _ensure_both_api_keys()
+    else:
+        # ← Linux/Wayland: primer arranque con el wizard portable.
+        #   _ensure_both_api_keys() es un dialog Win32; aca el setup lo hace
+        #   setup_wizard.py (requeridas + opcionales) y luego sigue main.
+        try:
+            import setup_wizard
+            if setup_wizard.needs_setup():
+                setup_wizard.run_setup(launch_after=False)
+        except Exception as _sw_e:
+            print(f"[ERIS] wizard skip: {_sw_e}")
 
     ui = ErisUI("face.png")
 
@@ -3808,7 +3824,8 @@ def main():
 
                 threading.Thread(target=hotkey_thread, daemon=True).start()
 
-            setup_global_hotkey()
+            if os.name == "nt":
+                setup_global_hotkey()
             print("[PATCH] Avengers: Age of Ultron golden aesthetics & Insert global hotkey loaded successfully!")
 
     except Exception as e:

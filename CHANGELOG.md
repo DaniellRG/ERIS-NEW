@@ -3,6 +3,24 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/) (no released de
 versiones formales; ERIS es un proyecto vivo que evoluciona por sesiones).
 
+## [2026-09-06] — Instalador one-liner + wizard de arranque (Linux)
+
+- `install.sh`: `curl | bash` instala ERIS en `~/.eris/ERIS-NEW` (copia
+  separada del workspace de desarrollo), crea venv, instala
+  `requirements-linux.txt`, deja el comando `eris` y abre el configurador.
+  Por diseño instala siempre el último commit de `main`.
+- `setup_wizard.py`: ventana de bienvenida (ERIS en grande) con API keys
+  **REQUERIDAS** (Gemini) y **OPCIONALES** (Fish/Telegram/Spotify/OpenWeather/
+  ElevenLabs/OpenRouter/Groq/Cerebras/Context7/HIBP) que pueden quedar vacías.
+  Guarda en `config/api_keys.json` (UTF-8 sin BOM, merge conserva lo existente).
+  Modos: GUI, `--check` (headless) y `--save k=v`.
+- `eris` (launcher Linux): GUI por defecto (primer arranque abre el wizard),
+  `--cli`, `--wizard`, `--check`, `--update` (git pull + deps).
+- `main.py`: guard Windows-only de boot en Linux — single-instance mutex y
+  global hotkey Win32 protegidos tras `os.name == "nt"`; primer arranque en
+  Linux abre el wizard portable (`launch_after=False` evita doble instancia).
+- README_LINUX.md: sección de instalación one-liner + comandos del launcher.
+
 ## [2026-09-05] — Sesión de saneamiento integral (Fases 1–4)
 
 ### Fase 1 — Bugs críticos

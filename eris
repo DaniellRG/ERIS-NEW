@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# ============================================================
+#  ERIS - launcher para Linux
+#  Uso:
+#     eris              -> arranca la GUI
+#     eris --cli        -> chat por terminal (eris_cli.py)
+#     eris --wizard     -> abre la ventana de configuracion
+#     eris --update     -> trae la ultima version (git pull + deps)
+#     eris --check      -> estado de las API keys
+# ============================================================
+set -u
+
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV="$REPO/.venv-linux"
+PY="$VENV/bin/python"
+[ -x "$PY" ] || PY="python3"
+
+export PYTHONIOENCODING="utf-8"
+export ERIS_WORKSPACE="${ERIS_WORKSPACE:-$REPO}"
+
+case "${1:-}" in
+    --cli|-t)
+        exec "$PY" "$REPO/eris_cli.py" "${@:2}"
+        ;;
+    --wizard|--setup|-s)
+        exec "$PY" "$REPO/setup_wizard.py"
+        ;;
+    --check)
+        exec "$PY" "$REPO/setup_wizard.py" --check
+        ;;
+    --update|-u)
+        echo "==> Actualizando ERIS desde GitHub..."
+        git -C "$REPO" pull --ff-only || { echo "  (git pull fallo: revisa tu red o si hay cambios locales)"; exit 1; }
+        if [ -x "$PY" ]; then
+            "$VENV/bin/pip" install -q --upgrade -r "$REPO/requirements-linux.txt" && echo "==> Dependencias actualizadas."
+        fi
+        echo "==> ERIS actualizado a la ultima version."
+        ;;
+    --help|-h)
+        sed -n '2,10p' "${BASH_SOURCE[0]}"
+        ;;
+    --version|-v)
+        echo "$(basename "${BASH_SOURCE[0]}") - ERIS launcher (Linux)"
+        git -C "$REPO" log --oneline -1 2>/dev/null
+        ;;
+    *)
+        # primer arranque: abrir el wizard si no hay configuracion
+        if [ ! -f "$REPO/config/api_keys.json" ]; then
+            echo "==> Primera vez: abriendo la configuracion de ERIS..."
+            exec "$PY" "$REPO/setup_wizard.py"
+        fi
+        exec "$PY" "$REPO/main.py" "${@:1}"
+        ;;
+esac
