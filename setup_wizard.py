@@ -75,11 +75,20 @@ def merge_and_save(filled: dict) -> Path:
 
 
 def chat_ready() -> bool:
-    """Hay forma de chatear? Gemini key presente o Ollama local instalado."""
+    """Puede chatear? La key de Gemini alcanza (con internet). Ollama solo
+    sirve si ademas hay un modelo descargado (el modelo NO se descarga aca).
+    """
     cfg = load_config()
     if cfg.get("gemini_api_key", "").strip():
         return True
-    return shutil.which("ollama") is not None
+    if shutil.which("ollama"):
+        try:
+            out = os.popen("ollama list 2>/dev/null").read().strip()
+            if out:
+                return True
+        except Exception:
+            pass
+    return False
 
 
 def needs_setup() -> bool:
@@ -102,7 +111,8 @@ def _cmdline_check() -> int:
         print(f"[opcional]  {label} ({key}): {'OK' if val else '(vacia)'}")
     print("chat_ready:", chat_ready())
     if not chat_ready():
-        print("AVISO: para chatear hace falta la key de Gemini o instalar Ollama (ollama pull qwen3:8b).")
+        print("AVISO: para chatear hace falta la key de Gemini (Eris con internet).")
+        print("       Ollama local es OPCIONAL y ademas hay que bajarle un modelo aparte.")
     print("Resumen:", "LISTA PARA INICIAR" if chat_ready() else "FALTA LA KEY DE GEMINI (u Ollama)")
     return 0
 
@@ -195,21 +205,25 @@ def _build_widgets(parent, launch_after: bool = True):
     # ── Estado Ollama ──
     ollama_here = shutil.which("ollama") is not None
     ollama_lbl = QLabel(
-        "Ollama local para chat sin internet: INSTALADO" if ollama_here
-        else "Ollama local para chat sin internet: no detectado "
-              "(igual puedes iniciar con la key de Gemini)"
+        "Ollama (OPCIONAL, chat sin internet): motor detectado" if ollama_here
+        else "Ollama (OPCIONAL, chat sin internet): motor no instalado — "
+              "basta con la key de Gemini; los modelos van aparte"
     )
     ollama_lbl.setStyleSheet("font-size: 11px; color: #777; margin-top: 6px;")
     form.addWidget(ollama_lbl)
 
     # ── Botones ──
     def on_start():
-        if not entries["gemini_api_key"].text().strip() and not ollama_here:
+        gemini_filled = bool(
+            entries["gemini_api_key"].text().strip()
+            or (load_config().get("gemini_api_key", "") or "").strip()
+        )
+        if not gemini_filled and not chat_ready():
             QMessageBox.warning(
                 dialog, "Falta algo",
-                "ERIS necesita al menos una clave de Gemini O instalar Ollama "
-                "(ollama pull qwen3:8b) para poder chatear.\n\n"
-                "Puedes ponerla ahora o cerrar e instalarla despues.",
+                "ERIS necesita la clave de Gemini para chatear por internet.\n\n"
+                "Si preferis 100% local es aparte: instalar Ollama y descargar un "
+                "modelo (ollama pull qwen3:8b). No es necesario.",
             )
             return
         merge_and_save({k: w.text() for k, w in entries.items()})

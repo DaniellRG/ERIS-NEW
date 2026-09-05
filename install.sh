@@ -79,11 +79,12 @@ if [ -n "$MISSING_SYS" ]; then
     echo "    (brightnessctl: control de brillo | xclip: portapapeles)"
 fi
 
-# 6) Ollama (opcional, recomendado para chat local)
+# 6) Ollama (OPCIONAL, para chat 100% local — el modelo se descarga aparte)
 if ! command -v ollama >/dev/null 2>&1; then
-    echo "==> Ollama no esta instalado. Para chat 100% local:"
+    echo "==> Ollama no esta instalado. Es OPCIONAL: Eris funciona igual con"
+    echo "    internet (key de Gemini). Si queres chat local despues:"
     echo "      curl -fsSL https://ollama.com/install.sh | sh"
-    echo "      ollama pull qwen3:8b"
+    echo "      ollama pull qwen3:8b    <- el modelo, cuando lo quieras bajar"
 fi
 
 # 7) Primer arranque con wizard
