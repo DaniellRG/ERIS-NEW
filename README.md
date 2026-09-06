@@ -56,7 +56,7 @@ Eris_Source/
 │   ├── goal_setting.py          # Metas autónomas
 │   └── ... (conectividad, self_healing, offline_voice, tts_engine...)
 ├── actions/                 # 296 módulos de acciones (volumen, apps, web...)
-├── agents/                  # 9 agentes especializados
+├── agents/                  # 12 agentes especializados
 ├── skills/                  # 39 skills instaladas
 ├── eris_workspace/          # Workspace 3D (ursina/panda3d)
 ├── android_eris/            # Build APK Android (config con key → gitignored)

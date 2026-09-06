@@ -385,7 +385,7 @@ def _estado_continuo() -> str:
         ("mistake_learner (aprende de errores)", "recent"),
         ("feedback_learner (aprende de feedback)", "recent"),
         ("neuro_spheres (cerebro que crece)", "status"),
-        ("semantic_memory (memoria que aprende)", None),
+        ("memory_unified (memoria que aprende)", None),
         ("idle_learning (aprende en pausa)", None),
     ]
     for nombre, act in dominios:

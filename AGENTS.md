@@ -66,7 +66,7 @@ $env:PYTHONIOENCODING="utf-8"
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
 | `data/knowledge/` | 69 .md knowledge files |
 | `actions/` | 296 action modules (one tool per file) |
-| `agents/` | 9 specialist agents |
+| `agents/` | 12 specialist agents |
 | `skills/` | 39 installed skills (21 builtin + 18 user_created) |
 | `vault/` | Memoria charra: `raw/` capturas → `wiki/` destilado → `outputs/` productos |
 
