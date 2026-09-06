@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import importlib
 import threading
-from typing import Any, Callable
 
 _cache = {}
 _failed = {}  # tool_name → (module_path, func_name, fail_count)

@@ -45,6 +45,19 @@ def resolve_device(name_sub: str, kind: str = "input") -> int | None:
     return None
 
 
+def _virtual_name(name: str) -> bool:
+    """True si el dispositivo suena a agregador virtual (abre pero trae silencio)."""
+    low = (name or "").lower()
+    return any(v in low for v in _VIRTUAL_HINT)
+
+
+def _is_virtual(idx: int | None) -> bool:
+    try:
+        return idx is not None and _virtual_name(_device_name(idx))
+    except Exception:
+        return False
+
+
 def _find_input_by_name(name_sub: str) -> int | None:
     if not name_sub:
         return None
@@ -57,13 +70,13 @@ def _find_input_by_name(name_sub: str) -> int | None:
     return None
 
 
-def _can_open_mic(idx: int | None) -> bool:
-    """True si el dispositivo abre de verdad como micro a SEND_SAMPLE_RATE."""
+def _can_open_mic(idx: int | None, rate: int = SEND_SAMPLE_RATE) -> bool:
+    """True si el dispositivo abre de verdad como micro a `rate`."""
     import sounddevice as sd
     try:
         s = sd.InputStream(
             device=idx,
-            samplerate=SEND_SAMPLE_RATE,
+            samplerate=rate,
             channels=CHANNELS,
             dtype="int16",
             blocksize=CHUNK_SIZE,
@@ -74,6 +87,43 @@ def _can_open_mic(idx: int | None) -> bool:
         return True
     except Exception:
         return False
+
+
+def _sample_has_audio(idx: int | None, rate: int) -> bool:
+    """True si capturando ~0.25s el mic entrega audio real (no silencio).
+
+    Los agregadores virtuales (pipewire/pulse/default) abren pero dan ceros
+    absolutos; los mics físicos siempre traen al menos ruido de fondo.
+    """
+    import numpy as np
+    import sounddevice as sd
+    try:
+        frames = int(rate * 0.25)
+        buf = sd.rec(frames, samplerate=rate, channels=CHANNELS, dtype="int16", device=idx)
+        sd.wait()
+        return float(np.abs(buf).mean()) > 1.0
+    except Exception:
+        return False
+
+
+def _mic_rate_for(idx: int | None) -> int | None:
+    """Tasa a la que el mic funciona DE VERDAD: 16k si trae audio; si no, la nativa.
+
+    En Linux/ALSA muchos mics físicos (Bluetooth/analógico) rechazan 16 kHz y
+    solo abren a su tasa nativa; los agregadores virtuales abren a 16k pero
+    capturan silencio. Se verifica con energía de audio, no solo apertura.
+    """
+    if idx is None:
+        return None
+    if _can_open_mic(idx, SEND_SAMPLE_RATE) and _sample_has_audio(idx, SEND_SAMPLE_RATE):
+        return SEND_SAMPLE_RATE
+    try:
+        native = int(_cached_devices()[idx]["default_samplerate"])
+    except Exception:
+        native = 0
+    if native > 0 and _can_open_mic(idx, native) and _sample_has_audio(idx, native):
+        return native
+    return None
 
 
 def _can_open_out(idx: int | None) -> bool:
@@ -113,7 +163,7 @@ def _device_name(idx: int | None) -> str:
 
 _VIRTUAL_HINT = ("virtual", "sonar", "monitor", "stereo mix", "what u hear",
                  "loopback", "mapper", "primario", "primary", "asignador",
-                 "wave out", "wave in")
+                 "wave out", "wave in", "pipewire", "pulse", "default", "jack")
 _OUTPUT_BAD = _VIRTUAL_HINT + ("spdif", "digital", "hdmi", "nvidia", "microphone")
 _INPUT_HINT = ("mic", "micro", "micrófono", "headset", "headphone", "auricular",
                "handsfree", "hands-free", "earbud", "buds", "capture", "entrada")
@@ -164,15 +214,14 @@ def _ordered_candidates(kind: str, cfg: dict) -> list[int]:
     if cfg.get(idx_key):
         try:
             idx = int(cfg[idx_key])
-            name = cfg.get(name_key)
             full = _device_name(idx)
-            if not name or name.lower() in full.lower():
+            if full and not _virtual_name(full):
                 cands.append(idx)
         except Exception:
             pass
 
     dflt = _default_index(kind)
-    if dflt is not None:
+    if dflt is not None and not _is_virtual(dflt):
         cands.append(dflt)
 
     scored = []
@@ -211,11 +260,13 @@ def resolve_mic() -> int | None:
     except Exception:
         pass
     for idx in _ordered_candidates("input", cfg):
-        if _can_open_mic(idx):
+        rate = _mic_rate_for(idx)
+        if rate is not None:
             try:
-                if cfg.get("mic_device") != idx:
+                if cfg.get("mic_device") != idx or cfg.get("mic_device_rate") != rate:
                     cfg["mic_device"] = idx
                     cfg["mic_device_name"] = _device_name(idx)
+                    cfg["mic_device_rate"] = rate
                     save_api_keys(cfg)
             except Exception:
                 pass
@@ -246,6 +297,44 @@ def resolve_speaker() -> int | None:
                 pass
             return idx
     return None
+
+
+def mic_opened_rate() -> int:
+    """Tasa a la que se abrió el mic (16k si pudo; si no, la nativa guardada)."""
+    try:
+        from memory.config_manager import load_api_keys
+        cfg = load_api_keys() or {}
+        rate = int(cfg.get("mic_device_rate", SEND_SAMPLE_RATE))
+        if rate > 0:
+            return rate
+    except Exception:
+        pass
+    return SEND_SAMPLE_RATE
+
+
+def resample_int16(indata, src_rate: int, dst_rate: int = SEND_SAMPLE_RATE):
+    """Re-muestrea un bloque ?int16 mono (flat) de src_rate a dst_rate.
+
+    Entero (48k→16k): promedio de grupos (anti-alias). Otros ratios: interpolación
+    lineal con numpy. Devuelve la misma forma si no hace falta resamplear.
+    """
+    if src_rate == dst_rate or indata is None or len(indata) == 0:
+        return indata
+    import numpy as np
+    arr = np.asarray(indata).reshape(-1).astype(np.int16)
+    n = len(arr)
+    if src_rate > dst_rate and src_rate % dst_rate == 0:
+        k = src_rate // dst_rate
+        m = n // k
+        if m < 1:
+            m = 1
+        out = arr[: m * k].reshape(m, k).mean(axis=1).astype(np.int16)
+    else:
+        ratio = dst_rate / float(src_rate)
+        new_n = max(1, int(round(n * ratio)))
+        xi = np.arange(new_n) / ratio
+        out = np.interp(xi, np.arange(n), arr.astype(np.float32)).astype(np.int16)
+    return out
 
 
 def describe_audio_devices() -> list[str]:

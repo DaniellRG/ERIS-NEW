@@ -12,7 +12,7 @@ import numpy as np
 from pathlib import Path
 from typing import Callable
 
-from core.audio_config import SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE, CHUNK_SIZE, PLAY_CHUNK_SIZE
+from core.audio_config import SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE, CHUNK_SIZE, PLAY_CHUNK_SIZE, mic_opened_rate, resample_int16
 
 
 class OfflineVoicePipeline:
@@ -39,6 +39,7 @@ class OfflineVoicePipeline:
         self._ptt_listener = None
         self._ptt_buffered = b""
         self._ptt_last_size = 0
+        self._mic_rate = SEND_SAMPLE_RATE
 
     def configure(self, model: str = None, ollama_url: str = None, tts_backend: str = None):
         if model:
@@ -111,6 +112,30 @@ class OfflineVoicePipeline:
 
     def _mic_callback(self, indata, frames, time_info, status):
         """Mic audio callback — feeds Vosk."""
+        try:
+            if self._mic_rate != SEND_SAMPLE_RATE:
+                rs = resample_int16(indata, self._mic_rate, SEND_SAMPLE_RATE)
+                if rs is not None and len(rs):
+                    indata = rs
+        except Exception:
+            pass
+        # VAD: en silencio no alimentar Vosk (evita comerse un core completo
+        # reconociendo ruido de fondo 125x/s y deja la UI congelada).
+        try:
+            import numpy as np
+            _lvl = float(np.abs(np.asarray(indata, dtype=np.int16)).mean()) / 32768.0
+            _win = getattr(self, "_vad_win", None)
+            if _win is None:
+                _win = []
+                self._vad_win = _win
+            _win.append(_lvl)
+            if len(_win) > 4:
+                _win.pop(0)
+            _has_voice = sum(_win) / len(_win) > 0.002
+        except Exception:
+            _has_voice = True
+        if not self._ptt_enabled and not _has_voice:
+            return
         if self._ptt_enabled and not self._ptt_holding:
             # En PTT, descartar audio mientras no se mantiene ESPACIO
             if self._ptt_buffered:
@@ -149,11 +174,12 @@ class OfflineVoicePipeline:
             return
         self._running = True
         try:
+            self._mic_rate = mic_opened_rate()
             self._mic_stream = sd.InputStream(
-                samplerate=SEND_SAMPLE_RATE,
+                samplerate=self._mic_rate,
                 channels=1,
                 dtype="int16",
-                blocksize=CHUNK_SIZE * 4,
+                blocksize=max(64, int(round(CHUNK_SIZE * 4 * self._mic_rate / SEND_SAMPLE_RATE))),
                 callback=self._mic_callback,
             )
             self._mic_stream.start()

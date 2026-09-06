@@ -306,6 +306,10 @@ class ParticleOrb(QWidget):
 
     def set_audio_level(self, level: float):
         self._audio_level = level * 0.5
+        try:
+            self._apply_frame_rate()
+        except Exception:
+            pass
 
     def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
         """Tiñe el orbe con el sentimiento dominante (blend con el color de estado)
@@ -318,13 +322,18 @@ class ParticleOrb(QWidget):
             pass
 
     def _apply_frame_rate(self):
-        """FPS adaptativos: suaves en pantalla (60 FPS), ahorra CPU al ocultarse."""
+        """FPS adaptativos: fluidos cuando hay vida, dormitados en silencio.
+        Antes IDLE repintaba a 60 FPS (120 partículas) de forma continua →
+        un core al ~85% de CPU y la UI inerte (clics sin efecto)."""
         if not self.isVisible():
             target = 300
         elif self._state in ("MUTED", "ERROR"):
             target = 33   # estados raros: 30 FPS bastan
+        elif self._state in ("THINKING", "SPEAKING") \
+                or self._audio_level > 0.1:
+            target = 16   # hay vida/audio real (voz, no ruido): 60 FPS fluidos
         else:
-            target = 16   # IDLE y activos: 60 FPS fluidos (antes IDLE caía a 10 FPS)
+            target = 110  # IDLE/LISTENING/INITIATING en silencio: respiración lenta (~9 FPS)
         if self._timer.interval() != target:
             self._timer.start(target)
 
@@ -1992,6 +2001,24 @@ class SettingsDialog(QDialog):
 
     # ── Save ────────────────────────────────────────────────────────────────
     def _save(self):
+        """Guarda la configuración. Todo error se muestra y se loguea (antes
+        una excepción al recolectar campos quedaba MUDO: botón sin efecto)."""
+        self._status_bar.setText("◆  COMMITTING configuration...  ◆")
+        try:
+            self._save_impl()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._status_bar.setText(f"◆  ERROR GUARDANDO: {e}  ◆")
+            print(f"[Settings] Error saving: {e}")
+            try:
+                from PyQt6.QtWidgets import QMessageBox
+                QMessageBox.warning(self, "Error al guardar",
+                                    f"No se pudo guardar la configuración:\n{e}")
+            except Exception:
+                pass
+
+    def _save_impl(self):
         self._status_bar.setText("◆  COMMITTING configuration...  ◆")
 
         def _safe_int(val, default=None):
@@ -2068,6 +2095,16 @@ class SettingsDialog(QDialog):
             "central_visual": "face" if self._central_visual.currentText().startswith("Cara") else "orb",
             "os_system": self._cfg.get("os_system", "windows"),
         })
+        # Si se eligió un micro concreto, guardar su tasa nativa (Linux/ALSA:
+        # muchos mics solo abren a su tasa; sin esto el stream abriría a 16k).
+        try:
+            _mic_sel = _combo_idx(self._mic_cb)
+            if _mic_sel is not None:
+                from core.audio_config import _mic_rate_for
+                _r = _mic_rate_for(_mic_sel)
+                cfg["mic_device_rate"] = _r if _r else None
+        except Exception:
+            pass
         try:
             from core.logging_setup import API_CONFIG_PATH
             path = API_CONFIG_PATH
@@ -2080,6 +2117,7 @@ class SettingsDialog(QDialog):
             except Exception as _e:
                 print(f"[Settings] ollama autostart apply skipped: {_e}")
             self._status_bar.setText("◆  CONFIGURATION COMMITTED  ◆")
+            print(f"[Settings] COMMITTED: {len(cfg)} claves | tts={cfg.get('tts_backend')} model={cfg.get('model_for_conversation')} mic={cfg.get('mic_device')} rate={cfg.get('mic_device_rate')}")
             self.saved.emit(cfg)
             QTimer.singleShot(300, self.accept)
         except Exception as e:

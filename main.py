@@ -26,10 +26,31 @@ from core.time_utils import get_time_context, load_tz
 
 import numpy as np
 import warnings
+import faulthandler
+faulthandler.register(10, all_threads=True)  # debug temporal: kill -USR1 dump
 warnings.filterwarnings("ignore", message=".*cffi callback.*")
 warnings.filterwarnings("ignore", message=".*_init_.*should return None.*")
 warnings.filterwarnings("ignore", message=".*Setting the shape on a NumPy array.*")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="sounddevice")
+
+
+def _warnings_watchdog():
+    """Restaura los filtros de warnings cada 1s.
+
+    En Linux/Wayland, algo en runtime resetea los filtros y el callback de audio
+    de sounddevice revierte a imprimir DEPRECATION spam por cada bloque (~150/s),
+    saturando un núcleo y volviendo la UI casi inerte (los clics no responden).
+    Re-afirmar el filtro corta el torrente sin importar quién lo pise.
+    """
+    while True:
+        try:
+            warnings.filterwarnings("ignore", message=".*Setting the shape on a NumPy array.*")
+            warnings.filterwarnings("ignore", category=DeprecationWarning, module="sounddevice")
+        except Exception:
+            pass
+        time.sleep(1.0)
+
+
 import sounddevice as sd
 from google import genai
 from google.genai import types
@@ -51,7 +72,7 @@ setup_logging()
 from core.audio_config import (
     LIVE_MODEL, CHANNELS, SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE,
     CHUNK_SIZE, PLAY_CHUNK_SIZE, resolve_device, resolve_mic, resolve_speaker,
-    get_api_key, ERIS_VOICES, get_eris_voice
+    mic_opened_rate, resample_int16, get_api_key, ERIS_VOICES, get_eris_voice
 )
 import core.audio_config as _audio_cfg
 
@@ -84,6 +105,7 @@ _GATE_WAKE_PHRASES_MULTI = (
 )
 _WAKE_BUFFER_SECONDS = 4.0  # FIX #7: reduced for faster wake reset                     # cuántos segundos de audio bufferear
 _WAKE_SPEECH_THRESHOLD = 0.004                 # FIX #6: lowered for quiet environments
+_WAKE_VAD_THRESHOLD = 0.002                    # VAD: por debajo no se alimenta Vosk (ahorra CPU en silencio)
 _WAKE_SILENCE_RUN_SECONDS = 0.30               # silencio que separa ráfagas de voz
 _WAKE_CONVO_TIMEOUT = 45.0                     # sin voz, la conversación se cierra sola
 _END_CONVERSATION_PHRASES = (
@@ -429,6 +451,7 @@ class ErisLive:
         try:
             from actions.self_improvement_loop import generate_suggestions, save_suggestion
             def _run_improvement_scan():
+                time.sleep(300)  # diferir el 1er ciclo (pesa ~1-2 min CPU): la UI debe responder ya
                 while True:
                     try:
                         suggestions = generate_suggestions()
@@ -462,6 +485,7 @@ class ErisLive:
         self._evolution_thread = None
         try:
             def _run_evolution_scan():
+                time.sleep(600)  # diferir el 1er tick (health audit 448 tools pesa): UI libre al boot
                 while True:
                     try:
                         from core.self_evolution import run_evolution_tick
@@ -492,6 +516,10 @@ class ErisLive:
         # El ojo guardián: detecta y corrige errores del código en tiempo real
         self._guard_thread = threading.Thread(target=self._code_guard_loop, daemon=True)
         self._guard_thread.start()
+
+        # Watchdog de warnings: evita que el spam de DeprecationWarning del
+        # callback de audio deje la UI inert (clics sin efecto) en Linux.
+        threading.Thread(target=_warnings_watchdog, daemon=True).start()
 
         # Auto-backup scheduler (memoria, config, knowledge cada interval_hours)
         try:
@@ -2390,54 +2418,76 @@ class ErisLive:
         loop = asyncio.get_event_loop()
 
         def callback(indata, frames, time_info, status):
+            # ── Si el mic abrió a su tasa nativa (48k/44.1k), convertir a 16k
+            #    para Vosk/Gemini (constante SEND_SAMPLE_RATE aguas abajo). ──
+            try:
+                if mic_rate != SEND_SAMPLE_RATE:
+                    rs = resample_int16(indata, mic_rate, SEND_SAMPLE_RATE)
+                    if rs is not indata:
+                        indata = rs
+                        frames = len(rs)
+            except Exception:
+                pass
             # ── Modo suspensión: solo Vosk local para frases de despertar ──
             if getattr(self, "is_sleeping", False):
                 if getattr(self, "vosk_recognizer", None):
-                    audio_data = indata.tobytes()
-                    if self.vosk_recognizer.AcceptWaveform(audio_data):
-                        res = json.loads(self.vosk_recognizer.Result())
-                        text = res.get("text", "").lower()
-                        # Mismo matcher tolerante de nombre/frases que en modo normal
-                        if _has_wake_word(text):
-                            self.is_sleeping = False
-                            self._open_wake_gate()
-                            self.ui.set_state("LISTENING")
-                            self.ui.write_log("SYS: Despierta!")
-                            # Show window from tray
-                            try:
-                                def _show():
-                                    self.ui.show_and_activate()
-                                    self.ui.tray_icon.showMessage("ERIS", "Estoy aqui. Dime.", 
-                                        self.ui.tray_icon.icon(), 3000)
-                                from PyQt6.QtCore import QTimer
-                                QTimer.singleShot(0, _show)
-                            except Exception:
-                                pass
-                            # Play wake sound
-                            try:
-                                import winsound
-                                winsound.Beep(500, 200)
-                                winsound.Beep(700, 200)
-                            except Exception:
-                                pass
-                    else:
-                        # Detección incremental: despertar apenas reconoce el nombre
-                        try:
-                            partial = json.loads(self.vosk_recognizer.PartialResult())
-                            _pt = partial.get("partial", "").strip()
-                            if len(_pt.split()) >= 2 and _has_wake_word(_pt):
+                    _s = time.monotonic()
+                    _lvl = np.abs(np.asarray(indata, dtype=np.int16)).mean() / 32768.0
+                    _sleepvad = getattr(self, "_sleep_vad_win", None)
+                    if _sleepvad is None:
+                        _sleepvad = []
+                        self._sleep_vad_win = _sleepvad
+                    _sleepvad.append(_lvl)
+                    if len(_sleepvad) > 4:
+                        _sleepvad.pop(0)
+                    _has_voice = sum(_sleepvad) / len(_sleepvad) > _WAKE_VAD_THRESHOLD
+                    del _s, _lvl
+                    if _has_voice:
+                        audio_data = indata.tobytes()
+                        if self.vosk_recognizer.AcceptWaveform(audio_data):
+                            res = json.loads(self.vosk_recognizer.Result())
+                            text = res.get("text", "").lower()
+                            # Mismo matcher tolerante de nombre/frases que en modo normal
+                            if _has_wake_word(text):
                                 self.is_sleeping = False
                                 self._open_wake_gate()
                                 self.ui.set_state("LISTENING")
                                 self.ui.write_log("SYS: Despierta!")
+                                # Show window from tray
+                                try:
+                                    def _show():
+                                        self.ui.show_and_activate()
+                                        self.ui.tray_icon.showMessage("ERIS", "Estoy aqui. Dime.",
+                                            self.ui.tray_icon.icon(), 3000)
+                                    from PyQt6.QtCore import QTimer
+                                    QTimer.singleShot(0, _show)
+                                except Exception:
+                                    pass
+                                # Play wake sound
                                 try:
                                     import winsound
                                     winsound.Beep(500, 200)
                                     winsound.Beep(700, 200)
                                 except Exception:
                                     pass
-                        except Exception:
-                            pass
+                        else:
+                            # Detección incremental: despertar apenas reconoce el nombre
+                            try:
+                                partial = json.loads(self.vosk_recognizer.PartialResult())
+                                _pt = partial.get("partial", "").strip()
+                                if len(_pt.split()) >= 2 and _has_wake_word(_pt):
+                                    self.is_sleeping = False
+                                    self._open_wake_gate()
+                                    self.ui.set_state("LISTENING")
+                                    self.ui.write_log("SYS: Despierta!")
+                                    try:
+                                        import winsound
+                                        winsound.Beep(500, 200)
+                                        winsound.Beep(700, 200)
+                                    except Exception:
+                                        pass
+                            except Exception:
+                                pass
                 return
 
             with self._speaking_lock:
@@ -2542,7 +2592,12 @@ class ErisLive:
                 # Mientras ERIS habla, el orbe se mueve con SU voz (nivel de
                 # playback), no con el ruido ambiente del micro
                 if not eris_speaking:
-                    self.ui.set_orb_audio_level(min(1.0, rms * 18))
+                    nf = max(getattr(self, '_noise_floor', 0.001), 0.0005)
+                    lvl = rms / nf                      # señal sobre ruido: ~1 en silencio, >>1 al hablar
+                    _now = time.monotonic()
+                    if _now - getattr(self, '_last_orb_sent', 0) >= 0.066:
+                        self.ui.set_orb_audio_level(min(1.0, lvl * 0.15))
+                        self._last_orb_sent = _now
             except Exception:
                 rms = 0.0
             data = amplified.tobytes()
@@ -2555,7 +2610,23 @@ class ErisLive:
                 while self._wake_buffer_bytes > max_bytes and self._wake_buffer:
                     old, _ = self._wake_buffer.pop(0)
                     self._wake_buffer_bytes -= len(old)
-                if getattr(self, "vosk_recognizer", None):
+                # VAD: en silencio NO alimentar Vosk (antes se llamaba 125x/s en
+                # silencio → un core al 100% y la UI inerte, clics sin efecto).
+                # El buffer sí se acumula (barato) para no perder el inicio.
+                _speech = False
+                try:
+                    if rms is not None:
+                        _win = getattr(self, "_wake_vad_win", None)
+                        if _win is None:
+                            _win = []
+                            self._wake_vad_win = _win
+                        _win.append(rms)
+                        if len(_win) > 4:
+                            _win.pop(0)
+                        _speech = sum(_win) / len(_win) > _WAKE_VAD_THRESHOLD
+                except Exception:
+                    _speech = True
+                if _speech and getattr(self, "vosk_recognizer", None):
                     if self.vosk_recognizer.AcceptWaveform(data):
                         res = json.loads(self.vosk_recognizer.Result())
                         text = res.get("text", "").lower()
@@ -2589,6 +2660,9 @@ class ErisLive:
                 mic_device_idx = resolve_mic()
             except Exception:
                 mic_device_idx = None
+            # Linux: muchos mics abren SOLO a su tasa nativa (48k BT / 44.1k
+            # analógico); el stream abre ahí y el callback resamplea a 16k.
+            mic_rate = mic_opened_rate() if mic_device_idx is not None else SEND_SAMPLE_RATE
             if mic_device_idx is not None:
                 try:
                     _mic_name = sd.query_devices(mic_device_idx)["name"]
@@ -2599,10 +2673,10 @@ class ErisLive:
             print(f"[ERIS] 🎤 Mic seleccionado: {mic_device_idx} {_mic_name}")
 
             _mic_kw = dict(
-                samplerate=SEND_SAMPLE_RATE,
+                samplerate=mic_rate,
                 channels=CHANNELS,
                 dtype="int16",
-                blocksize=CHUNK_SIZE,
+                blocksize=max(64, int(round(CHUNK_SIZE * mic_rate / SEND_SAMPLE_RATE))),
                 callback=callback,
             )
             try:

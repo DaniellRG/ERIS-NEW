@@ -15,7 +15,6 @@ Estructura cualquier tarea (chica o grande) en fases con método:
 Estado: memory/missions/<id>/mission.json (+ memory/missions/current.json).
 """
 import json
-import os
 import re
 import time
 from datetime import datetime
@@ -24,7 +23,6 @@ from pathlib import Path
 try:
     from core.code_guard import (
         _NODE_EXTS,
-        _changed_fraction,
         _run,
         _validate_file,
         _venv_python,
@@ -32,7 +30,6 @@ try:
 except Exception:  # import aislado en tests/módulo
     _NODE_EXTS = {".js", ".mjs", ".cjs"}
     from core.code_guard import (
-        _changed_fraction,
         _run,
         _validate_file,
         _venv_python,
@@ -193,7 +190,6 @@ def explore(proyecto: str = "", max_depth: int = 2, buscar: str = "") -> dict:
             parts.append(_read_excerpt(f))
     if buscar:
         parts.append(f"\n🔎 BÚSQUEDA: {buscar}")
-        import subprocess
         rg = _run(["rg", "-n", "-m", "15", buscar, str(base),
                    "-g", "!.venv/*", "-g", "!node_modules/*",
                    "-g", "!__pycache__/*", "-g", "!backups/*"], timeout=60)
