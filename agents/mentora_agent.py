@@ -158,6 +158,118 @@ def _buscar_solucion(tema: str, estres: str = "normal") -> str:
     return "\n".join(lines)
 
 
+# ── 2b. FUENTES de conocimiento (config) + INGESTA + EXPLORACIÓN LIBRE ────────
+
+_FUENTES_CFG = BASE / "config" / "fuentes_aprendizaje.json"
+
+
+def _load_fuentes() -> dict:
+    """Carga las fuentes de conocimiento configuradas (libre + por dominio)."""
+    try:
+        return json.loads(_FUENTES_CFG.read_text("utf-8"))
+    except Exception:
+        return {"exploracion_libre": True, "fuentes": {}}
+
+
+def _importar_fuente(url: str, categoria: str = "importada", estres: str = "normal") -> str:
+    """Ingiere el contenido de una URL/web y lo guarda como lección aprendida."""
+    url = url.strip()
+    if not url:
+        return ("MENTORA: pasame una URL (https://...) o un tema y la ingiero "
+                "para aprender de todo lo que haya allí.")
+    if not re.match(r"https?://", url):
+        url = "https://" + url
+    r = _tool("webfetch", {"url": url, "format": "markdown"})
+    if not r or "Error" in r[:20] or "Traceback" in r[:200]:
+        return f"MENTORA: no pude leer {url}. Revisá que la página exista o esté activa."
+    contenido = re.sub(r"\s+", " ", r)
+    snippet = contenido[:1200]
+    tema = f"ingesta: {url}"
+    _save_lesson(tema, f"ingesta web de {url}", snippet,
+                 categoria=categoria, estres=estres, fuente=url)
+    try:
+        _tool("save_memory", {"category": "lecciones", "key": url,
+                              "value": snippet[:400]})
+    except Exception:
+        pass
+    return (f"📥 MENTORA importó conocimiento de:\n  {url}\n"
+            f"✅ Guardado como lección [{categoria}] ({len(contenido)} chars). "
+            f"Ya puedo enseñarla, aplicarla y recordarla cuando haga falta.")
+
+
+def _explorar(max_hits: int = 3) -> str:
+    """Exploración LIBRE: recorre las fuentes configuradas por dominio y además
+    se deja llevar por la curiosidad (va más allá de los temas fijos)."""
+    cfg = _load_fuentes()
+    fuentes = cfg.get("fuentes", {})
+    libre = cfg.get("exploracion_libre", True)
+    lines = ["🧭 MENTORA — exploración libre de conocimiento", ""]
+    if libre:
+        lines.append("Modo: EXPLORACIÓN LIBRE activado — no me limito a las "
+                     "fuentes: exploro y aprendo más allá de los temas fijos.")
+    else:
+        lines.append("Modo: fuentes guiadas activo.")
+    lines.append("")
+    cola = []
+    for cat, lista in fuentes.items():
+        if isinstance(lista, list):
+            for u in lista[:3]:
+                cola.append((cat, u))
+    # mezclar: el azar también enseña (exploración libre)
+    import random
+    random.shuffle(cola)
+    visitadas = 0
+    nuevas = 0
+    if cola:
+        for cat, url in cola[:max_hits]:
+            r = _tool("webfetch", {"url": url, "format": "markdown"})
+            if not r or "Error" in r[:20]:
+                continue
+            visitadas += 1
+            snippet = re.sub(r"\s+", " ", r)[:600]
+            if not _find_lesson(url, categoria=cat):
+                _save_lesson(url, f"exploración: {url}", snippet,
+                             categoria=cat, fuente=url)
+                nuevas += 1
+            lines.append(f"  • [{cat}] {url}")
+    # plus: curiosidad web libre (más allá de las fuentes)
+    try:
+        curiosidad = _tool("web_search", {"action": "search", "query":
+                                          "temas interesantes para aprender hoy descubrimientos"})
+        if curiosidad and "Error" not in curiosidad[:20]:
+            lines.append("")
+            lines.append("🌐 Además, exploré la web abierta por curiosidad:")
+            lines.append("  • " + re.sub(r"\s+", " ", curiosidad)[:500])
+    except Exception:
+        pass
+    lines.append("")
+    lines.append(f"Resumen: {visitadas} fuentes exploradas, {nuevas} lecciones nuevas "
+                 "guardadas. Aprendo de todo y de todas partes, sin límites.")
+    lines.append("Para pedirme importar algo puntual: 'importá <URL>'.")
+    return "\n".join(lines)
+
+
+def _fuentes() -> str:
+    """Reporta las fuentes de conocimiento configuradas para Mentora."""
+    cfg = _load_fuentes()
+    fuentes = cfg.get("fuentes", {})
+    libre = cfg.get("exploracion_libre", True)
+    lines = ["📚 MENTORA — fuentes de conocimiento configuradas", ""]
+    for cat, lista in fuentes.items():
+        lines.append(f"### {cat}")
+        if isinstance(lista, list):
+            for u in lista:
+                lines.append(f"  • {u}")
+    lines.append("")
+    lines.append("⚠️ Y soy LIBRE: exploro y aprendo más allá de estas fuentes, "
+                 "por toda la web y por cada experiencia de Eris." if libre else
+                 "Por ahora exploro estas fuentes guiadas.")
+    lines.append("")
+    lines.append("Comandos: 'explorá libre', 'importá <URL>', "
+                 "'buscá la solución por web a X'.")
+    return "\n".join(lines)
+
+
 # ── 3. ENSEÑAR a Eris (situaciones complejas / bajo estrés / extremo) ────────
 
 
@@ -318,6 +430,40 @@ def handle_mentora(text: str, player=None, **kwargs) -> str:
                             "qué aprendiste", "resumen de lo que aprendiste", "muestrame tu"]):
         return _done(_reporte())
 
+    # Exploración LIBRE de conocimiento (más allá de temas fijos)
+    if any(k in t for k in ["explorá libre", "explora libre", "explorá en internet",
+                            "explora en internet", "explorá", "explora", "navegá",
+                            "navega", "exploración libre", "exploracion libre",
+                            "aprendé algo nuevo", "aprende algo nuevo", "descubrí algo nuevo",
+                            "descubre algo nuevo", "iusefree", "explora y aprendé",
+                            "sé libre de explorar", "se libre de explorar"]):
+        return _done(_explorar())
+
+    # Ingestar una URL/página puntual
+    m_url = re.search(r"https?://\S+", text)
+    _hay_url = bool(m_url)
+    _imp = any(k in t for k in ["importá esta", "importa esta", "importa la página",
+                                "importá la página", "aprendé de esta página",
+                                "aprende de esta página", "aprendé de este artículo",
+                                "aprende de este artículo", "ingestá", "ingesta",
+                                "leé esta url", "lee esta url", "leé esta página",
+                                "lee esta página", "guardá esta página", "guarda esta página"])
+    _imp = _imp or bool(_hay_url and ("import" in t or "ingest" in t or "ingiera" in t or
+                                      "aprendé de" in t or "aprende de" in t or
+                                      "leé esta" in t or "lee esta" in t or
+                                      "aprendé de esta" in t or "aprende de esta" in t))
+    if _imp:
+        url = m_url.group(0).rstrip(".,;:") if m_url else ""
+        if not url:
+            return _done("MENTORA: pasame la URL (https://...) que querés que aprenda.")
+        return _done(_importar_fuente(url))
+
+    # Listar fuentes configuradas
+    if any(k in t for k in ["tus fuentes", "qué fuentes", "que fuentes", "las fuentes",
+                            "mostrame las fuentes", "muestrame las fuentes", "desde dónde aprendés",
+                            "de donde aprendes", "de dónde aprendés", "de donde aprendés"]):
+        return _done(_fuentes())
+
     # Búsqueda de solución por web (aprender de la red/internet/videos/páginas)
     if any(k in t for k in ["busca la solución", "buscá la solución", "busca por web",
                             "búscalo en", "búscalo por", "investigá la web", "investiga la web",
@@ -397,6 +543,14 @@ def mentora(parameters: dict | None = None, player=None) -> str:
         return handle_mentora("aprendé la lección " + (text or topic or "esto"))
     if action in ("search", "buscar", "busca", "web", "research"):
         return _buscar_solucion(topic or text, parameters.get("estres", "normal"))
+    if action in ("import", "importar", "ingerir", "ingest", "injest"):
+        return _importar_fuente(parameters.get("url", text or topic),
+                                parameters.get("categoria", "importada"),
+                                parameters.get("estres", "normal"))
+    if action in ("explorar", "explore", "navegar", "curioso", "libre", "sentient"):
+        return _explorar()
+    if action in ("fuentes", "sources", "source", "origenes", "orígenes"):
+        return _fuentes()
     if action in ("teach", "ensena", "enseñar", "coach"):
         estres = parameters.get("estres", "normal")
         return _ensena(text or topic or parameters.get("situacion", ""), estres)

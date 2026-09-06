@@ -1,0 +1,61 @@
+{
+  "exploracion_libre": true,
+  "fuentes": {
+    "programacion": [
+      "https://raw.githubusercontent.com/EbookFoundation/free-programming-books/main/README.md",
+      "https://github.com/sindresorhus/awesome",
+      "https://github.com/tuvtran/project-based-learning",
+      "https://developer.mozilla.org/es/docs/Web",
+      "https://www.freecodecamp.org/news/",
+      "https://github.com/donnemartin/system-design-primer",
+      "https://www.geeksforgeeks.org/",
+      "https://www.tutorialspoint.com/",
+      "https://www.w3schools.com/",
+      "https://ocw.mit.edu/search/?f=Course%20Number&g=6\\.00"
+    ],
+    "ciencia": [
+      "https://es.wikipedia.org/wiki/Especial:LoQueEnlazaAqu%C3%AD",
+      "https://www.khanacademy.org/",
+      "https://es.khanacademy.org/",
+      "https://ocw.mit.edu/",
+      "https://arxiv.org/",
+      "https://pubmed.ncbi.nlm.nih.gov/",
+      "https://www.britannica.com/",
+      "https://es.wikibooks.org/",
+      "https://es.wikiversity.org/"
+    ],
+    "inteligencia_artificial": [
+      "https://github.com/sindresorhus/awesome#machine-learning",
+      "https://arxiv.org/list/cs.AI/recent",
+      "https://huggingface.co/datasets",
+      "https://paperswithcode.com/",
+      "https://www.kaggle.com/datasets",
+      "https://github.com/trending?since=daily&spoken_language_code=es",
+      "https://github.com/huggingface/blog",
+      "https://huggingface.co/blog"
+    ],
+    "conocimiento_general": [
+      "https://es.wikipedia.org/wiki/Portal:Actualidad",
+      "https://es.wikibooks.org/wiki/Portada",
+      "https://es.wikiversity.org/wiki/Portada",
+      "https://curlie.org/",
+      "https://www.britannica.com/",
+      "https://es.wikinews.org/",
+      "https://www.worldcat.org/",
+      "https://openstax.org/subjects"
+    ],
+    "videos_tutoriales": [
+      "https://www.youtube.com/",
+      "https://ocw.mit.edu/",
+      "https://www.khanacademy.org/",
+      "https://www.freecodecamp.org/news/"
+    ],
+    "datasets_ingesta": [
+      "https://huggingface.co/datasets",
+      "https://www.kaggle.com/datasets",
+      "https://datasetsearch.research.google.com/",
+      "https://es.wikipedia.org/wiki/Wikipedia:Base_de_datos",
+      "https://opendata.europa.eu/"
+    ]
+  }
+}
