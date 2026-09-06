@@ -330,7 +330,14 @@ def _build_agent_router():
             _registered += 1
         except Exception:
             pass
-        print(f"[AgentRouter] {_registered}/10 handlers activos")
+        # 11. GUARDIAN — SAMX: supervisor de autocuidado de ERIS (detecta y repara anomalías)
+        try:
+            from agents.guardiana_agent import handle_guardian
+            router.register_handler("guardian", handle_guardian)
+            _registered += 1
+        except Exception:
+            pass
+        print(f"[AgentRouter] {_registered}/11 handlers activos")
     except Exception as e:
         print(f"[AgentRouter] init fallo: {e}")
     return router
@@ -532,6 +539,18 @@ class ErisLive:
                 print("[ERIS] 🧰 Mantenimiento proactivo iniciado (backups/limpieza/reportes)")
         except Exception as _me:
             print(f"[ERIS] Mantenimiento init: {_me}")
+        # ── Guardiana: supervigilancia continua de ERIS ──
+        # Vigila su salud, detecta y repara anomalías SOLO cuando algo se rompe, sin
+        # pisar los loops de evolución/autocuidado/mantenimiento ya activos.
+        try:
+            def _run_guardian_supervision():
+                time.sleep(300)  # diferir: deja cargar UI + evolución/autocuidado
+                from agents.guardiana_agent import _guardian_watch
+                _guardian_watch()  # bucle que chequea y repara, dentro del daemon
+            threading.Thread(target=_run_guardian_supervision, daemon=True).start()
+            print("[ERIS] 🛡️ Guardiana: supervigilancia continua iniciada")
+        except Exception as _ge:
+            print(f"[ERIS] Guardiana init: {_ge}")
         # Auto-descubrir plugins
         if get_plugin_manager:
             try:
@@ -888,6 +907,19 @@ class ErisLive:
                     pass  # Dejar que Gemini Live responda directamente
                 else:
                     agent_key = self._agent_router.classify_intent(text)
+                    # Guardian: delegar peticiones de autocuidado/salud/reparación de Eris
+                    if agent_key and agent_key == "guardian":
+                        handler = self._agent_router._handlers.get(agent_key)
+                        if handler:
+                            if self.ui:
+                                self.ui.set_state("THINKING")
+                                self.ui.write_log("SYS: delegando a guardiana (autocuidado de Eris)...")
+                            threading.Thread(
+                                target=self._run_agent_handoff,
+                                args=(agent_key, handler, text),
+                                daemon=True,
+                            ).start()
+                            return
                     # Agenlix: delegar dominios Linux (terminal, paquetes, input,
                     # ocr, media, git, mantenimiento, celular) al fragmento Linux
                     if agent_key and agent_key == "linux":

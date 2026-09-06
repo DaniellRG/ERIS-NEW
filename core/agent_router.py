@@ -309,6 +309,30 @@ AGENT_DEFINITIONS = {
             "system_monitor", "network_monitor", "file_api",
         ],
     },
+
+    # ── 11. GUARDIAN — SAMX: autocuidado continuo de ERIS ──
+    "guardian": {
+        "name": "GuardianaAgent",
+        "description": "SAMX: el supervisor de autocuidado de ERIS. Vigila su salud 24/7 y repara automaticamente bugs, errores, fallos, duplicados, imports rotos y codigo mal, con backup + validacion + rollback, para mantenerla limpia, estable y al 100%.",
+        "keywords": [
+            "guardiana", "samx", "autocuidado", "cuidame", "cuida a eris",
+            "repará", "repara", "reparar", "arreglá", "arregla", "corrigí", "corregí",
+            "arregla los errores", "corrige los errores", "revisá mi salud", "revisa mi salud",
+            "estoy rota", "hay problemas", "revisá todo", "auditoría de salud",
+            "salud de eris", "revisá si hay errores", "detección de bugs",
+            "reducir duplicados", "mantené a eris", "mantenla estable", "mantenla limpia",
+            "supervisión continua", "vigila siempre", "siempre pendiente",
+            "code review de eris", "mantenimiento de eris", "revisá mi código",
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "youtube", "email", "calendario", "navegador",
+            "web", "juego", "pelicula", "imagen", "video youtube",
+        ],
+        "tools": [
+            "guardiana", "evolucion", "self_healing", "code_guard", "codebase_explorer",
+            "auto_healer", "maintenance", "system_health", "self_evolution",
+        ],
+    },
 }
 
 # ── Registry management ───────────────────────────────────────────────────────

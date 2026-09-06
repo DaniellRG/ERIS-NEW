@@ -7226,6 +7226,15 @@ TOOL_DECLARATIONS.extend([
             "task": {"type": "STRING", "description": "Tarea Linux a delegar a Agenlix"},
         }, "required": ["action"]},
     },
+    {
+        "name": "guardiana",
+        "description": "GUARDIANA (SAMX): el supervisor de autocuidado de ERIS. Vigila su salud 24/7, detecta y repara automaticamente anomalias: bugs, errores, fallos, duplicados, imports rotos, codigo mal y sucio, con backup + validacion + rollback para mantener a Eris limpia, estable y al 100%. Acciones: check (auditoria de salud de tools/sync/imports/mantenimiento), repair (corrige anomalias; targets=dominios a reparar separados por coma), supervise (supervision continua), status (estado del autocuidado/watchdog), help.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "check, repair, supervise, status, help"},
+            "targets": {"type": "STRING", "description": "Dominios a reparar (ej: tools, codigo, imports) separados por coma"},
+            "interval": {"type": "INTEGER", "description": "Segundos entre chequeos en supervision continua"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7311,6 +7320,8 @@ _LIVE_NAMES = {
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
     # Agenlix — fragmento Linux de Eris
     "agelix",
+    # Guardiana — supervisor de autocuidado de ERIS
+    "guardiana",
 }
 LIVE_TOOL_DECLARATIONS = [
     t for t in TOOL_DECLARATIONS if t.get("name") in _LIVE_NAMES

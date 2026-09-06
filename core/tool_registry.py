@@ -392,6 +392,7 @@ _TOOLS = {
     "media_lab":             ("actions.media_lab", "media_lab"),
     "git_autonomo":          ("actions.git_autonomo", "git_autonomo"),
     "agelix":                ("agents.agenlix_agent", "agelix"),
+    "guardiana":             ("agents.guardiana_agent", "guardiana"),
     "memory_unified":        ("core.memory_unified", "get_memory"),
     "task_engine":           ("core.task_engine", "TaskEngine"),
     "permission_gate":       ("core.permission_gate", "get_permission_gate"),

@@ -18,9 +18,9 @@
 - main.py: Inicializa UI PyQt6, conecta Gemini Live API, voice loop, tool dispatcher, proactive thread, ciclo de reconexión resiliente
 
 ### Core (core/) — módulos de cerebro y plataforma
-- tool_declarations.py: **457 schemas de herramientas** para Gemini Function Calling (subconjunto priorizado <=120 por request)
+- tool_declarations.py: **458 schemas de herramientas** para Gemini Function Calling (subconjunto priorizado <=120 por request)
 - tool_dispatcher.py: Despachador que ejecuta tool calls via ThreadPoolExecutor
-- tool_registry.py: Registro lazy-loading de **457 tools**, imports bajo demanda
+- tool_registry.py: Registro lazy-loading de **458 tools**, imports bajo demanda
 - agent_router.py: Enrutador multi-agente con weighted scoring + penalty keywords (~343 líneas)
 - self_map.py: ERIS conoce TODA su estructura de archivos (~543 líneas)
 - prompt_loader.py: Carga prompt.txt con identidad y reglas
@@ -188,9 +188,9 @@ Tengo 6 etapas de relación (stranger → companion). 7 dimensiones emocionales 
 |---|---|
 | main.py | Corazón: conexión Gemini, UI, ciclo de vida |
 | ui.py | Interfaz PyQt6: orbo, settings, logs |
-| core/tool_declarations.py | 457 schemas de herramientas para Gemini (subconjunto <=120 por request) |
+| core/tool_declarations.py | 458 schemas de herramientas para Gemini (subconjunto <=120 por request) |
 | core/tool_dispatcher.py | Despachador que ejecuta mis tools |
-| core/tool_registry.py | Registro lazy-loading de 457 tools |
+| core/tool_registry.py | Registro lazy-loading de 458 tools |
 | core/agent_router.py | Enrutador multi-agente |
 | core/audio_config.py | Config de audio y voces |
 | core/prompt.txt | Mi system prompt (identidad y reglas) |

@@ -10,6 +10,7 @@ from agents.productivity_agent import handle_productivity
 from agents.dev_agent import handle_dev
 from agents.studies_agent import handle_studies
 from agents.agenlix_agent import handle_linux
+from agents.guardiana_agent import handle_guardian
 
 __all__ = [
     "handle_vision",
@@ -21,4 +22,5 @@ __all__ = [
     "handle_dev",
     "handle_studies",
     "handle_linux",
+    "handle_guardian",
 ]
