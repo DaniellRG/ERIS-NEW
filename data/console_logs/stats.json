@@ -1,14 +1,18 @@
 {
   "errors": {
     "tool_dispatcher": {
-      "count": 1,
-      "last": "2026-08-19T22:43:21.976386"
+      "count": 3,
+      "last": "2026-09-05T19:42:57.861482"
     }
   },
   "tool_calls": {
     "web_search": {
       "count": 1,
       "last": "2026-08-19T22:43:21.983501"
+    },
+    "ide_integration": {
+      "count": 2,
+      "last": "2026-09-05T19:42:57.861882"
     }
   }
 }

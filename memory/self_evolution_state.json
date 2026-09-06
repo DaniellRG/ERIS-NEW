@@ -1,6 +1,130 @@
 {
-  "last_fix_time": 1787934660.368108,
-  "last_fix": "core\\code_guard.py",
-  "last_fix_when": "2026-08-28 11:31:00",
-  "last_tick": "2026-08-28 11:31:00"
+  "last_health": "2026-09-05 22:37:32",
+  "total": 450,
+  "ok": 450,
+  "broken": [],
+  "last_tick": "2026-09-06 07:45:27",
+  "last_care": 1788699186.698213,
+  "last_care_summary": "todo en orden",
+  "care_history": [
+    {
+      "ts": "2026-09-05 23:02:22",
+      "deep": true,
+      "fixed": [],
+      "pendientes": [
+        "vault",
+        "deps"
+      ]
+    },
+    {
+      "ts": "2026-09-05 23:02:25",
+      "deep": true,
+      "fixed": [
+        "vault",
+        "deps"
+      ],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:04:39",
+      "deep": true,
+      "fixed": [
+        "vault",
+        "sync"
+      ],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:07:02",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:09:17",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:17:17",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:37:38",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:45:34",
+      "deep": true,
+      "fixed": [
+        "estado_json"
+      ],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-05 23:53:34",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:02:25",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:06:58",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:12:01",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:20:01",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:23:48",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 00:31:48",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 07:37:27",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 07:45:27",
+      "deep": false,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 07:53:06",
+      "deep": true,
+      "fixed": [],
+      "pendientes": []
+    }
+  ]
 }

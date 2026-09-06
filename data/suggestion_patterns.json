@@ -1039,6 +1039,12 @@
       "action": "tool:web_search",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:web_search",
+      "action": "tool:web_search",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "emotional_state": [
@@ -1131,9 +1137,39 @@
       "action": "tool:emotional_state",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:emotional_state",
+      "action": "tool:emotional_state",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "morning_brief": [
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:morning_brief",
       "action": "tool:morning_brief",
@@ -2309,6 +2345,54 @@
       "action": "tool:ide_integration",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:ide_integration",
+      "action": "tool:ide_integration",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "desktop_control": [
@@ -2357,6 +2441,12 @@
       "action": "tool:self_awareness",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:self_awareness",
+      "action": "tool:self_awareness",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "image_analyzer": [
@@ -2368,6 +2458,18 @@
     }
   ],
   "terminal_agent": [
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:terminal_agent",
+      "action": "tool:terminal_agent",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:terminal_agent",
       "action": "tool:terminal_agent",
@@ -2457,6 +2559,24 @@
       "action": "tool:contextual_awareness",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:contextual_awareness",
+      "action": "tool:contextual_awareness",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:contextual_awareness",
+      "action": "tool:contextual_awareness",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:contextual_awareness",
+      "action": "tool:contextual_awareness",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "project_builder": [
@@ -2491,6 +2611,30 @@
     {
       "suggestion": "tool:meta_communication",
       "action": "tool:meta_communication",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "system_monitor": [
+    {
+      "suggestion": "tool:system_monitor",
+      "action": "tool:system_monitor",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "self_improvement_loop": [
+    {
+      "suggestion": "tool:self_improvement_loop",
+      "action": "tool:self_improvement_loop",
+      "priority": 2,
+      "source": "learned"
+    }
+  ],
+  "emotional_memory": [
+    {
+      "suggestion": "tool:emotional_memory",
+      "action": "tool:emotional_memory",
       "priority": 2,
       "source": "learned"
     }

@@ -1,0 +1,86 @@
+[
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": true,
+    "reason": "no_ui",
+    "time": "2026-09-05 22:24:47"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": false,
+    "reason": "denied_by_policy",
+    "time": "2026-09-05 22:25:52"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": false,
+    "reason": "denied_by_policy",
+    "time": "2026-09-05 22:25:52"
+  },
+  {
+    "tool": "git_control",
+    "params_preview": "{'action': 'force_push'}",
+    "allowed": true,
+    "reason": "no_ui",
+    "time": "2026-09-05 22:25:52"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": false,
+    "reason": "denied_by_policy",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": false,
+    "reason": "denied_by_policy",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "git_control",
+    "params_preview": "{'action': 'force_push'}",
+    "allowed": true,
+    "reason": "user",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "git_control",
+    "params_preview": "{'action': 'force_push'}",
+    "allowed": false,
+    "reason": "user",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "git_control",
+    "params_preview": "{'action': 'force_push'}",
+    "allowed": true,
+    "reason": "trusted_session",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "git_control",
+    "params_preview": "{'action': 'force_push'}",
+    "allowed": false,
+    "reason": "user",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": true,
+    "reason": "user",
+    "time": "2026-09-05 22:26:07"
+  },
+  {
+    "tool": "shutdown_eris",
+    "params_preview": "{}",
+    "allowed": false,
+    "reason": "user",
+    "time": "2026-09-05 22:26:07"
+  }
+]

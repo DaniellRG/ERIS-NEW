@@ -106,22 +106,29 @@ def _sample_has_audio(idx: int | None, rate: int) -> bool:
         return False
 
 
-def _mic_rate_for(idx: int | None) -> int | None:
+def _mic_rate_for(idx: int | None, require_energy: bool | None = None) -> int | None:
     """Tasa a la que el mic funciona DE VERDAD: 16k si trae audio; si no, la nativa.
 
     En Linux/ALSA muchos mics físicos (Bluetooth/analógico) rechazan 16 kHz y
     solo abren a su tasa nativa; los agregadores virtuales abren a 16k pero
-    capturan silencio. Se verifica con energía de audio, no solo apertura.
+    capturan silencio. require_energy=True exige señal real (para descartar
+    virtuales muertos); con False basta con que ABRA (el BT dormido entrega
+    ceros pero se despierta al abrir el stream). Real por defecto = exigir
+    energía a los virtuales y solo apertura a los físicos.
     """
     if idx is None:
         return None
-    if _can_open_mic(idx, SEND_SAMPLE_RATE) and _sample_has_audio(idx, SEND_SAMPLE_RATE):
+    if require_energy is None:
+        require_energy = bool(_is_virtual(idx))
+    if _can_open_mic(idx, SEND_SAMPLE_RATE) and (
+        not require_energy or _sample_has_audio(idx, SEND_SAMPLE_RATE)):
         return SEND_SAMPLE_RATE
     try:
         native = int(_cached_devices()[idx]["default_samplerate"])
     except Exception:
         native = 0
-    if native > 0 and _can_open_mic(idx, native) and _sample_has_audio(idx, native):
+    if native > 0 and _can_open_mic(idx, native) and (
+        not require_energy or _sample_has_audio(idx, native)):
         return native
     return None
 
@@ -259,8 +266,28 @@ def resolve_mic() -> int | None:
         cfg = load_api_keys() or {}
     except Exception:
         pass
+    # Pass 1: con energía real AHORA (el mic que de verdad escucha). Nunca virtuales.
     for idx in _ordered_candidates("input", cfg):
-        rate = _mic_rate_for(idx)
+        if _is_virtual(idx):
+            continue
+        rate = _mic_rate_for(idx, require_energy=True)
+        if rate is not None:
+            try:
+                if cfg.get("mic_device") != idx or cfg.get("mic_device_rate") != rate:
+                    cfg["mic_device"] = idx
+                    cfg["mic_device_name"] = _device_name(idx)
+                    cfg["mic_device_rate"] = rate
+                    save_api_keys(cfg)
+            except Exception:
+                pass
+            return idx
+    # Pass 2: mic físico que ABRA aunque esté dormido (BT entrega ceros al
+    # arrancar pero se despierta al abrir el stream). Evita caer al `default`
+    # virtual que captura silencio y tumba la voz.
+    for idx in _ordered_candidates("input", cfg):
+        if _is_virtual(idx):
+            continue
+        rate = _mic_rate_for(idx, require_energy=False)
         if rate is not None:
             try:
                 if cfg.get("mic_device") != idx or cfg.get("mic_device_rate") != rate:

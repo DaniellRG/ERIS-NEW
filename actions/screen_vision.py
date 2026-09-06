@@ -57,25 +57,33 @@ def _get_openrouter_model() -> str:
 def _capture_screen_base64() -> str:
     """
     Captura la pantalla principal, la redimensiona/comprime y la devuelve en base64.
+    Wayland/Linux: grim (soporte nativo Hyprland). Windows y fallback: mss.
     """
-    with mss() as sct:
-        monitor = sct.monitors[0] # All monitors combined
-        screenshot = sct.grab(monitor)
-        
-        # Convertir a imagen de Pillow
-        img = Image.frombytes("RGB", screenshot.size, screenshot.bgra, "raw", "BGRX")
-        
-        # Redimensionar si es muy grande para ahorrar tokens/ancho de banda
-        max_size = (1280, 720)
-        img.thumbnail(max_size, Image.Resampling.BILINEAR)
-        
-        # Guardar en buffer en memoria como JPEG
-        buffer = io.BytesIO()
-        img.save(buffer, format="JPEG", quality=65)
-        
-        # Codificar a base64
-        img_b64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-        return img_b64
+    import os
+    import subprocess
+    import shutil
+    img = None
+    if os.name != "nt":
+        grim = shutil.which("grim")
+        if grim:
+            try:
+                r = subprocess.run([grim, "-t", "jpeg", "-q", "70", "-"],
+                                   capture_output=True, timeout=15)
+                if r.returncode == 0 and r.stdout:
+                    img = Image.open(io.BytesIO(r.stdout))
+            except Exception:
+                img = None
+    if img is None:
+        with mss() as sct:
+            monitor = sct.monitors[0]  # All monitors combined
+            screenshot = sct.grab(monitor)
+            img = Image.frombytes("RGB", screenshot.size, screenshot.bgra,
+                                  "raw", "BGRX")
+    # Redimensionar si es muy grande para ahorrar tokens/ancho de banda
+    img.thumbnail((1280, 720), Image.Resampling.BILINEAR)
+    buffer = io.BytesIO()
+    img.save(buffer, format="JPEG", quality=65)
+    return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
 def _analyze_with_ollama(b64_image: str, query: str) -> str:
     """Analiza imagen usando Ollama local (sin internet)."""

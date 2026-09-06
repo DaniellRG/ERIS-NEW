@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "title": "ERIS Test",
-    "message": "Esta es una notificacion de prueba. Si la ves, funciona!",
+    "title": "ERIS · prueba",
+    "message": "soy yo, probando mis manos",
     "priority": "normal",
     "category": "general",
     "silent": false,
-    "timestamp": "2026-09-05T10:42:37.286346",
+    "timestamp": "2026-09-05T23:14:09.357945",
     "delivered": true
   }
 ]

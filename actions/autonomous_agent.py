@@ -28,32 +28,88 @@ def _get_openrouter_key():
         return ""
 
 def capture_screen_b64() -> str:
-    """Captura TODAS las pantallas (multi-monitor)."""
+    """Captura TODAS las pantallas (multi-monitor).
+    Wayland/Linux: grim (nativo Hyprland). Windows/fallback: mss."""
+    import os as _os
+    import shutil as _shutil
+    import subprocess as _sp
     try:
-        from mss import mss
         from PIL import Image
-        with mss() as sct:
-            monitor = sct.monitors[0]
-            raw = sct.grab(monitor)
-            img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
-            w, h = img.size
-            if max(w, h) > 1024:
-                ratio = 1024 / max(w, h)
-                img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
-            buf = io.BytesIO()
-            img.save(buf, format="JPEG", quality=70)
-            return base64.b64encode(buf.getvalue()).decode()
+        img = None
+        if _os.name != "nt":
+            grim = _shutil.which("grim")
+            if grim:
+                try:
+                    r = _sp.run([grim, "-t", "jpeg", "-q", "85", "-"],
+                                capture_output=True, timeout=15)
+                    if r.returncode == 0 and r.stdout:
+                        img = Image.open(io.BytesIO(r.stdout))
+                except Exception:
+                    img = None
+        if img is None:
+            from mss import mss
+            with mss() as sct:
+                monitor = sct.monitors[0]
+                raw = sct.grab(monitor)
+                img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
+        w, h = img.size
+        if max(w, h) > 1024:
+            ratio = 1024 / max(w, h)
+            img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=70)
+        return base64.b64encode(buf.getvalue()).decode()
     except Exception as e:
         return f"Error captura: {e}"
 
 def capture_region_b64(left: int, top: int, width: int, height: int) -> str:
     """Captura SOLO la región indicada (píxeles de pantalla), recortada contra
-    el monitor que la contiene. Resize a máx 1024."""
+    el monitor que la contiene. Resize a máx 1024.
+    Wayland/Linux: grim -g. Windows y fallback: mss."""
+    import os as _os
+    import base64
+    import io
+    import shutil
+    import subprocess
+    from PIL import Image
+    if width <= 0 or height <= 0:
+        return "Error captura: región inválida"
     try:
+        if _os.name != "nt":
+            grim = shutil.which("grim")
+        if _os.name != "nt" and grim:
+            # grim -g no es fiable en algunos Hyprland: capturo el monitor
+            # completo y recorto (con el scale del output) en Python.
+            scale = 1.0
+            import json as _json
+            try:
+                mr = subprocess.run(["hyprctl", "-j", "monitors"],
+                                    capture_output=True, text=True, timeout=6)
+                cx, cy = left + int(width / 2), top + int(height / 2)
+                for m in _json.loads(mr.stdout or "[]"):
+                    bx, by = m.get("x", 0), m.get("y", 0)
+                    bw, bh = m.get("width", 0), m.get("height", 0)
+                    if bx <= cx < bx + bw and by <= cy < by + bh:
+                        scale = float(m.get("scale") or 1.0)
+                        break
+            except Exception:
+                pass
+            cap = subprocess.run([grim, "-t", "jpeg", "-q", "85", "-"],
+                                 capture_output=True, timeout=15)
+            if cap.returncode == 0 and cap.stdout:
+                img = Image.open(io.BytesIO(cap.stdout))
+                img = img.crop((
+                    max(0, int(left * scale)), max(0, int(top * scale)),
+                    int((left + width) * scale), int((top + height) * scale)))
+                w, h = img.size
+                if max(w, h) > 1024:
+                    ratio = 1024 / max(w, h)
+                    img = img.resize((int(w * ratio), int(h * ratio)),
+                                     Image.Resampling.BILINEAR)
+                buf = io.BytesIO()
+                img.save(buf, format="JPEG", quality=70)
+                return base64.b64encode(buf.getvalue()).decode("utf-8")
         from mss import mss
-        from PIL import Image
-        if width <= 0 or height <= 0:
-            return "Error captura: región inválida"
         with mss() as sct:
             monitors = sct.monitors
             target = monitors[0]  # fallback: todas las pantallas

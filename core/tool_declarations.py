@@ -1209,6 +1209,18 @@ TOOL_DECLARATIONS = [
         }
     },
     {
+        "name": "undo",
+        "description": "Patrón /undo de opencode: restaura el estado previo de archivos antes de una operación de escritura/edición (backup automático tomado por el dispatcher). Acciones: undo (restaurar la más reciente), undo_n (con n=índice, 1 = la más reciente), list (historial con n=cuántas), stats (resumen).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "undo, undo_n, list, stats"},
+                "n": {"type": "INTEGER", "description": "Índice para undo_n o cantidad para list (default 1/10)"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
         "name": "self_modify",
         "description": "Modifica el propio codigo de ERIS para anadir nuevas capacidades o corregir bugs. Lee el archivo, aplica el cambio con reemplazo exacto, verifica sintaxis y reporta el diff. Acciones: modify (modificar con backup automatico), add_function (agregar nueva funcion a un archivo), add_import (agregar import a un archivo), read_first (leer antes de modificar).",
         "parameters": {
@@ -1728,17 +1740,17 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "shell_executor",
-        "description": "Ejecuta comandos reales de terminal (CMD/PowerShell). Acciones: run_cmd, run_ps, run, elevated (admin UAC), open (abrir app/carpeta/URL), win_r, shell_execute, preview, list_history, clear, info. Parametros: command, target, shell, timeout (max 120), elevated/admin.",
+        "description": "Ejecuta comandos reales de terminal (bash en Linux, CMD/PowerShell en Windows), con sesion PERSISTENTE: el 'cd' se mantiene entre llamadas. Acciones: run, run_cmd, run_ps, elevated (sudo/admin), open (abrir app/carpeta/URL con xdg-open o start), preview (HTML en navegador), win_r (solo Windows), shell_execute, list_history, clear, info, session_info, session_reset. Eris puede moverse por carpetas, leer/escribir/borrar archivos e instalar programas (apt/pip/npm) desde aqui. Parametros: command, target, shell (bash|powershell|cmd, auto en Linux), timeout (max 120), elevated/admin.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "run_cmd | run_ps | run | elevated | open | win_r | shell_execute | preview | list_history | clear | info"},
+                "action": {"type": "STRING", "description": "run | run_cmd | run_ps | elevated | open | win_r | shell_execute | preview | list_history | clear | info | session_info | session_reset"},
                 "command": {"type": "STRING", "description": "Comando a ejecutar"},
                 "cmd": {"type": "STRING", "description": "Alias de command"},
                 "target": {"type": "STRING", "description": "App/carpeta/URL/archivo a abrir (para open/win_r/shell_execute/preview)"},
-                "shell": {"type": "STRING", "description": "powershell (default) | cmd"},
+                "shell": {"type": "STRING", "description": "auto (default) | bash | powershell | cmd"},
                 "timeout": {"type": "INTEGER", "description": "Timeout en segundos (max 120, default 30)"},
-                "elevated": {"type": "BOOLEAN", "description": "Ejecutar como admin via UAC"},
+                "elevated": {"type": "BOOLEAN", "description": "Ejecutar elevado (sudo en Linux, admin UAC en Windows)"},
                 "admin": {"type": "BOOLEAN", "description": "Alias de elevated"},
             },
             "required": ["action"],
@@ -3713,11 +3725,11 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "system_reader",
-        "description": "Deep PC state: sensors, network (con interfaces y conexiones detalladas), disks, battery, advisory (recomendaciones de salud del sistema).",
+        "description": "Deep PC state: sensors, network (con interfaces y conexiones detalladas), disks, battery, advisory (recomendaciones de salud del sistema). Acción 'platform': autoconciencia del SO — SO/distro/kernel/escritorio/display/audio y mapa de herramientas de control disponibles (pactl, wpctl, hyprctl, brightnessctl, grim, notify-send, nmcli, rfkill, ydotool...) con las tools ERIS asociadas. Úsala tras migrar de sistema para re-adaptarte.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "status, top_processes, disks, network, sensors, deep, advisory"},
+                "action": {"type": "STRING", "description": "status, top_processes, disks, network, sensors, deep, advisory, platform"},
                 "detail": {"type": "STRING", "description": "normal | verbose (nivel de detalle, aplica a network)"},
             },
             "required": ["action"],
@@ -4499,17 +4511,18 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "evolucion",
-        "description": "LA evolución continua de ERIS: su autoconocimiento vivo y su bucle que nunca se estanca. 1) status: estado de la evolución (último tick, micro-fixes, salud); 2) health: auditoría REAL de que TODAS las tools declaradas importan y resuelven (447/447); 3) inventory: regenera su mapa de capacidades (eris_inventario_vivo.md) y lo espeja en Obsidian (Tools/); 4) rectify: normaliza conteos de tools en prompt/README/AGENTS y refresca el inventario; 5) sync: espeja estado/inventario/evolución en Obsidian (Tools/, Memoria/, Logs/); 6) evolve: UN PASO de evolución — aplica una micro-mejora certera sobre su propio código (quita imports sin uso con backup + validación + rollback) o consolida su autoconocimiento; 7) tick: dispara el ciclo de evolución como el hilo de fondo; 8) learn (titulo, contenido): guarda lo aprendido en Obsidian (Aprendizaje/); 9) log (tag, lineas): deja huella en Logs/Evolución. Todo lo que aprende y hace queda espejado en el vault de Obsidian.",
+        "description": "LA evolución continua de ERIS: su autoconocimiento vivo y su bucle que nunca se estanca. 1) status: estado de la evolución (último tick, micro-fixes, salud); 2) health: auditoría REAL de que TODAS las tools declaradas importan y resuelven (447/447); 3) inventory: regenera su mapa de capacidades (eris_inventario_vivo.md) y lo espeja en Obsidian (Tools/); 4) rectify: normaliza conteos de tools en prompt/README/AGENTS y refresca el inventario; 5) sync: espeja estado/inventario/evolución en Obsidian (Tools/, Memoria/, Logs/); 6) evolve: UN PASO de evolución — aplica una micro-mejora certera sobre su propio código (quita imports sin uso con backup + validación + rollback) o consolida su autoconocimiento; 7) tick: dispara el ciclo de evolución como el hilo de fondo; 8) learn (titulo, contenido): guarda lo aprendido en Obsidian (Aprendizaje/); 9) log (tag, lineas): deja huella en Logs/Evolución. 10) care (audit_only): AUTOCUIDADO — revisa SUS pilares (vault Obsidian, knowledge, config api_keys, sync de tools, logs, estado JSON, deps pip) y se autoconfigura sola lo roto/faltante: crea directorios/archivos, quita BOM, repara JSON, instala deps, sanea; 11) autocare: autocuidado PROFUNDO forzado (como el que corre al arranque). Todo lo que aprende y hace queda espejado en el vault de Obsidian.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "status, health, inventory, rectify, sync, evolve, tick, learn, log"},
+                "action": {"type": "STRING", "description": "status, health, inventory, rectify, sync, evolve, care (autocuidado; con audit_only audita sin arreglar), autocare, tick, learn, log"},
                 "dry_run": {"type": "BOOLEAN", "description": "con evolve: solo previsualiza sin tocar archivos"},
                 "targets": {"type": "ARRAY", "description": "con evolve: lista de archivos a revisar (default: sus propios módulos core)"},
                 "titulo": {"type": "STRING", "description": "Título de la nota de aprendizaje (con learn)"},
                 "contenido": {"type": "STRING", "description": "Contenido de la nota de aprendizaje (con learn)"},
                 "tag": {"type": "STRING", "description": "Etiqueta del log de evolución (con log)"},
                 "lineas": {"type": "ARRAY", "description": "Líneas del log de evolución (con log)"},
+                "audit_only": {"type": "BOOLEAN", "description": "Con care: solo audita sus pilares sin arreglar nada (False = auto-repara)"},
             },
             "required": ["action"],
         }
@@ -7082,12 +7095,22 @@ TOOL_DECLARATIONS.extend([
         }, "required": ["action"]},
     },
     {
-        "name": "shell_session",
-        "description": "Sesion de shell persistente: ejecuta comandos en una sesion de terminal, con historial y contexto.",
+        "name": "permission_policy",
+        "description": "Políticas de permisos estilo opencode (data/permission_rules.json): reglas allow/ask/deny por tool o tool.acción. Acciones: view (ver reglas y estado), allow/ask/deny (aplicar regla con tool= y tool_action=), trust (confiar sesión por minutes minutos), untrust (revocar), reset (volver a heurística por defecto).",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "run, history, clear, cd, env"},
+            "action": {"type": "STRING", "description": "view, allow, ask, deny, trust, untrust, reset"},
+            "tool": {"type": "STRING", "description": "Nombre de la tool sobre la cual aplicar la regla (ej: shutdown_eris)"},
+            "tool_action": {"type": "STRING", "description": "Acción específica de la tool (opcional, ej: push para git_control)"},
+            "minutes": {"type": "INTEGER", "description": "Minutos de sesión confiable (para trust, default 30)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "shell_session",
+        "description": "Sesion de shell persistente (bash en Linux): ejecuta comandos en una sesion de terminal que MANTIENE el directorio actual entre llamadas. Ideal para moverse: cd a una carpeta, luego ls/cp/mv/rm/etc. sin volver a escribir la ruta. Acciones: run (command), cd (cwd/path), history, clear, env, status.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "run, cd, history, clear, env, status"},
             "command": {"type": "STRING", "description": "Comando a ejecutar"},
-            "cwd": {"type": "STRING", "description": "Directorio de trabajo"},
+            "cwd": {"type": "STRING", "description": "Directorio de trabajo (para cd)"},
         }, "required": ["action"]},
     },
     {
@@ -7097,6 +7120,102 @@ TOOL_DECLARATIONS.extend([
             "action": {"type": "STRING", "description": "create, list, status, cancel, retry, queue"},
             "task_id": {"type": "STRING", "description": "ID de la tarea"},
             "priority": {"type": "STRING", "description": "low, medium, high, critical"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "wayland_input",
+        "description": "Input fisico REAL en Wayland (ydotool): mueve el mouse, hace clic izquierdo/derecho/medio, doble clic, arrastra, escribe texto y pulsa teclas/combos (ej ctrl+c) en el escritorio del usuario. Habilita operar CUALQUIER app grafica como una persona.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, move, click, right_click, middle_click, double_click, drag, type, key, combo, press, release, screenshot"},
+            "x": {"type": "INTEGER", "description": "Coordenada X (para move/drag/region)"},
+            "y": {"type": "INTEGER", "description": "Coordenada Y (para move/drag/region)"},
+            "button": {"type": "STRING", "description": "left, right, middle (para click)"},
+            "count": {"type": "INTEGER", "description": "Cantidad de clicks (default 1)"},
+            "text": {"type": "STRING", "description": "Texto a escribir (para type)"},
+            "key": {"type": "STRING", "description": "Tecla (enter, esc, tab, ctrl...) o combo ctrl+alt+t"},
+            "combo": {"type": "STRING", "description": "Combinacion de teclas (ctrl+c)"},
+            "start_x": {"type": "INTEGER", "description": "X inicial del drag"},
+            "start_y": {"type": "INTEGER", "description": "Y inicial del drag"},
+            "steps": {"type": "INTEGER", "description": "Pasos del drag (default 20)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "kde_connect",
+        "description": "Controla el celular del usuario via KDE Connect: lista emparejados, vincula (pair), hace sonar el telefono (ring), ping, envia archivos (send_file), envia texto/clipboard, envia SMS, lee notificaciones, bloquea/desbloquea, ejecuta ordenes remotas y controla la musica del telefono. Requiere la app KDE Connect en el celular (misma red).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "list, find, pair, unpair, ring, ping, send_file, send_text, clipboard, sms, notifications, lock, unlock, commands, execute, media_control, status"},
+            "device": {"type": "STRING", "description": "ID del dispositivo (de list)"},
+            "path": {"type": "STRING", "description": "Archivo a enviar (send_file)"},
+            "text": {"type": "STRING", "description": "Texto/mensaje (send_text, ping, sms)"},
+            "message": {"type": "STRING", "description": "Mensaje (ping)"},
+            "number": {"type": "STRING", "description": "Numero de telefono (sms)"},
+            "attachment": {"type": "STRING", "description": "Archivo adjunto (sms)"},
+            "command": {"type": "STRING", "description": "Id de orden remota (execute) o accion de media_control"},
+            "volume": {"type": "INTEGER", "description": "Volumen del telefono 0-100 (media_control volume)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "ocr_tool",
+        "description": "OCR offline con tesseract (sin API): extrae texto de archivos de imagen, PDFs o de la pantalla actual (captura grim). Idiomas spa+eng. Perfecta para leer pantallas/aplicaciones cuando la vision no alcanza.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "file, screen, region, pdf, langs"},
+            "path": {"type": "STRING", "description": "Archivo de imagen/PDF (file/pdf)"},
+            "file": {"type": "STRING", "description": "Alias de path"},
+            "lang": {"type": "STRING", "description": "auto (default), spa, eng"},
+            "x": {"type": "INTEGER", "description": "X de la region (region)"},
+            "y": {"type": "INTEGER", "description": "Y de la region (region)"},
+            "w": {"type": "INTEGER", "description": "Ancho de la region (region)"},
+            "h": {"type": "INTEGER", "description": "Alto de la region (region)"},
+            "psm": {"type": "INTEGER", "description": "Modo PSM de tesseract (default 3)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "media_lab",
+        "description": "Laboratorio multimedia: graba la pantalla (wf-recorder, con/sin audio), detiene grabacion, graba audio del micro (pulse), convierte video/audio, recorta (trim con start/duration), hace GIFs, une video+audio y da info de media (ffprobe). Util para mostrar clips de lo que Eris hace o procesar archivos multimedia.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "record, stop_record, info, convert, trim, gif, audio_record, merge, screenshot"},
+            "out": {"type": "STRING", "description": "Archivo de salida"},
+            "output": {"type": "STRING", "description": "Alias de out"},
+            "input": {"type": "STRING", "description": "Archivo de entrada (convert/trim/gif/merge)"},
+            "path": {"type": "STRING", "description": "Archivo para info"},
+            "seconds": {"type": "INTEGER", "description": "Duracion en segundos (record/audio_record)"},
+            "region": {"type": "STRING", "description": "Region de grabacion (x,y w x h)"},
+            "x": {"type": "INTEGER"}, "y": {"type": "INTEGER"},
+            "w": {"type": "INTEGER"}, "h": {"type": "INTEGER"},
+            "audio": {"type": "BOOLEAN", "description": "Grabar con audio (record)"},
+            "audio_device": {"type": "STRING", "description": "Dispositivo de audio (record)"},
+            "fps": {"type": "INTEGER", "description": "FPS (record/gif)"},
+            "codec": {"type": "STRING", "description": "Codec (record)"},
+            "width": {"type": "INTEGER", "description": "Ancho (convert/gif)"},
+            "start": {"type": "STRING", "description": "Inicio del trim (ej 00:01:30)"},
+            "duration": {"type": "STRING", "description": "Duracion del trim"},
+            "video": {"type": "STRING", "description": "Video para merge"},
+            "audio": {"type": "STRING", "description": "Audio para merge"},
+            "source": {"type": "STRING", "description": "Fuente de audio (default)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "git_autonomo",
+        "description": "Git autonomo de Eris: versiona su propio codigo y proyectos del usuario. status, commit con mensaje autogenerado segun que archivos cambiaron (feat/fix/refactor/chore), auto (stage+commit+diario), log, diary (diario de cambios en memory/git_diario.md), init. Repo por defecto: el de ERIS o el de 'repo'.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, init, add, commit, auto, log, diary, commit_diario"},
+            "repo": {"type": "STRING", "description": "Ruta del repo git (default: ERIS)"},
+            "path": {"type": "STRING", "description": "Alias de repo"},
+            "message": {"type": "STRING", "description": "Mensaje de commit"},
+            "n": {"type": "INTEGER", "description": "Cantidad de commits para log"},
+            "since": {"type": "STRING", "description": "Filtro de fecha para log"},
+            "paths": {"type": "STRING", "description": "Archivos a stage"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "maintenance",
+        "description": "Mantenimiento PROACTIVO que Eris agenda sola: backups del workspace y del vault Obsidian, limpieza de logs viejos, reporte de salud del sistema. list, run (name), run_all, add (name, interval, builtin clean_logs|backup_workspace|backup_vault|health_report o command), remove, status. Corre automaticamente en segundo plano cada intervalo.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "list, run, run_all, add, remove, status"},
+            "name": {"type": "STRING", "description": "Nombre de la tarea"},
+            "interval": {"type": "INTEGER", "description": "Intervalo en segundos (default semanal)"},
+            "builtin": {"type": "STRING", "description": "clean_logs | backup_workspace | backup_vault | health_report"},
+            "command": {"type": "STRING", "description": "Comando bash para tarea tipo command"},
         }, "required": ["action"]},
     },
 ])
@@ -7179,6 +7298,9 @@ _LIVE_NAMES = {
     "cron_scheduler",
     # Security
     "secret_scanner",
+    # Terminal libre (Linux/Wayland nativo)
+    "shell_session", "maintenance",
+    "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
 }
 LIVE_TOOL_DECLARATIONS = [
     t for t in TOOL_DECLARATIONS if t.get("name") in _LIVE_NAMES

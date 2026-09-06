@@ -142,22 +142,22 @@
       "avg_duration": 0.0
     },
     "web_search": {
-      "total": 7,
-      "success": 7,
+      "total": 8,
+      "success": 8,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
     "emotional_state": {
-      "total": 15,
-      "success": 15,
+      "total": 18,
+      "success": 18,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
     "morning_brief": {
-      "total": 75,
-      "success": 75,
+      "total": 77,
+      "success": 77,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -170,11 +170,11 @@
       "avg_duration": 0.0
     },
     "system_monitor": {
-      "total": 1,
-      "success": 1,
+      "total": 2,
+      "success": 2,
       "failures": 0,
       "total_duration": 1.1662745475769043,
-      "avg_duration": 1.1662745475769043
+      "avg_duration": 0.5831372737884521
     },
     "window_manager": {
       "total": 3,
@@ -254,8 +254,8 @@
       "avg_duration": 0.0
     },
     "ide_integration": {
-      "total": 42,
-      "success": 42,
+      "total": 50,
+      "success": 50,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -275,8 +275,8 @@
       "avg_duration": 0.0
     },
     "self_awareness": {
-      "total": 2,
-      "success": 2,
+      "total": 3,
+      "success": 3,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -289,8 +289,8 @@
       "avg_duration": 0.0
     },
     "terminal_agent": {
-      "total": 4,
-      "success": 4,
+      "total": 6,
+      "success": 6,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -331,8 +331,8 @@
       "avg_duration": 0.0
     },
     "contextual_awareness": {
-      "total": 2,
-      "success": 2,
+      "total": 5,
+      "success": 5,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -354,6 +354,20 @@
     "meta_communication": {
       "total": 3,
       "success": 3,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "self_improvement_loop": {
+      "total": 1,
+      "success": 1,
+      "failures": 0,
+      "total_duration": 0,
+      "avg_duration": 0.0
+    },
+    "emotional_memory": {
+      "total": 1,
+      "success": 1,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0

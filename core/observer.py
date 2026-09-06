@@ -48,12 +48,12 @@ _cache = {"mtime": 0.0, "data": None}
 
 # ── Pesos / umbrales por defecto (ajustables con observer action=config) ──
 _DEFAULTS = {
-    "cooldown_voice_min": 15,   # mínimo entre comentarios en voz
-    "max_voice_hour": 3,        # tope de comentarios en voz por hora
-    "long_coding_min": 20,      # minutos seguidos programando para comentar
-    "comment_trim_sec": 300,    # si no te contesta en 5 min, hace el mimo de
+    "cooldown_voice_min": 7,    # mínimo entre comentarios en voz
+    "max_voice_hour": 6,        # tope de comentarios en voz por hora
+    "long_coding_min": 12,      # minutos seguidos programando para comentar
+    "comment_trim_sec": 240,    # si no te contesta en 4 min, hace el mimo de
     "browsing_title_noise": True,  # títulos de navegador no disparan eventos
-    "mirar_interval_min": 15,   # min entre "miradas leves" automáticas
+    "mirar_interval_min": 10,   # min entre "miradas leves" automáticas
     "mirar_min_coding_min": 5,  # mínimo codificando para mirar sola
 }
 
@@ -230,7 +230,52 @@ def _window_rect(hwnd: int) -> dict | None:
 
 
 def capture_focus_b64() -> str:
-    """Captura SOLO la región de la ventana en foco (sin leer contenido)."""
+    """Captura SOLO la región de la ventana en foco (sin leer contenido).
+    Wayland/Hyprland: ventana activa vía hyprctl; grim full + recorte (grim -g
+    no es fiable aquí)."""
+    if _U32 is None:
+        try:
+            import base64, io, json, shutil, subprocess
+            from PIL import Image as _PIL
+            grim = shutil.which("grim")
+            if not grim:
+                return "Error captura: grim no está instalado"
+            r = subprocess.run(["hyprctl", "-j", "activewindow"],
+                               capture_output=True, text=True, timeout=8)
+            if r.returncode != 0 or not r.stdout:
+                return "Error captura: hyprctl no responde"
+            w = json.loads(r.stdout)
+            if not w or not w.get("mapped") or w.get("hidden"):
+                return "Error captura: no hay ventana activa visible"
+            at, size = w.get("at"), w.get("size")
+            if not at or not size or size[0] <= 0 or size[1] <= 0:
+                return "Error captura: sin geometría de ventana"
+            scale = 1.0
+            try:
+                mr = subprocess.run(["hyprctl", "-j", "monitors"],
+                                    capture_output=True, text=True, timeout=6)
+                for m in json.loads(mr.stdout or "[]"):
+                    if m.get("id") == w.get("monitor"):
+                        scale = float(m.get("scale") or 1.0)
+                        break
+            except Exception:
+                pass
+            cap = subprocess.run([grim, "-t", "jpeg", "-q", "85", "-"],
+                                 capture_output=True, timeout=15)
+            if cap.returncode != 0 or not cap.stdout:
+                return "Error captura: grim falló (¿permiso de captura?)"
+            img = _PIL.open(io.BytesIO(cap.stdout))
+            l = max(0, int(at[0] * scale))
+            t = max(0, int(at[1] * scale))
+            rr = int((at[0] + size[0]) * scale)
+            bb = int((at[1] + size[1]) * scale)
+            img = img.crop((l, t, rr, bb))
+            img.thumbnail((1024, 768), _PIL.Resampling.BILINEAR)
+            buf = io.BytesIO()
+            img.save(buf, format="JPEG", quality=70)
+            return base64.b64encode(buf.getvalue()).decode("utf-8")
+        except Exception as e:
+            return f"Error captura: {type(e).__name__}: {e}"
     try:
         from actions.autonomous_agent import capture_region_b64
     except Exception as e:

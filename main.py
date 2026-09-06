@@ -499,6 +499,32 @@ class ErisLive:
             print("[ERIS] 🌱 Evolución continua iniciada (tick cada 30 min)")
         except Exception as _ee:
             print(f"[ERIS] Evolución loop init: {_ee}")
+        # ── Autocuidado al arranque: se revisa a fondo SUS pilares y se
+        #    autoconfigura lo roto/faltante (crea, repara, instala) ──
+        try:
+            def _run_startup_care():
+                time.sleep(120)  # deja que la UI cargue; el care profundo pesa
+                try:
+                    from core.self_evolution import run_full_care_now
+                    _care = run_full_care_now()
+                    print(f"[ERIS] 🛟 Autocuidado de arranque: {_care[:220]}")
+                    try:
+                        self.ui.write_log("[ERIS autocuidado] " + _care[:220])
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+            threading.Thread(target=_run_startup_care, daemon=True).start()
+        except Exception:
+            pass
+        # ── Mantenimiento proactivo: backups, limpieza de logs y reportes ──
+        try:
+            from core.maintenance_scheduler import start_maintenance_scheduler
+            _mt = start_maintenance_scheduler(interval=60)
+            if _mt:
+                print("[ERIS] 🧰 Mantenimiento proactivo iniciado (backups/limpieza/reportes)")
+        except Exception as _me:
+            print(f"[ERIS] Mantenimiento init: {_me}")
         # Auto-descubrir plugins
         if get_plugin_manager:
             try:
@@ -2493,64 +2519,27 @@ class ErisLive:
             with self._speaking_lock:
                 eris_speaking = self._is_speaking
 
-            # ── Micrófono silenciado: solo interrupción por voz mientras habla ──
+            # ── Micrófono silenciado: no cortar el habla por el propio echo cuando
+            #    Eris habla (el analogico porta el altavoz). Solo nivel para el orbe. ──
             if self.ui.muted:
                 if eris_speaking:
-                    # When ERIS is speaking, also update level (from playback perspective)
                     try:
                         rms = float(np.sqrt(np.mean(indata.astype(np.float32) ** 2))) / 32768.0
                         self.ui.set_audio_level(min(1.0, rms * 15))
-                        
-                        # Voice interruption: uses cached threshold (se lee 1 vez, no 60x/s)
-                        threshold = getattr(self, "_mic_threshold", None)
-                        if threshold is None:
-                            try:
-                                from memory.config_manager import BASE_DIR
-                                api_cfg_path = BASE_DIR / "config" / "api_keys.json"
-                                if api_cfg_path.exists():
-                                    c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
-                                    threshold = float(c.get("mic_sensitivity", 0.003))
-                                else:
-                                    threshold = 0.003
-                            except Exception:
-                                threshold = 0.003
-                            self._mic_threshold = threshold
-                        
-                        interrupt_threshold = max(0.015, threshold * 3.5)
-                        
-                        if rms > interrupt_threshold:
-                            self._interrupt_frames = getattr(self, "_interrupt_frames", 0) + 1
-                            if self._interrupt_frames >= 5:  # ~100ms of continuous voice
-                                if not self._stop_requested.is_set():
-                                    self._stop_requested.set()
-                                    print(f"[ERIS] 🎤 Voice interruption detected! (RMS: {rms:.4f} > {interrupt_threshold:.4f})")
-                                    from PyQt6.QtCore import QTimer
-                                    QTimer.singleShot(0, self._on_stop_pressed)
-                        else:
-                            self._interrupt_frames = 0
                     except Exception:
                         pass
                 return
 
-            # ── Half-duplex: mientras ERIS habla, aplicar echo cancellation
-            #    soft y permitir interrupción por voz. ──
+            # ── Half-duplex: mientras ERIS habla, el mic del portátil (analógico)
+            #    porta el eco de su propio altavoz; cortarse por ese RMS crea un
+            #    loop de auto-interrupción y Eris se silencia a sí misma. Solo
+            #    actualizamos el nivel del orbe; el corte real por voz lo resuelve
+            #    la API (Gemini live hace barge-in con el stream de mic que recibe). ──
             if eris_speaking:
                 try:
                     rms = float(np.sqrt(np.mean(indata.astype(np.float32) ** 2))) / 32768.0
                     self.ui.set_audio_level(min(1.0, rms * 15))
-                    # FIX #3: Allow voice interruption even in non-muted mode
-                    _int_thresh = getattr(self, "_mic_threshold", 0.003)
-                    _int_thresh = max(0.02, _int_thresh * 5)
-                    if rms > _int_thresh:
-                        self._interrupt_frames = getattr(self, "_interrupt_frames", 0) + 1
-                        if self._interrupt_frames >= 3:
-                            if not self._stop_requested.is_set():
-                                self._stop_requested.set()
-                                print(f"[ERIS] 🎤 Half-duplex interruption! (RMS: {rms:.4f})")
-                                from PyQt6.QtCore import QTimer
-                                QTimer.singleShot(0, self._on_stop_pressed)
-                    else:
-                        self._interrupt_frames = 0
+                    self._interrupt_frames = 0
                 except Exception:
                     pass
                 return
@@ -2595,7 +2584,7 @@ class ErisLive:
                     nf = max(getattr(self, '_noise_floor', 0.001), 0.0005)
                     lvl = rms / nf                      # señal sobre ruido: ~1 en silencio, >>1 al hablar
                     _now = time.monotonic()
-                    if _now - getattr(self, '_last_orb_sent', 0) >= 0.066:
+                    if _now - getattr(self, '_last_orb_sent', 0) >= 0.040:
                         self.ui.set_orb_audio_level(min(1.0, lvl * 0.15))
                         self._last_orb_sent = _now
             except Exception:
@@ -2737,6 +2726,7 @@ class ErisLive:
                         if not self._stop_requested.is_set():
                             if _cached_tts_backend not in ("elevenlabs", "fish"):
                                 self.audio_in_queue.put_nowait(response.data)
+                                self._last_audio_ts = time.time()
                             # When backend=elevenlabs or fish, skip Gemini audio; TTS engine will be used
 
                     if response.server_content:
@@ -3009,13 +2999,20 @@ class ErisLive:
                         self.ui.clear_eris_response()
                         self.ui.set_state("THINKING")
                         _first_chunk = True
-                        # ── FIX #2: Drain audio immediately (no 3s wait) ──
-                        try:
-                            while not self.audio_in_queue.empty():
-                                self.audio_in_queue.get_nowait()
-                            self.set_speaking(False)
-                        except Exception:
-                            pass
+                        # ── FIX #2 (mejorado): drain SOLO audio viejo ──
+                        # Vaciar la cola de audio corta a ERIS a mitad de frase
+                        # cuando llega un tool_call entre oraciones. Ahora solo se
+                        # descarta si no hay audio fluyendo hace >2.5s (stale);
+                        # si está hablando, el resto del turno sigue fluido.
+                        _last_audio = getattr(self, '_last_audio_ts', 0.0)
+                        _audio_stale = (time.time() - _last_audio) > 2.5
+                        if _audio_stale and not self._is_speaking:
+                            try:
+                                while not self.audio_in_queue.empty():
+                                    self.audio_in_queue.get_nowait()
+                                self.set_speaking(False)
+                            except Exception:
+                                pass
                         fcs = response.tool_call.function_calls
                         for fc in fcs:
                             print(f"[ERIS] 📞 {fc.name}")
@@ -3121,29 +3118,28 @@ class ErisLive:
             else:
                 _speaker_name = "(default)"
             print(f"[ERIS] 🎧 Altavoz seleccionado: {speaker_device_idx} {_speaker_name}")
-            _play_channels = CHANNELS
-            if speaker_device_idx is not None:
-                try:
-                    _d = sd.query_devices(speaker_device_idx)
-                    _ch = _d["max_output_channels"]
-                    if _ch > 0:
-                        _play_channels = _ch
-                except Exception:
-                    pass
+            # ── Latencia más cómoda (180ms) para que PipeWire/pulse no se quede
+            #    sin buffer entre ráfagas → menos cortes y entrecortes ──
             _open_kw = dict(
                 samplerate=RECEIVE_SAMPLE_RATE,
-                channels=_play_channels,
+                channels=CHANNELS,
                 dtype="int16",
-                blocksize=PLAY_CHUNK_SIZE,
+                latency=0.18,
             )
             try:
                 stream = sd.RawOutputStream(device=speaker_device_idx, **_open_kw)
             except Exception:
-                print(f"[ERIS] ⚠️ Fallback: using default speaker device")
-                _play_channels = CHANNELS
-                stream = sd.RawOutputStream(device=None, channels=CHANNELS,
-                                            samplerate=RECEIVE_SAMPLE_RATE,
-                                            dtype="int16", blocksize=PLAY_CHUNK_SIZE)
+                print(f"[ERIS] ⚠️ Fallback: usando altavoz con blocksize por defecto")
+                try:
+                    stream = sd.RawOutputStream(device=speaker_device_idx,
+                                                samplerate=RECEIVE_SAMPLE_RATE,
+                                                channels=CHANNELS, dtype="int16",
+                                                blocksize=PLAY_CHUNK_SIZE)
+                except Exception:
+                    print(f"[ERIS] ⚠️ Fallback: altavoz default")
+                    stream = sd.RawOutputStream(device=None, channels=CHANNELS,
+                                                samplerate=RECEIVE_SAMPLE_RATE,
+                                                dtype="int16", blocksize=PLAY_CHUNK_SIZE)
             stream.start()
 
         def _write_audio(data: bytes):
@@ -3178,6 +3174,24 @@ class ErisLive:
             except Exception:
                 pass
             _speech_last_chunk = None
+            # ── Jitter buffer: acumular ~250ms antes de empezar a escribir ──
+            #    El audio de Gemini llega en ráfagas; sin este "preroll", la
+            #    salida arranca a trompicones y se corta el comienzo de cada
+            #    frase. Una vez iniciado, escribe directo (la latencia de la
+            #    stream amortigua las ráfagas restantes).
+            _PREROLL_MS = 250
+            _preroll = b""
+            _preroll_started = None
+            _preroll_max = int(RECEIVE_SAMPLE_RATE * 2 * _PREROLL_MS / 1000)
+            _preroll_flush_s = 0.6
+            _playing = False
+
+            def _reset_preroll():
+                nonlocal _preroll, _preroll_started, _playing
+                _preroll = b""
+                _preroll_started = None
+                _playing = False
+
             while True:
                 try:
                     chunk = await asyncio.wait_for(
@@ -3185,6 +3199,12 @@ class ErisLive:
                         timeout=0.05
                     )
                 except asyncio.TimeoutError:
+                    # Si quedó preroll sin completar (frase muy corta), soltarlo
+                    if _preroll and _preroll_started and (time.time() - _preroll_started) > _preroll_flush_s:
+                        _write_audio(_preroll)
+                        _preroll = b""
+                        _preroll_started = None
+                        _playing = True
                     if self._turn_done_event and self._turn_done_event.is_set():
                         if self.audio_in_queue.empty():
                             if not hasattr(self, '_queue_empty_since') or self._queue_empty_since is None:
@@ -3194,6 +3214,7 @@ class ErisLive:
                                 self._turn_done_event.clear()
                                 self._queue_empty_since = None
                                 _speech_last_chunk = None
+                                _reset_preroll()
                         else:
                             self._queue_empty_since = None
                     continue
@@ -3211,11 +3232,23 @@ class ErisLive:
                             break
                     if self._turn_done_event:
                         self._turn_done_event.set()
+                    _reset_preroll()
                     break
 
                 _speech_last_chunk = time.time()
                 self.set_speaking(True)
-                _write_audio(chunk)
+                # ── Preroll: acumular antes de soltar el primer chunk ──
+                if not _playing:
+                    if not _preroll_started:
+                        _preroll_started = time.time()
+                    _preroll += chunk
+                    if len(_preroll) >= _preroll_max or (time.time() - _preroll_started) > _preroll_flush_s:
+                        _write_audio(_preroll)
+                        _preroll = b""
+                        _preroll_started = None
+                        _playing = True
+                else:
+                    _write_audio(chunk)
         except Exception as e:
             print(f"[ERIS] ❌ Play: {e}")
             raise

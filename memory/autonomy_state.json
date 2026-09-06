@@ -1,8 +1,8 @@
 {
   "auto_installs_today": 0,
   "auto_repairs_today": 0,
-  "learning_topics_today": 10,
-  "last_reset": "2026-08-20T22:33:20.610506",
+  "learning_topics_today": 2,
+  "last_reset": "2026-09-05T17:39:15.271983",
   "installed_packages": [],
   "repaired_files": [],
   "learned_topics": [
@@ -15,7 +15,9 @@
     "blockchain beyond crypto",
     "computer vision state of art 2026",
     "robotics humanoid latest developments",
-    "5G 6G wireless technology evolution"
+    "5G 6G wireless technology evolution",
+    "transformer architecture improvements 2026",
+    "multimodal AI systems"
   ],
   "curiosity_queue": [],
   "low_risk_actions": []

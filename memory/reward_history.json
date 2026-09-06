@@ -2410,5 +2410,185 @@
     },
     "reason": "Interaccion completada exitosamente",
     "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:27:40.187324",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:28:23.208415",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:29:34.624839",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:42:58.103165",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:43:19.330708",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T19:49:41.934099",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T21:58:24.145584",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T22:45:18.315360",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T22:52:39.780677",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T23:07:11.693278",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T23:08:10.444858",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T23:09:05.007730",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-05T23:31:00.897816",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-06T07:36:35.310139",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
+  },
+  {
+    "timestamp": "2026-09-06T07:51:47.899928",
+    "reward_type": "helped_user",
+    "final_reward": 0.875,
+    "emotions_affected": {
+      "happiness": 0.15,
+      "gratitude": 0.1,
+      "confidence": 0.05
+    },
+    "reason": "Interaccion completada exitosamente",
+    "context": {}
   }
 ]

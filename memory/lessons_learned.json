@@ -229,5 +229,12 @@
     "error": "Error: [Errno 22] Invalid argument",
     "solution": "Auto-registered from tool error",
     "count": 2
+  },
+  {
+    "time": "2026-09-05T19:29:41.484378",
+    "module": "terminal_agent",
+    "error": "Error: creationflags is only supported on Windows platforms",
+    "solution": "Auto-registered from tool error",
+    "count": 1
   }
 ]

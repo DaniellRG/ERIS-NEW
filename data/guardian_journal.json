@@ -1,415 +1,5 @@
 [
   {
-    "time": "2026-08-16T15:50:32.473950",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-16T15:51:00.874319",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:01:09.355212",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:11:18.942545",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:21:59.864808",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-16T16:22:29.207144",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:32:38.477525",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:42:47.803433",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-16T16:48:08.454489",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-16T16:48:38.071490",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T00:16:44.804815",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T00:17:40.287117",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T00:27:51.266450",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T00:38:00.783547",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T00:41:05.899608",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T00:41:35.211716",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T12:47:04.021722",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T12:48:10.334973",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T12:58:22.881869",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:07:46.334764",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T13:08:16.693364",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:18:27.153874",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:28:29.132567",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T13:29:00.372731",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:39:11.239566",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:49:21.198023",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T13:58:17.265367",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T13:58:48.571804",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:08:59.042929",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:19:09.272983",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:27:56.979397",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T14:28:28.002213",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:32:42.778149",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T14:33:13.852060",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:43:24.717596",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:45:02.487071",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T14:45:32.760317",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T14:50:45.930627",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T14:51:17.371666",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:27:44.660275",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:28:36.859320",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:29:23.147108",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:30:56.236892",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:31:27.684914",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:37:52.557236",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:38:23.164664",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:46:36.079621",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:47:07.510721",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:55:38.976067",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:56:08.943907",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-17T23:58:39.131026",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-17T23:59:09.140697",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:03:46.024048",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:04:16.663495",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:10:07.179095",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:10:37.859005",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:12:02.007161",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:12:32.302997",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:18:02.515476",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:18:32.739804",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:25:55.875493",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:26:25.967276",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:29:52.385695",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:30:22.190441",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:32:17.105782",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:32:47.124771",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:38:43.774136",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:39:14.678819",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T00:41:14.657054",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T00:41:44.912958",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T07:59:44.705450",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T08:01:17.454846",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T08:11:29.817783",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T08:21:39.597114",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T08:31:49.562782",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T08:41:59.466323",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T08:52:09.530196",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T09:02:20.778454",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T09:12:15.312666",
-    "level": "INFO",
-    "msg": "Monitor del Guardian activado (intervalo 600s)"
-  },
-  {
-    "time": "2026-08-18T09:12:46.178674",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T09:22:56.674763",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
-    "time": "2026-08-18T09:33:06.873946",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
     "time": "2026-08-18T09:43:17.346313",
     "level": "INFO",
     "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
@@ -2498,5 +2088,415 @@
     "time": "2026-08-28T11:31:40.211040",
     "level": "INFO",
     "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 32 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T17:36:47.443995",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T17:37:12.375140",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T17:38:16.665065",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T17:38:41.336717",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T17:48:48.577781",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T17:52:54.521317",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T17:53:21.067346",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T17:57:21.200892",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T17:57:47.963965",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:04:06.664829",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:04:32.736027",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:05:53.756063",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:06:20.408037",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:07:29.259275",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:07:56.374691",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:09:03.012181",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:09:30.214463",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:13:35.897008",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:14:03.120333",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:15:02.681238",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:15:29.648970",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:20:53.977489",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:21:21.567188",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:24:31.380023",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:24:57.972424",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:28:03.440291",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T18:28:30.134312",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:38:33.827097",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:48:37.665458",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T18:58:40.421728",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:03:56.341566",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:04:19.465763",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:13:56.146951",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:14:19.939831",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:24:23.927922",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:24:34.778113",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:24:58.720647",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:40:27.991962",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:40:53.989599",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:47:03.936953",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:47:30.465462",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T19:55:40.018025",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T19:56:06.602582",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:06:20.278773",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:16:27.345424",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:26:34.468114",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:32:37.478685",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T22:33:05.822754",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:37:50.244658",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T22:38:16.472826",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:44:39.674527",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T22:45:04.948335",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T22:51:32.426806",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T22:52:00.438398",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:02:09.512557",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:02:40.590185",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T23:03:08.060496",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:07:19.212210",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T23:07:46.506233",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:17:49.861829",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:27:53.274279",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:35:39.964471",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T23:36:06.025631",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:43:36.061518",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-05T23:44:00.637725",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-05T23:54:06.662433",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:00:27.377694",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T00:00:53.728466",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:04:59.900717",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T00:05:25.578633",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:10:03.175266",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T00:10:28.953491",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:20:35.344246",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:21:49.845489",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T00:22:14.536960",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:32:20.919122",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T00:42:27.201882",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T07:35:29.460161",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T07:35:56.768948",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T07:46:04.791225",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T07:51:08.289667",
+    "level": "INFO",
+    "msg": "Monitor del Guardian activado (intervalo 600s)"
+  },
+  {
+    "time": "2026-09-06T07:51:34.639307",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
   }
 ]

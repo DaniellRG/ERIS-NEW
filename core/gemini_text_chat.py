@@ -13,6 +13,12 @@ from core.tool_declarations import TOOL_DECLARATIONS
 _MAX_RETRIES = 3
 _RETRY_DELAYS = [30, 60, 120]
 
+# ── Compactación de contexto (patrón compact de opencode) ──
+# Cuando el historial supera _COMPACT_THRESHOLD turnos, los turnos viejos se
+# resumen en una sola entrada y se conservan los últimos _KEEP_RECENT.
+_COMPACT_THRESHOLD = 24
+_KEEP_RECENT = 8
+
 # Gemini limita a 128 function_declarations por request (429/400 si se pasa).
 # ERIS tiene 448 tools: enviamos un subconjunto priorizado <= 120.
 _GEMINI_TOOL_CAP = 120
@@ -116,6 +122,7 @@ class GeminiTextChat:
         self._history.clear()
 
     async def chat(self, user_text: str) -> str:
+        await self._compact_history()
         if self._use_ollama:
             return await self._chat_ollama(user_text)
         else:
@@ -123,10 +130,86 @@ class GeminiTextChat:
 
     async def stream_chat(self, user_text: str, on_token=None) -> str:
         """Igual que chat() pero transmite tokens al callback `on_token` si se provee."""
+        await self._compact_history()
         if self._use_ollama:
             return await self._chat_ollama(user_text, on_token=on_token)
         else:
             return await self._chat_gemini(user_text, on_token=on_token)
+
+    # ── Compactación de contexto ──
+
+    async def _invoke_ollama_summary(self, text: str) -> str | None:
+        """Resume `text` usando Ollama local (sin tools). Devuelve None si falla."""
+        try:
+            import requests
+            prompt = (
+                "Sos ERIS, una asistente con memoria conversacional. "
+                "Compactá la conversación anterior en un resumen breve pero completo: "
+                "quién habló de qué, decisiones tomadas, datos importantes, herramientas usadas, "
+                "promesas y pendientes. Mantené el español y no inventes nada."
+            )
+            payload = {
+                "model": self._ollama_model,
+                "messages": [
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": text},
+                ],
+                "stream": False,
+                "options": {"temperature": 0.3, "num_predict": 512},
+            }
+            r = requests.post(f"{self._ollama_base}/api/chat", json=payload, timeout=120)
+            r.raise_for_status()
+            out = r.json().get("message", {}).get("content", "").strip()
+            return out or None
+        except Exception as e:
+            print(f"[GeminiText] Compactación omitida (Ollama no respondió): {e}")
+            return None
+
+    async def _compact_history(self) -> bool:
+        """Resume los turnos viejos cuando el historial crece demasiado.
+        Devuelve True si compactó. Es no-op si no hace falta o si Ollama no está."""
+        try:
+            if len(self._history) < _COMPACT_THRESHOLD:
+                return False
+            if not self._use_ollama or not self._ollama_base or not self._ollama_model:
+                return False
+
+            old = self._history[: -_KEEP_RECENT]
+            recent = self._history[-_KEEP_RECENT:]
+            texts = []
+            for msg in old:
+                role = "usuario" if getattr(msg, "role", "model") == "user" else "ERIS"
+                if hasattr(msg, "parts"):
+                    t = " ".join(getattr(p, "text", "") or "" for p in msg.parts if getattr(p, "text", None))
+                else:
+                    t = str(msg)
+                if t.strip():
+                    texts.append(f"{role}: {t.strip()}")
+            if not texts:
+                return False
+            body = "\n".join(texts)
+            if len(body) > 16000:
+                body = body[-16000:]
+            summary = await self._invoke_ollama_summary(body)
+            if not summary:
+                return False
+
+            full = "[Resumen compactado de la conversación anterior]:\n" + summary
+            if self._use_ollama:
+                summary_msg = type('Msg', (), {
+                    'role': 'user',
+                    'parts': [type('Part', (), {'text': full})()],
+                })()
+            else:
+                from google.genai import types
+                summary_msg = types.Content(role="user", parts=[types.Part.from_text(text=full)])
+            self._history = [summary_msg] + recent
+            print(f"[GeminiText] 🗜️ Contexto compactado: {len(old)} turnos → 1 resumen "
+                  f"(queda {len(self._history)} entradas)")
+            return True
+        except Exception as e:
+            print(f"[GeminiText] Compactación falló (sin riesgo): {e}")
+            return False
 
     def export_history(self) -> list:
         """Exporta el historial como lista de {role, text} para persistir en disco."""

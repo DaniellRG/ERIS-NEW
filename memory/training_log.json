@@ -1398,5 +1398,12 @@
     "success": false,
     "error": "Error: [Errno 22] Invalid argument",
     "duration": 0.0
+  },
+  {
+    "time": "2026-09-05T19:29:41.484587",
+    "module": "terminal_agent",
+    "success": false,
+    "error": "Error: creationflags is only supported on Windows platforms",
+    "duration": 0.0
   }
 ]

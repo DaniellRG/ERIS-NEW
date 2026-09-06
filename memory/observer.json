@@ -1,72 +1,19 @@
 {
-  "today": "2026-08-28",
-  "last_poll": 1787935001.668219,
+  "today": "2026-09-06",
+  "last_poll": 1788699372.5140002,
   "current": {
-    "proc": "devenv",
-    "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio",
-    "kind": "programacion",
-    "since": 1787934780.02211
+    "proc": "",
+    "title": "",
+    "kind": "otros",
+    "since": 1788699372.5140002
   },
   "coding": {
-    "session_start": 1787934780.02211,
-    "today_min": 46,
+    "session_start": 0.0,
+    "today_min": 0,
     "reported": false,
     "last_end": 0.0
   },
-  "apps_today": {
-    "pythonw": {
-      "count": 17,
-      "title": "ERIS"
-    },
-    "windowsterminal": {
-      "count": 37,
-      "title": "Windows PowerShell"
-    },
-    "explorer": {
-      "count": 7,
-      "title": "Program Manager"
-    },
-    "searchhost": {
-      "count": 1,
-      "title": "Buscar"
-    },
-    "whatsapp.root": {
-      "count": 7,
-      "title": "WhatsApp"
-    },
-    "steamwebhelper": {
-      "count": 5,
-      "title": "Steam"
-    },
-    "brave": {
-      "count": 7,
-      "title": "Eve x Ultimate Bunny (CNS Compatible) at Stellar Blade Nexus - Mods and community - Brave"
-    },
-    "modmanager": {
-      "count": 1,
-      "title": "Fluffy Mod Manager"
-    },
-    "neatdm": {
-      "count": 1,
-      "title": "Download Completed"
-    },
-    "winrar": {
-      "count": 1,
-      "title": "Shadow kunoich body stocking no heart-1461-1-2-1754644284.zip (copia de evaluación)"
-    },
-    "wallpaperui": {
-      "count": 4,
-      "title": "Wallpaper UI"
-    },
-    "obsidian": {
-      "count": 1,
-      "title": "Vista gráfica - BaseObsiEris - Obsidian 1.13.7"
-    },
-    "devenv": {
-      "count": 7,
-      "title": "SistemadeEmpleados - Program.cs* - Microsoft Visual Studio"
-    }
-  },
+  "apps_today": {},
   "events": [
     {
       "type": "title_change",
@@ -316,19 +263,19 @@
     "voice": true,
     "id": "1787934780",
     "injected": true,
-    "awaiting_reply": true
+    "awaiting_reply": false
   },
   "voice": {
-    "count_hour": 3,
-    "hour_start": 1787931960.5071578
+    "count_hour": 0,
+    "hour_start": 1788670826.1204257
   },
   "config": {
-    "cooldown_voice_min": 15,
-    "max_voice_hour": 3,
-    "long_coding_min": 20,
-    "comment_trim_sec": 300,
+    "cooldown_voice_min": 7,
+    "max_voice_hour": 6,
+    "long_coding_min": 12,
+    "comment_trim_sec": 240,
     "browsing_title_noise": true,
-    "mirar_interval_min": 15,
+    "mirar_interval_min": 10,
     "mirar_min_coding_min": 5
   },
   "personal_time": {
@@ -337,8 +284,8 @@
     "since": 1787935001.6690383
   },
   "flag": {
-    "en_silencio": true,
-    "silence_reported": true,
+    "en_silencio": false,
+    "silence_reported": false,
     "marca_personal": "armarle algún dato curioso para la próxima"
   },
   "vista": {

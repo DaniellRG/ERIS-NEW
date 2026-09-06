@@ -1,5 +1,212 @@
 [
  {
+  "ts": 1788699074.556702,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es domingo 06 de septiembre de 2026.\nClima: Clima actual en Lima: Partly Cloudy  +17°C 84% ↗6km/h\nNotic",
+  "ts_end": 1788699075.567841
+ },
+ {
+  "ts": 1788698136.4740365,
+  "tool": "morning_brief",
+  "args": "action=brief",
+  "status": "done",
+  "agent": "",
+  "result": "Buenos días. Hoy es domingo 06 de septiembre de 2026.\nClima: Clima actual en Lima: Partly Cloudy  +17°C 84% ↗6km/h\nNotic",
+  "ts_end": 1788698138.761798
+ },
+ {
+  "ts": 1788669045.4549491,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788669045.4727552
+ },
+ {
+  "ts": 1788667736.3297255,
+  "tool": "terminal_agent",
+  "args": "action=open",
+  "status": "done",
+  "agent": "Dev",
+  "result": "Falta 'command' o 'target'. Ejemplo: 'notepad', 'C:\\Users', 'https://google.com'",
+  "ts_end": 1788667736.333628
+ },
+ {
+  "ts": 1788667670.2993786,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788667670.3362136
+ },
+ {
+  "ts": 1788667620.791877,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788667620.8148708
+ },
+ {
+  "ts": 1788666741.7324538,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788666741.7642887
+ },
+ {
+  "ts": 1788666311.9711154,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788666312.0077767
+ },
+ {
+  "ts": 1788663492.5652199,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [#######---] 74%\n  energy: [#######---] 73%\n  confidence: [######----] 64%\n  curiosity: [",
+  "ts_end": 1788663492.593386
+ },
+ {
+  "ts": 1788663492.4845746,
+  "tool": "contextual_awareness",
+  "args": "action=time",
+  "status": "done",
+  "agent": "",
+  "result": "{\n  \"time\": \"21:58\",\n  \"date\": \"2026-09-05\",\n  \"day\": \"s\\u00e1bado\",\n  \"period\": \"noche\",\n  \"hour\": 21\n}",
+  "ts_end": 1788663492.546718
+ },
+ {
+  "ts": 1788655776.1314766,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "{\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa activo. Titulo: ~\"\n}",
+  "ts_end": 1788655776.162369
+ },
+ {
+  "ts": 1788655378.8814244,
+  "tool": "self_awareness",
+  "args": "file=actions/ide_integration.py, action=read_my_code",
+  "status": "done",
+  "agent": "",
+  "result": "Archivo 'actions/ide_integration.py' (902 líneas). Mostrando primeras 200:\n\n1: \"\"\"\n2: actions/ide_integration.py\n3: ────",
+  "ts_end": 1788655378.9177587
+ },
+ {
+  "ts": 1788655378.8682961,
+  "tool": "emotional_memory",
+  "args": "action=record, emotion=frustration, context=Error de ide_integration en Linux por dependencia PyGetWi..., intensity=0.7, trigger=ide_integration_linux_error",
+  "status": "done",
+  "agent": "",
+  "result": "{\n  \"status\": \"registrado\",\n  \"emotion\": \"frustration\",\n  \"intensity\": 0.7\n}",
+  "ts_end": 1788655378.9026375
+ },
+ {
+  "ts": 1788655378.866597,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [########--] 85%\n  energy: [#######---] 76%\n  confidence: [#######---] 70%\n  curiosity: [",
+  "ts_end": 1788655378.8860953
+ },
+ {
+  "ts": 1788655377.8486557,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "Tool 'ide_integration' failed: PyGetWindow currently does not support Linux. If you have Xlib knowledge, please contribu",
+  "ts_end": 1788655377.8730993
+ },
+ {
+  "ts": 1788655377.8475664,
+  "tool": "emotional_state",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "[EMOTIONAL STATE]\n  happiness: [#######---] 75%\n  energy: [#######---] 73%\n  confidence: [######----] 65%\n  curiosity: [",
+  "ts_end": 1788655377.877793
+ },
+ {
+  "ts": 1788655377.838766,
+  "tool": "contextual_awareness",
+  "args": "action=time",
+  "status": "done",
+  "agent": "",
+  "result": "{\n  \"time\": \"19:42\",\n  \"date\": \"2026-09-05\",\n  \"day\": \"s\\u00e1bado\",\n  \"period\": \"noche\",\n  \"hour\": 19\n}",
+  "ts_end": 1788655377.8448956
+ },
+ {
+  "ts": 1788654585.561858,
+  "tool": "self_improvement_loop",
+  "args": "action=scan",
+  "status": "done",
+  "agent": "",
+  "result": "✅ Escaneo completado. No se detectaron problemas.",
+  "ts_end": 1788654585.5654202
+ },
+ {
+  "ts": 1788654581.4651253,
+  "tool": "terminal_agent",
+  "args": "command=wmctrl -l, action=run",
+  "status": "error",
+  "agent": "Dev",
+  "result": "Error: creationflags is only supported on Windows platforms",
+  "ts_end": 1788654581.4821491
+ },
+ {
+  "ts": 1788654577.456112,
+  "tool": "web_search",
+  "args": "query=PyGetWindow alternative Linux for IDE automation",
+  "status": "done",
+  "agent": "Web",
+  "result": "No encontré resultados para 'PyGetWindow alternative Linux for IDE automation'",
+  "ts_end": 1788654578.1569657
+ },
+ {
+  "ts": 1788654574.4322996,
+  "tool": "ide_integration",
+  "args": "action=detect",
+  "status": "done",
+  "agent": "Dev",
+  "result": "Tool 'ide_integration' failed: PyGetWindow currently does not support Linux. If you have Xlib knowledge, please contribu",
+  "ts_end": 1788654574.4422116
+ },
+ {
+  "ts": 1788653228.8777723,
+  "tool": "contextual_awareness",
+  "args": "action=status",
+  "status": "done",
+  "agent": "",
+  "result": "{\n  \"time\": {\n    \"time\": \"19:07\",\n    \"date\": \"2026-09-05\",\n    \"day\": \"s\\u00e1bado\",\n    \"period\": \"noche\",\n    \"hour\"",
+  "ts_end": 1788653229.958534
+ },
+ {
+  "ts": 1788647688.8738103,
+  "tool": "system_monitor",
+  "args": "action=overview",
+  "status": "done",
+  "agent": "",
+  "result": "CPU: 18.9% | Cores: 12 | Freq: 3749 MHz | Load: 4.0 / 2.8 / 2.1\nRAM: 53.8% | Usada: 6.8/12.7 GB | Disponible: 5.9 GB\nSwa",
+  "ts_end": 1788647689.393064
+ },
+ {
   "ts": 1787934673.8063354,
   "tool": "morning_brief",
   "args": "action=brief",

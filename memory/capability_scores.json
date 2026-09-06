@@ -185,14 +185,14 @@
     ]
   },
   "terminal_agent": {
-    "score": 0.9272727272727272,
-    "attempts": 55,
+    "score": 0.9107142857142857,
+    "attempts": 56,
     "successes": 51,
     "failures": {
-      "Error": 3,
+      "Error": 4,
       "Error abriendo C": 1
     },
-    "last_failure": "Error: [Errno 22] Invalid argument",
+    "last_failure": "Error: creationflags is only supported on Windows platforms",
     "errors": [
       {
         "error": "Error: Start-Process : Este comando no se puede ejecutar debido al error: El sistema no puede encontrar el archivo \nespecificado.\nEn l¡nea: 1 Car cter: 1\n+ Start-Process \"steam.exe\" -ErrorAction Stop\n",
@@ -209,6 +209,10 @@
       {
         "error": "Error: [Errno 22] Invalid argument",
         "time": "2026-08-24T09:46:21.351077"
+      },
+      {
+        "error": "Error: creationflags is only supported on Windows platforms",
+        "time": "2026-09-05T19:29:41.483570"
       }
     ]
   },

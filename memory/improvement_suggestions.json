@@ -60,5 +60,14 @@
     "code_action": null,
     "timestamp": 1787600558.4949932,
     "count": 3
+  },
+  {
+    "type": "error_pattern",
+    "severity": "media",
+    "title": "Error recurrente: timeout (4 veces)",
+    "detail": "TimeoutError: timed out while closing connection",
+    "context": "[ERIS] 📤 ide_integration → {\n  \"detected\": false,\n  \"title\": \"~\",\n  \"message\": \"No se reconoce el programa \n[RESILIENT] ✅ Task completed: ide_integration (ide_integration_7c4074e204bd_1788666741)\n[ERIS] ❌ Recv: 1006 None. abnormal closure [internal]",
+    "code_action": null,
+    "timestamp": 1788666989.6303375
   }
 ]

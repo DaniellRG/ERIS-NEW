@@ -3,6 +3,9 @@
 open_app.py — Intelligent application finder and launcher with Windows protocol support for ERIS.
 """
 import os
+import glob
+import shlex
+import shutil
 import subprocess
 import webbrowser
 import traceback
@@ -173,6 +176,49 @@ def open_app(parameters: dict, response=None, player=None) -> str:
             webbrowser.open(web_apps[app_lower])
             if player: player.write_log(f"🌐 Abriendo {app_name}: '{web_apps[app_lower]}'.")
             return f"Abriendo {app_name}: {web_apps[app_lower]}"
+
+        # ── Linux / macOS: binario real (PATH) + .desktop + detach ──
+        if os.name != "nt":
+            _aliases = {
+                "chrome": "google-chrome", "google chrome": "google-chrome",
+                "firefox": "firefox", "terminal": "foot",
+                "explorador de archivos": "xdg-open", "file manager": "xdg-open",
+            }
+            _target = _aliases.get(app_lower, app_lower)
+            exe = shutil.which(_target) or shutil.which(app_lower)
+            if not exe:
+                # Buscar .desktop (nombre exacto o parcial) y usar su Exec=
+                for _d in ("/usr/share/applications",
+                           "/usr/local/share/applications",
+                           os.path.expanduser("~/.local/share/applications")):
+                    if not os.path.isdir(_d):
+                        continue
+                    _dp = os.path.join(_d, f"{_target}.desktop")
+                    if not os.path.isfile(_dp):
+                        _cands = glob.glob(os.path.join(_d, f"*{_target}*.desktop"))
+                        _dp = _cands[0] if _cands else ""
+                    if _dp and os.path.isfile(_dp):
+                        try:
+                            for _line in open(_dp, encoding="utf-8"):
+                                if _line.startswith("Exec="):
+                                    _cmd = shlex.split(_line[5:].split("%")[0])
+                                    if _cmd:
+                                        subprocess.Popen(_cmd, start_new_session=True,
+                                                         stdout=subprocess.DEVNULL,
+                                                         stderr=subprocess.DEVNULL)
+                                        if player:
+                                            player.write_log(f"🚀 Abriendo aplicación: '{app_name}' ({os.path.basename(_dp)}).")
+                                        return (f"Aplicación '{app_name}' iniciada "
+                                                f"({os.path.basename(_dp)}).")
+                        except Exception:
+                            pass
+            if exe:
+                subprocess.Popen([exe], start_new_session=True,
+                                 stdout=subprocess.DEVNULL,
+                                 stderr=subprocess.DEVNULL)
+                if player:
+                    player.write_log(f"🚀 Abriendo aplicación: '{app_name}'.")
+                return f"Aplicación '{app_name}' iniciada correctamente (Ruta: {exe})."
 
         # Standard Mappings
         mappings = {

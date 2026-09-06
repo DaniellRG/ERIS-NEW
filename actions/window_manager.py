@@ -257,11 +257,24 @@ def _linux_clients():
     return [c for c in data if c.get("mapped") and (c.get("title") or "").strip()]
 
 
+def _linux_find(name):
+    """Encuentra ventanas por TÍTULO o por CLASE de la app (ej: 'foot', 'brave')."""
+    n = (name or "").strip().lower()
+    if not n:
+        return []
+    return [c for c in _linux_clients()
+            if n in (c.get("title") or "").lower()
+            or n in (c.get("class") or "").lower()
+            or n in (c.get("initialTitle") or "").lower()]
+
+
 def _linux_list():
     wins = _linux_clients()
     if not wins:
         return "No hay ventanas visibles."
-    lines = [f"  [{c['size'][0]}x{c['size'][1]}] {c['title'][:60]}" for c in wins]
+    lines = [f"  [{c['size'][0]}x{c['size'][1]}] "
+             f"{c.get('class', '?')}: {c['title'][:48]}"
+             for c in wins]
     return f"Ventanas ({len(wins)}):\n" + "\n".join(lines[:20])
 
 
@@ -276,11 +289,6 @@ def _linux_list_monitors():
             f"{m['width']}x{m['height']} en ({m['x']},{m['y']})"
         )
     return "\n".join(lines)
-
-
-def _linux_find(name):
-    n = (name or "").lower()
-    return [c for c in _linux_clients() if n in (c.get("title") or "").lower()]
 
 
 def _linux_focus(name):

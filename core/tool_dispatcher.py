@@ -113,6 +113,17 @@ class ToolDispatcher:
         except Exception:
             pass
 
+        # ── UNDO hook (patrón /undo de opencode): snapshot previo de archivos ──
+        # Antes de ejecutar, respaldamos el estado de los archivos que la tool
+        # va a modificar. La tool `undo` restaura el más reciente.
+        try:
+            from core.file_undo import snapshot
+            _snaps = snapshot(name, args)
+            if _snaps:
+                print(f"[ERIS] 🔙 Undo snapshot creado ({len(_snaps)} archivo(s))")
+        except Exception:
+            pass
+
         # ── Special: shutdown ──
         if name == "shutdown_eris":
             resilient.task_completed(task_id, "Apagando ERIS.")

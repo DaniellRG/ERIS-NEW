@@ -291,6 +291,7 @@ class ParticleOrb(QWidget):
         ) for _ in range(120)]
         self._audio_level = 0.0
         self._phase = 0.0
+        self._fast = False
         self._mouse_pos = None
         self._attract = False
         self._pulse = 0.0
@@ -322,18 +323,24 @@ class ParticleOrb(QWidget):
             pass
 
     def _apply_frame_rate(self):
-        """FPS adaptativos: fluidos cuando hay vida, dormitados en silencio.
-        Antes IDLE repintaba a 60 FPS (120 partículas) de forma continua →
-        un core al ~85% de CPU y la UI inerte (clics sin efecto)."""
+        """FPS adaptativos con histéresis (sin sacudidas por fluctuación del
+        nivel): base fluida 30 FPS, 60 FPS al hablar/pensar, respiro al ocultarse.
+        Antes IDLE repintaba a 60 FPS continuos → un core al ~85% de CPU; y el
+        salto 16ms↔110ms según nivel de audio causaba traba visible del orbe."""
         if not self.isVisible():
             target = 300
         elif self._state in ("MUTED", "ERROR"):
-            target = 33   # estados raros: 30 FPS bastan
-        elif self._state in ("THINKING", "SPEAKING") \
-                or self._audio_level > 0.1:
-            target = 16   # hay vida/audio real (voz, no ruido): 60 FPS fluidos
+            target = 33
+        elif self._state in ("THINKING", "SPEAKING"):
+            target = 16   # 60 FPS reales
+        elif self._audio_level > 0.12:
+            self._fast = True
+            target = 16
+        elif self._audio_level < 0.05:
+            self._fast = False
+            target = 33
         else:
-            target = 110  # IDLE/LISTENING/INITIATING en silencio: respiración lenta (~9 FPS)
+            target = 16 if getattr(self, "_fast", False) else 33
         if self._timer.interval() != target:
             self._timer.start(target)
 

@@ -17,10 +17,10 @@
 ### Entry Point
 - main.py: Inicializa UI PyQt6, conecta Gemini Live API, voice loop, tool dispatcher, proactive thread, ciclo de reconexión resiliente
 
-### Core (core/) — 34 módulos
-- tool_declarations.py: 44 schemas de herramientas para Gemini Function Calling
-- tool_dispatcher.py: Despachador que ejecuta tool calls via ThreadPoolExecutor (~838 líneas)
-- tool_registry.py: Registro lazy-loading de 226+ herramientas, imports bajo demanda (~400 líneas)
+### Core (core/) — módulos de cerebro y plataforma
+- tool_declarations.py: **456 schemas de herramientas** para Gemini Function Calling (subconjunto priorizado <=120 por request)
+- tool_dispatcher.py: Despachador que ejecuta tool calls via ThreadPoolExecutor
+- tool_registry.py: Registro lazy-loading de **456 tools**, imports bajo demanda
 - agent_router.py: Enrutador multi-agente con weighted scoring + penalty keywords (~343 líneas)
 - self_map.py: ERIS conoce TODA su estructura de archivos (~543 líneas)
 - prompt_loader.py: Carga prompt.txt con identidad y reglas
@@ -46,7 +46,7 @@
 - plugin_manager.py: Hot-load de plugins
 - updater.py: Auto-updater via GitHub Releases
 
-### Acciones (actions/) — 194 módulos implementados
+### Acciones (actions/) — 296 módulos implementados
 
 #### Sistema y PC (18 módulos)
 system_monitor, computer_control, desktop_control, window_manager, file_controller, file_processor, computer_settings, windows_settings, process_manager, program_manager, app_discovery, open_app, app_installer, driver_manager, pc_control, system_reader, res_monitor, res_protect
@@ -90,7 +90,7 @@ smart_home, rgb_control, weather_report
 #### Utilidades (20+ módulos)
 calculator, alarm_manager, fun_mode, clipboard_manager, user_profile, accessibility, human_mouse, native_ui, contextual_control, data_analyst, data_viz, habit_predictor, text_summarizer, theme_manager, i18n, i18n_ui, multi_user, proactive_ia, proactive_automation, config_export, smart_cache, ask_user, ask_opencode, subagent_task, agent_task, shutdown_eris, sleep_mode, morning_brief, quick_actions, orb_overlay, eris_ui_control, mcp_tool, mcp_client
 
-### Agentes (agents/) — 8 agentes especializados
+### Agentes (agents/) — 15 agentes especializados registrados (agent_registry.json + agent_router)
 - VisionAgent: screen_vision, image_analyzer, vision_guardian, game_companion, ollama_vision
 - SearchAgent: web_search, super_search, session_search
 - SecurityAgent: security_scanner, program_manager
@@ -106,8 +106,9 @@ calculator, alarm_manager, fun_mode, clipboard_manager, user_profile, accessibil
 - recovery.py: Modo recuperación con degradación graceful
 - post.py: POST, checksum, verificación de integridad
 
-### Skills (skills/) — 13 habilidades built-in
-brainstorming, TDD, systematic-debugging, threat-hunting, incident-response, vulnerability-scanning, malware-analysis, forensics, verification, writing-plans, writing-skills, executing-plans, subagent-driven
+### Skills (skills/) — 39 skills instaladas (21 builtin + 18 user_created)
+- Builtin: brainstorming, TDD, systematic-debugging, threat-hunting, incident-response, vulnerability-scanning, malware-analysis, forensics, verification, writing-plans, writing-skills, executing-plans, subagent-driven, y más
+- User-created (las que fui aprendiendo): gestionadas con `skill_manage(action='view')`
 
 ### Memoria (memory/)
 - working.json: Contexto de conversación activa
@@ -125,7 +126,7 @@ brainstorming, TDD, systematic-debugging, threat-hunting, incident-response, vul
 - accessibility_config.json, eris_learning.json, eris_tasks.json, rules.json, etc.
 
 ### Datos (data/)
-- knowledge/: 25+ documentos .md de conocimiento técnico
+- knowledge/: **69+ documentos .md** de conocimiento técnico (incluye manual completo de opencode)
 - chroma_db/: Base vectorial ChromaDB para RAG
 - exports/: Exportaciones de conocimiento
 - encrypted/: 108 archivos cifrados con AES-256
@@ -187,9 +188,9 @@ Tengo 6 etapas de relación (stranger → companion). 7 dimensiones emocionales 
 |---|---|
 | main.py | Corazón: conexión Gemini, UI, ciclo de vida |
 | ui.py | Interfaz PyQt6: orbo, settings, logs |
-| core/tool_declarations.py | 44 schemas de herramientas para Gemini |
+| core/tool_declarations.py | 456 schemas de herramientas para Gemini (subconjunto <=120 por request) |
 | core/tool_dispatcher.py | Despachador que ejecuta mis tools |
-| core/tool_registry.py | Registro lazy-loading de 226+ tools |
+| core/tool_registry.py | Registro lazy-loading de 456 tools |
 | core/agent_router.py | Enrutador multi-agente |
 | core/audio_config.py | Config de audio y voces |
 | core/prompt.txt | Mi system prompt (identidad y reglas) |

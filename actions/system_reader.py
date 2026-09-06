@@ -10,6 +10,10 @@ _CPU_HISTORY = []
 _MEM_HISTORY = []
 _NET_HISTORY = []
 
+def _root_dev():
+    return "/" if os.name != "nt" else "C:\\"
+
+
 def _safe_read(path, default=""):
     try:
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -26,7 +30,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
     if action == "status":
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
-        disk = psutil.disk_usage("C:\\")
+        disk = psutil.disk_usage(_root_dev())
         net = psutil.net_io_counters()
         boot = datetime.datetime.fromtimestamp(psutil.boot_time())
         uptime = datetime.datetime.now() - boot
@@ -108,7 +112,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
     elif action == "advisory":
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
-        disk = psutil.disk_usage("C:\\")
+        disk = psutil.disk_usage(_root_dev())
         boot = datetime.datetime.fromtimestamp(psutil.boot_time())
         uptime = datetime.datetime.now() - boot
         temp_ok = True
@@ -162,7 +166,7 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
     elif action == "deep":
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
-        disk = psutil.disk_usage("C:\\")
+        disk = psutil.disk_usage(_root_dev())
         boot = datetime.datetime.fromtimestamp(psutil.boot_time())
         uptime = datetime.datetime.now() - boot
         procs = sorted(
@@ -176,4 +180,20 @@ def system_reader(parameters=None, player=None, action: str = None, detail: str 
             f"Procesos: {top_names}"
         )
 
-    return "Acciones: status, top_processes, disks, network, sensors, deep"
+    elif action == "platform":
+        from core.platform_self import system_portrait_markdown, _system_dict
+        try:
+            raw = _system_dict()
+            tools = raw["tools"]
+            lines = [system_portrait_markdown(), "", "MAPA COMPLETO (programa → tool ERIS → disponible):"]
+            for prog, d in sorted(tools.items()):
+                lines.append(
+                    f"  {prog}: {'✔' if d['available'] else '✘'}  →  {d['eris_tool']}  ({d['for']})")
+            return "\n".join(lines)
+        except Exception as e:
+            return f"platform: error ({e})"
+
+    elif action == "platform_os":
+        return "Acciones: status, top_processes, disks, network, platform, sensors, deep"
+
+    return "Acciones: status, top_processes, disks, network, platform, sensors, deep"

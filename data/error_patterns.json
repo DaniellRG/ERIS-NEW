@@ -32,6 +32,17 @@
       "first_seen": 1786904592.265987,
       "last_seen": 1786909835.6262724,
       "resolved": true
+    },
+    {
+      "id": "err_1788654574437",
+      "text": "PyGetWindow currently does not support Linux. If you have Xlib knowledge, please contribute! https://github.com/asweigart/pygetwindow",
+      "signature": "pygetwindow currently does not support linux. if you have xlib knowledge, please contribute! https:<PATH>",
+      "tool": "ide_integration",
+      "context": "{'action': 'detect'}",
+      "occurrences": 2,
+      "first_seen": 1788654574.437906,
+      "last_seen": 1788655377.863143,
+      "resolved": false
     }
   ],
   "solutions": {
@@ -54,7 +65,7 @@
     }
   },
   "stats": {
-    "total": 3,
+    "total": 4,
     "resolved": 5
   }
 }

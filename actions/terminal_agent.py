@@ -1,22 +1,26 @@
 """
 terminal_agent.py — Terminal interactiva persistente para ERIS.
-Shell PowerShell/CMD persistente con streaming, cambio de directorio, y memoria de sesión.
+Shell persistente (bash en Linux, PowerShell/CMD en Windows) con streaming,
+cambio de directorio, y memoria de sesión. Eris se mueve libre por el sistema.
 """
 import subprocess
 import os
+import sys
 import json
 import time
+import shutil
 import tempfile
 import ctypes
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TERMINAL_STATE = BASE_DIR / "data" / "terminal_state.json"
+IS_WIN = os.name == "nt"
 
 from core.shell_session import get_session, close_session
 
 # ── SendInput helpers for Win+R simulation ──
-user32 = ctypes.windll.user32 if os.name == "nt" else None
+user32 = ctypes.windll.user32 if IS_WIN else None
 INPUT_KEYBOARD = 1
 KEYEVENTF_KEYUP = 0x0002
 KEYEVENTF_UNICODE = 0x0004
@@ -89,15 +93,33 @@ def _type_unicode(text: str):
         time.sleep(0.01)
 
 
-def _run_command(cmd: str, shell_type: str = "powershell", timeout: int = 30, elevated: bool = False) -> str:
+def _run_command(cmd: str, shell_type: str = "auto", timeout: int = 30, elevated: bool = False) -> str:
     """Ejecuta un comando en shell persistente. Mantiene estado entre comandos."""
+    if shell_type in ("auto", ""):
+        shell_type = "bash" if not IS_WIN else "powershell"
+    shell_type = _normalize_shell(shell_type)
     session = get_session(shell=shell_type)
-    return session.run(cmd, timeout=timeout)
+    real_cmd = f"sudo {cmd}" if elevated and not IS_WIN else cmd
+    return session.run(real_cmd, timeout=timeout)
+
+
+def _normalize_shell(shell: str) -> str:
+    shell = (shell or "").strip().lower()
+    if shell in ("bash", "sh", "zsh"):
+        return "bash"
+    if shell in ("cmd", "cmd.exe"):
+        return "cmd"
+    if shell in ("ps", "pwsh", "powershell"):
+        return "powershell"
+    return "bash" if not IS_WIN else "powershell"
 
 
 def _open_with_start_process(target: str) -> str:
-    """Abre cualquier cosa con Start-Process (apps, carpetas, URLs, archivos)."""
+    """Abre cualquier cosa (apps, carpetas, URLs, archivos).
+    Windows: Start-Process. Linux: xdg-open / ejecución directa."""
     try:
+        if not IS_WIN:
+            return _open_linux(target)
         result = subprocess.run(
             ["powershell", "-NoProfile", "-Command",
              f'Start-Process "{target}" -ErrorAction Stop'],
@@ -111,6 +133,34 @@ def _open_with_start_process(target: str) -> str:
         return f"Error abriendo {target}: {e}"
 
 
+def _open_linux(target: str) -> str:
+    """Abre app/carpeta/URL/archivo en Linux: xdg-open, o binario directo."""
+    target = target.strip().strip('"').strip("'")
+    if not target:
+        return "Falta 'command' o 'target'."
+    try:
+        if target.startswith(("http://", "https://", "ftp://")):
+            subprocess.Popen(["xdg-open", target],
+                             start_new_session=True,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return f"Abierto en navegador: {target}"
+        candidate = target.replace("\\", "/")
+        if os.path.isdir(candidate) or os.path.isfile(candidate):
+            subprocess.Popen(["xdg-open", candidate],
+                             start_new_session=True,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return f"Abierto: {candidate}"
+        exe = shutil.which(target)
+        if exe:
+            subprocess.Popen([exe],
+                             start_new_session=True,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return f"Abierto: {exe}"
+        return f"No encontré '{target}' como archivo, carpeta, comando ni binario."
+    except Exception as e:
+        return f"Error abriendo {target}: {e}"
+
+
 def terminal_agent(parameters: dict, player=None) -> str:
     """
     Terminal interactiva persistente para ERIS.
@@ -120,28 +170,30 @@ def terminal_agent(parameters: dict, player=None) -> str:
     action = parameters.get("action", "run")
     cmd = parameters.get("command", "") or parameters.get("cmd", "")
     target = parameters.get("target", "") or cmd
-    shell = parameters.get("shell", "powershell")
+    shell = _normalize_shell(parameters.get("shell", "auto"))
     timeout = min(parameters.get("timeout", 30), 120)
     elevated = parameters.get("elevated", False) or parameters.get("admin", False)
     state = _load_state()
 
     # ── INFO ──
     if action == "info":
+        base = "Linux (bash)" if not IS_WIN else "Windows (PowerShell/CMD)"
         return (
-            "Terminal Agent — Control total de Windows.\n\n"
-            "TERMINAL:\n"
-            "  run_cmd    — Ejecuta en CMD\n"
-            "  run_ps     — Ejecuta en PowerShell\n"
-            "  run        — Auto-detecta shell\n"
-            "  elevated   — Ejecuta como ADMIN (UAC)\n\n"
+            f"Terminal Agent — {base}. Eris se mueve libre por el sistema.\n\n"
+            "TERMINAL (sesión persistente, cd se mantiene):\n"
+            "  run        — Ejecuta comando (bash en Linux, PS/CMD en Windows)\n"
+            "  run_cmd    — Fuerza shell CMD/bash\n"
+            "  run_ps     — Fuerza PowerShell\n"
+            "  elevated   — Con sudo (Linux) / admin UAC (Windows)\n\n"
             "ABRIR COSAS:\n"
-            "  open       — Abre app, carpeta, URL o archivo\n"
-            "  win_r      — Simula Win+R y ejecuta\n"
-            "  shell_execute — Usa ShellExecute (como click derecho > Abrir)\n\n"
-            "HISTORIAL:\n"
-            "  list_history — Ver comandos ejecutados\n"
-            "  clear        — Limpiar historial\n"
-            "  info         — Esta ayuda"
+            "  open       — Abre app, carpeta, URL o archivo (xdg-open/start)\n"
+            "  preview    — Abre archivo HTML en navegador\n"
+            "  win_r      — Simula Win+R (solo Windows)\n"
+            "  shell_execute — Abre como ShellExecute (Windows)\n\n"
+            "SESION/HISTORIAL:\n"
+            "  session_info, session_reset, list_history, clear, info\n\n"
+            "Tambien existe 'shell_session' para moverse con cd persistente.\n"
+            "Y tools nativas de archivos: file_manager, file_editor, file_controller."
         )
 
     # ── LIST HISTORY ──
@@ -276,6 +328,15 @@ def terminal_agent(parameters: dict, player=None) -> str:
     if action == "shell_execute":
         if not target:
             return "Falta 'command' o 'target'."
+        if not IS_WIN:
+            result_text = _open_linux(target)
+            state["history"].append({
+                "cmd": f"shell_execute: {target}", "shell": "bash", "elevated": False,
+                "output": result_text, "time": time.strftime("%Y-%m-%d %H:%M:%S")
+            })
+            state["history"] = state["history"][-50:]
+            _save_state(state)
+            return result_text
         try:
             result = subprocess.run(
                 ["powershell", "-NoProfile", "-Command",
@@ -302,8 +363,10 @@ def terminal_agent(parameters: dict, player=None) -> str:
     if not cmd:
         return "Falta el parámetro 'command'."
 
-    # Auto-detect shell
-    if action == "run_cmd" or cmd.lower().startswith(("dir ", "cd ", "type ", "del ", "copy ", "move ", "mkdir ", "rmdir ", "cls", "echo ", "set ", "where ", "tasklist", "ipconfig", "systeminfo", "net ", "assoc", "ftype")):
+# Auto-detect shell (Linux: siempre bash)
+    if not IS_WIN:
+        shell = "bash"
+    elif action == "run_cmd" or cmd.lower().startswith(("dir ", "cd ", "type ", "del ", "copy ", "move ", "mkdir ", "rmdir ", "cls", "echo ", "set ", "where ", "tasklist", "ipconfig", "systeminfo", "net ", "assoc", "ftype")):
         shell = "cmd"
     elif action == "run_ps" or cmd.lower().startswith(("get-", "set-", "write-", "import-", "export-", "new-", "remove-", "select-", "where-object", "foreach", "measure-", "start-", "stop-", "restart-", "invoke-", "install-", "uninstall-")):
         shell = "powershell"

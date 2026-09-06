@@ -1,83 +1,6 @@
 {
   "history": [
     {
-      "cmd": "Get-Date",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Error: 'NoneType' object has no attribute 'strip'",
-      "time": "2026-08-08 19:13:16"
-    },
-    {
-      "cmd": "Get-Process | Select-Object -First 5 Name, Id, CPU",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "Name                    Id     CPU\n----                    --     ---\nAdobeCollabSync      19128 0.03125\nAdobeCollabSync      19168 3.03125\namdfendrsr            3016        \nApplicationFrameHost  1884  0.4375\narmsvc                4864",
-      "time": "2026-08-08 19:13:17"
-    },
-    {
-      "cmd": "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "WindowsProductName WindowsVersion\n------------------ --------------\nWindows 10 Home    2009",
-      "time": "2026-08-08 19:13:20"
-    },
-    {
-      "cmd": "echo Hola desde ERIS",
-      "shell": "cmd",
-      "elevated": false,
-      "output": "Hola desde ERIS",
-      "time": "2026-08-08 19:13:20"
-    },
-    {
-      "cmd": "Get-AudioDevice -List",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-08 19:44:28"
-    },
-    {
-      "cmd": "Start-Process \"chrome\" \"https://es.wikipedia.org/wiki/Vía_Láctea\"",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "(comando ejecutado sin output)",
-      "time": "2026-08-12 11:14:20"
-    },
-    {
-      "cmd": "Get-ScheduledTask | Where-Object {$_.State -eq 'Ready'} | Select-Object TaskName, TaskPath, Author | Format-Table -AutoSize",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "TaskName                                                     TaskPath                                                  \n--------                                                     --------                                                  \nAdobe Acrobat Update Task                                    \\                                                         \nBlueStacksHelper_nxt                                         \\                                                         \nNVIDIA App SelfUpdat",
-      "time": "2026-08-12 11:16:46"
-    },
-    {
-      "cmd": "Get-MpComputerStatus | Select-Object AMServiceEnabled, AntivirusEnabled, RealTimeProtectionEnabled",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "AMServiceEnabled AntivirusEnabled RealTimeProtectionEnabled\n---------------- ---------------- -------------------------\n            True             True                      True",
-      "time": "2026-08-12 11:17:36"
-    },
-    {
-      "cmd": "Get-ScheduledTask | Where-Object {$_.State -eq 'Ready'} | Select-Object TaskName, TaskPath, Author",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "TaskName                                                     TaskPath                                                  \n--------                                                     --------                                                  \nAdobe Acrobat Update Task                                    \\                                                         \nBlueStacksHelper_nxt                                         \\                                                         \nNVIDIA App SelfUpdat",
-      "time": "2026-08-12 11:33:03"
-    },
-    {
-      "cmd": "Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct | Select-Object displayName, productState",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "displayName      productState\n-----------      ------------\nWindows Defender       397568",
-      "time": "2026-08-12 11:33:36"
-    },
-    {
-      "cmd": "Get-ScheduledTask | Where-Object {$_.Author -notlike '*Microsoft*' -and $_.Author -notlike '*Adobe*' -and $_.Author -notlike '*NVIDIA*'} | Select-Object TaskName, Author, @{Name='Command';Expression={$_.Actions.Execute}}",
-      "shell": "powershell",
-      "elevated": false,
-      "output": "TaskName                                   Author                                                   Command            \n--------                                   ------                                                   -------            \nBlueStacksHelper_nxt                                                                                C:\\Program Files...\nOpenClaw Gateway                                                                                    C:\\Users\\danie\\....\nRunPlatformExperienc",
-      "time": "2026-08-12 11:34:08"
-    },
-    {
       "cmd": "Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelperOnUnlock\"; Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelper_Daily\"; Disable-ScheduledTask -TaskName \"RunPlatformExperienceHelper_Metrics\"",
       "shell": "powershell",
       "elevated": false,
@@ -349,8 +272,85 @@
       "elevated": false,
       "output": "Error: [Errno 22] Invalid argument",
       "time": "2026-08-24 09:46:47"
+    },
+    {
+      "cmd": "wmctrl -l",
+      "shell": "powershell",
+      "elevated": false,
+      "output": "Error: creationflags is only supported on Windows platforms",
+      "time": "2026-09-05 19:29:41"
+    },
+    {
+      "cmd": "echo HOLA_ERIS && uname -a && whoami",
+      "shell": "bash",
+      "elevated": false,
+      "output": "HOLA_ERIS\nLinux omarchy 7.1.9-arch1-2 #1 SMP PREEMPT_DYNAMIC Fri, 21 Aug 2026 22:18:59 +0000 x86_64 GNU/Linux\nsoul",
+      "time": "2026-09-05 23:56:35"
+    },
+    {
+      "cmd": "cd /tmp/eris_libre/pruebaA",
+      "shell": "bash",
+      "elevated": false,
+      "output": "Directorio no encontrado: /tmp/eris_libre/pruebaA",
+      "time": "2026-09-05 23:56:35"
+    },
+    {
+      "cmd": "pwd",
+      "shell": "bash",
+      "elevated": false,
+      "output": "/home/soul/Eris/ERIS-NEW",
+      "time": "2026-09-05 23:56:35"
+    },
+    {
+      "cmd": "open: true",
+      "shell": "open",
+      "elevated": false,
+      "output": "Abierto: /usr/bin/true",
+      "time": "2026-09-05 23:56:35"
+    },
+    {
+      "cmd": "open: zxvnmope123",
+      "shell": "open",
+      "elevated": false,
+      "output": "No encontré 'zxvnmope123' como archivo, carpeta, comando ni binario.",
+      "time": "2026-09-05 23:56:35"
+    },
+    {
+      "cmd": "./.venv-linux/bin/python -m pip --version",
+      "shell": "bash",
+      "elevated": false,
+      "output": "pip 26.2.1 from /home/soul/Eris/ERIS-NEW/.venv-linux/lib/python3.14/site-packages/pip (python 3.14)",
+      "time": "2026-09-05 23:59:40"
+    },
+    {
+      "cmd": "./.venv-linux/bin/python -m pip install --target /tmp/eris_piptest filetype -q --disable-pip-version-check 2>&1 | tail -3",
+      "shell": "bash",
+      "elevated": false,
+      "output": "(ejecutado sin output)",
+      "time": "2026-09-05 23:59:41"
+    },
+    {
+      "cmd": "PYTHONPATH=/tmp/eris_piptest ./.venv-linux/bin/python -c \"import filetype; print('filetype OK', filetype.__version__ if hasattr(filetype,'__version__') else '') \"",
+      "shell": "bash",
+      "elevated": false,
+      "output": "filetype OK 1.2.0",
+      "time": "2026-09-05 23:59:41"
+    },
+    {
+      "cmd": "rm -rf /tmp/eris_piptest && echo limpio",
+      "shell": "bash",
+      "elevated": false,
+      "output": "limpio",
+      "time": "2026-09-05 23:59:41"
+    },
+    {
+      "cmd": "rm -f /tmp/eris_prueba_edit.md && echo ok",
+      "shell": "bash",
+      "elevated": false,
+      "output": "ok",
+      "time": "2026-09-05 23:59:41"
     }
   ],
-  "last_cmd": "python C:\\Users\\danie\\OneDrive\\Desktop\\ERIS_Codigo\\code_20260824_094645.py",
-  "last_output": "Error: [Errno 22] Invalid argument"
+  "last_cmd": "rm -f /tmp/eris_prueba_edit.md && echo ok",
+  "last_output": "ok"
 }

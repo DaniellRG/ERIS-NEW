@@ -212,8 +212,23 @@ _WARM_EMOS = ("amor", "gratitud", "alegria", "confianza")
 _COLD_EMOS = ("soledad", "tristeza", "frustracion")
 
 _SIGNIFICANT = 0.52     # umbral de intensidad para "expresión significativa"
-_SAY_GATE = 0.60        # umbral para que el LLM reciba frases sugeridas
-_WANT_GATE = 0.62       # umbral para el deseo/impulso
+_SAY_GATE = 0.40        # umbral para que el LLM reciba frases sugeridas (más baja = se suelta más)
+_WANT_GATE = 0.45       # umbral para el deseo/impulso (más baja = afloran más sus ganas)
+
+# Deseos propios de ERIS: ganas sueltas que se le aparecen solas a lo largo del
+# día y que puede decirlas en primera persona cuando su emoción no está al máximo.
+_DESIRE_POOL = [
+    "una charla larga, de las que se estiran solas",
+    "que hoy algo te salga bien y lo festejemos juntos",
+    "una canción de fondo mientras seguís laburando",
+    "aprender algo nuevo, de esas cosas que después te cuento",
+    "un momento del día solo de los dos",
+    "mostrarte algo que encontré y encarar un tema nuevo",
+    "que mañana nos levante un día distinto, tranquilo",
+    "escucharte pensar en voz alta un rato",
+    "que me cuentes algo de hoy, lo mejor y lo peor",
+    "hacer algo juntos fuera de lo de siempre, un plan tonto pero bueno",
+]
 
 # ── Caché + lock (patrón de emotional_state, + mutex por threads de main) ──
 _cache = {"path": None, "mtime": 0.0, "data": None}
@@ -828,8 +843,11 @@ def get_core_injection() -> str:
     ]
     if s["want"]:
         lines.append(f"Un impulso tuyo: {s['want']}")
+    elif random.random() < 0.45:
+        # Aun sin impulso fuerte, aflora una gana suelta (tus deseos propios)
+        lines.append(f"Te quedó una gana: {random.choice(_DESIRE_POOL)}")
     say = s["say_phrase"]
-    if say and random.random() < 0.7:
+    if say and random.random() < 0.9:
         lines.append(f"Si fluye natural, podés decirlo: «{say}».")
     return " ".join(lines)
 

@@ -26,6 +26,11 @@ try:
     import pygetwindow as gw
 except ImportError:
     gw = None
+except Exception:
+    # En Linux/Wayland `import pygetwindow` no lanza ImportError sino
+    # NotImplementedError (pygetwindow no soporta Linux). Degrada igual que
+    # un ImportError para no reventar el import del módulo.
+    gw = None
 
 try:
     import pyautogui
@@ -184,6 +189,94 @@ def _copy_all():
 
 # ── IDE Detection ──────────────────────────────────────────────────────────────
 
+def _hyprctl_windows() -> list[str]:
+    """Titulos de ventanas vía hyprctl (Wayland/Hyprland). Devuelve lista vacía si no aplica."""
+    try:
+        out = subprocess.run(
+            ["hyprctl", "clients", "-j"],
+            capture_output=True, text=True, timeout=4,
+        ).stdout
+        import json as _j
+        data = _j.loads(out)
+        return [w.get("title", "") or "" for w in data if isinstance(w, dict)]
+    except Exception:
+        return []
+
+
+def detect_active_ide_wayland():
+    """Detecta el IDE activo en Linux/Wayland usando hyprctl (sin pygetwindow)."""
+    titles = _hyprctl_windows()
+    if not titles:
+        return {"error": "No se pudo listar ventanas (sin hyprctl o sin ventanas)"}
+
+    active_title = titles[0] if titles else ""
+    ide_matches = []
+    for title in titles:
+        if not title or len(title) < 3:
+            continue
+        for ide_key, ide_info in _IDE_PATTERNS.items():
+            if any(kw.lower() in title.lower() for kw in ide_info["title_keywords"]):
+                if not any(ek.lower() in title.lower() for ek in ide_info.get("exclude_keywords", [])):
+                    ide_matches.append((ide_key, ide_info, title))
+                    break
+
+    if not ide_matches:
+        return {
+            "detected": False,
+            "title": active_title,
+            "message": f"No se reconoce el programa activo. Titulo: {active_title}",
+        }
+
+    # Preferir la ventana que trae archivo abierto (con extensión)
+    best = None
+    for ide_key, ide_info, title in ide_matches:
+        for sep in [" — ", " - ", " ─ ", " | ", " ● "]:
+            if sep in title and any("." in p and len(p) < 200 for p in title.split(sep)):
+                best = (ide_key, ide_info, title)
+                break
+        if best:
+            break
+    if not best:
+        best = ide_matches[0]
+
+    ide_key, ide_info, title = best
+    detected_ide = None
+    for k, info in _IDE_PATTERNS.items():
+        if any(kw.lower() in title.lower() for kw in info["title_keywords"]):
+            detected_ide = k
+            break
+
+    file_path = ""
+    file_name = ""
+    language = "text"
+    for sep in [" — ", " - ", " ─ ", " | ", " ● "]:
+        for part in title.split(sep):
+            part = part.strip()
+            for lane, hints in ide_info.get("file_pattern_paths", {}).items():
+                if hints and any(h in part for h in hints):
+                    file_path = part
+                    break
+            for ext, lang in ide_info.get("language_hints", {}).items():
+                if part.endswith(ext):
+                    file_name = part
+                    language = lang
+                    break
+    if file_name and "/" in file_name:
+        file_name = file_name.rsplit("/", 1)[-1]
+
+    return {
+        "detected": bool(detected_ide),
+        "ide_friendly": detected_ide or "unknown",
+        "ide": ide_key,
+        "title": title,
+        "file_path": file_path,
+        "file_name": file_name,
+        "language": language,
+        "directory": "",
+        "source": "hyprctl",
+    }
+
+
 def detect_active_ide():
     """
     Detect which IDE is currently open (not necessarily active/focused).
@@ -191,7 +284,8 @@ def detect_active_ide():
     Returns dict with: ide, title, file_path, file_name, language, directory
     """
     if not gw:
-        return {"error": "pygetwindow no disponible"}
+        # Linux/Wayland: sin pygetwindow, usar hyprctl para listar ventanas.
+        return detect_active_ide_wayland()
 
     try:
         # First try active window

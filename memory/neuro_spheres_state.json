@@ -1,5 +1,5 @@
 {
-  "total_nodes": 57,
+  "total_nodes": 59,
   "total_connections": 69,
   "nodes": {
     "aprendizaje_1787245113209": {
@@ -430,7 +430,7 @@
       "force": 5,
       "connections": [],
       "created": "2026-08-20T22:55:40.533080",
-      "last_used": "2026-08-28T11:35:00.064285",
+      "last_used": "2026-09-06T07:52:06.702386",
       "content": "Aprendi: No depender del LLM para herramientas criticas - la ejecucion garantizada via Python es mas confiable. Contexto: Implementamos los 24 modulos cognitivos y el ciclo cognitivo automatico - ahora mis herramientas de razonamiento se ejecutan garantizadamente via Python"
     },
     "emociones_1787284652221": {
@@ -440,7 +440,7 @@
       "force": 8,
       "connections": [],
       "created": "2026-08-20T22:57:32.221592",
-      "last_used": "2026-08-28T11:31:35.936911",
+      "last_used": "2026-09-06T07:51:47.902630",
       "content": "Recompensa helped_user: Interaccion completada exitosamente. Crecimiento: 3"
     },
     "aprendizaje_1787284652224": {
@@ -633,9 +633,29 @@
       "connections": [],
       "created": "2026-09-05T15:50:15.741401",
       "last_used": "2026-09-05T15:50:15.741416"
+    },
+    "aprendizaje_1788644375825": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788644375825",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T16:39:35.825116",
+      "last_used": "2026-09-05T16:39:35.825130"
+    },
+    "aprendizaje_1788646479555": {
+      "sphere": "aprendizaje",
+      "type": "aprendizaje",
+      "title": "TEST_NODE_1788646479555",
+      "content": "test",
+      "force": 1,
+      "connections": [],
+      "created": "2026-09-05T17:14:39.555746",
+      "last_used": "2026-09-05T17:14:39.555761"
     }
   },
-  "last_add": "2026-09-05T15:50:15.741420",
+  "last_add": "2026-09-05T17:14:39.555766",
   "last_connect": "2026-08-20T11:58:33.239791",
   "growth_history": [
     {
@@ -1232,6 +1252,20 @@
       "timestamp": "2026-09-05T15:50:15.741424",
       "action": "add",
       "node_id": "aprendizaje_1788641415741",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T16:39:35.825138",
+      "action": "add",
+      "node_id": "aprendizaje_1788644375825",
+      "sphere": "aprendizaje",
+      "type": "aprendizaje"
+    },
+    {
+      "timestamp": "2026-09-05T17:14:39.555769",
+      "action": "add",
+      "node_id": "aprendizaje_1788646479555",
       "sphere": "aprendizaje",
       "type": "aprendizaje"
     }

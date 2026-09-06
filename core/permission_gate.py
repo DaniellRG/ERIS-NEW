@@ -26,6 +26,26 @@ _DATA_DIR.mkdir(parents=True, exist_ok=True)
 _PERMISSION_LOG = _DATA_DIR / "permission_log.json"
 _PERMISSION_RULES = _DATA_DIR / "permission_rules.json"
 
+_rules_cache: dict = {}
+_rules_mtime: float = 0.0
+
+
+def _reload_rules() -> dict:
+    """Lee data/permission_rules.json (cacheado por mtime).
+    Formato: {"tool": "allow|ask|deny", "tool.action": "...", "*": "..."}."""
+    global _rules_cache, _rules_mtime
+    try:
+        if _PERMISSION_RULES.exists():
+            m = _PERMISSION_RULES.stat().st_mtime
+            if m != _rules_mtime:
+                raw = json.loads(_PERMISSION_RULES.read_text(encoding="utf-8"))
+                _rules_cache = raw if isinstance(raw, dict) else {}
+                _rules_mtime = m
+            return _rules_cache
+    except Exception:
+        pass
+    return {}
+
 # Risky command patterns
 DANGEROUS_COMMANDS = [
     (re.compile(r"\brm\s+(-[rf]+\s+)?/", re.I), "Eliminar archivos/directorios"),
@@ -107,6 +127,21 @@ class PermissionGate:
         self._trusted_sessions.pop(user, None)
         return False
 
+    def _match_rule(self, tool_name: str, params: dict) -> str | None:
+        """Resuelve la regla explícita más específica para esta llamada."""
+        try:
+            rules = _reload_rules()
+            action = params.get("action") if isinstance(params, dict) else None
+            ordered = [tool_name]
+            if action:
+                ordered.append(f"{tool_name}.{action}")
+            for key in ordered:
+                if key in rules:
+                    return rules[key]
+            return rules.get("*")
+        except Exception:
+            return None
+
     def assess_risk(self, tool_name: str, params: dict) -> tuple[bool, str, str]:
         """
         Assess risk of a tool call.
@@ -118,6 +153,15 @@ class PermissionGate:
 
         if tool_name in self._auto_deny:
             return True, "critical", f"Tool bloqueada: {tool_name}"
+
+        # ── Políticas explícitas (data/permission_rules.json): allow | ask | deny ──
+        rule = self._match_rule(tool_name, params)
+        if rule == "deny":
+            return True, "critical", f"Bloqueada por política (permission_rules.json): {tool_name}"
+        if rule == "ask":
+            return True, "medium", f"Confirmación requerida por política (permission_rules.json): {tool_name}"
+        if rule == "allow":
+            return False, "safe", ""
 
         if tool_name in ALWAYS_CONFIRM:
             return True, "high", DANGEROUS_TOOLS.get(tool_name, f"Tool riesgosa: {tool_name}")
@@ -163,6 +207,12 @@ class PermissionGate:
 
         if not needs_confirm:
             return PermissionResult(True, "safe")
+
+        # Bloques duros por política (deny) — NO dependen del UI ni de
+        # sesión confiable. Una tool "deny" es un rechazo absoluto.
+        if risk == "critical" and (desc.startswith("Bloqueada") or desc.startswith("Tool bloqueada")):
+            self._log_decision(tool_name, params, False, "denied_by_policy")
+            return PermissionResult(False, "denied_by_policy")
 
         if self.is_trusted(user):
             self._log_decision(tool_name, params, True, "trusted_session")
@@ -211,3 +261,72 @@ def get_permission_gate() -> PermissionGate:
     if _gate is None:
         _gate = PermissionGate()
     return _gate
+
+
+def permission_policy_tool(parameters=None, player=None) -> str:
+    """Tool `permission_policy` — gestiona las políticas allow/ask/deny
+    estilo opencode (data/permission_rules.json). Acciones: view, allow,
+    ask, deny, trust, untrust, reset."""
+    global _rules_mtime
+    params = parameters or {}
+    action = (params.get("action") or "view").strip().lower()
+    tool = (params.get("tool") or "").strip()
+    tool_action = (params.get("tool_action") or "").strip()
+    try:
+        minutes = int(params.get("minutes") or 30)
+    except Exception:
+        minutes = 30
+    gate = get_permission_gate()
+    rules = _reload_rules()
+    key = tool if not tool_action else f"{tool}.{tool_action}"
+
+    if action in ("view", "list", "rules", "status"):
+        lines = [f"{k} → {v}" for k, v in rules.items() if k != "$comment"]
+        auto = " | ".join(sorted(gate._auto_approve - set(ALWAYS_SAFE))) or "—"
+        denied = " | ".join(sorted(gate._auto_deny)) or "—"
+        trusted = "sí" if gate.is_trusted() else "no"
+        body = "\n".join(lines) or "(sin reglas explícitas)"
+        return (
+            "Políticas de permisos (data/permission_rules.json):\n{}\n"
+            "Auto-aprobadas: {}\nBloqueadas: {}\nSesión de confianza: {}".format(
+                body, auto, denied, trusted)
+        )
+
+    if action in ("allow", "ask", "deny"):
+        if not key:
+            return "Falta 'tool'. Ej: permission_policy action=deny tool=shutdown_eris tool_action=..."
+        rules[key] = action
+        try:
+            _PERMISSION_RULES.write_text(
+                json.dumps(rules, indent=2, ensure_ascii=False), encoding="utf-8")
+        except Exception as e:
+            return "No pude escribir las reglas: {}".format(e)
+        _rules_cache.clear()
+        _rules_mtime = 0.0
+        # Reconstruir los conjuntos automáticos a partir de reglas exactas de tool
+        ap = set(ALWAYS_SAFE) | {k for k, v in rules.items() if v == "allow" and "." not in k}
+        dn = {k for k, v in rules.items() if v == "deny" and "." not in k}
+        gate.set_auto_approve(ap)
+        gate.set_auto_deny(dn)
+        return "Regla aplicada: {} → {}. Efectiva ya.".format(key, action)
+
+    if action in ("trust",):
+        gate.trust_session("default", minutes)
+        return "Sesión confiable por {} minutos (no pedirá confirmación).".format(minutes)
+
+    if action in ("untrust", "clear_trust"):
+        gate._trusted_sessions.pop("default", None)
+        return "Sesión de confianza revocada."
+
+    if action == "reset":
+        try:
+            _PERMISSION_RULES.unlink(missing_ok=True)
+        except Exception:
+            pass
+        _rules_cache.clear()
+        _rules_mtime = 0.0
+        gate.set_auto_approve(set(ALWAYS_SAFE))
+        gate.set_auto_deny(set())
+        return "Políticas reseteadas: vuelve la heurística por defecto."
+
+    return "Acciones válidas de permission_policy: view, allow, ask, deny, trust, untrust, reset."

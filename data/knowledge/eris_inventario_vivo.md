@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
+Generado: 2026-09-06 07:45:27 · 456 tools registradas y resolviendo.
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific
@@ -24,10 +24,10 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `advanced_rag` — Búsqueda avanzada en la base de conocimiento de Eris. Hybrid BM25+semantic con cross-encoder re-ranking y cita
 
 ## agent
-- `agent_loop` — Motor de agente autónomo de ERIS: descompone un objetivo en pasos, los ejecuta con herramientas, verifica y co
-- `agent_task` — Ejecuta tareas de agente con un modelo de IA. Acciones: run (ejecutar tarea con task/text, model opcional, mod
 - `agent_as_tool` — Delega una sub-tarea a un agente autónomo especializado. Útil para tareas complejas que benefit de un enfoque 
 - `agent_bus` — Barrido de eventos del agente: publica y suscribe eventos entre agentes. Acciones: publish, subscribe, emit, l
+- `agent_loop` — Motor de agente autónomo de ERIS: descompone un objetivo en pasos, los ejecuta con herramientas, verifica y co
+- `agent_task` — Ejecuta tareas de agente con un modelo de IA. Acciones: run (ejecutar tarea con task/text, model opcional, mod
 
 ## agi
 - `agi_agent` — Delega una meta a un agente multi-paso que descompone la tarea y la ejecuta. Acciones: plan (crear plan con 'g
@@ -52,17 +52,17 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `anomaly_detector` — Detección de patrones inusuales: archivos modificados, código sospechoso (exec/eval/hardcoded secrets), logs a
 
 ## api
+- `api_doc_generator` — Generar documentacion de APIs: OpenAPI 3.0, Markdown. Acciones: status, generate_openapi, generate_markdown.
 - `api_server` — API Server para ERIS: levanta un servidor HTTP que expone las herramientas. Acciones: status (estado), start (
 - `api_tester` — Testear APIs: GET, POST, PUT, DELETE, health checks, medir latencia. Acciones: status, request, health_check.
-- `api_doc_generator` — Generar documentacion de APIs: OpenAPI 3.0, Markdown. Acciones: status, generate_openapi, generate_markdown.
 
 ## app
 - `app_discovery` — Descubre aplicaciones instaladas en el sistema: buscar por nombre, listar apps instaladas y obtener su ruta. A
 - `app_installer` — Install/uninstall apps via winget
 
 ## ask
-- `ask_user` — Hace una pregunta estructurada al usuario con opciones para obtener su decision o preferencia
 - `ask_opencode` — Pregunta a opencode una duda de programacion y devuelve su respuesta. Acciones: ask (preguntar con question/te
+- `ask_user` — Hace una pregunta estructurada al usuario con opciones para obtener su decision o preferencia
 
 ## assumption
 - `assumption_detection` — Identificar y cuestionar supuestos en el propio razonamiento. Que se esta dando por hecho? Esta justificado? A
@@ -78,11 +78,11 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `audio_transcriber` — Transcribe audio a texto usando faster-whisper. Acciones: transcribe (transcribir archivo de audio), transcrib
 
 ## auto
-- `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
-- `auto_backup` — Respaldos automaticos de ERIS: realizar respaldo manual, ver estado y configurar respaldos. Acciones: status (
 - `auto_agent` — Agente autonomo multi-paso de ERIS: planifica y ejecuta metas automaticamente. Acciones: status (estado), plan
+- `auto_backup` — Respaldos automaticos de ERIS: realizar respaldo manual, ver estado y configurar respaldos. Acciones: status (
 - `auto_documenter` — Genera documentación automática: changelogs, READMEs, análisis de código para docs, y sugerencias de migración
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
+- `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
 
 ## autonomous
 - `autonomous_learner` — Aprendizaje autonomo: estudia temas, guarda conocimiento y resume. Acciones: study (estudiar un topic), summar
@@ -91,8 +91,8 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `autonomy` — Sistema de autonomia de ERIS: auto-mejora, ejecucion sin confirmacion, auto-reparo, aprendizaje autonomo. Eris
 
 ## backup
-- `backup_system` — Sistema de backup: crea respaldos con metadatos y programacion. Acciones: create_backup (crear backup), list_b
 - `backup_prioritizer` — Priorización inteligente de respaldos: clasifica archivos por criticidad, detecta cuáles necesitan backup, y s
+- `backup_system` — Sistema de backup: crea respaldos con metadatos y programacion. Acciones: create_backup (crear backup), list_b
 
 ## batch
 - `batch_executor` — Ejecuta múltiples tareas independientes en paralelo. Reduce tiempo total cuando hay 3+ tareas que no dependen 
@@ -101,10 +101,10 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `bias_detection` — Detectar sesgos cognitivos propios y ajenos: confirmacion, anclaje, disponibilidad, representatividad, favorit
 
 ## browser
+- `browser_auto` — Automatización de navegador con Playheadless. Abrir páginas, extraer texto, hacer click, escribir, ejecutar JS
 - `browser_control` — Automatizacion de navegador: navegar, buscar, hacer clic, leer paginas, hacer scroll, resultados de busqueda, 
 - `browser_extension` — Conexion con el navegador via extension: lista pestanas, navega, obtiene contenido, ejecuta JS, busca historia
 - `browser_history` — Historial de navegacion: consulta historial y marcadores de Chrome/Edge, busca por texto y exporta. Acciones: 
-- `browser_auto` — Automatización de navegador con Playheadless. Abrir páginas, extraer texto, hacer click, escribir, ejecutar JS
 - `browser_unified` — Browser automation completo con Playwright. Navegar, forms, scraping, screenshots, PDFs, multi-tab, cookies pe
 
 ## calculator
@@ -138,20 +138,20 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `cicd_builder` — Crear pipelines CI/CD: GitHub Actions, templates predefinidos para Python, Node.js, Docker. Acciones: status, 
 
 ## clipboard
-- `clipboard_manager` — Historial del portapapeles: guarda, busca y reusa texto copiado. Acciones: history (ver historial), search (bu
 - `clipboard_history` — Gestor de historial de clipboard. Leer, buscar, fijar snippets, categorías, estadísticas.
+- `clipboard_manager` — Historial del portapapeles: guarda, busca y reusa texto copiado. Acciones: history (ver historial), search (bu
 
 ## code
+- `code_analyzer` — Static analysis: ruff, radon, mypy, bandit, pylint
+- `code_assistant` — Asistente de codigo proactivo. Escaneo completo automatico: detecta si hay un IDE abierto, lee el codigo, y en
+- `code_copilot` — Asistente de código IA con edición QUIRÚRGICA: genera código en TODOS los lenguajes (java, html, css, javascri
+- `code_engineer` — Ingeniero de código con reasoning loop completo: leer archivo → buscar patrón → editar con contexto → verifica
+- `code_generator` — Generate code files in any programming language — always saves to Desktop/ERIS_Scripts by default.
+- `code_guard` — El ojo guardián de ERIS sobre el código del usuario: detecta en tiempo real errores (rojo: rompe) y advertenci
 - `code_helper` — Write, edit, explain, run, build, help — code in any language. Use help for programming questions and guidance
 - `code_review` — Code review: review, security, style, history, stats, quick, review_diff (revisa git diff sin commitear; use_l
-- `code_assistant` — Asistente de codigo proactivo. Escaneo completo automatico: detecta si hay un IDE abierto, lee el codigo, y en
-- `code_validator` — Auto-validación de código tras cambios. Acciones: validate (py_compile de 'path' o pytest de 'repo'), fix (cor
-- `code_analyzer` — Static analysis: ruff, radon, mypy, bandit, pylint
-- `code_generator` — Generate code files in any programming language — always saves to Desktop/ERIS_Scripts by default.
-- `code_copilot` — Asistente de código IA con edición QUIRÚRGICA: genera código en TODOS los lenguajes (java, html, css, javascri
-- `code_guard` — El ojo guardián de ERIS sobre el código del usuario: detecta en tiempo real errores (rojo: rompe) y advertenci
 - `code_sandbox` — Ejecución segura de código Python en sandbox. Escribí y ejecutá código en tiempo real con timeout y restriccio
-- `code_engineer` — Ingeniero de código con reasoning loop completo: leer archivo → buscar patrón → editar con contexto → verifica
+- `code_validator` — Auto-validación de código tras cambios. Acciones: validate (py_compile de 'path' o pytest de 'repo'), fix (cor
 
 ## codebase
 - `codebase` — Codebase analysis: stats, tree, functions, classes, imports, search, glob, grep, dependencies, duplicates, str
@@ -164,12 +164,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `compaction` — Compaction inteligente de contexto —管理a la ventana de contexto del LLM. Capas: 1) Poda de resultados de tools 
 
 ## computer
-- `computer_settings` — Volume, brightness, window control
 - `computer_control` — Native PC control: click, type, hotkeys, scroll, screenshot, open apps and type, window management
+- `computer_settings` — Volume, brightness, window control
 
 ## confidence
-- `confidence_scorer` — Cuantifica confianza en respuestas: evidencia disponible, contradicciones, complejidad, historial de errores. 
 - `confidence_calibration` — Calibrar nivel de confianza en respuestas. Evaluar que tan seguro esta basado en evidencia, experiencia, facto
+- `confidence_scorer` — Cuantifica confianza en respuestas: evidencia disponible, contradicciones, complejidad, historial de errores. 
 
 ## config
 - `config_export` — Exporta o importa la configuracion completa de ERIS (config, memory, knowledge, plugins). Acciones: export (ex
@@ -181,27 +181,27 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `console_log` — Console.log centralizado de ERIS. Lee, busca y gestiona el log de errores, warnings, tool calls y rendimiento.
 
 ## context
-- `context_read` — Lee el contexto actual de Eris (AGENTS.md). Acciones: read (AGENTS.md), notes (NOTES.md del proyecto), all (to
-- `context_update` — Actualiza el contexto de Eris. Acciones: persona (actualizar AGENTS.md), learn (registrar aprendizaje), todo (
+- `context_bridge` — Conecta contexto entre sesiones: intención pendiente, tareas incompletas, preguntas abiertas, sesiones relacio
 - `context_engine` — Motor de contexto de ERIS: analiza el contexto del sistema (aplicaciones activas, comandos recientes), gestion
 - `context_menu` — Instala entradas del menu contextual de Windows.
 - `context_optimizer` — Optimización de ventana de contexto: calcula presupuesto óptimo de tokens por sección (system, history, tools,
-- `context_bridge` — Conecta contexto entre sesiones: intención pendiente, tareas incompletas, preguntas abiertas, sesiones relacio
+- `context_read` — Lee el contexto actual de Eris (AGENTS.md). Acciones: read (AGENTS.md), notes (NOTES.md del proyecto), all (to
+- `context_update` — Actualiza el contexto de Eris. Acciones: persona (actualizar AGENTS.md), learn (registrar aprendizaje), todo (
 
 ## context7
 - `context7` — Context7 - Documentacion actualizada de librerias. Para: buscar librerias por nombre (action=search), obtener 
 
 ## contextual
-- `contextual_control` — Control Contextual de Entorno. Ajusta dinámicamente volumen, brillo, energía y notificaciones
 - `contextual_awareness` — Conciencia contextual: hora, fecha, bateria, CPU, RAM, disco, procesos activos. Eris sabe que pasa a su alrede
+- `contextual_control` — Control Contextual de Entorno. Ajusta dinámicamente volumen, brillo, energía y notificaciones
 
 ## contradiction
 - `contradiction_detection` — Detectar contradicciones logicas entre declaraciones o en el propio razonamiento. Verificar coherencia interna
 
 ## conversation
-- `conversation_search` — Search past conversations by keyword or list recent conversation history. Useful when you need to remember wha
 - `conversation_brancher` — Explora alternativas de una conversación: genera branches de diferentes approaches para una misma pregunta, y 
 - `conversation_replayer` — Reproduce sesiones de conversación pasadas: ver qué hizo el agente, por qué, y aprender de sesiones anteriores
+- `conversation_search` — Search past conversations by keyword or list recent conversation history. Useful when you need to remember wha
 
 ## cost
 - `cost_tracker` — Tracking de costos de API/LLM. Acciones: record (registrar llamada), session (costo de sesión actual), daily (
@@ -232,28 +232,28 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `cybersecurity` — Ensenanza y herramientas de ciberseguridad: conceptos, tecnicas, hacking etico. Acciones: teach (ensenar conce
 
 ## daily
-- `daily_health_report` — Reporte diario de salud de ERIS: ejecuta self_regression (compile + pytest + auditoría A/B), tool_benchmark (t
 - `daily_digest` — Memoria de largo plazo de ERIS: digest diario que consolida qué se hizo, qué se aprendió y qué falló cada día.
+- `daily_health_report` — Reporte diario de salud de ERIS: ejecuta self_regression (compile + pytest + auditoría A/B), tool_benchmark (t
 
 ## darkweb
 - `darkweb_monitor` — Monitoreo de exposicion de datos: verifica si emails o dominios aparecen en filtraciones. Acciones: check (ver
 
 ## dashboard
-- `dashboard_web` — Panel web de control de ERIS con chat y quick actions conectados al agente real. Acciones: start (iniciar dash
 - `dashboard` — dashboard tool
+- `dashboard_web` — Panel web de control de ERIS con chat y quick actions conectados al agente real. Acciones: start (iniciar dash
 
 ## data
+- `data_analyst` — Analiza archivos CSV o Excel: muestra columnas, estadisticas basicas, filtra datos, genera reportes. Acciones:
 - `data_connectors` — Conectores de datos: SQL, CSV, API, etc. Acciones: connect (conectar), query (consultar), list. Params: query 
 - `data_encryption` — Cifrado de datos y archivos: cifrar/descifrar texto o archivos con AES, gestionar claves y verificar hashes. A
-- `data_viz` — Visualizacion de datos con matplotlib/plotly: bar, line, pie, scatter, histogram, table, interactive
-- `data_analyst` — Analiza archivos CSV o Excel: muestra columnas, estadisticas basicas, filtra datos, genera reportes. Acciones:
 - `data_visualize` — Genera graficos PNG (bar, line, pie, hist, scatter) desde CSV/Excel/JSON usando PIL. Guarda en data/generated/
+- `data_viz` — Visualizacion de datos con matplotlib/plotly: bar, line, pie, scatter, histogram, table, interactive
 
 ## db
 - `db_knowledge` — Base de conocimiento SQLite de ERIS: guarda y consulta hechos/conocimiento. Acciones: add (guardar fact, topic
 - `db_memory` — Store, retrieve, search or list persistent memories. Used to remember or recall user information across sessio
-- `db_tasks` — Gestion de tareas en base de datos SQLite. Acciones: list (listar), add (crear tarea), update (actualizar esta
 - `db_schema_visualizer` — Visualizar esquemas de base de datos: texto, Mermaid ERD, JSON. Acciones: status, visualize.
+- `db_tasks` — Gestion de tareas en base de datos SQLite. Acciones: list (listar), add (crear tarea), update (actualizar esta
 
 ## debate
 - `debate_engine` — Argumenta ambos lados de una cuestion. Presenta argumentos a favor y en contra con evidencia y sintesis. Accio
@@ -269,7 +269,7 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## desktop
 - `desktop_control` — Control de ventanas y escritorio: listar, minimizar, maximizar, restaurar, cerrar, enfocar, buscar, cascada, m
-- `desktop_notifications` — Notificaciones nativas de Windows con prioridades y configuracion. Acciones: send (enviar notificacion), list_
+- `desktop_notifications` — Notificaciones de escritorio nativas (Windows Toast / Linux notify-send) con prioridades y configuracion. Acci
 
 ## dev
 - `dev_agent` — Autonomous development agent: explore codebase, implement changes, test, compile, git flow, GitHub push, full 
@@ -289,10 +289,10 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## document
 - `document_creator` — Crea documentos de texto, Word o Excel locales. Acciones: create (crear desde title+content), create_sheet (cr
-- `document_handler` — Create Word, PDF, Excel, PowerPoint, CSV, TXT documents with content and memory — always saves to Desktop. Act
-- `document_rag` — RAG sobre documentos y memoria: indexa documentos, memoria episodica y vault de Obsidian; consulta con pregunt
 - `document_generator` — Crea, inspecciona y retoma documentos de Word. Acciones: create (crear doc nuevo), check_content (leer doc exi
+- `document_handler` — Create Word, PDF, Excel, PowerPoint, CSV, TXT documents with content and memory — always saves to Desktop. Act
 - `document_manager` — Gestiona documentos (PDF, Word, Excel, Text). Acciones: create (crear documento con content y path), read (lee
+- `document_rag` — RAG sobre documentos y memoria: indexa documentos, memoria episodica y vault de Obsidian; consulta con pregunt
 - `document_tool` — Trabaja con documentos y archivos: info (metadatos), read (extraer texto), summary, write (crear), edit/replac
 
 ## dream
@@ -302,19 +302,19 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `driver_manager` — Gestiona drivers de Windows: lista, respalda, restaura. Acciones: list (listar drivers), backup (respaldar dri
 
 ## email
-- `email_manager` — Gestión de email IMAP/SMTP. Leer, enviar, buscar emails. Acciones: count (no leídos), list (recientes), read (
 - `email_calendar_deep` — Email/Calendar deep integration. Resumir inbox, count unread, smart reply, calendar today, followup tracker.
+- `email_manager` — Gestión de email IMAP/SMTP. Leer, enviar, buscar emails. Acciones: count (no leídos), list (recientes), read (
 
 ## emo
 - `emo_core` — Núcleo emocional de Eris – monitorea el sistema y ajusta su estado.
 
 ## emotional
-- `emotional_state` — Consulta o ajusta tu estado emocional interno (energía, felicidad, etc.). Acciones: status (ver estado y mood)
-- `emotional_growth` — Sistema de desarrollo emocional de ERIS. Permite consultar
 - `emotional_core` — Núcleo emocional sentiente de ERIS: el estado anímico actual (emoción dominante con nombre, intensidad y CAUSA
+- `emotional_growth` — Sistema de desarrollo emocional de ERIS. Permite consultar
 - `emotional_memory` — Memoria emocional: Eris recuerda como se sintio en cada interaccion, analiza patrones, predice emociones. Acci
-- `emotional_tone` — La voz de Eris cambia segun su emocion. Feliz=rapido, Triste=lento, Enojado=firme. Acciones: status, map, appl
 - `emotional_rl` — Motor de Reinforcement Learning Emocional de Eris: recompensas basadas en emociones. Acciones: status (ver apr
+- `emotional_state` — Consulta o ajusta tu estado emocional interno (energía, felicidad, etc.). Acciones: status (ver estado y mood)
+- `emotional_tone` — La voz de Eris cambia segun su emocion. Feliz=rapido, Triste=lento, Enojado=firme. Acciones: status, map, appl
 
 ## english
 - `english_teacher` — Profesor de ingles: curriculo A1 a C2, lecciones, ejercicios, correccion. Acciones: lesson (dar leccion), exer
@@ -324,14 +324,14 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## eris
 - `eris_guardian` — Guardian de ERIS: vigila la salud del codigo y del sistema. Escanea todos los archivos .py del proyecto, detec
-- `eris_update` — Verifica si hay una nueva version de ERIS en GitHub Releases (sin parámetros).
 - `eris_style` — Perfil de estilo configurable de ERIS (config/eris_style.json): identidad, trato con el usuario, frases (salud
 - `eris_ui_control` — Control de la interfaz grafica de ERIS. Acciones: state (cambiar estado), log (escribir en log), focus (traer 
+- `eris_update` — Verifica si hay una nueva version de ERIS en GitHub Releases (sin parámetros).
 - `eris_updater` — Auto-actualización de Eris. Verificar nuevas versiones, changelog, descargar y aplicar actualizaciones.
 
 ## error
-- `error_recovery` — Recuperación automática de errores de herramientas. Diagnosticar el error, intentar fix automático, y sugerir 
 - `error_pattern_db` — Base de datos de errores y soluciones: registra errores, busca soluciones conocidas, y aprende de cada fix par
+- `error_recovery` — Recuperación automática de errores de herramientas. Diagnosticar el error, intentar fix automático, y sugerir 
 
 ## ethical
 - `ethical_reasoning` — Evalua implicaciones morales de acciones usando multiples marcos eticos: deontologia, consecuencialismo, virtu
@@ -346,15 +346,15 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `feedback_learner` — Aprende del feedback del usuario (👍/👎). Registra qué respuestas le gustan y ajusta estilo/futuras respuestas.
 
 ## file
-- `file_processor` — Process files: info, describe, summarize, validate, convert, compress
-- `file_editor` — Edición quirúrgica y búsqueda avanzada de archivos. Acciones: read (leer archivo/directorio con 'path', 'offse
+- `file_api` — API de archivos: lectura, escritura, busqueda y manipulacion segura de archivos del sistema.
 - `file_controller` — File CRUD, read fragmentado (offset/limit), grep con file:line, glob por nombre, find, organize, disk usage, j
+- `file_editor` — Edición quirúrgica y búsqueda avanzada de archivos. Acciones: read (leer archivo/directorio con 'path', 'offse
 - `file_encryptor` — Cifra y descifra archivos con contrasena. Acciones: encrypt (cifrar archivo: path/file + password/key), decryp
 - `file_manager` — Operaciones con archivos: mover, copiar, renombrar, borrar, listar, buscar, crear directorio, abrir archivo/ca
 - `file_monitor` — Monitor file system changes in real-time. Acciones: start, stop, status. Params: folder (carpeta a vigilar), q
-- `file_profiler` — Perfil completo de archivos: tech stack, complejidad ciclomática, imports, quality score, clases/funciones, de
 - `file_organizer` — Organizador inteligente de archivos. Scan, organizar por reglas, duplicados, undo, historial.
-- `file_api` — API de archivos: lectura, escritura, busqueda y manipulacion segura de archivos del sistema.
+- `file_processor` — Process files: info, describe, summarize, validate, convert, compress
+- `file_profiler` — Perfil completo de archivos: tech stack, complejidad ciclomática, imports, quality score, clases/funciones, de
 
 ## finance
 - `finance_tracker` — Tracker de finanzas personales. Importar CSV bancarios, categorizar, presupuestos, gráficos, suscripciones.
@@ -369,11 +369,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `fun_mode` — Modo diversion: chistes, datos curiosos, juegos. Acciones: joke (contar un chiste), fact (dato curioso), trivi
 
 ## game
-- `game_companion` — Companero de juegos. Analiza pantalla y ayuda. Acciones: analyze (analizar pantalla), help (ayuda con game). P
 - `game_agent` — Agente autonomo de juego: analiza la pantalla, controla el personaje, explora, pelea. Acciones: analyze (descr
+- `game_companion` — Companero de juegos. Analiza pantalla y ayuda. Acciones: analyze (analizar pantalla), help (ayuda con game). P
 - `game_launcher` — Encuentra y lanza juegos instalados en el PC. Escanea todas las unidades en busca de juegos. Acciones: scan (e
 
 ## git
+- `git_autonomo` — Git autonomo de Eris: versiona su propio codigo y proyectos del usuario. status, commit con mensaje autogenera
 - `git_control` — Full Git operations: status, add, commit, push, pull, branch, log, diff, filter-branch, init, remote, tag, Git
 - `git_daily` — Flujo git diario con convención de commits. Acciones: status (corto), diff (--stat, 'full'=true para detalle),
 - `git_smart` — Git inteligente con auto-commit messages. Genera mensajes descriptivos automáticamente analizando los cambios.
@@ -385,9 +386,9 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `gmail_control` — Read, send, and manage Gmail messages
 
 ## goal
+- `goal_management` — Gestionar multiples metas: priorizar, trackear progreso, manejar dependencias. Acciones: list (ver metas), pri
 - `goal_setting` — Sistema de metas autonomas: Eris define sus propias metas, las prioriza, y las persigue. Genera metas automati
 - `goal_tracker` — Persistencia y seguimiento de objetivos a largo plazo: crear metas, sub-tareas, milestones, progreso, detectar
-- `goal_management` — Gestionar multiples metas: priorizar, trackear progreso, manejar dependencias. Acciones: list (ver metas), pri
 
 ## goals
 - `goals` — Manage personal goals and objectives
@@ -438,24 +439,27 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 ## intent
 - `intent_classifier` — Clasifica la intención de una query o acción: coding, debugging, research, file_management, git, memory, plann
 
+## kde
+- `kde_connect` — Controla el celular del usuario via KDE Connect: lista emparejados, vincula (pair), hace sonar el telefono (ri
+
 ## keylogger
 - `keylogger_detector` — Detecta keyloggers y monitorea actividad de teclado. Acciones: scan (escanear), start (iniciar monitoreo), sto
 
 ## knowledge
 - `knowledge_base` — Base de conocimiento local de ERIS: agregar, buscar, actualizar, eliminar y exportar entradas con titulo, cont
-- `knowledge_ingestor` — Ingesta masiva de conocimiento: indexa archivos, URLs y texto directo en la base de conocimiento. Acciones: in
 - `knowledge_distiller` — Extrae patrones de conocimiento de interacciones pasadas: qué funcionó, qué no, y reglas reutilizables. Aprend
-- `knowledge_verifier` — Verifica hechos antes de afirmarlos: busca en RAG y memoria semántica, genera veredicto (supported/contradicte
 - `knowledge_graph` — Grafo de conocimiento del vault Obsidian. Relaciones, clústers, notas centrales, caminos, visualización ASCII.
 - `knowledge_graph_adv` — Knowledge graph avanzado de entidades y relaciones. Extrae y consulta relaciones entre conceptos del vault y c
+- `knowledge_ingestor` — Ingesta masiva de conocimiento: indexa archivos, URLs y texto directo en la base de conocimiento. Acciones: in
+- `knowledge_verifier` — Verifica hechos antes de afirmarlos: busca en RAG y memoria semántica, genera veredicto (supported/contradicte
 
 ## learn
 - `learn_from_mistake` — Aprende de errores y guarda lecciones: registra un error, su leccion y la solucion para no repetirlo. Acciones
 - `learn_session` — Sesion de aprendizaje estructurada. Acciones: start (iniciar con topic), summarize (resumir learnings), list, 
 
 ## learning
-- `learning_pipeline` — Pipeline de aprendizaje autonomo: investiga topics en web, sintetiza conocimiento, y lo guarda en Obsidian aut
 - `learning_curriculum` — Currículum de auto-mejora estructurado: identifica debilidades, crea ejercicios, rastrea progreso.
+- `learning_pipeline` — Pipeline de aprendizaje autonomo: investiga topics en web, sintetiza conocimiento, y lo guarda en Obsidian aut
 
 ## llm
 - `llm_router` — Router inteligente de LLMs. Selecciona el mejor modelo (Gemini/Ollama/OpenRouter) según calidad, costo, latenc
@@ -463,26 +467,32 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 ## lsp
 - `lsp_manager` — Language Server Protocol — errores, tipos, autocomplete y definiciones de código. Auto-detecta el lenguaje del
 
+## maintenance
+- `maintenance` — Mantenimiento PROACTIVO que Eris agenda sola: backups del workspace y del vault Obsidian, limpieza de logs vie
+
 ## mcp
-- `mcp_tool` — Interfaz al Model Context Protocol (MCP): conecta servidores MCP, lista sus herramientas, y ejecuta llamadas a
 - `mcp_manager` — Model Context Protocol — conecta a servidores MCP para acceder a herramientas externas. Acciones: list (ver se
 - `mcp_server` — Servidor MCP (Model Context Protocol). Exponer tools de Eris a otros agents/LLMs vía JSON-RPC stdio.
+- `mcp_tool` — Interfaz al Model Context Protocol (MCP): conecta servidores MCP, lista sus herramientas, y ejecuta llamadas a
+
+## media
+- `media_lab` — Laboratorio multimedia: graba la pantalla (wf-recorder, con/sin audio), detiene grabacion, graba audio del mic
 
 ## meeting
 - `meeting_transcriber` — Transcribe reuniones: desde archivo (file) o microfono (duration). Acciones: transcribe (transcribir archivo),
 
 ## memory
-- `memory_nudge` — Nudges de memoria de Eris. Acciones: now (nudge ahora), history (historial), suggest (sugerencias de mejora), 
-- `memory_rag` — Memoria RAG de ERIS: recuerda/guarda informacion con busqueda semantica, etiquetas y relevancia. Acciones: rem
 - `memory_consolidation` — Consolida memoria vieja en resumenes, elimina duplicados, optimiza. Acciones: status, consolidate, semantic, e
 - `memory_consolidator` — Consolidación de memoria. Resumir memorias similares, fusionar duplicados, podar entradas viejas, backup.
+- `memory_nudge` — Nudges de memoria de Eris. Acciones: now (nudge ahora), history (historial), suggest (sugerencias de mejora), 
+- `memory_rag` — Memoria RAG de ERIS: recuerda/guarda informacion con busqueda semantica, etiquetas y relevancia. Acciones: rem
 - `memory_search` — Consolidación de memoria. Resumir conversaciones, extraer hechos clave, limpiar ruido, buscar en hechos histór
 - `memory_unified` — Memoria unificada: acceso centralizado a todas las capas de memoria (semantica, episodica, working, long-term)
 
 ## meta
-- `meta_reasoner` — Analiza la CALIDAD del proceso de razonamiento: lógica, evidencia, sesgos, saltos. Actúa como crítico interno.
 - `meta_cognition` — Pensar sobre como se piensa. Reflexionar sobre el propio proceso de pensamiento: origen, sesgos, alternativas,
 - `meta_communication` — Entender la intencion detras de la comunicacion: que quiere lograr el emisor, que siente, que necesita. Mas al
+- `meta_reasoner` — Analiza la CALIDAD del proceso de razonamiento: lógica, evidencia, sesgos, saltos. Actúa como crítico interno.
 
 ## metrics
 - `metrics_dashboard` — Dashboard de métricas del agente: uso de tools, llamadas LLM, cache hits, errores. Acciones: summary (resumen)
@@ -500,12 +510,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `morning_brief` — Genera un resumen diario al iniciar el dia: clima, noticias, recordatorios, eventos del calendario, citas prog
 
 ## multi
-- `multi_search` — Búsqueda web multi-fuente: consulta Google y DuckDuckGo, extrae las páginas más relevantes y consolida un resu
-- `multi_user` — Gestion de usuarios/perfiles de ERIS. Acciones: list (listar perfiles), create (crear perfil), switch (cambiar
 - `multi_agent` — Orquesta múltiples agentes con roles (researcher, implementer, reviewer, planner, documenter). Negociación, es
 - `multi_ai_hub` — Hub multi-proveedor de IA. Ollama, OpenRouter, OpenAI, Anthropic con routing inteligente y fallback.
-- `multi_user_profiles` — Multi-usuario con permisos, personalidad y contexto separado. Crear, cambiar, listar, eliminar usuarios.
 - `multi_perspective` — Analiza situaciones desde multiples perspectivas: usuario, experto, critico, neutral, emocional, practico, cre
+- `multi_search` — Búsqueda web multi-fuente: consulta Google y DuckDuckGo, extrae las páginas más relevantes y consolida un resu
+- `multi_user` — Gestion de usuarios/perfiles de ERIS. Acciones: list (listar perfiles), create (crear perfil), switch (cambiar
+- `multi_user_profiles` — Multi-usuario con permisos, personalidad y contexto separado. Crear, cambiar, listar, eliminar usuarios.
 
 ## multilang
 - `multilang_learning` — Aprendizaje en cualquier idioma: detecta idioma, traduce, y guarda conocimiento. Acciones: status, detect, tra
@@ -545,6 +555,7 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## ocr
 - `ocr_reader` — Extrae texto de imagenes usando OCR (pytesseract). Acciones: read (extraer texto de imagen), read_from_screen 
+- `ocr_tool` — OCR offline con tesseract (sin API): extrae texto de archivos de imagen, PDFs o de la pantalla actual (captura
 
 ## office
 - `office_docs` — Excel, Word y PowerPoint por voz. Excel: excel_create (crear XLSX con headers y rows), excel_read (leer celdas
@@ -572,11 +583,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## pdf
 - `pdf_editor` — Edita PDFs: leer, unir, dividir, llenar formularios. Acciones: read (leer PDF), merge (unir PDFs), split (divi
-- `pdf_manager` — Operaciones con PDFs: leer (read), unir (merge), dividir (split), convertir a texto, crear PDF desde texto (cr
 - `pdf_generator` — Generar documentos PDF desde texto o markdown. Crear reportes, documentos, resúmenes.
+- `pdf_manager` — Operaciones con PDFs: leer (read), unir (merge), dividir (split), convertir a texto, crear PDF desde texto (cr
 
 ## permission
 - `permission_gate` — Control de permisos: verifica y aprueba/deniega operaciones peligrosas antes de ejecutarlas.
+- `permission_policy` — Políticas de permisos estilo opencode (data/permission_rules.json): reglas allow/ask/deny por tool o tool.acci
 
 ## personality
 - `personality` — Motor de personalidad de ERIS: analiza y adapta respuestas segun contexto y tono. Acciones: analyze (analizar 
@@ -591,9 +603,9 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `play_direct` — Reproduce contenido multimedia directamente: YouTube (query/url/video_id) o archivos locales (file_path). Acci
 
 ## plugin
-- `plugin_marketplace` — Marketplace de plugins. Acciones: list (listar plugins), search (buscar con query), install (instalar por name
 - `plugin_loader` — Carga y gestion de plugins. Acciones: load (cargar plugin por name), list, unload, reload.
 - `plugin_manage` — Gestiona plugins de ERIS. Acciones: list (listar), load (cargar plugin por name), unload (descargar), reload, 
+- `plugin_marketplace` — Marketplace de plugins. Acciones: list (listar plugins), search (buscar con query), install (instalar por name
 
 ## predict
 - `predict_analyze` — Analisis predictivo y estadistico de datos: predice la siguiente tendencia de una serie de valores y analiza c
@@ -606,10 +618,10 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## proactive
 - `proactive_automation` — Reglas de automatizacion proactiva basadas en habitos y comportamientos del sistema. Acciones: status (ver reg
-- `proactive_ia` — Tareas y recordatorios proactivos de ERIS. Acciones: status (resumen), add_task (crear tarea), complete_task, 
 - `proactive_comms` — Comunicacion proactiva: Eris busca a Daniel cuando algo importante pase (metas vencidas, errores, disco bajo, 
-- `proactive_suggester` — Sugerencias proactivas después de completar tareas: sugiere qué hacer después basándose en patrones, contexto 
+- `proactive_ia` — Tareas y recordatorios proactivos de ERIS. Acciones: status (resumen), add_task (crear tarea), complete_task, 
 - `proactive_monitor` — Monitoreo proactivo de URLs, APIs, crypto. Detecta cambios y alerta automáticamente. Acciones: add (agregar mo
+- `proactive_suggester` — Sugerencias proactivas después de completar tareas: sugiere qué hacer después basándose en patrones, contexto 
 
 ## process
 - `process_manager` — Lista procesos en ejecucion, busca por nombre, mata procesos por PID o nombre. Acciones: list (top procesos), 
@@ -624,8 +636,8 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `project_builder` — Generador autonomo de proyectos COMPLETOS de software. Crea toda la estructura de carpetas, codigo fuente, con
 
 ## prompt
-- `prompt_optimizer` — Optimizar prompts: analizar calidad, sugerir mejoras, agregar contexto, rol, ejemplos. Acciones: status, optim
 - `prompt_compressor` — Comprime historial de conversación para ahorrar tokens. Mantiene contexto esencial, elimina redundancias. Útil
+- `prompt_optimizer` — Optimizar prompts: analizar calidad, sugerir mejoras, agregar contexto, rol, ejemplos. Acciones: status, optim
 
 ## quick
 - `quick_actions` — Acciones rapidas predefinidas. Params: name (nombre de la accion rapida a ejecutar).
@@ -700,12 +712,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `scheduler` — Schedule and manage timed tasks and events
 
 ## screen
+- `screen_context` — Captura de pantalla + OCR + descripción visual. Sacar screenshots, extraer texto de la pantalla (OCR), analiza
+- `screen_control` — Control de la pantalla. Acciones: brightness_get (brillo actual), brightness_set (level 0-100 para fijar brill
 - `screen_reader` — OCR real de pantalla (Windows OCR API). Acciones: read_screen (OCR de toda la pantalla), read_region (OCR de u
-- `screen_vision` — Lectura y analisis de pantalla con IA: describe que hay en pantalla, busca un elemento, o lee texto. Tambien a
 - `screen_recorder` — Graba la pantalla del PC con o sin audio. Params: duration (duracion en segundos), fps (fotogramas por segundo
 - `screen_see` — Mira la pantalla y describe que hay en ella usando vision AI. Acciones: see, read_text, find_cursor, document_
-- `screen_control` — Control de la pantalla. Acciones: brightness_get (brillo actual), brightness_set (level 0-100 para fijar brill
-- `screen_context` — Captura de pantalla + OCR + descripción visual. Sacar screenshots, extraer texto de la pantalla (OCR), analiza
+- `screen_vision` — Lectura y analisis de pantalla con IA: describe que hay en pantalla, busca un elemento, o lee texto. Tambien a
 
 ## screenshot
 - `screenshot_history` — Historial de capturas de pantalla: captura, busca por texto, etiqueta, compara. Acciones: capture (tomar captu
@@ -724,20 +736,20 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 ## self
 - `self_awareness` — Auto-analisis de ERIS: analiza su propio codigo, prompts, conversaciones y rendimiento. Acciones: analyze_code
 - `self_edit` — Lee y edita archivos del codigo fuente de ERIS con busqueda y reemplazo exacto de texto. Crea backup automatic
-- `self_improvement_loop` — Escanea logs y sistema en busca de errores, problemas de rendimiento y oportunidades de mejora. Genera sugeren
-- `self_modify` — Modifica el propio codigo de ERIS para anadir nuevas capacidades o corregir bugs. Lee el archivo, aplica el ca
-- `self_map` — ERIS obtiene su mapa completo de sí misma (arquitectura, módulos, capacidades) — sin parámetros.
-- `self_regression` — Auto-regresión integral de ERIS: compila todos los .py del proyecto, corre pytest y audita la alineación A/B d
-- `self_extend` — Loop seguro de auto-extension: implementa, registra y valida tools auto-generadas. Acciones: status (tools act
 - `self_evolution` — Estado evolutivo de ERIS: reflexiones, lecciones, metas e hitos. Acciones: status (ver evolucion), reflect (re
-- `self_heal` — Auto-detect and fix code issues
-- `self_healing_loop` — Self-healing orchestrator
-- `self_protection` — Sistema de autoproteccion de Eris. Acciones: status (estado), scan (verificar integridad de archivos criticos)
-- `self_healing` — Sistema de auto-reparacion de ERIS: detecta y corrige errores en el codigo, registra aprendizajes y da reporte
-- `self_improve` — Auto-mejora de codigo: analiza archivos core/*.py, detecta mejoras (funciones largas, codigo duplicado, sin do
 - `self_evolving_prompts` — Auto-evolución de prompts: aprende de cada ejecución qué funciona y qué no, y mejora los system prompts automá
 - `self_explainer` — Explica POR QUÉ el agente tomó una decisión. Genera explicaciones claras de razonamiento, alternativas descart
+- `self_extend` — Loop seguro de auto-extension: implementa, registra y valida tools auto-generadas. Acciones: status (tools act
+- `self_heal` — Auto-detect and fix code issues
+- `self_healing` — Sistema de auto-reparacion de ERIS: detecta y corrige errores en el codigo, registra aprendizajes y da reporte
+- `self_healing_loop` — Self-healing orchestrator
+- `self_improve` — Auto-mejora de codigo: analiza archivos core/*.py, detecta mejoras (funciones largas, codigo duplicado, sin do
+- `self_improvement_loop` — Escanea logs y sistema en busca de errores, problemas de rendimiento y oportunidades de mejora. Genera sugeren
+- `self_map` — ERIS obtiene su mapa completo de sí misma (arquitectura, módulos, capacidades) — sin parámetros.
 - `self_model` — Auto-modelo de capacidades: conocer fortalezas, limitaciones, sesgos. Evaluar que puede y que no puede hacer. 
+- `self_modify` — Modifica el propio codigo de ERIS para anadir nuevas capacidades o corregir bugs. Lee el archivo, aplica el ca
+- `self_protection` — Sistema de autoproteccion de Eris. Acciones: status (estado), scan (verificar integridad de archivos criticos)
+- `self_regression` — Auto-regresión integral de ERIS: compila todos los .py del proyecto, corre pytest y audita la alineación A/B d
 
 ## semantic
 - `semantic_deduplicator` — Deduplicación semántica de memorias: fusiona entradas duplicadas o muy similares en episodic.json y semantic.j
@@ -747,12 +759,12 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `send_sms` — Envia un SMS. Requiere 'to' (numero) y 'message'. Usa Twilio o API HTTP configurada.
 
 ## session
-- `session_debugger` — Debugger de sesiones: analiza qué pasos ejecutó el agente, detecta errores, cuellos de botella, y compara sesi
 - `session_analytics` — Analítica de sesiones de usuario: horas pico, tools más usadas, tendencias de uso, reportes diarios.
+- `session_debugger` — Debugger de sesiones: analiza qué pasos ejecutó el agente, detecta errores, cuellos de botella, y compara sesi
 
 ## shell
-- `shell_executor` — Ejecuta comandos reales de terminal (CMD/PowerShell). Acciones: run_cmd, run_ps, run, elevated (admin UAC), op
-- `shell_session` — Sesion de shell persistente: ejecuta comandos en una sesion de terminal, con historial y contexto.
+- `shell_executor` — Ejecuta comandos reales de terminal (bash en Linux, CMD/PowerShell en Windows), con sesion PERSISTENTE: el 'cd
+- `shell_session` — Sesion de shell persistente (bash en Linux): ejecuta comandos en una sesion de terminal que MANTIENE el direct
 
 ## show
 - `show_expression` — Muestra una expresion en TU CARA animada (la que aparece en la interfaz). Elegi el nombre de la expresion. Exp
@@ -761,25 +773,25 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `shutdown_eris` — Apaga el asistente ERIS. Acciones: shutdown (confirm requerido para apagar).
 
 ## skill
+- `skill_creator` — Creador automático de skills: detecta patrones repetitivos en tools usadas, y crea skills YAML para automatiza
 - `skill_manage` — Manage ERIS skills: list, view, create, edit, patch, delete, sync
 - `skill_marketplace` — Marketplace de skills: buscar, instalar, crear, publicar y valorar skills. Acciones: search (buscar), list (li
 - `skill_recommender` — Recomienda skills del sistema para una tarea dada. Analiza la query del usuario y sugiere qué skills cargar.
-- `skill_creator` — Creador automático de skills: detecta patrones repetitivos en tools usadas, y crea skills YAML para automatiza
 
 ## sleep
 - `sleep_mode` — sleep_mode tool
 
 ## smart
+- `smart_browser` — Navegador inteligente con busqueda, historial, descarga de archivos. Acciones: search (buscar en internet), op
+- `smart_cache` — Cache inteligente de ERIS: guarda y recupera valores con TTL, elimina claves, ve estadisticas y usa patrones d
+- `smart_file_organizer` — Organizador inteligente de archivos: detecta patrones de uso, sugiere archivos relacionados, y encuentra archi
 - `smart_home` — Domotica. Controla dispositivos inteligentes via Home Assistant, MQTT o modo simulacion. Acciones: status (est
 - `smart_notifications` — Notificaciones inteligentes: crear, listar, agendar y gestionar por prioridad. Acciones: list (listar), create
-- `smart_cache` — Cache inteligente de ERIS: guarda y recupera valores con TTL, elimina claves, ve estadisticas y usa patrones d
-- `smart_browser` — Navegador inteligente con busqueda, historial, descarga de archivos. Acciones: search (buscar en internet), op
 - `smart_retry` — Reintento inteligente: backoff exponencial con jitter para errores transitorios. Evita saturar APIs y maneja r
-- `smart_file_organizer` — Organizador inteligente de archivos: detecta patrones de uso, sugiere archivos relacionados, y encuentra archi
 
 ## sms
-- `sms_status` — Estado del servicio SMS: Twilio activo, HTTP configurado, o sin configurar.
 - `sms` — Envio de SMS via twilio o gateway. Acciones: send (enviar SMS a un numero), status.
+- `sms_status` — Estado del servicio SMS: Twilio activo, HTTP configurado, o sin configurar.
 
 ## social
 - `social_dynamics` — Analiza situaciones sociales: intenciones, creencias, dinamica de poder, comunicacion, emociones, prediccion. 
@@ -814,18 +826,18 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `superpowers_skill` — Activate a Superpowers software development methodology skill. Use this when the user asks to develop software
 
 ## system
+- `system_health` — Dashboard de salud del sistema: CPU, RAM, disco, red, uptime, procesos top, bateria, temperaturas. Acciones: s
 - `system_monitor` — Monitoreo del sistema: CPU, RAM, disco, GPU, red y procesos. Acciones: overview (resumen), cpu, ram, disk, gpu
 - `system_reader` — Deep PC state: sensors, network (con interfaces y conexiones detalladas), disks, battery, advisory (recomendac
-- `system_health` — Dashboard de salud del sistema: CPU, RAM, disco, red, uptime, procesos top, bateria, temperaturas. Acciones: s
-- `system_volume` — Control del volumen y audio del sistema Windows. Acciones: get (volumen actual), set (level 0-100), up/down (s
+- `system_volume` — Control del volumen y audio del sistema (Windows: pycaw; Linux: pactl/wpctl). Acciones: get (volumen actual), 
 
 ## task
-- `task_planner` — Planificador multi-paso: descompone una meta en pasos ejecutables, los ejecuta con reintentos y persiste el pl
-- `task_scheduler` — Planificador de tareas de ERIS: programa tareas con horarios en lenguaje natural, lista tareas, las pausa, rea
-- `task_queue` — Cola de tareas de ERIS. Acciones: add (agregar tarea con task y priority), list, remove (por id), clear, statu
-- `task_tree` — Árbol de descomposición de tareas con dependencias: topological sort, ejecución paralela de tareas independien
-- `task_manager` — Gestor de tareas Kanban con dependencias y deadlines. Agregar, listar, mover, buscar tareas. Estados: pending,
 - `task_engine` — Motor de tareas: gestiona colas de tareas, prioridades, dependencias y ejecucion asincrona.
+- `task_manager` — Gestor de tareas Kanban con dependencias y deadlines. Agregar, listar, mover, buscar tareas. Estados: pending,
+- `task_planner` — Planificador multi-paso: descompone una meta en pasos ejecutables, los ejecuta con reintentos y persiste el pl
+- `task_queue` — Cola de tareas de ERIS. Acciones: add (agregar tarea con task y priority), list, remove (por id), clear, statu
+- `task_scheduler` — Planificador de tareas de ERIS: programa tareas con horarios en lenguaje natural, lista tareas, las pausa, rea
+- `task_tree` — Árbol de descomposición de tareas con dependencias: topological sort, ejecución paralela de tareas independien
 
 ## teaching
 - `teaching_optimizer` — Optimiza la ensenanza adaptandose al nivel y estilo de aprendizaje del estudiante. Planifica objetivos, prereq
@@ -843,8 +855,8 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `terminal_agent` — Execute CMD/PowerShell commands
 
 ## test
-- `test_runner` — Ejecutar tests: pytest, unittest, npm test. Descubre archivos de test. Acciones: status, run, discover.
 - `test_generator` — Generador automático de tests. Analiza código Python con AST, genera pytest, coverage, sugerencias.
+- `test_runner` — Ejecutar tests: pytest, unittest, npm test. Descubre archivos de test. Acciones: status, run, discover.
 
 ## text
 - `text_summarizer` — Resume textos largos de forma extractiva. Devuelve el resumen con las oraciones mas importantes. Acciones: sum
@@ -856,10 +868,10 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `todowrite` — Crea y gestiona una lista de tareas: agregar, listar, actualizar estado, eliminar, contar pendientes/completad
 
 ## tool
-- `tool_creator` — Creates and registers a new tool dynamically. Requiere tool_name, description, python_code; parameters_schema 
 - `tool_benchmark` — Benchmark de herramientas de ERIS: mide tiempos de respuesta de 'tools' (lista de nombres o 'all') y guarda ra
-- `tool_creation` — Eris crea sus propias herramientas nuevas basandose en patrones de uso. Acciones: status, create, list, delete
 - `tool_cache` — Cache de resultados de herramientas. Acciones: get (obtener resultado cacheado), stats (estadísticas del cache
+- `tool_creation` — Eris crea sus propias herramientas nuevas basandose en patrones de uso. Acciones: status, create, list, delete
+- `tool_creator` — Creates and registers a new tool dynamically. Requiere tool_name, description, python_code; parameters_schema 
 - `tool_dep_graph` — Grafo de dependencias de herramientas: qué tools dependen de qué otras, qué corre en paralelo, y cuáles son cr
 
 ## training
@@ -873,6 +885,9 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 
 ## tts
 - `tts_set_voice` — Configura el motor de texto a voz: selecciona voz, ajusta velocidad, cambia backend. Acciones: list_voices, se
+
+## undo
+- `undo` — Patrón /undo de opencode: restaura el estado previo de archivos antes de una operación de escritura/edición (b
 
 ## unified
 - `unified_communications` — Centraliza el envío y consulta de mensajes en múltiples plataformas (WhatsApp, Telegram, Discord, Gmail). Acci
@@ -903,15 +918,15 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `visual_expressions` — Expresiones visuales de Eris en pantalla. Acciones: show (mostrar), update (actualizar con 'expression'), hide
 
 ## voice
-- `voice_recognition` — Gestion del reconocimiento de voz de ERIS. Acciones: enroll (registrar voz), verify (verificar), status, reset
+- `voice_biometrics` — Reconocimiento de voz para identificar al usuario. Permite enrollar perfiles de voz y identificar quién habla.
+- `voice_clone` — Clonacion y sintesis de voz: profile (ver/activo), samples (listar voces), quality, switch (cambiar voz activa
+- `voice_cloning` — Clonación de voz local con XTTS v2. Generar audio con voz clonada desde un archivo de referencia. Acciones: st
 - `voice_cloning_new` — Clonacion de voz: entrena clon de una voz a partir de muestras de audio, sintetiza texto con la voz clonada y 
 - `voice_cloning_real` — Clonacion de voz real con edge-tts: speak (sintetizar texto), voices (listar), set_voice (activa), create (pro
 - `voice_enhanced` — Sintesis de voz avanzada con perfiles y wake word: speak, list, create, delete, set (voz activa), wake_word
-- `voice_clone` — Clonacion y sintesis de voz: profile (ver/activo), samples (listar voces), quality, switch (cambiar voz activa
-- `voice_profile` — Perfil de voz unico de Eris: tono, velocidad, pitch. Perfiles: eris_default, eris_calmada, eris_emocionada, er
 - `voice_memory` — Memoria de voz: Eris recuerda como hablo y mantiene consistencia. Evita cambios bruscos de tono. Acciones: sta
-- `voice_biometrics` — Reconocimiento de voz para identificar al usuario. Permite enrollar perfiles de voz y identificar quién habla.
-- `voice_cloning` — Clonación de voz local con XTTS v2. Generar audio con voz clonada desde un archivo de referencia. Acciones: st
+- `voice_profile` — Perfil de voz unico de Eris: tono, velocidad, pitch. Perfiles: eris_default, eris_calmada, eris_emocionada, er
+- `voice_recognition` — Gestion del reconocimiento de voz de ERIS. Acciones: enroll (registrar voz), verify (verificar), status, reset
 - `voice_translator` — Traducción + voz. Traducir texto a otro idioma Y hablarlo. O solo traducir. Detectar idioma.
 
 ## vscode
@@ -920,15 +935,18 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 ## vue
 - `vue_designer` — Diseñador de páginas web con VUE (Vue 3 + Vite). Crea un proyecto Vue completo y funcional: package.json, vite
 
+## wayland
+- `wayland_input` — Input fisico REAL en Wayland (ydotool): mueve el mouse, hace clic izquierdo/derecho/medio, doble clic, arrastr
+
 ## weather
 - `weather_report` — Weather by city
 
 ## web
-- `web_generator` — Generador completo de sitios web profesionales: landing pages, dashboards, portafolios, galerias, blogs. Crea 
 - `web_designer` — Diseñador web profesional. Crea paginas web RICAS y completas (nunca en blanco): con informacion real, imagene
-- `web_scraper` — Extrae contenido de paginas web: texto, enlaces, imagenes, con Playwright/requests. Acciones: scrape (texto), 
+- `web_generator` — Generador completo de sitios web profesionales: landing pages, dashboards, portafolios, galerias, blogs. Crea 
 - `web_jobs` — Sistema de recepcion de trabajos via web. Acciones: start (iniciar servidor), stop (detener), status (estado y
 - `web_navigation` — Navega a una URL en el navegador, reproduce videos de YouTube, o busca en Google. Acciones: navigate (ir a URL
+- `web_scraper` — Extrae contenido de paginas web: texto, enlaces, imagenes, con Playwright/requests. Acciones: scrape (texto), 
 - `web_search` — Búsqueda web REAL-TIME en DuckDuckGo. Usá esto cuando necesités información actual, noticias, o cualquier cosa
 
 ## webfetch
@@ -942,16 +960,16 @@ Generado: 2026-08-28 11:25:46 · 448 tools declaradas.
 - `window_manager` — Gestion de ventanas multi-monitor: listar, enfocar, mover, minimizar, cerrar, maximizar, snap y organizar en l
 
 ## windows
-- `windows_settings` — Deep Windows settings: display, audio, network, power
 - `windows_service` — Instalar Eris como servicio de Windows para correr 24/7. Acciones: status, install, start, stop, create_script
+- `windows_settings` — Deep Windows settings: display, audio, network, power
 
 ## wolfram
 - `wolfram_alpha` — Respuestas computacionales via Wolfram Alpha: matematicas, unidades, datos cientificos. IMPORTANTE: envia el q
 
 ## workflow
-- `workflow_runner` — Ejecuta flujos de trabajo reutilizables (JSON en data/workflows/) encadenando tools existentes. Acciones: run 
 - `workflow_builder` — Crear workflows: pasos if/then/else, ejecutar secuencias. Acciones: status, create, list, execute, remove.
 - `workflow_engine` — Workflow/skill chaining engine. Crear, ejecutar y gestionar flujos de trabajo multi-paso con triggers, condici
+- `workflow_runner` — Ejecuta flujos de trabajo reutilizables (JSON en data/workflows/) encadenando tools existentes. Acciones: run 
 
 ## world
 - `world_simulation` — Simulador de Mundo Virtual de Eris: simula escenarios antes de actuar, probar acciones y aprender sin riesgo. 
