@@ -30,27 +30,27 @@ _GROUPS = {
 }
 
 
+def _pkg_manager() -> str | None:
+    """Detecta el gestor de paquetes real del sistema."""
+    for p in ("pacman", "apt-get", "apt", "dnf", "zypper"):
+        if shutil.which(p) or Path(f"/usr/bin/{p}").exists():
+            return p
+    return None
+
+
 def _linux_status() -> str:
     """Estado real de Agenlix: qué hay instalado y qué tools resuelven activas."""
     from core.tool_registry import get_tool
+    pm = _pkg_manager()
     lines = ["🟢 AGENLIX — Fragmento Linux de ERIS · ESTADO ACTIVO", ""]
     for group, names in _GROUPS.items():
         subs = []
         for n in names:
-            bin_path = shutil.which(n) if n not in ("shell_session", "terminal_agent",
-                                                    "wayland_input", "ocr_tool",
-                                                    "media_lab", "git_autonomo",
-                                                    "maintenance", "kde_connect",
-                                                    "system_volume", "window_manager",
-                                                    "pc_control", "desktop_notifications",
-                                                    "screen_control", "screen_see") else ""
+            display = n
             ok = False
-            if bin_path:
-                ok = True
-            elif n == "pulse":
-                ok = bool(shutil.which("pactl") or shutil.which("pw-cli"))
-            elif n == "systemctl":
-                ok = Path("/bin/systemctl").exists() or Path("/usr/bin/systemctl").exists()
+            if n == "apt":
+                display = pm or "apt"
+                ok = bool(pm)
             elif n in ("shell_session", "terminal_agent", "wayland_input", "ocr_tool",
                        "media_lab", "git_autonomo", "maintenance", "kde_connect",
                        "system_volume", "window_manager", "pc_control",
@@ -60,7 +60,13 @@ def _linux_status() -> str:
                     ok = True
                 except Exception:
                     ok = False
-            subs.append(f"{' ✅' if ok else ' ❌'} {n}")
+            elif n == "pulse":
+                ok = bool(shutil.which("pactl") or shutil.which("pw-cli"))
+            elif n == "systemctl":
+                ok = Path("/bin/systemctl").exists() or Path("/usr/bin/systemctl").exists()
+            elif shutil.which(n):
+                ok = True
+            subs.append(f"{' ✅' if ok else ' ❌'} {display}")
         lines.append(f"▸ {group}:")
         for s in subs:
             lines.append(f"   {s}")
@@ -102,6 +108,11 @@ def _parse_brackets(text: str):
 def _handle_terminal(text: str) -> str:
     """Terminal bash persistente: comandos, cd, historial, sudo."""
     t = text.lower()
+    if not any(k in t for k in ["terminal", "bash", "consola", "comando", "command",
+                                "shell", "sudo", "permisos", "permiso", "historial",
+                                "cd ", "pwd", "donde estoy", "ejecutá", "ejecuta",
+                                "corré", "corre ", "shell_session", "root"]):
+        return ""
     if "historial" in t:
         return _run_shell("history")
     if "pwd" in t or "donde estoy" in t:
@@ -133,32 +144,67 @@ def _handle_terminal(text: str) -> str:
 
 
 def _handle_packages(text: str) -> str:
-    """Gestión de paquetes con sudo on-demand."""
+    """Gestión de paquetes con sudo on-demand (pacman/apt/dnf detectado)."""
     t = text.lower()
-    m = re.search(r"(?:instalar|install|instala|eliminar|remover|desinstalar|update|upgrade)"
-                  r"[\s\w]*?(?:[a-z0-9.+-]+(?:\s|$))", text, re.I)
+    if not any(k in t for k in ["paquete", "instalá", "instalar", "instala ", "instala un",
+                                "apt", "pacman", "dnf", "zypper", "actualizá el sistema",
+                                "actualiza el sistema", "actualizar el sistema",
+                                "desinstalar", "desinstalá", "desinstala", "remove",
+                                "update", "upgrade", "actualizar paquetes"]):
+        return ""
     pkg = ""
+    if "update" in t or "actualizar sistema" in t or "actualizá el sistema" in t \
+            or "actualiza el sistema" in t:
+        return _pkg_update()
+    m = re.search(r"(?:instal[áa]|install|instalar|eliminar|remover|desinstalar)"
+                  r"\s+([a-z0-9_.+-]+)", text, re.I)
     if m:
-        mm = re.search(r"([a-z0-9_./+-]+(?:-[a-z0-9.+-]+)?)", text)
-        pkg = mm.group(1) if mm else ""
-    if "update" in t or "actualizar sistema" in t or "actualizá el sistema" in t:
-        return _run_shell("sudo apt-get update && sudo apt-get upgrade -y")
-    if "instalar paquete" in t or "instala paquete" in t:
-        return _run_shell(f"sudo apt-get install -y {pkg}")
-    if "eliminar" in t or "desinstalar" in t or "remover" in t:
-        return _run_shell(f"sudo apt-get remove -y {pkg}")
-    if re.search(r"\b(apt|pacman|dnf)\b", t):
+        pkg = m.group(1)
+    if pkg:
+        if any(k in t for k in ["eliminar", "desinstalar", "remover", "remove"]):
+            return _pkg_remove(pkg)
+        return _pkg_install(pkg)
+    if re.search(r"\b(apt|pacman|dnf|zypper)\b", t):
         return _run_shell(text.strip()[:160])
-    m2 = re.search(r"(?:instal[áa]|instalar)\s+([a-z0-9_.+-]+)", text, re.I)
-    if m2:
-        return _run_shell(f"sudo apt-get install -y {m2.group(1)}")
-    return f"Gestor de paquetes GNU/Linux. Decime: 'instalá nombre-del-paquete', " \
+    return f"Gestor de paquetes ({_pkg_manager() or '?'}). Decime: 'instalá nombre-del-paquete', " \
            f"'actualizá el sistema', 'desinstalá X'. Los permisos se piden al momento (askpass)."
+
+
+def _pkg_install(pkg: str) -> str:
+    pm = _pkg_manager()
+    if pm == "pacman":
+        return _run_shell(f"sudo pacman -S --needed --noconfirm {pkg}")
+    if pm in ("apt-get", "apt"):
+        return _run_shell(f"sudo apt-get install -y {pkg}")
+    return f"Gestor de paquetes no reconocido para instalar {pkg}."
+
+
+def _pkg_remove(pkg: str) -> str:
+    pm = _pkg_manager()
+    if pm == "pacman":
+        return _run_shell(f"sudo pacman -R --noconfirm {pkg}")
+    if pm in ("apt-get", "apt"):
+        return _run_shell(f"sudo apt-get remove -y {pkg}")
+    return f"Gestor de paquetes no reconocido para remover {pkg}."
+
+
+def _pkg_update() -> str:
+    pm = _pkg_manager()
+    if pm == "pacman":
+        return _run_shell("sudo pacman -Syu --noconfirm")
+    if pm in ("apt-get", "apt"):
+        return _run_shell("sudo apt-get update && sudo apt-get upgrade -y")
+    return "Gestor de paquetes no reconocido para actualizar."
 
 
 def _handle_input(text: str) -> str:
     """Input físico con ydotool: mouse, clics, teclado, combos."""
     t = text.lower()
+    if not any(k in t for k in ["ydotool", "clik", "click", "clic", "mouse", "mouse ",
+                                "cursor", "teclado", "escribí", "escribe ", "tipiá",
+                                "tipiar", "tecla ", "teclas", "combo", "combinaci",
+                                "atajo", "presioná", "pulsá ctrl", "esc", "enter"]):
+        return ""
     p = {}
     if any(k in t for k in ["clic", "click", "tocá", "toca", "click en"]):
         m = re.search(r"(?:en|sobre|a)\s*[(\[“\"]?(\d+)[,\s]+(\d+)", text)
@@ -196,6 +242,11 @@ def _handle_input(text: str) -> str:
 def _handle_ocr(text: str) -> str:
     """OCR offline con tesseract: pantalla, archivo o región."""
     t = text.lower()
+    if not any(k in t for k in ["ocr", "tesseract", "leer el texto", "leé el texto",
+                                "lee el texto", "texto de la pantalla", "texto en imagen",
+                                "texto en la imagen", "reconocer texto", "leer el texto de"]):
+        if not re.search(r"([\w./-]+\.(?:png|jpg|jpeg|webp|bmp|pdf))", text):
+            return ""
     if "pantalla" in t or "screen" in t:
         return _tool("ocr_tool", {"action": "screen"})
     m = re.search(r"([\w./-]+\.(?:png|jpg|jpeg|webp|bmp|pdf))", text)
@@ -209,6 +260,12 @@ def _handle_ocr(text: str) -> str:
 def _handle_media(text: str) -> str:
     """Multimedia: grabar pantalla/audio, convertir, GIFs, info."""
     t = text.lower()
+    if not any(k in t for k in ["grabar", "grabá", "grabá la", "grabaci", "grabando",
+                                "video", "vídeo", "convert", "convirt", "gif",
+                                "ffmpeg", "wf-recorder", "mp4", "mp3", "audio ",
+                                "grabar audio", "grabá audio", "recortar video",
+                                "unir video", "duración del"]):
+        return ""
     if "grabar pantalla" in t or "grabá la pantalla" in t or "screen record" in t:
         m = re.search(r"(\d+)\s*(?:s|seg|segundos)", t)
         seconds = int(m.group(1)) if m else 5
@@ -242,6 +299,12 @@ def _handle_media(text: str) -> str:
 def _handle_git(text: str) -> str:
     """Git autónomo: status, commit, subir, diario."""
     t = text.lower()
+    if not any(k in t for k in ["git", "commit", "commiteá", "commitea", "subi todo",
+                                "subí todo", "subí al repo", "sube al repo",
+                                "guardar cambios", "diario de cambios", "repo", "repositorio",
+                                "estado de git", "estado del git", "ver los cambios",
+                                "mostrá los cambios", "sube los cambios"]):
+        return ""
     if any(k in t for k in ["commiteá", "commitea", "commit", "subi todo", "subí todo",
                             "subí al repo", "sube al repo", "guardar cambios"]):
         return _tool("git_autonomo", {"action": "auto"})
@@ -260,6 +323,10 @@ def _handle_git(text: str) -> str:
 def _handle_maintenance(text: str) -> str:
     """Mantenimiento programado: backup, limpieza, reportes."""
     t = text.lower()
+    if not any(k in t for k in ["mantenimiento", "backup", "respaldo", "limpieza",
+                                "clean_logs", "health_report", "run_all", "limpiá los logs",
+                                "copia de seguridad"]):
+        return ""
     if "run_all" in t or "ejecutá todo" in t or "hacé mantenimiento" in t or "hacé el mantenimiento" in t:
         return _tool("maintenance", {"action": "run_all"})
     m = re.search(r"(?:clean_logs|backup|health_report|backup_workspace|backup_vault)", text)
@@ -271,6 +338,11 @@ def _handle_maintenance(text: str) -> str:
 def _handle_kde(text: str) -> str:
     """KDE Connect: celular y teléfono."""
     t = text.lower()
+    if not any(k in t for k in ["kde", "kdeconnect", "celular", "teléfono", "telefono",
+                                "celu ", "al celular", "del celular", "phone", "vincular",
+                                "emparejar", "pair", "sonar", "ding", "sms", "notificación",
+                                "notificacion", "enviá al", "envia al", "mandá al", "manda al"]):
+        return ""
     if any(k in t for k in ["listar", "lista", "list", "dispositivos", "estado", "status"]):
         return _tool("kde_connect", {"action": "list"})
     if "pai" in t or "vincular" in t or "emparejar" in t:
@@ -297,6 +369,10 @@ def _handle_kde(text: str) -> str:
 def _handle_system_controls(text: str) -> str:
     """Controles de sistema Linux: volumen, brillo, ventanas, notificaciones, red."""
     t = text.lower()
+    if not any(k in t for k in ["volumen", "brillo", "notificac", "ventana", "window",
+                                "hyprland", "hyprctl", "wifi", "bluetooth", "dpms",
+                                "monitor apagado", "fi "] ):
+        return ""
     if "volumen" in t:
         if "subi" in t or "aument" in t or "más" in t:
             return _tool("system_volume", {"action": "up"})
@@ -329,6 +405,12 @@ def _handle_system_controls(text: str) -> str:
 
 def _handle_screen(text: str) -> str:
     """Visión: describir la pantalla real (grim en Wayland)."""
+    if not any(k in text.lower() for k in ["leé el texto", "leer el texto",
+                                           "que hay en pantalla", "que se ve en",
+                                           "describí la pantalla", "describe la pantalla",
+                                           "mirá la pantalla", "mira la pantalla",
+                                           "leé la pantalla", "lee la pantalla"]):
+        return ""
     if any(k in text.lower() for k in ["leé el texto", "leer el texto"]):
         return _tool("screen_see", {"action": "read_text"})
     return _tool("screen_see", {"action": "see"})
@@ -373,10 +455,10 @@ def handle_linux(text: str, player=None, **kwargs) -> str:
         ("ocr", _handle_ocr),
         ("media", _handle_media),
         ("input", _handle_input),
-        ("paquetes", _handle_packages),
-        ("terminal", _handle_terminal),
         ("controles", _handle_system_controls),
         ("pantalla", _handle_screen),
+        ("terminal", _handle_terminal),
+        ("paquetes", _handle_packages),
     ]:
         try:
             r = fn(text)
