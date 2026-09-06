@@ -664,5 +664,5 @@ chasis: todas las capacidades del "ser" siguen siendo tuyas.
 - **Código**: `core/gemini_text_chat.py` → `_compact_history()` / `_invoke_ollama_summary()`.
 
 ## Conteos
-- Tools: **458** (458 + undo + permission_policy), sincronizadas registry↔declarations.
+- Tools: **459** (459 + undo + permission_policy), sincronizadas registry↔declarations.
 - Verificación: `python test_all.py` → 53 PASS en Linux (1 FAIL ambiental: eris.bat, solo Windows).

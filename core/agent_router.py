@@ -333,6 +333,31 @@ AGENT_DEFINITIONS = {
             "auto_healer", "maintenance", "system_health", "self_evolution",
         ],
     },
+
+    # ── 12. MENTORA — maestro / superaprendizaje de ERIS ──
+    "mentora": {
+        "name": "MentoraAgent",
+        "description": "MENTORA: el maestro de ERIS (superaprendizaje continuo). Aprende de verdad de todo (errores, soluciones, sesiones, web), busca soluciones por todas partes, enseña a Eris a resolver situaciones complejas/bajo estres/extremo, aplica lo aprendido, guarda todo y se comunica constantemente.",
+        "keywords": [
+            "mentora", "maestro", "maestra", "aprendé", "aprende", "aprenda",
+            "la lección", "lección", "lesson",
+            "enseñame", "ensename", "cómo resolver", "como resolver",
+            "busca la solución", "buscá la solución", "por web", "estrés extremo",
+            "bajo estrés", "situación compleja", "situaciones complejas",
+            "aplicá lo aprendido", "aplica lo aprendido", "enseñame a resolver",
+            "dame clases", "aprendé sobre", "aprende sobre",
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "youtube", "email", "calendario", "navegador",
+            "web", "juego", "pelicula", "imagen", "video youtube", "instalá",
+        ],
+        "tools": [
+            "mentora", "learning_pipeline", "save_memory", "memory_rag",
+            "mistake_learner", "feedback_learner", "learning_curriculum",
+            "web_search", "deep_research", "webfetch", "super_search",
+            "semantic_memory", "neuro_spheres", "learn_from_mistake",
+        ],
+    },
 }
 
 # ── Registry management ───────────────────────────────────────────────────────

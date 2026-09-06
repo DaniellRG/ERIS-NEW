@@ -94,7 +94,7 @@ for mod_name in core_modules:
 print("[6] AGENTS")
 agents = ["dev_agent", "media_agent", "productivity_agent", "search_agent",
           "security_agent", "system_agent", "vision_agent", "opencode_bridge",
-          "studies_agent"]
+          "studies_agent", "agenlix_agent", "guardiana_agent", "mentora_agent"]
 for a in agents:
     try:
         __import__(f"agents.{a}")

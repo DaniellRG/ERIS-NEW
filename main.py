@@ -337,7 +337,14 @@ def _build_agent_router():
             _registered += 1
         except Exception:
             pass
-        print(f"[AgentRouter] {_registered}/11 handlers activos")
+        # 12. MENTORA — maestro de ERIS: superaprendizaje continuo (aprende, busca soluciones web, enseña)
+        try:
+            from agents.mentora_agent import handle_mentora
+            router.register_handler("mentora", handle_mentora)
+            _registered += 1
+        except Exception:
+            pass
+        print(f"[AgentRouter] {_registered}/12 handlers activos")
     except Exception as e:
         print(f"[AgentRouter] init fallo: {e}")
     return router
@@ -907,6 +914,19 @@ class ErisLive:
                     pass  # Dejar que Gemini Live responda directamente
                 else:
                     agent_key = self._agent_router.classify_intent(text)
+                    # Mentora: delegar peticiones de aprendizaje/enseñanza/búsqueda de solución
+                    if agent_key and agent_key == "mentora":
+                        handler = self._agent_router._handlers.get(agent_key)
+                        if handler:
+                            if self.ui:
+                                self.ui.set_state("THINKING")
+                                self.ui.write_log("SYS: delegando a mentora (aprendizaje continuo de Eris)...")
+                            threading.Thread(
+                                target=self._run_agent_handoff,
+                                args=(agent_key, handler, text),
+                                daemon=True,
+                            ).start()
+                            return
                     # Guardian: delegar peticiones de autocuidado/salud/reparación de Eris
                     if agent_key and agent_key == "guardian":
                         handler = self._agent_router._handlers.get(agent_key)

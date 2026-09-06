@@ -11,6 +11,7 @@ from agents.dev_agent import handle_dev
 from agents.studies_agent import handle_studies
 from agents.agenlix_agent import handle_linux
 from agents.guardiana_agent import handle_guardian
+from agents.mentora_agent import handle_mentora
 
 __all__ = [
     "handle_vision",
@@ -23,4 +24,5 @@ __all__ = [
     "handle_studies",
     "handle_linux",
     "handle_guardian",
+    "handle_mentora",
 ]

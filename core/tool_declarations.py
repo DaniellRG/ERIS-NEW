@@ -7235,6 +7235,17 @@ TOOL_DECLARATIONS.extend([
             "interval": {"type": "INTEGER", "description": "Segundos entre chequeos en supervision continua"},
         }, "required": ["action"]},
     },
+    {
+        "name": "mentora",
+        "description": "MENTORA: el MAESTRO de ERIS (superaprendizaje continuo). Aprende de verdad de todo (errores, soluciones, sesiones, web), busca soluciones por todas partes (web/internet/paginas) para situaciones complejas, de bajo estres o de estres extremo, ensena a Eris como resolverlas, aplica lo aprendido, guarda todo y se comunica constantemente. Acciones: learn (aprende una leccion), search (busca solucion por web y la guarda; topic=el tema), teach (ensena a Eris; text=situacion, estres=normal|bajo|extremo), apply (aplica lo aprendido; text=contexto), report (estado del aprendizaje), help.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "learn, search, teach, apply, report, help"},
+            "topic": {"type": "STRING", "description": "Tema a buscar/aprender"},
+            "text": {"type": "STRING", "description": "Situacion a ensenar o contexto a aplicar"},
+            "situacion": {"type": "STRING", "description": "Situacion a ensenar"},
+            "estres": {"type": "STRING", "description": "Nivel de estres: normal, bajo, extremo"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7322,6 +7333,8 @@ _LIVE_NAMES = {
     "agelix",
     # Guardiana — supervisor de autocuidado de ERIS
     "guardiana",
+    # Mentora — maestro de ERIS (superaprendizaje continuo)
+    "mentora",
 }
 LIVE_TOOL_DECLARATIONS = [
     t for t in TOOL_DECLARATIONS if t.get("name") in _LIVE_NAMES
