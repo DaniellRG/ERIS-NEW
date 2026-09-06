@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-08-23T17:09:28.415659",
-    "action": "restart",
-    "details": "Eris reiniciada PID: 24404"
-  },
-  {
-    "timestamp": "2026-08-23T17:19:30.100696",
-    "action": "restart",
-    "details": "Eris reiniciada PID: 24404"
-  },
-  {
     "timestamp": "2026-08-23T17:29:30.139691",
     "action": "restart",
     "details": "Eris reiniciada PID: 24404"
@@ -498,5 +488,15 @@
     "timestamp": "2026-09-06T07:46:34.949132",
     "action": "restart",
     "details": "Eris reiniciada PID: 7735"
+  },
+  {
+    "timestamp": "2026-09-06T07:57:12.667463",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 10110"
+  },
+  {
+    "timestamp": "2026-09-06T08:07:12.785088",
+    "action": "restart",
+    "details": "Eris reiniciada PID: 10110"
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "total_analyses": 39,
+  "total_analyses": 42,
   "by_module": {
     "chain_of_thought": 1,
     "multi_perspective": 1,
@@ -11,7 +11,7 @@
     "teaching_optimizer": 1,
     "debate_engine": 1,
     "temporal_reasoning": 1,
-    "meta_cognition": 16,
+    "meta_cognition": 19,
     "self_model": 1,
     "confidence_calibration": 1,
     "contradiction_detection": 1,
@@ -182,6 +182,18 @@
     {
       "module": "meta_cognition",
       "time": "2026-09-06T07:52:06.704026"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-09-06T07:57:12.528069"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-09-06T08:02:12.549355"
+    },
+    {
+      "module": "meta_cognition",
+      "time": "2026-09-06T08:07:12.593832"
     }
   ]
 }

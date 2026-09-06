@@ -220,6 +220,38 @@ AGENT_DEFINITIONS = {
         ],
         "handler": "agents.security_agent.handle_security",
     },
+
+    # ──────────────────────────────────────────────
+    # 9. LINUX — Agenlix: el fragmento Linux de ERIS
+    # Todo lo Linux: terminal, paquetes, input, OCR,
+    # multimedia, git, mantenimiento, celular.
+    # ──────────────────────────────────────────────
+    "linux": {
+        "name": "AgenlixAgent",
+        "description": "Fragmento Linux de ERIS: terminal bash persistente + sudo on-demand, paquetes (apt), input físico Wayland (ydotool), OCR (tesseract), multimedia (ffmpeg/wf-recorder), git autónomo, mantenimiento programado, KDE Connect (celular) y controles de sistema. ERIS delega acá todo lo pesado de Linux.",
+        "keywords": [
+            "agelix", "agenlix", "fragmento linux",
+            "terminal", "bash", "consola", "comando", "shell",
+            "sudo", "permiso administrador", "con permisos",
+            "paquete", "apt", "pacman", "instalar paquete",
+            "actualizá el sistema", "actualiza el sistema",
+            "wayland", "hyprland", "hyprctl", "ydotool",
+            "mové el mouse", "mueve el mouse", "doble clic", "clic en", "escribí con el teclado",
+            "kde connect", "celular", "vincular celular", "hacé sonar",
+            "ocr", "tesseract", "leé el texto de la pantalla",
+            "grabá la pantalla", "grabar la pantalla", "convertí video", "hacé un gif",
+            "subí todo al repo", "git autónomo",
+            "mantenimiento programado", "hacé el mantenimiento",
+            "servicio systemd", "systemctl",
+        ],
+        "tools": [
+            "agelix", "shell_session", "terminal_agent", "wayland_input",
+            "ocr_tool", "media_lab", "git_autonomo", "maintenance",
+            "kde_connect", "system_volume", "window_manager", "pc_control",
+            "desktop_notifications", "screen_control", "screen_see",
+        ],
+        "handler": "agents.agenlix_agent.handle_linux",
+    },
 }
 
 

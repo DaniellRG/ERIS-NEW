@@ -1,7 +1,7 @@
 ﻿# ERIS AI — Asistente Autónomo Multi-SO
 
 Asistente virtual de escritorio con autonomía total, integración profunda,
-inteligencia emocional, NeuroSpheres y **456 tools**. Funciona en **Windows y
+inteligencia emocional, NeuroSpheres y **457 tools**. Funciona en **Windows y
 Linux** (CachyOS/Arch) con el mismo repositorio — podés trabajar en tus dos
 máquinas en paralelo sincronizando por git.
 
@@ -21,7 +21,7 @@ ERIS es un asistente de escritorio que:
   y nunca estancada.
 - **Guarda todo en Obsidian**: memoria, capacidades, aprendizaje, misiones,
   neuroesferas y proyecto vivo.
-- **Ejecuta 456 herramientas** (archivos, terminal, web, memoria, código,
+- **Ejecuta 457 herramientas** (archivos, terminal, web, memoria, código,
   sistema, comunicación, multimedia, autonomía).
 - **Se autocuida**: self-healing, code_guard (corrige su propio código),
   crash recovery, auto-backup.
@@ -38,13 +38,13 @@ Eris_Source/
 ├── config/
 │   └── api_keys.json        # 🔒 API keys, modelos, configuración (gitignored)
 ├── core/                    # Motor interno
-│   ├── tool_registry.py         # 456 tools registradas
+│   ├── tool_registry.py         # 457 tools registradas
 │   ├── tool_declarations.py     # Declaraciones para el LLM
 │   ├── tool_dispatcher.py       # Ejecutor de tools
 │   ├── action_imports.py        # Imports tolerantes de 296 action modules
 │   ├── prompt.txt               # System prompt de ERIS
 │   ├── mission_agent.py         # Tool #447 "mission"
-│   ├── self_evolution.py        # Tool #456 "evolucion" (autoconocimiento vivo)
+│   ├── self_evolution.py        # Tool #457 "evolucion" (autoconocimiento vivo)
 │   ├── code_guard.py            # Auto-corrección de código (F401, backups, rollback)
 │   ├── logging_setup.py         # BASE_DIR + get_obsidian_vault() PORTABLE
 │   ├── platform.py              # Capa de abstracción cross-platform
@@ -116,9 +116,9 @@ python test_all.py        # gate: 56 PASS, 0 FAIL
 
 ---
 
-## 4. Tools (456)
+## 4. Tools (457)
 
-Las 456 tools están sincronizadas entre `tool_declarations.py`,
+Las 457 tools están sincronizadas entre `tool_declarations.py`,
 `tool_registry.py` y `action_imports.py`. Categorías principales:
 
 | Categoría | Ejemplos |
@@ -136,7 +136,7 @@ Las 456 tools están sincronizadas entre `tool_declarations.py`,
 | **Emociones** | emotional_state, neural_bridge, world_simulation |
 | **IDE** | ide_integration |
 | **Misión** | mission (#447) — plantea y persigue tu misión |
-| **Evolución** | evolucion (#456) — autoconocimiento vivo, salud, Obsidian |
+| **Evolución** | evolucion (#457) — autoconocimiento vivo, salud, Obsidian |
 
 ---
 
@@ -144,7 +144,7 @@ Las 456 tools están sincronizadas entre `tool_declarations.py`,
 
 | Componente | Qué hace |
 |---|---|
-| **`evolucion` (#456)** | Autoconocimiento vivo: status, health, inventory, rectify, sync, evolve, tick, learn, log. Loop cada 30 min que la mantiene evolucionando (nunca se estanca). Registra en Obsidian `Tools/`, `Aprendizaje/`. |
+| **`evolucion` (#457)** | Autoconocimiento vivo: status, health, inventory, rectify, sync, evolve, tick, learn, log. Loop cada 30 min que la mantiene evolucionando (nunca se estanca). Registra en Obsidian `Tools/`, `Aprendizaje/`. |
 | **`mission` (#447)** | Define y persigue la misión global; al cerrar espeja la misión en Obsidian `Proyectos/`. |
 | **`code_guard`** | Audita y corrige su propio código (mata imports sin uso, backup + rollback si rompe). Ya se corrigió sola 2 veces. |
 | **Self-healing** | Monitorea y repara módulos caídos. |
@@ -224,7 +224,7 @@ Reglas:
 ## 11. Estado actual (validado)
 
 - ✅ **56 PASS / 0 FAIL** en Windows (`test_all.py`)
-- ✅ **456 tools sincronizadas** (456 registry = 456 declarations, 0 duplicados)
+- ✅ **457 tools sincronizadas** (457 registry = 457 declarations, 0 duplicados)
 - ✅ **0 imports rotos** — `590 .py` compilan; `action_imports` importa limpio
   incluso sin PyQt6/openpyxl (deps opcionales degradan con gracia)
 - ✅ **0 duplicados** / 0 stubs muertos / 0 BOMs

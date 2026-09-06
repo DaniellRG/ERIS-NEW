@@ -475,5 +475,23 @@
     "success": true,
     "error": "",
     "timestamp": "2026-08-27T09:16:13.663208"
+  },
+  {
+    "agent": "agelix_linux",
+    "text": "decime el estado",
+    "result": "🟢 AGENLIX — Fragmento Linux de ERIS · ESTADO ACTIVO\n\n▸ Terminal y paquetes:\n    ✅ shell_session\n    ✅ terminal_agent\n    ❌ apt\n    ✅ systemctl\n▸ Input físico (Wayland):\n    ✅ wayland_input\n    ✅ ydotool\n    ✅ grim\n▸ OCR offline:\n    ✅ ocr_tool\n    ✅ tesseract\n▸ Multimedia (ffmpeg):\n    ✅ media_lab\n    ✅ ffmpeg\n    ✅ wf-recorder\n    ✅ pulse\n▸ Git autónomo:\n    ✅ git_autonomo\n    ✅ git\n▸ Mantenimiento:\n    ✅ maintenance\n    ✅ systemctl\n▸ Celular (KDE Connect):\n    ✅ kde_connect\n    ✅ kdeconnect-cl",
+    "elapsed": 0.014,
+    "success": true,
+    "error": "",
+    "timestamp": "2026-09-06T08:10:52.218650"
+  },
+  {
+    "agent": "agelix_linux",
+    "text": "qué podés hacer",
+    "result": "🟢 AGENLIX — Fragmento Linux de ERIS · ESTADO ACTIVO\n\n▸ Terminal y paquetes:\n    ✅ shell_session\n    ✅ terminal_agent\n    ❌ apt\n    ✅ systemctl\n▸ Input físico (Wayland):\n    ✅ wayland_input\n    ✅ ydotool\n    ✅ grim\n▸ OCR offline:\n    ✅ ocr_tool\n    ✅ tesseract\n▸ Multimedia (ffmpeg):\n    ✅ media_lab\n    ✅ ffmpeg\n    ✅ wf-recorder\n    ✅ pulse\n▸ Git autónomo:\n    ✅ git_autonomo\n    ✅ git\n▸ Mantenimiento:\n    ✅ maintenance\n    ✅ systemctl\n▸ Celular (KDE Connect):\n    ✅ kde_connect\n    ✅ kdeconnect-cl",
+    "elapsed": 0.001,
+    "success": true,
+    "error": "",
+    "timestamp": "2026-09-06T08:10:52.220730"
   }
 ]

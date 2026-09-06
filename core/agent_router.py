@@ -275,6 +275,40 @@ AGENT_DEFINITIONS = {
             "document_creator", "document_generator", "pdf_generator",
         ],
     },
+
+    # ── 10. LINUX — Agenlix: terminal, paquetes, input Wayland, OCR, media, git, mantenimiento, KDE Connect ──
+    "linux": {
+        "name": "AgenlixAgent",
+        "description": "Fragmento Linux de ERIS: terminal bash persistente + sudo on-demand, paquetes (apt), input físico Wayland (ydotool), OCR (tesseract), multimedia (ffmpeg/wf-recorder), git autónomo, mantenimiento programado, KDE Connect (celular) y controles de sistema. ERIS delega acá todo lo pesado de Linux.",
+        "keywords": [
+            "agelix", "agenlix", "fragmento linux",
+            "terminal", "bash", "consola", "comando", "shell", "shell session",
+            "permiso administrador", "con permisos", "sudo",
+            "paquete", "paquetes", "apt", "pacman", "dnf", "instalar paquete",
+            "instalá el paquete", "instala el paquete",
+            "actualizá el sistema", "actualiza el sistema", "update system",
+            "wayland", "hyprland", "hyprctl", "ydotool",
+            "mové el mouse", "mueve el mouse", "escribí con el teclado", "doble clic", "clic en",
+            "kde connect", "celular", "teléfono", "telefono", "vincular celular", "hacé sonar",
+            "ocr", "tesseract", "leé el texto de la pantalla", "lee el texto",
+            "grabá la pantalla", "grabar la pantalla", "wf-recorder", "convertí video", "convertir video", "hacé un gif",
+            "git autónomo", "git_autonomo", "subí todo al repo", "sube todo al repo",
+            "mantenimiento programado", "hacé el mantenimiento", "hace el mantenimiento",
+            "background services", "file_undo", "respaldar", "respaldo",
+            "servicio systemd", "systemctl", "habilita el servicio",
+        ],
+        "penalty_keywords": [
+            "spotify", "musica", "youtube", "email", "calendario",
+            "virus", "hack", "codigo fuente explicame", "web", "navegador",
+        ],
+        "tools": [
+            "agelix", "shell_session", "terminal_agent", "wayland_input",
+            "ocr_tool", "media_lab", "git_autonomo", "maintenance",
+            "kde_connect", "system_volume", "window_manager", "pc_control",
+            "desktop_notifications", "screen_control", "screen_see",
+            "system_monitor", "network_monitor", "file_api",
+        ],
+    },
 }
 
 # ── Registry management ───────────────────────────────────────────────────────

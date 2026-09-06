@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-06 07:45:27 · 456 tools registradas y resolviendo.
+Generado: 2026-09-06 08:01:06 · 456 tools registradas y resolviendo.
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific

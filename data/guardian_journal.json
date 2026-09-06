@@ -1,10 +1,5 @@
 [
   {
-    "time": "2026-08-18T09:43:17.346313",
-    "level": "INFO",
-    "msg": "CICLO: salud {'port8765': True, 'ollama': True, 'chromadb': True}, 33 problemas, 0 reparados"
-  },
-  {
     "time": "2026-08-18T09:48:28.854083",
     "level": "INFO",
     "msg": "Monitor del Guardian activado (intervalo 600s)"
@@ -2496,6 +2491,11 @@
   },
   {
     "time": "2026-09-06T07:51:34.639307",
+    "level": "INFO",
+    "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
+  },
+  {
+    "time": "2026-09-06T08:01:42.010951",
     "level": "INFO",
     "msg": "CICLO: salud {'port8765': True, 'ollama': False, 'chromadb': False}, 2 problemas, 0 reparados"
   }

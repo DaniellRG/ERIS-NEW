@@ -323,7 +323,14 @@ def _build_agent_router():
             _registered += 1
         except Exception:
             pass
-        print(f"[AgentRouter] {_registered}/9 handlers activos")
+        # 10. LINUX — Agenlix: fragmento Linux de ERIS (terminal, paquetes, input, ocr, media, git, mantenimiento, celular)
+        try:
+            from agents.agenlix_agent import handle_linux
+            router.register_handler("linux", handle_linux)
+            _registered += 1
+        except Exception:
+            pass
+        print(f"[AgentRouter] {_registered}/10 handlers activos")
     except Exception as e:
         print(f"[AgentRouter] init fallo: {e}")
     return router
@@ -881,6 +888,20 @@ class ErisLive:
                     pass  # Dejar que Gemini Live responda directamente
                 else:
                     agent_key = self._agent_router.classify_intent(text)
+                    # Agenlix: delegar dominios Linux (terminal, paquetes, input,
+                    # ocr, media, git, mantenimiento, celular) al fragmento Linux
+                    if agent_key and agent_key == "linux":
+                        handler = self._agent_router._handlers.get(agent_key)
+                        if handler:
+                            if self.ui:
+                                self.ui.set_state("THINKING")
+                                self.ui.write_log("SYS: delegando a agelix (fragmento Linux)...")
+                            threading.Thread(
+                                target=self._run_agent_handoff,
+                                args=(agent_key, handler, text),
+                                daemon=True,
+                            ).start()
+                            return
                     if agent_key and agent_key == "dev":
                         # Only intercept dev agent for FILE CREATION specifically
                         import unicodedata as _ucd

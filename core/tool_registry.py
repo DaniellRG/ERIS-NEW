@@ -391,6 +391,7 @@ _TOOLS = {
     "ocr_tool":              ("actions.ocr_tool", "ocr_tool"),
     "media_lab":             ("actions.media_lab", "media_lab"),
     "git_autonomo":          ("actions.git_autonomo", "git_autonomo"),
+    "agelix":                ("agents.agenlix_agent", "agelix"),
     "memory_unified":        ("core.memory_unified", "get_memory"),
     "task_engine":           ("core.task_engine", "TaskEngine"),
     "permission_gate":       ("core.permission_gate", "get_permission_gate"),

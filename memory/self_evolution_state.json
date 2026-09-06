@@ -3,8 +3,8 @@
   "total": 450,
   "ok": 450,
   "broken": [],
-  "last_tick": "2026-09-06 07:45:27",
-  "last_care": 1788699186.698213,
+  "last_tick": "2026-09-06 08:01:06",
+  "last_care": 1788699666.833062,
   "last_care_summary": "todo en orden",
   "care_history": [
     {
@@ -123,6 +123,12 @@
     {
       "ts": "2026-09-06 07:53:06",
       "deep": true,
+      "fixed": [],
+      "pendientes": []
+    },
+    {
+      "ts": "2026-09-06 08:01:06",
+      "deep": false,
       "fixed": [],
       "pendientes": []
     }

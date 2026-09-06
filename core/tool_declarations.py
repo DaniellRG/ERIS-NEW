@@ -7218,6 +7218,14 @@ TOOL_DECLARATIONS.extend([
             "command": {"type": "STRING", "description": "Comando bash para tarea tipo command"},
         }, "required": ["action"]},
     },
+{
+        "name": "agelix",
+        "description": "AGENLIX: el fragmento Linux de Eris. Delega a su subagente especialista en Linux una tarea o consulta pesada del sistema: terminal bash persistente + sudo on-demand (askpass), paquetes/apt, input fisico Wayland (ydotool: mouse/clics/teclado), OCR offline (tesseract), multimedia (ffmpeg/wf-recorder: grabar pantalla/audio, convertir, gifs), git autonomo, mantenimiento programado (backups/limpieza/health), KDE Connect (celular) y controles de sistema. Acciones: status (reporte de todo lo que Agenlix controla, activo/declarado), help, task (task=<descripcion>).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, help, task"},
+            "task": {"type": "STRING", "description": "Tarea Linux a delegar a Agenlix"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7301,6 +7309,8 @@ _LIVE_NAMES = {
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
+    # Agenlix — fragmento Linux de Eris
+    "agelix",
 }
 LIVE_TOOL_DECLARATIONS = [
     t for t in TOOL_DECLARATIONS if t.get("name") in _LIVE_NAMES

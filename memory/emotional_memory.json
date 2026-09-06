@@ -979,9 +979,23 @@
       "intensity": 0.7,
       "context": "Ciclo autonomo ejecutado",
       "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-06T07:57:12.664077",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-06T08:07:12.773067",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
     }
   ],
   "patterns": {
-    "curiosidad": 140
+    "curiosidad": 142
   }
 }
