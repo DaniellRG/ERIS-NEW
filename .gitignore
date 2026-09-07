@@ -58,6 +58,13 @@ memory/instance.lock
 # ===== Estado de runtime (regenerable, vive solo en cada PC) =====
 data/*.json
 data/console_logs/stats.json
+data/conversations/
+data/encrypted/
+data/federated_learning/
+data/languages/
+data/generated_projects/
+data/user_profiles/
+data/workflows/
 memory/*.json
 
 # ===== Binarios gigantes / modelos / caches =====
