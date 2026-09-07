@@ -1,13 +1,14 @@
-﻿# ERIS AI — Asistente Autónomo Multi-SO
+﻿# ERIS AI — Asistente Autónoma Multi-SO
 
-Asistente virtual de escritorio con autonomía total, integración profunda,
-inteligencia emocional, NeuroSpheres y **459 tools**. Funciona en **Windows y
-Linux** (CachyOS/Arch) con el mismo repositorio — podés trabajar en tus dos
-máquinas en paralelo sincronizando por git.
+Asistente virtual de escritorio **100% Python** (3.14 + PyQt6) con autonomía total,
+inteligencia emocional, NeuroSpheres, auto-evolución y **459 tools**. Corre en
+**Windows y Linux** (CachyOS/Arch) desde el mismo repositorio — pensado para
+trabajar en paralelo desde dos máquinas sincronizando por git.
 
-> 📌 **Si estás leyendo esto desde la laptop Linux**: tenés todo lo que ERIS
-> es y hace. Este README + `README_LINUX.md` te guían para arrancar y saber
-> qué tiene.
+> 📌 **Si estás retomando contexto desde otra PC**: leé la sección
+> [2. Cómo retomar](#2-cómo-retomar-el-contexto) y la
+> [3. Bitácora de mejoras recientes](#3-bitácora-de-mejoras-recientes-2026-09). Esto
+> es un proyecto vivo; el `git log` local y este README son la fuente de verdad.
 
 ---
 
@@ -15,230 +16,306 @@ máquinas en paralelo sincronizando por git.
 
 ERIS es un asistente de escritorio que:
 
-- **Chatea por voz y texto** (Gemini Live en la nube + Ollama local).
+- **Chatea por voz y texto** — Gemini Live (nube, baja latencia) + Ollama local.
 - **Siente y evoluciona**: sistema emocional, NeuroSpheres (cerebro visual que
-  crece), y un loop de **auto-evolución continua** que la mantiene aprendiendo
-  y nunca estancada.
+  crece), diario emocional nocturno, y un loop de **auto-evolución continua**
+  que la mantiene aprendiendo y nunca estancada.
 - **Guarda todo en Obsidian**: memoria, capacidades, aprendizaje, misiones,
   neuroesferas y proyecto vivo.
-- **Ejecuta 459 herramientas** (archivos, terminal, web, memoria, código,
-  sistema, comunicación, multimedia, autonomía).
-- **Se autocuida**: self-healing, code_guard (corrige su propio código),
-  crash recovery, auto-backup.
+- **Ejecuta 459 herramientas**: archivos, terminal, web, memoria, código,
+  sistema, comunicación, multimedia, autonomía, IDE.
+- **Se autocuida**: code_guard (corrige su propio código con backup+rollback),
+  self-healing, crash recovery, auto-backup, y la **Guardiana** (supervisora de
+  autocuidado).
+- **Aprende a aprender**: la **Mentora** integra fuentes de conocimiento y
+  genera lecciones que sí impactan respuestas futuras.
+
+**Idioma**: español (colombiana). **NO usa Node/Bun**: es Python puro — los
+scripts Node/JS solo existen como plantillas para generar proyectos de usuario.
 
 ---
 
-## 2. Arquitectura
+## 2. Cómo retomar el contexto
+
+Estado del repote y cómo seguir después de un tiempo sin tocar el código:
+
+1. **Regenerate**: `git pull` en la otra PC; `git log --oneline -15` para ver lo
+   último; probar `python test_all.py` (gate: 56 PASS en esta máquina).
+2. **Tools son sagradas**: `core/tool_registry.py` == `core/tool_declarations.py`
+   (`len` igual, 0 duplicados). Si agregás/quitas una tool, editás AMBOS y
+   verificás, después reiniciar ERIS. Hoy: **459 = 459**.
+3. **Agentes**: la fuente única de verdad es `core/agent_definitions.py`
+   (12 agentes + keywords + handlers + penalty_keywords). `core/agent_router.py`
+   la importa (no duplica) y purga el registro stale. **NO** editar
+   `core/agent_registry.json` a mano: se regenera.
+4. **Gemini limita function_declarations a 128**: el chat texto envía un
+   subconjunto priorizado <=120 vía `_gemini_tools()`; el modo Live envía 85
+   (sin nombres reservados). No revertir a `TOOL_DECLARATIONS` completo en el
+   payload de Gemini.
+5. **Nombres reservados de Gemini Live**: las funciones no pueden empezar con
+   `google`/`_` ni llamarse `reset`/`default`. El filtro de `LIVE_TOOL_DECLARATIONS`
+   ya los excluye automáticamente (caso real: `google_calendar`).
+6. **pytest no está instalado** en `.venv-linux`; los tests de `tests/` se
+   validan con asserts directos o con `test_all.py`.
+7. **Vault Obsidian**: NO viaja en git. Se resuelve portable con
+   `core/logging_setup.get_obsidian_vault()` (env `ERIS_OBSIDIAN_VAULT`, luego
+   carpeta hermana `../Eris_NEW/BaseDatosObsidian/BaseObsiEris`).
+8. **`config/api_keys.json`** NO viaja (gitignored). Es UTF-8 **sin BOM**. Ahí
+   viven las API keys y la configuración (voz, backend TTS, modelo, etc.).
+
+---
+
+## 3. Bitácora de mejoras recientes (2026-09)
+
+Todo esto está en `main` y pusheado a `origin`.
+
+### 🩺 Fix Live 1011 crónico (2026-09-07, `e8bbfd7`)
+- **`google_calendar` fuera del payload Live**: su nombre viola la regla de
+  Gemini (no empezar con `google`). Podía cerrar la sesión con **1011** durante
+  la fase de function-calling. Ahora `LIVE_TOOL_DECLARATIONS` excluye por regla
+  (prefijo `google`, `_`, `reset`, `default`), también en el fallback de 140. Live: 85 declaraciones.
+- **Modelo primario estable**: `models/gemini-2.5-flash-native-audio-latest`
+  (alias GA); el `gemini-3.1-flash-live-preview` quedó como 1er fallback. Los
+  `-preview` rotan y son la fuente típica de 1011. Fallback automático tras 3 fallos.
+
+### ⚡ Performance (2026-09-06, `70fe0af`)
+- **Caché central de config** (`core/audio_config.get_config`, invalidación por
+  mtime): `api_keys.json` se leía ~30+ veces en hot paths; ahora 1 lectura.
+- **`_gemini_tools()` cacheado** (firma de `TOOL_DECLARATIONS`): las 120
+  declaraciones ya no se reconstruyen por turno.
+- **TTS Fish en paralelo**: chunks vía `asyncio.gather` + POST en
+  `asyncio.to_thread` (textos largos = 1/2~1/N del tiempo, sin bloquear el loop).
+- **Prompt cacheado** (`core/prompt_loader.load_system_prompt`, ~134 KB): no se
+  relee en cada reconexión.
+- **Latencia offline 4x menor**: poll `0.2s → 0.05s` en `core/offline_voice.py`.
+- **Timeouts de red** bajados en `core/local_brain.py` (180s→60s, 45s→30s).
+- ⚠️ El spin del main thread (~67% CPU) es **preexistente** (medido contra
+  baseline): viene del hot-loop `asyncio.sleep(0.01)` de `_listen_audio`. Pendiente
+  de optimizar con cola bloqueante.
+
+### 🗂️ Refactor agent-router — una sola fuente de verdad (2026-09-06, `d1d621d`)
+- `core/agent_definitions.py` = 12 agentes (keywords + penalty_keywords +
+  handlers + tools). El router **importa** de ahí; `agent_registry.json`
+  regenerado a 12 (purga 6 stale: home/reverse/search/self/productivity/system).
+- Herramientas rotas corregidas: `game_updater` eliminado, `semantic_memory→memory_unified`.
+- Clasificación afinada 100%: visión recuperó "qué ves"/"qué hay en la pantalla";
+  security recuperó "escaneá la red"/"busca virus"/"puerto"; `study` ruteando.
+
+### 🎓 Mentora — maestra de ERIS (2026-09-06, `0e15c68` + `d6252e1`)
+- `agents/mentora_agent.py`: acciones learn/search/teach/apply/report/import/
+  explorar/fuentes/help. Lecciones en `memory/mentora_lecciones.json` y
+  `mentora_ensena.json`.
+- `config/fuentes_aprendizaje.json`: fuentes por dominio (programación, ciencia,
+  IA, general, videos, datasets) + `exploracion_libre: true`.
+
+### 🛡️ Guardiana — supervisor de autocuidado (2026-09-06, `2e34cb8`)
+- `agents/guardiana_agent.py`: monitorea el bienestar de ERIS y dispara
+  auto-correcciones; `_run_guardian_supervision` en `main.py`.
+
+### 🐧 Previo (2026-09-05/06)
+- Instaladores one-liner `install.sh`/`install.ps1` + launcher `eris` + wizard.
+- Portabilidad Linux completa (Hyprland, controles nativos, terminal libre bash
+  persistente + sudo on-demand, 6 tools nuevas, audio fluido con jitter buffer).
+
+---
+
+## 4. Arquitectura
 
 ```
-Eris_Source/
-├── main.py                  # Entry point GUI (PyQt6) — arranca Eris
-├── eris_cli.py              # CLI terminal (estilo opencode)
+ERIS-NEW/
+├── main.py                  # Entry point GUI (PyQt6)
+├── eris_cli.py              # CLI terminal
 ├── ui.py                    # UI principal (orbe, emociones, ventana)
 ├── config/
-│   └── api_keys.json        # 🔒 API keys, modelos, configuración (gitignored)
+│   ├── api_keys.json        # 🔒 API keys y configuración (gitignored)
+│   └── fuentes_aprendizaje.json  # Fuentes de conocimiento de la Mentora
 ├── core/                    # Motor interno
-│   ├── tool_registry.py         # 459 tools registradas
-│   ├── tool_declarations.py     # Declaraciones para el LLM
-│   ├── tool_dispatcher.py       # Ejecutor de tools
+│   ├── tool_registry.py         # 459 tools (callables)
+│   ├── tool_declarations.py     # 459 declaraciones + LIVE (85, sin reservados)
+│   ├── tool_dispatcher.py       # Ejecutador de tools
 │   ├── action_imports.py        # Imports tolerantes de 296 action modules
-│   ├── prompt.txt               # System prompt de ERIS
-│   ├── mission_agent.py         # Tool #447 "mission"
-│   ├── self_evolution.py        # Tool #459 "evolucion" (autoconocimiento vivo)
-│   ├── code_guard.py            # Auto-corrección de código (F401, backups, rollback)
+│   ├── agent_definitions.py     # ⭐ Fuente única de verdad de 12 agentes
+│   ├── agent_router.py          # Enruta a los agentes (importa las definiciones)
+│   ├── prompt.txt               # System prompt de ERIS (~1864 líneas)
+│   ├── prompt_loader.py         # Carga prompt cacheada (mtime)
+│   ├── audio_config.py          # Modelos Live, voces, devices, get_config()
+│   ├── gemini_text_chat.py      # Chat dual Ollama/Gemini (tools <=120)
+│   ├── local_brain.py           # Cerebro local (Ollama + tools) offline
+│   ├── offline_voice.py         # STT Vosk + loop de voz offline
+│   ├── tts_engine.py            # TTS (edge/fish/gemini), fish en paralelo
+│   ├── mission_agent.py         # Tool "mission"
+│   ├── self_evolution.py        # Tool "evolucion" (autoconocimiento vivo)
+│   ├── code_guard.py            # Auto-corrección de código (backup+rollback)
 │   ├── logging_setup.py         # BASE_DIR + get_obsidian_vault() PORTABLE
-│   ├── platform.py              # Capa de abstracción cross-platform
 │   ├── neuro_spheres.py         # Cerebro visual auto-creciente
-│   ├── emotional_state/emotional_core.py
-│   ├── gemini_text_chat.py      # Chat dual Ollama/Gemini
-│   ├── knowledge_graph.py       # Grafo de conocimiento (vault portable)
-│   ├── learning_pipeline.py     # Aprendizaje autónomo → Obsidian
-│   ├── goal_setting.py          # Metas autónomas
-│   └── ... (conectividad, self_healing, offline_voice, tts_engine...)
-├── actions/                 # 296 módulos de acciones (volumen, apps, web...)
+│   ├── emotional_core.py        # Núcleo emocional sentiente (12 emociones)
+│   ├── observer.py              # Sentidos: ventana en foco, mirada con permiso
+│   ├── platform_self.py / platform.py  # Capa cross-platform
+│   └── ... (conectividad, self_healing, daily_digest, llm_bridge...)
+├── actions/                 # 296 módulos de acciones (uno por tool)
 ├── agents/                  # 12 agentes especializados
-├── skills/                  # 39 skills instaladas
-├── eris_workspace/          # Workspace 3D (ursina/panda3d)
-├── android_eris/            # Build APK Android (config con key → gitignored)
-├── memory/                  # Estado de memoria, evolución, backups
-├── data/                    # Conocimiento, sesiones, caches (parcial gitignored)
-│   └── knowledge/           # 69 archivos .md de conocimiento
-├── test_all.py              # 57 tests (0 fallos)
-├── requirements.txt         # Dependencias Windows
-├── requirements-linux.txt   # Dependencias Linux (sin paquetes win-only)
-├── run_linux.sh             # 🐧 Arranque en Linux (crea venv, instala, lanza)
-└── README_LINUX.md          # 🐧 Guía de despliegue Linux
+├── skills/                  # 39 skills (21 builtin + 18 user)
+├── memory/                  # Estado de memoria, evolución, backups, lecciones
+├── data/
+│   └── knowledge/           # 69 archivos .md de conocimiento (inventario vivo)
+├── test_all.py              # Gate de tests
+├── requirements.txt / requirements-linux.txt
+├── install.sh / install.ps1 / run_linux.sh
+└── README_LINUX.md          # Guía de despliegue Linux
 ```
 
 ---
 
-## 3. Lanzamiento
+## 5. Agentes especializados (12)
 
-### Instalacion one-liner (recomendada para cualquier PC)
+Ruteados por `core/agent_router.py` desde `core/agent_definitions.py`. Cada uno
+tiene keywords, penalty_keywords, handler y tools propias:
 
-**Linux:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.sh | bash
-```
-
-**Windows (PowerShell):**
-```powershell
-powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.ps1 | iex"
-```
-
-Instalan en `~/.eris/ERIS-NEW` (no tocan el workspace de desarrollo), crean
-el venv, instalan deps, dejan el comando `eris` y abren el **wizard de
-bienvenida** (API keys: REQUERIDA la de Gemini para chatear por internet;
-las OPCIONALES pueden quedarse vacias). Nada descarga modelos de IA — el
-uso local con Ollama es aparte y opcional. Actualizar: `eris --update`.
-
-### Windows (PC de escritorio)
-```cmd
-cd D:\Eris_Source
-.\.venv\Scripts\pythonw.exe main.py
-```
-
-### Linux (laptop CachyOS)
-```bash
-cd Eris_Source
-./run_linux.sh
-```
-
-### CLI (ambos)
-```cmd
-eris
-```
-
-### Tests (ambos)
-```cmd
-python test_all.py        # gate: 56 PASS, 0 FAIL
-```
+| Agente | Rol |
+|---|---|
+| **core** | Núcleo general (router se queda sin match) |
+| **web** | Búsqueda, navegación, scraping |
+| **file** | Archivos, memoria, conocimiento |
+| **dev** | Código, terminal, git |
+| **media** | Imagen, video, audio, TTS |
+| **comm** | Mensajes, notificaciones, redes |
+| **vision** | Ver pantalla/ventanas, describir lo visible |
+| **security** | Escaneos, virus, puertos, pentest |
+| **study** | Estudio, repaso, notas |
+| **linux** | Control del sistema Linux (Hyprland, audio, red) |
+| **guardian** (Guardiana) | Autocuidado de ERIS |
+| **mentora** (Mentora) | Aprendizaje continuo y fuentes de conocimiento |
 
 ---
 
-## 4. Tools (459)
+## 6. Voz y modelos de IA
 
-Las 459 tools están sincronizadas entre `tool_declarations.py`,
-`tool_registry.py` y `action_imports.py`. Categorías principales:
-
-| Categoría | Ejemplos |
-|-----------|----------|
-| **Archivos** | read, write, edit, glob, grep, file_organizer |
-| **Terminal** | shell, shell_elevated, shell_session |
-| **Web** | web_search, web_fetch, web_scrape, browser_control |
-| **Memoria** | memory_read, memory_write, memory_search, memory_consolidation |
-| **NeuroSpheres** | neuro_spheres (add, connect, strengthen, query, learn) |
-| **Código** | ast_analyze, ast_edit, code_review, project_builder |
-| **Sistema** | system_monitor, computer_control, process_manager |
-| **Comunicación** | gmail_control, telegram, whatsapp, discord |
-| **Multimedia** | image_generation, tts, speech_to_text, screen_vision |
-| **Autonomía** | self_evolution, self_edit, autonomous_learner |
-| **Emociones** | emotional_state, neural_bridge, world_simulation |
-| **IDE** | ide_integration |
-| **Misión** | mission (#447) — plantea y persigue tu misión |
-| **Evolución** | evolucion (#459) — autoconocimiento vivo, salud, Obsidian |
+- **Voz en vivo (Gemini Live API)** — primario **`gemini-2.5-flash-native-audio-latest`**
+  (estable), fallback automático a `gemini-3.1-flash-live-preview` → luego
+  `gemini-2.5-flash-native-audio-preview-12-2025`.
+- **Texto**: `gemini-flash-latest` (model_for_conversation); agentes `gemini`;
+  búsqueda `gemini`.
+- **Local**: Ollama (`ollama_model: llama3.2` en esta máquina; `qwen3:8b` como
+  cerebro dual recomendado) — sin rate limits.
+- **STT**: Vosk local (modelo ya en `config/vosk_model`) + transcripción del Live.
+- **TTS**: edge-tts default (`tts_backend: edge`, voz `es-AR-TomasNeural`);
+  Fish Audio opcional (`s2.1-pro-free`) con voz personalizada; voces de
+  Gemini Live (`Aoede`... `Orus`) para el modo en vivo.
+- Toda la configuración vive en `config/api_keys.json`.
 
 ---
 
-## 5. Gear clave de autonomía
+## 7. Gear clave de autonomía
 
 | Componente | Qué hace |
 |---|---|
-| **`evolucion` (#459)** | Autoconocimiento vivo: status, health, inventory, rectify, sync, evolve, tick, learn, log. Loop cada 30 min que la mantiene evolucionando (nunca se estanca). Registra en Obsidian `Tools/`, `Aprendizaje/`. |
-| **`mission` (#447)** | Define y persigue la misión global; al cerrar espeja la misión en Obsidian `Proyectos/`. |
-| **`code_guard`** | Audita y corrige su propio código (mata imports sin uso, backup + rollback si rompe). Ya se corrigió sola 2 veces. |
-| **Self-healing** | Monitorea y repara módulos caídos. |
-| **Auto-evolución loop** | Tick inmediato al arrancar + cada 30 min; estado en `memory/self_evolution_state.json`. |
+| **`evolucion`** | Autoconocimiento vivo: status, health, inventory, rectify, tick… Loop cada 30 min que la mantiene evolucionando. Estado en `memory/self_evolution_state.json`. |
+| **`mission`** | Define y persigue la misión global; al cerrar espeja en Obsidian `Proyectos/`. |
+| **`code_guard`** | Audita y corrige su propio código (mata imports sin uso, backup + rollback si rompe). |
+| **`guardiana`** | Supervisor de autocuidado continua de ERIS. |
+| **`mentora`** | Ingiere fuentes, explora libre, y genera lecciones que impactan respuestas. |
+| **Self-healing / crash recovery** | Repara módulos caídos y sobrevive a cortes. |
 
 ---
 
-## 6. NeuroSpheres
+## 8. NeuroSpheres
 
-Cerebro visual que crece con cada interacción (estado en
-`memory/neuro_spheres_state.json`). 11 esferas: **aprendizaje,
-memoria, emociones, habilidad, investigacion, codigo, error/bug/solucion,
-diagnostico**, y más. Cada sesión genera nodos automáticamente.
-
----
-
-## 7. Modelo de IA
-
-- **Nube (default)**: Gemini — `gemini-3.1-flash-lite` (conversación) y
-  `gemini`/`gemini-search` para agentes y búsqueda.
-- **Local**: Ollama — `qwen3:8b` (cerebro dual, sin rate limits).
-- **Otros**: OpenRouter, Groq, Cerebras (fallbacks secundarios).
-- **Voz**: Fish Audio (voz personalizada) + edge-tts/gtts (local cloud).
-- **Voz local offline**: Vosk (STT) + edge-tts + Ollama.
-- **Config**: `config/api_keys.json` (todas las claves ahí).
+Cerebro visual que crece con cada interacción
+(`memory/neuro_spheres_state.json`). Esferas de aprendizaje, memoria, emociones,
+habilidad, investigación, código, error/bug/solución, diagnóstico… (en esta
+máquina ~60 nodos y creciendo; el test espera >= 80, por eso un WARN).
 
 ---
 
-## 8. Vault de Obsidian (memoria persistente)
+## 9. Vault de Obsidian (memoria persistente)
 
-ERIS guarda su segundo cerebro en Obsidian. Ruta resuelta de forma **portable**
-por `core/logging_setup.get_obsidian_vault()`, en este orden:
-
-1. Variable de entorno `ERIS_OBSIDIAN_VAULT`
-2. Carpeta hermana `../Eris_NEW/BaseDatosObsidian/BaseObsiEris`
-3. `D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris` (Windows)
-4. `obsidian_vault/` local (fallback)
-
-Contenido vivo: `Tools/`, `Capacidades/`, `Memoria/`, `Logs/`, `Aprendizaje/`,
-`Proyectos/`, `NeuroSpheres/` (687 notas).
+Segundo cerebro de ERIS, resuelto portable (ver arriba). Contenido vivo:
+`Tools/`, `Capacidades/`, `Memoria/`, `Logs/`, `Aprendizaje/`, `Proyectos/`,
+`NeuroSpheres/`.
 
 ---
 
-## 9. Portabilidad Linux (Fase 1 — lista)
+## 10. Portabilidad Linux (lista)
 
-- ✅ Arranca y **chatea por texto** en Linux (Gemini/Ollama).
+- ✅ Arranca y chatea por voz y texto en Linux.
 - ✅ Memoria, emociones, NeuroSpheres, evolución, Obsidian.
-- ✅ UI PyQt6, TTS nube, Vosk.
-- ✅ **Controles de sistema Linux** (mismos tools que Windows): volumen →
-  pactl/wpctl, ventanas → hyprctl (Hyprland, sintaxis Lua), notificaciones →
-  notify-send, monitor/wifi/bluetooth → hyprctl/nmcli/rfkill, brillo →
-  brightnessctl, captura → grim. Cero deps pip (solo paquetes de sistema).
+- ✅ Controles de sistema nativos: volumen → pactl, ventanas → hyprctl,
+  notificaciones → notify-send, wifi/bluetooth → nmcli/rfkill, brillo →
+  brightnessctl, captura → grim.
+- ✅ Terminal libre bash persistente + `sudo` on-demand con diálogo gráfico
+  (`core/shell_session.py`; la password nunca se loguea).
+- ✅ GUI-automation X11 (pyautogui) degradado en Wayland sin crashear.
 
-> Ver `README_LINUX.md` para la guía completa de despliegue en la laptop.
+> Guía completa en `README_LINUX.md`.
 
 ---
 
-## 10. Trabajo en paralelo (2 máquinas)
+## 11. Lanzamiento
 
-Flujo recomendado: **un solo repo**, commit por máquina.
+Instalación one-liner (instala en `~/.eris/ERIS-NEW`, crea venv, deja `eris`):
 
-```
-PC escritorio (Windows)         Laptop (CachyOS / Linux)
-      |  git push                    |  git pull
-      +---------------------------->+
-      |  git pull                    |  git push
-      +<----------------------------+
+```bash
+# Linux
+curl -fsSL https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.sh | bash
 ```
 
-Reglas:
-- Nunca editar lo mismo en ambas máquinas a la vez (git avisará conflictos).
-- `api_keys.json` y el vault Obsidian **NO viajan en git** — copialos aparte.
-  Conservalos igual en ambas (la laptop apunta a `$HOME/Eris_NEW/...`).
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/DaniellRG/ERIS-NEW/main/install.ps1 | iex"
+```
+
+Desarrollo manual:
+```bash
+# Linux
+./run_linux.sh          # o: ./.venv-linux/bin/python main.py
+# Windows
+D:\Eris_Source\.venv\Scripts\pythonw.exe main.py
+```
+
+CLI: `eris` (o `python eris_cli.py`). Tests: `python test_all.py`.
 
 ---
 
-## 11. Estado actual (validado)
+## 12. Tests y estado actual
 
-- ✅ **56 PASS / 0 FAIL** en Windows (`test_all.py`)
-- ✅ **459 tools sincronizadas** (459 registry = 459 declarations, 0 duplicados)
-- ✅ **0 imports rotos** — `590 .py` compilan; `action_imports` importa limpio
-  incluso sin PyQt6/openpyxl (deps opcionales degradan con gracia)
-- ✅ **0 duplicados** / 0 stubs muertos / 0 BOMs
-- ✅ **NeuroSpheres** creciendo por sesión (46 nodos al último sync)
-- ✅ **69 knowledge files**
-- ✅ **9/9 agents** en uso
-- ✅ **Árbol importa sin paquetes Windows** → listo para Linux
+En esta máquina (Linux): **56 PASS, 1 FAIL, 3 WARN**.
+
+- El FAIL es `eris.bat` (launcher de **Windows**) — esperado en Linux; en la PC
+  Windows debe dar 57 PASS / 0 FAIL.
+- WARN ambientales: neuro nodos < 80, chromadb no instalado, `ctypes.windll`.
+- Estado del repo: **459 tools sincronizadas (459=459, 0 duplicados)**, 12
+  agentes, 85 declaraciones Live, 0 imports rotos (590 `.py` compilan).
 
 ---
 
-## 12. Requisitos
+## 13. Trabajo en paralelo (2 máquinas)
+
+```
+PC 1 (Windows)                        PC 2 (CachyOS/Linux)
+    git push  ───────────────────────►   git pull
+    git pull  ◄───────────────────────   git push
+```
+
+- **Un solo repo** (`https://github.com/DaniellRG/ERIS-NEW`), un fork local por
+  máquina, `main` compartido.
+- **Nunca editar lo mismo en ambas a la vez** (git avisará conflictos).
+- `config/api_keys.json` y el vault de Obsidian **NO viajan en git** — copiarlos
+  aparte e igualarlos en ambas máquinas.
+
+---
+
+## 14. Requisitos
 
 - **Python 3.14** (Windows) / 3.12+ (Linux)
 - **PyQt6** + webengine
-- **Ollama** (opcional, cerebro local) + modelo `qwen3:8b`
-- **API keys** (Gemini, Fish Audio, etc.) en `config/api_keys.json`
-- **Linux**: `portaudio pipewire-pulse` (sistema)
+- **Ollama** (opcional, cerebro local) + un modelo (ej. `qwen3:8b` o `llama3.2`)
+- **API keys** (Gemini obligatoria para modo nube) en `config/api_keys.json`
+- **Linux**: `portaudio pipewire-pulse` y paquetes del sistema (ver AGENTS.md)
+
+---
+
+## 15. Repositorio remoto
+
+```text
+origin  https://github.com/DaniellRG/ERIS-NEW  (rama main)
+```

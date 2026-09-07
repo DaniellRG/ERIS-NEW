@@ -3,6 +3,34 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/) (no released de
 versiones formales; ERIS es un proyecto vivo que evoluciona por sesiones).
 
+## [2026-09-07] — Fix Live 1011 crónico + modelo estable
+
+- `LIVE_TOOL_DECLARATIONS` excluye los **nombres reservados** de Gemini Live
+  (prefijo `google`/`_`, `reset`/`default`): `google_calendar` violaba la regla
+  y podía cerrar la sesión con **1011** en la fase de function-calling. Live:
+  86 → 85 declaraciones; global 459 intacta. Blindado también en el fallback.
+- `LIVE_MODEL` primario → `models/gemini-2.5-flash-native-audio-latest`
+  (alias GA estable); fallbacks reordenados: `gemini-3.1-flash-live-preview`
+  y `gemini-2.5-flash-native-audio-preview-12-2025`.
+- README.md reescrito como fuente de contexto única con bitácora de mejoras.
+- Verificado: los 3 candidatos conectan con audio en probe aislado (g-genai 2.22,
+  v1beta); test_all 56 PASS / 1 FAIL (eris.bat ambiental) / 3 WARN.
+
+## [2026-09-06] — Agentes, refactor del router y performance
+
+- **Guardiana-Agent** (`2e34cb8`): `agents/guardiana_agent.py`, supervisor de
+  autocuidado continuo de ERIS (`_run_guardian_supervision` en main.py).
+- **MentoraAgent** (`0e15c68` + `d6252e1`): maestra de aprendizaje continuo;
+  `config/fuentes_aprendizaje.json` (dominios + `exploracion_libre`),
+  acciones import/explorar/fuentes, lecciones en `memory/mentora_lecciones.json`.
+- **Refactor agent-router** (`d1d621d`): `core/agent_definitions.py` = fuente
+  única de verdad de 12 agentes; `agent_router.py` la importa; registro
+  regenerado (se purgan 6 stale); herramientas rotas corregidas
+  (`game_updater` fuera, `semantic_memory→memory_unified`); clasificación 100%.
+- **Performance** (`70fe0af`): caché central de config (mtime); `_gemini_tools()`
+  cacheado; TTS fish en paralelo (`gather` + `to_thread`); prompt cacheado;
+  latencia offline 4x menor; timeouts de red bajados.
+
 ## [2026-09-06] — Instalador one-liner + wizard de arranque (Linux)
 
 - `install.sh`: `curl | bash` instala ERIS en `~/.eris/ERIS-NEW` (copia
