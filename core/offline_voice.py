@@ -190,7 +190,10 @@ class OfflineVoicePipeline:
             print("[offline] Mic error:", e)
 
     def _poll_loop(self):
-        """Consume recognized mic text and respond, continuamente."""
+        """Consume recognized mic text and respond, continuamente.
+        Sleep 0.05s (antes 0.2s): baja la latencia de respuesta offline de
+        ~200ms a ~50ms. process_once y _poll_ptt_once son O(1) si no hay
+        texto nuevo, así que el polling extra es CPU despreciable."""
         import time
         while self._running:
             try:
@@ -200,7 +203,7 @@ class OfflineVoicePipeline:
                     self.process_once()
             except Exception:
                 pass
-            time.sleep(0.2)
+            time.sleep(0.05)
 
     def _poll_ptt_once(self):
         """En PTT: al soltar ESPACIO, reconocer el audio acumulado."""

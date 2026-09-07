@@ -29,10 +29,9 @@ _EDGE_VOICES = {
 
 
 def _load_cfg():
-    try:
-        return json.loads(API_CFG_PATH.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
+    """Config leido via caché central (mtime-based), no en cada llamado."""
+    from core.audio_config import get_config
+    return get_config()
 
 
 def get_backend() -> str:
@@ -236,10 +235,20 @@ async def _synthesize_elevenlabs(text: str, voice: str = "") -> bytes:
     return pcm
 
 
+def _fish_post(url: str, payload: bytes, headers: dict) -> bytes:
+    """POST síncrono a Fish Audio (corre en thread vía asyncio.to_thread)."""
+    import urllib.request
+    import urllib.error
+    req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return resp.read()
+
+
 async def _synthesize_fish(text: str, voice: str = "") -> bytes:
     """Synthesize with Fish Audio TTS API, return PCM bytes (24kHz, mono, int16).
-    Optimized for LOW LATENCY: opus format, streaming, reduced sample rate."""
-    import urllib.request
+    Optimized for LOW LATENCY: opus format, streaming, reduced sample rate.
+    El POST via asyncio.to_thread para no bloquear el event loop (clave para
+    sintetizar chunks en paralelo con asyncio.gather)."""
     import urllib.error
     import subprocess
 
@@ -272,9 +281,7 @@ async def _synthesize_fish(text: str, voice: str = "") -> bytes:
     }).encode("utf-8")
 
     try:
-        req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            opus_data = resp.read()
+        opus_data = await asyncio.to_thread(_fish_post, url, payload, headers)
     except urllib.error.HTTPError as e:
         body = ""
         try:
@@ -324,13 +331,22 @@ def _split_text_chunks(text: str, max_len: int = 480) -> list:
 
 async def synthesize_fish_chunked(text: str, voice: str = "") -> bytes:
     """Synthesize text with Fish Audio, splitting into chunks if needed (500 char limit).
+    Chunks se sintetizan EN PARALELO (asyncio.gather) en lugar de secuencial —
+    para textos largos, el TTS tarda 1/2~1/N del tiempo secuencial.
     Returns concatenated PCM audio (24kHz, mono, int16)."""
     chunks = _split_text_chunks(text, max_len=480)
+    if len(chunks) <= 1:
+        return await _synthesize_fish(chunks[0], voice)
+    results = await asyncio.gather(
+        *(_synthesize_fish(c, voice) for c in chunks),
+        return_exceptions=True,
+    )
     all_pcm = b""
-    for chunk in chunks:
-        pcm = await _synthesize_fish(chunk, voice)
-        if pcm:
-            all_pcm += pcm
+    for r in results:
+        if isinstance(r, Exception):
+            continue
+        if r:
+            all_pcm += r
     return all_pcm
 
 

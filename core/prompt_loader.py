@@ -2,8 +2,21 @@ from core.logging_setup import PROMPT_PATH
 
 from core.platform_self import system_portrait_markdown
 
+_prompt_cache: dict = {"mtime": -1.0, "size": -1, "text": None}
+
 
 def load_system_prompt() -> str:
+    """Prompt del sistema cacheado con invalidación por mtime (el archivo no
+    cambia durante la ejecución; se relee solo si cambió en disco)."""
+    global _prompt_cache
+    try:
+        st = PROMPT_PATH.stat()
+        if (_prompt_cache["text"] is not None
+                and st.st_mtime == _prompt_cache["mtime"]
+                and st.st_size == _prompt_cache["size"]):
+            return _prompt_cache["text"]
+    except Exception:
+        pass
     try:
         base = PROMPT_PATH.read_text(encoding="utf-8")
     except Exception:
@@ -90,7 +103,14 @@ def load_system_prompt() -> str:
     try:
         portrait = system_portrait_markdown()
         if portrait:
-            return base + "\n\n" + portrait
+            text = base + "\n\n" + portrait
+        else:
+            text = base
+    except Exception:
+        text = base
+    try:
+        st = PROMPT_PATH.stat()
+        _prompt_cache = {"mtime": st.st_mtime, "size": st.st_size, "text": text}
     except Exception:
         pass
-    return base
+    return text

@@ -202,7 +202,7 @@ class LocalBrain:
         }
         try:
             req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=45) as resp:
+            with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
             content = data["choices"][0]["message"]["content"]
             if not content or not content.strip():
@@ -266,7 +266,7 @@ class LocalBrain:
             method="POST",
         )
         try:
-            with urllib.request.urlopen(req, timeout=180) as resp:
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
             msg = data.get("message", {})
             return {"content": msg.get("content"), "tool_calls": msg.get("tool_calls") or []}

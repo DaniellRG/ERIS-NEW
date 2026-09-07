@@ -22,6 +22,33 @@ _cached_api_key: str | None = None
 _device_cache: dict = {"ts": 0.0, "devs": None}
 _DEVICE_CACHE_TTL = 5.0
 
+# ── Caché central del config (api_keys.json) ───────────────────────────────
+# Se leia ~30+ veces en hot paths (mic callback cada ~8ms, tts_engine por
+# cada get_backend()/get_voice()). Ahora se lee UNA vez y se invalida cuando
+# el archivo cambia (mtime). Nunca cachear si el archivo no existe.
+_config_cache: dict = {"mtime": -1.0, "data": None}
+
+
+def get_config(force_reload: bool = False) -> dict:
+    """Config (api_keys.json) cacheado con invalidación por mtime.
+
+    Llamadas concurrentes desde threads distintos son seguras: el peor caso
+    es re-leer el archivo, nunca un estado inconsistente.
+    """
+    global _config_cache
+    try:
+        st = API_CONFIG_PATH.stat()
+        if (force_reload or _config_cache["data"] is None
+                or st.st_mtime != _config_cache["mtime"]):
+            _config_cache = {
+                "mtime": st.st_mtime,
+                "data": json.loads(API_CONFIG_PATH.read_text(encoding="utf-8")),
+            }
+    except Exception:
+        if _config_cache["data"] is None:
+            _config_cache = {"mtime": -1.0, "data": {}}
+    return _config_cache["data"] or {}
+
 
 def _cached_devices() -> list[dict]:
     """Lista de dispositivos de audio con cache TTL (enumerar es costoso)."""
@@ -473,8 +500,7 @@ def get_api_key() -> str:
     global _cached_api_key
     if _cached_api_key:
         return _cached_api_key
-    with open(API_CONFIG_PATH, "r", encoding="utf-8") as f:
-        _cached_api_key = json.load(f)["gemini_api_key"]
+    _cached_api_key = get_config().get("gemini_api_key", "")
     return _cached_api_key
 
 
@@ -492,7 +518,7 @@ ERIS_VOICES = {
 
 def get_eris_voice() -> str:
     try:
-        cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+        cfg = get_config()
         voice = cfg.get("eris_voice", cfg.get("jarvis_voice", "Aoede"))
         # Strip suffixes like " (Warm)" or " (Femenina)" in case UI saved display text
         if " (" in voice:

@@ -1093,7 +1093,8 @@ class ErisLive:
                     self._offline_pipeline.speak(response)
                 else:
                     import json as _json_tts
-                    _cfg_tts = _json_tts.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+                    from core.audio_config import get_config as _get_cfg
+                    _cfg_tts = _get_cfg()
                     _be = _cfg_tts.get("tts_backend", "edge")
                     if _be == "fish":
                         from core.tts_engine import synthesize as _fish_synth

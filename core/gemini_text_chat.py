@@ -7,7 +7,6 @@ Supports two backends:
 import json, time, traceback
 from pathlib import Path
 
-from core.logging_setup import API_CONFIG_PATH
 from core.tool_declarations import TOOL_DECLARATIONS
 
 _MAX_RETRIES = 3
@@ -35,10 +34,23 @@ _GEMINI_PRIORITY_TOOLS = [
 ]
 
 
+_tools_cache: tuple = None  # (signature, tools)
+
+
 def _gemini_tools() -> list:
     """Devuelve las declaraciones de tools para Gemini (<= _GEMINI_TOOL_CAP),
     priorizando _GEMINI_PRIORITY_TOOLS y completando con el resto en orden.
+    Cacheado: solo se reconstruye si cambió el conjunto de tool_declarations.
     """
+    global _tools_cache
+    try:
+        sig = (len(TOOL_DECLARATIONS),
+               TOOL_DECLARATIONS[0]["name"] if TOOL_DECLARATIONS else "",
+               TOOL_DECLARATIONS[-1]["name"] if TOOL_DECLARATIONS else "")
+        if _tools_cache and _tools_cache[0] == sig:
+            return _tools_cache[1]
+    except Exception:
+        sig = None
     picked = []
     picked_names = set()
     for name in _GEMINI_PRIORITY_TOOLS:
@@ -53,20 +65,24 @@ def _gemini_tools() -> list:
         if decl["name"] not in picked_names:
             picked.append(decl)
             picked_names.add(decl["name"])
+    _tools_cache = (sig, picked)
     return picked
 
 
 def _get_api_key() -> str:
-    return json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))["gemini_api_key"]
+    from core.audio_config import get_config
+    return get_config().get("gemini_api_key", "")
 
 
 def _get_chat_model() -> str:
-    cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+    from core.audio_config import get_config
+    cfg = get_config()
     return cfg.get("model_for_conversation", "gemini-2.5-flash")
 
 
 def _get_ollama_config() -> dict:
-    cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+    from core.audio_config import get_config
+    cfg = get_config()
     return {
         "base_url": cfg.get("ollama_base_url", "http://localhost:11434"),
         "model": cfg.get("ollama_model", "qwen3:8b"),
