@@ -55,6 +55,11 @@ data/cookies*.json
 memory/identity.json
 memory/instance.lock
 
+# ===== Estado de runtime (regenerable, vive solo en cada PC) =====
+data/*.json
+data/console_logs/stats.json
+memory/*.json
+
 # ===== Binarios gigantes / modelos / caches =====
 android_build/
 data/vosk-model-es/
