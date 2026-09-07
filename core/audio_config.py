@@ -3,12 +3,15 @@ import time
 
 from core.logging_setup import API_CONFIG_PATH
 
-LIVE_MODEL          = "models/gemini-3.1-flash-live-preview"
+# Modelo primario estable (alias "latest" = el GA vigente de Gemini Live;
+# los "-preview" rotan y causan más 1011). Fallbacks: el preview más nuevo
+# primero, después el preview fechado.
+LIVE_MODEL          = "models/gemini-2.5-flash-native-audio-latest"
 
 # Modelos alternativos para fallback cuando el primario falla (error 1008)
 LIVE_MODEL_FALLBACKS = [
+    "models/gemini-3.1-flash-live-preview",
     "models/gemini-2.5-flash-native-audio-preview-12-2025",
-    "models/gemini-2.5-flash-native-audio-latest",
 ]
 _live_model_index = 0  # índice del modelo actual en uso
 CHANNELS            = 1

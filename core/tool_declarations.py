@@ -7337,8 +7337,19 @@ _LIVE_NAMES = {
     "mentora",
 }
 LIVE_TOOL_DECLARATIONS = [
-    t for t in TOOL_DECLARATIONS if t.get("name") in _LIVE_NAMES
+    t for t in TOOL_DECLARATIONS
+    if t.get("name") in _LIVE_NAMES
+    # Gemini Live rechaza/es errora (1011) con nombres reservados:
+    # prefijo "google", prefijo "_", ni "reset"/"default".
+    and not t["name"].startswith("google")
+    and not t["name"].startswith("_")
+    and t["name"].lower() not in ("reset", "default")
 ]
-# Fallback: if filtering is too aggressive, use first 140
+# Fallback: if filtering is too aggressive, use first 140 (sin nombres reservados)
 if len(LIVE_TOOL_DECLARATIONS) < 50:
-    LIVE_TOOL_DECLARATIONS = TOOL_DECLARATIONS[:140]
+    _safe = [
+        t for t in TOOL_DECLARATIONS
+        if not t["name"].startswith(("google", "_"))
+        and t["name"].lower() not in ("reset", "default")
+    ]
+    LIVE_TOOL_DECLARATIONS = _safe[:140]

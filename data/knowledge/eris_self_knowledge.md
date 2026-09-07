@@ -5,7 +5,7 @@
 - Versión: 2.0
 - Tipo: Asistente de IA agéntica local con auto-conciencia
 - Plataforma: Windows (Python 3.14, PyQt6)
-- Modelo principal: Gemini Live API (gemini-3.1-flash-live-preview)
+- Modelo principal: Gemini Live API (gemini-2.5-flash-native-audio-latest; fallback gemini-3.1-flash-live-preview)
 - Modelo secundario: Gemini 2.0 Flash (conversación texto)
 - Fallback: OpenRouter (múltiples modelos) + Ollama local
 - Idioma base: Español colombiano
@@ -90,15 +90,19 @@ smart_home, rgb_control, weather_report
 #### Utilidades (20+ módulos)
 calculator, alarm_manager, fun_mode, clipboard_manager, user_profile, accessibility, human_mouse, native_ui, contextual_control, data_analyst, data_viz, habit_predictor, text_summarizer, theme_manager, i18n, i18n_ui, multi_user, proactive_ia, proactive_automation, config_export, smart_cache, ask_user, ask_opencode, subagent_task, agent_task, shutdown_eris, sleep_mode, morning_brief, quick_actions, orb_overlay, eris_ui_control, mcp_tool, mcp_client
 
-### Agentes (agents/) — 15 agentes especializados registrados (agent_registry.json + agent_router)
-- VisionAgent: screen_vision, image_analyzer, vision_guardian, game_companion, ollama_vision
-- SearchAgent: web_search, super_search, session_search
-- SecurityAgent: security_scanner, program_manager
-- SystemAgent: computer_control, desktop_control, system_monitor, windows_settings, file_organizer, file_monitor, smart_file_organizer
-- MediaAgent: spotify_control, youtube_video, image_generation, tiktok_analyzer
-- ProductivityAgent: google_calendar, gmail_control, document_generator, presentation_generator, spreadsheet_generator, goals, reminder, scheduler
-- DevAgent: code_helper, dev_agent, git_control, codebase, vscode_controller, todowrite, subagent_task, webfetch, web_search, code_analyzer, code_generator, web_generator
-- OpenCodeBridge: Puente para CLI de desarrollo
+### Agentes (agents/) — 12 agentes especializados (única fuente de verdad: core/agent_definitions.py)
+- core (SystemAgent): abrir apps, escritorio, ventanas, volumen, clipboard, monitor → agents/system_agent.handle_system
+- web (SearchAgent): búsqueda web, deep research, navegador → agents/search_agent.handle_search
+- file (FileAgent): archivos y carpetas → agents/system_agent.handle_file
+- dev (DevAgent): programación, git, codebase, testing → agents/dev_agent.handle_dev
+- media (MediaAgent): música, video, imágenes → agents/media_agent.handle_media
+- comm (ProductivityAgent): email, calendario, documentos → agents/productivity_agent.handle_productivity
+- vision (VisionAgent): ver pantalla/imágenes, OCR → agents/vision_agent.handle_vision
+- security (SecurityAgent): escaneo, firewall, protección → agents/security_agent.handle_security
+- study (StudiesAgent): explicar, resumir, planes de estudio, quizzes → agents/studies_agent.handle_studies
+- linux (AgenlixAgent): terminal bash + sudo, paquetes, input Wayland, OCR, git, mantenimiento, KDE Connect → agents/agenlix_agent.handle_linux
+- guardian (Guardiana/SAMX): autocuidado 24/7, detecta y repara anomalías → agents/guardiana_agent.handle_guardian
+- mentora (MentoraAgent): aprendizaje continuo, busca solución por web, enseña, aplica → agents/mentora_agent.handle_mentora
 
 ### BIOS (bios/) — 4 módulos de arranque
 - boot.py: Secuencia de arranque estilo BIOS
