@@ -4780,5 +4780,83 @@
       "sin señales suficientes"
     ],
     "timestamp": 1787840173.694354
+  },
+  {
+    "id": "session_1788797986770",
+    "type": "session",
+    "day": "2026-09-07",
+    "signals": {
+      "messages": 4,
+      "tasks": 0,
+      "handoffs": 0,
+      "neuro_nodes": 88
+    },
+    "notes": [
+      "sesión activa"
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "sesión activa"
+    ],
+    "timestamp": 1788797986.7705002
+  },
+  {
+    "id": "session_1788798225063",
+    "type": "session",
+    "day": "2026-09-07",
+    "signals": {
+      "messages": 7,
+      "tasks": 0,
+      "handoffs": 0,
+      "neuro_nodes": 88
+    },
+    "notes": [
+      "sesión activa"
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "sesión activa"
+    ],
+    "timestamp": 1788798225.0631707
+  },
+  {
+    "id": "session_1788799197877",
+    "type": "session",
+    "day": "2026-09-07",
+    "signals": {
+      "messages": 10,
+      "tasks": 0,
+      "handoffs": 0,
+      "neuro_nodes": 86
+    },
+    "notes": [
+      "sesión activa"
+    ],
+    "overall_score": 0.6,
+    "feedback": [
+      "sesión activa"
+    ],
+    "timestamp": 1788799197.877942
+  },
+  {
+    "id": "session_1788806083061",
+    "type": "session",
+    "day": "2026-09-07",
+    "signals": {
+      "messages": 33,
+      "tasks": 0,
+      "handoffs": 0,
+      "neuro_nodes": 100
+    },
+    "notes": [
+      "sesión activa",
+      "memoria creciendo"
+    ],
+    "overall_score": 0.7,
+    "feedback": [
+      "sesión activa",
+      "memoria creciendo"
+    ],
+    "timestamp": 1788806083.0611482
   }
 ]

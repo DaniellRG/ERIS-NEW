@@ -1,5 +1,5 @@
 {
-  "total_analyses": 43,
+  "total_analyses": 35,
   "by_module": {
     "chain_of_thought": 1,
     "multi_perspective": 1,
@@ -11,7 +11,7 @@
     "teaching_optimizer": 1,
     "debate_engine": 1,
     "temporal_reasoning": 1,
-    "meta_cognition": 20,
+    "meta_cognition": 12,
     "self_model": 1,
     "confidence_calibration": 1,
     "contradiction_detection": 1,
@@ -165,39 +165,7 @@
     },
     {
       "module": "meta_cognition",
-      "time": "2026-08-28T11:31:35.992040"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-08-28T11:35:00.065371"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-05T17:39:15.249759"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T07:51:47.933959"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T07:52:06.704026"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T07:57:12.528069"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T08:02:12.549355"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T08:07:12.593832"
-    },
-    {
-      "module": "meta_cognition",
-      "time": "2026-09-06T08:12:12.609946"
+      "time": "2026-09-07T14:18:35.220527"
     }
   ]
 }

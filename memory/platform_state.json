@@ -1,63 +1,63 @@
 {
-  "fingerprint": "linux|omarchy|7.1.9|x86_64",
+  "fingerprint": "windows|Windows|11|AMD64",
   "os": {
-    "family": "linux",
-    "os_name": "Omarchy",
-    "distro_id": "omarchy",
-    "version_id": "4.0.2",
-    "kernel": "7.1.9-arch1-2",
-    "arch": "x86_64",
-    "python": "3.14.7"
+    "family": "windows",
+    "os_name": "Windows",
+    "distro_id": "",
+    "version_id": "",
+    "kernel": "11",
+    "arch": "AMD64",
+    "python": "3.14.5"
   },
   "session": {
-    "desktop": "Hyprland",
-    "display": "wayland",
-    "session": "wayland",
-    "audio": "pipewire"
+    "desktop": "unknown",
+    "display": "headless",
+    "session": "unknown",
+    "audio": "unknown"
   },
   "tools": {
     "pactl": {
-      "available": true,
+      "available": false,
       "eris_tool": "system_volume",
       "for": "audio y volumen (PipeWire/Pulse)"
     },
     "wpctl": {
-      "available": true,
+      "available": false,
       "eris_tool": "system_volume",
       "for": "audio y volumen (WirePlumber/pipewire)"
     },
     "hyprctl": {
-      "available": true,
+      "available": false,
       "eris_tool": "window_manager",
       "for": "ventanas/monitores (Hyprland)"
     },
     "brightnessctl": {
-      "available": true,
+      "available": false,
       "eris_tool": "screen_control",
       "for": "brillo de pantalla"
     },
     "grim": {
-      "available": true,
+      "available": false,
       "eris_tool": "pc_control",
       "for": "captura de pantalla en Wayland"
     },
     "notify-send": {
-      "available": true,
+      "available": false,
       "eris_tool": "desktop_notifications",
       "for": "notificaciones"
     },
     "nmcli": {
-      "available": true,
+      "available": false,
       "eris_tool": "pc_control",
       "for": "red wifi"
     },
     "rfkill": {
-      "available": true,
+      "available": false,
       "eris_tool": "pc_control",
       "for": "bluetooth/wireless"
     },
     "ydotool": {
-      "available": true,
+      "available": false,
       "eris_tool": "computer_control",
       "for": "input de teclado/mouse sin X11"
     },
@@ -67,15 +67,15 @@
       "for": "input de teclado/mouse en X11"
     },
     "xrandr": {
-      "available": true,
+      "available": false,
       "eris_tool": "monitor_control",
       "for": "resoluciones/cables en X11"
     },
     "tesseract": {
-      "available": true,
+      "available": false,
       "eris_tool": "screen_vision",
       "for": "OCR de pantalla/capturas"
     }
   },
-  "detected_at": "2026-09-06 07:54:21"
+  "detected_at": "2026-09-07 14:17:50"
 }

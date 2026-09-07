@@ -36,6 +36,7 @@ from PyQt6.QtWidgets import (
     QTextEdit, QVBoxLayout, QWidget, QMenu, QTabWidget,
     QSplitter, QSizePolicy,
 )
+from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 from PyQt6.QtGui import QShortcut, QKeySequence
 # Nota: QtWebEngine (Chromium) se importa SOLO dentro de WebGLOrb.__init__
 # (lazy). Importarlo al top cargaba Chromium en cada proceso y causaba
@@ -326,9 +327,18 @@ class ParticleOrb(QWidget):
         """FPS adaptativos con histéresis (sin sacudidas por fluctuación del
         nivel): base fluida 30 FPS, 60 FPS al hablar/pensar, respiro al ocultarse.
         Antes IDLE repintaba a 60 FPS continuos → un core al ~85% de CPU; y el
-        salto 16ms↔110ms según nivel de audio causaba traba visible del orbe."""
+        salto 16ms↔110ms según nivel de audio causaba traba visible del orbe.
+
+        El orbe corre SIEMPRE a 60 FPS para animaciones fluidas en cualquier
+        SO de escritorio con ventana visible; solo baja el ritmo si la ventana
+        está oculta. La CPU de repintado solo es problema con softw. render
+        antiguo, y en Windows/Linux modernos 60 FPS es fluido sin colapso."""
+        import platform as _p
+        _desktop_os = _p.system().lower() in ("windows", "linux")
         if not self.isVisible():
             target = 300
+        elif _desktop_os:
+            target = 16   # 60 FPS constantes en cualquier SO de escritorio
         elif self._state in ("MUTED", "ERROR"):
             target = 33
         elif self._state in ("THINKING", "SPEAKING"):
@@ -2242,6 +2252,123 @@ class FloatingOrb(QWidget):
 
 
 # ── Main Window (Minimal Constellation Orb) ──────────────────────────────────────
+class HistorySidebar(QFrame):
+    """Panel lateral de historial de conversaciones (estilo ChatGPT)."""
+
+    conversation_selected = pyqtSignal(str)
+    new_conversation_requested = pyqtSignal()
+    delete_requested = pyqtSignal(str)
+    rename_requested = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._conv_ids: list[str] = []
+        self._active_id: str | None = None
+        self._visible = True
+        self._setup_ui()
+
+    def _setup_ui(self):
+        self.setFixedWidth(230)
+        self.setStyleSheet(f"background: {C.BG2}; border-right: 1px solid {C.BORDER};")
+
+        lay = QVBoxLayout(self)
+        lay.setContentsMargins(10, 10, 10, 10)
+        lay.setSpacing(8)
+
+        header = QLabel("HISTORIAL")
+        header.setStyleSheet(f"color: {C.PRI}; font-size: 11px; font-weight: bold; letter-spacing: 1px;")
+        lay.addWidget(header)
+
+        new_btn = QPushButton("＋ Nueva conversación")
+        new_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        new_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C.PRI}; color: {C.BG}; border: none; border-radius: 6px;
+                font-size: 12px; font-weight: bold; padding: 7px 10px;
+            }}
+            QPushButton:hover {{ background: {C.PRI_LIGHT}; }}
+        """)
+        new_btn.clicked.connect(self.new_conversation_requested)
+        lay.addWidget(new_btn)
+
+        self._list = QListWidget()
+        self._list.setStyleSheet(f"""
+            QListWidget {{
+                background: transparent; border: none; color: {C.TEXT};
+                font-size: 12px; outline: 0;
+            }}
+            QListWidget::item {{
+                padding: 8px 10px; border-radius: 6px; margin-bottom: 2px;
+                border: 1px solid transparent;
+            }}
+            QListWidget::item:hover {{ background: rgba(255,255,255,0.06); }}
+            QListWidget::item:selected {{ background: {C.PRI}; color: {C.BG}; font-weight: bold; }}
+        """)
+        self._list.itemClicked.connect(self._on_item_clicked)
+        self._list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self._list.customContextMenuRequested.connect(self._on_context_menu)
+        lay.addWidget(self._list, 1)
+
+        hint = QLabel("Seleccioná una conversación para retomar el contexto.\nSi no eliges nada, hablas libre.")
+        hint.setWordWrap(True)
+        hint.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        lay.addWidget(hint)
+
+    def set_conversations(self, convs: list[dict]):
+        """Pobla la lista: convs = [{id, title, updated, msg_count}]."""
+        self._list.clear()
+        self._conv_ids = []
+        # Primero la conversación actual (si existe) y luego el resto
+        ordered = list(convs)
+        ordered.sort(key=lambda c: c.get("updated", ""), reverse=True)
+        for c in ordered:
+            cid = c.get("id", "")
+            if not cid:
+                continue
+            self._conv_ids.append(cid)
+            title = c.get("title") or "Conversación"
+            when = c.get("updated", "")[:16].replace("T", " ")
+            item = QListWidgetItem(f"{title}\n  {when}")
+            item.setData(256, cid)  # Qt.ItemDataRole.UserRole
+            self._list.addItem(item)
+
+    def set_active(self, conv_id: str | None):
+        self._active_id = conv_id
+        for i in range(self._list.count()):
+            item = self._list.item(i)
+            if item.data(256) == conv_id:
+                self._list.setCurrentItem(item)
+                return
+        self._list.clearSelection()
+
+    def _on_item_clicked(self, item: QListWidgetItem):
+        cid = item.data(256)
+        if cid and cid != self._active_id:
+            self.conversation_selected.emit(cid)
+
+    def _on_context_menu(self, pos):
+        item = self._list.itemAt(pos)
+        if item is None:
+            return
+        cid = item.data(256)
+        if not cid:
+            return
+        from PyQt6.QtWidgets import QMenu
+        from PyQt6.QtGui import QAction
+        menu = QMenu(self)
+        ren = QAction("✏️  Renombrar", menu)
+        dele = QAction("🗑️  Eliminar", menu)
+        ren.triggered.connect(lambda _=False, c=cid: self.rename_requested.emit(c))
+        dele.triggered.connect(lambda _=False, c=cid: self.delete_requested.emit(c))
+        menu.addAction(ren)
+        menu.addAction(dele)
+        menu.exec(self._list.viewport().mapToGlobal(pos))
+
+    def refresh_active_msg_count(self, conv_id: str, count: int):
+        # Actualización ligera del contador si hiciera falta en el futuro
+        pass
+
+
 class MainWindow(QMainWindow):
     _log_sig = pyqtSignal(str)
     _state_sig = pyqtSignal(str)
@@ -2254,6 +2381,10 @@ class MainWindow(QMainWindow):
         self.on_stop_command = None
         self.on_config_saved = None
         self.on_mute_command = None
+        self._on_conversation_selected = None
+        self._on_new_conversation = None
+        self._on_conversation_delete = None
+        self._on_conversation_rename = None
         self._muted = False
         self._float_orb = float_orb
         self._eris_accum = ""
@@ -2343,6 +2474,10 @@ class MainWindow(QMainWindow):
         """)
         self._splitter.setHandleWidth(1)
 
+        # ── Historial de conversaciones (sidebar izquierdo) ──
+        self._history_sidebar = HistorySidebar()
+        self._history_sidebar.show()
+
         # Left side: main content
         main_widget = QWidget()
         main_widget.setStyleSheet(f"background: {C.BG};")
@@ -2358,12 +2493,15 @@ class MainWindow(QMainWindow):
         self._deck_panel = CommandDeckWidget()
         self._deck_panel.hide()
 
+        self._splitter.addWidget(self._history_sidebar)
         self._splitter.addWidget(main_widget)
         self._splitter.addWidget(self._term_panel)
         self._splitter.addWidget(self._deck_panel)
-        self._splitter.setSizes([700, 0, 0])
-        self._splitter.setStretchFactor(0, 1)
-        self._splitter.setStretchFactor(1, 0)
+        self._splitter.setSizes([230, 700, 0, 0])
+        self._splitter.setStretchFactor(0, 0)
+        self._splitter.setStretchFactor(1, 1)
+        self._splitter.setStretchFactor(2, 0)
+        self._splitter.setStretchFactor(3, 0)
 
         root_layout.addWidget(self._splitter)
 
@@ -2508,6 +2646,7 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+,"), self).activated.connect(self._open_settings)
         QShortcut(QKeySequence("Ctrl+T"), self).activated.connect(self._toggle_terminal)
         QShortcut(QKeySequence("Ctrl+D"), self).activated.connect(self._toggle_deck)
+        QShortcut(QKeySequence("Ctrl+H"), self).activated.connect(self._toggle_history)
         QShortcut(QKeySequence("Escape"), self).activated.connect(self._go_to_orb)
         QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(self._quit_app)
 
@@ -2588,30 +2727,51 @@ class MainWindow(QMainWindow):
         self.show()
         self.raise_()
 
+    def _hist_px(self) -> int:
+        try:
+            return 230 if self._history_sidebar._visible else 0
+        except Exception:
+            return 0
+
+    def _toggle_history(self):
+        side = getattr(self, "_history_sidebar", None)
+        if side is None:
+            return
+        if getattr(side, "_visible", False):
+            side.hide()
+            side._visible = False
+            self._splitter.setSizes([0, 1, 1 if self._term_panel._visible else 0, 1 if self._deck_panel._visible else 0])
+        else:
+            side.show()
+            side._visible = True
+            self._splitter.setSizes([230, 1, 1 if self._term_panel._visible else 0, 1 if self._deck_panel._visible else 0])
+
     def _toggle_terminal(self):
         if hasattr(self, '_term_panel') and self._term_panel:
             deck_vis = self._deck_panel is not None and self._deck_panel._visible
+            hist = self._hist_px()
             if self._term_panel._visible:
                 self._term_panel.hide()
                 self._term_panel._visible = False
-                self._splitter.setSizes([1, 0, 1] if deck_vis else [1, 0, 0])
+                self._splitter.setSizes([hist, 1, 0, 1 if deck_vis else 0])
             else:
                 self._term_panel.show()
                 self._term_panel._visible = True
-                self._splitter.setSizes([1, 1, 1] if deck_vis else [1, 1, 0])
+                self._splitter.setSizes([hist, 1, 1, 1 if deck_vis else 0])
 
     def _toggle_deck(self):
         if hasattr(self, '_deck_panel') and self._deck_panel:
             term_vis = self._term_panel._visible
+            hist = self._hist_px()
             if self._deck_panel._visible:
                 self._deck_panel.hide()
                 self._deck_panel._visible = False
-                self._splitter.setSizes([1, 1 if term_vis else 0, 0])
+                self._splitter.setSizes([hist, 1, 1 if term_vis else 0, 0])
             else:
                 self._deck_panel.show()
                 self._deck_panel._visible = True
                 self._deck_panel.refresh()
-                self._splitter.setSizes([1, 1 if term_vis else 0, 1])
+                self._splitter.setSizes([hist, 1, 1 if term_vis else 0, 1])
 
     def show_main(self):
         if self._float_orb:
@@ -3083,6 +3243,107 @@ class ErisUI:
     @property
     def terminal_panel(self):
         return getattr(self._win, '_term_panel', None)
+
+    # ── Historial de conversaciones ────────────────────────────────────────
+    def toggle_history(self):
+        self._marshal(self._win._toggle_history)
+
+    @property
+    def history_sidebar(self):
+        return getattr(self._win, '_history_sidebar', None)
+
+    def set_conversations(self, convs: list[dict]):
+        """Pobla el histograma lateral desde cualquier hilo."""
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is None:
+            return
+        self._marshal(side.set_conversations, convs)
+
+    def set_active_conversation(self, conv_id: str | None):
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is None:
+            return
+        self._marshal(side.set_active, conv_id)
+
+    @property
+    def on_conversation_selected(self):
+        return getattr(self._win, '_on_conversation_selected', None)
+
+    @on_conversation_selected.setter
+    def on_conversation_selected(self, cb):
+        self._win._on_conversation_selected = cb
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is not None:
+            try:
+                side.conversation_selected.disconnect()
+            except Exception:
+                pass
+            side.conversation_selected.connect(self._history_pick)
+
+    @property
+    def on_new_conversation(self):
+        return getattr(self._win, '_on_new_conversation', None)
+
+    @on_new_conversation.setter
+    def on_new_conversation(self, cb):
+        self._win._on_new_conversation = cb
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is not None:
+            try:
+                side.new_conversation_requested.disconnect()
+            except Exception:
+                pass
+            side.new_conversation_requested.connect(self._history_new)
+
+    def _history_pick(self, conv_id: str):
+        cb = getattr(self._win, '_on_conversation_selected', None)
+        if cb:
+            self._marshal(cb, conv_id)
+
+    def _history_new(self):
+        cb = getattr(self._win, '_on_new_conversation', None)
+        if cb:
+            self._marshal(cb)
+
+    @property
+    def on_conversation_delete(self):
+        return getattr(self._win, '_on_conversation_delete', None)
+
+    @on_conversation_delete.setter
+    def on_conversation_delete(self, cb):
+        self._win._on_conversation_delete = cb
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is not None:
+            try:
+                side.delete_requested.disconnect()
+            except Exception:
+                pass
+            side.delete_requested.connect(self._history_delete)
+
+    @property
+    def on_conversation_rename(self):
+        return getattr(self._win, '_on_conversation_rename', None)
+
+    @on_conversation_rename.setter
+    def on_conversation_rename(self, cb):
+        self._win._on_conversation_rename = cb
+        side = getattr(self._win, '_history_sidebar', None)
+        if side is not None:
+            try:
+                side.rename_requested.disconnect()
+            except Exception:
+                pass
+            side.rename_requested.connect(self._history_rename)
+
+    def _history_delete(self, conv_id: str):
+        cb = getattr(self._win, '_on_conversation_delete', None)
+        if cb:
+            self._marshal(cb, conv_id)
+
+    def _history_rename(self, conv_id: str):
+        cb = getattr(self._win, '_on_conversation_rename', None)
+        if cb:
+            self._marshal(cb, conv_id)
 
     def toggle_terminal(self):
         self._marshal(self._win._toggle_terminal)

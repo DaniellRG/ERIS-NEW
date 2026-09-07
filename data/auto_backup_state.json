@@ -1,6 +1,6 @@
 {
-  "last_backup": "2026-08-27T09:16:15.486464",
-  "backup_count": 10,
+  "last_backup": "2026-09-03T13:09:29.252592",
+  "backup_count": 11,
   "history": [
     {
       "timestamp": "2026-07-26T11:36:02.264367",
@@ -59,6 +59,12 @@
     {
       "timestamp": "2026-08-27T09:16:15.486464",
       "path": "D:\\Eris_Source\\backups\\auto\\backup_20260827_091613",
+      "items_backed": 12,
+      "items_failed": 0
+    },
+    {
+      "timestamp": "2026-09-03T13:09:29.252592",
+      "path": "D:\\Eris_Source\\backups\\auto\\backup_20260903_130925",
       "items_backed": 12,
       "items_failed": 0
     }

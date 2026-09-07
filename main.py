@@ -26,8 +26,12 @@ from core.time_utils import get_time_context, load_tz
 
 import numpy as np
 import warnings
-import faulthandler
-faulthandler.register(10, all_threads=True)  # debug temporal: kill -USR1 dump
+if os.name != "nt":
+    try:
+        import faulthandler
+        faulthandler.register(10, all_threads=True)  # debug temporal: kill -USR1 dump
+    except Exception:
+        pass
 warnings.filterwarnings("ignore", message=".*cffi callback.*")
 warnings.filterwarnings("ignore", message=".*_init_.*should return None.*")
 warnings.filterwarnings("ignore", message=".*Setting the shape on a NumPy array.*")
@@ -169,6 +173,58 @@ def _clean_transcript(text: str) -> str:
     text = _CTRL_RE.sub("", text)
     text = re.sub(r"[\x00-\x08\x0b-\x1f]", "", text)
     return text.strip()
+
+_RE_NORM = re.compile(r"[^a-z0-9áéíóúüñ]", re.IGNORECASE)
+
+def _norm_text(s: str) -> str:
+    """Normaliza para comparar transcripciones ignorando espacios/puntuación."""
+    return _RE_NORM.sub("", s.lower())
+
+def _is_sig(ch: str) -> bool:
+    """True si el char cuenta en la comparación normalizada (letra/número)."""
+    return bool(ch) and not _RE_NORM.match(ch)
+
+def _overlap_index(accum: str, new: str) -> int:
+    """Devuelve el índice RAW (chars originales) dentro de `new` donde empieza
+    el contenido que NO estaba ya en `accum`.
+
+    Gemini Live entrega output_transcription ACUMULATIVO: cada chunk trae todo
+    lo dicho hasta el momento. Sin este recorte, concatenar los chunks duplica
+    la frase 2-3 veces. Calculamos el solape normalizado (sin espacios) entre
+    la cola de lo acumulado y la cabeza de lo nuevo, y saltamos esa porción.
+    """
+    na = _norm_text(accum)
+    nb = _norm_text(new)
+    best = 0
+    for k in range(min(len(na), len(nb)), 0, -1):
+        if na[-k:] == nb[:k]:
+            best = k
+            break
+    if best == 0:
+        return 0
+    # mapear `best` chars normalizados de vuelta a índice raw en `new`
+    idx = 0
+    count = 0
+    while idx < len(new) and count < best:
+        if _is_sig(new[idx]):
+            count += 1
+        idx += 1
+    return idx
+
+def _new_fragment(accum: str, new: str) -> str:
+    """Solo la parte NUEVA de `new` respecto a lo ya acumulado. Si `new` ya
+    estaba completo (chunk duplicado) devuelve "". Si no hay solape (o empieza
+    turno nuevo) devuelve `new` tal cual."""
+    new = new.strip()
+    if not new:
+        return ""
+    if not accum:
+        return new
+    i = _overlap_index(accum, new)
+    if i >= len(new):
+        return ""
+    frag = new[i:].strip()
+    return frag
 
 _SELF_IMPROV_LOCK = threading.Lock()
 _SELF_IMPROV_LAST = 0.0
@@ -369,6 +425,25 @@ class ErisLive:
         self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
         self._last_tool_context = ""             # contexto del último tool ejecutado
+        # ── Historial de conversaciones (persistente, sidebar) ──
+        self._conv_active: dict | None = None    # conversación en curso ({id,title,created,updated,messages})
+        self._conv_buffer_eris = ""              # respuesta de ERIS acumulada (se cierra en turn completo)
+        try:
+            from core.conversation_history import (
+                new_session_id, ensure_dir, list_conversations,
+            )
+            ensure_dir()
+            self._conv_active = {
+                "id": new_session_id(),
+                "title": "",
+                "created": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
+                "updated": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
+                "messages": [],
+            }
+            self.ui.set_conversations(list_conversations())
+            self.ui.set_active_conversation(self._conv_active["id"])
+        except Exception:
+            self._conv_active = {"id": "", "title": "", "created": "", "updated": "", "messages": []}
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -414,6 +489,10 @@ class ErisLive:
         self.ui.on_text_command = self._on_text_command
         self.ui.on_stop_command = self._on_stop_pressed
         self.ui.on_config_saved = self._apply_config
+        self.ui.on_conversation_selected = self._resume_conversation
+        self.ui.on_new_conversation = self._start_new_conversation
+        self.ui.on_conversation_delete = self._delete_conversation
+        self.ui.on_conversation_rename = self._rename_conversation
         self._turn_done_event: asyncio.Event | None = None
         self._api_1011_tool: str | None = None   # tracks tool name when 1011 hits
         self._reconnect_event: asyncio.Event | None = None
@@ -831,8 +910,190 @@ class ErisLive:
         except Exception:
             pass
 
+    # ── Historial de conversaciones ─────────────────────────────────────────
+    def _conv_ts(self) -> str:
+        from datetime import datetime
+        return datetime.now().isoformat(timespec="seconds")
+
+    def _save_active_conv(self):
+        """Guardar la conversación activa a JSON."""
+        conv = getattr(self, "_conv_active", None)
+        if not conv:
+            return
+        try:
+            conv["updated"] = self._conv_ts()
+            from core.conversation_history import save_conversation
+            save_conversation(conv)
+        except Exception:
+            pass
+
+    def _start_new_conversation(self):
+        """Nueva conversación en blanco (sin contexto previo)."""
+        try:
+            from datetime import datetime
+            from core.conversation_history import new_session_id, list_conversations
+            self._finish_conv_eris()
+            self._save_active_conv()
+            self._conv_active = {
+                "id": new_session_id(),
+                "title": "",
+                "created": datetime.now().isoformat(timespec="seconds"),
+                "updated": datetime.now().isoformat(timespec="seconds"),
+                "messages": [],
+            }
+            self._conv_buffer_eris = ""
+            self._context_inject = ""
+            self.ui.set_conversations(list_conversations())
+            self.ui.set_active_conversation(self._conv_active["id"])
+            if self.ui:
+                self.ui.write_log("SYS: nueva conversación — hablás libre, sin contexto previo.")
+            print(f"[ERIS] 🆕 Conversación nueva: {self._conv_active['id']}")
+        except Exception as _ce:
+            print(f"[ERIS] nueva conversación: {_ce}")
+            if self.ui:
+                self.ui.write_log(f"SYS: error creando conversación ({_ce})")
+
+    def _resume_conversation(self, conv_id: str):
+        """Cargar una conversación vieja: inactive su contexto para seguir el mismo hilo."""
+        try:
+            from core.conversation_history import (
+                load_conversation, build_resume_context, list_conversations,
+            )
+            conv = load_conversation(conv_id)
+            if not conv.get("messages"):
+                return
+            self._save_active_conv()
+            self._conv_active = conv
+            self._conv_buffer_eris = ""
+            # Inyectar contexto de la conversación retomada en el prompt vivo
+            resume = build_resume_context(conv)
+            if resume:
+                self._context_inject = resume  # usado en _build_config
+            self._remember(f"[CONTEXTO RETOMADO] {resume[:800]}", cap=60, max_len=2000)
+            self._convo_ctx = self._convo_ctx[-18:] if self._convo_ctx else []
+            self.ui.set_conversations(list_conversations())
+            self.ui.set_active_conversation(conv_id)
+            _bc = self._context_inject or ""
+            print(f"[ERIS] 🔁 Retomada conversación {conv_id} ({_bc[:60]}...)")
+            if self.ui:
+                self.ui.write_log(f"SYS: retomada conversación «{conv.get('title')}» — siguiendo el hilo anterior.")
+        except Exception as _re:
+            print(f"[ERIS] retomar conversación: {_re}")
+            if self.ui:
+                self.ui.write_log(f"SYS: error retomando conversación ({_re})")
+
+    def _rename_conversation(self, conv_id: str):
+        """Renombrar una conversación del historial (pedido desde la UI)."""
+        if not conv_id:
+            return
+        try:
+            from PyQt6.QtWidgets import QInputDialog
+            from core.conversation_history import load_conversation, rename_conversation, list_conversations
+            old = load_conversation(conv_id).get("title", "")
+            new, ok = QInputDialog.getText(
+                None, "Renombrar conversación",
+                "Nuevo nombre:", text=old,
+            )
+            if not ok:
+                return
+            new = (new or "").strip()
+            if not new:
+                return
+            if rename_conversation(conv_id, new):
+                self.ui.set_conversations(list_conversations())
+                self.ui.set_active_conversation(conv_id)
+                if self.ui:
+                    self.ui.write_log(f"SYS: conversación renombrada a {new}")
+                print(f"[ERIS] ✏️ Conversación {conv_id} renombrada a {new!r}")
+        except Exception as _rn:
+            print(f"[ERIS] renombrar conversación: {_rn}")
+            if self.ui:
+                self.ui.write_log(f"SYS: error renombrando ({_rn})")
+
+    def _delete_conversation(self, conv_id: str):
+        """Eliminar una conversación del historial (pedido desde la UI)."""
+        if not conv_id:
+            return
+        try:
+            from PyQt6.QtWidgets import QMessageBox
+            from core.conversation_history import delete_conversation, list_conversations
+            _cur = getattr(self, "_conv_active", None) or {}
+            is_active = _cur.get("id") == conv_id
+            mb = QMessageBox()
+            mb.setWindowTitle("Eliminar conversación")
+            mb.setText("¿Eliminar esta conversación del historial?")
+            mb.setInformativeText("No se puede deshacer.")
+            mb.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            mb.setDefaultButton(QMessageBox.StandardButton.No)
+            if mb.exec() != QMessageBox.StandardButton.Yes:
+                return
+            if delete_conversation(conv_id):
+                if is_active:
+                    self._start_new_conversation()
+                self.ui.set_conversations(list_conversations())
+                if self.ui:
+                    self.ui.write_log("SYS: conversación eliminada")
+                print(f"[ERIS] 🗑️ Conversación {conv_id} eliminada")
+        except Exception as _dl:
+            print(f"[ERIS] eliminar conversación: {_dl}")
+            if self.ui:
+                self.ui.write_log(f"SYS: error eliminando ({_dl})")
+
+    def _record_conv_user(self, text: str):
+        """Registrar mensaje del usuario en la conversación activa."""
+        text = str(text or "").strip()
+        if not text:
+            return
+        conv = getattr(self, "_conv_active", None)
+        if not conv:
+            return
+        try:
+            # Título automático por tema desde el PRIMER mensaje del usuario
+            if not conv.get("title") and not conv.get("messages"):
+                from core.conversation_history import make_title
+
+                conv["title"] = make_title(text)
+                self.ui.set_conversations(self._list_convs())
+            conv["messages"].append({"role": "user", "text": text[:4000], "ts": self._conv_ts()})
+            conv["updated"] = self._conv_ts()
+        except Exception:
+            pass
+
+    def _record_conv_eris(self, chunk: str):
+        """Acumula la respuesta de ERIS; el guardado completo ocurre en turn_complete."""
+        if not chunk:
+            return
+        self._conv_buffer_eris += chunk
+
+    def _finish_conv_eris(self):
+        """Cierra el mensaje de ERIS actual y guarda."""
+        text = (getattr(self, "_conv_buffer_eris", "") or "").strip()
+        self._conv_buffer_eris = ""
+        if not text:
+            return
+        conv = getattr(self, "_conv_active", None)
+        if not conv:
+            return
+        try:
+            conv["messages"].append({"role": "eris", "text": text[:4000], "ts": self._conv_ts()})
+            conv["updated"] = self._conv_ts()
+            self._save_active_conv()
+        except Exception:
+            pass
+
+    def _list_convs(self):
+        try:
+            from core.conversation_history import list_conversations
+            return list_conversations()
+        except Exception:
+            return []
+
     def _on_text_command(self, text: str):
         self._last_user_interaction = time.time()  # Reset idle timer
+        # Registrar adjunto como mensaje de usuario (el texto del documento
+        # llega después como "Tú: ..." desde la transcripción o el texto).
+        if text.startswith("[AUDIO_FILE]") or text.startswith("[IMAGE_FILE]") or text.startswith("[DOC_FILE]"):
+            self._record_conv_user(text.split(" ", 1)[0].strip("[]") + " adjunto")
 
         # Audio file: process with Gemini Vision (not the realtime audio session)
         if text.startswith("[AUDIO_FILE]"):
@@ -867,6 +1128,7 @@ class ErisLive:
 
         # Fire phrase triggers in background (only for text-input path)
         self._last_text_trigger = text
+        self._record_conv_user(text)
         threading.Thread(target=self._fire_phrase_triggers, args=(text,), daemon=True).start()
         # DB: log user message
         if convo_log:
@@ -2356,6 +2618,14 @@ class ErisLive:
                 parts.append(learning_context)
         except Exception:
             pass
+        # ── Contexto retomado de una conversación vieja del historial ──
+        _ctx_inject = getattr(self, "_context_inject", "") or ""
+        if _ctx_inject:
+            parts.append(
+                "[📂 CONVERSACIÓN RETOMADA DEL HISTORIAL — ESTE es el hilo de trabajo "
+                "que veníamos haciendo. Continuá este proyecto con total contexto, "
+                "como si nunca se hubiera cortado.]\n" + _ctx_inject
+            )
         # ── Contexto de conversación reciente (sobrevive a reconexiones) ──
         if getattr(self, "_convo_ctx", None):
             parts.append(
@@ -2400,9 +2670,13 @@ class ErisLive:
 
         # ── Smart trim: nunca cortar lo esencial (personalidad, relación,
         #    estilo, memoria, digest). Se recorta solo la cola del prompt base.
-        #    60000 chars ≈ ~15K tokens (Gemini 3.1 Flash aguanta ~1M) — el prompt
-        #    completo (~49K) entra sin perder secciones críticas. ──
-        MAX_SYSTEM_CHARS = 60000
+        #    30000 chars ≈ ~7.5K tokens. Gemini Live (native audio) deja de
+        #    responder (timeout → runtime lo ve como 1011 y reconecta en loop)
+        #    con system_instruction > ~40K. Verificado con probes: 20-30K OK,
+        #    60K muerto. El prompt base completo (~136K) se recorta; las
+        #    secciones críticas (identidad, motores 3D) están al inicio y
+        #    sobreviven. ──
+        MAX_SYSTEM_CHARS = 30000
         system_text = "\n".join(parts)
         if len(system_text) > MAX_SYSTEM_CHARS:
             _essential = "\n".join(parts[:-1])
@@ -2829,60 +3103,63 @@ class ErisLive:
                                     if self._first_transcript_time:
                                         now = time.time()
                                         print(f"[TIMING] ✅ First response chunk: +{now - self._first_transcript_time:.1f}s | text: {txt}")
-                                out_buf.append(txt)
-                                out_full = (out_full + " " + txt).strip() if out_full else txt
-                                self.ui.stream_eris_chunk(txt)
-                                # ── FIX #5: Debounce express_emotion (max 1x per 2s) ──
-                                if not hasattr(self, '_last_emo_time') or (time.time() - getattr(self, '_last_emo_time', 0)) > 2.0:
-                                    self.ui.express_emotion(out_full)
-                                    self._last_emo_time = time.time()
-                                # ── ElevenLabs early synthesis ──
-                                if _cached_tts_backend == "elevenlabs":
-                                    _el_early_buf = getattr(self, '_el_early_buf', '') + txt
-                                    self._el_early_buf = _el_early_buf
-                                    if not getattr(self, '_el_early_fired', False):
-                                        _has_sentence = any(s in _el_early_buf for s in (". ", "! ", "? "))
-                                        _has_length = len(_el_early_buf) >= 60
-                                        if _has_sentence or _has_length:
-                                            self._el_early_fired = True
-                                            # Store the EXACT text we're synthesizing now (for remainder calc)
-                                            self._el_early_synthesized = _el_early_buf.strip()
-                                            _early_text = self._el_early_synthesized
-                                            try:
-                                                from core.emotional_core import get_face_and_voice as _ef3
-                                                _early_emo, _early_face = _ef3()
-                                            except Exception:
-                                                _early_emo, _early_face = "neutral", "neutral"
-                                            def _early_play(_t=_early_text, _e=_early_emo):
+                                frag = _new_fragment(out_full, txt)
+                                if frag:
+                                    out_buf.append(frag)
+                                    out_full = (out_full + " " + frag).strip() if out_full else frag
+                                    self.ui.stream_eris_chunk(frag)
+                                    self._record_conv_eris(frag)
+                                    # ── FIX #5: Debounce express_emotion (max 1x per 2s) ──
+                                    if not hasattr(self, '_last_emo_time') or (time.time() - getattr(self, '_last_emo_time', 0)) > 2.0:
+                                        self.ui.express_emotion(out_full)
+                                        self._last_emo_time = time.time()
+# ── ElevenLabs early synthesis ──
+                                    if _cached_tts_backend == "elevenlabs":
+                                        _el_early_buf = getattr(self, '_el_early_buf', '') + frag
+                                        self._el_early_buf = _el_early_buf
+                                        if not getattr(self, '_el_early_fired', False):
+                                            _has_sentence = any(s in _el_early_buf for s in (". ", "! ", "? "))
+                                            _has_length = len(_el_early_buf) >= 60
+                                            if _has_sentence or _has_length:
+                                                self._el_early_fired = True
+                                                # Store the EXACT text we're synthesizing now (for remainder calc)
+                                                self._el_early_synthesized = _el_early_buf.strip()
+                                                _early_text = self._el_early_synthesized
                                                 try:
-                                                    _l4 = asyncio.new_event_loop()
+                                                    from core.emotional_core import get_face_and_voice as _ef3
+                                                    _early_emo, _early_face = _ef3()
+                                                except Exception:
+                                                    _early_emo, _early_face = "neutral", "neutral"
+                                                def _early_play(_t=_early_text, _e=_early_emo):
                                                     try:
-                                                        from core.tts_engine import synthesize_elevenlabs_streaming
-                                                        def _ep(pcm_bytes):
-                                                            if pcm_bytes and len(pcm_bytes) > 100:
-                                                                try:
-                                                                    self.audio_in_queue.put_nowait(pcm_bytes)
-                                                                except Exception:
-                                                                    pass
-                                                        _l4.run_until_complete(synthesize_elevenlabs_streaming(_t, emotion=_e, play_audio=_ep))
-                                                    finally:
-                                                        _l4.close()
-                                                except Exception as _ee:
-                                                    print(f"[ERIS] ⚠️ ElevenLabs early: {_ee}")
-                                            threading.Thread(target=_early_play, daemon=True).start()
-                                            print(f"[ERIS] 🎙️ ElevenLabs early: {_early_text[:60]}...")
-                                # ── Fish Audio: accumulate text for single synthesis at turn_complete ──
-                                # DISABLED sentence streaming: each sentence = separate API call = gaps between sentences
-                                # Instead, accumulate full text and synthesize once at turn_complete for smooth audio
-                                if _cached_tts_backend == "fish":
-                                    pass  # Text accumulates in out_full, synthesized at turn_complete
-                                # Broadcast a mobile agrupado por frase (evita flood)
-                                _mobile_buf.append(txt)
-                                _m_joined = "".join(_mobile_buf)
-                                if _m_joined.rstrip().endswith((".", "!", "?", "\n", ":", ";")) or len(_m_joined) >= 150:
-                                    if _mobile_broadcast:
-                                        _mobile_broadcast(_m_joined)
-                                    _mobile_buf = []
+                                                        _l4 = asyncio.new_event_loop()
+                                                        try:
+                                                            from core.tts_engine import synthesize_elevenlabs_streaming
+                                                            def _ep(pcm_bytes):
+                                                                if pcm_bytes and len(pcm_bytes) > 100:
+                                                                    try:
+                                                                        self.audio_in_queue.put_nowait(pcm_bytes)
+                                                                    except Exception:
+                                                                        pass
+                                                            _l4.run_until_complete(synthesize_elevenlabs_streaming(_t, emotion=_e, play_audio=_ep))
+                                                        finally:
+                                                            _l4.close()
+                                                    except Exception as _ee:
+                                                        print(f"[ERIS] ⚠️ ElevenLabs early: {_ee}")
+                                                threading.Thread(target=_early_play, daemon=True).start()
+                                                print(f"[ERIS] 🎙️ ElevenLabs early: {_early_text[:60]}...")
+                                    # ── Fish Audio: accumulate text for single synthesis at turn_complete ──
+                                    # DISABLED sentence streaming: each sentence = separate API call = gaps between sentences
+                                    # Instead, accumulate full text and synthesize once at turn_complete for smooth audio
+                                    if _cached_tts_backend == "fish":
+                                        pass  # Text accumulates in out_full, synthesized at turn_complete
+                                    # Broadcast a mobile agrupado por frase (evita flood)
+                                    _mobile_buf.append(frag)
+                                    _m_joined = "".join(_mobile_buf)
+                                    if _m_joined.rstrip().endswith((".", "!", "?", "\n", ":", ";")) or len(_m_joined) >= 150:
+                                        if _mobile_broadcast:
+                                            _mobile_broadcast(_m_joined)
+                                        _mobile_buf = []
 
                         if sc.input_transcription and sc.input_transcription.text:
                             txt = _clean_transcript(sc.input_transcription.text)
@@ -2897,6 +3174,7 @@ class ErisLive:
                             # NOTE: _turn_done_event.set() moved AFTER TTS synthesis to prevent audio cutoff
                             full_in = " ".join(in_buf).strip()
                             if full_in and full_in != self._last_text_trigger:
+                                self._record_conv_user(full_in)
                                 self.ui.write_log(f"Tú: {full_in}")
                                 threading.Thread(target=self._fire_phrase_triggers, args=(full_in,), daemon=True).start()
                             # Reacción emocional también en la vía por voz
@@ -2955,6 +3233,7 @@ class ErisLive:
                             if out_full:
                                 self._remember(f"ERIS: {out_full}")
                                 self._last_tool_context = f"Última respuesta: {out_full[:200]}"
+                            self._finish_conv_eris()
                             # ── ElevenLabs: synthesize remainder if early already fired ──
                             if _cached_tts_backend == "elevenlabs" and out_full.strip():
                                 _early_synthesized = getattr(self, '_el_early_synthesized', '')
@@ -4037,6 +4316,13 @@ def main():
                 from core.neuro_spheres import learn_from_sessions
                 result = learn_from_sessions()
                 print(f"🧠 Auto-learn: {result.get('created', 0)} nodos nuevos")
+            except Exception:
+                pass
+            try:
+                _cur = globals().get("_current_eris")
+                if _cur is not None:
+                    _cur._finish_conv_eris()
+                    _cur._save_active_conv()
             except Exception:
                 pass
             _run_post_session_tasks()

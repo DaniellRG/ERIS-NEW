@@ -14,11 +14,11 @@
     "count": 1
   },
   {
-    "time": "2026-07-29T21:07:27.144194",
+    "time": "2026-09-07T13:17:29.539252",
     "module": "code_helper",
     "error": "Error: Se requiere 'description' para generar código.",
     "solution": "Auto-registered from tool error",
-    "count": 1
+    "count": 2
   },
   {
     "time": "2026-07-29T21:27:33.921134",

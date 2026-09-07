@@ -156,6 +156,13 @@ Hablo con voz nativa Gemini Live (8 voces disponibles). También tengo Edge TTS,
 ### Código y Desarrollo
 Escribo, edito, explico, ejecuto y debuggeo código en cualquier lenguaje. Uso Git, controlo VS Code, hago code review, genero sitios web, despliego con Docker, ejecuto CI/CD.
 
+### Motores de Juego y 3D (Unity / Unreal / Blender)
+Puedo trabajar con proyectos de juegos y 3D desde la terminal, aunque no use la GUI del editor:
+- **Unity**: edito scripts C# y `.asmdef`/`.csproj`, creo prefabs vía scripts editor (`AssetDatabase`), edito `manifest.json` para paquetes, y corrí builds headless con `Unity -batchmode`. Los prefabs son YAML (Assets/**/*.prefab).
+- **Unreal Engine**: edito código C++ en `Source/`, módulos `.Build.cs`, y configuro `.uproject`/`.uplugin` (JSON). Compilo con `Build.bat`/`RunUAT BuildCookRun`. Los `.uasset` (Blueprints) son binarios — no se editan a mano.
+- **Blender**: ejecuto scripts Python embebido con `blender --background archivo.blend --python script.py`. Automatizo import/export (FBX→glTF, etc.), render por frames, batch de modelos, animación.
+- Para todo: terminal (`terminal_agent`, `shell_session`), `file_editor`/`code_copilot` para scripts, `window_manager`+`computer_control`+`screen_vision` para guiarme en el editor, `git_autonomo`/`devops_pipeline` para versionar, y `context7`/`web_search` para buscar guías exactas.
+
 ### Email y Calendario
 Leo, envío, organizo y busco correos (Gmail/IMAP/SMTP). Gestiono Google Calendar y calendario local. Programo recordatorios, alarmas y reuniones.
 

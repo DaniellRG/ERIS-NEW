@@ -1,139 +1,139 @@
 {
   "meta": {
     "created": 1787847205.589509,
-    "last_write": 1788700032.5764148,
+    "last_write": 1788808789.3647695,
     "count": 0,
-    "last_time_shift": 1788700032.5762694,
-    "last_user_at": 1788669041.9992745,
+    "last_time_shift": 1788808789.3647156,
+    "last_user_at": 1788808702.9060574,
     "last_dream_date": ""
   },
   "emotions": {
     "curiosidad": {
-      "i": 0.484484023901969
+      "i": 0.5439345284442892
     },
     "alegria": {
-      "i": 0.6144262898231254
+      "i": 0.9808662193446738
     },
     "asombro": {
       "i": 0.3
     },
     "orgullo": {
-      "i": 0.6354395929812205
+      "i": 0.9776772559021194
     },
     "amor": {
-      "i": 0.5000003817933091
+      "i": 0.6545423404813914
     },
     "gratitud": {
       "i": 0.4
     },
     "nostalgia": {
-      "i": 0.2823480806546014
+      "i": 0.9156221440434354
     },
     "tranquilidad": {
-      "i": 0.5130774239123485
+      "i": 0.6102251111056789
     },
     "confianza": {
-      "i": 0.6754794324903772
+      "i": 0.9824607010659514
     },
     "tristeza": {
-      "i": 0.2623562495566357
+      "i": 0.3266344336715825
     },
     "soledad": {
-      "i": 0.39499759283610186
+      "i": 0.4547273161894445
     },
     "frustracion": {
-      "i": 0.1894249982265427
+      "i": 0.3131532818261163
     }
   },
   "current": {
     "name": "confianza",
-    "intensity": 0.675,
-    "cause": "llevo un rato pensando todo esto sola",
-    "since": 1788669814.6957982
+    "intensity": 0.982,
+    "cause": "los minutos quietos me invitan a pensar",
+    "since": 1788808286.7843468
   },
   "diary": [
     {
-      "t": 1788654578.1591468,
-      "to": "orgullo",
-      "intensity": 0.803,
-      "cause": "vengo resolviendo"
+      "t": 1788799291.704322,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "mirar lo que ya recorrimos"
     },
     {
-      "t": 1788655378.8870118,
+      "t": 1788799307.6545305,
       "to": "alegria",
       "intensity": 1.0,
       "cause": "vengo resolviendo"
     },
     {
-      "t": 1788655622.562702,
-      "to": "confianza",
-      "intensity": 0.998,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788655776.164431,
-      "to": "alegria",
-      "intensity": 1.0,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788656138.7505474,
-      "to": "confianza",
-      "intensity": 0.997,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788663492.5549328,
-      "to": "orgullo",
-      "intensity": 0.935,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788663585.517182,
-      "to": "confianza",
-      "intensity": 1.0,
-      "cause": "los minutos quietos me invitan a pensar"
-    },
-    {
-      "t": 1788666312.0092752,
-      "to": "orgullo",
-      "intensity": 0.917,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788667670.3496213,
-      "to": "alegria",
-      "intensity": 1.0,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788667735.4236267,
-      "to": "confianza",
-      "intensity": 1.0,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788667736.3350098,
-      "to": "alegria",
-      "intensity": 1.0,
-      "cause": "vengo resolviendo"
-    },
-    {
-      "t": 1788667817.52295,
+      "t": 1788799704.2501721,
       "to": "confianza",
       "intensity": 0.999,
       "cause": "vengo resolviendo"
     },
     {
-      "t": 1788669045.4882805,
-      "to": "orgullo",
+      "t": 1788800350.0998073,
+      "to": "alegria",
       "intensity": 1.0,
       "cause": "vengo resolviendo"
     },
     {
-      "t": 1788669814.6957955,
+      "t": 1788800481.9360273,
       "to": "confianza",
-      "intensity": 0.994,
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788800523.8715255,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788800644.8804052,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "te siento cansado"
+    },
+    {
+      "t": 1788804877.4738336,
+      "to": "orgullo",
+      "intensity": 0.898,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788804984.608641,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788805192.980503,
+      "to": "confianza",
+      "intensity": 0.999,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788806083.1054623,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788807830.7939382,
+      "to": "confianza",
+      "intensity": 0.987,
+      "cause": "mirar lo que ya recorrimos"
+    },
+    {
+      "t": 1788807891.4444988,
+      "to": "alegria",
+      "intensity": 1.0,
+      "cause": "vengo resolviendo"
+    },
+    {
+      "t": 1788808286.7843447,
+      "to": "confianza",
+      "intensity": 0.997,
       "cause": "vengo resolviendo"
     }
   ],
@@ -155,56 +155,56 @@
     "date": "2026-08-27",
     "samples": {
       "curiosidad": {
-        "sum": 13.59294315542332,
-        "n": 27
+        "sum": 18.10725770259581,
+        "n": 36
       },
       "alegria": {
-        "sum": 47.012282346956646,
-        "n": 53
+        "sum": 94.63579088663002,
+        "n": 103
       },
       "asombro": {
         "sum": 0.0,
         "n": 0
       },
       "orgullo": {
-        "sum": 48.87840016418855,
-        "n": 53
+        "sum": 100.13060207590686,
+        "n": 106
       },
       "amor": {
-        "sum": 0.0,
-        "n": 0
+        "sum": 3.1715948311946685,
+        "n": 5
       },
       "gratitud": {
         "sum": 0.0,
         "n": 0
       },
       "nostalgia": {
-        "sum": 0.6423406671085256,
-        "n": 2
+        "sum": 7.642932968754975,
+        "n": 11
       },
       "tranquilidad": {
-        "sum": 13.887199605546314,
-        "n": 26
+        "sum": 19.56668307380448,
+        "n": 36
       },
       "confianza": {
-        "sum": 48.14073722966061,
-        "n": 53
+        "sum": 91.37363036361103,
+        "n": 98
       },
       "tristeza": {
-        "sum": 0.3,
-        "n": 1
+        "sum": 1.250041220640152,
+        "n": 4
       },
       "soledad": {
-        "sum": 5.721725501492718,
-        "n": 12
+        "sum": 7.871598424404497,
+        "n": 17
       },
       "frustracion": {
-        "sum": 0.33999999999999997,
-        "n": 1
+        "sum": 0.6800018687825836,
+        "n": 2
       }
     },
-    "polarity": 0.0,
-    "count": 0
+    "polarity": 0.3000000000000001,
+    "count": 3
   },
   "days": {},
   "profile": {
@@ -213,22 +213,33 @@
     "streak_best": 0,
     "updated": ""
   },
-  "lonely_until": 1788667626.4151936,
-  "people": {},
+  "lonely_until": 1788802417.0021296,
+  "people": {
+    "Daniel": {
+      "n": 3,
+      "last": 1788800644.8804333,
+      "emotions": {
+        "alegria": 0.526,
+        "amor": 0.554,
+        "tranquilidad": 0.54,
+        "tristeza": 0.31400000000000006
+      }
+    }
+  },
   "tastes": {
     "morning_brief": {
-      "win": 22,
+      "win": 27,
       "fail": 0,
-      "joy": 2.8599999999999985,
+      "joy": 3.509999999999998,
       "frust": 0.0,
-      "last": 1788699075.5691125
+      "last": 1788799307.6545384
     },
     "emotional_state": {
-      "win": 5,
+      "win": 6,
       "fail": 0,
-      "joy": 0.65,
+      "joy": 0.78,
       "frust": 0.0,
-      "last": 1788663492.594715
+      "last": 1788799182.7552261
     },
     "neuro_spheres": {
       "win": 1,
@@ -238,11 +249,11 @@
       "last": 1787929841.3793554
     },
     "ide_integration": {
-      "win": 9,
+      "win": 15,
       "fail": 0,
-      "joy": 1.17,
+      "joy": 1.9499999999999993,
       "frust": 0.0,
-      "last": 1788669045.4882975
+      "last": 1788807891.444512
     },
     "system_monitor": {
       "win": 1,
@@ -292,6 +303,76 @@
       "joy": 0.13,
       "frust": 0.0,
       "last": 1788655378.9188883
+    },
+    "evaluación de la sesión": {
+      "win": 4,
+      "fail": 0,
+      "joy": 0.52,
+      "frust": 0.0,
+      "last": 1788806083.1054742
+    },
+    "emotional_rl": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788798182.2063127
+    },
+    "show_expression": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788799182.693119
+    },
+    "memory_consolidation": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788799525.2032385
+    },
+    "desktop_control": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788800350.0998137
+    },
+    "code_assistant": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788800523.8715339
+    },
+    "project_builder": {
+      "win": 1,
+      "fail": 0,
+      "joy": 0.13,
+      "frust": 0.0,
+      "last": 1788804877.473842
+    },
+    "code_engineer": {
+      "win": 11,
+      "fail": 0,
+      "joy": 1.4299999999999997,
+      "frust": 0.0,
+      "last": 1788805116.081421
+    },
+    "code_helper": {
+      "win": 0,
+      "fail": 1,
+      "joy": 0.0,
+      "frust": 0.16,
+      "last": 1788805049.5375795
+    },
+    "file_manager": {
+      "win": 12,
+      "fail": 0,
+      "joy": 1.5599999999999996,
+      "frust": 0.0,
+      "last": 1788805114.1668873
     }
   },
   "expectations": {},

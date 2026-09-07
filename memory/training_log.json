@@ -1405,5 +1405,12 @@
     "success": false,
     "error": "Error: creationflags is only supported on Windows platforms",
     "duration": 0.0
+  },
+  {
+    "time": "2026-09-07T13:17:29.539278",
+    "module": "code_helper",
+    "success": false,
+    "error": "Error: Se requiere 'description' para generar código.",
+    "duration": 0.0
   }
 ]

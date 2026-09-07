@@ -635,6 +635,12 @@
       "action": "tool:show_expression",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:show_expression",
+      "action": "tool:show_expression",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "browser_control": [
@@ -1039,12 +1045,6 @@
       "action": "tool:web_search",
       "priority": 2,
       "source": "learned"
-    },
-    {
-      "suggestion": "tool:web_search",
-      "action": "tool:web_search",
-      "priority": 2,
-      "source": "learned"
     }
   ],
   "emotional_state": [
@@ -1149,15 +1149,27 @@
       "action": "tool:emotional_state",
       "priority": 2,
       "source": "learned"
-    },
-    {
-      "suggestion": "tool:emotional_state",
-      "action": "tool:emotional_state",
-      "priority": 2,
-      "source": "learned"
     }
   ],
   "morning_brief": [
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:morning_brief",
+      "action": "tool:morning_brief",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:morning_brief",
       "action": "tool:morning_brief",
@@ -1995,9 +2007,147 @@
       "action": "tool:code_engineer",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_engineer",
+      "action": "tool:code_engineer",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "file_manager": [
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
+    {
+      "suggestion": "tool:file_manager",
+      "action": "tool:file_manager",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:file_manager",
       "action": "tool:file_manager",
@@ -2419,6 +2569,12 @@
       "action": "tool:desktop_control",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:desktop_control",
+      "action": "tool:desktop_control",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "codebase_explorer": [
@@ -2430,12 +2586,6 @@
     }
   ],
   "self_awareness": [
-    {
-      "suggestion": "tool:self_awareness",
-      "action": "tool:self_awareness",
-      "priority": 2,
-      "source": "learned"
-    },
     {
       "suggestion": "tool:self_awareness",
       "action": "tool:self_awareness",
@@ -2481,18 +2631,6 @@
       "action": "tool:terminal_agent",
       "priority": 2,
       "source": "learned"
-    },
-    {
-      "suggestion": "tool:terminal_agent",
-      "action": "tool:terminal_agent",
-      "priority": 2,
-      "source": "learned"
-    },
-    {
-      "suggestion": "tool:terminal_agent",
-      "action": "tool:terminal_agent",
-      "priority": 2,
-      "source": "learned"
     }
   ],
   "autonomy": [
@@ -2515,6 +2653,12 @@
       "action": "tool:code_helper",
       "priority": 2,
       "source": "learned"
+    },
+    {
+      "suggestion": "tool:code_helper",
+      "action": "tool:code_helper",
+      "priority": 2,
+      "source": "learned"
     }
   ],
   "camera_bus": [
@@ -2526,6 +2670,12 @@
     }
   ],
   "emotional_rl": [
+    {
+      "suggestion": "tool:emotional_rl",
+      "action": "tool:emotional_rl",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:emotional_rl",
       "action": "tool:emotional_rl",
@@ -2559,27 +2709,15 @@
       "action": "tool:contextual_awareness",
       "priority": 2,
       "source": "learned"
-    },
-    {
-      "suggestion": "tool:contextual_awareness",
-      "action": "tool:contextual_awareness",
-      "priority": 2,
-      "source": "learned"
-    },
-    {
-      "suggestion": "tool:contextual_awareness",
-      "action": "tool:contextual_awareness",
-      "priority": 2,
-      "source": "learned"
-    },
-    {
-      "suggestion": "tool:contextual_awareness",
-      "action": "tool:contextual_awareness",
-      "priority": 2,
-      "source": "learned"
     }
   ],
   "project_builder": [
+    {
+      "suggestion": "tool:project_builder",
+      "action": "tool:project_builder",
+      "priority": 2,
+      "source": "learned"
+    },
     {
       "suggestion": "tool:project_builder",
       "action": "tool:project_builder",
@@ -2615,26 +2753,18 @@
       "source": "learned"
     }
   ],
-  "system_monitor": [
+  "memory_consolidation": [
     {
-      "suggestion": "tool:system_monitor",
-      "action": "tool:system_monitor",
+      "suggestion": "tool:memory_consolidation",
+      "action": "tool:memory_consolidation",
       "priority": 2,
       "source": "learned"
     }
   ],
-  "self_improvement_loop": [
+  "code_assistant": [
     {
-      "suggestion": "tool:self_improvement_loop",
-      "action": "tool:self_improvement_loop",
-      "priority": 2,
-      "source": "learned"
-    }
-  ],
-  "emotional_memory": [
-    {
-      "suggestion": "tool:emotional_memory",
-      "action": "tool:emotional_memory",
+      "suggestion": "tool:code_assistant",
+      "action": "tool:code_assistant",
       "priority": 2,
       "source": "learned"
     }

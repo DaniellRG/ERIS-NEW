@@ -9,11 +9,11 @@
       "avg_duration": 0.2014938990275065
     },
     "file_manager": {
-      "total": 7,
-      "success": 7,
+      "total": 19,
+      "success": 19,
       "failures": 0,
       "total_duration": 0.6825528144836426,
-      "avg_duration": 0.09750754492623466
+      "avg_duration": 0.03592383234124435
     },
     "shell": {
       "total": 4,
@@ -30,8 +30,8 @@
       "avg_duration": 2.0
     },
     "show_expression": {
-      "total": 106,
-      "success": 106,
+      "total": 107,
+      "success": 107,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -142,22 +142,22 @@
       "avg_duration": 0.0
     },
     "web_search": {
-      "total": 8,
-      "success": 8,
+      "total": 7,
+      "success": 7,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
     "emotional_state": {
-      "total": 18,
-      "success": 18,
+      "total": 17,
+      "success": 17,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
     "morning_brief": {
-      "total": 77,
-      "success": 77,
+      "total": 80,
+      "success": 80,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -170,11 +170,11 @@
       "avg_duration": 0.0
     },
     "system_monitor": {
-      "total": 2,
-      "success": 2,
+      "total": 1,
+      "success": 1,
       "failures": 0,
       "total_duration": 1.1662745475769043,
-      "avg_duration": 0.5831372737884521
+      "avg_duration": 1.1662745475769043
     },
     "window_manager": {
       "total": 3,
@@ -212,8 +212,8 @@
       "avg_duration": 0.0
     },
     "code_engineer": {
-      "total": 22,
-      "success": 22,
+      "total": 33,
+      "success": 33,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -261,8 +261,8 @@
       "avg_duration": 0.0
     },
     "desktop_control": {
-      "total": 4,
-      "success": 4,
+      "total": 5,
+      "success": 5,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -275,8 +275,8 @@
       "avg_duration": 0.0
     },
     "self_awareness": {
-      "total": 3,
-      "success": 3,
+      "total": 2,
+      "success": 2,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -289,8 +289,8 @@
       "avg_duration": 0.0
     },
     "terminal_agent": {
-      "total": 6,
-      "success": 6,
+      "total": 4,
+      "success": 4,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -303,8 +303,8 @@
       "avg_duration": 0.0
     },
     "code_helper": {
-      "total": 2,
-      "success": 2,
+      "total": 3,
+      "success": 3,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -317,8 +317,8 @@
       "avg_duration": 0.0
     },
     "emotional_rl": {
-      "total": 1,
-      "success": 1,
+      "total": 2,
+      "success": 2,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -331,15 +331,15 @@
       "avg_duration": 0.0
     },
     "contextual_awareness": {
-      "total": 5,
-      "success": 5,
+      "total": 2,
+      "success": 2,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
     "project_builder": {
-      "total": 1,
-      "success": 1,
+      "total": 2,
+      "success": 2,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
@@ -358,14 +358,14 @@
       "total_duration": 0,
       "avg_duration": 0.0
     },
-    "self_improvement_loop": {
+    "memory_consolidation": {
       "total": 1,
       "success": 1,
       "failures": 0,
       "total_duration": 0,
       "avg_duration": 0.0
     },
-    "emotional_memory": {
+    "code_assistant": {
       "total": 1,
       "success": 1,
       "failures": 0,

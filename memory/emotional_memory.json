@@ -981,14 +981,189 @@
       "trigger": "auto_cycle"
     },
     {
-      "timestamp": "2026-09-06T07:57:12.664077",
+      "timestamp": "2026-09-03T12:10:26.324069",
       "emotion": "curiosidad",
       "intensity": 0.7,
       "context": "Ciclo autonomo ejecutado",
       "trigger": "auto_cycle"
     },
     {
-      "timestamp": "2026-09-06T08:07:12.773067",
+      "timestamp": "2026-09-03T12:20:39.196714",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T12:30:39.267480",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T12:40:39.327785",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T12:50:48.559039",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T13:00:48.590618",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T13:10:48.670277",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T13:20:50.462727",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T13:30:50.525935",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-03T13:40:50.620739",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T11:05:02.761756",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T11:15:23.090471",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T11:31:14.821074",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T11:42:24.385765",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T11:52:38.184503",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:02:38.333483",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:13:23.537969",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:23:31.423500",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:33:31.485136",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:43:52.895167",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T12:53:53.008148",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T13:03:53.118818",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T13:13:53.278873",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T13:24:17.311721",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T13:34:10.143881",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T14:04:38.468680",
+      "emotion": "curiosidad",
+      "intensity": 0.7,
+      "context": "Ciclo autonomo ejecutado",
+      "trigger": "auto_cycle"
+    },
+    {
+      "timestamp": "2026-09-07T14:15:19.535132",
       "emotion": "curiosidad",
       "intensity": 0.7,
       "context": "Ciclo autonomo ejecutado",
@@ -996,6 +1171,6 @@
     }
   ],
   "patterns": {
-    "curiosidad": 142
+    "curiosidad": 167
   }
 }

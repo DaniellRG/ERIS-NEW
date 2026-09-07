@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-06 08:01:06 · 456 tools registradas y resolviendo.
+Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific
@@ -22,6 +22,9 @@ Generado: 2026-09-06 08:01:06 · 456 tools registradas y resolviendo.
 
 ## advanced
 - `advanced_rag` — Búsqueda avanzada en la base de conocimiento de Eris. Hybrid BM25+semantic con cross-encoder re-ranking y cita
+
+## agelix
+- `agelix` — AGENLIX: el fragmento Linux de Eris. Delega a su subagente especialista en Linux una tarea o consulta pesada d
 
 ## agent
 - `agent_as_tool` — Delega una sub-tarea a un agente autónomo especializado. Útil para tareas complejas que benefit de un enfoque 
@@ -396,6 +399,9 @@ Generado: 2026-09-06 08:01:06 · 456 tools registradas y resolviendo.
 ## google
 - `google_calendar` — Google Calendar real. Crear, listar, eliminar eventos. Acciones: today, week, upcoming, create, delete, search
 
+## guardiana
+- `guardiana` — GUARDIANA (SAMX): el supervisor de autocuidado de ERIS. Vigila su salud 24/7, detecta y repara automaticamente
+
 ## gustos
 - `gustos` — Ver, agregar y quitar gustos de ERIS y del usuario. ERIS tiene gustos propios (comida, música, hobbies, etc.) 
 
@@ -488,6 +494,9 @@ Generado: 2026-09-06 08:01:06 · 456 tools registradas y resolviendo.
 - `memory_rag` — Memoria RAG de ERIS: recuerda/guarda informacion con busqueda semantica, etiquetas y relevancia. Acciones: rem
 - `memory_search` — Consolidación de memoria. Resumir conversaciones, extraer hechos clave, limpiar ruido, buscar en hechos histór
 - `memory_unified` — Memoria unificada: acceso centralizado a todas las capas de memoria (semantica, episodica, working, long-term)
+
+## mentora
+- `mentora` — MENTORA: el MAESTRO de ERIS (superaprendizaje continuo). Aprende de verdad de todo (errores, soluciones, sesio
 
 ## meta
 - `meta_cognition` — Pensar sobre como se piensa. Reflexionar sobre el propio proceso de pensamiento: origen, sesgos, alternativas,

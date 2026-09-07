@@ -1,305 +1,5 @@
 [
   {
-    "timestamp": "2026-08-28T09:42:48.774141",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T09:42:48.785014",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T09:42:48.794495",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T09:42:48.801791",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T09:42:48.810507",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:00:58.426604",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:00:58.434885",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:00:58.442472",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:00:58.449628",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:00:58.457597",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:08:16.743582",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:08:16.751142",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:08:16.759022",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:08:16.767213",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:08:16.775892",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:19:42.055806",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:19:42.064974",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:19:42.073087",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:19:42.080164",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:19:42.088574",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:23:28.275456",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:23:28.283680",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:23:28.292877",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:23:28.300895",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:23:28.309422",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:25:05.192670",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:25:05.200852",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:25:05.210019",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:25:05.218743",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:25:05.226846",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:26:41.606819",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:26:41.615417",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:26:41.623227",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:26:41.631097",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:26:41.639764",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:29:33.048906",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:29:33.058532",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:29:33.067635",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:29:33.076054",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:29:33.084475",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:30:07.274674",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:30:07.282680",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:30:07.291890",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:30:07.300848",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:30:07.308978",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:33:05.146871",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:33:05.155629",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:33:05.164390",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:33:05.174533",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:33:05.183606",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:34:09.166776",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:34:09.174421",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:34:09.182589",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:34:09.191070",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:34:09.198693",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:35:34.902703",
-    "action": "create",
-    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:35:34.910233",
-    "action": "create",
-    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:35:34.918610",
-    "action": "create",
-    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
-  },
-  {
-    "timestamp": "2026-08-28T10:35:34.925800",
-    "action": "create",
-    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
-  },
-  {
-    "timestamp": "2026-08-28T10:35:34.934645",
-    "action": "create",
-    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
-  },
-  {
     "timestamp": "2026-08-28T10:38:41.634746",
     "action": "create",
     "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
@@ -496,6 +196,306 @@
   },
   {
     "timestamp": "2026-08-28T11:30:55.721403",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-03T12:09:13.897958",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-03T12:09:13.964150",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-03T12:09:13.971621",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-03T12:09:13.979505",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-03T12:09:13.985885",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:03:49.562057",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:03:49.636245",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:03:49.647510",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:03:49.659864",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:03:49.670705",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:17:29.128848",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:17:29.134432",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:17:29.146153",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:17:29.157691",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:17:29.168511",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:20:43.548318",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:20:43.561638",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:20:43.574839",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:20:43.586358",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:20:43.599705",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:30:09.975985",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:30:09.982945",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:30:09.995031",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:30:10.007085",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:30:10.020196",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:41:19.612281",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:41:19.624699",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:41:19.637534",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T11:41:19.648538",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T11:41:19.660283",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T12:09:18.753487",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:09:18.765957",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:09:18.777517",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T12:09:18.789605",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:09:18.801789",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T12:38:42.148201",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:38:42.154899",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:38:42.165874",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T12:38:42.179422",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T12:38:42.190651",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:03:31.070946",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:03:31.078518",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:03:31.092591",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:03:31.108848",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:03:31.121264",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:08:17.725584",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:08:17.740869",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:08:17.753057",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:08:17.766465",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:08:17.780120",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:11:13.447727",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:11:13.453913",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:11:13.466477",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:11:13.478741",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:11:13.491898",
+    "action": "create",
+    "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:17:43.516603",
+    "action": "create",
+    "details": "Meta creada: Realizar al menos 3 mejoras de codigo auto (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:17:43.530488",
+    "action": "create",
+    "details": "Meta creada: Documentar todas las capacidades en Obsidian (30+ docs) (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:17:43.542016",
+    "action": "create",
+    "details": "Meta creada: Ejecutar limpieza de memoria semanal (low)"
+  },
+  {
+    "timestamp": "2026-09-07T14:17:43.555703",
+    "action": "create",
+    "details": "Meta creada: Consolidar memoria episodica y semantica (medium)"
+  },
+  {
+    "timestamp": "2026-09-07T14:17:43.567927",
     "action": "create",
     "details": "Meta creada: Mejorar personalidad de voz y expresion (low)"
   }
