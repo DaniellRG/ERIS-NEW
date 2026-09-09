@@ -173,6 +173,17 @@ class OfflineVoicePipeline:
             print("[offline] No se pudo inicializar Vosk. Modo solo texto.")
             return
         self._running = True
+        if self._tts_backend == "kokoro":
+            import threading
+            def _warm_kokoro():
+                import asyncio
+                from core.tts_engine import warmup_kokoro
+                try:
+                    ok = asyncio.run(warmup_kokoro())
+                    print(f"[offline] Kokoro warmup: {'OK' if ok else 'FALLÓ'}")
+                except Exception as e:
+                    print(f"[offline] Kokoro warmup error: {e}")
+            threading.Thread(target=_warm_kokoro, daemon=True).start()
         try:
             self._mic_rate = mic_opened_rate()
             self._mic_stream = sd.InputStream(

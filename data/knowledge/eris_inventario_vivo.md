@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-09 09:22:10 · 475 tools registradas y resolviendo.
+Generado: 2026-09-09 14:18:33 · 475 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).

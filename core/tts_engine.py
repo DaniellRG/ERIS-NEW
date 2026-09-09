@@ -86,7 +86,7 @@ def tts_set_voice(parameters: dict, player=None) -> str:
         return f"Velocidad de voz configurada: {cfg['tts_speed']}"
     if action == "set_backend":
         backend = (parameters.get("backend") or "edge").lower().strip()
-        if backend not in ("edge", "gemini", "kokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish"):
+        if backend not in ("edge", "gemini", "kokoro", "pykokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish"):
             return f"Backend no soportado: {backend}. Opciones: edge, gemini, kokoro, bark, sapi, elevenlabs, fish."
         cfg = _load_cfg()
         cfg["tts_backend"] = backend
@@ -170,7 +170,7 @@ async def synthesize(text: str, backend: str | None = None, voice: str | None = 
     if backend == "bark":
         return await _synthesize_bark(text, voice)
 
-    if backend == "kokoro":
+    if backend in ("kokoro", "pykokoro"):
         return await _synthesize_kokoro(text, voice)
 
     return b""
@@ -617,7 +617,7 @@ async def _synthesize_kokoro(text: str, voice: str = "") -> bytes:
                     return b""
 
     try:
-        result = _KOKORO_PIPELINE.run(text)
+        result = _KOKORO_PIPELINE.run(text, lang="es")
         audio = result.audio
         if audio is None or len(audio) == 0:
             return b""

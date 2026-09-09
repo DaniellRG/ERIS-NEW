@@ -1375,7 +1375,7 @@ class SettingsDialog(QDialog):
         lbl_eng.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl.addWidget(lbl_eng)
         self._tts = QComboBox()
-        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "pykokoro"])
+        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "kokoro", "pykokoro"])
         self._tts.setCurrentText(self._cfg.get("tts_backend", "edge"))
         hl.addWidget(self._tts)
         hl.addStretch()
@@ -1622,20 +1622,17 @@ class SettingsDialog(QDialog):
                     self._voice.addItem(v.name, v.id)
             except Exception:
                 self._voice.addItem("Default", "default")
-        elif engine == "pykokoro":
+        elif engine in ("pykokoro", "kokoro"):
             try:
-                from kokoro import KPipeline
                 _voices = [
-                    ("af_heart", "Heart (Fem EN)"),
-                    ("af_bella", "Bella (Fem EN)"),
-                    ("af_nicole", "Nicole (Fem EN)"),
-                    ("am_adam", "Adam (Masc EN)"),
-                    ("am_michael", "Michael (Masc EN)"),
+                    ("ef_dora", "Dora (Fem ES)"),
+                    ("em_alex", "Alex (Masc ES)"),
+                    ("em_santa", "Santa (Masc ES)"),
                 ]
                 for v_id, v_label in _voices:
                     self._voice.addItem(v_label, v_id)
             except ImportError:
-                self._voice.addItem("PyKokoro not installed", "")
+                self._voice.addItem("Kokoro no cargado", "")
         elif engine == "gemini":
             from core.audio_config import ERIS_VOICES as _av
             for _vk, (_vg, _vd) in _av.items():

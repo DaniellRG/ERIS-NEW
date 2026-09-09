@@ -1,6 +1,6 @@
 ﻿# AGENTS.md — ERIS AI
 
-Windows desktop assistant (Python 3.14, PyQt6). 475 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Fish Audio TTS.
+Windows desktop assistant (Python 3.14, PyQt6). 475 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS (ef_dora).
 
 ## Quick start
 
@@ -92,7 +92,7 @@ $env:PYTHONIOENCODING="utf-8"
 
 - **Default**: Ollama local (`qwen3:8b`) — no rate limits
 - **Fallback**: Gemini API (`gemini-3.1-flash-lite`) — low free-tier quota
-- **TTS**: Fish Audio (`s2.1-pro-free`) with custom voice
+- **TTS**: Kokoro-82M local (`pykokoro`, backend `kokoro`) — voz femenina `ef_dora`, Apache-2.0, ilimitada, ~3x realtime en CPU (usa espeak+spacy `es_core_news_sm`). El backend acepta `kokoro` o `pykokoro` (alias en `tts_engine.synthesize`); `from_pretrained` con string `"cpu"` (NO `torch.device`); guardar wav con `soundfile` (no torchaudio). Alternativa nube sin costo: `edge` (`es-AR-TomasNeural`, MS cloud). `ui.py` combo lista `kokoro`/`pykokoro` con Dora/Alex/Santa (ES). NUNCA usar `pykokoro` sin alias — la UI vieja guardaba `"PyKokoro not installed"` como voz y rompía el config.
 - **Config**: `config/api_keys.json`
 
 ## Ollama
