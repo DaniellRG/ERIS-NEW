@@ -592,6 +592,7 @@ _TOOLS = {
     "bienestar":             ("core.bienestar", "bienestar_tool"),
     "cuadernos":             ("core.cuadernos", "cuadernos_tool"),
     "despedidas":            ("core.despedidas", "despedidas_tool"),
+    "todo_yo":               ("core.todo_yo", "todo_yo_tool"),
 }
 
 

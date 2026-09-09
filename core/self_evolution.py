@@ -160,6 +160,7 @@ def build_inventory_md() -> int:
              "- **BIENESTAR**: `core/bienestar.py` lee la energía del usuario (memory/bienestar.json) y ajusta el trato al momento de él. Tool `bienestar`: estado/registrar.",
              "- **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.",
              "- **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.",
+             "- **AUTOCONOCIMIENTO VIVO**: `core/todo_yo.py` le inyecta a Eris SIEMPRE su mapa integral `[TODO LO QUE SOS]` (cuerpo, mente, corazón, herramientas + novedades de su evolución desde memory/evolucion_novedades.json). Tool `todo_yo`: estado/novedades/registrar/esencia.",
              ""]
     for key in sorted(groups):
         lines.append(f"## {key}")

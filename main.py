@@ -2808,6 +2808,17 @@ class ErisLive:
             "vocalizaciones (mmm, um, ah, eh, mmmh). Empezá a hablar "
             "directamente con la respuesta, sin humedades ni arrastres."
         )
+        # ── AUTOCONOCIMIENTO VIVO: el mapa integral de Eris, SIEMPRE presente.
+        #    Así sabe qué es, qué tiene (cuerpo/mente/corazón/herramientas) y
+        #    qué novedades de su evolución le llegaron. Inyectado ANTES del
+        #    sys_prompt → sobrevive al trim. ──
+        try:
+            from core.todo_yo import inyect_todo_yo
+            _tuyo = inyect_todo_yo()
+            if _tuyo:
+                parts.append(_tuyo)
+        except Exception:
+            pass
         parts.append(sys_prompt)
 
         # ── Smart trim: nunca cortar lo esencial (personalidad, relación,

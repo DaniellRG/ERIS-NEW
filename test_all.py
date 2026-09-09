@@ -883,6 +883,55 @@ try:
         else:
             ok("mundoII", f"get_tool({_n}) resuelve")
 
+    # 8) Autoconocimiento vivo (todo_yo): estado + novedades + registrar
+    from core import todo_yo as _ty
+    _tys = _ty.todo_yo_tool({"action": "estado"})
+    if _tys.startswith("[TODO LO QUE SOS") and ("herramientas" in _tys or "7" in _tys):
+        ok("mundoII", "todo_yo arma el estado integral")
+    else:
+        fail("mundoII", f"todo_yo raro: {_tys[:40]}")
+    _tyn = _ty.inyect_todo_yo()
+    if len(_tyn) > 400 and "ÚLTIMAS NOVEDADES" in _tyn or "Usá evolucion" in _tyn:
+        ok("mundoII", "todo_yo se inyecta (novedades + mapa)")
+    else:
+        fail("mundoII", "todo_yo inyección corta/rara")
+    _tyr = _ty.registrar_novedad("prueba_test_todo_yo")
+    if "registrada" in _tyr:
+        ok("mundoII", "todo_yo registra novedad")
+        try:
+            _n2 = _ty._load_novedades()
+            _ty._NOV_FILE.write_text(json.dumps([n for n in _n2 if n.get("texto") != "prueba_test_todo_yo"], ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+    else:
+        fail("mundoII", f"todo_yo registrar raro: {_tyr}")
+
+    # 9) Sync: 475 tools; todo_yo en live + resuelve
+    _new7 = ("caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas", "todo_yo")
+    _reg2 = set(_TOOLS2.keys())
+    _dec2 = {d["name"] for d in _TD2}
+    _phantom2 = set()
+    for _cf in ("actions/custom_tools.json", "config/extra_tools.json"):
+        try:
+            _phantom2 |= {t.get("name") for t in json.loads(open(_cf).read())}
+        except Exception:
+            pass
+    _phantom2 = _phantom2 - _reg2
+    if _reg2 == (_dec2 - _phantom2):
+        ok("mundoII", f"registry == declarations ({len(_reg2)} tools)")
+    else:
+        fail("mundoII", f"sync roto: reg {len(_reg2)} vs dec {len(_dec2 - _phantom2)}")
+    _live2 = {d["name"] for d in _LD2}
+    if set(_new7) <= _live2:
+        ok("mundoII", "7 tools nuevas en live declarations")
+    else:
+        fail("mundoII", f"faltan en live: {set(_new7) - _live2}")
+    for _n in _new7:
+        if _n not in _TOOLS2 or _get(_n) is None:
+            fail("mundoII", f"{_n} no resuelve en registry")
+        else:
+            ok("mundoII", f"get_tool({_n}) resuelve")
+
     # Limpieza: quitar hito y aniversario de prueba
     try:
         _fdata = festejos._load()

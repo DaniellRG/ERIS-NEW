@@ -7376,6 +7376,14 @@ TOOL_DECLARATIONS.extend([
             "nota": {"type": "STRING", "description": "Nota de recapitulación del día"},
         }, "required": ["action"]},
     },
+    {
+        "name": "todo_yo",
+        "description": "AUTOCONOCIMIENTO VIVO: el mapa integral de Eris (cuerpo, mente, corazón y sus herramientas) + las novedades recientes de su evolución. estado/soy (su estado completo, recibe el bloque '[TODO LO QUE SOS]' cada turno), novedades (bitácora de lo que se le agregó/mejoró), registrar (texto: anota una novedad), esencia (quién es). Úsala cuando quieras recordarte todo lo que sos y podés usar.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, novedades, registrar, esencia"},
+            "texto": {"type": "STRING", "description": "Novedad a registrar"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7460,6 +7468,7 @@ _LIVE_NAMES = {
     "cerebro", "expresion_eris", "vida_interna", "relaciones",
     "autoimagen", "intereses", "retrospectiva", "ambiente", "suenos",
     "caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas",
+    "todo_yo",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
