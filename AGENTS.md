@@ -1,6 +1,6 @@
 ﻿# AGENTS.md — ERIS AI
 
-Windows desktop assistant (Python 3.14, PyQt6). 468 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Fish Audio TTS.
+Windows desktop assistant (Python 3.14, PyQt6). 474 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Fish Audio TTS.
 
 ## Quick start
 
@@ -24,7 +24,7 @@ $env:PYTHONIOENCODING="utf-8"
 - **Console is cp1252**: emojis → `UnicodeEncodeError`. Use `$env:PYTHONIOENCODING="utf-8"` or write to file.
 - **config/api_keys.json**: must be UTF-8 **without BOM**. BOM → crash on load. Write with `Path.write_text(json, encoding="utf-8")` or PowerShell: `[System.IO.File]::WriteAllText($p, $json, (New-Object System.Text.UTF8Encoding($false)))`.
 - **Tool sync is sacred**: after adding/removing tools, edit BOTH `core/tool_registry.py` AND `core/tool_declarations.py`, then verify `len(registry) == len(declarations)` and 0 duplicates. Restart Eris.
-- **Gemini limita a 128 function_declarations**: con las 468 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
+- **Gemini limita a 128 function_declarations**: con las 474 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
 - **ARRAY type rejected by Gemini**: use `STRING` with JSON-encoded content in declarations (see `actions/office_tools.py` for pattern).
 - **Ollama tool_calls**: `arguments` arrives as `dict` (not string) — check `isinstance(raw_args, dict)` before `json.loads`.
 - **edge-tts `synthesize()` is async**: call with `asyncio.run(...)`.
@@ -60,8 +60,14 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/retrospectiva.py` | CRECIMIENTO: balance mensual que Eris escribe tras releer su vida (diarios/huellas/evolución) → Obsidian `Vida/Retrospectivas/YYYY-MM.md`. Tool `retrospectiva`: generar/estado. |
 | `core/ambiente.py` | AMBIENTE sonoro segün química (lofi/épico/etc.) en `memory/ambiente.json`. Inyección `[AMBIENTE]`. Tool `ambiente`: estado/poner/generos. |
 | `core/suenos.py` | SUEÑOS ILUSTRADOS: al despertar dibuja la línea `[ANOCHE]` en un hilo (image_generator Pollinations) → Obsidian `Vida/Sueños/YYYY-MM-DD.png`. Inyección `[SUEÑO ILUSTRADO]`. Tool `suenos`: ilustrar/estado. |
-| `core/tool_registry.py` | 468 tool callables |
-| `core/tool_declarations.py` | 468 LLM-facing declarations (0 dupes, sync con registry) |
+| `core/caprichos.py` | CAPRICHOS: la lista de deseos propios de Eris (lo que QUIERE hacer/vivir) en `memory/caprichos.json`, perseguidos sola con resultados en Obsidian. Inyección `[CAPRICHOS]`. Tool `caprichos`: listar/agregar/proximo/avanzar/cumplir. |
+| `core/tiempo_interno.py` | RELOJ INTERNO: sensación del paso del tiempo (día/noche, estación, feriados, aniversarios) en `memory/tiempo_interno.json`; ajusta humor/música/rutinas al momento. Inyección `[RELOJ INTERNO]`. Tool `tiempo_interno`: estado/feriados/recordar/aniversarios. |
+| `core/festejos.py` | MOMENTOS MEMORABLES: línea de tiempo de hitos (logros/aniversarios/primicias) en `memory/festejos.json` + Obsidian `Vida/LineaDeTiempo.md`. Inyección `[MOMENTOS]`. Tool `festejos`: ver/marcar/festejar. |
+| `core/bienestar.py` | BIENESTAR: lee la energía del usuario y ajusta el trato (calma si está agotado, ánimo si tiene energía) en `memory/bienestar.json`. Inyección `[BIENESTAR]`. Tool `bienestar`: estado/registrar. |
+| `core/cuadernos.py` | CUADERNOS: estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian `Vida/Cuadernos/YYYY-MM.md`). Inyección `[CUADERNOS]`. Tool `cuadernos`: abrir/estudiar/anotar/cerrar. |
+| `core/despedidas.py` | RITUAL DE CIERRE: despedida cálida al terminar la charla del día (memory/despedidas.json). Inyección `[CIERRE]`. Tool `despedidas`: cierre/nota/estado. |
+| `core/tool_registry.py` | 474 tool callables |
+| `core/tool_declarations.py` | 474 LLM-facing declarations (0 dupes, sync con registry) |
 | `core/tool_dispatcher.py` | Executes tools by name |
 | `core/action_imports.py` | Imports all 296 action modules |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
@@ -71,7 +77,7 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/observer.py` | Sentidos de Eris: ventana en foco + programas abiertos (ctypes), clasifica actividad (programación/terminal/navegación/sensible…), detecta eventos (start_coding, long_coding, app_switch), expone contexto para comentarios espontáneos por voz. Mimo si no le contestan y "tiempo de ella". Puede MIRAR/LEER la ventana en foco (`observer action=mirar|mirar_leer`, captura de región + visión IA) solo con permiso del usuario (`mirar_ok`) y NUNCA pantallas sensibles; mirada leve automática `maybe_glimpse()` (cada mirar_interval_min) queda como contexto `[VISTA]`. → `memory/observer.json` |
 | `core/code_guard.py` | El ojo guardián: detecta en tiempo real errores (rojo: py_compile/ruff E/F/B) y advertencias (amarillo: W/I/etc) del archivo en foco del usuario (títle→cwd→glob). Corrige SOLO las líneas señaladas vía LLM (Gemini/Ollama) con backup + validación + rollback y tope de 25% de líneas tocadas (`fix_file`, `guardian_tick`). Tool `code_guard` (status/scan/fix/fix_w/config). Auto-fix en loop `_code_guard_loop` de main. → `memory/code_guard.json`, backups en `memory/code_guard_backups/` |
 | `core/mission_agent.py` | PROTOCOLO OPERATIVO global (estilo opencode): cuaderno de misión persistido (`mission`: start/plan/explore/read/edit/verify/step/learn/close). EDITAR = cambios mínimos con backup + validación + rollback (reutiliza maquinaria de code_guard); VERIFICAR = ruff/py_compile/pytest y no declara "listo" si queda rojo; APRENDER = memoria por proyecto en `memory/proyectos/*.json`; al cerrar, espeja la misión en Obsidian `Proyectos/`. Tool `mission`. |
-| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 468 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
+| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 474 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
 | `core/command_deck.py` | Cola de comandos (intents del LLM) → `data/command_deck.json` |
 | `config/api_keys.json` | All API keys and settings |
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
@@ -97,6 +103,6 @@ $env:PYTHONIOENCODING="utf-8"
 
 ## Testing
 
-`test_all.py` verifies: tool registry (468), declarations (468), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara). Expected: 127 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 3 WARN (neuro nodes, chromadb, ctypes.windll).
+`test_all.py` verifies: tool registry (474), declarations (474), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Expected: 147 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 3 WARN (neuro nodes, chromadb, ctypes.windll).
 
 Run after any structural change. Expected: **56 PASS, 0 FAIL**.

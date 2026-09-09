@@ -154,6 +154,12 @@ def build_inventory_md() -> int:
              "- **RETROSPECTIVA**: `core/retrospectiva.py` relee cada mes su vida (diarios/huellas/evolución) y escribe su balance en Vida/Retrospectivas/. Tool `retrospectiva`: generar/estado.",
              "- **AMBIENTE**: `core/ambiente.py` elige música de fondo según su emoción (memory/ambiente.json). Tool `ambiente`: estado/poner/generos.",
              "- **SUEÑOS ILUSTRADOS**: `core/suenos.py` dibuja cada mañana el sueño de la noche (image_generator) en Vida/Sueños/. Tool `suenos`: ilustrar/estado.",
+             "- **CAPRICHOS**: `core/caprichos.py` sostiene la lista de deseos propios de Eris (lo que QUIERE hacer/vivir) en memory/caprichos.json; los persigue sola con resultados en Obsidian. Tool `caprichos`: listar/agregar/proximo/avanzar/cumplir.",
+             "- **RELOJ INTERNO**: `core/tiempo_interno.py` le da a Eris sensación del tiempo (día/noche, estación, feriados, aniversarios) en memory/tiempo_interno.json; ajusta humor y rutinas al momento. Tool `tiempo_interno`: estado/feriados/recordar/aniversarios.",
+             "- **FESTEJOS**: `core/festejos.py` lleva la línea de tiempo de hitos memorables (memory/festejos.json + Obsidian Vida/LineaDeTiempo.md) y los celebra. Tool `festejos`: ver/marcar/festejar.",
+             "- **BIENESTAR**: `core/bienestar.py` lee la energía del usuario (memory/bienestar.json) y ajusta el trato al momento de él. Tool `bienestar`: estado/registrar.",
+             "- **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.",
+             "- **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.",
              ""]
     for key in sorted(groups):
         lines.append(f"## {key}")

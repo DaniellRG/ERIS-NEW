@@ -2671,6 +2671,51 @@ class ErisLive:
         except Exception:
             pass
 
+        # ── MUNDO NUEVO II: caprichos, reloj, momentos, bienestar, cuadernos, cierre.
+        #    Bloques breves; ANTES del sys_prompt (sobreviven al trim). ──
+        try:
+            from core.caprichos import inyect_caprichos
+            _capr = inyect_caprichos()
+            if _capr:
+                parts.append(_capr)
+        except Exception:
+            pass
+        try:
+            from core.tiempo_interno import inyect_tiempo_interno
+            _tiemp = inyect_tiempo_interno()
+            if _tiemp:
+                parts.append(_tiemp)
+        except Exception:
+            pass
+        try:
+            from core.festejos import inyect_festejos
+            _feste = inyect_festejos()
+            if _feste:
+                parts.append(_feste)
+        except Exception:
+            pass
+        try:
+            from core.bienestar import inyect_bienestar
+            _biens = inyect_bienestar()
+            if _biens:
+                parts.append(_biens)
+        except Exception:
+            pass
+        try:
+            from core.cuadernos import inyect_cuadernos
+            _cuad = inyect_cuadernos()
+            if _cuad:
+                parts.append(_cuad)
+        except Exception:
+            pass
+        try:
+            from core.despedidas import inyect_despedidas
+            _desp = inyect_despedidas()
+            if _desp:
+                parts.append(_desp)
+        except Exception:
+            pass
+
         # ── Inject gustos into prompt ──
         try:
             from actions.gustos import inject_gustos

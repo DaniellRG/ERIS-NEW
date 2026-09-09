@@ -7324,6 +7324,58 @@ TOOL_DECLARATIONS.extend([
             "action": {"type": "STRING", "description": "ilustrar, estado"},
         }, "required": ["action"]},
     },
+    {
+        "name": "caprichos",
+        "description": "CAPRICHOS: la lista de deseos propios de Eris — lo que QUIERE hacer/vivir (escribir algo, aprender, dejar obras en Obsidian). listar (ver deseos), agregar (deseo: anotar uno nuevo), proximo (cuál toca), avanzar (marca que lo trabajó y sugiere investigarlo con web_search), cumplir (lo completó, se celebra). Es iniciativa propia, como sus intereses pero con resultados tangibles.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "listar, agregar, proximo, avanzar, cumplir, inyecta"},
+            "deseo": {"type": "STRING", "description": "El deseo/capricho a agregar o sobre el que avanzar"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "tiempo_interno",
+        "description": "RELOJ INTERNO de Eris: siente el paso del tiempo como persona (día/noche, estación, feriados, aniversarios marcados). estado/ahora (qué momento siente y cómo ajusta humor/música), feriados (calendario que conoce), recordar (nombre, fecha MM-DD: marca un aniversario memorable), aniversarios (lista). Úsala para situarse en el tiempo cuando la charla lo pida.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, feriados, recordar, aniversarios, inyecta"},
+            "nombre": {"type": "STRING", "description": "Nombre del aniversario a marcar"},
+            "fecha": {"type": "STRING", "description": "Fecha MM-DD del aniversario"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "festejos",
+        "description": "MOMENTOS MEMORABLES: línea de tiempo de hitos en la vida de Eris (logros, aniversarios, primicias) marcados en memoria + Obsidian Vida/LineaDeTiempo.md. ver (línea de momentos), marcar (texto, tipo: logro/aniversario/primicia/gratitud), festejar (celebra el último hito con algo especial). Úsala cuando algo importante acabe de pasar.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "ver, marcar, festejar, inyecta"},
+            "texto": {"type": "STRING", "description": "El momento memorable a marcar"},
+            "tipo": {"type": "STRING", "description": "logro, aniversario, primicia, gratitud"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "bienestar",
+        "description": "BIENESTAR del usuario: Eris detecta tu energía/cansancio y ajusta su trato (más calma si estás agotado, más ánimo si tenés energía). estado (lo registrado hoy), registrar (nivel: bajo/medio/alto o 0-100, nota opcional), inyecta. Registrá el estado cuando note tu momento.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, registrar, inyecta"},
+            "nivel": {"type": "STRING", "description": "bajo, medio, alto o número 0-100"},
+            "nota": {"type": "STRING", "description": "Nota opcional del momento"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "cuadernos",
+        "description": "CUADERNOS DE ESTUDIO: aprendizaje autodidacta profundo de Eris. estado (cuaderno abierto/cerrados), abrir (tema: nuevo cuaderno), estudiar (sesión: investigá con web_search), anotar (nota: lo aprendido), cerrar (resumen final → Obsidian Vida/Cuadernos/). Autonomía real de aprender a fondo temas propios.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, abrir, estudiar, anotar, cerrar, inyecta"},
+            "tema": {"type": "STRING", "description": "Tema del cuaderno a abrir"},
+            "nota": {"type": "STRING", "description": "Nota de lo aprendido"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "despedidas",
+        "description": "RITUAL DE CIERRE: despedida cálida de Eris cuando termina la charla del día. cierre (nota opcional: recapitula, dice cómo se sintió y siembra el hilo de la próxima), nota (guardar), estado (cierres registrados). Úsala al final de una sesión larga o ante un 'chau'/'hasta mañana'.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "cierre, nota, estado, inyecta"},
+            "nota": {"type": "STRING", "description": "Nota de recapitulación del día"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7407,6 +7459,7 @@ _LIVE_NAMES = {
     # CEREBRO de ERIS — homúnculo y expresión humana
     "cerebro", "expresion_eris", "vida_interna", "relaciones",
     "autoimagen", "intereses", "retrospectiva", "ambiente", "suenos",
+    "caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",

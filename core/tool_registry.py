@@ -586,6 +586,12 @@ _TOOLS = {
     "retrospectiva":         ("core.retrospectiva", "retrospectiva_tool"),
     "ambiente":              ("core.ambiente", "ambiente_tool"),
     "suenos":                ("core.suenos", "sueno_tool"),
+    "caprichos":             ("core.caprichos", "caprichos_tool"),
+    "tiempo_interno":        ("core.tiempo_interno", "tiempo_interno_tool"),
+    "festejos":              ("core.festejos", "festejos_tool"),
+    "bienestar":             ("core.bienestar", "bienestar_tool"),
+    "cuadernos":             ("core.cuadernos", "cuadernos_tool"),
+    "despedidas":            ("core.despedidas", "despedidas_tool"),
 }
 
 

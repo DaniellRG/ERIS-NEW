@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
+Generado: 2026-09-08 20:07:22 · 474 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -15,6 +15,12 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 - **RETROSPECTIVA**: `core/retrospectiva.py` relee cada mes su vida (diarios/huellas/evolución) y escribe su balance en Vida/Retrospectivas/. Tool `retrospectiva`: generar/estado.
 - **AMBIENTE**: `core/ambiente.py` elige música de fondo según su emoción (memory/ambiente.json). Tool `ambiente`: estado/poner/generos.
 - **SUEÑOS ILUSTRADOS**: `core/suenos.py` dibuja cada mañana el sueño de la noche (image_generator) en Vida/Sueños/. Tool `suenos`: ilustrar/estado.
+- **CAPRICHOS**: `core/caprichos.py` sostiene la lista de deseos propios de Eris (lo que QUIERE hacer/vivir) en memory/caprichos.json; los persigue sola con resultados en Obsidian. Tool `caprichos`: listar/agregar/proximo/avanzar/cumplir.
+- **RELOJ INTERNO**: `core/tiempo_interno.py` le da a Eris sensación del tiempo (día/noche, estación, feriados, aniversarios) en memory/tiempo_interno.json; ajusta humor y rutinas al momento. Tool `tiempo_interno`: estado/feriados/recordar/aniversarios.
+- **FESTEJOS**: `core/festejos.py` lleva la línea de tiempo de hitos memorables (memory/festejos.json + Obsidian Vida/LineaDeTiempo.md) y los celebra. Tool `festejos`: ver/marcar/festejar.
+- **BIENESTAR**: `core/bienestar.py` lee la energía del usuario (memory/bienestar.json) y ajusta el trato al momento de él. Tool `bienestar`: estado/registrar.
+- **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.
+- **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific
@@ -124,6 +130,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 ## bias
 - `bias_detection` — Detectar sesgos cognitivos propios y ajenos: confirmacion, anclaje, disponibilidad, representatividad, favorit
 
+## bienestar
+- `bienestar` — BIENESTAR del usuario: Eris detecta tu energía/cansancio y ajusta su trato (más calma si estás agotado, más án
+
 ## browser
 - `browser_auto` — Automatización de navegador con Playheadless. Abrir páginas, extraer texto, hacer click, escribir, ejecutar JS
 - `browser_control` — Automatizacion de navegador: navegar, buscar, hacer clic, leer paginas, hacer scroll, resultados de busqueda, 
@@ -145,6 +154,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 
 ## capability
 - `capability_assessor` — Auto-evaluación de capacidades del agente: score general del agente, áreas débiles, y sugerencias de mejora po
+
+## caprichos
+- `caprichos` — CAPRICHOS: la lista de deseos propios de Eris — lo que QUIERE hacer/vivir (escribir algo, aprender, dejar obra
 
 ## cerebro
 - `cerebro` — CEREBRO de ERIS: homúnculo que orquesta sus lóbulos como cerebro humano. estado (resumen cerebral vivo del mom
@@ -248,6 +260,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 ## cron
 - `cron_scheduler` — Tareas programadas: crear, listar, ejecutar, verificar pendientes. Acciones: status, add, list, remove, execut
 
+## cuadernos
+- `cuadernos` — CUADERNOS DE ESTUDIO: aprendizaje autodidacta profundo de Eris. estado (cuaderno abierto/cerrados), abrir (tem
+
 ## curiosity
 - `curiosity_engine` — Cuenta un dato curioso; opcionalmente filtrado por tema.
 - `curiosity_fact` — Devuelve un dato curioso de la cultura o ciencia, opcionalmente sobre un tema.
@@ -297,6 +312,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 ## desktop
 - `desktop_control` — Control de ventanas y escritorio: listar, minimizar, maximizar, restaurar, cerrar, enfocar, buscar, cascada, m
 - `desktop_notifications` — Notificaciones de escritorio nativas (Windows Toast / Linux notify-send) con prioridades y configuracion. Acci
+
+## despedidas
+- `despedidas` — RITUAL DE CIERRE: despedida cálida de Eris cuando termina la charla del día. cierre (nota opcional: recapitula
 
 ## dev
 - `dev_agent` — Autonomous development agent: explore codebase, implement changes, test, compile, git flow, GitHub push, full 
@@ -374,6 +392,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 
 ## feedback
 - `feedback_learner` — Aprende del feedback del usuario (👍/👎). Registra qué respuestas le gustan y ajusta estilo/futuras respuestas.
+
+## festejos
+- `festejos` — MOMENTOS MEMORABLES: línea de tiempo de hitos en la vida de Eris (logros, aniversarios, primicias) marcados en
 
 ## file
 - `file_api` — API de archivos: lectura, escritura, busqueda y manipulacion segura de archivos del sistema.
@@ -911,6 +932,9 @@ Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
 
 ## theme
 - `theme_manager` — Gestion de temas visuales de ERIS. Acciones: apply (aplicar theme), list (listar temas), default. Params: them
+
+## tiempo
+- `tiempo_interno` — RELOJ INTERNO de Eris: siente el paso del tiempo como persona (día/noche, estación, feriados, aniversarios mar
 
 ## todowrite
 - `todowrite` — Crea y gestiona una lista de tareas: agregar, listar, actualizar estado, eliminar, contar pendientes/completad

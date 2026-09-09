@@ -776,6 +776,131 @@ except Exception as e:
     import traceback
     traceback.print_exc()
     fail("mundo", str(e))
+
+print("\n[22] MUNDO NUEVO II (caprichos, tiempo, festejos, bienestar, cuadernos, cierre)")
+try:
+    from core import caprichos, tiempo_interno, festejos, bienestar, cuadernos, despedidas
+
+    # 1) Caprichos: listar + proximo + inyectar
+    _cl = caprichos.caprichos_tool({"action": "listar"})
+    if "caprichos" in _cl.lower() or "deseos" in _cl.lower() or "pendientes" in _cl.lower():
+        ok("mundoII", "caprichos lista deseos")
+    else:
+        fail("mundoII", f"caprichos listar raro: {_cl[:50]}")
+    _cn = caprichos.proximo_capricho()
+    if _cn and _cn.get("texto"):
+        ok("mundoII", "caprichos elige próximo")
+    else:
+        fail("mundoII", "caprichos proximo sin texto")
+    _ci = caprichos.inyect_caprichos()
+    if _ci.startswith("[CAPRICHOS]"):
+        ok("mundoII", "caprichos se inyecta")
+    else:
+        fail("mundoII", "caprichos inyección rara")
+
+    # 2) Tiempo interno: estado + aniversario (usa nombre único con fecha, limpia después)
+    _tt = tiempo_interno.tiempo_interno_tool({"action": "estado"})
+    if _tt.startswith("[RELOJ INTERNO]"):
+        ok("mundoII", "tiempo_interno estado genera")
+    else:
+        fail("mundoII", f"tiempo_interno raro: {_tt[:40]}")
+    _tm = tiempo_interno.tiempo_interno_tool(
+        {"action": "recordar", "nombre": "test_aniversario_eris", "fecha": "01-01"})
+    if "marqué" in _tm.lower() or "ya está" in _tm.lower():
+        ok("mundoII", "tiempo_interno marca aniversario")
+    else:
+        fail("mundoII", f"tiempo_interno marcar raro: {_tm[:40]}")
+
+    # 3) Festejos: marcar hito (temporal) + ver
+    _fm = festejos.festejos_tool({"action": "marcar", "texto": "test_hito_eris", "tipo": "logro"})
+    if "marcé" in _fm.lower() or "memorable" in _fm.lower():
+        ok("mundoII", "festejos marca hito")
+    else:
+        fail("mundoII", f"festejos marcar raro: {_fm[:40]}")
+    _fv = festejos.festejos_tool({"action": "ver"})
+    if "test_hito_eris" in _fv:
+        ok("mundoII", "festejos timeline incluye el hito")
+    else:
+        fail("mundoII", f"festejos ver raro: {_fv[:40]}")
+
+    # 4) Bienestar: registrar + estado
+    _br = bienestar.bienestar_tool({"action": "registrar", "nivel": "alto"})
+    if "energ" in _br.lower() or "anoté" in _br.lower() or "adapto" in _br.lower():
+        ok("mundoII", "bienestar registra estado")
+    else:
+        fail("mundoII", f"bienestar registrar raro: {_br[:40]}")
+    _bs = bienestar.inyect_bienestar()
+    if _bs.startswith("[BIENESTAR]"):
+        ok("mundoII", "bienestar se inyecta")
+    else:
+        fail("mundoII", "bienestar inyección rara")
+
+    # 5) Cuadernos: estado + cerrar (sin abrir no debe fallar)
+    _ce = cuadernos.cuadernos_tool({"action": "estado"})
+    if "cuaderno" in _ce.lower():
+        ok("mundoII", "cuadernos estado responde")
+    else:
+        fail("mundoII", f"cuadernos raro: {_ce[:40]}")
+
+    # 6) Despedidas: estado + cierre (solo genera instrucciones, sin persistir tonterías)
+    _ds = despedidas.despedidas_tool({"action": "estado"})
+    if "cierres" in _ds.lower() or "Todavía no" in _ds:
+        ok("mundoII", "despedidas estado responde")
+    else:
+        fail("mundoII", f"despedidas raro: {_ds[:40]}")
+    _di = despedidas.inyect_despedidas()
+    if _di.startswith("[CIERRE]"):
+        ok("mundoII", "despedidas se inyecta")
+    else:
+        fail("mundoII", "despedidas inyección rara")
+
+    # 7) Sync: 474 tools; las 6 nuevas en live + resuelven
+    import pathlib as _pl2
+    from core.tool_registry import get_tool as _get, _TOOLS as _TOOLS2
+    from core.tool_declarations import TOOL_DECLARATIONS as _TD2, LIVE_TOOL_DECLARATIONS as _LD2
+    _new6 = ("caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas")
+    _reg2 = set(_TOOLS2.keys())
+    _dec2 = {d["name"] for d in _TD2}
+    _phantom2 = set()
+    for _cf in ("actions/custom_tools.json", "config/extra_tools.json"):
+        try:
+            _phantom2 |= {t.get("name") for t in json.loads(open(_cf).read())}
+        except Exception:
+            pass
+    _phantom2 = _phantom2 - _reg2
+    if _reg2 == (_dec2 - _phantom2):
+        ok("mundoII", f"registry == declarations ({len(_reg2)} tools)")
+    else:
+        fail("mundoII", f"sync roto: reg {len(_reg2)} vs dec {len(_dec2 - _phantom2)}")
+    _live2 = {d["name"] for d in _LD2}
+    if set(_new6) <= _live2:
+        ok("mundoII", "6 tools nuevas en live declarations")
+    else:
+        fail("mundoII", f"faltan en live: {set(_new6) - _live2}")
+    for _n in _new6:
+        if _n not in _TOOLS2 or _get(_n) is None:
+            fail("mundoII", f"{_n} no resuelve en registry")
+        else:
+            ok("mundoII", f"get_tool({_n}) resuelve")
+
+    # Limpieza: quitar hito y aniversario de prueba
+    try:
+        _fdata = festejos._load()
+        _fdata["hitos"] = [h for h in _fdata["hitos"] if "test_hito_eris" not in h["texto"]]
+        festejos._save(_fdata)
+    except Exception:
+        pass
+    try:
+        _tdata = tiempo_interno._load()
+        _tdata["aniversarios"] = [a for a in _tdata["aniversarios"] if "test_eris" not in a["nombre"]]
+        tiempo_interno._save(_tdata)
+    except Exception:
+        pass
+
+except Exception as e:
+    import traceback
+    traceback.print_exc()
+    fail("mundoII", str(e))
 print(f"  PASS: {PASS}")
 print(f"  FAIL: {FAIL}")
 print(f"  WARN: {WARN}")
