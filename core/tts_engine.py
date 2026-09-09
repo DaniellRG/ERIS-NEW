@@ -136,11 +136,15 @@ def tts_set_voice(parameters: dict, player=None) -> str:
 
 
 async def synthesize(text: str, backend: str | None = None, voice: str | None = None,
-                     emotion: str | None = None) -> bytes:
+                     emotion: str | None = None,
+                     rate: str | None = None, pitch: str | None = None,
+                     volume: float = 1.0) -> bytes:
     """Synthesize text to PCM audio (24kHz, mono, int16).
     Returns full WAV bytes ready for playback.
     When backend is 'gemini', returns empty bytes (audio comes from Gemini API).
     `emotion` ajusta prosodia (rate/pitch) en backends locales como edge.
+    `rate`/`pitch` (strings edge, ej. "+10%"/"+4Hz") y `volume` (0..1) son
+    overrides directos de los parámetros de voz (vienen del expression_engine).
     """
     if backend is None:
         backend = get_backend()
@@ -151,7 +155,8 @@ async def synthesize(text: str, backend: str | None = None, voice: str | None = 
         return b""
 
     if backend == "edge":
-        return await _synthesize_edge(text, voice, emotion=emotion)
+        return await _synthesize_edge(text, voice, emotion=emotion,
+                                      rate=rate, pitch=pitch, volume=volume)
 
     if backend in ("sapi", "windows", "local"):
         return await _synthesize_sapi(text)
@@ -414,19 +419,21 @@ async def synthesize_fish_streaming(text: str, voice: str = "", on_chunk=None):
         return b""
 
 
-async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = None) -> bytes:
+async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = None,
+                           rate: str | None = None, pitch: str | None = None,
+                           volume: float = 1.0) -> bytes:
     """Synthesize with Edge-TTS, return WAV PCM bytes."""
     import edge_tts
 
     if not voice or voice == "bark" or voice not in _EDGE_VOICES.values():
         voice = _EDGE_VOICES.get("es-ar", "es-AR-ElenaNeural")
 
-    rate = "+0%"
-    pitch = "+0Hz"
+    rate_ = rate or "+0%"
+    pitch_ = pitch or "+0Hz"
     try:
         cfg = _load_cfg()
         speed = float(cfg.get("tts_speed", 1.0))
-        tone = {"speed": 1.0, "pitch": 1.0}
+        tone = {"speed": 1.0, "pitch": 1.0, "volume": 1.0}
         if emotion:
             try:
                 from core.emotional_tone import emotion_to_voice
@@ -435,15 +442,24 @@ async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = Non
                 pass
         speed = speed * float(tone.get("speed", 1.0))
         if speed and speed != 1.0:
-            rate = f"{'+' if speed > 1 else ''}{int(round((speed - 1) * 100))}%"
+            rate_ = f"{'+' if speed > 1 else ''}{int(round((speed - 1) * 100))}%"
         p = float(tone.get("pitch", 1.0))
         if p and p != 1.0:
-            pitch = f"{'+' if p > 1 else ''}{int(round((p - 1) * 50))}Hz"
+            pitch_ = f"{'+' if p > 1 else ''}{int(round((p - 1) * 50))}Hz"
+        if rate:
+            rate_ = rate
+        if pitch:
+            pitch_ = pitch
+        v = float(tone.get("volume", 1.0)) * volume
+        if v < 0.01:
+            v = 0.01
+        volume_attr = {"volume_gain_db": f"{int(round((v - 1) * 10))}dB"}
     except Exception:
-        rate = "+0%"
-        pitch = "+0Hz"
+        rate_ = "+0%"
+        pitch_ = "+0Hz"
+        volume_attr = {}
 
-    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
+    communicate = edge_tts.Communicate(text, voice, rate=rate_, pitch=pitch_, **volume_attr)
     audio_chunks: list[bytes] = []
 
     # Timeout: si Edge TTS tarda mas de 15 segundos, cortar

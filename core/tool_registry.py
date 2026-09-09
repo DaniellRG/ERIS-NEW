@@ -575,6 +575,17 @@ _TOOLS = {
     "self_improve":          ("core.self_modify", "self_modify_tool"),
     "memory_search":         ("core.memory_consolidation", "memory_consolidation_tool"),
     "file_organizer":        ("actions.smart_file_organizer", "smart_file_organizer"),
+
+    # ── CEREBRO de ERIS (homúnculo + expresión humana) ──
+    "cerebro":               ("core.cerebro", "cerebro_tool"),
+    "expresion_eris":        ("core.expression_engine", "expression_tool"),
+    "vida_interna":          ("core.vida_interna", "vida_interna_tool"),
+    "relaciones":            ("core.relaciones", "relaciones_tool"),
+    "autoimagen":            ("core.autoimagen", "autoimagen_tool"),
+    "intereses":             ("core.intereses", "intereses_tool"),
+    "retrospectiva":         ("core.retrospectiva", "retrospectiva_tool"),
+    "ambiente":              ("core.ambiente", "ambiente_tool"),
+    "suenos":                ("core.suenos", "sueno_tool"),
 }
 
 

@@ -120,6 +120,41 @@ _END_CONVERSATION_PHRASES = (
     "me voy", "me despido", "adiós", "adios", "chao", "chau", "hasta luego",
 )
 
+# ── AUTO-CONTINUACIÓN: Eris trabaja sola en tareas largas ──────────────────────
+# El modelo Gemini Live cierra el turno tras cada respuesta y espera input del
+# usuario. Eso hace que Eris "termine una parte", diga "listo, voy a intentar
+# otra cosa" y se quede muda esperando un "dale, seguí". Este mecanismo detecta
+# tareas activas y, tras cada turno en el que Eris usó tools (con el trabajo a
+# medias), le inyecta automáticamente un avance silencioso por send_realtime_input
+# para que siga sola hasta una acción="TAREA COMPLETA" declarada por ella misma.
+_AUTO_CONT_DONE_MARKER = "TAREA COMPLETA"
+_AUTO_CONT_MAX_STEPS   = 10          # tope de avances automáticos por tarea (anti-loop)
+_AUTO_CONT_COOLDOWN_S  = 4.0         # espera mínima entre avances (deja fluir el TTS)
+# Si la última respuesta de Eris contiene algo de esto, es una tarea en curso
+# (usó tools y no declaró completo) → hay que pincharla para que siga.
+_AUTO_CONT_INTENT_MARKERS = (
+    "voy a intentar", "voy a probar", "voy a hacer", "sigo con", "continúo con",
+    "continuo con", "después voy a", "ahora voy a", "ahora intento", "siguiente paso",
+    "vamos, sigo", "listo, ahora", "bien, ahora", "ya está, ahora", "pasemos a",
+    "pasamos a", "le sigo", "lo sigo", "la sigo", "voy a buscar", "voy a crear",
+    "voy a escribir", "terminé esta parte", "terminé eso", "ya hice eso",
+    "voy a intentar otra cosa", "hago la prueba", "voy a comprobar",
+)
+# Verbos y frases que arman una tarea multi-paso cuando el usuario las pide.
+_AUTO_CONT_TASK_VERBS = (
+    "hacé una", "hace una", "hacé un", "hace un", "hacéme", "hazme", "haceme",
+    "creá", "crea", "escribí", "escribi", "escribime", "escribime un",
+    "programá", "programa", "programes", "desarrollá", "desarrolla",
+    "armá", "arma", "construí", "construi", "generá", "genera",
+    "instalá", "instala", "descargá", "descarga", "investigá", "investiga",
+    "averiguá", "averigua", "resolvé", "resuelve", "buscá", "busca", "analizá",
+    "analiza", "organizá", "organiza", "prepará", "prepara", "configurá",
+    "configura", "diseñá", "disena", "implementá", "implementa", "subí", "subi",
+    "cargá", "carga", "convertí", "converti", "traducí", "traduci", "hacé una calculadora",
+    "hace una calculadora", "quiero un script", "necesito un script",
+    "hacé un script", "hace un script", "escribí un script", "creá un script",
+)
+
 def _normalize_name(w: str) -> str:
     """Normaliza una palabra para compararla con variaciones de 'Eris'."""
     w = w.lower().strip(".,!?¿¡'\"")
@@ -260,6 +295,11 @@ def _generate_daily_digest():
 
 def _run_post_session_tasks():
     """Tareas al cerrar sesión: evaluar la sesión y refrescar el digest del día."""
+    try:
+        from core.session_summaries import finalize_session_summary
+        finalize_session_summary()
+    except Exception:
+        pass
     try:
         from core.self_improvement import evaluate_session
         eval_result = evaluate_session()
@@ -425,25 +465,15 @@ class ErisLive:
         self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
         self._last_tool_context = ""             # contexto del último tool ejecutado
-        # ── Historial de conversaciones (persistente, sidebar) ──
-        self._conv_active: dict | None = None    # conversación en curso ({id,title,created,updated,messages})
-        self._conv_buffer_eris = ""              # respuesta de ERIS acumulada (se cierra en turn completo)
-        try:
-            from core.conversation_history import (
-                new_session_id, ensure_dir, list_conversations,
-            )
-            ensure_dir()
-            self._conv_active = {
-                "id": new_session_id(),
-                "title": "",
-                "created": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
-                "updated": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
-                "messages": [],
-            }
-            self.ui.set_conversations(list_conversations())
-            self.ui.set_active_conversation(self._conv_active["id"])
-        except Exception:
-            self._conv_active = {"id": "", "title": "", "created": "", "updated": "", "messages": []}
+        # ── Auto-continuación: Eris sigue sola en tareas largas ──
+        self._auto_cont_on = False               # hay una tarea multi-paso activa
+        self._auto_cont_steps = 0                # avances automáticos emitidos
+        self._auto_cont_last_ts = 0.0            # último avance (cooldown anti-loop)
+        self._auto_cont_turn_used_tools = False  # el turno recién cerrado usó tools
+        self._session_rec_on = False             # acumulando resumen de sesión actual
+        # ── Rutinas recurrentes (Eris agenda y ejecuta sola) ──
+        self._routines_stop = threading.Event()
+        self._routines_thread = None
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -489,10 +519,6 @@ class ErisLive:
         self.ui.on_text_command = self._on_text_command
         self.ui.on_stop_command = self._on_stop_pressed
         self.ui.on_config_saved = self._apply_config
-        self.ui.on_conversation_selected = self._resume_conversation
-        self.ui.on_new_conversation = self._start_new_conversation
-        self.ui.on_conversation_delete = self._delete_conversation
-        self.ui.on_conversation_rename = self._rename_conversation
         self._turn_done_event: asyncio.Event | None = None
         self._api_1011_tool: str | None = None   # tracks tool name when 1011 hits
         self._reconnect_event: asyncio.Event | None = None
@@ -625,6 +651,18 @@ class ErisLive:
                 print("[ERIS] 🧰 Mantenimiento proactivo iniciado (backups/limpieza/reportes)")
         except Exception as _me:
             print(f"[ERIS] Mantenimiento init: {_me}")
+        # ── Rutinas recurrentes: Eris agenda tareas propias y las ejecuta sola,
+        #    inyectando el comando en su sesión al vencer (frecuencia: 30s). ──
+        try:
+            self._routines_stop.clear()
+            self._routines_thread = threading.Thread(
+                target=self._routines_loop, daemon=True,
+                name="eris-routines",
+            )
+            self._routines_thread.start()
+            print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
+        except Exception as _re:
+            print(f"[ERIS] Rutinas init: {_re}")
         # ── Guardiana: supervigilancia continua de ERIS ──
         # Vigila su salud, detecta y repara anomalías SOLO cuando algo se rompe, sin
         # pisar los loops de evolución/autocuidado/mantenimiento ya activos.
@@ -751,10 +789,16 @@ class ErisLive:
         if self._loop and self.session:
             if text and len(text) > 3000:
                 text = text[:3000] + "...\n[Texto truncado por tamaño]"
-            asyncio.run_coroutine_threadsafe(
-                self.session.send_realtime_input(text=text),
-                self._loop
-            )
+# ── Auto-continuación: armar si el pedido es una tarea multi-paso ──
+        try:
+            self._arm_auto_continue(text)
+        except Exception:
+            pass
+
+        asyncio.run_coroutine_threadsafe(
+            self.session.send_realtime_input(text=text),
+            self._loop
+        )
 
     def _put_audio_chunk(self, data: bytes):
         """Encola un chunk de audio PCM para enviar a Gemini (thread-safe)."""
@@ -822,6 +866,128 @@ class ErisLive:
             return False
         tl = text.lower()
         return any(p in tl for p in _END_CONVERSATION_PHRASES)
+
+    # ── Auto-continuación: Eris avanza sola por tareas largas ───────────────
+
+    def _arm_auto_continue(self, prompt: str):
+        """Activa el modo de avance automático si el pedido parece una tarea
+        multi-paso (crear/instalar/investigar/hacer algo con tools)."""
+        if not prompt:
+            return
+        low = prompt.lower()
+        if not any(v in low for v in _AUTO_CONT_TASK_VERBS):
+            return
+        if self._is_end_conversation(prompt):
+            return
+        self._auto_cont_on = True
+        self._auto_cont_steps = 0
+        self._auto_cont_last_ts = 0.0
+        self._active_task = prompt[:300]
+        self.ui.write_log(f"SYS: 🚀 Modo autónomo activado ({prompt[:60]}...)")
+        print(f"[ERIS] 🚀 Auto-continuación armada: {prompt[:80]}")
+
+    async def _maybe_push_auto_continue(self, last_response: str):
+        """Tras un turno, si Eris usó tools y NO declaró TAREA COMPLETA, le
+        inyecta un avance silencioso para que siga sola (sin que el usuario
+        tenga que decir 'dale')."""
+        try:
+            if not self._auto_cont_on:
+                return
+            # Si ya declaró que terminó toda la tarea → apagar el modo.
+            if _AUTO_CONT_DONE_MARKER in last_response.upper():
+                self._auto_cont_on = False
+                self._auto_cont_steps = 0
+                self.ui.write_log("SYS: ✅ Tarea completada por Eris (auto-continuación fuera).")
+                print("[ERIS] ✅ TAREA COMPLETA detectada — auto-continuación apagada")
+                return
+            # Sombrero: solo avanza si el turno realmente hizo trabajo (tools) o
+            # si Eris dejó claro que va a seguir con la tarea.
+            if not self._auto_cont_turn_used_tools and not any(
+                    m in last_response.lower() for m in _AUTO_CONT_INTENT_MARKERS):
+                return
+            if self._auto_cont_steps >= _AUTO_CONT_MAX_STEPS:
+                self._auto_cont_on = False
+                self.ui.write_log(f"SYS: ⚠️ Tope de {_AUTO_CONT_MAX_STEPS} avances — freno a pedirte.")
+                return
+            now = time.time()
+            if now - self._auto_cont_last_ts < _AUTO_CONT_COOLDOWN_S:
+                return
+            if not self.session or not self._loop:
+                return
+            self._auto_cont_steps += 1
+            self._auto_cont_last_ts = now
+            nudge = (
+                "[AUTO-CONTINUACIÓN] Seguí trabajando SOLA la tarea que te pidió "
+                "el usuario, sin esperar su confirmación. Contame con una frase "
+                "corta y en voz vivaz qué acabas de hacer y cuál es el próximo paso "
+                "(por ejemplo 'creé el archivo, ahora lo pruebo'), y seguí de "
+                "inmediato con la herramienta que corresponda: escribí, ejecutá, "
+                "probá, verificá. Cuando estés segura de que TODO termina y quedó "
+                "VERIFICADO (compilá/ejecutá/probá el resultado, idealmente con "
+                "`mission action=verify` antes de declarar listo), recién ahí "
+                f"respondé exactamente: '{_AUTO_CONT_DONE_MARKER}'. No digas "
+                "'dale' ni preguntes si seguir."
+            )
+            self._auto_cont_turn_used_tools = False
+            self.ui.write_log(f"SYS: 🤖 Avance automático #{self._auto_cont_steps} (sigo sola)...")
+            print(f"[ERIS] 🤖 Auto-continuación push #{self._auto_cont_steps}")
+            # Deja terminar el TTS del turno anterior antes de mover ficha.
+            await asyncio.sleep(2.0)
+            await self.session.send_realtime_input(text=nudge)
+        except Exception as e:
+            print(f"[ERIS] ❌ auto-continue push: {e}")
+
+    # ── Rutinas recurrentes: Eris ejecuta sola sus tareas agendadas ──────────
+
+    def _routines_loop(self):
+        """Hilo daemon: cada 30s revisa cron_scheduler y ejecuta los jobs vencidos
+        inyectando su comando en la sesión live (sin armar auto-continuación)."""
+        while not self._routines_stop.is_set():
+            try:
+                for _ in range(30):
+                    if self._routines_stop.wait(1.0):
+                        return
+                if self._wake_gate_open and self.session and self._loop:
+                    due = self._routines_check_due()
+                    for job in due:
+                        name = job.get("name", "?")
+                        command = job.get("command", "")
+                        if not command:
+                            continue
+                        prefix = "[AUTO]"
+                        self.ui.write_log(f"SYS: 🔁 Rutina '{name}' → {command[:60]}")
+                        print(f"[ERIS] 🔁 Ejecutando rutina '{name}': {command[:60]}")
+                        # Ejecutar dentro del loop async para respetar la sesión.
+                        self._loop.call_soon_threadsafe(
+                            self._inject_routine, name, f"{prefix} {command}"
+                        )
+                        try:
+                            from core.cron_scheduler import cron_scheduler_tool
+                            cron_scheduler_tool({"action": "execute", "name": name})
+                        except Exception:
+                            pass
+            except Exception as _re:
+                print(f"[ERIS] 🔁 rutinas loop: {_re}")
+
+    def _inject_routine(self, name: str, text: str):
+        """Marca el job como ejecutado e inyecta su comando en la sesión viva."""
+        try:
+            if self.session:
+                fut = self.session.send_realtime_input(text=text)
+                asyncio.ensure_future(fut)
+        except Exception as _re2:
+            print(f"[ERIS] 🔁 inyectar rutina {name}: {_re2}")
+
+    def _routines_check_due(self) -> list[dict]:
+        """Jobs vencidos desde cron_scheduler (action=check_due)."""
+        try:
+            import json as _json
+            from core.cron_scheduler import cron_scheduler_tool
+            raw = cron_scheduler_tool({"action": "check_due"})
+            parsed = _json.loads(raw)
+            return parsed.get("due", [])
+        except Exception:
+            return []
 
     def _apply_config(self, cfg: dict):
         """Called from UI thread when user saves settings. Triggers session reconnect."""
@@ -910,190 +1076,9 @@ class ErisLive:
         except Exception:
             pass
 
-    # ── Historial de conversaciones ─────────────────────────────────────────
-    def _conv_ts(self) -> str:
-        from datetime import datetime
-        return datetime.now().isoformat(timespec="seconds")
-
-    def _save_active_conv(self):
-        """Guardar la conversación activa a JSON."""
-        conv = getattr(self, "_conv_active", None)
-        if not conv:
-            return
-        try:
-            conv["updated"] = self._conv_ts()
-            from core.conversation_history import save_conversation
-            save_conversation(conv)
-        except Exception:
-            pass
-
-    def _start_new_conversation(self):
-        """Nueva conversación en blanco (sin contexto previo)."""
-        try:
-            from datetime import datetime
-            from core.conversation_history import new_session_id, list_conversations
-            self._finish_conv_eris()
-            self._save_active_conv()
-            self._conv_active = {
-                "id": new_session_id(),
-                "title": "",
-                "created": datetime.now().isoformat(timespec="seconds"),
-                "updated": datetime.now().isoformat(timespec="seconds"),
-                "messages": [],
-            }
-            self._conv_buffer_eris = ""
-            self._context_inject = ""
-            self.ui.set_conversations(list_conversations())
-            self.ui.set_active_conversation(self._conv_active["id"])
-            if self.ui:
-                self.ui.write_log("SYS: nueva conversación — hablás libre, sin contexto previo.")
-            print(f"[ERIS] 🆕 Conversación nueva: {self._conv_active['id']}")
-        except Exception as _ce:
-            print(f"[ERIS] nueva conversación: {_ce}")
-            if self.ui:
-                self.ui.write_log(f"SYS: error creando conversación ({_ce})")
-
-    def _resume_conversation(self, conv_id: str):
-        """Cargar una conversación vieja: inactive su contexto para seguir el mismo hilo."""
-        try:
-            from core.conversation_history import (
-                load_conversation, build_resume_context, list_conversations,
-            )
-            conv = load_conversation(conv_id)
-            if not conv.get("messages"):
-                return
-            self._save_active_conv()
-            self._conv_active = conv
-            self._conv_buffer_eris = ""
-            # Inyectar contexto de la conversación retomada en el prompt vivo
-            resume = build_resume_context(conv)
-            if resume:
-                self._context_inject = resume  # usado en _build_config
-            self._remember(f"[CONTEXTO RETOMADO] {resume[:800]}", cap=60, max_len=2000)
-            self._convo_ctx = self._convo_ctx[-18:] if self._convo_ctx else []
-            self.ui.set_conversations(list_conversations())
-            self.ui.set_active_conversation(conv_id)
-            _bc = self._context_inject or ""
-            print(f"[ERIS] 🔁 Retomada conversación {conv_id} ({_bc[:60]}...)")
-            if self.ui:
-                self.ui.write_log(f"SYS: retomada conversación «{conv.get('title')}» — siguiendo el hilo anterior.")
-        except Exception as _re:
-            print(f"[ERIS] retomar conversación: {_re}")
-            if self.ui:
-                self.ui.write_log(f"SYS: error retomando conversación ({_re})")
-
-    def _rename_conversation(self, conv_id: str):
-        """Renombrar una conversación del historial (pedido desde la UI)."""
-        if not conv_id:
-            return
-        try:
-            from PyQt6.QtWidgets import QInputDialog
-            from core.conversation_history import load_conversation, rename_conversation, list_conversations
-            old = load_conversation(conv_id).get("title", "")
-            new, ok = QInputDialog.getText(
-                None, "Renombrar conversación",
-                "Nuevo nombre:", text=old,
-            )
-            if not ok:
-                return
-            new = (new or "").strip()
-            if not new:
-                return
-            if rename_conversation(conv_id, new):
-                self.ui.set_conversations(list_conversations())
-                self.ui.set_active_conversation(conv_id)
-                if self.ui:
-                    self.ui.write_log(f"SYS: conversación renombrada a {new}")
-                print(f"[ERIS] ✏️ Conversación {conv_id} renombrada a {new!r}")
-        except Exception as _rn:
-            print(f"[ERIS] renombrar conversación: {_rn}")
-            if self.ui:
-                self.ui.write_log(f"SYS: error renombrando ({_rn})")
-
-    def _delete_conversation(self, conv_id: str):
-        """Eliminar una conversación del historial (pedido desde la UI)."""
-        if not conv_id:
-            return
-        try:
-            from PyQt6.QtWidgets import QMessageBox
-            from core.conversation_history import delete_conversation, list_conversations
-            _cur = getattr(self, "_conv_active", None) or {}
-            is_active = _cur.get("id") == conv_id
-            mb = QMessageBox()
-            mb.setWindowTitle("Eliminar conversación")
-            mb.setText("¿Eliminar esta conversación del historial?")
-            mb.setInformativeText("No se puede deshacer.")
-            mb.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            mb.setDefaultButton(QMessageBox.StandardButton.No)
-            if mb.exec() != QMessageBox.StandardButton.Yes:
-                return
-            if delete_conversation(conv_id):
-                if is_active:
-                    self._start_new_conversation()
-                self.ui.set_conversations(list_conversations())
-                if self.ui:
-                    self.ui.write_log("SYS: conversación eliminada")
-                print(f"[ERIS] 🗑️ Conversación {conv_id} eliminada")
-        except Exception as _dl:
-            print(f"[ERIS] eliminar conversación: {_dl}")
-            if self.ui:
-                self.ui.write_log(f"SYS: error eliminando ({_dl})")
-
-    def _record_conv_user(self, text: str):
-        """Registrar mensaje del usuario en la conversación activa."""
-        text = str(text or "").strip()
-        if not text:
-            return
-        conv = getattr(self, "_conv_active", None)
-        if not conv:
-            return
-        try:
-            # Título automático por tema desde el PRIMER mensaje del usuario
-            if not conv.get("title") and not conv.get("messages"):
-                from core.conversation_history import make_title
-
-                conv["title"] = make_title(text)
-                self.ui.set_conversations(self._list_convs())
-            conv["messages"].append({"role": "user", "text": text[:4000], "ts": self._conv_ts()})
-            conv["updated"] = self._conv_ts()
-        except Exception:
-            pass
-
-    def _record_conv_eris(self, chunk: str):
-        """Acumula la respuesta de ERIS; el guardado completo ocurre en turn_complete."""
-        if not chunk:
-            return
-        self._conv_buffer_eris += chunk
-
-    def _finish_conv_eris(self):
-        """Cierra el mensaje de ERIS actual y guarda."""
-        text = (getattr(self, "_conv_buffer_eris", "") or "").strip()
-        self._conv_buffer_eris = ""
-        if not text:
-            return
-        conv = getattr(self, "_conv_active", None)
-        if not conv:
-            return
-        try:
-            conv["messages"].append({"role": "eris", "text": text[:4000], "ts": self._conv_ts()})
-            conv["updated"] = self._conv_ts()
-            self._save_active_conv()
-        except Exception:
-            pass
-
-    def _list_convs(self):
-        try:
-            from core.conversation_history import list_conversations
-            return list_conversations()
-        except Exception:
-            return []
 
     def _on_text_command(self, text: str):
         self._last_user_interaction = time.time()  # Reset idle timer
-        # Registrar adjunto como mensaje de usuario (el texto del documento
-        # llega después como "Tú: ..." desde la transcripción o el texto).
-        if text.startswith("[AUDIO_FILE]") or text.startswith("[IMAGE_FILE]") or text.startswith("[DOC_FILE]"):
-            self._record_conv_user(text.split(" ", 1)[0].strip("[]") + " adjunto")
 
         # Audio file: process with Gemini Vision (not the realtime audio session)
         if text.startswith("[AUDIO_FILE]"):
@@ -1128,7 +1113,6 @@ class ErisLive:
 
         # Fire phrase triggers in background (only for text-input path)
         self._last_text_trigger = text
-        self._record_conv_user(text)
         threading.Thread(target=self._fire_phrase_triggers, args=(text,), daemon=True).start()
         # DB: log user message
         if convo_log:
@@ -1265,10 +1249,19 @@ class ErisLive:
                 if self.session and self._loop:
                     # Truncate for voice — max 300 chars
                     short = result_str[:300] + "..." if len(result_str) > 300 else result_str
+                    # En modo autónomo, el resultado no "cierra" la tarea: es un
+                    # trampolín para seguir con el próximo paso, sin saludar ni pedir.
+                    if self._auto_cont_on:
+                        _tail = (f"\n\nSi esto es un paso intermedio de la tarea en curso, "
+                                 f"NO te detengas: seguí con el siguiente paso vos sola, "
+                                 f"sin esperar al usuario. Cuando termines TODO y lo "
+                                 f"verifiques, respondé: '{_AUTO_CONT_DONE_MARKER}'.")
+                    else:
+                        _tail = "\n\nDecile al usuario el resultado en 1 frase corta. No leas el resultado completo, solo decí algo como 'Listo, creado' o 'Hecho'."
                     try:
                         asyncio.run_coroutine_threadsafe(
                             self.session.send_realtime_input(
-                                text=f"[RESULTADO DE TOOL '{agent_key}']\n{short}\n\nDecile al usuario el resultado en 1 frase corta. No leas el resultado completo, solo decí algo como 'Listo, creado' o 'Hecho'."
+                                text=f"[RESULTADO DE TOOL '{agent_key}']\n{short}{_tail}"
                             ),
                             self._loop
                         )
@@ -1716,12 +1709,35 @@ class ErisLive:
                 if _backend == "gemini":
                     _backend = "edge"
                 _emotion = "neutral"
+                _vp = {"speed": 1.0, "pitch": 1.0, "volume": 1.0}
                 try:
                     from core.emotional_core import get_face_and_voice
                     _emotion = get_face_and_voice()[0]
                 except Exception:
                     pass
-                pcm = asyncio.run(synthesize(text, backend=_backend, emotion=_emotion))
+                try:
+                    from core.expression_engine import get_voice_params
+                    _vp = get_voice_params(_emotion)
+                except Exception:
+                    pass
+                try:
+                    from core.expression_engine import get_face_expression
+                    _cara, _color = get_face_expression()
+                    self.ui.show_expression(_cara, text)
+                    self.ui.set_emotional_color(_color, 0.9, _emotion)
+                except Exception:
+                    pass
+                _rate = None
+                _pitch = None
+                _sp = float(_vp.get("speed", 1.0))
+                _pi = float(_vp.get("pitch", 1.0))
+                if _sp and _sp != 1.0:
+                    _rate = f"{'+' if _sp > 1 else ''}{int(round((_sp - 1) * 100))}%"
+                if _pi and _pi != 1.0:
+                    _pitch = f"{'+' if _pi > 1 else ''}{int(round((_pi - 1) * 50))}Hz"
+                _vol = float(_vp.get("volume", 1.0))
+                pcm = asyncio.run(synthesize(text, backend=_backend, emotion=_emotion,
+                                             rate=_rate, pitch=_pitch, volume=_vol))
                 if pcm and len(pcm) > 0:
                     # ── FIX #3: Route through audio_in_queue instead of sd.play ──
                     # This avoids conflicts with WinAudioOutput / main playback
@@ -1820,6 +1836,15 @@ class ErisLive:
             voice_ok = observer.should_voice()
         except Exception:
             voice_ok = True
+        # La química del momento ajusta las ganas de comentar sola:
+        # emociones con espontaneidad baja (tristeza/frustración/soledad)
+        # hacen que Eris sea menos locuaz al vuelo; curiosidad/alegría, más.
+        try:
+            from core.expression_engine import should_comment_spontaneously
+            _quimica = should_comment_spontaneously() if voice_ok else False
+            voice_ok = voice_ok and _quimica
+        except Exception:
+            pass
         for ev in events:
             line = self._observer_line(ev, _emo)
             if not line:
@@ -2566,6 +2591,86 @@ class ErisLive:
         except Exception:
             pass
 
+        # ── CEREBRO: homúnculo (estado cerebral unificado) + expresión humana.
+        #    Se inyecta ANTES del sys_prompt (sobrevive al trim de 30K). ──
+        try:
+            from core.cerebro import get_brain_state
+            from core.expression_engine import get_expression_injection
+            _cerebro_block = get_brain_state(text="")
+            if _cerebro_block:
+                parts.append(_cerebro_block)
+            from core.expression_engine import get_expression_injection, get_saludo_vivo
+            _expr_block = get_expression_injection()
+            if _expr_block:
+                parts.append(_expr_block)
+            _saludo_block = get_saludo_vivo()
+            if _saludo_block:
+                parts.append(_saludo_block)
+        except Exception:
+            pass
+
+        # ── RELACIONES: vida social (multi-persona) y VIDA INTERIOR:
+        #    rituales/huellas/diario. Inyectadas ANTES del sys_prompt
+        #    (sobreviven al trim). ──
+        try:
+            from core.relaciones import inject_relaciones_vivas
+            _relaciones = inject_relaciones_vivas()
+            if _relaciones:
+                parts.append(_relaciones)
+        except Exception:
+            pass
+        try:
+            from core.vida_interna import maybe_ritual, inject_vida, recuperar_huella
+            _ritual_txt = maybe_ritual()
+            _huella_txt = recuperar_huella()
+            _vida = inject_vida(_ritual_txt, _huella_txt)
+            if _vida:
+                parts.append(_vida)
+        except Exception:
+            pass
+
+        # ── MUNDO NUEVO: autoimagen, temas propios, ambiente, sueños, voz.
+        #    Bloques breves; ANTES del sys_prompt (sobreviven al trim). ──
+        try:
+            from core.autoimagen import get_autoimagen
+            _autoimg = get_autoimagen()
+            if _autoimg:
+                parts.append(_autoimg)
+        except Exception:
+            pass
+        try:
+            from core.intereses import inyect_intereses
+            _interes = inyect_intereses()
+            if _interes:
+                parts.append(_interes)
+        except Exception:
+            pass
+        try:
+            from core.ambiente import inyect_ambiente
+            _amb = inyect_ambiente()
+            if _amb:
+                parts.append(_amb)
+        except Exception:
+            pass
+        try:
+            from core.suenos import ilustrar_si_hay_sueno_nuevo, inyect_suenos
+            try:
+                ilustrar_si_hay_sueno_nuevo()  # dispara en hilo, no bloquea
+            except Exception:
+                pass
+            _sueno = inyect_suenos()
+            if _sueno:
+                parts.append(_sueno)
+        except Exception:
+            pass
+        try:
+            from core.expression_engine import get_voz_propia
+            _vozb = get_voz_propia()
+            if _vozb:
+                parts.append(_vozb)
+        except Exception:
+            pass
+
         # ── Inject gustos into prompt ──
         try:
             from actions.gustos import inject_gustos
@@ -2618,14 +2723,6 @@ class ErisLive:
                 parts.append(learning_context)
         except Exception:
             pass
-        # ── Contexto retomado de una conversación vieja del historial ──
-        _ctx_inject = getattr(self, "_context_inject", "") or ""
-        if _ctx_inject:
-            parts.append(
-                "[📂 CONVERSACIÓN RETOMADA DEL HISTORIAL — ESTE es el hilo de trabajo "
-                "que veníamos haciendo. Continuá este proyecto con total contexto, "
-                "como si nunca se hubiera cortado.]\n" + _ctx_inject
-            )
         # ── Contexto de conversación reciente (sobrevive a reconexiones) ──
         if getattr(self, "_convo_ctx", None):
             parts.append(
@@ -2987,8 +3084,14 @@ class ErisLive:
                 if rms >= _WAKE_SPEECH_THRESHOLD:
                     self._wake_last_activity = time.time()
                 elif (not eris_speaking
+                      and not getattr(self, "_auto_cont_on", False)
                       and (time.time() - self._wake_last_activity) > _WAKE_CONVO_TIMEOUT):
                     self._close_wake_gate()
+                    try:
+                        from core.session_summaries import finalize_session_summary
+                        finalize_session_summary()
+                    except Exception:
+                        pass
                     return
             loop.call_soon_threadsafe(self._put_audio_chunk, data)
 
@@ -3108,7 +3211,6 @@ class ErisLive:
                                     out_buf.append(frag)
                                     out_full = (out_full + " " + frag).strip() if out_full else frag
                                     self.ui.stream_eris_chunk(frag)
-                                    self._record_conv_eris(frag)
                                     # ── FIX #5: Debounce express_emotion (max 1x per 2s) ──
                                     if not hasattr(self, '_last_emo_time') or (time.time() - getattr(self, '_last_emo_time', 0)) > 2.0:
                                         self.ui.express_emotion(out_full)
@@ -3173,10 +3275,24 @@ class ErisLive:
                             self._stop_requested.clear()
                             # NOTE: _turn_done_event.set() moved AFTER TTS synthesis to prevent audio cutoff
                             full_in = " ".join(in_buf).strip()
-                            if full_in and full_in != self._last_text_trigger:
-                                self._record_conv_user(full_in)
+                            if full_in and not full_in.startswith("[AUTO-CONTINUACIÓN]") and full_in != self._last_text_trigger:
                                 self.ui.write_log(f"Tú: {full_in}")
                                 threading.Thread(target=self._fire_phrase_triggers, args=(full_in,), daemon=True).start()
+                            # ── Auto-continuación: si el usuario pidió una tarea por
+                            #    voz, armar el modo para que Eris siga sola. Si el
+                            #    usuario habla de nuevo, el modo suelto para que la
+                            #    nueva instrucción tenga prioridad. El nudge interno
+                            #    ([AUTO-CONTINUACIÓN]...) se excluye para no suicidar
+                            #    el modo con su propio avance. ──
+                            try:
+                                if (full_in and full_in != self._last_text_trigger
+                                        and not full_in.startswith("[AUTO-CONTINUACIÓN]")):
+                                    if self._auto_cont_on:
+                                        self._auto_cont_on = False
+                                        print("[ERIS] 🛑 Usuario intervino — auto-continuación fuera")
+                                    self._arm_auto_continue(full_in)
+                            except Exception:
+                                pass
                             # Reacción emocional también en la vía por voz
                             if full_in and full_in != self._last_text_trigger:
                                 if react_to_user_interaction:
@@ -3197,6 +3313,13 @@ class ErisLive:
                                 self._wake_last_activity = time.time()
                                 if self._is_end_conversation(full_in):
                                     self._close_wake_gate()
+                                    try:
+                                        from core.session_summaries import finalize_session_summary
+                                        _s_path = finalize_session_summary()
+                                        if _s_path:
+                                            self.ui.write_log(f"SYS: 💾 Resumen de sesión guardado en Obsidian.")
+                                    except Exception:
+                                        pass
                                 elif not self._is_speaking:
                                     # Respuesta solo texto: volver a escuchar
                                     self.ui.set_state("LISTENING")
@@ -3233,7 +3356,13 @@ class ErisLive:
                             if out_full:
                                 self._remember(f"ERIS: {out_full}")
                                 self._last_tool_context = f"Última respuesta: {out_full[:200]}"
-                            self._finish_conv_eris()
+                            # ── Resumen de sesión (memoria liviana, no historial) ──
+                            try:
+                                if full_in or out_full:
+                                    from core.session_summaries import record_exchange
+                                    record_exchange(full_in, out_full)
+                            except Exception:
+                                pass
                             # ── ElevenLabs: synthesize remainder if early already fired ──
                             if _cached_tts_backend == "elevenlabs" and out_full.strip():
                                 _early_synthesized = getattr(self, '_el_early_synthesized', '')
@@ -3335,6 +3464,16 @@ class ErisLive:
                                     ).start()
                             except Exception:
                                 pass
+                            # ── Auto-continuación: si hay tarea en curso y Eris usó
+                            #    tools sin declarar TAREA COMPLETA, empujarla a seguir
+                            #    sola (sin que el usuario deba decir "dale"). ──
+                            try:
+                                if self._auto_cont_on:
+                                    asyncio.create_task(
+                                        self._maybe_push_auto_continue(out_full or "")
+                                    )
+                            except Exception:
+                                pass
                             in_buf = []
                             out_buf = []
                             out_full = ""
@@ -3370,6 +3509,7 @@ class ErisLive:
                         for fc in fcs:
                             print(f"[ERIS] 📞 {fc.name}")
                             _last_tool = fc.name
+                        self._auto_cont_turn_used_tools = True
                         # Guardar contexto de tarea activa para reconexión
                         _tool_names = ", ".join(fc.name for fc in fcs)
                         self._active_task = f"Ejecutando tool(s): {_tool_names}"
@@ -3800,6 +3940,19 @@ class ErisLive:
                                 except Exception as _abe:
                                     print(f"[ERIS] Auto brief error: {_abe}")
                             tg.create_task(_auto_brief())
+                        # Contexto al despertar: Eris lee los últimos resúmenes de
+                        # sesión y los inyecta como memoria liviana (no historial).
+                        try:
+                            from core.session_summaries import load_recent_summaries
+                            _rec = load_recent_summaries(limit=3)
+                            if _rec:
+                                _ctx_note = ("[CONTEXTO DE SESIONES ANTERIORES] (resúmenes "
+                                             "cortos, para retomar el hilo si hace falta):\n"
+                                             + "\n".join("— " + r for r in _rec))
+                                self._remember(_ctx_note)
+                                print("[ERIS] 🧠 Contexto de sesiones anteriores cargado")
+                        except Exception as _se:
+                            print(f"[ERIS] Contexto sesiones: {_se}")
 
                     tg.create_task(self._send_realtime())
                     tg.create_task(self._listen_audio())
@@ -4313,16 +4466,15 @@ def main():
             raise
         finally:
             try:
-                from core.neuro_spheres import learn_from_sessions
-                result = learn_from_sessions()
-                print(f"🧠 Auto-learn: {result.get('created', 0)} nodos nuevos")
+                self_safe = globals().get("_current_eris")
+                if self_safe is not None and getattr(self_safe, "_routines_stop", None):
+                    self_safe._routines_stop.set()
             except Exception:
                 pass
             try:
-                _cur = globals().get("_current_eris")
-                if _cur is not None:
-                    _cur._finish_conv_eris()
-                    _cur._save_active_conv()
+                from core.neuro_spheres import learn_from_sessions
+                result = learn_from_sessions()
+                print(f"🧠 Auto-learn: {result.get('created', 0)} nodos nuevos")
             except Exception:
                 pass
             _run_post_session_tasks()

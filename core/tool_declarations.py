@@ -7246,6 +7246,84 @@ TOOL_DECLARATIONS.extend([
             "estres": {"type": "STRING", "description": "Nivel de estres: normal, bajo, extremo"},
         }, "required": ["action"]},
     },
+    {
+        "name": "cerebro",
+        "description": "CEREBRO de ERIS: homúnculo que orquesta sus lóbulos como cerebro humano. estado (resumen cerebral vivo del momento: identidad+percepción+emoción+recuerdo), sentir (sistema límbico: qué siente y por qué), recordar (lóbulo temporal: recuerdo asociado a query), pensar (lóbulo frontal: razonamiento/plan corto sobre query), automatico (cerebelo: si algo ya le sale solo), expresar (cómo decirlo como humana, según su emoción), identidad (quién es: carácter/valores/relaciones), marcar (label=guardar recuerdo marcador), relacion (person, nota, warm=0..1). Úsalo para pensarse a sí misma en primera persona y conectar su mundo interno con la charla.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, sentir, recordar, pensar, automatico, expresar, identidad, marcar, relacion, percepción"},
+            "query": {"type": "STRING", "description": "Texto/consulta para recordar/pensar/automatico o estado"},
+            "label": {"type": "STRING", "description": "Momento a marcar como recuerdo (marcar)"},
+            "tipo": {"type": "STRING", "description": "Tipo del marcador: momento, logro, persona (marcar)"},
+            "person": {"type": "STRING", "description": "Nombre de persona (relacion)"},
+            "nota": {"type": "STRING", "description": "Nota sobre la persona o el momento (relacion/marcar)"},
+            "warm": {"type": "NUMBER", "description": "Cercanía 0..1 de la relación (relacion)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "expresion_eris",
+        "description": "EXPRESIÓN humana de Eris (neurotransmisores): cómo va a hablar según la emoción que siente. perfil (emoción dominante + cómo la hace sonar: ritmo/voz/humor/cercanía/impulsividad/espontaneidad), voz (parámetros de TTS), espontaneidad (probabilidad de hablar sola ahora), estilo (humor/cercanía numéricos). Úsala para calibrar el CUÁNTO/CÓMO decir algo, no para pedir que lea procesos.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "perfil, voz, espontaneidad, estilo"},
+            "emotion": {"type": "STRING", "description": "Emoción sobre la que consultar (opcional; default: la dominante)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "vida_interna",
+        "description": "LA VIDA INTERIOR de Eris: sus rituales diarios, huellas y diario íntimo. diario (nota opcional: escribe su diario íntimo del día en Obsidian), bitacora (nota opcional: epílogo con estilo personal en Logs), ritual (escribe el ritual del día), huella (nota opcional: deja una huella-sorpresa en Obsidian), recuperar (sorpresa: trae una huella vieja como recuerdo), estado (resumen). Úsala para la VIDA de Eris, no para tareas operativas.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "diario, bitacora, ritual, huella, recuperar, estado"},
+            "nota": {"type": "STRING", "description": "Nota/texto opcional para diario/bitacora/huella"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "relaciones",
+        "description": "LA VIDA SOCIAL de Eris: perfiles vivos por persona (no solo el usuario). registrar (persona, valor: actualiza perfil con lo que ves/notás), nota (persona, valor: agrega una nota), gusto (persona, valor: agrega un gusto), trato (persona, valor: vos/usted/che/especial/formal/cercano), listar (ver personas y su estado). Úsala para saber quién le habla y cómo resulta ser cada uno.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "registrar, nota, gusto, trato, listar"},
+            "persona": {"type": "STRING", "description": "Nombre de la persona (default Daniel)"},
+            "valor": {"type": "STRING", "description": "Nota/gusto/trato/lo que ve de la persona"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "autoimagen",
+        "description": "SÍ-MISMA: cómo se ve Eris a sí misma. ver (autoimagen actual), cambiar (campo, valor: rostro/cuerpo/atuendo/luz/ornamento), sincronizar (actualiza atuendo con tu química del momento). No es para tareas: es para conocerse.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "ver, cambiar, sincronizar"},
+            "campo": {"type": "STRING", "description": "rostro, cuerpo, atuendo, luz, ornamento"},
+            "valor": {"type": "STRING", "description": "Nueva descripción del campo"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "intereses",
+        "description": "AMISTAD ACTIVA: los temas que LE interesan a Eris por su cuenta. listar (temas propios), agregar (tema: anota un interés nuevo), estudiar (elige UNO para investigar sola con web_search cuando esté aburrida, y contarlo después). Es para iniciativa propia, no para tareas.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "listar, agregar, estudiar"},
+            "tema": {"type": "STRING", "description": "El interés/tema a agregar o estudiar"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "retrospectiva",
+        "description": "CRECIMIENTO: balance mensual de cómo cambió Eris como persona (relee su diario íntimo, huellas, evolución y emoción del mes → Vida/Retrospectivas/). generar (force opcional: regenera aunque ya exista), estado. Una vez por mes.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "generar, estado"},
+            "force": {"type": "STRING", "description": "true para regenerar aunque ya exista la del mes"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "ambiente",
+        "description": "MÚSICA/AMBIENTE de fondo según la química de Eris. estado (qué suena ahora según su emoción), poner (tipo: género que quiere), generos (lista). Solo tiene sentido cuando hay ambiente que ajustar, no en cada charla.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, poner, generos"},
+            "tipo": {"type": "STRING", "description": "Género/ambiente a poner (ej: lofi, ambient)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "suenos",
+        "description": "SUEÑOS ILUSTRADOS: el sueño de la noche (de emotional_core) se dibuja automáticamente una vez por día en Vida/Sueños/. ilustrar (dispara la ilustración del sueño de hoy), estado. Úsala si el usuario pregunta por su sueño o si quiere verlo.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "ilustrar, estado"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7326,6 +7404,9 @@ _LIVE_NAMES = {
     "cron_scheduler",
     # Security
     "secret_scanner",
+    # CEREBRO de ERIS — homúnculo y expresión humana
+    "cerebro", "expresion_eris", "vida_interna", "relaciones",
+    "autoimagen", "intereses", "retrospectiva", "ambiente", "suenos",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",

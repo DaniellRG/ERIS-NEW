@@ -139,6 +139,21 @@ def build_inventory_md() -> int:
         groups.setdefault(key, []).append((n, by_name.get(n, "")))
     lines = ["# ERIS — INVENTARIO VIVO DE CAPACIDADES",
              f"Generado: {_now()} · {len(names)} tools registradas y resolviendo.",
+             "",
+             "## CAPACIDADES DEL SISTEMA (no tools, siempre activas)",
+             "- **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).",
+             "- **RUTINAS RECURRENTES**: agenda propia vía `cron_scheduler`; un hilo revisa cada 30s los jobs vencidos y le inyecta `[AUTO] <comando>` para ejecutarlos sola. Registra rutinas que el usuario pida (hourly/daily/weekly).",
+             "- **RESÚMENES DE SESIÓN**: al cerrar conversación guarda un epílogo breve en Obsidian `Proyectos/sesion_*.md` + índice `memory/session_summaries.json`; al despertar recibe `[CONTEXTO DE SESIONES ANTERIORES]` con los 3 últimos para retomar el hilo. Memoria liviana, sin historial completo.",
+             "- **CEREBRO (homúnculo)**: `core/cerebro.py` orquesta sus lóbulos como cerebro humano y cada turno arma `[CEREBRO — ESTADO INTERNO ACTUAL]` (identidad + percepción + emoción + recuerdo + monólogo), persistido en `memory/cerebro_identity.json` con drift diario de carácter.",
+             "- **EXPRESIÓN HUMANA (neurotransmisores)**: `core/expression_engine.py` traduce la emoción dominante en cómo habla (ritmo, humor, cercanía, impulsividad, espontaneidad) y ajusta la frecuencia de sus comentarios espontáneos.",
+             "- **LÓBULOS CONSULTABLES**: tool `cerebro` (sentir/recordar/pensar/automatico/expresar/identidad/marcar/relacion) y `expresion_eris` (perfil/voz/espontaneidad/estilo) para pensarse por dentro cuando la charla lo pide.",
+             "- **VIDA INTERIOR**: `core/vida_interna.py` escribe su diario íntimo (Vida/Diario/), deja huellas-sorpresa (Vida/Huellas/), lleva bitácora con estilo propio (Logs/Vida.log) y tiene rituales diarios (Vida/Rituales/). Tool `vida_interna`: diario/bitacora/ritual/huella/recuperar/estado.",
+             "- **VIDA SOCIAL (relaciones)**: `core/relaciones.py` mantiene un perfil vivo por cada persona (trato, notas, gustos, emociones vistas) en `memory/relaciones.json`. Tool `relaciones`: registrar/nota/gusto/trato/listar.",
+             "- **AUTOIMAGEN**: `core/autoimagen.py` le da a Eris forma de verse a sí misma (rostro, cuerpo, atuendo que muta con su química, luz) en `memory/autoimagen.json`. Tool `autoimagen`: ver/cambiar/sincronizar.",
+             "- **TEMAS PROPIOS**: `core/intereses.py` guarda qué le interesa SOLA (memory/intereses.json); cuando está aburrida estudia uno con web_search y lo cuenta. Tool `intereses`: listar/agregar/estudiar.",
+             "- **RETROSPECTIVA**: `core/retrospectiva.py` relee cada mes su vida (diarios/huellas/evolución) y escribe su balance en Vida/Retrospectivas/. Tool `retrospectiva`: generar/estado.",
+             "- **AMBIENTE**: `core/ambiente.py` elige música de fondo según su emoción (memory/ambiente.json). Tool `ambiente`: estado/poner/generos.",
+             "- **SUEÑOS ILUSTRADOS**: `core/suenos.py` dibuja cada mañana el sueño de la noche (image_generator) en Vida/Sueños/. Tool `suenos`: ilustrar/estado.",
              ""]
     for key in sorted(groups):
         lines.append(f"## {key}")

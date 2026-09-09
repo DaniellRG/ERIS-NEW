@@ -80,6 +80,8 @@
     "avisar_solo_resultados": true
   },
   "rotacion": {
-    "saludo_manana": 1
+    "saludo_manana": 1,
+    "saludo_tarde": 0,
+    "saludo_noche": 0
   }
 }

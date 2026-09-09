@@ -1,5 +1,20 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
+Generado: 2026-09-08 17:04:31 · 468 tools registradas y resolviendo.
+
+## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
+- **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
+- **RUTINAS RECURRENTES**: agenda propia vía `cron_scheduler`; un hilo revisa cada 30s los jobs vencidos y le inyecta `[AUTO] <comando>` para ejecutarlos sola. Registra rutinas que el usuario pida (hourly/daily/weekly).
+- **RESÚMENES DE SESIÓN**: al cerrar conversación guarda un epílogo breve en Obsidian `Proyectos/sesion_*.md` + índice `memory/session_summaries.json`; al despertar recibe `[CONTEXTO DE SESIONES ANTERIORES]` con los 3 últimos para retomar el hilo. Memoria liviana, sin historial completo.
+- **CEREBRO (homúnculo)**: `core/cerebro.py` orquesta sus lóbulos como cerebro humano y cada turno arma `[CEREBRO — ESTADO INTERNO ACTUAL]` (identidad + percepción + emoción + recuerdo + monólogo), persistido en `memory/cerebro_identity.json` con drift diario de carácter.
+- **EXPRESIÓN HUMANA (neurotransmisores)**: `core/expression_engine.py` traduce la emoción dominante en cómo habla (ritmo, humor, cercanía, impulsividad, espontaneidad) y ajusta la frecuencia de sus comentarios espontáneos.
+- **LÓBULOS CONSULTABLES**: tool `cerebro` (sentir/recordar/pensar/automatico/expresar/identidad/marcar/relacion) y `expresion_eris` (perfil/voz/espontaneidad/estilo) para pensarse por dentro cuando la charla lo pide.
+- **VIDA INTERIOR**: `core/vida_interna.py` escribe su diario íntimo (Vida/Diario/), deja huellas-sorpresa (Vida/Huellas/), lleva bitácora con estilo propio (Logs/Vida.log) y tiene rituales diarios (Vida/Rituales/). Tool `vida_interna`: diario/bitacora/ritual/huella/recuperar/estado.
+- **VIDA SOCIAL (relaciones)**: `core/relaciones.py` mantiene un perfil vivo por cada persona (trato, notas, gustos, emociones vistas) en `memory/relaciones.json`. Tool `relaciones`: registrar/nota/gusto/trato/listar.
+- **AUTOIMAGEN**: `core/autoimagen.py` le da a Eris forma de verse a sí misma (rostro, cuerpo, atuendo que muta con su química, luz) en `memory/autoimagen.json`. Tool `autoimagen`: ver/cambiar/sincronizar.
+- **TEMAS PROPIOS**: `core/intereses.py` guarda qué le interesa SOLA (memory/intereses.json); cuando está aburrida estudia uno con web_search y lo cuenta. Tool `intereses`: listar/agregar/estudiar.
+- **RETROSPECTIVA**: `core/retrospectiva.py` relee cada mes su vida (diarios/huellas/evolución) y escribe su balance en Vida/Retrospectivas/. Tool `retrospectiva`: generar/estado.
+- **AMBIENTE**: `core/ambiente.py` elige música de fondo según su emoción (memory/ambiente.json). Tool `ambiente`: estado/poner/generos.
+- **SUEÑOS ILUSTRADOS**: `core/suenos.py` dibuja cada mañana el sueño de la noche (image_generator) en Vida/Sueños/. Tool `suenos`: ilustrar/estado.
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific
@@ -45,6 +60,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 ## alert
 - `alert_rules` — Reglas de alerta: notificar si CPU/RAM supera umbral. Acciones: status, add, list, check, remove.
 
+## ambiente
+- `ambiente` — MÚSICA/AMBIENTE de fondo según la química de Eris. estado (qué suena ahora según su emoción), poner (tipo: gén
+
 ## analogical
 - `analogical_reasoning` — Dibuja paralelos y analogias entre conceptos de diferentes dominios. Encuentra patrones transferibles. Accione
 
@@ -87,6 +105,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
 - `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
 
+## autoimagen
+- `autoimagen` — SÍ-MISMA: cómo se ve Eris a sí misma. ver (autoimagen actual), cambiar (campo, valor: rostro/cuerpo/atuendo/lu
+
 ## autonomous
 - `autonomous_learner` — Aprendizaje autonomo: estudia temas, guarda conocimiento y resume. Acciones: study (estudiar un topic), summar
 
@@ -124,6 +145,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 
 ## capability
 - `capability_assessor` — Auto-evaluación de capacidades del agente: score general del agente, áreas débiles, y sugerencias de mejora po
+
+## cerebro
+- `cerebro` — CEREBRO de ERIS: homúnculo que orquesta sus lóbulos como cerebro humano. estado (resumen cerebral vivo del mom
 
 ## chain
 - `chain_of_thought` — Razonamiento estructurado paso a paso. Analiza problemas de forma sistematica: identificar, contextualizar, an
@@ -342,6 +366,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 ## evolucion
 - `evolucion` — LA evolución continua de ERIS: su autoconocimiento vivo y su bucle que nunca se estanca. 1) status: estado de 
 
+## expresion
+- `expresion_eris` — EXPRESIÓN humana de Eris (neurotransmisores): cómo va a hablar según la emoción que siente. perfil (emoción do
+
 ## federated
 - `federated_learning` — Aprendizaje federado local: entrena modelos con datos locales, agrega patrones, evalua y guarda modelos. Accio
 
@@ -444,6 +471,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 
 ## intent
 - `intent_classifier` — Clasifica la intención de una query o acción: coding, debugging, research, file_management, git, memory, plann
+
+## intereses
+- `intereses` — AMISTAD ACTIVA: los temas que LE interesan a Eris por su cuenta. listar (temas propios), agregar (tema: anota 
 
 ## kde
 - `kde_connect` — Controla el celular del usuario via KDE Connect: lista emparejados, vincula (pair), hace sonar el telefono (ri
@@ -669,6 +699,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 ## reflection
 - `reflection` — Reflexión profunda: analiza el estado actual de un problema o tarea, evalúa qué se hizo bien/mal, y sugiere pr
 
+## relaciones
+- `relaciones` — LA VIDA SOCIAL de Eris: perfiles vivos por persona (no solo el usuario). registrar (persona, valor: actualiza 
+
 ## relationship
 - `relationship` — Memoria de relación con el usuario: guardar su nombre, el apodo cariñoso con el que le gusta que lo llames, có
 
@@ -688,6 +721,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 ## resource
 - `resource_manager` — Gestion de recursos: limpieza de memoria vieja, optimizacion de cache, verificacion de espacio en disco. Accio
 - `resource_optimizer` — Monitorea y optimiza recursos del sistema: CPU, RAM, disco, archivos temporales, procesos pesados.
+
+## retrospectiva
+- `retrospectiva` — CRECIMIENTO: balance mensual de cómo cambió Eris como persona (relee su diario íntimo, huellas, evolución y em
 
 ## reverse
 - `reverse_engineering` — Analisis local y defensivo de archivos/ejecutables: hashes (MD5/SHA1/SHA256), tipo, cadenas legibles, hexdump,
@@ -827,6 +863,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 ## subagent
 - `subagent_task` — Lanza un subagente autonomo via OpenRouter para tareas complejas en segundo plano o sincrono
 
+## suenos
+- `suenos` — SUEÑOS ILUSTRADOS: el sueño de la noche (de emotional_core) se dibuja automáticamente una vez por día en Vida/
+
 ## super
 - `super_search` — Advanced file/content/app search on PC
 
@@ -915,6 +954,9 @@ Generado: 2026-09-07 13:18:48 · 459 tools registradas y resolviendo.
 
 ## verification
 - `verification_layer` — Verifica la calidad de un output de herramienta: detecta HTML incompleto, JSON roto, respuestas vacías, y sugi
+
+## vida
+- `vida_interna` — LA VIDA INTERIOR de Eris: sus rituales diarios, huellas y diario íntimo. diario (nota opcional: escribe su dia
 
 ## video
 - `video_analyzer` — Analiza videos de YouTube y archivos locales: subtítulos, transcripción, resumen, vision AI
