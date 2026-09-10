@@ -3231,10 +3231,10 @@ class ErisLive:
 
                     if response.data:
                         if not self._stop_requested.is_set():
-                            if _cached_tts_backend not in ("elevenlabs", "fish"):
+                            if _cached_tts_backend not in ("elevenlabs", "fish", "kokoro", "pykokoro", "edge"):
                                 self.audio_in_queue.put_nowait(response.data)
                                 self._last_audio_ts = time.time()
-                            # When backend=elevenlabs or fish, skip Gemini audio; TTS engine will be used
+                            # When a TTS backend, skip Gemini audio; TTS engine will be used
 
                     if response.server_content:
                         sc = response.server_content
@@ -3502,6 +3502,32 @@ class ErisLive:
                                             self._turn_done_event.set()
                                 threading.Thread(target=_fish_play, daemon=True).start()
                                 print(f"[ERIS] Fish Audio: {out_full[:60]}...")
+                            # ── Kokoro/edge local: sentence-chunked synthesis (low latency, in order) ──
+                            elif _cached_tts_backend in ("kokoro", "pykokoro", "edge") and out_full.strip():
+                                def _kokoro_play(_txt=out_full, _tb=_cached_tts_backend):
+                                    try:
+                                        import re as _kk_re
+                                        _parts = [p for p in _kk_re.split(r'(?<=[.!?\n])', _txt) if p.strip()]
+                                        if not _parts:
+                                            _parts = [_txt]
+                                        _lf = asyncio.new_event_loop()
+                                        try:
+                                            from core.tts_engine import synthesize
+                                            async def _do_kokoro(_chunks=_parts):
+                                                for _s in _chunks:
+                                                    pcm = await synthesize(_s.strip(), backend=_tb)
+                                                    if pcm and len(pcm) > 100:
+                                                        self.audio_in_queue.put_nowait(pcm)
+                                            _lf.run_until_complete(_do_kokoro())
+                                        finally:
+                                            _lf.close()
+                                    except Exception as _ekk:
+                                        print(f"[ERIS] Kokoro error: {_ekk}")
+                                    finally:
+                                        if self._turn_done_event:
+                                            self._turn_done_event.set()
+                                threading.Thread(target=_kokoro_play, daemon=True).start()
+                                print(f"[ERIS] 🎙️ {_cached_tts_backend}: {out_full[:60]}...")
                             else:
                                 if self._turn_done_event:
                                     self._turn_done_event.set()

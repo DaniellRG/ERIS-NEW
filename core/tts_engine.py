@@ -453,7 +453,7 @@ async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = Non
         v = float(tone.get("volume", 1.0)) * volume
         if v < 0.01:
             v = 0.01
-        volume_attr = {"volume_gain_db": f"{int(round((v - 1) * 10))}dB"}
+        volume_attr = {"volume": f"{'+' if v >= 1 else '-'}{abs(int(round((v - 1) * 100)))}%"}
     except Exception:
         rate_ = "+0%"
         pitch_ = "+0Hz"
