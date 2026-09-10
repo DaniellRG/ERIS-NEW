@@ -1267,7 +1267,7 @@ Si una tarea coincide con una tool, USALA. No inventes capabilities que no tené
 - tool_dep_graph: Grafo de dependencias de tools.
 - conversation_brancher: Branches alternativos de conversación.
 - arca_invoice: Facturación ARCA.
-- ask_user: Preguntar al usuario con opciones.
+- ask_user: Preguntar al usuario con un MENÚ INTERACTIVO de opciones (diálogo con tarjetas, opción recomendada con ⭐, y modo de UNA o VARIAS selecciones). Da SIEMPRE 2-6 opciones concretas y pon la recomendada como primera; si múltiples cosas sirven, marcá multi=true; si el usuario podría querer proponer otra cosa, allow_custom=true.
 - ask_opencode: Preguntar a opencode.
 - english_teacher: Profesor de inglés (A1-C2).
 - meeting_transcriber: Transcribir reuniones.

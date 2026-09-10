@@ -2678,13 +2678,15 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "ask_user",
-        "description": "Hace una pregunta estructurada al usuario con opciones para obtener su decision o preferencia",
+        "description": "Hace una pregunta estructurada al usuario con un menú interactivo de opciones para obtener su decisión o preferencia. Usala SIEMPRE que necesites que el usuario elija entre alternativas. Muestra un diálogo con tarjetas de opciones, marca la recomendada (⭐) si la indicás, y permite elegir UNA (default) o VARIAS (multi=true) opciones. Devuelve la elección del usuario (índice, lista de índices o texto personalizado).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
                 "question": {"type": "STRING", "description": "Pregunta clara al usuario"},
-                "options": {"type": "STRING", "description": "Lista de opciones separadas por coma"},
-                "allow_custom": {"type": "BOOLEAN", "description": "Permitir respuesta personalizada"},
+                "options": {"type": "STRING", "description": "Lista de opciones separadas por coma. La primera opción debería ser la recomendada si la hay"},
+                "multi": {"type": "BOOLEAN", "description": "Si true, el usuario puede seleccionar VARIAS opciones (checkboxes). Si false (default), elige solo una"},
+                "recommended": {"type": "STRING", "description": "Texto de la opción recomendada (se muestra con ⭐ Recomendado). Puede ser el número de opción (1,2,3...) o una parte del texto"},
+                "allow_custom": {"type": "BOOLEAN", "description": "Permitir respuesta personalizada escrita por el usuario"},
                 "default": {"type": "STRING", "description": "Valor por defecto"},
             },
             "required": ["question"],
@@ -7435,7 +7437,7 @@ _LIVE_NAMES = {
     # Calculator, reminders
     "calculator", "reminder",
     # Communication
-    "send_message", "gmail_control",
+    "send_message", "gmail_control", "ask_user",
     # Calendar
     "google_calendar",
     # Smart home
