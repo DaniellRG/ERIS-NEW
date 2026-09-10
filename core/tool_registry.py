@@ -451,6 +451,8 @@ _TOOLS = {
     "code_guard":              ("core.code_guard", "code_guard_tool"),
     "mission":                 ("core.mission_agent", "mission_tool"),
     "evolucion":               ("core.self_evolution", "self_evolution_tool"),
+    "diagnostico":             ("actions.diagnostico", "diagnostico"),
+    "auto_salud":              ("core.self_health", "self_health_tool"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),

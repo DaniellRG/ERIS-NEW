@@ -4528,6 +4528,34 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    # ── Auto-salud + Diagnóstico en vivo ──
+
+    {
+        "name": "diagnostico",
+        "description": "Panel de diagnóstico en vivo de ERIS: responde '¿qué se rompió y por qué?' de forma accionable. state (default): resumen — valida config/api_keys.json (JSON sin BOM), escanea errores recientes de los logs con contexto, disco, RAM/CPU del proceso y tools core; logs: últimos errores de logs (params logs=N, filtro='texto'); config: valida el config; health: chequea tools core; reporte: informe completo. No modifica nada (solo diagnostica).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "state (default), logs, config, health, reporte"},
+                "logs": {"type": "INTEGER", "description": "Cantidad de logs a escanear (con action=logs)"},
+                "filtro": {"type": "STRING", "description": "Filtro de texto para buscar en errores (con action=logs)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "auto_salud",
+        "description": "Monitor PROACTIVO de la propia salud de ERIS (no URLs externas): detecta config api_keys.json roto/BOM, disco al 90%+, RAM del proceso disparada, errores nuevos en los logs y tools core que dejan de resolver. status (default): estado actual; check: fuerza un chequeo completo AHORA y notifica los problemas nuevos. Los avisos también salen automáticamente cada 5 minutos por el hilo de monitoreo.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status (default) o check (forzar chequeo)"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7469,6 +7497,8 @@ _LIVE_NAMES = {
     "autoimagen", "intereses", "retrospectiva", "ambiente", "suenos",
     "caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas",
     "todo_yo",
+    # Diagnóstico en vivo + Auto-salud proactiva
+    "diagnostico", "auto_salud",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",

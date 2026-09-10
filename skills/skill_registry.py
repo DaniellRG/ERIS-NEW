@@ -262,7 +262,7 @@ def skill_view(name: str) -> str:
     """
     Level 1: Return full SKILL.md content for a specific skill.
     """
-    all_skills = _scan_skills()
+    all_skills = _scan_all_skills()
     for s in all_skills:
         if s["name"].lower() == name.lower() or s["name"].lower().replace("-", " ") == name.lower().replace("-", " "):
             return s["full_content"]

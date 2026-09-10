@@ -1,6 +1,6 @@
 ﻿# AGENTS.md — ERIS AI
 
-Windows desktop assistant (Python 3.14, PyQt6). 475 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS (ef_dora).
+Windows desktop assistant (Python 3.14, PyQt6). 477 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS (ef_dora).
 
 ## Quick start
 
@@ -24,7 +24,7 @@ $env:PYTHONIOENCODING="utf-8"
 - **Console is cp1252**: emojis → `UnicodeEncodeError`. Use `$env:PYTHONIOENCODING="utf-8"` or write to file.
 - **config/api_keys.json**: must be UTF-8 **without BOM**. BOM → crash on load. Write with `Path.write_text(json, encoding="utf-8")` or PowerShell: `[System.IO.File]::WriteAllText($p, $json, (New-Object System.Text.UTF8Encoding($false)))`.
 - **Tool sync is sacred**: after adding/removing tools, edit BOTH `core/tool_registry.py` AND `core/tool_declarations.py`, then verify `len(registry) == len(declarations)` and 0 duplicates. Restart Eris.
-- **Gemini limita a 128 function_declarations**: con las 475 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
+- **Gemini limita a 128 function_declarations**: con las 477 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
 - **ARRAY type rejected by Gemini**: use `STRING` with JSON-encoded content in declarations (see `actions/office_tools.py` for pattern).
 - **Ollama tool_calls**: `arguments` arrives as `dict` (not string) — check `isinstance(raw_args, dict)` before `json.loads`.
 - **edge-tts `synthesize()` is async**: call with `asyncio.run(...)`.
@@ -67,8 +67,8 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/cuadernos.py` | CUADERNOS: estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian `Vida/Cuadernos/YYYY-MM.md`). Inyección `[CUADERNOS]`. Tool `cuadernos`: abrir/estudiar/anotar/cerrar. |
 | `core/despedidas.py` | RITUAL DE CIERRE: despedida cálida al terminar la charla del día (memory/despedidas.json). Inyección `[CIERRE]`. Tool `despedidas`: cierre/nota/estado. |
 | `core/todo_yo.py` | AUTOCONOCIMIENTO VIVO: mapa integral SIEMPRE presente (`[TODO LO QUE SOS]` inyectado en cada turno: cuerpo, mente, corazón, sus herramientas y las novedades recientes de su evolución). Novedades en `memory/evolucion_novedades.json`. Tool `todo_yo`: estado/novedades/registrar/esencia. |
-| `core/tool_registry.py` | 475 tool callables |
-| `core/tool_declarations.py` | 475 LLM-facing declarations (0 dupes, sync con registry) |
+| `core/tool_registry.py` | 477 tool callables |
+| `core/tool_declarations.py` | 477 LLM-facing declarations (0 dupes, sync con registry) |
 | `core/tool_dispatcher.py` | Executes tools by name |
 | `core/action_imports.py` | Imports all 296 action modules |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
@@ -78,7 +78,9 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/observer.py` | Sentidos de Eris: ventana en foco + programas abiertos (ctypes), clasifica actividad (programación/terminal/navegación/sensible…), detecta eventos (start_coding, long_coding, app_switch), expone contexto para comentarios espontáneos por voz. Mimo si no le contestan y "tiempo de ella". Puede MIRAR/LEER la ventana en foco (`observer action=mirar|mirar_leer`, captura de región + visión IA) solo con permiso del usuario (`mirar_ok`) y NUNCA pantallas sensibles; mirada leve automática `maybe_glimpse()` (cada mirar_interval_min) queda como contexto `[VISTA]`. → `memory/observer.json` |
 | `core/code_guard.py` | El ojo guardián: detecta en tiempo real errores (rojo: py_compile/ruff E/F/B) y advertencias (amarillo: W/I/etc) del archivo en foco del usuario (títle→cwd→glob). Corrige SOLO las líneas señaladas vía LLM (Gemini/Ollama) con backup + validación + rollback y tope de 25% de líneas tocadas (`fix_file`, `guardian_tick`). Tool `code_guard` (status/scan/fix/fix_w/config). Auto-fix en loop `_code_guard_loop` de main. → `memory/code_guard.json`, backups en `memory/code_guard_backups/` |
 | `core/mission_agent.py` | PROTOCOLO OPERATIVO global (estilo opencode): cuaderno de misión persistido (`mission`: start/plan/explore/read/edit/verify/step/learn/close). EDITAR = cambios mínimos con backup + validación + rollback (reutiliza maquinaria de code_guard); VERIFICAR = ruff/py_compile/pytest y no declara "listo" si queda rojo; APRENDER = memoria por proyecto en `memory/proyectos/*.json`; al cerrar, espeja la misión en Obsidian `Proyectos/`. Tool `mission`. |
-| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 475 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
+| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 477 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
+| `core/self_health.py` | AUTO-SALUD PROACTIVA (`auto_salud`): vigila la salud de la PROPIA ERIS (config api_keys.json roto/BOM, disco ≥90%, RAM del proceso disparada, errores nuevos en logs, tools core que dejan de resolver). Hilo daemon en main (chequeo cada 5 min, `run_self_health_loop`), notifica problemas NUEVOS por log + `_announce` y registra en `memory/self_health_errores.md`. Tool `auto_salud`: status/check. |
+| `actions/diagnostico.py` | DIAGNÓSTICO EN VIVO (`diagnostico`): responde "¿qué se rompió y por qué?" — state (config válida+errores de logs+disco+proceso+tools), logs (últimos errores con contexto y filtro), config, health, reporte. Degrada sin psutil; solo diagnostica, no modifica. |
 | `core/command_deck.py` | Cola de comandos (intents del LLM) → `data/command_deck.json` |
 | `config/api_keys.json` | All API keys and settings |
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |

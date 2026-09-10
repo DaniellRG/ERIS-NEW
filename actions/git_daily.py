@@ -73,6 +73,35 @@ def _py_compile(path: Path) -> tuple[bool, str]:
         return False, str(e)[:300]
 
 
+def _impact(repo: str) -> str:
+    """Medición de impacto del último commit: archivos, +/-, y estadística por archivo."""
+    ok, out = _git(repo, "show", "--stat", "--format=", "HEAD")
+    if not ok or not out.strip():
+        return ""
+    try:
+        total_adds = 0
+        total_dels = 0
+        per_file = []
+        for line in out.splitlines():
+            if "|" not in line:
+                continue
+            parts = line.rsplit("|", 1)
+            fname = parts[0].strip()
+            bits = parts[1].strip()
+            if not bits:
+                continue
+            a = bits.count("+")
+            d = bits.count("-")
+            total_adds += a
+            total_dels += d
+            if a or d:
+                per_file.append(f"  +{a}/-{d}  {fname}")
+        head = f"IMPACTO: {len(per_file)} archivos, +{total_adds}/-{total_dels} líneas"
+        return "\n" + head + "\n" + "\n".join(per_file)
+    except Exception:
+        return ""
+
+
 def git_daily(parameters: dict = None, player=None) -> str:
     """Flujo git diario con convención de commits. Acciones: status (corto), diff (--stat o 'full'=true),
     commit (stage todo + mensaje 'message' o convencional auto; 'verify'=true hace py_compile previo),
@@ -132,7 +161,7 @@ def git_daily(parameters: dict = None, player=None) -> str:
                 _, outp = _py_compile(Path(repo) / py)
                 if "ERROR" in outp:
                     result += f"\n⚠️ {py}: {outp[:200]}"
-        return result
+        return result + _impact(repo)
 
     if action == "sync":
         _git(repo, "add", "-A")
@@ -144,6 +173,6 @@ def git_daily(parameters: dict = None, player=None) -> str:
         okc, outc = _git(repo, "commit", "-m", msg)
         okp, outp = _git(repo, "pull", "--rebase")
         okph, outph = _git(repo, "push")
-        return f"COMMIT: {outc}\nPULL: {outp}\nPUSH: {outph}"
+        return f"COMMIT: {outc}\nPULL: {outp}\nPUSH: {outph}{_impact(repo)}"
 
     return (f"Accion no valida: {action}. Disponibles: status, diff, commit, sync, log, branch.")

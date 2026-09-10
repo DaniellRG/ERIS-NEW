@@ -651,6 +651,33 @@ class ErisLive:
                 print("[ERIS] 🧰 Mantenimiento proactivo iniciado (backups/limpieza/reportes)")
         except Exception as _me:
             print(f"[ERIS] Mantenimiento init: {_me}")
+        # ── Auto-salud proactiva: vigila config/disco/RAM/logs de ERIS y avisa ──
+        try:
+            from core.self_health import run_self_health_loop
+
+            def _self_health_alert(prob: dict):
+                try:
+                    _txt = f"{prob['area']}: {prob['msg']}"
+                    self.ui.write_log(f"[AUTO-SALUD] 🚨 {prob['level'].upper()} — {_txt}")
+                    if prob["level"] == "error" and prob["area"] == "config":
+                        print(f"[ERIS] 🩺 Config rota: {prob['msg']}")
+                    else:
+                        print(f"[ERIS] 🩺 {_txt[:120]}")
+                        try:
+                            self._announce(f"Alerta: {_txt[:180]}")
+                        except Exception:
+                            pass
+                except Exception:
+                    pass
+
+            self._self_health_thread = threading.Thread(
+                target=run_self_health_loop, args=(_self_health_alert,),
+                daemon=True, name="eris-self-health",
+            )
+            self._self_health_thread.start()
+            print("[ERIS] 🩺 Auto-salud proactiva iniciada (chequeo cada 5 min)")
+        except Exception as _she:
+            print(f"[ERIS] Auto-salud init: {_she}")
         # ── Rutinas recurrentes: Eris agenda tareas propias y las ejecuta sola,
         #    inyectando el comando en su sesión al vencer (frecuencia: 30s). ──
         try:

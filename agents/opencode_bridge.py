@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -10,10 +11,39 @@ from pathlib import Path
 from core.platform import safe_print
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-OPENCODE_BIN = os.environ.get(
-    "OPENCODE_BIN",
-    str(Path(os.environ.get("APPDATA", Path.home())) / "npm" / "opencode.cmd"),
-)
+
+
+def _find_opencode() -> str:
+    """Localizar el binario de opencode: env var > PATH > rutas conocidas."""
+    env = os.environ.get("OPENCODE_BIN", "").strip()
+    if env:
+        if os.path.isfile(env):
+            return env
+        safe_print(f"[OpenCode] OPENCODE_BIN configurado pero no existe: {env}")
+
+    found = shutil.which("opencode")
+    if found:
+        return found
+
+    if os.name == "nt":
+        cand = Path(os.environ.get("APPDATA", Path.home())) / "npm" / "opencode.cmd"
+        if cand.is_file():
+            return str(cand)
+        cand = Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Programs" / "opencode" / "opencode.exe"
+        if cand.is_file():
+            return str(cand)
+
+    for p in (
+        Path.home() / ".local" / "bin" / "opencode",
+        Path.home() / ".local" / "share" / "mise" / "installs" / "opencode" / "latest" / "opencode",
+        Path.home() / ".opencode" / "bin" / "opencode",
+    ):
+        if p.is_file():
+            return str(p)
+    return ""
+
+
+OPENCODE_BIN = _find_opencode()
 MEMORY_DIR = BASE_DIR / "memory" / "opencode"
 MEMORY_DIR.mkdir(parents=True, exist_ok=True)
 MEMORY_FILE = MEMORY_DIR / "lessons.json"
@@ -44,8 +74,7 @@ def _learn(problem: str, solution: str, directory: str = ""):
     _save_memory(entries[-500:])
 
 
-def _format_lessons(limit: int = 5) -> str:
-    entries = _load_memory()
+def _format_entries(entries: list[dict], limit: int = 5) -> str:
     if not entries:
         return "No hay lecciones aprendidas aún."
     lines = ["Lecciones aprendidas de opencode:"]
@@ -56,6 +85,10 @@ def _format_lessons(limit: int = 5) -> str:
         lines.append(f"  Solución: {sol}")
         lines.append("")
     return "\n".join(lines)
+
+
+def _format_lessons(limit: int = 5) -> str:
+    return _format_entries(_load_memory(), limit)
 
 
 def opencode_task(
@@ -92,7 +125,7 @@ def opencode_task(
             capture_output=True,
             text=True,
             timeout=300,
-            shell=True,
+            shell=False,
             env={**os.environ, "OPENCODE_SERVER_PORT": "0"},
         )
     except subprocess.TimeoutExpired:
@@ -171,4 +204,4 @@ def recall_lessons(query: str = "", limit: int = 5) -> str:
             if q in e["problem"].lower() or q in e["solution"].lower()
         ]
 
-    return _format_lessons(limit)
+    return _format_entries(entries, limit)
