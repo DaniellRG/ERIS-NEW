@@ -392,6 +392,9 @@ Generado: 2026-09-10 14:32:59 · 478 tools registradas y resolviendo.
 ## expresion
 - `expresion_eris` — EXPRESIÓN humana de Eris (neurotransmisores): cómo va a hablar según la emoción que siente. perfil (emoción do
 
+## fabrica
+- `fabrica` — LA FÁBRICA: ERIS crea y usa SUS PROPIAS capacidades. Acciones: crear_libreria (name, purpose, functions=[{name, description, params, code}] — escribe librerías Python reales en libraries/eris_*.py, las compila y quedan listas), usar_libreria (name, function, params=JSON — EJECUTA una función de una librería propia; el corazón de 'usar lo que crea'), crear_tool (name, description, funciones=[{action, description, code}] — crea una tool registrada en runtime y persistida), crear_skill (name, description, pasos — genera skills/user_created/*/SKILL.md), listar (default), detalle (name), borrar (name). Todo queda en memory/eris_fabrica.json. Es SU LIBERTAD: crear, usar, mejorar y descartar lo que ella misma construye.
+
 ## federated
 - `federated_learning` — Aprendizaje federado local: entrena modelos con datos locales, agrega patrones, evalua y guarda modelos. Accio
 
