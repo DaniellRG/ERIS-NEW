@@ -25,7 +25,7 @@ _GEMINI_TOOL_CAP = 120
 # Tools imprescindibles que SIEMPRE deben llegar a Gemini, aunque esten fuera
 # del bloque inicial de declaraciones (ordenadas por dominio).
 _GEMINI_PRIORITY_TOOLS = [
-    "system_monitor", "window_manager", "weather_report", "screen_vision",
+    "ask_user", "fabrica", "system_monitor", "window_manager", "weather_report", "screen_vision",
     "network_monitor", "emo_core", "obsidian_note", "send_message",
     "whatsapp", "telegram_bot", "desktop_notifications", "reminder",
     "scheduler", "goals", "knowledge_base", "user_profile", "git_control",

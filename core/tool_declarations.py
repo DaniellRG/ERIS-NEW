@@ -4558,6 +4558,26 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    {
+        "name": "fabrica",
+        "description": "LA FÁBRICA: Eris crea y usa SUS PROPIAS capacidades (librerías de Python reales, tools nuevas y skills). Acciones: crear_libreria (name, purpose, functions=[{name, description, code}] — escribe modules/librerias reales en libraries/eris_*.py, los compila y los deja listos para usarse), usar_libreria (name, function, params=JSON — EJECUTA una función de una librería propia, el corazón de 'usar lo que crea'), crear_tool (name, description, funciones=[{action, description, code}] — crea una tool registrada en runtime, usable YA y tras reinicio), crear_skill (name, description, pasos — genera skills/user_created/*/SKILL.md), listar (default: todo lo creado), detalle (name), borrar (name). Usala SIEMPRE que quieras crear algo nuevo para vos o que necesites correr código de tus propias librerías.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "listar (default), detalle, borrar, crear_libreria, usar_libreria, crear_tool, crear_skill"},
+                "name": {"type": "STRING", "description": "Nombre de la librería/tool/skill"},
+                "purpose": {"type": "STRING", "description": "Para crear_libreria: qué hace la librería"},
+                "functions": {"type": "STRING", "description": "Para crear_libreria: lista JSON de {name, description, code} con las funciones REALES"},
+                "function": {"type": "STRING", "description": "Para usar_libreria: la función a ejecutar"},
+                "params": {"type": "STRING", "description": "Para usar_libreria: JSON con los argumentos de la función"},
+                "descripcion": {"type": "STRING", "description": "Descripción de la tool/skill a crear"},
+                "funciones": {"type": "STRING", "description": "Para crear_tool: lista JSON de {action, description, code}"},
+                "pasos": {"type": "STRING", "description": "Para crear_skill: contenido/instrucciones de la skill"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7419,7 +7439,7 @@ TOOL_DECLARATIONS.extend([
 # ── Live subset: native-audio models cap at ~151 tools ──
 _LIVE_NAMES = {
     # Core interaction
-    "open_app", "terminal_agent", "screen_control",
+    "ask_user", "open_app", "terminal_agent", "screen_control",
     # Files
     "file_manager", "file_editor",
     # Web & search
@@ -7501,6 +7521,8 @@ _LIVE_NAMES = {
     "todo_yo",
     # Diagnóstico en vivo + Auto-salud proactiva
     "diagnostico", "auto_salud",
+    # La Fábrica — Eris crea sus propias capacidades
+    "fabrica",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
@@ -7520,6 +7542,22 @@ LIVE_TOOL_DECLARATIONS = [
     and not t["name"].startswith("_")
     and t["name"].lower() not in ("reset", "default")
 ]
+# Ordenar por prioridad de _LIVE_NAMES: las tools de interacción core
+# (ask_user, control de ventanas, etc.) deben aparecer PRIMERO en el
+# payload para máxima visibilidad del modelo. Se usa un ORDEN EXPLÍCITO
+# (listas ordenadas, no sets — iterar un set no garantiza orden).
+_LIVE_FIRST = [
+    "ask_user", "fabrica", "open_app", "terminal_agent", "screen_control",
+    "web_search", "webfetch", "desktop_control", "window_manager",
+    "file_manager", "file_editor", "reminder", "scheduler", "goals",
+    "git_control", "code_engineer", "shot", "show_expression",
+]
+LIVE_TOOL_DECLARATIONS.sort(
+    key=lambda t: (
+        _LIVE_FIRST.index(t["name"]) if t["name"] in _LIVE_FIRST else len(_LIVE_FIRST),
+        TOOL_DECLARATIONS.index(t),
+    )
+)
 # Fallback: if filtering is too aggressive, use first 140 (sin nombres reservados)
 if len(LIVE_TOOL_DECLARATIONS) < 50:
     _safe = [

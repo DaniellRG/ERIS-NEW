@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-10 13:30:39 · 477 tools registradas y resolviendo.
+Generado: 2026-09-10 14:32:59 · 478 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -90,7 +90,7 @@ Generado: 2026-09-10 13:30:39 · 477 tools registradas y resolviendo.
 
 ## ask
 - `ask_opencode` — Pregunta a opencode una duda de programacion y devuelve su respuesta. Acciones: ask (preguntar con question/te
-- `ask_user` — Hace una pregunta estructurada al usuario con opciones para obtener su decision o preferencia
+- `ask_user` — Hace una pregunta estructurada al usuario con un menú interactivo de opciones para obtener su decisión o prefe
 
 ## assumption
 - `assumption_detection` — Identificar y cuestionar supuestos en el propio razonamiento. Que se esta dando por hecho? Esta justificado? A
@@ -111,6 +111,7 @@ Generado: 2026-09-10 13:30:39 · 477 tools registradas y resolviendo.
 - `auto_documenter` — Genera documentación automática: changelogs, READMEs, análisis de código para docs, y sugerencias de migración
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
 - `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
+- `auto_salud` — Monitor PROACTIVO de la propia salud de ERIS (no URLs externas): detecta config api_keys.json roto/BOM, disco 
 
 ## autoimagen
 - `autoimagen` — SÍ-MISMA: cómo se ve Eris a sí misma. ver (autoimagen actual), cambiar (campo, valor: rostro/cuerpo/atuendo/lu
@@ -322,6 +323,9 @@ Generado: 2026-09-10 13:30:39 · 477 tools registradas y resolviendo.
 
 ## devops
 - `devops_pipeline` — Git workflow completo + test execution loop. Git: status, diff, commit, branch, merge, log, blame, stash. Test
+
+## diagnostico
+- `diagnostico` — Panel de diagnóstico en vivo de ERIS: responde '¿qué se rompió y por qué?' de forma accionable. state (default
 
 ## disk
 - `disk_wiper` — Borrado seguro de archivos, carpetas o discos (overwrite con metodo DoD). Acciones: wipe_file (borrar archivo 
