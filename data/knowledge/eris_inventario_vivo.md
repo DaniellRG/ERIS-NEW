@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 11:04:51 · 492 tools registradas y resolviendo.
+Generado: 2026-09-11 11:22:16 · 492 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -668,6 +668,9 @@ Generado: 2026-09-11 11:04:51 · 492 tools registradas y resolviendo.
 - `pdf_editor` — Edita PDFs: leer, unir, dividir, llenar formularios. Acciones: read (leer PDF), merge (unir PDFs), split (divi
 - `pdf_generator` — Generar documentos PDF desde texto o markdown. Crear reportes, documentos, resúmenes.
 - `pdf_manager` — Operaciones con PDFs: leer (read), unir (merge), dividir (split), convertir a texto, crear PDF desde texto (cr
+
+## pentest
+- `pentest_lab` — LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, fuerza bruta y
 
 ## permission
 - `permission_gate` — Control de permisos: verifica y aprueba/deniega operaciones peligrosas antes de ejecutarlas.

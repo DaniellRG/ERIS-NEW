@@ -7627,9 +7627,9 @@ TOOL_DECLARATIONS.extend([
     },
     {
         "name": "pentest_lab",
-        "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. Acciones: status (estado del lab), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap --script vuln), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), info (info de una VM), snaps (listar snapshots).",
+        "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. APRENDE: cada hallazgo (CVEs, puertos, servicios) se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo; además detecta and paths de acceso. Acciones: status (estado del lab + aprendizaje), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap scripts rápidos + aprende hallazgos), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), learn (estado del aprendizaje), leccion (registrar lección con texto=), info (info de una VM), snaps (listar snapshots).",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "status, setup, start, stop, reset, snap, restore, scan, vuln, brute, sniff, report, info, snaps"},
+            "action": {"type": "STRING", "description": "status, setup, start, stop, reset, snap, restore, scan, vuln, brute, sniff, report, learn, leccion, info, snaps"},
             "vm": {"type": "STRING", "description": "Nombre de la VM (para start/stop/reset/snap/restore/info/snaps)"},
             "snap": {"type": "STRING", "description": "Nombre del snapshot (para snap/restore)"},
             "target": {"type": "STRING", "description": "IP objetivo (para scan/vuln/brute/sniff)"},
@@ -7638,6 +7638,7 @@ TOOL_DECLARATIONS.extend([
             "user": {"type": "STRING", "description": "Usuario a probar (para brute, default admin)"},
             "wordlist": {"type": "STRING", "description": "Ruta del wordlist (para brute)"},
             "seconds": {"type": "STRING", "description": "Segundos de captura (para sniff, default 10)"},
+            "texto": {"type": "STRING", "description": "Lección a registrar (para leccion)"},
         }, "required": ["action"]},
     },
 ])
