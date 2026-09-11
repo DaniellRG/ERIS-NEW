@@ -1051,6 +1051,7 @@ class SettingsDialog(QDialog):
         ("🎙", "VOICE & AUDIO", "TTS Engine · Voice Model · Mic/Speaker · Thinking Sound"),
         ("🎨", "APPEARANCE", "Theme · Colors · Glassmorphism · Orb Style"),
         ("⚙", "GENERAL", "Language · Timezone · Paths · Camera · Region"),
+        ("🏭", "FÁBRICA", "Tus creaciones · Librerías · Tools · Skills · Procedimientos · Auto-fábrica"),
         ("📊", "SYSTEM", "Stats · About · Self-Heal · Emotional State · Version"),
     ]
 
@@ -1149,6 +1150,7 @@ class SettingsDialog(QDialog):
             self._build_voice_section(),
             self._build_appearance_section(),
             self._build_general_section(),
+            self._build_fabrica_section(),
             self._build_system_section(),
         ]
         for sw in self._section_widgets:
@@ -1875,6 +1877,77 @@ class SettingsDialog(QDialog):
         gb3_layout.addWidget(self._gpu_accel)
         form.addWidget(gb3)
 
+        form.addStretch()
+        scroll.setWidget(form_w)
+        layout = QVBoxLayout(w)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(scroll)
+        return w
+
+    # ── Section: Fábrica (tus creaciones) ───────────────────────────────────
+    def _build_fabrica_section(self):
+        w = QWidget()
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        form_w = QWidget()
+        form = QVBoxLayout(form_w)
+        form.setContentsMargins(24, 16, 24, 16)
+        form.setSpacing(10)
+
+        gb = QGroupBox("🏭  TUS CREACIONES (FÁBRICA)")
+        gb_layout = QVBoxLayout(gb)
+        gb_layout.setSpacing(8)
+
+        refresh = QPushButton("⟳  REFRESCAR")
+        refresh.setCursor(Qt.CursorShape.PointingHandCursor)
+        refresh.setStyleSheet(f"background: {C.BG3}; color: {C.TEXT}; border: none; "
+                              f"border-radius: 8px; padding: 6px 12px;")
+        gb_layout.addWidget(refresh, 0, Qt.AlignmentFlag.AlignRight)
+
+        self._fabrica_list = QLabel("Cargando tus creaciones…")
+        self._fabrica_list.setWordWrap(True)
+        self._fabrica_list.setStyleSheet(f"background: {C.BG3}; color: {C.TEXT}; "
+                                         f"border-radius: 8px; padding: 12px;")
+        self._fabrica_list.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        gb_layout.addWidget(self._fabrica_list)
+
+        def _refresh_fabrica():
+            try:
+                from core.eris_fabrica import listar, _load_state
+                items = _load_state().get("items", [])
+                from core.procedimientos import listar_procedimientos
+                procs = listar_procedimientos()
+                from core.auto_fabrica import estado
+                af = estado()
+            except Exception as e:
+                self._fabrica_list.setText(f"No pude cargar tus creaciones: {e}")
+                return
+            if not items and not procs:
+                self._fabrica_list.setText(
+                    "Todavía no creaste nada propia. Pedime que cree algo con la fábrica "
+                    "(ej.: 'creá una librería para...') o esperá a que la auto-fábrica detecte tus patrones.")
+                return
+            lines = [f"<b style='color:{C.PRI}'>Librerías y herramientas ({len(items)})</b>"]
+            for it in items[:40]:
+                icon = {"libreria": "📚", "tool": "🛠", "skill": "🎓"}.get(it.get("type"), "📦")
+                lines.append(f"&nbsp;&nbsp;{icon} <b>{it['name']}</b> <span style='color:#888'>({it.get('type')})</span>"
+                             f" — {it.get('purpose') or it.get('description') or it.get('created','')[:10]}")
+            if procs:
+                lines.append(f"<br><b style='color:{C.PRI}'>Procedimientos aprendidos ({len(procs)})</b>")
+                for p in procs[:20]:
+                    lines.append(f"&nbsp;&nbsp;🧠 <b>{p['nombre']}</b> — {p['descripcion']} "
+                                 f"<span style='color:#888'>({p['pasos']} pasos, usado {p['veces_usado']}x)</span>")
+            lines.append(f"<br><b style='color:{C.PRI}'>Auto-fábrica</b>: {af.get('totales', 0)} tool(s) creadas sola"
+                         f" — hoy {af.get('creadas_hoy', 0)}/{af.get('tope_diario', 2)}, "
+                         f"umbral {af.get('umbral_repeticiones', 3)} repeticiones.")
+            self._fabrica_list.setText("<br>".join(lines))
+
+        refresh.clicked.connect(_refresh_fabrica)
+        _refresh_fabrica()
+        form.addWidget(gb)
+
+        form_w.setStyleSheet(f"QWidget {{ background: transparent; }}")
         form.addStretch()
         scroll.setWidget(form_w)
         layout = QVBoxLayout(w)

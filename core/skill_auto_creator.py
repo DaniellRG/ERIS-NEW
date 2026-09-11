@@ -62,6 +62,48 @@ def record_tool_sequence(tools: list[str], context: str = ""):
     _save_patterns(patterns)
 
 
+# Buffer de turno: acumula las tools del turno actual y al llegar a fin de turno
+# (2+ con silencio o cambio) compacta la secuencia. Llamar una vez por tool.
+_last_tool = ""
+_turn_buffer: list[str] = []
+_turn_ts = 0.0
+
+_LAST_TOOLS = []  # historial reciente de tools (para crear_skill directo)
+
+
+def register_tool_stream(tool: str, context: str = "", window: float = 600.0):
+    """Acumula tools llamadas en vivo y registra la secuencia al cerrar el turno.
+
+    window: segundos de silencio que cierran el turno. Ante un cambio brusco de
+    contexto se cierra antes.
+    """
+    global _last_tool, _turn_buffer, _turn_ts, _LAST_TOOLS
+    _LAST_TOOLS = (_LAST_TOOLS + [tool])[-30:]
+    now = time.time()
+    if tool == _last_tool:
+        return
+    if _turn_buffer and (now - _turn_ts > window):
+        _close_turn(context)
+    _turn_buffer.append(tool)
+    _turn_ts = now
+    _last_tool = tool
+
+
+def _close_turn(context: str = ""):
+    """Cierra el buffer actual y registra sus n-gramas."""
+    global _turn_buffer
+    buf = list(_turn_buffer)
+    _turn_buffer = []
+    if len(buf) >= 2:
+        record_tool_sequence(buf, context=context)
+    return buf
+
+
+def pending_turn() -> list[str]:
+    """Devuelve el buffer acumulado del turno actual (sin cerrarlo)."""
+    return list(_turn_buffer)
+
+
 def record_tool_combo(tool1: str, tool2: str):
     """Registra que dos tools se usaron juntas."""
     patterns = _load_patterns()

@@ -347,6 +347,14 @@ def _store_episode(event: str, category: str = "conversation", importance: float
 from core.tool_declarations import TOOL_DECLARATIONS, LIVE_TOOL_DECLARATIONS, load_custom_tools
 
 load_custom_tools(BASE_DIR)
+from core.tool_registry import install_custom_tools
+install_custom_tools(BASE_DIR)
+# Puente MCP: expone tools de servidores MCP estándar como tools propias
+try:
+    from core.mcp_bridge import bridge_standard_tools
+    bridge_standard_tools(silent=True)
+except Exception:
+    pass
 
 
 def _build_agent_router():
@@ -719,6 +727,10 @@ class ErisLive:
         # El ojo guardián: detecta y corrige errores del código en tiempo real
         self._guard_thread = threading.Thread(target=self._code_guard_loop, daemon=True)
         self._guard_thread.start()
+
+        # Auto-fábrica: crea tools de patrones repetidos cada ~30 min
+        self._autofab_thread = threading.Thread(target=self._auto_fabrica_loop, daemon=True)
+        self._autofab_thread.start()
 
         # Watchdog de warnings: evita que el spam de DeprecationWarning del
         # callback de audio deje la UI inert (clics sin efecto) en Linux.
@@ -1918,6 +1930,23 @@ class ErisLive:
             time.sleep(interval)
             try:
                 self._code_guard_tick()
+            except Exception:
+                pass
+
+    def _auto_fabrica_loop(self):
+        """Daemon: cada 30 min escanea patrones repetidos y crea tools automáticas."""
+        while True:
+            time.sleep(1800)
+            try:
+                from core.auto_fabrica import scan_y_crear
+                res = scan_y_crear()
+                if res:
+                    print(f"[AUTO-FAB] {len(res)} tool(s) creada(s): "
+                          f"{[r.get('nombre') for r in res]}")
+                    self.ui.write_log(
+                        f"[AUTO-FÁBRICA] {len(res)} tool(s) nuevas: "
+                        + ", ".join(r.get("nombre", "?") for r in res)
+                    )
             except Exception:
                 pass
 

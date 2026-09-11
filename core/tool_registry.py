@@ -454,6 +454,9 @@ _TOOLS = {
     "diagnostico":             ("actions.diagnostico", "diagnostico"),
     "auto_salud":              ("core.self_health", "self_health_tool"),
     "fabrica":                 ("core.eris_fabrica", "eris_fabrica"),
+    "procedimientos":          ("core.procedimientos", "procedimientos"),
+    "auto_fabrica":            ("core.auto_fabrica", "auto_fabrica"),
+    "mcp_bridge":              ("core.mcp_bridge", "mcp_bridge"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),
@@ -662,6 +665,43 @@ def register_tool(tool_name: str, func: Callable):
     with _lock:
         _cache[tool_name] = func
         _failed.pop(tool_name, None)
+
+
+def install_custom_tools(BASE_DIR):
+    """Registra en runtime las tools físicas creadas en actions/custom/.
+
+    La fábrica (core/eris_fabrica) y la auto-fábrica (core/auto_fabrica)
+    escriben módulos en actions/custom/ y los registran en vivo via
+    register_tool. Al reiniciar Eris, este loader las vuelve a registrar
+    para que sigan disponibles (la declaración se carga desde custom_tools.json).
+    """
+    import json
+    import importlib.util
+    custom_dir = BASE_DIR / "actions" / "custom"
+    if not custom_dir.exists():
+        return
+    for f in sorted(custom_dir.iterdir()):
+        if f.suffix != ".py" or f.name.startswith("_"):
+            continue
+        mod_name = f.stem
+        try:
+            spec = importlib.util.spec_from_file_location(f"actions.custom.{mod_name}", f)
+            if spec is None or spec.loader is None:
+                continue
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            # Buscar la función tool principal (crear_tool genera {mod}_tool;
+            # auto-fabrica usa igual patrón). Si no, buscar una función pública.
+            func = getattr(mod, f"{mod_name}_tool", None)
+            if func is None:
+                func = getattr(mod, mod_name, None)
+            if func is None:
+                func = next((v for k, v in vars(mod).items()
+                             if callable(v) and not k.startswith("_")), None)
+            if func is not None:
+                register_tool(mod_name, func)
+        except Exception:
+            continue
 
 
 def retry_tool(tool_name: str) -> Callable | None:

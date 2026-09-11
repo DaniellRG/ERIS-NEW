@@ -402,6 +402,19 @@ class ToolDispatcher:
             record_user_pattern(name, "tool:%s" % name)
         except Exception:
             pass
+        # ── Aprendizaje procedural: registrar la tool dentro de la intención ──
+        if _ok:
+            try:
+                from core.procedimientos import registrar_paso
+                _HOOKS.append(lambda: registrar_paso(name, intencion=str(intent or "")))
+            except Exception:
+                pass
+            # ── Patrón repetitivo (auto-fábrica): secuencias 2/3 de tools ──
+            try:
+                from core.skill_auto_creator import register_tool_stream
+                _HOOKS.append(lambda: register_tool_stream(name, context=str(intent or "")))
+            except Exception:
+                pass
         # ── Smart file organizer: track file access ──
         try:
             from core.smart_file_organizer import record_file_access

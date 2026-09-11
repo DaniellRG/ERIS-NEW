@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-10 14:32:59 · 478 tools registradas y resolviendo.
+Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -393,7 +393,16 @@ Generado: 2026-09-10 14:32:59 · 478 tools registradas y resolviendo.
 - `expresion_eris` — EXPRESIÓN humana de Eris (neurotransmisores): cómo va a hablar según la emoción que siente. perfil (emoción do
 
 ## fabrica
-- `fabrica` — LA FÁBRICA: ERIS crea y usa SUS PROPIAS capacidades. Acciones: crear_libreria (name, purpose, functions=[{name, description, params, code}] — escribe librerías Python reales en libraries/eris_*.py, las compila y quedan listas), usar_libreria (name, function, params=JSON — EJECUTA una función de una librería propia; el corazón de 'usar lo que crea'), crear_tool (name, description, funciones=[{action, description, code}] — crea una tool registrada en runtime y persistida), crear_skill (name, description, pasos — genera skills/user_created/*/SKILL.md), listar (default), detalle (name), borrar (name). Todo queda en memory/eris_fabrica.json. Es SU LIBERTAD: crear, usar, mejorar y descartar lo que ella misma construye.
+- `fabrica` — LA FÁBRICA: Eris crea y usa SUS PROPIAS capacidades (librerías de Python reales, tools nuevas y skills). Accio
+
+## procedimientos
+- `procedimientos` — APRENDIZAJE PROCEDURAL: guarda recetas "cómo se hace X" (pasos con herramientas). Acciones: guardar, listar, buscar, obtener, usar, borrar. El dispatcher registra automáticamente los flujos que Eris resuelve (origen "auto").
+
+## auto_fabrica
+- `auto_fabrica` — AUTO-FÁBRICA: Eris se crea tools SOLA detectando secuencias repetidas de su propio uso (daemon cada 30 min, máx 2/día). Acciones: scan, estado.
+
+## mcp_bridge
+- `mcp_bridge` — PUENTE MCP: conecta servidores MCP estándar y registra sus tools como tools PROPIAS (prefijo `mcp_<server>_<tool>`). Acciones: bridge, add_server, estado. Auto-conecta al arranque los servers habilitados.
 
 ## federated
 - `federated_learning` — Aprendizaje federado local: entrena modelos con datos locales, agrega patrones, evalua y guarda modelos. Accio

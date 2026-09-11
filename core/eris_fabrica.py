@@ -13,6 +13,7 @@ expone para ejecución inmediata vía `usar_libreria`.
 import importlib
 import json
 import re
+import shutil
 import sys
 import traceback
 from datetime import datetime
@@ -24,6 +25,9 @@ _CUSTOM_ACTIONS = _BASE / "actions" / "custom"
 _SKILLS_DIR = _BASE / "skills" / "user_created"
 _STATE_FILE = _BASE / "memory" / "eris_fabrica.json"
 _CUSTOM_TOOLS_JSON = _BASE / "actions" / "custom_tools.json"
+_BACKUP_DIR = _BASE / "memory" / "eris_fabrica_backups"
+
+_MAX_BACKUPS = 8  # versiones por creación
 
 # Para importar las librerías propias desde cualquier módulo.
 if str(_LIB_BASE) not in sys.path:
@@ -58,6 +62,129 @@ def _safe_name(raw: str) -> str:
 def _state_item(name: str) -> dict | None:
     st = _load_state()
     return next((i for i in st["items"] if i["name"] == name), None)
+
+
+def _snapshot(name: str, motivo: str = "") -> str | None:
+    """Guarda una copia de seguridad de una creación (antes de tocar/borrar)."""
+    it = _state_item(name)
+    if it is None:
+        return None
+    src = Path(it["path"])
+    if not src.exists():
+        return None
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    dest = _BACKUP_DIR / name / ts
+    try:
+        if src.is_dir():
+            shutil.copytree(src, dest)
+        else:
+            dest.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dest / src.name)
+        # Guardar también el metadato
+        (dest / "meta.json").write_text(
+            json.dumps({"name": name, "tipo": it["type"], "motivo": motivo,
+                        "creado": it.get("created", "")},
+                       ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        _prune_backups(name)
+        return str(dest)
+    except Exception:
+        return None
+
+
+def _prune_backups(name: str):
+    """Mantiene como máximo _MAX_BACKUPS versiones por creación."""
+    d = _BACKUP_DIR / name
+    if not d.exists():
+        return
+    versions = sorted(d.iterdir(), key=lambda p: p.name)
+    while len(versions) > _MAX_BACKUPS:
+        try:
+            shutil.rmtree(versions.pop(0))
+        except Exception:
+            break
+
+
+def _versiones(name_: str) -> list:
+    d = _BACKUP_DIR / name_
+    if not d.exists():
+        return []
+    vers = []
+    for p in sorted(d.iterdir(), key=lambda p: p.name, reverse=True):
+        meta = {}
+        mf = p / "meta.json"
+        if mf.exists():
+            try:
+                meta = json.loads(mf.read_text(encoding="utf-8"))
+            except Exception:
+                meta = {}
+        vers.append({"version": p.name, "fecha": meta.get("creado", p.name[:15]),
+                     "motivo": meta.get("motivo", ""), "tipo": meta.get("tipo", ""),
+                     "path": str(p)})
+    return vers
+
+
+def restaurar(name: str, version: str = "") -> dict:
+    """Restaura una creación desde una versión guardada (aunque esté borrada)."""
+    it = _state_item(name)
+    vers = _versiones(name)
+    if not vers:
+        return {"error": f"No hay backups para '{name}'."}
+    if not version:
+        version = vers[0]["version"]
+    src_dir = _BACKUP_DIR / name / version
+    if not src_dir.exists():
+        return {"error": f"No existe la versión '{version}'. Disponibles: "
+                         f"{[v['version'] for v in vers]}"}
+    # Reconstruir ruta destino: desde inventario o desde el backup meta
+    target = None
+    if it is not None:
+        target = Path(it["path"])
+    else:
+        meta = {}
+        mf = src_dir / "meta.json"
+        if mf.exists():
+            try:
+                meta = json.loads(mf.read_text(encoding="utf-8"))
+            except Exception:
+                meta = {}
+        tipo = meta.get("tipo", "")
+        if tipo == "libreria":
+            target = _LIB_BASE / f"{name}.py"
+        elif tipo == "tool":
+            target = _CUSTOM_ACTIONS / f"{name}.py"
+        elif tipo == "skill":
+            target = _SKILLS_DIR / name / "SKILL.md"
+        else:
+            return {"error": f"No sé dónde restaurar una creacion de tipo '{tipo}'."}
+    # Snapshot del estado actual antes de restaurar (si aún existe)
+    _snapshot(name, motivo=f"previo a restaurar {version}")
+    # Contenido real (el archivo/dir principal, sin el meta.json)
+    files = [f for f in src_dir.iterdir() if f.name != "meta.json"]
+    if not files:
+        return {"error": "Backup vacío."}
+    try:
+        for f in files:
+            if f.is_dir():
+                if target.exists():
+                    shutil.rmtree(target)
+                shutil.copytree(f, target)
+            else:
+                if target.exists():
+                    if target.is_dir():
+                        shutil.rmtree(target)
+                    else:
+                        target.unlink()
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, target)
+    except Exception as e:
+        return {"error": f"Error restaurando: {e}"}
+    msg = "Todo el contenido fue repuesto. Si era una tool, reiniciá Eris o volvé a registrarla con la fábrica."
+    if it is None:
+        msg += " La creación no estaba en el inventario; se restauró el archivo. "
+        msg += "Usá la fábrica (crear_libreria/crear_tool/crear_skill o su equivalente) para re-registrarla."
+    return {"status": "restaurada", "name": name, "version": version,
+            "path": str(target), "nota": msg}
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -355,6 +482,8 @@ def borrar(name: str) -> dict:
     it = _state_item(name)
     if it is None:
         return {"error": f"No encontré '{name}'."}
+    # Versionar antes de borrar: nada se pierde para siempre
+    _snapshot(name, motivo="borrado")
     try:
         p = Path(it["path"])
         if p.exists():
@@ -403,6 +532,11 @@ def eris_fabrica(parameters=None, player=None) -> str:
         return _ok(detalle(params.get("name", "")))
     if action == "borrar":
         return _ok(borrar(params.get("name", "")))
+    if action in ("versiones", "backups", "versionar"):
+        return _ok({"versions": _versiones(params.get("name", "")),
+                    "name": params.get("name", "")})
+    if action in ("restaurar", "rollback"):
+        return _ok(restaurar(params.get("name", ""), params.get("version", "")))
 
     if action == "crear_libreria":
         functions = params.get("functions") or params.get("funciones") or []
@@ -441,5 +575,5 @@ def eris_fabrica(parameters=None, player=None) -> str:
             description=params.get("description", params.get("descripcion", "")),
             pasos=params.get("pasos", params.get("content", ""))))
 
-    return _ok({"error": f"Acción desconocida: {action}. Acciones: listar, detalle, borrar, "
+    return _ok({"error": f"Acción desconocida: {action}. Acciones: listar, detalle, borrar, versiones, restaurar, "
                           "crear_libreria, usar_libreria, crear_tool, crear_skill"})

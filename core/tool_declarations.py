@@ -4578,6 +4578,51 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    {
+        "name": "procedimientos",
+        "description": "APRENDIZAJE PROCEDURAL: ERIS guarda 'cómo se hace X' (recetas de pasos con herramientas reutilizables). Cuando resuelves algo, ERIS aprende el camino y下次 puede reutilizarlo o enseñarlo. Acciones: guardar (nombre, descripcion, pasos=[{tool, detalle}], intencion — crea un procedimiento explícito), listar (lo que ERIS ya sabe hacer), buscar (intencion o texto — qué procedimientos aplican), obtener (nombre — detalle completo con pasos), usar (nombre — ejecuta el procedimiento: resuelve paso a paso), borrar (nombre). Acciones también: registrar (fieldName tecla el buffer actual, de uso automático por el dispatcher).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "guardar, listar, buscar, obtener, usar, borrar, registrar"},
+                "nombre": {"type": "STRING", "description": "Nombre del procedimiento"},
+                "descripcion": {"type": "STRING", "description": "Qué hace este procedimiento"},
+                "pasos": {"type": "STRING", "description": "Lista JSON de {tool, detalle} con cada paso"},
+                "intencion": {"type": "STRING", "description": "Cuándo usar este procedimiento (texto libre)"},
+                "texto": {"type": "STRING", "description": "Para buscar: texto intencional del usuario"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "auto_fabrica",
+        "description": "AUTO-FÁBRICA DE ERIS: crea tools nuevas AUTOMÁTICAMENTE cuando detecta patrones repetidos en tu uso de herramientas. Si haces siempre lo mismo (misma secuencia de tools >3 veces), la auto-fábrica genera una tool nueva que encapsula esa secuencia. Esta tool es solo para monitoreo: scan (forzar escaneo y creación ahora), estado (qué tools se crearon, umbral, cuántas hoy).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "scan (forzar escaneo), estado (resumen)"},
+                "min_rep": {"type": "STRING", "description": "Mínimo de repeticiones para crear (default: 3)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "mcp_bridge",
+        "description": "PUENTE MCP: conecta servidores MCP estándar y registra sus herramientas como tools PROPIAS de ERIS (llamables directo). Acciones: bridge (conecta los servers configurados y expone sus tools), add_server (name, command, args — agrega y conecta un server estándar), estado (servers configurados, tools bridged, estado).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "bridge, add_server, estado"},
+                "name": {"type": "STRING", "description": "Nombre del servidor MCP"},
+                "command": {"type": "STRING", "description": "Comando para arrancar el server (ej: npx)"},
+                "args": {"type": "STRING", "description": "Lista JSON de argumentos del comando"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7523,6 +7568,10 @@ _LIVE_NAMES = {
     "diagnostico", "auto_salud",
     # La Fábrica — Eris crea sus propias capacidades
     "fabrica",
+    # Aprendizaje procedural + Auto-fábrica
+    "procedimientos", "auto_fabrica",
+    # Puente MCP externo
+    "mcp_bridge",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
@@ -7547,7 +7596,7 @@ LIVE_TOOL_DECLARATIONS = [
 # payload para máxima visibilidad del modelo. Se usa un ORDEN EXPLÍCITO
 # (listas ordenadas, no sets — iterar un set no garantiza orden).
 _LIVE_FIRST = [
-    "ask_user", "fabrica", "open_app", "terminal_agent", "screen_control",
+    "ask_user", "fabrica", "procedimientos", "auto_fabrica", "mcp_bridge", "open_app", "terminal_agent", "screen_control",
     "web_search", "webfetch", "desktop_control", "window_manager",
     "file_manager", "file_editor", "reminder", "scheduler", "goals",
     "git_control", "code_engineer", "shot", "show_expression",
