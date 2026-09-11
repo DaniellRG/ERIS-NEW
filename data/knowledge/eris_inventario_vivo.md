@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 12:09:36 · 492 tools registradas y resolviendo.
+Generado: 2026-09-11 12:42:50 · 493 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -391,6 +391,9 @@ Generado: 2026-09-11 12:09:36 · 492 tools registradas y resolviendo.
 - `error_pattern_db` — Base de datos de errores y soluciones: registra errores, busca soluciones conocidas, y aprende de cada fix par
 - `error_recovery` — Recuperación automática de errores de herramientas. Diagnosticar el error, intentar fix automático, y sugerir 
 
+## escalada
+- `escalada` — ESCALADA GLOBAL de ERIS en TODO su aprendizaje (no solo pentest): cada skill que domina en cualquier dominio d
+
 ## ethical
 - `ethical_reasoning` — Evalua implicaciones morales de acciones usando multiples marcos eticos: deontologia, consecuencialismo, virtu
 
@@ -671,7 +674,6 @@ Generado: 2026-09-11 12:09:36 · 492 tools registradas y resolviendo.
 
 ## pentest
 - `pentest_lab` — LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN re
-- `escalada` — ESCALADA DE HABILIDADES del lab (acción `escalada` de pentest_lab + `core/pentest_learning.py`): 8 niveles de dificultad fácil→difícil. Nivel actual 7/8 (Reconocimiento→Enumeración→Detección→Brute→Explotación→PrivEsc→Movimiento lateral→Post-explotación). Cada scan/vuln/brute/exploit dominado se registra solo; `escalada` dice qué alcanzó y el próximo reto. Eris SABE en qué nivel está.
 
 ## permission
 - `permission_gate` — Control de permisos: verifica y aprueba/deniega operaciones peligrosas antes de ejecutarlas.

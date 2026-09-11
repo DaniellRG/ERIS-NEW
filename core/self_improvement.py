@@ -450,6 +450,13 @@ class LessonLearner:
             self.lessons.sort(key=lambda x: x["importance"], reverse=True)
             self.lessons = self.lessons[:100]
         _save_json(_LEARNED_LESSONS_FILE, self.lessons)
+        # reflejar en la ESCALADA GLOBAL (aprendió algo nuevo → sube)
+        try:
+            from core.escalada import registrar_logro as _rl
+            _rl("aprender", f"Nueva lección: {lesson[:120]}",
+                dificultad=min(int(round(importance * 8)) or 1, 8))
+        except Exception:
+            pass
 
     def get_lessons(self, category: str = None) -> list[dict]:
         """Get learned lessons."""

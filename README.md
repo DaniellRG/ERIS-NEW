@@ -1,7 +1,7 @@
 ﻿# ERIS AI — Asistente Autónoma Multi-SO
 
 Asistente virtual de escritorio **100% Python** (3.14 + PyQt6) con autonomía total,
-inteligencia emocional, NeuroSpheres, auto-evolución y **477 tools**. Corre en
+inteligencia emocional, NeuroSpheres, auto-evolución y **493 tools**. Corre en
 **Windows y Linux** (CachyOS/Arch) desde el mismo repositorio — pensado para
 trabajar en paralelo desde dos máquinas sincronizando por git.
 
@@ -130,7 +130,7 @@ ERIS-NEW/
 │   ├── api_keys.json        # 🔒 API keys y configuración (gitignored)
 │   └── fuentes_aprendizaje.json  # Fuentes de conocimiento de la Mentora
 ├── core/                    # Motor interno
-│   ├── tool_registry.py         # 492 tools (callables)
+│   ├── tool_registry.py         # 493 tools (callables)
 │   ├── tool_declarations.py     # 459 declaraciones + LIVE (85, sin reservados)
 │   ├── tool_dispatcher.py       # Ejecutador de tools
 │   ├── action_imports.py        # Imports tolerantes de 296 action modules
@@ -283,7 +283,7 @@ En esta máquina (Linux): **56 PASS, 1 FAIL, 3 WARN**.
 - El FAIL es `eris.bat` (launcher de **Windows**) — esperado en Linux; en la PC
   Windows debe dar 57 PASS / 0 FAIL.
 - WARN ambientales: neuro nodos < 80, chromadb no instalado, `ctypes.windll`.
-- Estado del repo: **477 tools sincronizadas (459=459, 0 duplicados)**, 12
+- Estado del repo: **493 tools sincronizadas (459=459, 0 duplicados)**, 12
   agentes, 85 declaraciones Live, 0 imports rotos (590 `.py` compilan).
 
 ---

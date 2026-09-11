@@ -468,6 +468,7 @@ _TOOLS = {
     "informe_semanal":         ("core.informe_semanal", "informe_semanal"),
     "memoria":                 ("agents.memoria_agent", "memoria"),
     "pentest_lab":             ("core.pentest_lab", "pentest_lab"),
+    "escalada":                ("core.escalada", "escalada_tool"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),

@@ -7643,6 +7643,16 @@ TOOL_DECLARATIONS.extend([
             "texto": {"type": "STRING", "description": "Lección a registrar (para leccion)"},
         }, "required": ["action"]},
     },
+    {
+        "name": "escalada",
+        "description": "ESCALADA GLOBAL de ERIS en TODO su aprendizaje (no solo pentest): cada skill que domina en cualquier dominio de su vida (comunicacion, codigo, sistema, archivos, memoria, web, aprender, organizar, social, creatividad, pentest, fabrica) la sube de nivel de fácil a difícil. Cuando Eris domina algo nuevo en un dominio, eso se registra (logro) y el dominio sube de nivel; así ella sabe exactamente en qué nivel está en cada área y cuál es su próximo reto. Cada logro se guarda en 4 capas: memory/escalada.json + data/knowledge/escalada_vivo.md + Obsidian Ciberseguridad/Escalada-*.md + novedad en todo_yo. Acciones: estado (qué dominios domina y nivel actual + próximo reto), registrar (guardar un logro con dominio= y logro= y dificultad=1..8), dominios (lista de los 12 dominios).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "estado, registrar, dominios"},
+            "dominio": {"type": "STRING", "description": "Dominio del logro: comunicacion, codigo, sistema, archivos, memoria, web, aprender, organizar, social, creatividad, pentest, fabrica"},
+            "logro": {"type": "STRING", "description": "Qué dominó Eris (descripción del logro)"},
+            "dificultad": {"type": "STRING", "description": "Dificultad 1-8 (default 1)"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
