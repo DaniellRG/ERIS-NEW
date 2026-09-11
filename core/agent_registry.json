@@ -836,7 +836,7 @@
     },
     "pentest": {
       "name": "PentestLabAgent",
-      "description": "PENTEST LAB: laboratorio de ciberseguridad aislado en VirtualBox. Realiza escaneo de red, detección de vulnerabilidades, fuerza bruta y captura de tráfico TODO dentro de VMs virtuales en red aislada (192.168.56.0/24). Nunca toca la red real del usuario. Herramientas: pentest_lab, vbox_controller, nmap, hydra, tshark. APRENDE TODO: cada hallazgo (CVE, puerto, servicio), vector de acceso, error y solución se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo (acciones learn/leccion).",
+      "description": "PENTEST LAB: laboratorio de ciberseguridad aislado en VirtualBox. Realiza escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN real (vsftpd_234_backdoor CVE-2011-2523 → shell root; ms08_067 → detección/doc), fuerza bruta y captura de tráfico TODO dentro de VMs virtuales en red aislada (192.168.56.0/24). Nunca toca la red real del usuario. Herramientas: pentest_lab, vbox_controller, nmap, hydra, tshark. APRENDE TODO: cada hallazgo (CVE, puerto, servicio), vector de acceso, error y solución se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo (acciones learn/leccion).",
       "keywords": [
         "pentest",
         "penetration",
