@@ -131,3 +131,49 @@ class PromptABTest:
         if winner:
             lines.append(f"Ganadora: {winner['name']}")
         return "\n".join(lines)
+
+
+def prompt_ab(parameters=None, player=None) -> str:
+    """Tool A/B testing de prompts: create, test, record, winner, report, list."""
+    import json as _json
+
+    def _parse(x):
+        try:
+            return _json.loads(x) if isinstance(x, str) else (x or {})
+        except Exception:
+            return {}
+
+    params = _parse(parameters)
+    action = (params.get("action") or "report").lower()
+    exp = params.get("experiment", "default")
+    variants = params.get("variants", [{"name": "default", "prompt": "", "weight": 1}])
+
+    if action in ("report", "status"):
+        test = PromptABTest(exp, variants)
+        return test.get_report()
+    if action in ("create", "create_experiment"):
+        test = PromptABTest(exp, variants)
+        test._save_metrics()
+        return _json.dumps({"status": "ok", "experiment": exp, "variants": [v["name"] for v in variants]}, ensure_ascii=False)
+    if action in ("test", "run"):
+        test = PromptABTest(exp, variants)
+        variant = test.select_variant()
+        return _json.dumps({"selected": variant["name"], "prompt": variant.get("prompt", ""), "experiment": exp}, ensure_ascii=False)
+    if action in ("record", "score"):
+        test = PromptABTest(exp, variants)
+        test.record_result(params.get("variant", "default"), params.get("score", 5), params.get("tokens", 0))
+        return _json.dumps({"status": "recorded", "experiment": exp})
+    if action in ("winner", "ganadora"):
+        test = PromptABTest(exp, variants)
+        w = test.get_winner()
+        return _json.dumps(w if w else {"winner": None, "reason": "insufficient_data"}, ensure_ascii=False)
+    if action in ("list", "experimentos"):
+        try:
+            from pathlib import Path as _P
+            f = _P(__file__).resolve().parent.parent / "data" / "prompt_ab_metrics.json"
+            if f.exists():
+                return _json.dumps(list(_json.loads(f.read_text(encoding="utf-8")).keys()), ensure_ascii=False)
+        except Exception:
+            pass
+        return _json.dumps([], ensure_ascii=False)
+    return _json.dumps({"error": f"Acción '{action}'. Usa: create, test, record, winner, report, list."}, ensure_ascii=False)

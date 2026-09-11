@@ -457,6 +457,13 @@ _TOOLS = {
     "procedimientos":          ("core.procedimientos", "procedimientos"),
     "auto_fabrica":            ("core.auto_fabrica", "auto_fabrica"),
     "mcp_bridge":              ("core.mcp_bridge", "mcp_bridge"),
+    "pro_contexto":            ("core.proactive_context", "pro_contexto"),
+    "prompt_ab":               ("core.prompt_ab_testing", "prompt_ab"),
+    "edit_journal":            ("core.edit_journal", "edit_journal"),
+    "token_saver":             ("core.token_saver", "token_saver"),
+    "world_model":             ("core.world_model", "get_world_model"),
+    "auto_mejora":             ("core.self_improvement", "auto_mejora"),
+    "sesiones":                ("core.session_summaries", "sesiones"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),
@@ -675,7 +682,6 @@ def install_custom_tools(BASE_DIR):
     register_tool. Al reiniciar Eris, este loader las vuelve a registrar
     para que sigan disponibles (la declaración se carga desde custom_tools.json).
     """
-    import json
     import importlib.util
     custom_dir = BASE_DIR / "actions" / "custom"
     if not custom_dir.exists():

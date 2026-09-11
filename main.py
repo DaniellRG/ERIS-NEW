@@ -4091,6 +4091,27 @@ class ErisLive:
                                 print("[ERIS] 🧠 Contexto de sesiones anteriores cargado")
                         except Exception as _se:
                             print(f"[ERIS] Contexto sesiones: {_se}")
+                        # Contexto proactivo: Eris sugiere herramientas útiles para
+                        # el periodo/hora en que el usuario llega a hablarle.
+                        try:
+                            from core.proactive_context import preload_context
+                            _pc = preload_context("inicio de conversacion", [])
+                            if _pc.get("predicted_tools"):
+                                _pc_note = ("[CONTEXTO PROACTIVO] Herramientas que "
+                                            "probablemente necesitaré pronto (pre-cargadas): "
+                                            + ", ".join(_pc["predicted_tools"]) + ".")
+                                self._remember(_pc_note)
+                                print("[ERIS] 🔮 Contexto proactivo cargado")
+                        except Exception as _pce:
+                            print(f"[ERIS] Contexto proactivo: {_pce}")
+                        # Modelo del mundo: Eris construye su representación
+                        # interna de la realidad (percepción + capacidades + límites).
+                        try:
+                            from core.world_model import inyectar_mundo
+                            self._remember(inyectar_mundo())
+                            print("[ERIS] 🌍 Modelo del mundo cargado")
+                        except Exception as _wme:
+                            print(f"[ERIS] Modelo del mundo: {_wme}")
 
                     tg.create_task(self._send_realtime())
                     tg.create_task(self._listen_audio())

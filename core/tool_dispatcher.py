@@ -21,6 +21,10 @@ from core.logging_setup import BASE_DIR
 from core.tool_registry import get_tool
 from core.resilient import get_manager, generate_task_id
 
+# Ventana rodante de últimas tools usadas (para secuencias de contexto proactivo)
+from collections import deque as _deque
+_RECENT_TOOLS = _deque(maxlen=4)
+
 TOOL_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="eris-tool")
 
 # Executor limitado para hooks post-dispatch (record-keeping). Evita la
@@ -415,6 +419,14 @@ class ToolDispatcher:
                 _HOOKS.append(lambda: register_tool_stream(name, context=str(intent or "")))
             except Exception:
                 pass
+            # ── Contexto proactivo: aprender secuencias de tools ──
+            try:
+                from core.proactive_context import record_tool_sequence as _pcs
+                _seq_now = list(_RECENT_TOOLS) + [name]
+                _RECENT_TOOLS.append(name)
+                _HOOKS.append(lambda s=list(_seq_now): _pcs(s) if len(s) >= 2 else None)
+            except Exception:
+                pass
         # ── Smart file organizer: track file access ──
         try:
             from core.smart_file_organizer import record_file_access
@@ -640,6 +652,13 @@ class ToolDispatcher:
 
         # ── Cap response size to prevent Gemini 1007 crash ──
         result_str = str(result)
+        # ── Token saver: comprime antes de enviar (ANSI, repetidos, 60/40) ──
+        try:
+            from core.token_saver import compress_tool_output as _cs_out
+            if len(result_str) > 800:
+                result_str = _cs_out(result_str)
+        except Exception:
+            pass
         _MAX_RESPONSE = 3500
         if len(result_str) > _MAX_RESPONSE:
             result_str = result_str[:_MAX_RESPONSE] + "\n\n[Respuesta truncada — {} chars totales]".format(len(str(result)))

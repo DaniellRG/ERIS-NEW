@@ -139,3 +139,45 @@ def load_recent_summaries(limit: int = 3) -> list[str]:
             first = e.get("slug", "")
         texts.append(f"[Sesión {e['ts'][:16]}] {first}")
     return texts
+
+
+def sesiones(parameters=None, player=None) -> str:
+    """Tool de resúmenes de sesión: reciente, epilogo, cerrar, indice."""
+    import json as _json
+    try:
+        params = _json.loads(parameters) if isinstance(parameters, str) else (parameters or {})
+    except Exception:
+        params = {}
+    action = (params.get("action") or "reciente").lower()
+    try:
+        n = int(params.get("n", 3))
+    except Exception:
+        n = 3
+
+    if action in ("reciente", "ultimas", "contexto"):
+        rec = load_recent_summaries(limit=n)
+        if not rec:
+            return "Aún no hay resúmenes de sesiones anteriores."
+        return "\n".join("— " + r for r in rec)
+
+    if action in ("epilogo", "buffer", "actual"):
+        blob = _fold_buffer()
+        if not blob.strip():
+            return "La sesión actual aún no tiene intercambios (o ya se cerró)."
+        return blob
+
+    if action in ("cerrar", "finalizar", "resumen"):
+        path = finalize_session_summary()
+        if not path:
+            return "No había nada que resumir en la sesión actual."
+        return f"Resumen de sesión guardado en: {path}"
+
+    if action in ("indice", "lista", "historial"):
+        entries = _load_index()
+        if not entries:
+            return "Aún no hay resúmenes registrados."
+        return "\n".join(
+            f"• {e['ts'][:16]} — {e['slug']}" for e in entries[-20:]
+        )
+
+    return _json.dumps({"error": f"Acción '{action}'. Usa: reciente, epilogo, cerrar, indice."}, ensure_ascii=False)

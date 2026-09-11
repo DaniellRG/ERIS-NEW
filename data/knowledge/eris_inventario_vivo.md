@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
+Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -109,6 +109,7 @@ Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
 - `auto_agent` — Agente autonomo multi-paso de ERIS: planifica y ejecuta metas automaticamente. Acciones: status (estado), plan
 - `auto_backup` — Respaldos automaticos de ERIS: realizar respaldo manual, ver estado y configurar respaldos. Acciones: status (
 - `auto_documenter` — Genera documentación automática: changelogs, READMEs, análisis de código para docs, y sugerencias de migración
+- `auto_fabrica` — AUTO-FÁBRICA DE ERIS: crea tools nuevas AUTOMÁTICAMENTE cuando detecta patrones repetidos en tu uso de herrami
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
 - `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
 - `auto_salud` — Monitor PROACTIVO de la propia salud de ERIS (no URLs externas): detecta config api_keys.json roto/BOM, disco 
@@ -395,15 +396,6 @@ Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
 ## fabrica
 - `fabrica` — LA FÁBRICA: Eris crea y usa SUS PROPIAS capacidades (librerías de Python reales, tools nuevas y skills). Accio
 
-## procedimientos
-- `procedimientos` — APRENDIZAJE PROCEDURAL: guarda recetas "cómo se hace X" (pasos con herramientas). Acciones: guardar, listar, buscar, obtener, usar, borrar. El dispatcher registra automáticamente los flujos que Eris resuelve (origen "auto").
-
-## auto_fabrica
-- `auto_fabrica` — AUTO-FÁBRICA: Eris se crea tools SOLA detectando secuencias repetidas de su propio uso (daemon cada 30 min, máx 2/día). Acciones: scan, estado.
-
-## mcp_bridge
-- `mcp_bridge` — PUENTE MCP: conecta servidores MCP estándar y registra sus tools como tools PROPIAS (prefijo `mcp_<server>_<tool>`). Acciones: bridge, add_server, estado. Auto-conecta al arranque los servers habilitados.
-
 ## federated
 - `federated_learning` — Aprendizaje federado local: entrena modelos con datos locales, agrega patrones, evalua y guarda modelos. Accio
 
@@ -545,6 +537,7 @@ Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
 - `maintenance` — Mantenimiento PROACTIVO que Eris agenda sola: backups del workspace y del vault Obsidian, limpieza de logs vie
 
 ## mcp
+- `mcp_bridge` — PUENTE MCP: conecta servidores MCP estándar y registra sus herramientas como tools PROPIAS de ERIS (llamables 
 - `mcp_manager` — Model Context Protocol — conecta a servidores MCP para acceder a herramientas externas. Acciones: list (ver se
 - `mcp_server` — Servidor MCP (Model Context Protocol). Exponer tools de Eris a otros agents/LLMs vía JSON-RPC stdio.
 - `mcp_tool` — Interfaz al Model Context Protocol (MCP): conecta servidores MCP, lista sus herramientas, y ejecuta llamadas a
@@ -699,6 +692,9 @@ Generado: 2026-09-10 14:53:22 · 481 tools registradas y resolviendo.
 - `proactive_ia` — Tareas y recordatorios proactivos de ERIS. Acciones: status (resumen), add_task (crear tarea), complete_task, 
 - `proactive_monitor` — Monitoreo proactivo de URLs, APIs, crypto. Detecta cambios y alerta automáticamente. Acciones: add (agregar mo
 - `proactive_suggester` — Sugerencias proactivas después de completar tareas: sugiere qué hacer después basándose en patrones, contexto 
+
+## procedimientos
+- `procedimientos` — APRENDIZAJE PROCEDURAL: ERIS guarda 'cómo se hace X' (recetas de pasos con herramientas reutilizables). Cuando
 
 ## process
 - `process_manager` — Lista procesos en ejecucion, busca por nombre, mata procesos por PID o nombre. Acciones: list (top procesos), 

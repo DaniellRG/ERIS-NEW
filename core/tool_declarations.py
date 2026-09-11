@@ -4623,6 +4623,111 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    {
+        "name": "pro_contexto",
+        "description": "CONTEXTO PROACTIVO: predice qué herramientas vas a necesitar pronto basándose en patrones de co-ocurrencia, hora del día y el query actual. ERIS usa esto para anticiparse. Acciones: predict (query — qué tools predice para eso), preload (query, tools — contexto pre-cargado con predicted_tools, skills, memory_hints, archivos a vigilar), record (tools=[nombres] o lista JSON — registra una secuencia para mejorar predicciones futuras), status (cuántos patrones aprendidos, periodo del día).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "predict, preload, record, status"},
+                "query": {"type": "STRING", "description": "Query/pedido del usuario"},
+                "tools": {"type": "STRING", "description": "Lista de nombres de tools separados por coma"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "prompt_ab",
+        "description": "A/B TESTING DE PROMPTS: ERIS prueba variantes de system prompts y mide cuál funciona mejor. Acciones: create (experiment, variants=[{name,prompt,weight}] — define experimento), test (experiment — selecciona una variante usando pesos históricos), record (experiment, variant, score 0-10, tokens — registra resultado), winner (experiment — variante ganadora con >=3 tests), report (experiment — estado completo), list (experimentos existentes).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "create, test, record, winner, report, list"},
+                "experiment": {"type": "STRING", "description": "Nombre del experimento (default: default)"},
+                "variants": {"type": "STRING", "description": "Lista JSON [{name, prompt, weight}]"},
+                "variant": {"type": "STRING", "description": "Nombre de variante para record"},
+                "score": {"type": "STRING", "description": "Puntaje 0-10 para record"},
+                "prompt": {"type": "STRING", "description": "Texto del prompt para create"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "edit_journal",
+        "description": "BITÁCORA DE EDICIONES: historial append-only de todas las ediciones de archivos (write/edit/create/delete/rename/move) con timestamp. Acciones: recent (n — últimas ediciones), search (query, n — busca en tipos/paths/detalles), stats (total y conteo por tipo), log (type, path, detail — registra manualmente).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "recent, search, stats, log"},
+                "n": {"type": "STRING", "description": "Cuántas entradas (default 20)"},
+                "query": {"type": "STRING", "description": "Texto a buscar"},
+                "type": {"type": "STRING", "description": "Tipo de entrada (create/edit/delete/rename/move/write)"},
+                "path": {"type": "STRING", "description": "Ruta del archivo"},
+                "detail": {"type": "STRING", "description": "Detalle opcional"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "token_saver",
+        "description": "AHORRO DE TOKENS: comprime salidas largas de herramientas antes de enviarlas al LLM (elimina ANSI, líneas duplicadas, trunca 60/40 con marcador). Acciones: compress (text — texto a comprimir, con stats de chars ahorrados), status (límite configurado y ruta de config), config (limit — cambia el límite de chars en config.json).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "compress, status, config"},
+                "text": {"type": "STRING", "description": "Texto a comprimir"},
+                "limit": {"type": "STRING", "description": "Nuevo límite de caracteres"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "world_model",
+        "description": "MODELO DEL MUNDO de ERIS: su representación interna de la realidad — qué percibe (usuario, ventana en foco, momento), su estado interno (emoción, identidad, valores, 485 herramientas, conocimiento), qué puede controlar (capacidades por dominio: conversar/archivos/codigo/web/sistema/memoria/voz/imagen/correspondencia/agenda/creacion/auto-mejora), qué no puede controlar (sus límites: no tiene cuerpo, su memoria es de archivos) y un resumen narrativo en 1ra persona. Guarda el modelo en memory/world_model.json. Úsala para recordarte cómo ves el mundo y qué podés hacer/limitarte.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "estado (regenera y devuelve el modelo del mundo)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "auto_mejora",
+        "description": "SELF-IMPROVEMENT de ERIS: su ciclo agéntico de mejora (Percepción → Razonamiento → Acción → Feedback → Memoria → Mejora). Acciones: estado (reporte completo: calidad promedio, tendencia, correcciones, lecciones, patrones de error + auto-evaluación de capacidades), evaluar (user, response — mide calidad de una respuesta 0-1), ciclo (user, response — ejecuta el ciclo completo de feedback), lecciones (lecciones aprendidas), errores (patrones de error frecuentes), correcciones (patron opcional — correcciones registradas), aprender (leccion, categoria, importancia — registra una lección), registrar_error (tipo, mensaje, contexto).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "estado, evaluar, ciclo, lecciones, errores, correcciones, aprender, registrar_error"},
+                "user": {"type": "STRING", "description": "Input del usuario (para evaluar/ciclo)"},
+                "response": {"type": "STRING", "description": "Respuesta a evaluar"},
+                "leccion": {"type": "STRING", "description": "Lección aprendida a registrar"},
+                "categoria": {"type": "STRING", "description": "Categoría de la lección"},
+                "tipo": {"type": "STRING", "description": "Tipo de error"},
+                "mensaje": {"type": "STRING", "description": "Mensaje de error"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "sesiones",
+        "description": "RESÚMENES DE SESIÓN: consulta el contexto de tus conversaciones pasadas. Acciones: reciente (n — últimos resúmenes de sesiones anteriores para retomar el hilo), epilogo (buffer actual en memoria: lo que se habló en esta sesión hasta ahora), cerrar (finaliza la sesión actual: escribe el resumen en Obsidian Proyectos/sesion_*.md), indice (lista los resúmenes guardados).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "reciente, epilogo, cerrar, indice"},
+                "n": {"type": "STRING", "description": "Cuántos resúmenes (default 3)"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7486,7 +7591,7 @@ _LIVE_NAMES = {
     # Core interaction
     "ask_user", "open_app", "terminal_agent", "screen_control",
     # Files
-    "file_manager", "file_editor",
+    "file_manager", "file_editor", "edit_journal",
     # Web & search
     "web_search", "webfetch", "browser_unified", "deep_research", "deep_research_gemini",
     # Desktop / App control
@@ -7572,6 +7677,8 @@ _LIVE_NAMES = {
     "procedimientos", "auto_fabrica",
     # Puente MCP externo
     "mcp_bridge",
+    # Contexto proactivo, A/B testing, token saver
+    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
@@ -7596,7 +7703,7 @@ LIVE_TOOL_DECLARATIONS = [
 # payload para máxima visibilidad del modelo. Se usa un ORDEN EXPLÍCITO
 # (listas ordenadas, no sets — iterar un set no garantiza orden).
 _LIVE_FIRST = [
-    "ask_user", "fabrica", "procedimientos", "auto_fabrica", "mcp_bridge", "open_app", "terminal_agent", "screen_control",
+    "ask_user", "fabrica", "procedimientos", "auto_fabrica", "mcp_bridge", "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "open_app", "terminal_agent", "screen_control",
     "web_search", "webfetch", "desktop_control", "window_manager",
     "file_manager", "file_editor", "reminder", "scheduler", "goals",
     "git_control", "code_engineer", "shot", "show_expression",

@@ -62,3 +62,10 @@ openrgb-python
 
 # Seguridad
 cryptography
+
+# RAG semántico + Voz biométrica/clonación (instaladas 2026-09-11)
+chromadb
+sentence-transformers
+rank-bm25
+resemblyzer
+deep-translator

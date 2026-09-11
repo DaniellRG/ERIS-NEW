@@ -110,3 +110,39 @@ def get_status() -> dict:
         "limit": _read_limit(),
         "config_path": str(_CONFIG_PATH),
     }
+
+
+def token_saver(parameters=None, player=None) -> str:
+    """Tool compactador de salidas: compress, status, config."""
+    import json as _json
+    try:
+        params = _json.loads(parameters) if isinstance(parameters, str) else (parameters or {})
+    except Exception:
+        params = {}
+    action = (params.get("action") or "status").lower()
+    if action in ("compress", "comprimir"):
+        text = params.get("text", "")
+        limit = params.get("limit")
+        try:
+            limit = int(limit) if limit else None
+        except Exception:
+            limit = None
+        out = compress_tool_output(text, limit)
+        saved = max(0, len(str(text)) - len(out))
+        return _json.dumps({"chars_original": len(str(text)), "chars_final": len(out), "ahorrados": saved, "output": out}, ensure_ascii=False)
+    if action in ("status", "estado"):
+        return _json.dumps(get_status(), ensure_ascii=False)
+    if action in ("config", "set_limit"):
+        try:
+            new_limit = int(params.get("limit", _DEFAULT_LIMIT))
+        except Exception:
+            new_limit = _DEFAULT_LIMIT
+        try:
+            cfg = _json.loads(_CONFIG_PATH.read_text(encoding="utf-8")) if _CONFIG_PATH.exists() else {}
+        except Exception:
+            cfg = {}
+        cfg["token_saver_limit"] = new_limit
+        _CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _CONFIG_PATH.write_text(_json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+        return _json.dumps({"status": "ok", "token_saver_limit": new_limit}, ensure_ascii=False)
+    return _json.dumps({"error": f"Acción '{action}'. Usa: compress, status, config."}, ensure_ascii=False)

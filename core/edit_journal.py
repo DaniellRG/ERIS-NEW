@@ -44,3 +44,59 @@ def recent(n: int = 20) -> str:
         return "\n".join(out)
     except Exception as e:
         return f"Error leyendo bitácora: {e}"
+
+
+def _read_lines():
+    try:
+        if not _JOURNAL.exists():
+            return []
+        return _JOURNAL.read_text(encoding="utf-8").splitlines()
+    except Exception:
+        return []
+
+
+def edit_journal(parameters=None, player=None) -> str:
+    """Tool de historial de ediciones: recent, search, stats, log."""
+    import json as _json
+    try:
+        params = _json.loads(parameters) if isinstance(parameters, str) else (parameters or {})
+    except Exception:
+        params = {}
+    action = (params.get("action") or "recent").lower()
+    try:
+        n = int(params.get("n", 20))
+    except Exception:
+        n = 20
+    if action in ("recent", "ultimas"):
+        return recent(n)
+    if action in ("search", "buscar"):
+        needle = (params.get("query") or params.get("term") or "").lower()
+        matches = []
+        for ln in _read_lines():
+            try:
+                r = _json.loads(ln)
+            except Exception:
+                continue
+            blob = " ".join(str(v) for v in r.values()).lower()
+            if needle in blob:
+                detail = r.get("detail", "") or ""
+                if detail:
+                    detail = " — " + detail
+                matches.append(f"{r.get('ts','?')} [{r.get('type','?')}] {r.get('path','?')}{detail}")
+            if len(matches) >= n:
+                break
+        return "\n".join(matches) if matches else f"Sin coincidencias para '{needle}'."
+    if action in ("stats", "resumen"):
+        counts = {}
+        for ln in _read_lines():
+            try:
+                r = _json.loads(ln)
+            except Exception:
+                continue
+            t = r.get("type", "?")
+            counts[t] = counts.get(t, 0) + 1
+        return _json.dumps({"total": len(_read_lines()), "por_tipo": counts}, ensure_ascii=False)
+    if action in ("log", "registrar"):
+        log(params.get("type", "write"), params.get("path", ""), params.get("detail", ""))
+        return _json.dumps({"status": "ok"})
+    return _json.dumps({"error": f"Acción '{action}'. Usa: recent, search, stats, log."}, ensure_ascii=False)

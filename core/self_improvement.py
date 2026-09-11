@@ -806,3 +806,86 @@ def get_self_improvement() -> SelfImprovementSystem:
     if _self_improvement is None:
         _self_improvement = SelfImprovementSystem()
     return _self_improvement
+
+
+# ── Tool: auto_mejora ───────────────────────────────────────────────────
+
+def auto_mejora(parameters=None, player=None) -> str:
+    """Tool de AUTO-MEJORA: estado completo, evaluar, lecciones, errores,
+    ciclo de feedback, corregir, aprender."""
+    import json as _json
+    try:
+        params = _json.loads(parameters) if isinstance(parameters, str) else (parameters or {})
+    except Exception:
+        params = {}
+    action = (params.get("action") or "estado").lower()
+    system = get_self_improvement()
+
+    if action in ("estado", "status", "reporte"):
+        # Incluye la auto-evaluación de capacidades si está disponible
+        extra = ""
+        try:
+            from core.capability_self_assessment import get_overall_score
+            extra = f"\n Auto-evaluación de capacidades: {get_overall_score():.0%} (media de dominio)"
+        except Exception:
+            pass
+        return system.get_improvement_report() + extra
+
+    if action in ("evaluar", "evaluate"):
+        eval_result = system.post_response_eval(
+            params.get("user", ""),
+            params.get("response", ""),
+            {"context": params.get("context", "")},
+        )
+        return _json.dumps({
+            "overall_score": eval_result.get("overall_score"),
+            "metrics": eval_result.get("metrics"),
+            "feedback": eval_result.get("feedback"),
+        }, ensure_ascii=False)
+
+    if action in ("ciclo", "cycle", "feedback"):
+        loop = FeedbackLoop()
+        result = loop.run_cycle(
+            params.get("user", ""),
+            params.get("response", ""),
+            {"context": params.get("context", "")},
+        )
+        return _json.dumps({
+            "evaluacion": (result.get("evaluation") or {}).get("overall_score"),
+            "correccion": result.get("correction"),
+            "lecciones": result.get("lessons"),
+            "optimizacion": result.get("optimization"),
+        }, ensure_ascii=False)
+    if action in ("reporte_ciclo", "ciclo_reporte"):
+        return FeedbackLoop().get_cycle_report()
+
+    if action in ("lecciones", "lessons"):
+        return system.learner.get_lessons_summary()
+
+    if action in ("errores", "errors"):
+        return system.error_detector.get_error_summary()
+
+    if action in ("correcciones", "corrections"):
+        pat = params.get("patron")
+        corr = system.corrector.get_corrections(pat)
+        if not corr:
+            return "Sin correcciones registradas."
+        return "\n".join(f"• {c['reason']}: {c['original'][:60]} → {c['corrected'][:60]}" for c in corr[-20:])
+
+    if action in ("aprender", "learn"):
+        system.learner.learn(
+            params.get("leccion", ""),
+            params.get("categoria", "general"),
+            float(params.get("importancia", 0.8)),
+        )
+        return _json.dumps({"status": "lección aprendida"}, ensure_ascii=False)
+
+    if action in ("registrar_error", "error"):
+        system.error_detector.record_error(
+            params.get("tipo", "unknown"),
+            params.get("mensaje", ""),
+            params.get("contexto", ""),
+        )
+        return _json.dumps({"status": "error registrado"}, ensure_ascii=False)
+
+    return _json.dumps({"error": f"Acción '{action}'. Usa: estado, evaluar, ciclo, lecciones, errores, correcciones, aprender, registrar_error."}, ensure_ascii=False)

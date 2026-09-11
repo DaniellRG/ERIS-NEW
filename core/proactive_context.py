@@ -164,3 +164,49 @@ def _save_patterns(data: dict):
         _PATTERNS_FILE.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
     except Exception:
         pass
+
+
+def predict_tools(query: str = "", tools_actuales: list[str] = None) -> dict:
+    """Predicts qué tools se necesitarán pronto para una query."""
+    return {
+        "query": query,
+        "predicted": predict_next_tools(tools_actuales or [], query),
+        "time_period": _get_time_period(),
+        "context": preload_context(query, tools_actuales),
+    }
+
+
+def pro_contexto(parameters=None, player=None) -> str:
+    """Tool de contexto proactivo: predict, record, status."""
+    import json as _json
+    try:
+        params = _json.loads(parameters) if isinstance(parameters, str) else (parameters or {})
+    except Exception:
+        params = {}
+    action = (params.get("action") or "predict").lower()
+    if action in ("predict", "predecir"):
+        return _json.dumps(predict_tools(
+            params.get("query", ""),
+            params.get("tools", []) if isinstance(params.get("tools"), list) else [],
+        ), ensure_ascii=False)
+    if action in ("preload", "pre"):
+        ctx = preload_context(
+            params.get("query", ""),
+            params.get("tools", []) if isinstance(params.get("tools"), list) else [],
+        )
+        return _json.dumps(ctx, ensure_ascii=False)
+    if action in ("record", "registrar"):
+        tools = params.get("tools", [])
+        if isinstance(tools, str):
+            tools = [t.strip() for t in tools.split(",") if t.strip()]
+        if not tools:
+            return _json.dumps({"error": "Falta 'tools': lista de nombres"})
+        record_tool_sequence(tools)
+        return _json.dumps({"status": "ok", "registrado": tools})
+    if action == "status":
+        return _json.dumps({
+            "patrones": len(_load_patterns()),
+            "time_period": _get_time_period(),
+            "co_occurrence_groups": list(CO_OCCURRENCE.keys()),
+        })
+    return _json.dumps({"error": f"Acción '{action}'. Usa: predict, preload, record, status."})
