@@ -448,7 +448,14 @@ def _build_agent_router():
             _registered += 1
         except Exception:
             pass
-        print(f"[AgentRouter] {_registered}/12 handlers activos")
+        # 13. MEMORIA — fragmento de autoconocimiento y memoria total de ERIS
+        try:
+            from agents.memoria_agent import handle_memoria
+            router.register_handler("memoria", handle_memoria)
+            _registered += 1
+        except Exception:
+            pass
+        print(f"[AgentRouter] {_registered}/13 handlers activos")
     except Exception as e:
         print(f"[AgentRouter] init fallo: {e}")
     return router
@@ -1291,6 +1298,27 @@ class ErisLive:
                                     daemon=True,
                                 ).start()
                                 return
+                    # ── Los 9 fragmentos especialistas restantes: web, core, file, media,
+                    #    comm, vision, security, study y memoria. Registrados
+                    #    en AGENT_DEFINITIONS y el router los clasifica. Se
+                    #    delegan igual que los 3 principales
+                    #    (mentora/guardian/linux). El router ya aplica umbral
+                    #    >=3, keywords con peso y penalizaciones, y anti-bounce
+                    #    para evitar secuestrar el chat. ──
+                    if agent_key and agent_key in ("web", "core", "file", "media",
+                                                    "comm", "vision", "security", "study",
+                                                    "memoria"):
+                        handler = self._agent_router._handlers.get(agent_key)
+                        if handler:
+                            if self.ui:
+                                self.ui.set_state("THINKING")
+                                self.ui.write_log(f"SYS: delegando a fragmento {agent_key}...")
+                            threading.Thread(
+                                target=self._run_agent_handoff,
+                                args=(agent_key, handler, text),
+                                daemon=True,
+                            ).start()
+                            return
             except Exception as _ag:
                 print(f"[AgentRouter] clasificacion error: {_ag}")
 

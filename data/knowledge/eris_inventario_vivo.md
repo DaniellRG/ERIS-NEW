@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 09:14:11 · 490 tools registradas y resolviendo.
+Generado: 2026-09-11 09:40:42 · 491 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -22,6 +22,9 @@ Generado: 2026-09-11 09:14:11 · 490 tools registradas y resolviendo.
 - **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.
 - **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.
 - **AUTOCONOCIMIENTO VIVO**: `core/todo_yo.py` le inyecta a Eris SIEMPRE su mapa integral `[TODO LO QUE SOS]` (cuerpo, mente, corazón, herramientas + novedades de su evolución desde memory/evolucion_novedades.json). Tool `todo_yo`: estado/novedades/registrar/esencia.
+
+## ab
+- `ab_automated` — A/B AUTOMÁTICO de prompts: un daemon prueba variantes de estilo de respuesta con el modelo local cada interval
 
 ## abstraction
 - `abstraction` — Mover entre niveles de abstraccion: concreto a abstracto y viceversa. Encontrar patrones generales o especific
@@ -499,6 +502,9 @@ Generado: 2026-09-11 09:14:11 · 490 tools registradas y resolviendo.
 - `image_analyzer` — Analiza una imagen o URL con vision AI: describe el contenido, compara dos imagenes o responde preguntas sobre
 - `image_generation` — Genera y manipula imagenes con IA. Acciones: generate (crear desde prompt), list (listar generadas), get, dele
 - `image_generator` — Generador de imágenes con Pollinations.ai (gratis) y fallback a Stable Diffusion API.
+
+## informe
+- `informe_semanal` — AUTO-INFORME SEMANAL de ERIS a Obsidian: balance automático de la semana (digests diarios, novedades de evoluc
 
 ## intellectual
 - `intellectual_humility` — Reconocer limitaciones, admitir cuando no se algo, buscar ayuda cuando es necesario. Saber que no se todo. Acc

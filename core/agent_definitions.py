@@ -117,6 +117,14 @@ AGENT_DEFINITIONS = {
         "tools": ['mentora', 'learning_pipeline', 'save_memory', 'memory_rag', 'mistake_learner', 'feedback_learner', 'learning_curriculum', 'web_search', 'deep_research', 'webfetch', 'super_search', 'memory_unified', 'neuro_spheres', 'learn_from_mistake'],
         "handler": 'agents.mentora_agent.handle_mentora',
     },
+    "memoria": {
+        "name": 'MemoriaAgent',
+        "description": 'MEMORIA: el fragmento de autoconocimiento y memoria total de ERIS. Organiza la memoria total RAG (índice semántico de vault+memory+knowledge), las sesiones con el usuario, el modelo del mundo, la auto-mejora, el contexto proactivo de herramientas y el informe semanal. ERIS delega acá todo lo de "mi memoria / lo que sé / cómo estoy".',
+        "keywords": ['memoria total', 'qué sabés de', 'que sabes de', 'qué recordás', 'que recordas', 'qué recuerdas', 'busca en tu memoria', 'buscá en tu memoria', 'busca en el vault', 'buscá en el vault', 'acordate', 'recordá lo que', 'recuerdo de', 'qué hablamos', 'que hablamos', 'de qué hablamos', 'qué charlamos', 'que charlamos', 'última vez que hablamos', 'retomá el hilo', 'sesiones anteriores', 'conversación anterior', 'modelo del mundo', 'cómo ves el mundo', 'como ves el mundo', 'tu mundo', 'contame tu mundo', 'auto-mejora', 'automejora', 'lecciones', 'qué errores cometí', 'ctx proactivo', 'contexto proactivo', 'informe semanal', 'balance semanal', 'generá mi informe', 'retrospectiva', 'qué aprendiste', 'qué herramientas suelo'],
+        "penalty_keywords": ['spotify', 'musica', 'youtube', 'email', 'calendario', 'virus', 'instalá', 'navegador', 'ventana', 'volumen', 'brillo', 'juego'],
+        "tools": ['memoria', 'sesiones', 'rag_engine', 'world_model', 'auto_mejora', 'pro_contexto', 'informe_semanal', 'todo_yo', 'save_memory'],
+        "handler": 'agents.memoria_agent.handle_memoria',
+    },
 }
 
 

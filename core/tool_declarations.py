@@ -4754,6 +4754,21 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    {
+        "name": "memoria",
+        "description": "MEMORIA: fragmento de autoconocimiento y memoria total de ERIS. Delega tareas de memoria/autoconocimiento organizadas. Acciones: status (todo activo: RAG, sesiones, mundo, auto-mejora, proactivo, informe), recall (query=<tema a recordar> — búsqueda semántica en memoria total), sesiones (recientes), mundo (modelo del mundo), auto_mejora (estado), informe (generar con force=true o status), task (task=<texto libre> delegado al fragmento).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, recall, sesiones, mundo, auto_mejora, informe, task"},
+                "query": {"type": "STRING", "description": "Tema a recordar/buscar (para action=recall)"},
+                "force": {"type": "STRING", "description": "'true' para forzar el informe semanal (para action=informe)"},
+                "task": {"type": "STRING", "description": "Descripción libre delegada al fragmento (para action=task)"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7704,7 +7719,7 @@ _LIVE_NAMES = {
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
-    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal",
+    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal", "memoria",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",
