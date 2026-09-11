@@ -1,0 +1,19 @@
+{
+  "name": "default",
+  "backend": "gemini:gemini-flash-latest",
+  "history": [
+    {
+      "role": "user",
+      "text": "hola eris, ¿me escuchas?"
+    },
+    {
+      "role": "user",
+      "text": "eras la escalada global y el pentest lab y confirmame que está todo activo y declarado, usando la tool escalada"
+    },
+    {
+      "role": "user",
+      "text": "mostrame tal cual el resultado de la tool escalada: qué dominios tengo activos y en qué nivel, y cuál es mi próximo reto"
+    }
+  ],
+  "updated": "2026-09-11T12:51:20"
+}

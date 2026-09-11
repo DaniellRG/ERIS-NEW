@@ -81,7 +81,7 @@
   },
   "rotacion": {
     "saludo_manana": 1,
-    "saludo_tarde": 0,
+    "saludo_tarde": 1,
     "saludo_noche": 0
   }
 }
