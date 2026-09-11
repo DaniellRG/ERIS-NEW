@@ -698,6 +698,25 @@ class ErisLive:
             print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
         except Exception as _re:
             print(f"[ERIS] Rutinas init: {_re}")
+        # ── A/B automático de prompts: el daemon prueba variantes de estilo con
+        #    el modelo local según ab_interval_hours y aplica la ganadora como
+        #    [ESTILO ACTIVO]. Chequea cada hora si toca ronda. ──
+        try:
+            def _ab_loop():
+                from core.ab_automated import run_ab_round
+                time.sleep(1800)  # diferir: no pelear por CPU al arrancar
+                while True:
+                    try:
+                        _res = run_ab_round()
+                        if _res and not _res.startswith("SIN ronda"):
+                            print(f"[ERIS] A/B prompts: {_res}")
+                    except Exception as _abe:
+                        print(f"[ERIS] A/B aut error: {_abe}")
+                    time.sleep(3600)
+            threading.Thread(target=_ab_loop, daemon=True, name="eris-ab-auto").start()
+            print("[ERIS] 🧪 A/B automático de prompts activo")
+        except Exception as _abe:
+            print(f"[ERIS] A/B init: {_abe}")
         # ── Guardiana: supervigilancia continua de ERIS ──
         # Vigila su salud, detecta y repara anomalías SOLO cuando algo se rompe, sin
         # pisar los loops de evolución/autocuidado/mantenimiento ya activos.
@@ -710,6 +729,21 @@ class ErisLive:
             print("[ERIS] 🛡️ Guardiana: supervigilancia continua iniciada")
         except Exception as _ge:
             print(f"[ERIS] Guardiana init: {_ge}")
+        # ── Auto-informe semanal: genera balance en Obsidian el día configurado. ──
+        try:
+            def _informe_semanal_loop():
+                from core.informe_semanal import _background_check
+                time.sleep(60)
+                while True:
+                    try:
+                        _background_check()
+                    except Exception:
+                        pass
+                    time.sleep(3600)
+            threading.Thread(target=_informe_semanal_loop, daemon=True, name="eris-informe-semanal").start()
+            print("[ERIS] 📅 Informe semanal daemon activo")
+        except Exception as _isr:
+            print(f"[ERIS] Informe semanal init: {_isr}")
         # Auto-descubrir plugins
         if get_plugin_manager:
             try:
@@ -2876,6 +2910,40 @@ class ErisLive:
         except Exception:
             pass
         parts.append(sys_prompt)
+
+        # ── RECUERDOS RELEVANTES: búsqueda semántica en la memoria total
+        #    (vault + memory + knowledge) sobre lo último que dijo el usuario.
+        #    Throttle: solo recalcula si pasó 45s y el tema cambió (hash distinto).
+        #    Se inyecta ANTES del sys_prompt; degrada en silencio sin índice. ──
+        try:
+            import hashlib as _hl
+            from core.rag_engine import recall_texto, _EMBED_FILE, _META_FILE
+            _rec_q = getattr(self, "_last_text_trigger", "") or ""
+            _rec_h = _hl.md5(_rec_q.encode()).hexdigest()[:10]
+            _rec_now = time.time()
+            _last_h = getattr(self, "_rag_last_hash", "")
+            _last_t = getattr(self, "_rag_last_time", 0.0)
+            if (len(_rec_q) >= 15 and _rec_h != _last_h
+                    and (_rec_now - _last_t) >= 45
+                    and _EMBED_FILE.exists() and _META_FILE.exists()):
+                _rec_block = recall_texto(_rec_q, 3)
+                if _rec_block:
+                    parts.insert(-1, _rec_block)
+                self._rag_last_hash = _rec_h
+                self._rag_last_time = _rec_now
+        except Exception:
+            pass
+
+        # ── ESTILO ACTIVO: la variante ganadora del A/B automático de prompts.
+        #    Se recarga una vez por sesión (cache) para no leer disco por turno. ──
+        try:
+            from core.ab_automated import get_active_style
+            if getattr(self, "_active_style", None) is None:
+                self._active_style = get_active_style()
+            if self._active_style:
+                parts.insert(-1, self._active_style)
+        except Exception:
+            pass
 
         # ── Smart trim: nunca cortar lo esencial (personalidad, relación,
         #    estilo, memoria, digest). Se recorta solo la cola del prompt base.

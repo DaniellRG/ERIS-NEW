@@ -130,7 +130,7 @@ ERIS-NEW/
 │   ├── api_keys.json        # 🔒 API keys y configuración (gitignored)
 │   └── fuentes_aprendizaje.json  # Fuentes de conocimiento de la Mentora
 ├── core/                    # Motor interno
-│   ├── tool_registry.py         # 488 tools (callables)
+│   ├── tool_registry.py         # 490 tools (callables)
 │   ├── tool_declarations.py     # 459 declaraciones + LIVE (85, sin reservados)
 │   ├── tool_dispatcher.py       # Ejecutador de tools
 │   ├── action_imports.py        # Imports tolerantes de 296 action modules

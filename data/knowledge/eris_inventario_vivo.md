@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
+Generado: 2026-09-11 09:14:11 · 490 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -111,6 +111,7 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 - `auto_documenter` — Genera documentación automática: changelogs, READMEs, análisis de código para docs, y sugerencias de migración
 - `auto_fabrica` — AUTO-FÁBRICA DE ERIS: crea tools nuevas AUTOMÁTICAMENTE cuando detecta patrones repetidos en tu uso de herrami
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
+- `auto_mejora` — SELF-IMPROVEMENT de ERIS: su ciclo agéntico de mejora (Percepción → Razonamiento → Acción → Feedback → Memoria
 - `auto_programmer` — Desarrollo y Auto-Programacion autonoma: permite escribir herramientas nuevas a partir de una descripcion, val
 - `auto_salud` — Monitor PROACTIVO de la propia salud de ERIS (no URLs externas): detecta config api_keys.json roto/BOM, disco 
 
@@ -351,6 +352,9 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 
 ## driver
 - `driver_manager` — Gestiona drivers de Windows: lista, respalda, restaura. Acciones: list (listar drivers), backup (respaldar dri
+
+## edit
+- `edit_journal` — BITÁCORA DE EDICIONES: historial append-only de todas las ediciones de archivos (write/edit/create/delete/rena
 
 ## email
 - `email_calendar_deep` — Email/Calendar deep integration. Resumir inbox, count unread, smart reply, calendar today, followup tracker.
@@ -686,6 +690,9 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 ## principled
 - `principled_reasoning` — Razonamiento guiado por principios claros: verdad, utilidad, justicia, compasion, integridad, responsabilidad.
 
+## pro
+- `pro_contexto` — CONTEXTO PROACTIVO: predice qué herramientas vas a necesitar pronto basándose en patrones de co-ocurrencia, ho
+
 ## proactive
 - `proactive_automation` — Reglas de automatizacion proactiva basadas en habitos y comportamientos del sistema. Acciones: status (ver reg
 - `proactive_comms` — Comunicacion proactiva: Eris busca a Daniel cuando algo importante pase (metas vencidas, errores, disco bajo, 
@@ -709,6 +716,7 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 - `project_builder` — Generador autonomo de proyectos COMPLETOS de software. Crea toda la estructura de carpetas, codigo fuente, con
 
 ## prompt
+- `prompt_ab` — A/B TESTING DE PROMPTS: ERIS prueba variantes de system prompts y mide cuál funciona mejor. Acciones: create (
 - `prompt_compressor` — Comprime historial de conversación para ahorrar tokens. Mantiene contexto esencial, elimina redundancias. Útil
 - `prompt_optimizer` — Optimizar prompts: analizar calidad, sugerir mejoras, agregar contexto, rol, ejemplos. Acciones: status, optim
 
@@ -837,6 +845,9 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 - `send_message` — Send via Discord/Signal/Messenger
 - `send_sms` — Envia un SMS. Requiere 'to' (numero) y 'message'. Usa Twilio o API HTTP configurada.
 
+## sesiones
+- `sesiones` — RESÚMENES DE SESIÓN: consulta el contexto de tus conversaciones pasadas. Acciones: reciente (n — últimos resúm
+
 ## session
 - `session_analytics` — Analítica de sesiones de usuario: horas pico, tools más usadas, tendencias de uso, reportes diarios.
 - `session_debugger` — Debugger de sesiones: analiza qué pasos ejecutó el agente, detecta errores, cuellos de botella, y compara sesi
@@ -955,6 +966,9 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 ## todowrite
 - `todowrite` — Crea y gestiona una lista de tareas: agregar, listar, actualizar estado, eliminar, contar pendientes/completad
 
+## token
+- `token_saver` — AHORRO DE TOKENS: comprime salidas largas de herramientas antes de enviarlas al LLM (elimina ANSI, líneas dupl
+
 ## tool
 - `tool_benchmark` — Benchmark de herramientas de ERIS: mide tiempos de respuesta de 'tools' (lista de nombres o 'all') y guarda ra
 - `tool_cache` — Cache de resultados de herramientas. Acciones: get (obtener resultado cacheado), stats (estadísticas del cache
@@ -1063,6 +1077,7 @@ Generado: 2026-09-11 08:55:48 · 488 tools registradas y resolviendo.
 - `workflow_runner` — Ejecuta flujos de trabajo reutilizables (JSON en data/workflows/) encadenando tools existentes. Acciones: run 
 
 ## world
+- `world_model` — MODELO DEL MUNDO de ERIS: su representación interna de la realidad — qué percibe (usuario, ventana en foco, mo
 - `world_simulation` — Simulador de Mundo Virtual de Eris: simula escenarios antes de actuar, probar acciones y aprender sin riesgo. 
 
 ## youtube

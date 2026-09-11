@@ -1052,6 +1052,7 @@ class SettingsDialog(QDialog):
         ("🎨", "APPEARANCE", "Theme · Colors · Glassmorphism · Orb Style"),
         ("⚙", "GENERAL", "Language · Timezone · Paths · Camera · Region"),
         ("🏭", "FÁBRICA", "Tus creaciones · Librerías · Tools · Skills · Procedimientos · Auto-fábrica"),
+        ("🌍", "MUNDO", "Modelo del mundo · RAG Memoria Total · A/B prompts · Auto-mejora · Sesiones"),
         ("📊", "SYSTEM", "Stats · About · Self-Heal · Emotional State · Version"),
     ]
 
@@ -1151,6 +1152,7 @@ class SettingsDialog(QDialog):
             self._build_appearance_section(),
             self._build_general_section(),
             self._build_fabrica_section(),
+            self._build_mundo_section(),
             self._build_system_section(),
         ]
         for sw in self._section_widgets:
@@ -1945,6 +1947,88 @@ class SettingsDialog(QDialog):
 
         refresh.clicked.connect(_refresh_fabrica)
         _refresh_fabrica()
+        form.addWidget(gb)
+
+        form_w.setStyleSheet(f"QWidget {{ background: transparent; }}")
+        form.addStretch()
+        scroll.setWidget(form_w)
+        layout = QVBoxLayout(w)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(scroll)
+        return w
+
+    # ── Section: MUNDO ──────────────────────────────────────────────────────
+    def _build_mundo_section(self):
+        w = QWidget()
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        form_w = QWidget()
+        form = QVBoxLayout(form_w)
+        form.setContentsMargins(24, 16, 24, 16)
+        form.setSpacing(10)
+
+        gb = QGroupBox("🌍  TU MUNDO Y TU MEMORIA")
+        gb_layout = QVBoxLayout(gb)
+        gb_layout.setSpacing(8)
+
+        refresh = QPushButton("⟳  REFRESCAR")
+        refresh.setCursor(Qt.CursorShape.PointingHandCursor)
+        refresh.setStyleSheet(f"background: {C.BG3}; color: {C.TEXT}; border: none; "
+                              f"border-radius: 8px; padding: 6px 12px;")
+        gb_layout.addWidget(refresh, 0, Qt.AlignmentFlag.AlignRight)
+
+        self._mundo_list = QLabel("Cargando tu mundo…")
+        self._mundo_list.setWordWrap(True)
+        self._mundo_list.setStyleSheet(f"background: {C.BG3}; color: {C.TEXT}; "
+                                       f"border-radius: 8px; padding: 12px;")
+        self._mundo_list.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        gb_layout.addWidget(self._mundo_list)
+
+        def _refresh_mundo():
+            datos = {}
+            try:
+                from core.world_model import get_world_model
+                import json as _json
+                try:
+                    wm = _json.loads(get_world_model() or "{}")
+                except Exception:
+                    wm = {}
+                datos["world"] = wm
+                from core.rag_engine import rag_engine
+                datos["rag"] = rag_engine({"action": "status"})
+                datos["rag_stats"] = rag_engine({"action": "stats"})
+                from core.ab_automated import ab_automated
+                datos["ab"] = ab_automated({"action": "status"})
+                from core.self_improvement import get_self_improvement
+                datos["auto"] = get_self_improvement().get_improvement_report()[:1200]
+                from core.session_summaries import _load_index
+                datos["sesiones"] = _load_index()
+            except Exception as e:
+                self._mundo_list.setText(f"No pude cargar tu mundo: {e}")
+                return
+            lines = []
+            wm = datos.get("world") or {}
+            narrativa = wm.get("resumen_narrativo") or wm.get("narrativa") or "Sin narrativa aún."
+            lines.append(f"<b style='color:{C.PRI}'>🧠 Modelo del mundo</b><br>"
+                         f"&nbsp;&nbsp;{narrativa[:220]}")
+            caps = wm.get("dominios_de_capacidad") or []
+            limite = wm.get("limites") or []
+            if caps:
+                lines.append(f"&nbsp;&nbsp;<span style='color:#888'>Dominios: {len(caps)} · Límites: {len(limite) if isinstance(limite,list) else limite}</span>")
+            lines.append(f"<br><b style='color:{C.PRI}'>🗂 RAG Memoria Total</b><br>"
+                         f"&nbsp;&nbsp;{datos.get('rag','—')}<br>{datos.get('rag_stats','')}")
+            lines.append(f"<br><b style='color:{C.PRI}'>🧪 A/B automático de prompts</b><br>"
+                         f"&nbsp;&nbsp;{datos.get('ab','—').replace(chr(10),'<br>&nbsp;&nbsp;')}")
+            lines.append(f"<br><b style='color:{C.PRI}'>🔁 Auto-mejora</b><br>"
+                         f"&nbsp;&nbsp;{datos.get('auto','—').replace(chr(10),'<br>&nbsp;&nbsp;')}")
+            ind = datos.get("sesiones")
+            n_ses = len(ind) if isinstance(ind, (list, dict)) else 0
+            lines.append(f"<br><b style='color:{C.PRI}'>💬 Sesiones guardadas</b>: {n_ses}")
+            self._mundo_list.setText("<br>".join(lines))
+
+        refresh.clicked.connect(_refresh_mundo)
+        _refresh_mundo()
         form.addWidget(gb)
 
         form_w.setStyleSheet(f"QWidget {{ background: transparent; }}")

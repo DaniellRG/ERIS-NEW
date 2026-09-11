@@ -4728,6 +4728,32 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    {
+        "name": "ab_automated",
+        "description": "A/B AUTOMÁTICO de prompts: un daemon prueba variantes de estilo de respuesta con el modelo local cada intervalo y aplica la ganadora como ESTILO ACTIVO. Acciones: round (forzar/correr la ronda A/B ahora), active (ver el estilo activo actual), status (intervalo, última ronda y win rates de las variantes).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "round, active, status"},
+                "force": {"type": "STRING", "description": "'true' para correr la ronda aunque no toque (para action=round)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
+        "name": "informe_semanal",
+        "description": "AUTO-INFORME SEMANAL de ERIS a Obsidian: balance automático de la semana (digests diarios, novedades de evolución, sesiones con el usuario, estado del mundo) escrito por la propia ERIS en Vida/Retrospectivas/semana-YYYY-WW.md. El daemon lo genera solo el día configurado (informe_semanal_day, default Sunday). Acciones: generar (forzar escritura), status.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "generar, status"},
+                "force": {"type": "STRING", "description": "'true' para forzar la generación aunque no toque (para action=generar)"},
+            },
+            "required": ["action"],
+        }
+    },
+
     # ── Batch 5: Connectivity + Self-Healing ──
 
     {
@@ -7678,7 +7704,7 @@ _LIVE_NAMES = {
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
-    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones",
+    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",

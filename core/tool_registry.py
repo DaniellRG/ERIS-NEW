@@ -464,6 +464,8 @@ _TOOLS = {
     "world_model":             ("core.world_model", "get_world_model"),
     "auto_mejora":             ("core.self_improvement", "auto_mejora"),
     "sesiones":                ("core.session_summaries", "sesiones"),
+    "ab_automated":            ("core.ab_automated", "ab_automated"),
+    "informe_semanal":         ("core.informe_semanal", "informe_semanal"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),

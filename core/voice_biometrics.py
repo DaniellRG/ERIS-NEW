@@ -254,19 +254,87 @@ def delete_profile(name: str) -> dict:
     return {"ok": False, "error": f"Profile '{name}' not found."}
 
 
+def _record_from_mic(duration: float = 4.0, sample_rate: int = 16000) -> Optional[bytes]:
+    """Graba audio del micrófono y lo devuelve como WAV en bytes."""
+    try:
+        import io
+        import wave
+        import numpy as np
+        import sounddevice as sd
+        audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate,
+                       channels=1, dtype="int16")
+        sd.wait()
+        if np.max(np.abs(audio)) < 0.02:
+            return None  # silencio: no hay señal utilizable
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(sample_rate)
+            wf.writeframes(audio.tobytes())
+        return buf.getvalue()
+    except Exception as e:
+        print(f"[VoiceBio] Mic record failed: {e}")
+        return None
+
+
+def enroll_from_mic(name: str, samples: int = 3, seconds: float = 4.0,
+                    overwrite: bool = False) -> dict:
+    """Enrolla a un hablante grabando 'samples' clips directamente del micrófono."""
+    clips = []
+    for i in range(max(1, int(samples))):
+        clip = _record_from_mic(seconds)
+        if clip is None:
+            return {"ok": False, "error": f"Clip {i+1} sin señal de micrófono (silencio). "
+                                          "Asegurate de hablar cerca del mic."}
+        clips.append(clip)
+    return enroll_speaker(name, clips, overwrite=overwrite)
+
+
+def identify_from_mic(seconds: float = 4.0) -> dict:
+    """Identifica al hablante grabando un clip del micrófono."""
+    clip = _record_from_mic(seconds)
+    if clip is None:
+        return {"ok": False, "error": "No se captó señal de micrófono. Intentá de nuevo hablando."}
+    return identify_speaker(clip)
+
+
 def voice_biometrics(parameters: dict = None, player=None) -> str:
-    """Tool entry point for Gemini."""
+    """Tool entry point para identificar/enrollar por voz, con micrófono real."""
     params = parameters or {}
     action = params.get("action", "identify").lower()
 
     if action == "identify":
-        return "Para identificar un hablante, necesito un clip de audio grabado del micrófono."
+        seconds = float(params.get("seconds", 4))
+        res = identify_from_mic(seconds)
+        if not res.get("ok", True) and res.get("error"):
+            return f"❌ {res['error']}"
+        if res.get("identified"):
+            return (f"✅ Identifiqué tu voz: **{res['speaker']}** "
+                    f"(confianza {res['confidence']:.2f}, umbral {res.get('threshold')}).")
+        return (f"🤔 No te reconocí (confianza {res.get('confidence', 0):.2f}, "
+                f"umbral {res.get('threshold')}). Scores: {res.get('all_scores', {})}. "
+                f"¿Querés que registre tu voz? Pedime 'enrolá mi voz'.")
+
     elif action == "enroll":
-        return "Para enrollar un nuevo hablante, necesito el nombre y 3+ clips de audio del micrófono."
+        name = str(params.get("name", "usuario")).strip().lower()
+        samples = int(params.get("samples", 3))
+        seconds = float(params.get("seconds", 4))
+        overwrite = str(params.get("overwrite", "false")).lower() in ("true", "1", "yes")
+        prev = list_profiles()
+        if any(p["name"] == name for p in prev) and not overwrite:
+            return (f"Ya existe un perfil '{name}'. Usá overwrite=true para reemplazarlo "
+                    f"o pedí que te identifique primero.")
+        res = enroll_from_mic(name, samples, seconds, overwrite)
+        if res.get("ok"):
+            return (f"✅ Voz de '{name}' registrada con {res['samples']} muestras. "
+                    f"Ahora podés pedir 'identificame' y te reconozco por la voz.")
+        return f"❌ No pude registrar la voz: {res.get('error')}"
+
     elif action == "profiles":
         profiles = list_profiles()
         if not profiles:
-            return "No hay perfiles de voz enrollados."
+            return "No hay perfiles de voz enrollados. Pedime 'enrolá mi voz' para registrarte."
         return "Perfiles:\n" + "\n".join(f"  - {p['name']} ({p['samples']} samples, {p['enrolled_at']})" for p in profiles)
     elif action == "delete":
         name = params.get("name", "")
