@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 09:40:42 · 491 tools registradas y resolviendo.
+Generado: 2026-09-11 11:04:51 · 492 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -557,6 +557,9 @@ Generado: 2026-09-11 09:40:42 · 491 tools registradas y resolviendo.
 
 ## meeting
 - `meeting_transcriber` — Transcribe reuniones: desde archivo (file) o microfono (duration). Acciones: transcribe (transcribir archivo),
+
+## memoria
+- `memoria` — MEMORIA: fragmento de autoconocimiento y memoria total de ERIS. Delega tareas de memoria/autoconocimiento orga
 
 ## memory
 - `memory_consolidation` — Consolida memoria vieja en resumenes, elimina duplicados, optimiza. Acciones: status, consolidate, semantic, e

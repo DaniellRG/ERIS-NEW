@@ -1,6 +1,6 @@
 ﻿# AGENTS.md — ERIS AI
 
-Windows desktop assistant (Python 3.14, PyQt6). 491 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS (ef_dora).
+Windows desktop assistant (Python 3.14, PyQt6). 492 tools, NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS (ef_dora).
 
 ## Quick start
 
@@ -78,9 +78,10 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/informe_semanal.py` | AUTO-INFORME SEMANAL (`informe_semanal`): balance semanal de Eris (digests diarios `data/daily_reports/*.md` + novedades + sesiones + narrativa del mundo) escrito por ella en Obsidian `Vida/Retrospectivas/semana-GG-WW.md` el día `informe_semanal_day` (default Sunday). Acciones: generar/status. |
 | `core/rag_engine.py` | RAG MEMORIA TOTAL (`rag_engine`): índice semántico multi-fuente (vault real vía `get_obsidian_vault()`, `memory/*.json`, `data/knowledge/*.md`, `vault/wiki/`, episódicas) con sentence-transformers → `data/rag_embeddings.npz` + `data/rag_meta.json`. Acciones: index/search/recall/status/stats. `recall_texto()` inyectado por main.py como `[RECUERDOS RELEVANTES]` (throttle 45s + tema cambiado). |
 | `agents/memoria_agent.py` | MEMORIA (`memoria`): fragmento decimotercero de autoconocimiento y memoria total. Orquesta rag_engine (recall), sesiones, world_model, auto_mejora, pro_contexto e informe_semanal. Registrado en `AGENT_DEFINITIONS` (key `memoria`), tool + router + dispatch en main.py + persona en prompt.txt. Acciones: status/recall/sesiones/mundo/auto_mejora/informe/task. |
-| `core/agent_definitions.py` | 13 fragmentos (core, web, file, dev, media, comm, vision, security, study, linux, guardian, mentora, memoria). Los 12 previos `handle_*` de `agents/` ahora TODOS se despachan en main.py (antes 8 quedaban muertos); `memoria` es el nuevo. `core/agent_router.py:classify_intent()` umbral ≥3 + penalties + anti-bounce. |
-| `core/tool_registry.py` | 491 tool callables |
-| `core/tool_declarations.py` | 491 LLM-facing declarations (0 dupes, sync con registry) |
+| `core/pentest_lab.py` | PENTEST LAB (`pentest_lab`): laboratorio de pentesting aislado en VirtualBox. Scope 192.168.56.0/24 exclusivo. Herramientas: nmap (escaneo/vuln), hydra (fuerza bruta), tshark/tcpdump (captura de tráfico), snapshots de VMs. Wrapper VBoxManage para gestionar VMs (listar/iniciar/apagar/snapshots/red interna). Reports en `data/pentest_reports/`. Config en `data/pentest_lab.json`. Nunca toca la red real. |
+| `core/agent_definitions.py` | 14 fragmentos (core, web, file, dev, media, comm, vision, security, study, linux, guardian, mentora, memoria, pentest). Los 12 previos `handle_*` de `agents/` ahora TODOS se despachan en main.py (antes 8 quedaban muertos); `memoria` y `pentest` son los nuevos. `core/agent_router.py:classify_intent()` umbral ≥3 + penalties + anti-bounce. |
+| `core/tool_registry.py` | 492 tool callables |
+| `core/tool_declarations.py` | 492 LLM-facing declarations (0 dupes, sync con registry) |
 | `core/tool_dispatcher.py` | Executes tools by name |
 | `core/action_imports.py` | Imports all 296 action modules |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
@@ -90,7 +91,7 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/observer.py` | Sentidos de Eris: ventana en foco + programas abiertos (ctypes), clasifica actividad (programación/terminal/navegación/sensible…), detecta eventos (start_coding, long_coding, app_switch), expone contexto para comentarios espontáneos por voz. Mimo si no le contestan y "tiempo de ella". Puede MIRAR/LEER la ventana en foco (`observer action=mirar|mirar_leer`, captura de región + visión IA) solo con permiso del usuario (`mirar_ok`) y NUNCA pantallas sensibles; mirada leve automática `maybe_glimpse()` (cada mirar_interval_min) queda como contexto `[VISTA]`. → `memory/observer.json` |
 | `core/code_guard.py` | El ojo guardián: detecta en tiempo real errores (rojo: py_compile/ruff E/F/B) y advertencias (amarillo: W/I/etc) del archivo en foco del usuario (títle→cwd→glob). Corrige SOLO las líneas señaladas vía LLM (Gemini/Ollama) con backup + validación + rollback y tope de 25% de líneas tocadas (`fix_file`, `guardian_tick`). Tool `code_guard` (status/scan/fix/fix_w/config). Auto-fix en loop `_code_guard_loop` de main. → `memory/code_guard.json`, backups en `memory/code_guard_backups/` |
 | `core/mission_agent.py` | PROTOCOLO OPERATIVO global (estilo opencode): cuaderno de misión persistido (`mission`: start/plan/explore/read/edit/verify/step/learn/close). EDITAR = cambios mínimos con backup + validación + rollback (reutiliza maquinaria de code_guard); VERIFICAR = ruff/py_compile/pytest y no declara "listo" si queda rojo; APRENDER = memoria por proyecto en `memory/proyectos/*.json`; al cerrar, espeja la misión en Obsidian `Proyectos/`. Tool `mission`. |
-| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 491 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
+| `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 492 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
 | `core/self_health.py` | AUTO-SALUD PROACTIVA (`auto_salud`): vigila la salud de la PROPIA ERIS (config api_keys.json roto/BOM, disco ≥90%, RAM del proceso disparada, errores nuevos en logs, tools core que dejan de resolver). Hilo daemon en main (chequeo cada 5 min, `run_self_health_loop`), notifica problemas NUEVOS por log + `_announce` y registra en `memory/self_health_errores.md`. Tool `auto_salud`: status/check. |
 | `actions/diagnostico.py` | DIAGNÓSTICO EN VIVO (`diagnostico`): responde "¿qué se rompió y por qué?" — state (config válida+errores de logs+disco+proceso+tools), logs (últimos errores con contexto y filtro), config, health, reporte. Degrada sin psutil; solo diagnostica, no modifica. |
 | `core/eris_fabrica.py` | LA FÁBRICA (`fabrica`): Eris crea y usa SUS PROPIAS capacidades — librerías de Python reales (`libraries/eris_*.py` con funciones compiladas y usables vía `usar_libreria`), tools nuevas (módulo en `actions/custom/`, registrada en runtime con `register_tool` + declaración persistida en `actions/custom_tools.json` para el reinicio) y skills (`skills/user_created/*/SKILL.md`). Inventario en `memory/eris_fabrica.json`. Acciones: crear_libreria, usar_libreria, crear_tool, crear_skill, listar, detalle, borrar. |
@@ -99,7 +100,7 @@ $env:PYTHONIOENCODING="utf-8"
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
 | `data/knowledge/` | 69 .md knowledge files |
 | `actions/` | 296 action modules (one tool per file) |
-| `agents/` | 13 specialist agents |
+| `agents/` | 14 specialist agents |
 | `skills/` | 39 installed skills (21 builtin + 18 user_created) |
 | `vault/` | Memoria charra: `raw/` capturas → `wiki/` destilado → `outputs/` productos |
 

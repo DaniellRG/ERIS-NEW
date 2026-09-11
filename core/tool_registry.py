@@ -467,6 +467,7 @@ _TOOLS = {
     "ab_automated":            ("core.ab_automated", "ab_automated"),
     "informe_semanal":         ("core.informe_semanal", "informe_semanal"),
     "memoria":                 ("agents.memoria_agent", "memoria"),
+    "pentest_lab":             ("core.pentest_lab", "pentest_lab"),
 
     # ── Batch 5: Connectivity + Self-Healing ──
     "connectivity":          ("core.connectivity", "connectivity_tool"),

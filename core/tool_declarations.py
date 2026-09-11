@@ -7625,6 +7625,21 @@ TOOL_DECLARATIONS.extend([
             "texto": {"type": "STRING", "description": "Novedad a registrar"},
         }, "required": ["action"]},
     },
+    {
+        "name": "pentest_lab",
+        "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. Acciones: status (estado del lab), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap --script vuln), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), info (info de una VM), snaps (listar snapshots).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, setup, start, stop, reset, snap, restore, scan, vuln, brute, sniff, report, info, snaps"},
+            "vm": {"type": "STRING", "description": "Nombre de la VM (para start/stop/reset/snap/restore/info/snaps)"},
+            "snap": {"type": "STRING", "description": "Nombre del snapshot (para snap/restore)"},
+            "target": {"type": "STRING", "description": "IP objetivo (para scan/vuln/brute/sniff)"},
+            "ports": {"type": "STRING", "description": "Rango de puertos (para scan, default 1-1000)"},
+            "service": {"type": "STRING", "description": "Servicio: ssh, ftp, telnet, http, smb, mysql, rdp (para brute)"},
+            "user": {"type": "STRING", "description": "Usuario a probar (para brute, default admin)"},
+            "wordlist": {"type": "STRING", "description": "Ruta del wordlist (para brute)"},
+            "seconds": {"type": "STRING", "description": "Segundos de captura (para sniff, default 10)"},
+        }, "required": ["action"]},
+    },
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──
@@ -7719,7 +7734,7 @@ _LIVE_NAMES = {
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
-    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal", "memoria",
+    "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal", "memoria", "pentest_lab",
     # Terminal libre (Linux/Wayland nativo)
     "shell_session", "maintenance",
     "wayland_input", "kde_connect", "ocr_tool", "media_lab", "git_autonomo",

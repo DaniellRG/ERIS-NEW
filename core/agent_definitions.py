@@ -125,6 +125,14 @@ AGENT_DEFINITIONS = {
         "tools": ['memoria', 'sesiones', 'rag_engine', 'world_model', 'auto_mejora', 'pro_contexto', 'informe_semanal', 'todo_yo', 'save_memory'],
         "handler": 'agents.memoria_agent.handle_memoria',
     },
+    "pentest": {
+        "name": 'PentestLabAgent',
+        "description": 'PENTEST LAB: laboratorio de ciberseguridad aislado en VirtualBox. Realiza escaneo de red, detección de vulnerabilidades, fuerza bruta y captura de tráfico TODO dentro de VMs virtuales en red aislada (192.168.56.0/24). Nunca toca la red real del usuario. Herramientas: pentest_lab, vbox_controller, nmap, hydra, tshark.',
+        "keywords": ['pentest', 'penetration', 'vulnerabilidad', 'vulnerabilidades', 'escaneo de red', 'escaneá la red', 'nmap', 'hydra', 'fuerza bruta', 'brute force', 'capturar tráfico', 'sniff', 'tshark', 'tcpdump', 'laboratorio de seguridad', 'lab virtual', 'ciberseguridad', 'hack', 'exploit', 'metasploit', 'virtualbox', 'vm', 'máquina virtual', 'red aislada', 'red interna', 'target', 'metasploitable', 'puertos abiertos', 'servicios abiertos'],
+        "penalty_keywords": ['spotify', 'musica', 'youtube', 'email', 'calendario', 'juego', 'pelicula', 'navegador', 'ventana'],
+        "tools": ['pentest_lab'],
+        "handler": 'core.pentest_lab.pentest_lab',
+    },
 }
 
 

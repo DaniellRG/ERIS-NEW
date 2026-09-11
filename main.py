@@ -455,7 +455,14 @@ def _build_agent_router():
             _registered += 1
         except Exception:
             pass
-        print(f"[AgentRouter] {_registered}/13 handlers activos")
+        # 14. PENTEST — laboratorio de ciberseguridad aislado en VirtualBox
+        try:
+            from core.pentest_lab import pentest_lab
+            router.register_handler("pentest", pentest_lab)
+            _registered += 1
+        except Exception:
+            pass
+        print(f"[AgentRouter] {_registered}/14 handlers activos")
     except Exception as e:
         print(f"[AgentRouter] init fallo: {e}")
     return router
@@ -1298,8 +1305,8 @@ class ErisLive:
                                     daemon=True,
                                 ).start()
                                 return
-                    # ── Los 9 fragmentos especialistas restantes: web, core, file, media,
-                    #    comm, vision, security, study y memoria. Registrados
+                    # ── Los 10 fragmentos especialistas restantes: web, core, file, media,
+                    #    comm, vision, security, study, memoria y pentest. Registrados
                     #    en AGENT_DEFINITIONS y el router los clasifica. Se
                     #    delegan igual que los 3 principales
                     #    (mentora/guardian/linux). El router ya aplica umbral
@@ -1307,7 +1314,7 @@ class ErisLive:
                     #    para evitar secuestrar el chat. ──
                     if agent_key and agent_key in ("web", "core", "file", "media",
                                                     "comm", "vision", "security", "study",
-                                                    "memoria"):
+                                                    "memoria", "pentest"):
                         handler = self._agent_router._handlers.get(agent_key)
                         if handler:
                             if self.ui:
