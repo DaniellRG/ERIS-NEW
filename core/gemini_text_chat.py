@@ -99,6 +99,7 @@ def _get_openrouter_config() -> dict:
         "model": cfg.get("openrouter_model", "") or "meta-llama/llama-3.3-70b-instruct",
         "base_url": cfg.get("openrouter_base_url", "https://openrouter.ai/api/v1").rstrip("/"),
         "max_tokens": cfg.get("openrouter_max_tokens", 512),
+        "use_compact": cfg.get("openrouter_use_compact", True),
     }
 
 
@@ -140,6 +141,8 @@ class GeminiTextChat:
         self._openrouter_model = or_cfg["model"]
         self._openrouter_url = or_cfg["base_url"] + "/chat/completions"
         self._openrouter_max_tokens = or_cfg.get("max_tokens") or 640
+        self._openrouter_use_compact = bool(or_cfg.get("use_compact", True))
+        self._system_compact = self._load_compact_prompt()
 
     def _check_ollama(self, base_url: str) -> bool:
         """Check if Ollama is reachable."""
@@ -153,6 +156,15 @@ class GeminiTextChat:
     @property
     def backend_name(self) -> str:
         return self._backend
+
+    def _load_compact_prompt(self) -> str | None:
+        """Carga el prompt compacto para backends con contexto limitado (OpenRouter).
+        Devuelve None si no existe, para no romper backends con contexto amplio."""
+        try:
+            from core.logging_setup import PROMPT_COMPACT_PATH
+            return PROMPT_COMPACT_PATH.read_text(encoding="utf-8")
+        except Exception:
+            return None
 
     def reset(self):
         self._history.clear()
@@ -404,7 +416,8 @@ class GeminiTextChat:
                     "parameters": t.get("parameters", {"type": "object", "properties": {}}),
                 },
             })
-        msgs = [{"role": "system", "content": self._system}]
+        system_text = self._system_compact if (self._openrouter_use_compact and self._system_compact) else self._system
+        msgs = [{"role": "system", "content": system_text}]
         for msg in self._history[:-1]:
             role = "assistant" if getattr(msg, "role", "model") == "model" else "user"
             text = " ".join(p.text for p in msg.parts if p.text) if hasattr(msg, "parts") else ""
