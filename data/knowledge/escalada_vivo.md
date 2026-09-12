@@ -1,18 +1,20 @@
 # Escalada GLOBAL de ERIS — nivel por nivel (fácil → difícil)
 
-Actualizado: 2026-09-11 22:46
-Dominios activos: 9 — Total de logros: 16
+Actualizado: 2026-09-11 23:09
+Dominios activos: 12 — Total de logros: 21
 
 ## 📈 comunicacion — nivel 2/8 — Hablar, responder claro, expresar ideas, conversar gente
 - Explicar un pentest completo (recorrido de 8 niveles) en lenguaje claro y con reporte markdown documentado
 
-## 📈 codigo — nivel 2/8 — Programar, arreglar errores, tool que crea, refactor
+## 📈 codigo — nivel 3/8 — Programar, arreglar errores, tool que crea, refactor
 - Arreglé el exploit vsftpd para comandos con espacios (comillas dobles)
+- Escribir md5crypt en Python puro y openssl passwd para crack offline; importar impacket/paramiko
 
 ## 📈 sistema — nivel 2/8 — Linux, terminal, procesos, red, automatizar el PC
 - Diagnosticar y reiniciar VM lab (VBoxManage), validar servicios, y portabilizar codigo Windows/Linux
 
-## 🔒 archivos (Crear, ordenar, buscar y transformar archivos/documentos)
+## 📈 archivos — nivel 2/8 — Crear, ordenar, buscar y transformar archivos/documentos
+- Crear la libreria eris_metasploitable (archivo .py real en libraries/) con la fabrica y usarla
 
 ## 📈 memoria — nivel 2/8 — Recordar, guardar conocimiento, gente, lecciones
 - Documentar hallazgo usermap_script en 4 capas: json+md+Obsidian+novedad
@@ -26,9 +28,11 @@ Dominios activos: 9 — Total de logros: 16
 ## 📈 organizar — nivel 2/8 — Rutinas, cron, planes, agenda, follow-up
 - Planificar 5 pasos de escalada del lab y seguir con todos en orden
 
-## 🔒 social (Relaciones, momentos, gente que escucha y acompaña)
+## 📈 social — nivel 2/8 — Relaciones, momentos, gente que escucha y acompaña
+- Explicarle al usuario el resultado del lab (crack fallido, vectores) en charla clara
 
-## 🔒 creatividad (Escribir, dibujar, imágenes, voz, música, ideas nuevas)
+## 📈 creatividad — nivel 2/8 — Escribir, dibujar, imágenes, voz, música, ideas nuevas
+- Inventar la tool lab_pulse: un pulso propio del lab que Eris diseno y construyo sola
 
 ## 📈 pentest — nivel 8/8 — Seguridad ofensiva en el lab aislado (VirtualBox)
 - Detección de vulnerabilidades del lab: lab: Detección CVEs
@@ -37,5 +41,6 @@ Dominios activos: 9 — Total de logros: 16
 - Escalada de privilegios del lab: lab: PrivEsc /etc/shadow
 - Post-explotación del lab: Post-explotación: informe final consolidado con vector vsftpd (shell root) + usermap_script (RCE root CVE-2007-2447) + escalada de 7 niveles documentada
 
-## 📈 fabrica — nivel 2/8 — Crear sus PROPIAS capacidades (librerías, tools, skills)
+## 📈 fabrica — nivel 3/8 — Crear sus PROPIAS capacidades (librerías, tools, skills)
 - Instalar dependencia (impacket) y usarla como vector real de exploit RCE root
+- Crear librería real eris_metasploitable (3 funciones) y TOOL completa lab_pulse registrada en runtime + declaracion persistida

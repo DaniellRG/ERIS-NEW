@@ -21,5 +21,35 @@
         "action"
       ]
     }
+  },
+  {
+    "name": "lab_pulse",
+    "description": "Pulso del Pentest Lab: estado del aprendizaje, escalada global e inventario de tools en un vistazo.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "aprendizaje": {
+          "type": "STRING",
+          "description": "Estado del aprendizaje del lab (hallazgos, errores, caminos, niveles)."
+        },
+        "escalada": {
+          "type": "STRING",
+          "description": "Dominios activos de la escalada global."
+        },
+        "inventario": {
+          "type": "STRING",
+          "description": "Cantidad de tools registradas y declaradas."
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
   }
 ]
