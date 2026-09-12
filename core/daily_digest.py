@@ -68,6 +68,43 @@ def _collect_today(d: date = None) -> dict:
     learning = _load_json(_BASE / "data" / "self_learning_log.json")
     today["learning"] = _filter_today(learning if isinstance(learning, list) else [], ds)
 
+    novedades = _load_json(_BASE / "memory" / "evolucion_novedades.json")
+    if isinstance(novedades, dict):
+        novedades = novedades.get("novedades", [])
+    today["novedades"] = [n.get("texto", "") for n in (novedades or [])
+                          if isinstance(n, dict) and str(n.get("fecha", "")).startswith(ds)]
+
+    sesiones = _load_json(_BASE / "memory" / "session_summaries.json")
+    real_sesiones = []
+    if isinstance(sesiones, list):
+        for s in sesiones:
+            if not isinstance(s, dict) or "/tmp/" in str(s.get("path", "")):
+                continue
+            if str(s.get("ts", "")).startswith(ds):
+                real_sesiones.append(s.get("tail", ""))
+    today["sesiones"] = real_sesiones
+
+    escalada = _load_json(_BASE / "memory" / "escalada.json")
+    today["logros"] = []
+    if isinstance(escalada, dict):
+        doms = escalada.get("dominios", escalada.get("dominio", []))
+        items = []
+        if isinstance(doms, dict):
+            for dom in doms.values():
+                if isinstance(dom, dict):
+                    logros = dom.get("logros", dom.get("historial", []))
+                    if isinstance(logros, list):
+                        items.extend(logros)
+        elif isinstance(doms, list):
+            for dom in doms:
+                if isinstance(dom, dict):
+                    items.extend(dom.get("logros", dom.get("historial", [])))
+        for it in items:
+            if isinstance(it, dict) and str(it.get("fecha", it.get("ts", ""))).startswith(ds):
+                today["logros"].append(str(it.get("logro", it.get("descripcion", "")))[:140])
+    else:
+        today["logros"] = []
+
     idle = _load_json(_BASE / "data" / "idle_learning.json")
     topics = []
     if isinstance(idle, dict):
@@ -130,6 +167,21 @@ def generate_digest(d: date = None) -> str:
     if data["convo_count"]:
         lines.append(f"## Conversación")
         lines.append(f"Se registraron {data['convo_count']} mensajes de la charla de hoy.")
+        lines.append("")
+
+    narrativa = data["novedades"] + data["logros"]
+    if narrativa:
+        lines.append("## Narrativa del día")
+        for n in narrativa:
+            lines.append(f"- {n}")
+        lines.append("")
+
+    if data["sesiones"]:
+        lines.append("## Resumen de sesiones")
+        for tail in data["sesiones"][-3:]:
+            breve = " /. ".join(l.strip() for l in tail.splitlines()[:3] if l.strip())
+            if breve:
+                lines.append(f"- {breve[:220]}")
         lines.append("")
 
     if data["tasks"]:
