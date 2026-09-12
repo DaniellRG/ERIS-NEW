@@ -1,35 +1,41 @@
 # Escalada GLOBAL de ERIS — nivel por nivel (fácil → difícil)
 
-Actualizado: 2026-09-11 12:42
-Dominios activos: 3 — Total de logros: 9
+Actualizado: 2026-09-11 22:46
+Dominios activos: 9 — Total de logros: 16
 
-## 🔒 comunicacion (Hablar, responder claro, expresar ideas, conversar gente)
+## 📈 comunicacion — nivel 2/8 — Hablar, responder claro, expresar ideas, conversar gente
+- Explicar un pentest completo (recorrido de 8 niveles) en lenguaje claro y con reporte markdown documentado
 
 ## 📈 codigo — nivel 2/8 — Programar, arreglar errores, tool que crea, refactor
 - Arreglé el exploit vsftpd para comandos con espacios (comillas dobles)
 
-## 🔒 sistema (Linux, terminal, procesos, red, automatizar el PC)
+## 📈 sistema — nivel 2/8 — Linux, terminal, procesos, red, automatizar el PC
+- Diagnosticar y reiniciar VM lab (VBoxManage), validar servicios, y portabilizar codigo Windows/Linux
 
 ## 🔒 archivos (Crear, ordenar, buscar y transformar archivos/documentos)
 
-## 🔒 memoria (Recordar, guardar conocimiento, gente, lecciones)
+## 📈 memoria — nivel 2/8 — Recordar, guardar conocimiento, gente, lecciones
+- Documentar hallazgo usermap_script en 4 capas: json+md+Obsidian+novedad
 
-## 🔒 web (Buscar, investigar y traer info del mundo)
+## 📈 web — nivel 2/8 — Buscar, investigar y traer info del mundo
+- Probing HTTP/Apache, identificar TikiWiki 1.9.5 (versión via README) y verificar LFI fallido
 
 ## 📈 aprender — nivel 2/8 — Estudiar sola, cuadernos, temas propios, auto-mejora
 - Descubrí que Python 3.14 eliminó crypt → usar openssl passwd
 
-## 🔒 organizar (Rutinas, cron, planes, agenda, follow-up)
+## 📈 organizar — nivel 2/8 — Rutinas, cron, planes, agenda, follow-up
+- Planificar 5 pasos de escalada del lab y seguir con todos en orden
 
 ## 🔒 social (Relaciones, momentos, gente que escucha y acompaña)
 
 ## 🔒 creatividad (Escribir, dibujar, imágenes, voz, música, ideas nuevas)
 
-## 📈 pentest — nivel 7/8 — Seguridad ofensiva en el lab aislado (VirtualBox)
-- Enumeración del lab: lab: Enumeración
+## 📈 pentest — nivel 8/8 — Seguridad ofensiva en el lab aislado (VirtualBox)
 - Detección de vulnerabilidades del lab: lab: Detección CVEs
 - Fuerza bruta del lab: lab: Brute FTP
 - Explotación del lab: lab: Exploit shell root
 - Escalada de privilegios del lab: lab: PrivEsc /etc/shadow
+- Post-explotación del lab: Post-explotación: informe final consolidado con vector vsftpd (shell root) + usermap_script (RCE root CVE-2007-2447) + escalada de 7 niveles documentada
 
-## 🔒 fabrica (Crear sus PROPIAS capacidades (librerías, tools, skills))
+## 📈 fabrica — nivel 2/8 — Crear sus PROPIAS capacidades (librerías, tools, skills)
+- Instalar dependencia (impacket) y usarla como vector real de exploit RCE root
