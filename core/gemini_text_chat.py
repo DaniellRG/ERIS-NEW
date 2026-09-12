@@ -31,6 +31,7 @@ _GEMINI_PRIORITY_TOOLS = [
     "scheduler", "goals", "knowledge_base", "user_profile", "git_control",
     "code_assistant", "file_editor", "context_read", "morning_brief",
     "document_handler", "image_analyzer", "translator", "web_jobs",
+    "lab_pulse",
 ]
 
 
@@ -509,6 +510,8 @@ class GeminiTextChat:
                 try:
                     if on_token:
                         chunks = []
+                        stream_parts = []
+                        had_fc = False
                         for chunk in self._client.models.generate_content_stream(
                             model=_get_chat_model(),
                             contents=self._history,
@@ -519,9 +522,31 @@ class GeminiTextChat:
                             ),
                         ):
                             chunks.append(chunk)
-                            if on_token and chunk.text:
+                            if chunk.candidates and chunk.candidates[0].content and chunk.candidates[0].content.parts:
+                                for _p in chunk.candidates[0].content.parts:
+                                    stream_parts.append(_p)
+                                    if getattr(_p, "function_call", None):
+                                        had_fc = True
+                            if on_token and not had_fc and getattr(chunk, "text", ""):
                                 on_token(chunk.text)
-                        response = chunks[-1] if chunks else None
+                        # En streaming los function_call pueden llegar en chunks tempranos,
+                        # así que construimos la "respuesta" consolidando todas las partes.
+                        if chunks and (stream_parts or any(
+                            (ch.candidates and ch.candidates[0].content and ch.candidates[0].content.parts) for ch in chunks
+                        )):
+                            from google.genai import types as _gtypes
+                            agg_parts = []
+                            for _ch in chunks:
+                                if _ch.candidates and _ch.candidates[0].content and _ch.candidates[0].content.parts:
+                                    agg_parts.extend(_ch.candidates[0].content.parts)
+                            response = _gtypes.GenerateContentResponse(
+                                candidates=[
+                                    _gtypes.Candidate(content=_gtypes.Content(
+                                        role="model", parts=agg_parts))
+                                ]
+                            )
+                        else:
+                            response = None
                     else:
                         response = self._client.models.generate_content(
                             model=_get_chat_model(),
@@ -568,12 +593,17 @@ class GeminiTextChat:
                 args = dict(fc.args) if fc.args else {}
                 print(f"[GeminiText] 🔧 Tool: {name}({list(args.keys())})")
                 result = await self._execute_tool(name, args)
+                if result and result != "None":
+                    _snippet = str(result).replace("\n", " ")[:300]
+                    print(f"[GeminiText]   ↳ {_snippet}")
                 tool_responses.append(types.Part.from_function_response(
                     name=name,
                     response={"result": result}
                 ))
 
-            self._history.append(types.Content(role="tool", parts=tool_responses))
+            # Gemini v2.x: las respuestas de tool van con role='user' + from_function_response
+            # (role='tool' fue removido de la API v1beta en google-genai >= 2.0).
+            self._history.append(types.Content(role="user", parts=tool_responses))
 
         return " ".join(text_parts).strip() if text_parts else "Listo."
 
@@ -590,18 +620,33 @@ class GeminiTextChat:
             except Exception as e:
                 print(f"[GeminiText] Dispatcher error: {e}")
 
-        # Fallback: direct import from actions
+        # Fallback: tool_registry (cubre acciones core, custom/fábrica y plugins)
         try:
-            import importlib
-            mod = importlib.import_module(f"actions.{name}")
-            func = getattr(mod, "run", getattr(mod, "execute", None))
+            import asyncio
+            from core.tool_registry import get_tool
+            func = get_tool(name)
             if func:
-                import asyncio
                 loop = asyncio.get_event_loop()
                 result = await loop.run_in_executor(None, lambda: func(parameters=args))
                 return str(result)
         except Exception as e:
+            print(f"[GeminiText] Registry exec error: {e}")
+
+        # Último recurso: import directo desde actions (y actions.custom)
+        try:
+            import importlib
+            for modpath in (f"actions.{name}", f"actions.custom.{name}"):
+                try:
+                    mod = importlib.import_module(modpath)
+                except Exception:
+                    continue
+                func = getattr(mod, f"{name}_tool", None) or getattr(mod, "run", getattr(mod, "execute", None))
+                if func:
+                    import asyncio
+                    loop = asyncio.get_event_loop()
+                    result = await loop.run_in_executor(None, lambda: func(parameters=args))
+                    return str(result)
+        except Exception as e:
             print(f"[GeminiText] Direct exec error: {e}")
-            traceback.print_exc()
 
         return f"Error ejecutando {name}"

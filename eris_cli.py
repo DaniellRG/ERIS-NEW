@@ -200,6 +200,16 @@ async def chat_loop():
     from core.gemini_text_chat import GeminiTextChat
     from core.tool_dispatcher import ToolDispatcher
 
+    # Cargar tools custom (fábrica) para que estén disponibles en el CLI
+    try:
+        from core.tool_registry import install_custom_tools
+        install_custom_tools(BASE_DIR)
+        from core.tool_declarations import load_custom_tools
+        load_custom_tools(BASE_DIR)
+    except Exception:
+        import traceback as _tb
+        _tb.print_exc()
+
     stub = CLIStub()
 
     print(f"\n{C.DIM}Inicializando Eris...{C.RESET}")
