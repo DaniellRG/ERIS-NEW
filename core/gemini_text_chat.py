@@ -90,6 +90,18 @@ def _get_ollama_config() -> dict:
     }
 
 
+def _get_openrouter_config() -> dict:
+    from core.audio_config import get_config
+    cfg = get_config()
+    return {
+        "enabled": bool(cfg.get("openrouter_api_key")),
+        "api_key": cfg.get("openrouter_api_key", ""),
+        "model": cfg.get("openrouter_model", "") or "meta-llama/llama-3.3-70b-instruct",
+        "base_url": cfg.get("openrouter_base_url", "https://openrouter.ai/api/v1").rstrip("/"),
+        "max_tokens": cfg.get("openrouter_max_tokens", 512),
+    }
+
+
 class GeminiTextChat:
     """Multi-turn chat with tool execution. Uses Ollama (local) by default, Gemini as fallback."""
 
@@ -121,6 +133,14 @@ class GeminiTextChat:
             self._ollama_model = None
             self._backend = f"gemini:{_get_chat_model()}"
 
+        # OpenRouter como fallback cuando Gemini está saturado / sin cuota.
+        or_cfg = _get_openrouter_config()
+        self._use_openrouter = or_cfg["enabled"]
+        self._openrouter_api_key = or_cfg["api_key"]
+        self._openrouter_model = or_cfg["model"]
+        self._openrouter_url = or_cfg["base_url"] + "/chat/completions"
+        self._openrouter_max_tokens = or_cfg.get("max_tokens") or 640
+
     def _check_ollama(self, base_url: str) -> bool:
         """Check if Ollama is reachable."""
         import urllib.request
@@ -141,16 +161,22 @@ class GeminiTextChat:
         await self._compact_history()
         if self._use_ollama:
             return await self._chat_ollama(user_text)
-        else:
-            return await self._chat_gemini(user_text)
+        if self._use_openrouter:
+            result = await self._chat_openrouter(user_text)
+            if not result or not result.startswith("Error de OpenRouter"):
+                return result or "Listo."
+        return await self._chat_gemini(user_text)
 
     async def stream_chat(self, user_text: str, on_token=None) -> str:
         """Igual que chat() pero transmite tokens al callback `on_token` si se provee."""
         await self._compact_history()
         if self._use_ollama:
             return await self._chat_ollama(user_text, on_token=on_token)
-        else:
-            return await self._chat_gemini(user_text, on_token=on_token)
+        if self._use_openrouter:
+            result = await self._chat_openrouter(user_text, on_token=on_token)
+            if not result or not result.startswith("Error de OpenRouter"):
+                return result or "Listo."
+        return await self._chat_gemini(user_text, on_token=on_token)
 
     # ── Compactación de contexto ──
 
@@ -276,9 +302,10 @@ class GeminiTextChat:
                 messages.append({"role": role, "content": text})
         messages.append({"role": "user", "content": user_text})
 
-        # Build tools payload for Ollama
+        # Build tools payload for Ollama (limitado a _GEMINI_TOOL_CAP igual que
+        # Gemini: 493 tools + prompt completo exceden el contexto en CPU/VRAM).
         ollama_tools = []
-        for t in TOOL_DECLARATIONS:
+        for t in TOOL_DECLARATIONS[:_GEMINI_TOOL_CAP]:
             ollama_tools.append({
                 "type": "function",
                 "function": {
@@ -361,6 +388,95 @@ class GeminiTextChat:
             messages.extend(tool_results)
 
         return content or "Listo."
+
+    # ── OpenRouter backend (fallback cuando Gemini esta saturado/sin cuota) ──
+
+    async def _chat_openrouter(self, user_text: str, on_token=None) -> str:
+        import requests
+
+        or_tools = []
+        for t in TOOL_DECLARATIONS[: _GEMINI_TOOL_CAP]:
+            or_tools.append({
+                "type": "function",
+                "function": {
+                    "name": t["name"],
+                    "description": t.get("description", ""),
+                    "parameters": t.get("parameters", {"type": "object", "properties": {}}),
+                },
+            })
+        msgs = [{"role": "system", "content": self._system}]
+        for msg in self._history[:-1]:
+            role = "assistant" if getattr(msg, "role", "model") == "model" else "user"
+            text = " ".join(p.text for p in msg.parts if p.text) if hasattr(msg, "parts") else ""
+            if text:
+                msgs.append({"role": role, "content": text})
+        msgs.append({"role": "user", "content": user_text})
+
+        def _round_response():
+            payload = {
+                "model": self._openrouter_model,
+                "messages": msgs,
+                "tools": or_tools,
+                "max_tokens": self._openrouter_max_tokens or 2048,
+            }
+            r = requests.post(
+                self._openrouter_url,
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {self._openrouter_api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=120,
+            )
+            r.raise_for_status()
+            data = r.json()
+            c = data["choices"][0]["message"]
+            return c.get("content", ""), c.get("tool_calls", [])
+
+        for _round in range(6):
+            try:
+                content, tool_calls = _round_response()
+            except Exception as e:
+                return f"Error de OpenRouter: {e}"
+
+            if not tool_calls:
+                self._append_model_content(content)
+                return content or "Listo."
+
+            tool_results = []
+            for tc in tool_calls:
+                fn = tc.get("function", {})
+                name = fn.get("name", "")
+                args = fn.get("arguments", {})
+                if isinstance(args, str):
+                    try:
+                        args = json.loads(args)
+                    except Exception:
+                        args = {}
+                print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
+                result = await self._execute_tool(name, args)
+                tool_results.append({"role": "tool", "content": str(result)})
+
+            msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
+            msgs.extend(tool_results)
+
+        self._append_model_content(content)
+        return content or "Listo."
+
+    def _append_model_content(self, text: str):
+        """Persiste una respuesta de assistant en el historial en el formato
+        correcto según el backend activo (Gemini types.Content vs. objeto simple)."""
+        if self._use_ollama:
+            self._history.append(type("Msg", (), {
+                "role": "model",
+                "parts": [type("Part", (), {"text": text})()],
+            })())
+        else:
+            from google.genai import types
+            self._history.append(types.Content(
+                role="model",
+                parts=[types.Part.from_text(text=text)]
+            ))
 
     # ── Gemini backend ──
 
