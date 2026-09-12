@@ -1,7 +1,7 @@
 # Escalada GLOBAL de ERIS — nivel por nivel (fácil → difícil)
 
-Actualizado: 2026-09-11 23:29
-Dominios activos: 12 — Total de logros: 24
+Actualizado: 2026-09-11 23:46
+Dominios activos: 12 — Total de logros: 25
 
 ## 📈 comunicacion — nivel 2/8 — Hablar, responder claro, expresar ideas, conversar gente
 - Explicar un pentest completo (recorrido de 8 niveles) en lenguaje claro y con reporte markdown documentado
@@ -10,9 +10,10 @@ Dominios activos: 12 — Total de logros: 24
 - Arreglé el exploit vsftpd para comandos con espacios (comillas dobles)
 - Escribir md5crypt en Python puro y openssl passwd para crack offline; importar impacket/paramiko
 
-## 📈 sistema — nivel 3/8 — Linux, terminal, procesos, red, automatizar el PC
+## 📈 sistema — nivel 4/8 — Linux, terminal, procesos, red, automatizar el PC
 - Diagnosticar y reiniciar VM lab (VBoxManage), validar servicios, y portabilizar codigo Windows/Linux
 - Capturar el exploit vsftpd a nivel de red (tshark/dumpcap en vboxnet0, newgrp wireshark) y ver el backdoor completo
+- Explotar el segundo vector (usermap_script CVE-2007-2447) y capturarlo en vivo a nivel de red: dumpcap en vboxnet0 puerto 445, payload en Session Setup AndX NTLMSSP_AUTH smb.uname, LOGON_FAILURE tras ejecutar
 
 ## 📈 archivos — nivel 2/8 — Crear, ordenar, buscar y transformar archivos/documentos
 - Crear la libreria eris_metasploitable (archivo .py real en libraries/) con la fabrica y usarla
