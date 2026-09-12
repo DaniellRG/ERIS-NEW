@@ -107,3 +107,4 @@ android_eris/assets/eris_config.json
 .venv-linux/
 .venv-linux
 mobile/eris_mobile.config.json
+data/knowledge/crack/rockyou_full.txt
