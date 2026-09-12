@@ -1,7 +1,7 @@
 # Escalada GLOBAL de ERIS — nivel por nivel (fácil → difícil)
 
-Actualizado: 2026-09-11 23:21
-Dominios activos: 12 — Total de logros: 23
+Actualizado: 2026-09-11 23:29
+Dominios activos: 12 — Total de logros: 24
 
 ## 📈 comunicacion — nivel 2/8 — Hablar, responder claro, expresar ideas, conversar gente
 - Explicar un pentest completo (recorrido de 8 niveles) en lenguaje claro y con reporte markdown documentado
@@ -46,3 +46,4 @@ Dominios activos: 12 — Total de logros: 23
 ## 📈 fabrica — nivel 3/8 — Crear sus PROPIAS capacidades (librerías, tools, skills)
 - Instalar dependencia (impacket) y usarla como vector real de exploit RCE root
 - Crear librería real eris_metasploitable (3 funciones) y TOOL completa lab_pulse registrada en runtime + declaracion persistida
+- Crear skill pentest_lab_viaje (SKILL.md con la guia completa del lab: 8 niveles, 2 exploits, sniffing, crack) — 3er tipo de la fabrica (libreria+tool+skill)
