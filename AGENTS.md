@@ -126,3 +126,30 @@ $env:PYTHONIOENCODING="utf-8"
 `test_all.py` verifies: tool registry (490), declarations (490), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **160 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 2 WARN (neuro nodes, ctypes.windll)**.
 
 Run after any structural change. Current: **160 PASS, 1 FAIL ambiental**.
+
+## Avatar VRM 3D (flotante, Eris.vrm)
+
+- **Decision del usuario**: el modelo 3D NO va en la ventana principal. Solo el
+  orbe flotante se conmuta a "Modelo 3D (VRM)" desde Ajustes → combo "Flotante"
+  (config `floating_visual`, default `orb`, hoy `vrm`). En `_go_to_orb` de
+  `ui.py` se decide: si `floating_visual=="vrm"` y `VrmAvatar` existe → `show_float()`.
+- **VrmAvatar** (`ui.py:2441`): ventana 340×480 frameless siempre-al-tope, transparente
+  (`WA_TranslucentBackground` + `page().setBackgroundColor(Qt.transparent)`), carga
+  `assets/vrm/viewer.html` servido por `core/vrm_server.py` (mini HTTP local; los ES
+  modules no abren desde `file://`). Comunicación: `runJavaScript` (Python→JS) +
+  QWebChannel (JS→Python).
+- **viewer.html**: three.js 0.160 + @pixiv/three-vrm 3.5 (`assets/vrm/lib/`, locales).
+  Pose procedural en `naturalPose()`: VRoid exporta T-pose → los brazos se bajan 90°
+  (rotation.z en los nodos normalizados `getNormalizedBoneNode`, NO raw: `vrm.update()`
+  pisa los raw). Codos vía `bendJointTowardFront` (mundo, determinista; NUNCA componer
+  sobre el quaternion previo del hueso = compounding = brazos locos). Giro lento con
+  peso, respiración, mirada, parpadeo, lip-sync aa/oh.
+- **Studio**: `Ctrl+Alt+A` → `VrmAnimStudio` (sliders en vivo, guarda en
+  `config/api_keys.json → vrm_anim`; se recarga al iniciar el avatar).
+- **BUG ABIERTO (prioridad)**: el avatar carga (log sin errores JS) pero NO se ve en
+  Linux/Wayland. Guards anti-NaN ya aplicados (cámara en 0,0,0 → frente nulo → NaN).
+  Debug: servir `assets/vrm/` con `python -m http.server` y abrir el viewer en un
+  navegador; más `window.__eris_errors`. Si renderiza afuera, el problema es Qt/GPU.
+- **GPU**: `core/gpu_config.py` debe correr ANTES de crear QApplication (main.py línea 8).
+  En Linux fuerza `QSG_RHI_BACKEND=opengl` + `--no-sandbox` en QTWEBENGINE_CHROMIUM_FLAGS
+  (d3d11 no existe → crash "Unsupported Graphics API: 4").

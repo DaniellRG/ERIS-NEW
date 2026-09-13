@@ -39,6 +39,11 @@ scripts Node/JS solo existen como plantillas para generar proyectos de usuario.
 
 Estado del repote y cómo seguir después de un tiempo sin tocar el código:
 
+0. **BUG ABIERTO — Avatar VRM no se ve (¡empezar por acá!)**: el modelo 3D
+   flotante (`floating_visual=vrm` en config) carga sin errores JS en el log
+   pero la ventana queda vacía en Linux/Wayland. Detalles, causa candidata y
+   pasos de debug en la sección 3 (entrada "Avatar VRM 3D flotante"). El studio
+   (`Ctrl+Alt+A`) y los parámetros `vrm_anim` ya funcionan; falta el render.
 1. **Regenerate**: `git pull` en la otra PC; `git log --oneline -15` para ver lo
    último; probar `python test_all.py` (gate: 56 PASS en esta máquina).
 2. **Tools son sagradas**: `core/tool_registry.py` == `core/tool_declarations.py`
@@ -68,6 +73,49 @@ Estado del repote y cómo seguir después de un tiempo sin tocar el código:
 ## 3. Bitácora de mejoras recientes (2026-09)
 
 Todo esto está en `main` y pusheado a `origin`.
+
+### 🧊 Avatar VRM 3D flotante — ERIS en 3D (2026-09-12, `0aa91b8`)
+- **Objetivo** (decisión del usuario): el avatar 3D NO va en la ventana principal;
+  solo el **orbe flotante** se conmuta a "Modelo 3D (VRM)" desde Ajustes
+  (combo "Flotante", config `floating_visual`, default `orb`, hoy `vrm`).
+- **VrmAvatar** (`ui.py`): ventana flotante 340×480, frameless, siempre al tope,
+  transparente (WA_TranslucentBackground + `page().setBackgroundColor(transparent)`)
+  que carga `assets/vrm/viewer.html` vía mini HTTP local (`core/vrm_server.py`,
+  los ES modules no abren desde `file://`). Interfaz: `runJavaScript` (Python→JS)
+  + QWebChannel (JS→Python, model_loaded/errores).
+- **viewer.html**: three.js 0.160 + @pixiv/three-vrm 3.5 (libs locales en
+  `assets/vrm/lib/`, estructura tipo unpkg). `Eris.vrm` = modelo VRM 1.0 de
+  VRoid Studio (16.7 MB, commiteado). Motor procedural:
+  - Lip-sync por visemas `aa`/`oh` (boca se cierra a volumen 0; tope 0.55/0.22).
+  - Parpadeo automático, respiración, mirada sutil.
+  - **Pose natural**: el .vrm de VRoid viene en T-Pose → los brazos se bajan 90°
+    colgando a los costados con codos flexionados y dedos curvados.
+  - **Giro lento del cuerpo con peso** (~28s/ciclo): al girar, el peso pasa a la
+    pierna contraria, el torso resiste parcialmente y la cabeza compensa.
+  - **Parámetros ajustables** en `window.ANIM` + `window.setAnimParam(name,val)`
+    + `window.applyAnimConfig(cfg)`.
+- **Studio de animación 3D**: `Ctrl+Alt+A` → diálogo `VrmAnimStudio` (`ui.py`)
+  con sliders en vivo (abertura/vaivén de brazos, codos, muñecas, dedos,
+  respiración, sway de caderas, giro, peso, contragiro, cabeza, piernas, flote).
+  "Guardar" persiste en `config/api_keys.json` → clave `vrm_anim`
+  (recargado al iniciar el avatar).
+- **Fix crash "Unsupported Graphics API: 4"** (`core/gpu_config.py`): forzaba
+  `QSG_RHI_BACKEND=d3d11` en Linux (no existe) → QtWebEngine moría; ahora en
+  Linux usa `opengl` y antepone `--no-sandbox` a QTWEBENGINE_CHROMIUM_FLAGS
+  (con espacios correctos entre flags concatenados).
+- **Import de QtWebEngine ordenado**: `QtWebEngineWidgets` (o
+  `AA_ShareOpenGLContexts`) se importa ANTES de la primera QApplication y solo
+  si `assets/vrm/Eris.vrm` existe (`main.py` bloque temprano, `ui.py` `_vrm_ok`).
+- ⚠️ **BUG ABIERTO — el modelo NO aparece en pantalla en esta PC Linux**. El
+  log muestra el modelo cargando sin errores JS, pero la ventana queda vacía.
+  Se aplicaron guards anti-NaN (el frente calculado con la cámara en `(0,0,0)`
+  daba vector nulo → NaN → esqueleto colapsado), el encuadre se hace antes de la
+  primera pose, y se reemplazó `getBoneNode()` deprecado por `getRawBoneNode()`.
+  **Siguiente paso sugerido en la otra PC**: capturar `console.log`
+  (añadir `window.__eris_errors` ya existe) o probar el viewer.html directo en
+  un navegador (sirviendo `assets/vrm/` con `python -m http.server`) para ver
+  si renderiza fuera de QtWebEngine; si renderiza, el problema es Qt/GPU; si no,
+  el HTML/JS.
 
 ### 🩺 Fix Live 1011 crónico (2026-09-07, `e8bbfd7`)
 - **`google_calendar` fuera del payload Live**: su nombre viola la regla de
