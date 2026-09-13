@@ -8,6 +8,11 @@ _MONITORING = False
 _MONITOR_THREAD = None
 _LAST_SCAN = ""
 _DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "vision_guardian.json"
+_INJECT_FN = None
+_SPEAKING_FN = None
+_LAST_INJECTED = ""
+_LAST_INJECT_TS = 0.0
+_INJECT_COOLDOWN = 90
 
 
 def vision_guardian(parameters: dict = None, player=None) -> str:
@@ -60,12 +65,48 @@ def vision_guardian(parameters: dict = None, player=None) -> str:
 
 
 def start(**kwargs) -> None:
-    _start_monitor(None)
+    """Arranca el monitoreo en background. kwargs admitidos:
+    - inject_fn (callable): inyecta la vista en el contexto del modelo.
+    - speaking_fn (callable): devuelve True si Eris está hablando (no inyectar).
+    - enabled (bool): activa el monitoreo automatico (default: leer config).
+    - interval (int): segundos entre analisis (default: config o 90).
+    """
+    global _INJECT_FN, _SPEAKING_FN, _MONITORING
+    _INJECT_FN = kwargs.get("inject_fn")
+    _SPEAKING_FN = kwargs.get("speaking_fn")
+    interval = int(kwargs.get("interval", 0) or 0) or _config_interval()
+    enabled = kwargs.get("enabled")
+    if enabled is None:
+        enabled = _is_enabled()
+    if enabled:
+        _MONITORING = True
+    _start_monitor(None, interval)
+
+
+def _config_interval() -> int:
+    try:
+        cfg = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        c = json.loads(cfg.read_text(encoding="utf-8"))
+        return int(c.get("vision_guardian_interval", 90))
+    except Exception:
+        return 90
+
+
+def _is_enabled() -> bool:
+    try:
+        cfg = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        c = json.loads(cfg.read_text(encoding="utf-8"))
+        return bool(c.get("vision_guardian_enabled", True))
+    except Exception:
+        return True
 
 
 def _start_monitor(player, interval: int = 60) -> None:
+    if interval < 10:
+        interval = 10
+
     def _loop():
-        global _LAST_SCAN
+        global _LAST_SCAN, _LAST_INJECTED, _LAST_INJECT_TS
         while _MONITORING:
             try:
                 result = _scan_screen(player)
@@ -73,6 +114,9 @@ def _start_monitor(player, interval: int = 60) -> None:
                 _log_event("scan", result[:200])
                 if player and "ALERTA" in result:
                     player.write_log("[Vision Guardian] {}".format(result[:100]))
+                # Inyectar la vista en el contexto del modelo si cambió y
+                # Eris no está hablando (Feature 2: mírame la pantalla sola).
+                _maybe_inject(result)
             except Exception:
                 pass
             for _ in range(interval):
@@ -84,6 +128,31 @@ def _start_monitor(player, interval: int = 60) -> None:
         return
     _MONITOR_THREAD = threading.Thread(target=_loop, daemon=True, name="vision-guardian")
     _MONITOR_THREAD.start()
+
+
+def _maybe_inject(result: str) -> None:
+    """Si la pantalla cambió respecto a la última vista inyectada y Eris no
+    está hablando, envía el análisis al contexto del modelo (throttleado).
+    Omitimos resultados que son errores o capturas fallidas."""
+    global _LAST_INJECTED, _LAST_INJECT_TS
+    if not _INJECT_FN:
+        return
+    s = str(result)
+    if any(t in s for t in ("Error", "No se pudo", "no disponible", "degradado")):
+        return
+    if _SPEAKING_FN:
+        try:
+            if _SPEAKING_FN():
+                return
+        except Exception:
+            pass
+    key = s[:140]
+    now = time.time()
+    if key != _LAST_INJECTED and (now - _LAST_INJECT_TS) >= _INJECT_COOLDOWN:
+        _LAST_INJECTED = key
+        _LAST_INJECT_TS = now
+        _INJECT_FN("[VISTA EN VIVO] {}\n(Esto lo ves por tus propios ojos, es contexto; usalo si aporta.)".format(s[:300]))
+        _log_event("inject", key[:100])
 
 
 def _scan_screen(player) -> str:

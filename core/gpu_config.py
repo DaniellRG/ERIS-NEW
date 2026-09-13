@@ -62,14 +62,23 @@ def configure_gpu():
 
     os.environ["ERIS_GPU_ACCEL"] = "1" if gpu_enabled else "0"
     if gpu_enabled:
-        os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = (
+        import platform as _p
+        _is_linux = _p.system().lower() == "linux"
+        _chromium_flags = (
             "--ignore-gpu-blocklist "
             "--enable-gpu-rasterization "
             "--enable-zero-copy "
             "--num-raster-threads=4 "
-            "--js-flags=--max-old-space-size=1024"
+            "--js-flags=--max-old-space-size=1024 "
         )
-        os.environ["QSG_RHI_BACKEND"] = "d3d11"
+        if _is_linux:
+            # Linux/Wayland: d3d11 no existe; Qt WebEngine aborta con
+            # "Unsupported Graphics API: 4" si QSG_RHI_BACKEND no es opengl.
+            _chromium_flags += "--no-sandbox "
+            os.environ["QSG_RHI_BACKEND"] = "opengl"
+        else:
+            os.environ["QSG_RHI_BACKEND"] = "d3d11"
+        os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = _chromium_flags
         os.environ["QSG_INFO"] = "1"
         print("[ERIS] GPU Acceleration is ENABLED. Offloading RAM rendering workload to GPU.")
     else:

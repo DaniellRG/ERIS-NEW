@@ -1,0 +1,2 @@
+{"ts": "2026-09-12T14:00:00", "event": "record", "id": "mem_repref", "key": "respuesta_preferencia", "type": "preference", "text": "El usuario prefiere respuestas cortas y directas", "value": null}
+{"ts": "2026-09-12T15:39:26", "event": "record", "id": "mem_5384087b0b", "key": "mes_laboratorio", "type": "event", "text": "En septiembre 2026 configuramos el lab de pentest en VirtualBox", "value": null, "confidence": 0.7, "tags": []}

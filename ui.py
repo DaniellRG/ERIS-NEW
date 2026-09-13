@@ -33,7 +33,7 @@ from PyQt6.QtWidgets import (
     QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QPushButton, QScrollArea, QSplashScreen, QSystemTrayIcon,
-    QTextEdit, QVBoxLayout, QWidget, QMenu, QTabWidget,
+    QTextEdit, QVBoxLayout, QWidget, QMenu, QTabWidget, QSlider,
     QSplitter, QSizePolicy, QRadioButton,
 )
 from PyQt6.QtGui import QShortcut, QKeySequence
@@ -1797,6 +1797,19 @@ class SettingsDialog(QDialog):
         hl_visual.addStretch()
         gb2_layout.addLayout(hl_visual)
 
+        hl_float = QHBoxLayout()
+        lbl_float = QLabel("Flotante:")
+        lbl_float.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
+        hl_float.addWidget(lbl_float)
+        self._floating_visual = QComboBox()
+        self._floating_visual.addItems(["Orbe (partículas)", "Modelo 3D (VRM)"])
+        self._floating_visual.setCurrentText(
+            "Modelo 3D (VRM)" if self._cfg.get("floating_visual", "orb") == "vrm" else "Orbe (partículas)"
+        )
+        hl_float.addWidget(self._floating_visual)
+        hl_float.addStretch()
+        gb2_layout.addLayout(hl_float)
+
         form.addWidget(gb2)
 
         form.addStretch()
@@ -2263,6 +2276,7 @@ class SettingsDialog(QDialog):
             "glow_intensity": _safe_float(self._glow_intensity.entry.text(), 0.5),
             "webgl_orb": self._orb_renderer.currentText() == "WebGL (3D)",
             "central_visual": "face" if self._central_visual.currentText().startswith("Cara") else "orb",
+            "floating_visual": "vrm" if self._floating_visual.currentText().startswith("Modelo") else "orb",
             "os_system": self._cfg.get("os_system", "windows"),
         })
         # Si se eligió un micro concreto, guardar su tasa nativa (Linux/ALSA:
@@ -2404,7 +2418,330 @@ class FloatingOrb(QWidget):
         self.hide()
 
 
-# ── Interactive Menu Dialog (pregunta con opciones estilo opencode) ────────────
+# ── VRM 3D Avatar (Modelo 3D de Eris, Always on Top) ────────────────────────────
+class _VrmBridge(QObject):
+    """Bridge JS→Python for the VRM viewer (model loaded / errores)."""
+    def __init__(self, avatar):
+        super().__init__()
+        self.avatar = avatar
+
+    @pyqtSlot(str)
+    def log(self, msg):
+        pass
+
+    @pyqtSlot(str)
+    def error(self, msg):
+        pass
+
+    @pyqtSlot()
+    def model_loaded(self):
+        self.avatar._on_model_loaded()
+
+
+class VrmAvatar(QWidget):
+    """Ventana flotante que renderiza el modelo 3D Eris.vrm (three-vrm).
+
+    Usa un QWebEngineView transparente que carga viewer.html servido por un
+    mini HTTP server local (los ES modules no cargan desde file://). Se
+    comunica con Python vía QWebEngineView.runJavaScript (Python→JS) y
+    QWebChannel (JS→Python, mínimos).
+    """
+    states = ("IDLE", "LISTENING", "THINKING", "SPEAKING", "INITIATING", "MUTED", "ERROR")
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowFlags(
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.Tool
+        )
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setFixedSize(340, 480)
+
+        from PyQt6.QtWebEngineWidgets import QWebEngineView
+        from PyQt6.QtWebEngineCore import QWebEngineSettings
+
+        self._view = QWebEngineView(self)
+        self._view.setStyleSheet("background: transparent; border: none;")
+        self._view.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        self._view.setGeometry(0, 0, 340, 480)
+        self._view.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        try:
+            self._view.page().setBackgroundColor(Qt.GlobalColor.transparent)
+        except Exception:
+            pass
+
+        self._channel = QWebChannel()
+        self._bridge = _VrmBridge(self)
+        self._channel.registerObject("pyBridge", self._bridge)
+        self._view.page().setWebChannel(self._channel)
+
+        s = self._view.settings()
+        s.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, True)
+        s.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
+        s.setAttribute(QWebEngineSettings.WebAttribute.ScreenCaptureEnabled, True)
+
+        self._loaded = False
+        self._pending_state = None
+        self._view.loadFinished.connect(self._on_load_finished)
+
+        # Parámetros de animación (espejo de window.ANIM en viewer.html)
+        self._anim_cfg = {
+            "abertura_brazos": 0.12, "swing_brazos": 0.015, "flex_codos": 0.55,
+            "flex_munecas": 0.05, "curva_dedos": 0.15, "respiracion": 0.015,
+            "balanceo_caderas": 0.005, "giro_cuerpo": 0.06, "peso_giro": 0.025,
+            "contragiro_tronco": 0.35, "compensa_cabeza": 0.8,
+            "mirada_cabeza": 0.035, "peso_piernas": 0.008, "flote": 0.004,
+        }
+        self.load_anim_config()
+
+        try:
+            from core.vrm_server import vrm_server_url
+            self._view.setUrl(QUrl(vrm_server_url()))
+        except Exception:
+            self._view.setHtml(
+                "<html><body style='background:transparent;color:white;font:12px sans-serif'>"
+                "<div style='display:flex;align-items:center;justify-content:center;height:100%'>"
+                "Eris — VRM no disponible</div></body></html>"
+            )
+        self._view.show()
+
+        self._drag_pos = None
+        self._drag_start = None
+        self._visible = False
+        self._state = "IDLE"
+        self.show_main_callback = None
+
+    def _on_load_finished(self, ok: bool):
+        self._loaded = ok
+        if ok:
+            self.apply_anim_config()
+            if self._pending_state:
+                self.set_state(self._pending_state)
+                self._pending_state = None
+
+    def _on_model_loaded(self):
+        if self._pending_state:
+            self.set_state(self._pending_state)
+            self._pending_state = None
+
+    def _js(self, script: str):
+        if not self._loaded:
+            return
+        try:
+            self._view.page().runJavaScript(script)
+        except Exception:
+            pass
+
+    # ── API pública (misma firma que FloatingOrb/WebGLOrb) ──
+    def set_state(self, state: str):
+        self._state = state
+        if not self._loaded:
+            self._pending_state = state
+            return
+        self._js(f"window.updateState && window.updateState({json.dumps(state)});")
+
+    def set_audio_level(self, level: float):
+        self._js(f"window.updateVolume && window.updateVolume({float(max(0.0, min(1.0, level)))});")
+
+    def set_expression(self, emotion: str):
+        self._js(f"window.setExpression && window.setExpression({json.dumps(emotion)});")
+
+    def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
+        if emotion:
+            self.set_expression(emotion)
+
+    def show_float(self):
+        self._visible = True
+        screen = QApplication.primaryScreen().geometry()
+        self.move(screen.width() - self.width() - 20, screen.height() // 3 - 40)
+        self.show()
+        self.raise_()
+        self.activateWindow()
+        self._js("window.updateState && window.updateState('IDLE');")
+
+    def hide_float(self):
+        self._visible = False
+        self.hide()
+
+    # ── drag & click (mismo patrón que FloatingOrb) ──
+    def _on_click(self, e):
+        if self.show_main_callback:
+            self.show_main_callback()
+
+    # ── Config de animación (persistente en config/api_keys.json → "vrm_anim") ──
+    @staticmethod
+    def _anim_cfg_path():
+        from core.logging_setup import API_CONFIG_PATH
+        return API_CONFIG_PATH
+
+    def load_anim_config(self):
+        try:
+            p = self._anim_cfg_path()
+            if p and p.exists():
+                cfg = json.loads(p.read_text("utf-8"))
+                anim = cfg.get("vrm_anim", {})
+                if anim:
+                    self._anim_cfg = dict(anim)
+        except Exception:
+            pass
+        return dict(self._anim_cfg)
+
+    def save_anim_config(self):
+        try:
+            p = self._anim_cfg_path()
+            if p and p.exists():
+                cfg = json.loads(p.read_text("utf-8"))
+            else:
+                cfg = {}
+            cfg["vrm_anim"] = dict(self._anim_cfg)
+            p.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), "utf-8")
+        except Exception:
+            pass
+
+    def set_anim_param(self, name: str, value: float):
+        self._anim_cfg[name] = float(value)
+        self._js(f"window.setAnimParam && window.setAnimParam({json.dumps(name)}, {float(value)});")
+
+    def apply_anim_config(self):
+        cfg = dict(self._anim_cfg)
+        self._js(f"window.applyAnimConfig && window.applyAnimConfig({json.dumps(cfg)});")
+
+    def set_config_key(self, key: str, value):
+        try:
+            p = self._anim_cfg_path()
+            if p and p.exists():
+                cfg = json.loads(p.read_text("utf-8"))
+            else:
+                cfg = {}
+            cfg[key] = value
+            p.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), "utf-8")
+        except Exception:
+            pass
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
+            self._drag_pos = e.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            self._drag_start = e.globalPosition().toPoint()
+        if e.button() == Qt.MouseButton.RightButton:
+            self._on_click(e)
+
+    def mouseMoveEvent(self, e):
+        if e.buttons() & Qt.MouseButton.LeftButton and self._drag_pos is not None:
+            self.move(e.globalPosition().toPoint() - self._drag_pos)
+
+    def mouseReleaseEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton and self._drag_start is not None:
+            dist = (e.globalPosition().toPoint() - self._drag_start).manhattanLength()
+            if dist < 10:
+                self._on_click(e)
+        self._drag_pos = None
+        self._drag_start = None
+
+class VrmAnimStudio(QDialog):
+    """Entorno de moldeado del avatar 3D: sliders por grupo (brazos, caderas,
+    manos, dedos, peso de giro, respiración, cabeza) aplicados EN VIVO al
+    VrmAvatar. Al guardar persiste en config/api_keys.json ("vrm_anim")."""
+
+    def __init__(self, avatar, parent=None):
+        super().__init__(parent)
+        self._avatar = avatar
+        self.setWindowTitle("ERIS — Studio de animación 3D")
+        self.setMinimumWidth(460)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(16, 16, 16, 12)
+
+        hint = QLabel("Ajustá los movimientos en vivo. El modelo se actualiza mientras movés cada barra.")
+        hint.setWordWrap(True)
+        hint.setStyleSheet("color: %s; font-size: 11px;" % C.TEXT)
+        layout.addWidget(hint)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        body = QWidget()
+        form = QVBoxLayout(body)
+        form.setContentsMargins(4, 4, 4, 4)
+        form.setSpacing(10)
+        scroll.setWidget(body)
+        layout.addWidget(scroll, 1)
+
+        self._sliders = {}
+        for key, (label, lo, hi, step, default) in self._rows().items():
+            row = QHBoxLayout()
+            v = self._avatar._anim_cfg.get(key, default)
+            lbl = QLabel(label)
+            lbl.setFixedWidth(150)
+            lbl.setStyleSheet("color: %s; font-size: 11px;" % C.TEXT)
+            row.addWidget(lbl)
+            sl = QSlider(Qt.Orientation.Horizontal)
+            sl.setRange(int(lo / step), int(hi / step))
+            sl.setValue(int(v / step))
+            sl.setStyleSheet("QSlider::groove:horizontal { height: 4px; background: #444; border-radius: 2px; }"
+                             "QSlider::handle:horizontal { width: 14px; background: %s; border-radius: 7px; margin: -5px 0; }" % C.PRI)
+            val = QLabel("%.3f" % v)
+            val.setFixedWidth(52)
+            val.setStyleSheet("color: %s; font-size: 11px;" % C.ACC)
+            row.addWidget(sl)
+            row.addWidget(val)
+            form.addLayout(row)
+            self._sliders[key] = (sl, val, step)
+
+            def _on_change(key=key, sl=sl, val=val, step=step):
+                nv = sl.value() * step
+                val.setText("%.3f" % nv)
+                self._avatar.set_anim_param(key, nv)
+
+            sl.valueChanged.connect(_on_change)
+
+        btns = QHBoxLayout()
+        btns.addStretch(1)
+        reset = QPushButton("⏮ Restablecer")
+        save = QPushButton("✔ Guardar")
+        close = QPushButton("Cerrar")
+        for b in (reset, save, close):
+            b.setStyleSheet(
+                "QPushButton { background: %s; color: %s; border: none; border-radius: 18px;"
+                "padding: 8px 18px; font-size: 12px; font-weight: 600; }"
+                "QPushButton:hover { background: %s; }" % (C.PRI, C.BG, C.ACC))
+        reset.clicked.connect(self._reset_defaults)
+        save.clicked.connect(self._save)
+        close.clicked.connect(self.accept)
+        btns.addWidget(reset)
+        btns.addWidget(save)
+        btns.addWidget(close)
+        layout.addLayout(btns)
+
+    @staticmethod
+    def _rows():
+        return {
+            "abertura_brazos": ("Brazos: apertura A", 0.0, 0.4, 0.005, 0.12),
+            "swing_brazos": ("Brazos: vaivén", 0.0, 0.08, 0.001, 0.015),
+            "flex_codos": ("Codos: flexión", 0.0, 1.2, 0.01, 0.55),
+            "flex_munecas": ("Muñecas: relajación", 0.0, 0.4, 0.005, 0.05),
+            "curva_dedos": ("Manos: curva dedos", 0.0, 0.5, 0.005, 0.15),
+            "respiracion": ("Pecho: respiración", 0.0, 0.08, 0.001, 0.015),
+            "balanceo_caderas": ("Caderas: sway", 0.0, 0.04, 0.001, 0.005),
+            "giro_cuerpo": ("Cuerpo: giro lento", 0.0, 0.25, 0.005, 0.06),
+            "peso_giro": ("Peso en el giro", 0.0, 0.12, 0.001, 0.025),
+            "contragiro_tronco": ("Torso contra-giro", 0.0, 1.0, 0.01, 0.35),
+            "compensa_cabeza": ("Cabeza compensa", 0.0, 1.5, 0.01, 0.8),
+            "mirada_cabeza": ("Cabeza: mirada", 0.0, 0.12, 0.001, 0.035),
+            "peso_piernas": ("Piernas: peso", 0.0, 0.05, 0.001, 0.008),
+            "flote": ("Flote vertical", 0.0, 0.02, 0.0005, 0.004),
+        }
+
+    def _reset_defaults(self):
+        for key, (label, lo, hi, step, default) in self._rows().items():
+            sl, val, st = self._sliders[key]
+            sl.setValue(int(default / step))
+            self._avatar.set_anim_param(key, default)
+        self._avatar.save_anim_config()
+
+    def _save(self):
+        self._avatar.save_anim_config()
 
 class _OptionCard(QWidget):
     """Tarjeta clicable por opción. Single = selección única; Multi = checkbox.
@@ -2644,7 +2981,7 @@ class MainWindow(QMainWindow):
     _chunk_sig = pyqtSignal(str)
     _shutdown_sig = pyqtSignal()
 
-    def __init__(self, float_orb=None):
+    def __init__(self, float_orb=None, vrm_avatar=None):
         super().__init__()
         self.on_text_command = None
         self.on_stop_command = None
@@ -2652,6 +2989,7 @@ class MainWindow(QMainWindow):
         self.on_mute_command = None
         self._muted = False
         self._float_orb = float_orb
+        self._vrm_avatar = vrm_avatar
         self._eris_accum = ""
         self._floating_permiso = FloatingPermiso()
         self._drag_pos = None
@@ -2906,13 +3244,25 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+T"), self).activated.connect(self._toggle_terminal)
         QShortcut(QKeySequence("Ctrl+D"), self).activated.connect(self._toggle_deck)
         QShortcut(QKeySequence("Escape"), self).activated.connect(self._go_to_orb)
+        QShortcut(QKeySequence("Ctrl+Alt+A"), self).activated.connect(self._open_anim_studio)
         QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(self._quit_app)
 
     def _go_to_orb(self):
-        """Oculta la ventana principal, muestra orbe flotante."""
-        if self._float_orb:
+        """Oculta la ventana principal, muestra orbe flotante o avatar 3D."""
+        floating = self._central_visual_cfg("floating_visual", "orb") == "vrm"
+        use_vrm = floating and self._vrm_avatar is not None
+        if use_vrm:
+            self._vrm_avatar.show_float()
+        elif self._float_orb:
             self._float_orb.show_float()
         self.hide()
+
+    def _open_anim_studio(self):
+        """Abre el estudio de animación 3D (Ctrl+Alt+A)."""
+        if self._vrm_avatar is None:
+            return
+        studio = VrmAnimStudio(self._vrm_avatar, self)
+        studio.exec()
 
     def _setup_tray(self):
         icon_path = str(_base_dir() / "assets" / "ICOERIS.ico")
@@ -2952,14 +3302,14 @@ class MainWindow(QMainWindow):
             self._term_panel.refresh_theme()
         self.show()
 
-    def _central_visual_cfg(self) -> str:
+    def _central_visual_cfg(self, key: str = "central_visual", default: str = "face") -> str:
         try:
             from core.logging_setup import API_CONFIG_PATH
             if API_CONFIG_PATH.exists():
-                return json.loads(API_CONFIG_PATH.read_text("utf-8")).get("central_visual", "face")
+                return json.loads(API_CONFIG_PATH.read_text("utf-8")).get(key, default)
         except Exception:
             pass
-        return "face"
+        return default
 
     def _apply_central_visual(self, mode: str = ""):
         mode = mode or self._central_visual_cfg()
@@ -3013,6 +3363,8 @@ class MainWindow(QMainWindow):
     def show_main(self):
         if self._float_orb:
             self._float_orb.hide_float()
+        if self._vrm_avatar:
+            self._vrm_avatar.hide_float()
         self.show()
         self.raise_()
         self.activateWindow()
@@ -3085,6 +3437,13 @@ class MainWindow(QMainWindow):
         if sb:
             sb.setValue(sb.maximum())
 
+    def _append_thought(self, text: str):
+        """Pensamiento interno de Eris en el transcript (cursiva y tenue)."""
+        clean = text.replace("PENSANDO: ", "").replace("💭", "").strip()
+        self._append_transcript(
+            f"<i style='color:{getattr(C, 'TEXT_DIM', '#8a8a9a')}'>💭 {clean}</i>"
+        )
+
     def _update_eris_line(self, text: str):
         """Replace the last ERIS line in transcript with accumulated text."""
         doc = self._transcript.document()
@@ -3124,6 +3483,8 @@ class MainWindow(QMainWindow):
         self._state_sig.emit(state)
         if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_state(state)
+        if self._vrm_avatar and self._vrm_avatar.isVisible():
+            self._vrm_avatar.set_state(state)
 
     def write_log(self, text: str):
         if text == "__hide__":
@@ -3205,17 +3566,26 @@ class MainWindow(QMainWindow):
             self._orb.set_audio_level(level)
         if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_audio_level(level)
+        if self._vrm_avatar and self._vrm_avatar.isVisible():
+            self._vrm_avatar.set_audio_level(level)
 
     def set_face_speaking(self, value: bool):
         face = getattr(self, "_face", None)
         if face is not None:
             face.set_speaking(value)
+        if self._vrm_avatar and self._vrm_avatar.isVisible():
+            if value:
+                self._vrm_avatar.set_state("SPEAKING")
+            else:
+                self._vrm_avatar.set_state("IDLE")
 
     def set_orb_audio_level(self, level: float):
         if self._orb.isVisible():
             self._orb.set_audio_level(level)
         if self._float_orb and self._float_orb.isVisible():
             self._float_orb.set_audio_level(level)
+        if self._vrm_avatar and self._vrm_avatar.isVisible():
+            self._vrm_avatar.set_audio_level(level)
 
     def set_emotional_color(self, hex_color: str, strength: float = 0.5, emotion: str = ""):
         """Tiñe el/los orbes con el sentimiento dominante de Eris."""
@@ -3223,6 +3593,8 @@ class MainWindow(QMainWindow):
             self._orb.set_emotional_color(hex_color, strength, emotion)
         if self._float_orb:
             self._float_orb.set_emotional_color(hex_color, strength, emotion)
+        if self._vrm_avatar and self._vrm_avatar.isVisible():
+            self._vrm_avatar.set_emotional_color(hex_color, strength, emotion)
 
     def set_music(self, level: float):
         face = getattr(self, "_face", None)
@@ -3265,10 +3637,23 @@ class ErisUI:
     """Public API for main.py integration."""
 
     def __init__(self, face_png: str = ""):
-        # Chromium necesita un rasterizador: sin GPU usa SwiftShader (software).
-        # Antes se usaba "--disable-gpu --no-sandbox --disable-software-rasterizer"
-        # (sin NINGUN renderer) -> crashes 0x80000003 en Qt6WebEngineCore.
-        os.environ.setdefault("QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox")
+        # QtWebEngineWidgets exige importarse (o setear AA_ShareOpenGLContexts)
+        # ANTES de crear la primera QApplication; si no, el import lazy dentro de
+        # VrmAvatar lanza ImportError. Solo se carga si existe el modelo 3D.
+        # Los flags GRÁFICOS de WebEngine los define core/gpu_config.py al
+        # importar main.py (en Linux: QSG_RHI_BACKEND=opengl); aquí solo se
+        # garantiza el orden del import sin tocar Chromium/Qt.
+        self._vrm_model = _base_dir() / "assets" / "vrm" / "Eris.vrm"
+        self._vrm_ok = False
+        if self._vrm_model.exists():
+            try:
+                from PyQt6.QtCore import Qt as _QtC
+                if QApplication.instance() is None:
+                    QApplication.setAttribute(_QtC.ApplicationAttribute.AA_ShareOpenGLContexts)
+                import PyQt6.QtWebEngineWidgets  # noqa: F401
+                self._vrm_ok = True
+            except Exception:
+                self._vrm_ok = False
         self._app = QApplication.instance() or QApplication(sys.argv)
         _load_saved_theme()
         self._app.setStyle("Fusion")
@@ -3292,9 +3677,10 @@ class ErisUI:
         self._app.processEvents()
 
         self._float_orb = FloatingOrb()
+        self._vrm_avatar = VrmAvatar() if self._vrm_ok else None
         self._last_vol = 0.0
         try:
-            self._win = MainWindow(float_orb=self._float_orb)
+            self._win = MainWindow(float_orb=self._float_orb, vrm_avatar=self._vrm_avatar)
         except Exception as _mw_err:
             self._splash.close()
             from core.platform import show_messagebox
@@ -3305,6 +3691,8 @@ class ErisUI:
             )
             raise
         self._float_orb.show_main_callback = self._orb_clicked
+        if self._vrm_avatar:
+            self._vrm_avatar.show_main_callback = self._orb_clicked
         self._app.processEvents()
         self._splash.finish(self._win)
         self._win.show()
@@ -3380,6 +3768,11 @@ class ErisUI:
 
     def write_log(self, text: str):
         self._marshal(self._win.write_log, text)
+
+    def show_thought(self, text: str):
+        """Pensamiento interno de Eris (pipeline pensar→hablar): línea en
+        cursiva/tenue en el transcript, no se habla."""
+        self._marshal(self._win._append_thought, text)
 
     def show_plan(self, steps, statuses=None):
         self._marshal(self._win.show_plan, steps, statuses)

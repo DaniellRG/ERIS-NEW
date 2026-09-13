@@ -4756,14 +4756,22 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "memoria",
-        "description": "MEMORIA: fragmento de autoconocimiento y memoria total de ERIS. Delega tareas de memoria/autoconocimiento organizadas. Acciones: status (todo activo: RAG, sesiones, mundo, auto-mejora, proactivo, informe), recall (query=<tema a recordar> — búsqueda semántica en memoria total), sesiones (recientes), mundo (modelo del mundo), auto_mejora (estado), informe (generar con force=true o status), task (task=<texto libre> delegado al fragmento).",
+        "description": "MEMORIA: fragmento de autoconocimiento y memoria total de ERIS. Delega tareas de memoria/autoconocimiento organizadas. Acciones: status (todo activo: RAG, sesiones, mundo, auto-mejora, proactivo, informe), recall (query=<tema a recordar> — búsqueda semántica en memoria total), curar (sub=status|record|recall|as_of|changed_since|sweep|conflicts|resolve|policy|expire|restore — la CURADORA de memoria: guardar/recordar creencias, qué creías en una fecha, expiración por políticas, conflictos), sesiones (recientes), mundo (modelo del mundo), auto_mejora (estado), informe (generar con force=true o status), task (task=<texto libre> delegado al fragmento).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "status, recall, sesiones, mundo, auto_mejora, informe, task"},
+                "action": {"type": "STRING", "description": "status, recall, curar, sesiones, mundo, auto_mejora, informe, task"},
                 "query": {"type": "STRING", "description": "Tema a recordar/buscar (para action=recall)"},
                 "force": {"type": "STRING", "description": "'true' para forzar el informe semanal (para action=informe)"},
                 "task": {"type": "STRING", "description": "Descripción libre delegada al fragmento (para action=task)"},
+                "sub": {"type": "STRING", "description": "Para action=curar: status, record, recall, as_of, changed_since, sweep, conflicts, resolve, policy, expire, restore"},
+                "key": {"type": "STRING", "description": "Clave del recuerdo curado (para curar sub=record)"},
+                "text": {"type": "STRING", "description": "Texto de la creencia a guardar (para curar sub=record)"},
+                "type": {"type": "STRING", "description": "Tipo: instruction/fact/decision/goal/commitment/preference/relationship/context/event/learning/observation/artifact/error (para curar sub=record)"},
+                "as_of": {"type": "STRING", "description": "Fecha para curar sub=as_of (qué creías, YYYY-MM-DD)"},
+                "changed_since": {"type": "STRING", "description": "Fecha para curar sub=changed_since (qué cambió desde)"},
+                "id": {"type": "STRING", "description": "ID del recuerdo (para curar sub=expire/restore/resolve)"},
+                "keep": {"type": "STRING", "description": "Para curar sub=resolve: new/old/both"},
             },
             "required": ["action"],
         }
@@ -6500,6 +6508,31 @@ TOOL_DECLARATIONS = [
                 "target_lang": {"type": "STRING", "description": "Idioma destino (default en)"},
                 "source_lang": {"type": "STRING", "description": "Idioma fuente (auto-detect si vacío)"},
                 "lang": {"type": "STRING", "description": "Idioma para speak_in"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "curar_memoria",
+        "description": "CURADORA DE MEMORIA de Eris. Gestiona la memoria como un jefe de despacho: (1) EXPIRACION por politicas: retencion por tipo (7d context, 30d event, preferencias nunca expiran, etc) + reglas con nombre; el sweep marca recuerdos como [EXPIRED] con fecha y regla (reversible con restore, NADA se borra); (2) RECONCILIACION DE CONFLICTOS: cuando una creencia nueva contradice una vieja (misma clave, valor distinto) no sobreescribe en silencio, ambas quedan para revision y se resuelven con keep=new|old|both; (3) RECUERDO PUNTUAL: as_of reconstruye que creia Eris en una fecha, changed_since devuelve que cambio desde entonces (recuerdos curados + archivos de memoria). Acciones: status (estado general), record (key/text/type: guardar un recuerdo curado), recall (query/type/top: buscar), as_of (as_of=YYYY-MM-DD: que creia en esa fecha), changed_since (changed_since=YYYY-MM-DD: cambios desde esa fecha), sweep (dry=true para ensayar: aplicar politica de expiracion), expire (id/reason), restore (id), conflicts (listar conflictos sin resolver), resolve (id/keep), policy (sub=show|list|apply, preset=conservative|balanced|aggressive, sweep=true para aplicar y barrer), snapshot (trackear hashes de memory/*.json).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, record, recall, as_of, changed_since, sweep, expire, restore, conflicts, resolve, policy, snapshot"},
+                "key": {"type": "STRING", "description": "Clave del recuerdo curado (ej: 'preferencia_profesor', 'decision_auth')"},
+                "text": {"type": "STRING", "description": "Texto de la creencia/hecho a guardar"},
+                "type": {"type": "STRING", "description": "Tipo: instruction, fact, decision, goal, commitment, preference, relationship, context, event, learning, observation, artifact, error"},
+                "query": {"type": "STRING", "description": "Búsqueda en recuerdos curados (key/texto/tags)"},
+                "top": {"type": "INTEGER", "description": "Máx resultados (default 10)"},
+                "as_of": {"type": "STRING", "description": "Fecha para recall puntual: qué creía Eris en esa fecha (YYYY-MM-DD o ISO)"},
+                "changed_since": {"type": "STRING", "description": "Fecha para diff: qué cambió desde entonces (YYYY-MM-DD o ISO)"},
+                "include_expired": {"type": "BOOLEAN", "description": "Incluir expirados en recall (default false)"},
+                "id": {"type": "STRING", "description": "ID del recuerdo (para expire/restore/resolve)"},
+                "reason": {"type": "STRING", "description": "Motivo de expiración"},
+                "keep": {"type": "STRING", "description": "Al resolver conflicto: new (nueva gana), old (vieja gana), both (ambas)"},
+                "sub": {"type": "STRING", "description": "Para policy: show, list, apply"},
+                "preset": {"type": "STRING", "description": "Preset de retención: conservative, balanced, aggressive"},
+                "dry": {"type": "BOOLEAN", "description": "Sweep en seco (solo listar candidatos)"},
             },
             "required": ["action"],
         }

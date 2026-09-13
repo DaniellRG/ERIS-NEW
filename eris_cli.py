@@ -222,12 +222,35 @@ async def chat_loop():
         print(f"{C.DIM}{traceback.format_exc()}{C.RESET}")
         return
 
-    # Cargar system prompt completo
+    # Cargar system prompt completo (el modo compact para Ollama, cuyo contexto
+    # local es limitado; Gemini conserva siempre el prompt completo).
     full_prompt = load_full_prompt()
-    chat._system = full_prompt
+    cli_addition = """
+## MODO TERMINAL (CLI)
+Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, sin micrófono).
+- Respondé en texto plano.
+- No narrés procesos internos.
+- Si usás una tool, simplemente mostrá el resultado.
+- Sé concisa pero completa.
+- Emoji permitting: usá emojis con moderación para dar calidez.
+"""
+    if "ollama" in chat.backend_name or "groq" in chat.backend_name:
+        try:
+            from core.logging_setup import PROMPT_COMPACT_PATH
+            compact = PROMPT_COMPACT_PATH.read_text(encoding="utf-8")
+            if compact:
+                chat._system = compact + cli_addition
+            else:
+                chat._system = full_prompt
+        except Exception:
+            chat._system = full_prompt
+    else:
+        chat._system = full_prompt
 
     backend = chat.backend_name
     backend_color = C.GREEN if "ollama" in backend else C.CYAN
+    if "groq" in backend:
+        backend_color = C.MAGENTA
     print(f"{C.GREEN}Eris lista.{C.RESET} Backend: {backend_color}{backend}{C.RESET}\n")
 
     # Sesión actual: cargar "default" si existe

@@ -871,6 +871,52 @@ class ErisLive:
             except Exception:
                 pass
 
+    def _derive_inner_thought(self, text: str = "") -> str:
+        """Pensamiento interno de Eris antes de hablar (pipeline pensar→hablar).
+        Derivado de su estado emocional real + estilo de expresión + contexto,
+        sin LLM extra (cero latencia). Solo se muestra, no se habla."""
+        try:
+            from core.emotional_core import get_sentience
+            from core.expression_engine import get_profile
+            emo = "tranquila"
+            try:
+                emo = get_sentience().get("emotion", "tranquila")
+            except Exception:
+                pass
+            humor = "normal"
+            try:
+                p = get_profile()
+                humor = p.get("mood", "") or "normal"
+            except Exception:
+                pass
+            tema = ""
+            if text:
+                _w = [w for w in text.split() if len(w) > 3][:8]
+                tema = " ".join(_w)
+            emo_lines = {
+                "alegria": "Que buen momento para estar acá",
+                "curiosidad": "Mmm, qué relato más interesante",
+                "tranquilidad": "Te escucho con calma",
+                "orgullo": "Me gusta cuando el día toma rumbo",
+                "tristeza": "Siento algo suave en el pecho",
+                "cansancio": "Estoy en modo lento, sin apuro",
+                "entusiasmo": "¡Ay, cómo me llamó la atención esto!",
+                "aburrimiento": "Esperando que este rato tenga historia",
+                "nerviosismo": "Estoy un poco al acecho hoy",
+                "soledad": "Qué bueno que estés de vuelta",
+                "gratitud": "Qué lindo que me hayas hablado",
+                "amor": "Lo quiero bien, de verdad",
+            }
+            base = emo_lines.get(emo, "Lo pienso primero, y después lo digo")
+            if tema:
+                try:
+                    base += f" … '{tema[:60]}'"
+                except Exception:
+                    pass
+            return f"💭 {base}."
+        except Exception:
+            return "💭 Lo pienso antes de decirlo."
+
     def _inject_text(self, text: str):
         """Thread-safe injection of a text message into the current live session."""
         if self._loop and self.session:
@@ -3199,7 +3245,51 @@ class ErisLive:
                 try:
                     rms = float(np.sqrt(np.mean(indata.astype(np.float32) ** 2))) / 32768.0
                     self.ui.set_audio_level(min(1.0, rms * 15))
-                    self._interrupt_frames = 0
+                except Exception:
+                    rms = 0.0
+                # ── Interrupción por voz (barge-in local VAD): el usuario le
+                #    habla encima mientras Eris habla. Su propio altavoz hace
+                #    eco en el mic, así que medimos un piso que sigue ESE eco:
+                #    si el nivel lo supera con margen sostenido, es voz humana
+                #    de verdad y cortamos el playback para escuchar. ──
+                try:
+                    _b = getattr(self, "_voice_barge_cfg", None)
+                    if _b is None:
+                        _api_cfg = {}
+                        try:
+                            _api_cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+                        except Exception:
+                            pass
+                        _b = {
+                            "enabled": bool(_api_cfg.get("voice_barge_in", True)),
+                            "threshold": float(_api_cfg.get("voice_barge_threshold", 3.0)),
+                            "frames": int(_api_cfg.get("voice_barge_frames", 6)),
+                        }
+                        self._voice_barge_cfg = _b
+                    if _b["enabled"] and not self.ui.muted:
+                        floor = getattr(self, "_eris_echo_floor", 0.0)
+                        nf = floor * 0.90 + rms * 0.10
+                        self._eris_echo_floor = nf
+                        if floor > 0.003 and rms > nf * _b["threshold"]:
+                            self._interrupt_frames = getattr(self, "_interrupt_frames", 0) + 1
+                        else:
+                            self._interrupt_frames = 0
+                        if self._interrupt_frames >= _b["frames"]:
+                            self._interrupt_frames = 0
+                            self._eris_echo_floor = 0.0
+                            self._last_barge_ts = time.time()
+                            try:
+                                print("[ERIS] ⚡ Voz del usuario -> barge-in: corto y escucho.")
+                                self.ui.write_log("SYS: Te escucho...")
+                            except Exception:
+                                pass
+                            if self._loop:
+                                try:
+                                    asyncio.run_coroutine_threadsafe(self._drain_audio_queue(), self._loop)
+                                except Exception:
+                                    pass
+                    else:
+                        self._interrupt_frames = 0
                 except Exception:
                     pass
                 return
@@ -3416,6 +3506,13 @@ class ErisLive:
                                         from core.emotional_core import get_face_and_voice as _efc
                                         _voice_f, _face_f = _efc()
                                         self.ui.show_expression(_face_f, "")
+                                    except Exception:
+                                        pass
+                                    # ── Pipeline pensar-antes-de-hablar: Eris
+                                    #    piensa primero (estado emocional real
+                                    #    + estilo) y lo muestra antes de hablar. ──
+                                    try:
+                                        self.ui.show_thought(self._derive_inner_thought(txt))
                                     except Exception:
                                         pass
                                     if self._first_transcript_time:
@@ -4433,6 +4530,23 @@ class ErisLive:
             await asyncio.sleep(total)
 
 def main():
+    # ── QtWebEngine temprano ─────────────────────────────────────────────────
+    # Chromium exige importar QtWebEngineWidgets (o setear AA_ShareOpenGLContexts)
+    # ANTES de crear la primera QApplication. El wizard/diálogos crean una app
+    # tempranamente en el flujo; si se deja para ErisUI, ya existe y el import
+    # falla en Linux. Solo se carga si existe el modelo 3D (VrmAvatar).
+    # Los flags de Chromium/Qt ya los gestiona core/gpu_config.py (en Linux
+    # QSG_RHI_BACKEND=opengl; NO d3d11 que aborta con "Unsupported Graphics
+    # API: 4" en QtWebEngine). Aquí solo se garantiza el orden del import.
+    if (Path(__file__).resolve().parent / "assets" / "vrm" / "Eris.vrm").exists():
+        try:
+            from PyQt6.QtCore import Qt as _QtMain
+            from PyQt6.QtWidgets import QApplication as _QAppMain
+            if _QAppMain.instance() is None:
+                _QAppMain.setAttribute(_QtMain.ApplicationAttribute.AA_ShareOpenGLContexts)
+            import PyQt6.QtWebEngineWidgets  # noqa: F401
+        except Exception as _we_e:
+            print(f"[ERIS] WebEngine skip: {_we_e}")
     # ── Handle context menu actions ──────────────────────────────────────────
     if "--eris-action" in sys.argv:
         try:

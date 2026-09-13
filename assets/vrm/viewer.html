@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' qrc:; img-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:;">
+<title>ERIS — Avatar 3D</title>
+<style>
+    html, body {
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        background: transparent !important;
+        overflow: hidden;
+    }
+    body { cursor: grab; }
+    body.dragging { cursor: grabbing; }
+    #scene { position: fixed; inset: 0; }
+    #scene canvas { background: transparent !important; }
+    #loading {
+        position: fixed; inset: 0; display: flex;
+        align-items: center; justify-content: center;
+        color: rgba(200,220,210,0.6);
+        font: 11px 'Segoe UI', sans-serif; letter-spacing: 2px;
+        pointer-events: none; text-transform: uppercase;
+    }
+    #loading.hide { display: none; }
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<div id="loading">Cargando a Eris…</div>
+
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script type="importmap">
+{
+    "imports": {
+        "three": "./lib/three.module.js",
+        "three/addons/": "./lib/examples/jsm/"
+    }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { VRMLoaderPlugin, VRMUtils } from './lib/three-vrm.module.min.js';
+
+let renderer, scene, camera, clock;
+let vrm = null;
+let currentState = 'IDLE';
+let volume = 0.0;
+let loadOK = false;
+
+const MOUTH = { aa: 0.0, oh: 0.0 };
+const emotional_map = {
+    'alegria': 'happy', 'euforia': 'happy', 'entusiasmo': 'happy', 'gratitud': 'happy',
+    'amor': 'happy', 'orgullo': 'happy',
+    'tristeza': 'sad', 'triste': 'sad', 'soledad': 'sad', 'pena': 'sad',
+    'nerviosismo': 'surprised', 'nerviosa': 'surprised', 'preocupada': 'surprised',
+    'asombro': 'surprised', 'sorpresa': 'surprised', 'curiosidad': 'surprised',
+    'curiosa': 'surprised', 'sospecha': 'surprised',
+    'cansancio': 'relaxed', 'cansada': 'relaxed', 'aburrimiento': 'relaxed',
+    'aburrida': 'relaxed', 'tranquilidad': 'relaxed', 'tranquila': 'relaxed',
+    'calma': 'relaxed', 'neutral': 'relaxed',
+    'enojo': 'angry', 'enojada': 'angry', 'frustrada': 'angry', 'molesta': 'angry',
+    'seria': 'surprised', 'seca': 'surprised',
+};
+
+// Amplitud de la pose neutra: con el modelo cargado se inspeccionan los huesos
+// para bajar los brazos desde la T-Pose a una pose natural y relajada.
+let poseScale = 1.0;
+const TimeMul = new THREE.Vector3(0, 0.001, 0);
+const Zero = new THREE.Vector3(0, 0, 0);
+
+function notifyReady() {
+    try {
+        if (pyBridge && pyBridge.model_loaded) pyBridge.model_loaded();
+    } catch (e) { /* pyBridge pode ainda não existir */ }
+}
+
+function init() {
+    clock = new THREE.Clock();
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
+
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, premultipliedAlpha: false });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    document.getElementById('scene').appendChild(renderer.domElement);
+
+    // Luces para piel 3B / HRM
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8890aa, 1.0);
+    scene.add(hemi);
+    const key = new THREE.DirectionalLight(0xffffff, 1.15);
+    key.position.set(1.2, 2.2, 2);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.35);
+    fill.position.set(-1.5, 0.5, 1.5);
+    scene.add(fill);
+    const rim = new THREE.DirectionalLight(0x88ccff, 0.45);
+    rim.position.set(-2, 1.2, -2.5);
+    scene.add(rim);
+
+    loadVrm();
+    animate();
+}
+
+function loadVrm() {
+    const loader = new GLTFLoader();
+    loader.register((parser) => new VRMLoaderPlugin(parser));
+    loader.load(
+        'Eris.vrm',
+        (gltf) => {
+            const loaded = gltf.userData.vrm;
+            VRMUtils.removeUnnecessaryVertices(loaded.scene);
+            VRMUtils.combineSkeletons(loaded.scene);
+            vrm = loaded;
+            window.vrm = vrm;
+            scene.add(vrm.scene);
+            // Encuadre primero (posiciona la cámara) y luego la pose natural
+            frameAvatar();
+            naturalPose(0);
+            document.getElementById('loading').classList.add('hide');
+            loadOK = true;
+            notifyReady();
+        },
+        undefined,
+        (err) => {
+            window.__eris_errors = window.__eris_errors || [];
+            window.__eris_errors.push(String(err && err.message ? err.message : err).slice(0, 500));
+            document.getElementById('loading').textContent = 'No se pudo cargar Eris.vrm';
+            console.error('VRM load error:', err);
+        }
+    );
+}
+
+// ── Pose neutra natural ──
+// (la pose la maneja naturalPose(), ver abajo)
+
+function frameAvatar() {
+    if (!vrm) return;
+    const box = new THREE.Box3().setFromObject(vrm.scene);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const dist = (size.y * 0.5) / Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5));
+    camera.position.set(center.x, center.y + size.y * 0.15, center.z + dist * 1.05);
+    camera.lookAt(center.x, center.y + size.y * 0.5, center.z);
+    if (vrm.springBoneManager) vrm.springBoneManager.reset();
+}
+
+function setExpressionFromName(name) {
+    if (!vrm || !vrm.expressionManager) return;
+    const preset = emotional_map[name] || 'relaxed';
+    clearExpression();
+    vrm.expressionManager.setValue(preset, 0.9);
+}
+
+function clearExpression() {
+    if (!vrm || !vrm.expressionManager) return;
+    for (const e of ['happy', 'sad', 'surprised', 'angry', 'relaxed']) {
+        vrm.expressionManager.setValue(e, 0.0);
+    }
+}
+
+// ── Lip-sync suave y VERAZ: la boca se cierra cuando no hay volumen ──
+function applyMouth(dt) {
+    const talking = volume >= 0.03;
+    const targetAa = talking ? Math.min(volume, 0.55) : 0.0;
+    const targetOh = talking ? Math.min(volume * 0.35, 0.22) : 0.0;
+    const speed = talking ? Math.min(1.0, dt * 18) : Math.min(1.0, dt * 30);
+    MOUTH.aa += (targetAa - MOUTH.aa) * speed;
+    MOUTH.oh += (targetOh - MOUTH.oh) * speed;
+    if (!vrm || !vrm.expressionManager) return;
+    vrm.expressionManager.setValue('aa', Math.max(0, MOUTH.aa));
+    vrm.expressionManager.setValue('oh', Math.max(0, MOUTH.oh));
+}
+
+let blinkTimer = 2 + Math.random() * 3;
+let blinkVal = 0.0;
+
+function tickBlink(dt) {
+    blinkTimer -= dt;
+    if (blinkTimer <= 0) {
+        blinkVal = 1.0;
+        blinkTimer = 2.5 + Math.random() * 3.5;
+    } else {
+        blinkVal = Math.max(0, blinkVal - dt * 8);
+    }
+    if (vrm && vrm.expressionManager) {
+        vrm.expressionManager.setValue('blink', blinkVal);
+    }
+}
+
+// ── Parámetros de animación (ajustables en vivo desde Python) ──
+// Cada valor controla un movimiento. expuestos en window.ANIM para poder
+// retunearlos con vrm.setAnimParam('brazos_apertura', x) sin tocar el código.
+window.ANIM = {
+    abertura_brazos: 0.12,      // inclinación "A" de los brazos (rad extra)
+    swing_brazos: 0.015,        // vaivén de los brazos al costado
+    flex_codos: 0.55,           // cuánto se doblan los codos hacia adelante
+    flex_munecas: 0.05,         // relajación de las muñecas
+    curva_dedos: 0.15,          // curvatura de los dedos hacia la palma
+    respiracion: 0.015,         // amplitud de la respiración (pecho)
+    balanceo_caderas: 0.005,    // leve sway de cadera
+    giro_cuerpo: 0.06,          // giro lento del cuerpo (yaw)
+    peso_giro: 0.025,           // desplazamiento del peso al girar
+    contragiro_tronco: 0.35,    // cuánto el torso resiste el giro
+    compensa_cabeza: 0.8,       // cuánto la cabeza mira al frente al girar
+    mirada_cabeza: 0.035,       // sutileza de la mirada
+    peso_piernas: 0.008,        // transferencia de peso en las piernas
+    flote: 0.004,               // flote vertical sutil
+};
+window.setAnimParam = function (name, value) {
+    if (window.ANIM && name in window.ANIM) {
+        const v = Number(value);
+        if (Number.isFinite(v)) window.ANIM[name] = v;
+    }
+};
+window.applyAnimConfig = function (cfg) {
+    if (cfg && window.ANIM) {
+        for (const k of Object.keys(window.ANIM)) {
+            const v = Number(cfg[k]);
+            if (Number.isFinite(v)) window.ANIM[k] = v;
+        }
+    }
+};
+
+// Cálculo del eje "adelante" del personaje y flexión anatómica de codo.
+let avatarFrame = { up: null, forward: null };
+
+function computeAvatarFrame() {
+    const FALLBACK_FWD = new THREE.Vector3(0, 0, 1);
+    const FALLBACK_UP = new THREE.Vector3(0, 1, 0);
+    try {
+        const hips = new THREE.Vector3();
+        vrm.humanoid.getRawBoneNode('hips').getWorldPosition(hips);
+        const head = new THREE.Vector3();
+        vrm.humanoid.getRawBoneNode('head').getWorldPosition(head);
+        const fwd = new THREE.Vector3().subVectors(camera.position, hips);
+        fwd.y = 0;
+        if (fwd.lengthSq() < 1e-6) {
+            fwd.copy(FALLBACK_FWD);
+        }
+        fwd.normalize();
+        if (!Number.isFinite(fwd.x) || !Number.isFinite(fwd.y) || !Number.isFinite(fwd.z)) {
+            fwd.copy(FALLBACK_FWD);
+        }
+        const up = new THREE.Vector3().subVectors(head, hips);
+        if (up.lengthSq() < 1e-6) {
+            up.copy(FALLBACK_UP);
+        }
+        up.normalize();
+        if (!Number.isFinite(up.x) || !Number.isFinite(up.y) || !Number.isFinite(up.z)) {
+            up.copy(FALLBACK_UP);
+        }
+        avatarFrame.up = up;
+        avatarFrame.forward = fwd;
+    } catch (e) {
+        avatarFrame.forward = FALLBACK_FWD;
+        avatarFrame.up = FALLBACK_UP;
+    }
+}
+
+// Flexiona un hueso (codo/muñeca) hacia "adelante". Cálculo DETERMINISTA por
+// frame: parte del quaternion del PADRE (que fijamos hoy mismo con Euler) y
+// compone la flexión en espacio mundo. NO toca el estado previo del hueso, así
+// que nunca se acumula ni se dispara.
+function bendJointTowardFront(node, angle) {
+    if (!node || node.parent == null) return;
+    if (!avatarFrame.up || !avatarFrame.forward) return;
+    try {
+        const down = avatarFrame.up.clone().negate();
+        const axis = new THREE.Vector3().crossVectors(down, avatarFrame.forward).normalize();
+        if (axis.lengthSq() < 1e-6) return;
+        const flexWorld = new THREE.Quaternion().setFromAxisAngle(axis, angle);
+        const wp = new THREE.Quaternion();
+        node.parent.getWorldQuaternion(wp);
+        const wpInv = wp.clone().invert();
+        const local = wpInv.multiply(flexWorld).multiply(wp);
+        node.quaternion.copy(local);
+        if (node.rotation) node.rotation.setFromQuaternion(local);
+    } catch (e) { /* hueso ausente: ignorar */ }
+}
+
+function naturalPose(t) {
+    if (!vrm || !vrm.humanoid) return;
+    computeAvatarFrame();
+    const A = window.ANIM;
+    const N = (name) => vrm.humanoid.getNormalizedBoneNode(name);
+    const rot = (node, x, y, z) => {
+        if (node && node.rotation) {
+            node.rotation.x = x || 0;
+            node.rotation.y = y || 0;
+            node.rotation.z = z || 0;
+        }
+    };
+
+    const HANG = Math.PI / 2; // 90°: baja el brazo desde la T-pose
+
+    // ── Giro lento del cuerpo con peso real ──
+    // El cuerpo rota suavemente (periodo ~28s). Al girar, el peso se desplaza
+    // a la pierna contraria, el torso "resiste" parcialmente y la cabeza
+    // compensa para seguir mirando al frente: así se ve que "tiene peso".
+    const turnY = Math.sin(t * 0.23) * A.giro_cuerpo;
+    const turnSpeed = Math.cos(t * 0.23);           // dirección del giro
+    const hipsX = Math.cos(t * 0.65) * A.balanceo_caderas;
+    const hipsZ = Math.sin(t * 0.8) * A.balanceo_caderas;
+
+    // ── Cadera: yaw (giro) + leve sway ──
+    const hips = N('hips');
+    rot(hips, hipsX, turnY, hipsZ);
+    if (hips && hips.position) {
+        // peso: al girar el cuerpo se desplaza hacia el lado contrario
+        hips.position.x = -turnSpeed * A.peso_giro;
+        hips.position.y = Math.abs(Math.sin(t * 0.23)) * A.flote;
+    }
+
+    // ── Torso: respiración + resiste parcialmente el giro (contrarrotación) ──
+    rot(N('spine'),
+        0.01 + Math.sin(t * 0.9) * 0.008,
+        -turnY * A.contragiro_tronco,
+        Math.sin(t * 0.7) * 0.008);
+    rot(N('chest'),
+        A.respiracion + Math.sin(t * 1.6) * A.respiracion * 0.5,
+        -turnY * A.contragiro_tronco * 0.7,
+        0);
+
+    // ── Cabeza: compensa el giro para mirar al frente + mirada sutil ──
+    rot(N('head'),
+        0.02 + Math.sin(t * 0.32) * A.mirada_cabeza,
+        -turnY * A.compensa_cabeza + Math.sin(t * 0.42) * A.mirada_cabeza * 1.8,
+        Math.sin(t * 0.23) * A.mirada_cabeza * 0.85);
+    const head = N('head');
+    rot(N('neck'), head ? head.rotation.x * 0.4 : 0, head ? head.rotation.y * 0.2 : 0, 0);
+
+    // ── Brazos: colgando a los costados, leve inclinación "A" ──
+    const sway = Math.sin(t * 1.05) * A.swing_brazos;
+    // contra-swing al girar (la inercia mueve los brazos al lado opuesto del giro)
+    const turnSwing = -turnSpeed * A.peso_giro * 0.9;
+    rot(N('leftUpperArm'), 0.04 + Math.sin(t * 0.8) * A.swing_brazos * 1.6, 0, -(HANG - A.abertura_brazos) + sway + turnSwing);
+    rot(N('rightUpperArm'), 0.04 - Math.sin(t * 0.8) * A.swing_brazos * 1.6, 0, (HANG - A.abertura_brazos) - sway - turnSwing);
+
+    // ── Codos y muñecas: flexionados hacia adelante (brazo relajado) ──
+    bendJointTowardFront(N('leftLowerArm'), A.flex_codos + Math.sin(t * 1.2) * 0.03);
+    bendJointTowardFront(N('rightLowerArm'), A.flex_codos - Math.sin(t * 1.2) * 0.03);
+    bendJointTowardFront(N('leftHand'), A.flex_munecas + Math.sin(t * 1.4) * 0.02);
+    bendJointTowardFront(N('rightHand'), A.flex_munecas - Math.sin(t * 1.4) * 0.02);
+
+    // ── Dedos: ligeramente curvados hacia la palma ──
+    const curl = A.curva_dedos;
+    const sides = { left: -1, right: 1 };
+    for (const [side, dir] of Object.entries(sides)) {
+        for (const f of ['Index', 'Middle', 'Ring', 'Little']) {
+            if (N(side + f + 'Proximal')) rot(N(side + f + 'Proximal'), 0, 0, dir * curl);
+            if (N(side + f + 'Intermediate')) rot(N(side + f + 'Intermediate'), 0, 0, dir * curl * 1.4);
+            if (N(side + f + 'Distal')) rot(N(side + f + 'Distal'), 0, 0, dir * curl * 0.9);
+        }
+    }
+
+    // ── Piernas: transferencia de peso (al girar carga la pierna contraria) ──
+    const wX = Math.sin(t * 0.7) * A.peso_piernas + turnSpeed * A.peso_giro * 0.8;
+    rot(N('leftUpperLeg'), Math.max(0, wX), 0, 0);
+    rot(N('rightUpperLeg'), Math.min(0, wX), 0, 0);
+    rot(N('leftLowerLeg'), -Math.abs(wX) * 0.4, 0, 0);
+    rot(N('rightLowerLeg'), Math.abs(wX) * 0.4, 0, 0);
+    rot(N('leftFoot'), 0, 0, 0);
+    rot(N('rightFoot'), 0, 0, 0);
+}
+
+let isSpeaking = false;
+
+function tickAnim() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (vrm) {
+        const t = clock.elapsedTime;
+
+        naturalPose(t);
+        applyMouth(dt);
+        tickBlink(dt);
+        if (vrm.update) vrm.update(dt);
+    }
+    if (renderer) renderer.render(scene, camera);
+}
+
+function animate() {
+    tickAnim();
+}
+
+// rAF no dispara en offscreen/headless (sin vsync); el timer es el loop real,
+// suficiente también en pantalla con GPU (30 fps).
+setInterval(animate, 33);
+
+window.addEventListener('resize', () => {
+    if (!camera || !renderer) return;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── API para el puente Python (runJavaScript) ──
+window.updateState = function (state) {
+    currentState = state || 'IDLE';
+    if (vrm && vrm.expressionManager) {
+        if (state === 'SPEAKING') {
+            setExpressionFromName('alegria');
+        } else if (state === 'MUTED' || state === 'ERROR') {
+            clearExpression();
+            MOUTH.aa = 0.0;
+            MOUTH.oh = 0.0;
+        } else if (state === 'IDLE' || state === 'LISTENING') {
+            clearExpression();
+            MOUTH.aa = 0.0;
+            MOUTH.oh = 0.0;
+        }
+    }
+};
+
+window.updateVolume = function (level) {
+    volume = Math.max(0.0, Math.min(1.0, level || 0.0));
+    window.__volume = volume;
+};
+
+window.setExpression = function (name) {
+    setExpressionFromName(name || 'neutral');
+};
+
+window.resetExpression = function () {
+    clearExpression();
+};
+
+// ── Puente QWebChannel ──
+let pyBridge = null;
+if (typeof QWebChannel !== 'undefined') {
+    new QWebChannel(qt.webChannelTransport, (channel) => {
+        pyBridge = channel.objects.pyBridge;
+        if (loadOK && pyBridge && pyBridge.model_loaded) pyBridge.model_loaded();
+    });
+}
+
+init();
+</script>
+</body>
+</html>

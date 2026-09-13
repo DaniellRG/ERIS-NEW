@@ -83,12 +83,19 @@ def _memoria_status() -> str:
     except Exception:
         lines.append("▸ Contexto proactivo: ---")
 
-    # Informe semanal
+# Informe semanal
     try:
         from core.informe_semanal import informe_semanal
         lines.append(f"▸ Informe semanal: {informe_semanal({'action': 'status'})[:90]}")
     except Exception:
         lines.append("▸ Informe semanal: ---")
+
+    # Curadora de memoria
+    try:
+        from core.memory_curation import curar_memoria
+        lines.append(f"▸ Curadora de memoria: {curar_memoria({'action': 'status'})[:110]}")
+    except Exception:
+        lines.append("▸ Curadora de memoria: ---")
 
     lines.append("")
     lines.append("„Soy el fragmento de memoria de Eris. Tengo toda su memoria "
@@ -193,6 +200,24 @@ def _handle_informe(text: str) -> str:
     return _tool("informe_semanal", {"action": "status"})
 
 
+def _handle_curar(text: str) -> str:
+    """Curadora de memoria: políticas de expiración, conflictos, recall puntual."""
+    t = text.lower()
+    temas = ["curá", "cura", "curar", "curadora", "expira", "expiracion", "expiración",
+             "política de retención", "politica de retencion", "conflicto de memoria",
+             "contradic", "qué creí", "que crei", "en esa fecha", "as_of", "changed_since",
+             "conflicts", "sweep", "anticuad", "creencia vieja", "creencia nueva"]
+    if not any(k in t for k in temas):
+        return ""
+    if any(k in t for k in ["que crei", "que creí", "en esa fecha", "qué creía", "que creia"]):
+        return _tool("curar_memoria", {"action": "recall", "type": "fact"})
+    if any(k in t for k in ["contradic", "conflicto", "conflicts"]):
+        return _tool("curar_memoria", {"action": "conflicts"})
+    if any(k in t for k in ["expira", "sweep", "retención", "retencion", "política", "politica"]):
+        return _tool("curar_memoria", {"action": "policy"})
+    return _tool("curar_memoria", {"action": "status"})
+
+
 def _handle_salud(text: str) -> str:
     """Chequeo integral: todo junto."""
     t = text.lower()
@@ -231,6 +256,7 @@ def handle_memoria(text: str, player=None, **kwargs) -> str:
 
     for name, fn, guard in [
         ("salud", _handle_salud, None),
+        ("curar", _handle_curar, None),
         ("recall", _handle_recall, None),
         ("sesiones", _handle_sesiones, None),
         ("mundo", _handle_mundo, None),
@@ -278,6 +304,28 @@ def memoria(parameters: dict | None = None, player=None) -> str:
         return _tool("sesiones", {"action": "reciente", "n": 3})
     if action == "mundo":
         return _tool("world_model", {"action": "get"})
+    if action in ("curar", "curadora", "curate"):
+        sub = str(parameters.get("sub", "") or "").strip()
+        curadora_params = {"action": sub or "status"}
+        if sub in ("record",):
+            curadora_params["key"] = parameters.get("key", "")
+            curadora_params["text"] = parameters.get("text", "")
+            curadora_params["type"] = parameters.get("type", "fact")
+        elif sub == "recall":
+            curadora_params["query"] = parameters.get("query", "")
+            curadora_params["top"] = parameters.get("top", 5)
+        elif sub in ("as_of",):
+            curadora_params["as_of"] = parameters.get("as_of", "")
+        elif sub == "changed_since":
+            curadora_params["changed_since"] = parameters.get("changed_since", "")
+        elif sub == "expire":
+            curadora_params["id"] = parameters.get("id", "")
+        elif sub == "restore":
+            curadora_params["id"] = parameters.get("id", "")
+        elif sub == "resolve":
+            curadora_params["id"] = parameters.get("id", "")
+            curadora_params["keep"] = parameters.get("keep", "both")
+        return _tool("curar_memoria", curadora_params)
     if action in ("auto_mejora", "auto"):
         return _tool("auto_mejora", {"action": "estado"})
     if action in ("informe", "semanal"):
@@ -289,5 +337,7 @@ def memoria(parameters: dict | None = None, player=None) -> str:
             return "Memoria necesita 'task': una descripción de lo que querés recordar."
         return handle_memoria(task, player=player)
     return ("Tool memoria (fragmento de autoconocimiento de Eris). Acciones: "
-            "status, recall (query=...), sesiones, mundo, auto_mejora, informe, "
-            "task. Ej: {action:'recall', query:'qué aprendí de la fábrica'}.")
+            "status, recall (query=...), curar (sub=status|record|recall|as_of|"
+            "changed_since|sweep|conflicts|resolve|policy|expire|restore), "
+            "sesiones, mundo, auto_mejora, informe, task. Ej: {action:'recall', "
+            "query:'qué aprendí de la fábrica'}.")

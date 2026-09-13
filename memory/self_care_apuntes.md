@@ -87,3 +87,12 @@
 
 ## 2026-09-11 12:39:36 · config
 - no puedo inventar estas claves: ['tts_voice']
+
+## 2026-09-11 13:09:36 · config
+- no puedo inventar estas claves: ['tts_voice']
+
+## 2026-09-12 15:35:58 · config
+- no puedo inventar estas claves: ['tts_voice']
+
+## 2026-09-12 18:48:00 · config
+- no puedo inventar estas claves: ['tts_voice']

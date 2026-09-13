@@ -1,0 +1,11 @@
+{
+  "name": "local",
+  "backend": "ollama:qwen3:8b",
+  "history": [
+    {
+      "role": "user",
+      "text": "hola Eris, ¿cómo estás hoy?"
+    }
+  ],
+  "updated": "2026-09-12T07:11:10"
+}

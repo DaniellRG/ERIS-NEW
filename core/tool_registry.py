@@ -565,6 +565,7 @@ _TOOLS = {
     "screen_context":        ("actions.screen_context", "screen_context"),
     "voice_cloning":         ("core.voice_cloning", "voice_cloning"),
     "rag_engine":            ("core.rag_engine", "rag_engine"),
+    "curar_memoria":         ("core.memory_curation", "curar_memoria"),
 
     # ── Level 11: Extended Capabilities (Aug 2026) ──
     "translator":            ("actions.translator", "translator"),

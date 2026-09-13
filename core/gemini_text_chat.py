@@ -31,7 +31,7 @@ _GEMINI_PRIORITY_TOOLS = [
     "scheduler", "goals", "knowledge_base", "user_profile", "git_control",
     "code_assistant", "file_editor", "context_read", "morning_brief",
     "document_handler", "image_analyzer", "translator", "web_jobs",
-    "lab_pulse",
+    "lab_pulse", "curar_memoria",
 ]
 
 
@@ -104,6 +104,141 @@ def _get_openrouter_config() -> dict:
     }
 
 
+_JSON_SCHEMA_TYPES = {"ARRAY": "array", "BOOLEAN": "boolean", "INTEGER": "integer",
+                       "NULL": "null", "NUMBER": "number", "OBJECT": "object",
+                       "STRING": "string"}
+
+
+def _normalize_json_schema(schema) -> dict | None:
+    """Normaliza un esquema JSON de las declaraciones de Eris (que usan tipos en
+    MAYÚSCULA) a JSON Schema válido (minúsculas), como exige Groq estrictamente.
+    Gemini era tolerante con los tipos en mayúscula; Groq los rechaza (400)."""
+    if not isinstance(schema, dict):
+        return schema
+    out: dict = {}
+    for k, v in schema.items():
+        if k == "type":
+            out[k] = _JSON_SCHEMA_TYPES.get(str(v), str(v).lower())
+        elif k in ("properties", "definitions"):
+            out[k] = {kk: _normalize_json_schema(vv) for kk, vv in (v.items() if isinstance(v, dict) else {})}
+        elif k == "items":
+            out[k] = _normalize_json_schema(v)
+        elif k == "enum":
+            out[k] = v
+        elif isinstance(v, dict):
+            out[k] = _normalize_json_schema(v)
+        else:
+            out[k] = v
+    return out
+
+
+_groq_tools_cache: tuple = None
+
+
+def _mini_tool(decl: dict) -> dict:
+    """Miniaturiza una declaración para Groq: description <=120 chars y parámetros
+    sin descriptions (ahorra tokens; el tier gratuito limita a ~8000/request)."""
+    params = _normalize_json_schema(decl.get("parameters", {"type": "object", "properties": {}}))
+    props = params.get("properties")
+    if isinstance(props, dict):
+        for pv in props.values():
+            if isinstance(pv, dict):
+                pv.pop("description", None)
+    return {
+        "type": "function",
+        "function": {
+            "name": decl["name"],
+            "description": (decl.get("description", "") or "")[:120],
+            "parameters": params,
+        },
+    }
+
+
+def _groq_tools(limit_tokens: int | None = None, extras: list | None = None) -> list:
+    """Tools para Groq: miniaturizadas (description <=120 chars, parámetros sin
+    descriptions) y limitadas por presupuesto de tokens. El tier gratuito de Groq
+    limita cada request a ~8000 tokens, así que aquí batch = prompt compacto +
+    resumen (unos 1.5-2K tokens) deja ~5-6K para las tools (~60 miniaturizadas).
+    Cacheado con firma igual que _gemini_tools.
+    `extras` = nombres obligatorios que SIEMPRE se incluyen (fuera de presupuesto),
+    para cubrir tools que el prompt compacto conoce y Eris podría nombrar."""
+    global _groq_tools_cache
+    try:
+        sig = (len(TOOL_DECLARATIONS),
+               TOOL_DECLARATIONS[0]["name"] if TOOL_DECLARATIONS else "",
+               TOOL_DECLARATIONS[-1]["name"] if TOOL_DECLARATIONS else "")
+        if _groq_tools_cache and _groq_tools_cache[0] == sig:
+            found: list = _groq_tools_cache[1]
+            if limit_tokens is None or _groq_tools_cache[2] <= limit_tokens:
+                if not extras:
+                    return found
+                have = {t["function"]["name"] for t in found}
+                missing = [n for n in extras if n not in have]
+                if not missing:
+                    return found
+                found_extra = list(found)
+                for name in missing:
+                    for decl in TOOL_DECLARATIONS:
+                        if decl["name"] == name:
+                            found_extra.append(_mini_tool(decl))
+                            break
+                return found_extra
+    except Exception:
+        sig = None
+
+    _MAX_TOOL_TOKENS = limit_tokens if limit_tokens is not None else 5000  # aprox 80% del límite gratuito tras system+history
+    picked, picked_names, budget = [], set(), 0
+    # Extras siempre dentro
+    for name in (extras or []):
+        for decl in TOOL_DECLARATIONS:
+            if decl["name"] == name and name not in picked_names:
+                item = _mini_tool(decl)
+                est = len(json.dumps(item)) // 4 + 1
+                picked.append(item)
+                picked_names.add(name)
+                budget += est
+                break
+    order = list(_GEMINI_PRIORITY_TOOLS)
+    for name in order:
+        for decl in TOOL_DECLARATIONS:
+            if decl["name"] == name and name not in picked_names:
+                item = _mini_tool(decl)
+                est = len(json.dumps(item)) // 4 + 1
+                if budget + est > _MAX_TOOL_TOKENS:
+                    break
+                picked.append(item)
+                picked_names.add(name)
+                budget += est
+                break
+    for decl in TOOL_DECLARATIONS:
+        if budget >= _MAX_TOOL_TOKENS:
+            break
+        if decl["name"] not in picked_names:
+            item = _mini_tool(decl)
+            est = len(json.dumps(item)) // 4 + 1
+            if budget + est > _MAX_TOOL_TOKENS:
+                continue
+            picked.append(item)
+            picked_names.add(decl["name"])
+            budget += est
+    _groq_tools_cache = (sig, picked, budget)
+    print(f"[Groq] 📦 {len(picked)} tools declaradas (~{budget} tokens estimados)")
+    return picked
+
+
+def _get_groq_config() -> dict:
+    from core.audio_config import get_config
+    cfg = get_config()
+    return {
+        "enabled": bool(cfg.get("groq_api_key")),
+        "api_key": cfg.get("groq_api_key", ""),
+        "model": cfg.get("groq_model", "") or "llama-3.3-70b-versatile",
+        "base_url": cfg.get("groq_base_url", "https://api.groq.com/openai/v1").rstrip("/"),
+        "max_tokens": cfg.get("groq_max_tokens", 4096),
+        "use_compact": cfg.get("groq_use_compact", False),
+    }
+
+
 class GeminiTextChat:
     """Multi-turn chat with tool execution. Uses Ollama (local) by default, Gemini as fallback."""
 
@@ -145,6 +280,22 @@ class GeminiTextChat:
         self._openrouter_use_compact = bool(or_cfg.get("use_compact", True))
         self._system_compact = self._load_compact_prompt()
 
+        # Groq: cerebro grande en la nube (~280 tps), contexto 131K → prompt
+        # completo de Eris + tools + historial largo. Se activa si hay API key.
+        groq_cfg = _get_groq_config()
+        self._use_groq = groq_cfg["enabled"]
+        self._groq_api_key = groq_cfg["api_key"]
+        self._groq_model = groq_cfg["model"]
+        self._groq_url = groq_cfg["base_url"] + "/chat/completions"
+        self._groq_max_tokens = groq_cfg.get("max_tokens") or 4096
+        self._groq_use_compact = bool(groq_cfg.get("use_compact", False))
+        if self._use_groq:
+            self._backend = f"groq:{self._groq_model}"
+        elif self._use_ollama:
+            self._backend = f"ollama:{self._ollama_model}"
+        else:
+            self._backend = f"gemini:{_get_chat_model()}"
+
     def _check_ollama(self, base_url: str) -> bool:
         """Check if Ollama is reachable."""
         import urllib.request
@@ -172,6 +323,10 @@ class GeminiTextChat:
 
     async def chat(self, user_text: str) -> str:
         await self._compact_history()
+        if self._use_groq:
+            result = await self._chat_groq(user_text)
+            if not result or not result.startswith("Error de Groq"):
+                return result or "Listo."
         if self._use_ollama:
             return await self._chat_ollama(user_text)
         if self._use_openrouter:
@@ -183,6 +338,10 @@ class GeminiTextChat:
     async def stream_chat(self, user_text: str, on_token=None) -> str:
         """Igual que chat() pero transmite tokens al callback `on_token` si se provee."""
         await self._compact_history()
+        if self._use_groq:
+            result = await self._chat_groq(user_text, on_token=on_token)
+            if not result or not result.startswith("Error de Groq"):
+                return result or "Listo."
         if self._use_ollama:
             return await self._chat_ollama(user_text, on_token=on_token)
         if self._use_openrouter:
@@ -470,6 +629,135 @@ class GeminiTextChat:
                 print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
                 result = await self._execute_tool(name, args)
                 tool_results.append({"role": "tool", "content": str(result)})
+
+            msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
+            msgs.extend(tool_results)
+
+        self._append_model_content(content)
+        return content or "Listo."
+
+    async def _chat_groq(self, user_text: str, on_token=None) -> str:
+        """Chat por API de Groq (GPT-OSS 120B, ~500 tps). El tier gratuito limita
+        cada request a ~8000 tokens: usa system compacto + tools miniaturizadas
+        con presupuesto de tokens, y trunca el historial viejo si hace falta.
+        Formato OpenAI-compatible: role 'tool' es válido aquí."""
+        import json as _json
+        import requests
+
+        # Presupuesto: ~8000 tokens/request (tier gratuito). Fijamos un margen.
+        _BUDGET = 7800
+        gq_tools = _groq_tools(limit_tokens=5000)
+        system_text = self._system_compact if (self._groq_use_compact and self._system_compact) else self._system
+
+        def _estimate(msgs_list: list) -> int:
+            return sum((len(m.get("content", "")) + 8) // 4 + 1 for m in msgs_list)
+
+        def _build_msgs() -> list:
+            out = [{"role": "system", "content": system_text}]
+            for msg in self._history[:-1]:
+                role = "assistant" if getattr(msg, "role", "model") == "model" else "user"
+                if hasattr(msg, "parts"):
+                    text = " ".join(getattr(p, "text", "") or "" for p in msg.parts if getattr(p, "text", None))
+                else:
+                    text = str(msg)
+                if text.strip():
+                    out.append({"role": role, "content": text.strip()})
+            out.append({"role": "user", "content": user_text})
+            # Truncar historial viejo si excede el presupuesto (deja system + user)
+            while len(out) > 2 and _estimate(out) > _BUDGET - 4000:
+                out.pop(1)
+            return out
+
+        msgs = _build_msgs()
+
+        def _round_response(tools):
+            payload = {
+                "model": self._groq_model,
+                "messages": msgs,
+                "tools": tools if tools else None,
+                "max_tokens": min(self._groq_max_tokens or 4096, 2048),
+                "temperature": 0.7,
+                "stream": False,
+            }
+            r = requests.post(
+                self._groq_url,
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {self._groq_api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=180,
+            )
+            if r.status_code == 401:
+                raise RuntimeError("API key de Groq inválida (401)")
+            r.raise_for_status()
+            data = r.json()
+            c = data["choices"][0]["message"]
+            return c.get("content", ""), c.get("tool_calls", [])
+
+        current_tools = gq_tools
+        content = ""
+        retried = False
+        last_tool_name = None
+        for _round in range(6):
+            try:
+                content, tool_calls = _round_response(current_tools)
+            except Exception as e:
+                err_str = str(e)
+                # El modelo nombró una tool que no estaba declarada (el prompt
+                # compacto conoce más tools de las que entran por presupuesto) → se
+                # agrega esa tool como extra y se reintenta.
+                if "was not in request.tools" in err_str:
+                    import re as _re
+                    m = _re.search(r"call tool '([^']+)'", err_str)
+                    if m and not retried:
+                        retried = True
+                        extra = m.group(1)
+                        print(f"[Groq] ➕ Tool '{extra}' no declarada → agregada como extra")
+                        current_tools = _groq_tools(limit_tokens=5000, extras=[extra])
+                        try:
+                            content, tool_calls = _round_response(current_tools)
+                        except Exception as e2:
+                            return f"Error de Groq: {e2}"
+                    else:
+                        return f"Error de Groq: {e}"
+                elif not retried and ("413" in err_str or "429" in err_str or "Request too large" in err_str):
+                    # Reducir presupuesto de tools (conservando la última tool usada
+                    # para no repetir el 400 "not in request.tools") + truncar msgs.
+                    retried = True
+                    extras = [last_tool_name] if last_tool_name else None
+                    current_tools = _groq_tools(limit_tokens=2000, extras=extras)
+                    msgs = _build_msgs()
+                    while len(msgs) > 2 and _estimate(msgs) > _BUDGET - 2000:
+                        msgs.pop(1)
+                    try:
+                        content, tool_calls = _round_response(current_tools)
+                    except Exception as e2:
+                        return f"Error de Groq: {e2}"
+                else:
+                    return f"Error de Groq: {e}"
+
+            if not tool_calls:
+                self._append_model_content(content)
+                if on_token:
+                    for part in content.split():
+                        on_token(part + " ")
+                return content or "Listo."
+
+            tool_results = []
+            for tc in tool_calls:
+                fn = tc.get("function", {})
+                name = fn.get("name", "")
+                args = fn.get("arguments", {})
+                if isinstance(args, str):
+                    try:
+                        args = _json.loads(args)
+                    except Exception:
+                        args = {}
+                print(f"[Groq] 🔧 Tool: {name}({list(args.keys())})")
+                result = await self._execute_tool(name, args)
+                last_tool_name = name
+                tool_results.append({"role": "tool", "tool_call_id": tc.get("id", ""), "content": str(result)})
 
             msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
             msgs.extend(tool_results)
