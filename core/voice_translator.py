@@ -65,23 +65,62 @@ def _resolve_lang(lang: str) -> str:
     return _LANG_MAP.get(lang, lang)
 
 
+def _ollama_translate(text: str, target: str, source: str = "auto") -> str | None:
+    """Fallback de traducción vía Ollama local (sin costo ni rate limits)."""
+    try:
+        import json as _json
+        import requests as _requests
+        from pathlib import Path
+        cfg_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        cfg = {}
+        if cfg_path.exists():
+            cfg = _json.loads(cfg_path.read_text(encoding="utf-8"))
+        base_url = str(cfg.get("ollama_base_url", "http://localhost:11434")).rstrip("/")
+        model = cfg.get("ollama_model", "qwen3:8b")
+        src = "auto" if not source or source == "auto" else source
+        prompt = (
+            f"Translate the following text from {src} into {target}. "
+            "Reply with ONLY the translation, without quotes, explanations or extra text.\n\n"
+            f"{text}"
+        )
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+            "options": {"temperature": 0.2},
+        }
+        r = _requests.post(f"{base_url}/api/chat", json=payload, timeout=60)
+        r.raise_for_status()
+        out = (r.json().get("message") or {}).get("content", "").strip()
+        return out or None
+    except Exception:
+        return None
+
+
 def _translate_text(text: str, target_lang: str, source_lang: str = "auto") -> str:
-    """Translate text using deep_translator."""
+    """Translate text using deep_translator (fallback: Ollama local)."""
     if not text.strip():
         return ""
 
     target = _resolve_lang(target_lang)
     source = _resolve_lang(source_lang) if source_lang and source_lang != "auto" else "auto"
 
-    if _TranslatorClass is None:
-        return "[Traducción no disponible: deep_translator y googletrans no instalados]"
+    if _TranslatorClass is not None:
+        try:
+            translator = _TranslatorClass(source=source, target=target)
+            result = translator.translate(text)
+            if isinstance(result, str) and result.strip():
+                return result.strip()
+        except Exception as e:
+            last_err = str(e)
+    else:
+        last_err = "deep_translator y googletrans no están instalados"
 
-    try:
-        translator = _TranslatorClass(source=source, target=target)
-        result = translator.translate(text)
-        return result if isinstance(result, str) else str(result)
-    except Exception as e:
-        return f"[Error de traducción: {e}]"
+    # Fallback local (Ollama) — cubre TooManyRequests / instalación ausente
+    result = _ollama_translate(text, target, source)
+    if result:
+        return result
+    return f"[Error de traducción: {last_err}]"
 
 
 def _detect_lang(text: str) -> str:

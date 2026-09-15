@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_TASKS_FILE = Path(r"D:\Eris_Source\data\tasks.json")
+_TASKS_FILE = Path(__file__).resolve().parent.parent / "data" / "tasks.json"
 
 VALID_STATES = ["pending", "in_progress", "done", "blocked", "review"]
 VALID_PRIORITIES = ["low", "medium", "high", "urgent"]

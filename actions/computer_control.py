@@ -101,7 +101,150 @@ def _smooth_move(x, y, duration=0.4):
         time.sleep(duration / steps)
 
 
+def _wayland_delegate(parameters: dict, player=None) -> str:
+    """Camino Wayland/Linux sin X11: delega input físico a ydotool y ventanas a
+    hyprctl, para que `computer_control` funcione igual que en Windows."""
+    from actions.wayland_input import wayland_input
+
+    action = str(parameters.get("action", "")).lower().strip()
+    p = parameters or {}
+
+    if action in ("type", "smart_type"):
+        return wayland_input({"action": "type", "text": p.get("text", "")}, player)
+
+    if action == "open_and_type":
+        return ("En Wayland usá wayland_input/computer_control por partes: "
+                "primero abrí la app (gtk-launch) y luego type.")
+
+    if action in ("click", "right_click", "middle_click", "double_click", "doble_click"):
+        x, y = p.get("x"), p.get("y")
+        if x is not None and y is not None:
+            wayland_input({"action": "move", "x": x, "y": y}, player)
+        btn_arg = p.get("button", "left")
+        if action == "right_click":
+            btn_arg = "right"
+        if action == "middle_click":
+            btn_arg = "middle"
+        if action in ("double_click", "doble_click"):
+            return wayland_input({"action": "double_click"}, player)
+        return wayland_input({"action": "click", "button": btn_arg,
+                              "count": p.get("count", 1)}, player)
+
+    if action == "move":
+        return wayland_input({"action": "move", "x": p.get("x", 0), "y": p.get("y", 0)}, player)
+
+    if action == "drag":
+        return wayland_input({"action": "drag", "start_x": p.get("start_x", 0),
+                              "start_y": p.get("start_y", 0),
+                              "x": p.get("x", 0), "y": p.get("y", 0)}, player)
+
+    if action == "click_text":
+        return wayland_input({"action": "click_text", "text": p.get("text", "")}, player)
+
+    if action in ("press", "key"):
+        return wayland_input({"action": "key", "key": p.get("key", "")}, player)
+
+    if action in ("hotkey", "combo"):
+        keys = p.get("keys", "")
+        if isinstance(keys, (list, tuple)):
+            keys = "+".join(str(k) for k in keys)
+        keys = str(keys).replace(",", "+").replace(" ", "+").replace("++", "+")
+        return wayland_input({"action": "combo", "combo": keys}, player)
+
+    # Atajos frecuentes → combos ydotool
+    _combo_map = {
+        "copy": "ctrl+c", "paste": "ctrl+v", "select_all": "ctrl+a",
+        "undo": "ctrl+z", "redo": "ctrl+y", "save": "ctrl+s",
+        "new_tab": "ctrl+t", "next_tab": "ctrl+tab", "prev_tab": "ctrl+shift+tab",
+    }
+    if action in _combo_map:
+        return wayland_input({"action": "combo", "combo": _combo_map[action]}, player)
+
+    _key_map = {"enter": "enter", "tab": "tab", "escape": "escape",
+                "backspace": "backspace", "delete": "delete",
+                "pageup": "pageup", "pagedown": "pagedown",
+                "up": "up", "down": "down", "left": "left", "right": "right",
+                "space": "space", "home": "home", "end": "end"}
+    if action in _key_map:
+        return wayland_input({"action": "key", "key": _key_map[action]}, player)
+
+    if action == "clear_field":
+        wayland_input({"action": "combo", "combo": "ctrl+a"})
+        return wayland_input({"action": "key", "key": "delete"}, player)
+
+    if action == "get_mouse_pos":
+        import subprocess
+        try:
+            r = subprocess.run(["hyprctl", "cursorpos"], capture_output=True,
+                               text=True, timeout=5)
+            return ("Mouse en ({})".format(r.stdout.strip()) if r.returncode == 0
+                    else r.stderr.strip())
+        except Exception as e:
+            return f"Error: {e}"
+
+    if action == "focus_window":
+        import subprocess
+        title = (p.get("title", "") or "").strip()
+        if not title:
+            return "Falta 'title'."
+        try:
+            r = subprocess.run(["hyprctl", "clients", "-j"], capture_output=True,
+                               text=True, timeout=5)
+            clients = json.loads(r.stdout)
+            lower = title.lower()
+            best = None
+            for c in clients:
+                cls = str(c.get("class", "")).lower()
+                addr = c.get("address", "")
+                wtitle = str(c.get("title", "")).lower()
+                if lower in cls or lower in wtitle:
+                    best = addr
+                    break
+            if not best:
+                return f"No encontré la ventana '{title}' (hyprctl clients)."
+            r2 = subprocess.run(["hyprctl", "dispatch", "focuswindow", best],
+                                capture_output=True, text=True, timeout=5)
+            return "Foco en '{}'.".format(title) if r2.returncode == 0 else r2.stderr.strip()
+        except Exception as e:
+            return f"Error: {e}"
+
+    if action in ("scroll", "scroll_up", "scroll_down", "scroll_to_top",
+                  "scroll_to_bottom", "scroll_page_up", "scroll_page_down",
+                  "smooth_scroll"):
+        return ("En Wayland ydotool 1.x no sintetiza scroll; "
+                "usá key=pageup/pagedown o la rueda física.")
+
+    if action == "screenshot":
+        import subprocess
+        path = p.get("path", "") or ""
+        if path:
+            path = os.path.expanduser(path)
+            try:
+                r = subprocess.run(["grim", path], capture_output=True, timeout=15)
+                return f"Screenshot: {path}" if r.returncode == 0 else r.stderr.strip()
+            except Exception as e:
+                return f"Error: {e}"
+        from actions.screen_vision import _capture_screen_base64
+        b64 = _capture_screen_base64()
+        return f"Screenshot (base64, {len(b64) // 1024} KB)" if b64 else "Error capturando."
+
+    if action in ("open_tab", "close_tab", "close_current_tab", "list_tabs",
+                  "track_tab", "get_tab_info", "switch_tab"):
+        return ("El trackeo de pestañas de computer_control requiere pyautogui/X11. "
+                "En Wayland usá browser_control (Playwright) o wayland_input.")
+
+    return ("En Wayland, computer_control delega en wayland_input (ydotool). Acciones "
+            "soportadas: type, click, right_click, middle_click, double_click, move, drag, "
+            "click_text, press, hotkey, copy, paste, select_all, undo, redo, save, new_tab, "
+            "clear_field, get_mouse_pos, focus_window, screenshot, enter, tab, escape, "
+            "backspace, delete, scroll (con nota).")
+
+
 def computer_control(parameters: dict, player=None) -> str:
+    # Wayland/sin X11 → camino ydotool + grim + hyprctl
+    if pyautogui is None:
+        return _wayland_delegate(parameters, player)
+
     action = parameters.get("action", "").lower().strip()
     text = parameters.get("text", "")
     key = parameters.get("key", "")

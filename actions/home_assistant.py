@@ -21,7 +21,7 @@ from typing import Any
 
 
 def _get_config():
-    cfg_path = Path(r"D:\Eris_Source\config\api_keys.json")
+    cfg_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
     if not cfg_path.exists():
         return {}
     try:

@@ -52,11 +52,44 @@ def _pick_default_target(source_lang: str) -> str:
     return "en" if source_lang.startswith("es") else "es"
 
 
+def _ollama_translate(text: str, target: str, source: str = "auto") -> str | None:
+    """Fallback de traducción vía Ollama local (sin costo ni rate limits).
+
+    Usa el modelo local configurado (qwen3:8b por defecto). Devuelve ``None``
+    si Ollama no responde.
+    """
+    try:
+        import json as _json
+        import requests as _requests
+        from pathlib import Path
+        cfg_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        cfg = {}
+        if cfg_path.exists():
+            cfg = _json.loads(cfg_path.read_text(encoding="utf-8"))
+        base_url = str(cfg.get("ollama_base_url", "http://localhost:11434")).rstrip("/")
+        model = cfg.get("ollama_model", "qwen3:8b")
+        src = "auto" if not source or source == "auto" else source
+        prompt = (
+            f"Translate the following text from {src} into {target}. "
+            "Reply with ONLY the translation, without quotes, explanations or extra text.\n\n"
+            f"{text}"
+        )
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+            "options": {"temperature": 0.2},
+        }
+        r = _requests.post(f"{base_url}/api/chat", json=payload, timeout=60)
+        r.raise_for_status()
+        out = (r.json().get("message") or {}).get("content", "").strip()
+        return out or None
+    except Exception:
+        return None
+
+
 def translator(parameters: dict = None, player=None) -> str:  # noqa: C901
     """Translate text, list languages, or batch-translate."""
-    if GoogleTranslator is None:
-        return "Error: deep-translator is not installed. Run: pip install deep-translator"
-
     params = parameters or {}
     action = str(params.get("action", "translate")).strip().lower()
     text = str(params.get("text", "")).strip()
@@ -69,12 +102,21 @@ def translator(parameters: dict = None, player=None) -> str:  # noqa: C901
             return "Error: No text provided."
         if target == "auto" or not target:
             target = _pick_default_target(source)
-        try:
-            translator_obj = GoogleTranslator(source=source, target=target)
-            result = translator_obj.translate(text)
-            return result if result else "Error: Translation returned empty result."
-        except Exception as exc:
-            return f"Translation error: {exc}"
+        if GoogleTranslator is not None:
+            try:
+                translator_obj = GoogleTranslator(source=source, target=target)
+                result = translator_obj.translate(text)
+                if result:
+                    return result
+            except Exception as exc:
+                google_err = f"Translation error: {exc}"
+        else:
+            google_err = "Error: deep-translator is not installed."
+        # Fallback local (Ollama) — además cubre TooManyRequests
+        result = _ollama_translate(text, target, source)
+        if result:
+            return result
+        return google_err
 
     if action == "languages":
         lines = [f"{code} — {name}" for code, name in sorted(_LANG_MAP.items())]
@@ -86,14 +128,23 @@ def translator(parameters: dict = None, player=None) -> str:  # noqa: C901
         if target == "auto" or not target:
             target = _pick_default_target(source)
         results: list[str] = []
+        google_ok = GoogleTranslator is not None
         try:
-            translator_obj = GoogleTranslator(source=source, target=target)
+            if google_ok:
+                translator_obj = GoogleTranslator(source=source, target=target)
             for item in texts_raw:
                 t = str(item).strip()
                 if not t:
                     results.append("(empty)")
                     continue
-                translated = translator_obj.translate(t)
+                translated = None
+                if google_ok:
+                    try:
+                        translated = translator_obj.translate(t)
+                    except Exception:
+                        translated = None
+                if not translated:
+                    translated = _ollama_translate(t, target, source)
                 results.append(translated if translated else "(empty)")
         except Exception as exc:
             return f"Batch translation error: {exc}"

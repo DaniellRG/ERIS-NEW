@@ -11,7 +11,7 @@ Actions:
   export     — Export habit data to CSV
   leaderboard — Show habits ranked by consistency
 
-Storage: D:/Eris_Source/data/habits.json
+Storage: data/habits.json (relativo al proyecto)
 """
 from __future__ import annotations
 

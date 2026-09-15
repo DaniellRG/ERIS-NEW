@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 from datetime import datetime, date
 
-_VAULT_PATH = Path(r"D:\Eris_Source\vault")
+_VAULT_PATH = Path(__file__).resolve().parent.parent / "vault"
 _FOLDERS = ("raw", "wiki", "outputs")
 _CONVENTIONS_FILE = "CLAUDE.md"
 

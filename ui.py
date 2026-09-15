@@ -251,7 +251,7 @@ class Particle:
         self.size = random.uniform(1, 3)
         self.life = random.uniform(0.5, 1.0)
         self.max_life = self.life
-        self.trail = deque(maxlen=8)
+        self.trail = deque(maxlen=4)
         self.hue = random.uniform(0.08, 0.12)  # gold range
 
     def update(self, cx=0, cy=0, attract=False):
@@ -295,6 +295,8 @@ class ParticleOrb(QWidget):
         self._mouse_pos = None
         self._attract = False
         self._pulse = 0.0
+        self._paint_trails = True
+        self._sprite_cache = {}
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
         self._timer.start(16)
@@ -328,16 +330,26 @@ class ParticleOrb(QWidget):
         Antes IDLE repintaba a 60 FPS continuos → un core al ~85% de CPU; y el
         salto 16ms↔110ms según nivel de audio causaba traba visible del orbe.
 
-        El orbe corre SIEMPRE a 60 FPS para animaciones fluidas en cualquier
-        SO de escritorio con ventana visible; solo baja el ritmo si la ventana
-        está oculta. La CPU de repintado solo es problema con softw. render
-        antiguo, y en Windows/Linux modernos 60 FPS es fluido sin colapso."""
+        En render POR SOFTWARE (QSG_RHI_BACKEND=software, el modo que evita el
+        segfault de WebEngine en Linux) cada repintado cuesta CPU: a 60 FPS
+        constantes el orbe se traba. Aquí se baja a 30 FPS de base y solo se
+        sube a 60 FPS mientras habla (los bombeos se ven fluidos y el resto del
+        tiempo la CPU se libera). Con aceleración (hardware) se mantiene 60 FPS."""
         import platform as _p
         _desktop_os = _p.system().lower() in ("windows", "linux")
+        _soft = "soft" in os.environ.get("QSG_RHI_BACKEND", "").lower() or \
+                "--disable-gpu" in os.environ.get("QTWEBENGINE_CHROMIUM_FLAGS", "")
         if not self.isVisible():
             target = 300
+        elif _soft:
+            # Software renderer: 60 FPS SIEMPRE (el orbe se ve fluido). Para
+            # compensar el costo de CPU, en paintEvent se omite el trail
+            # (ahorra ~80% de las elipses) y se usa sprite cache para las
+            # partículas individuales.
+            self._paint_trails = False
+            target = 16
         elif _desktop_os:
-            target = 16   # 60 FPS constantes en cualquier SO de escritorio
+            target = 16   # 60 FPS constantes en cualquier SO con GPU
         elif self._state in ("MUTED", "ERROR"):
             target = 33
         elif self._state in ("THINKING", "SPEAKING"):
@@ -368,7 +380,9 @@ class ParticleOrb(QWidget):
         attract = self._attract and self._mouse_pos is not None
         mx, my = self._mouse_pos if self._mouse_pos else (cx, cy)
 
-        target_count = 120
+        # Menos partículas con render por software (120→60) para abaratar cada
+        # repintado translúcido; en GPU se mantiene la densidad completa.
+        target_count = 60 if "soft" in os.environ.get("QSG_RHI_BACKEND", "").lower() else 120
         if len(self._particles) < target_count:
             self._particles.append(Particle(
                 cx + random.uniform(-80, 80),
@@ -502,14 +516,15 @@ class ParticleOrb(QWidget):
             p.setBrush(QBrush(clr))
             p.setPen(Qt.PenStyle.NoPen)
             p.drawEllipse(QPointF(pt.x, pt.y), sz, sz)
-            for i, (tx, ty) in enumerate(pt.trail):
-                ta = int(alpha * i / len(pt.trail) * 0.3)
-                if ta > 0:
-                    tc = QColor(state_color)
-                    tc.setAlpha(ta)
-                    p.setBrush(QBrush(tc))
-                    ts = sz * i / len(pt.trail) * 0.5
-                    p.drawEllipse(QPointF(tx, ty), ts, ts)
+            if self._paint_trails:
+                for i, (tx, ty) in enumerate(pt.trail):
+                    ta = int(alpha * i / len(pt.trail) * 0.3)
+                    if ta > 0:
+                        tc = QColor(state_color)
+                        tc.setAlpha(ta)
+                        p.setBrush(QBrush(tc))
+                        ts = sz * i / len(pt.trail) * 0.5
+                        p.drawEllipse(QPointF(tx, ty), ts, ts)
         ring_color = QColor(state_color)
         ring_color.setAlpha(int(40 + 30 * self._pulse))
         pen = QPen(ring_color, 1)

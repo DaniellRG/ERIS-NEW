@@ -15,6 +15,35 @@ def _load():
     except (json.JSONDecodeError, OSError):
         _reminders = []
 
+
+def _rearm(player=None) -> None:
+    """Re-arma recordatorios activos tras un reinicio.
+
+    Futuros → nuevo threading.Timer. Vencidos (mientras Eris estuvo apagada)
+    → dispara el aviso apenas vuelve a correr.
+    """
+    _load()
+    now = datetime.now()
+    for r in _reminders:
+        if not r.get("active"):
+            continue
+        rid = r.get("id")
+        if any(t.get("id") == rid for t in _timers):
+            continue
+        try:
+            trigger = datetime.fromisoformat(r["trigger_at"])
+        except (ValueError, KeyError):
+            continue
+        text = r.get("text", "")
+        if trigger <= now:
+            _fire_reminder(rid, text, player)
+        else:
+            delay = (trigger - now).total_seconds()
+            timer = threading.Timer(delay, _fire_reminder, args=[rid, text, player])
+            timer.daemon = True
+            timer.start()
+            _timers.append({"id": rid, "timer": timer})
+
 def _save():
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -28,6 +57,7 @@ def reminders(parameters: dict, player=None) -> str:
     reminder_id = parameters.get("id")
 
     _load()
+    _rearm(player)
 
     if player:
         player.write_log(f"⏰ Reminder: {action}")

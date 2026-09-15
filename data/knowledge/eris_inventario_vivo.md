@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-11 22:49:20 · 493 tools registradas y resolviendo.
+Generado: 2026-09-15 10:35:49 · 494 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -269,6 +269,9 @@ Generado: 2026-09-11 22:49:20 · 493 tools registradas y resolviendo.
 
 ## cuadernos
 - `cuadernos` — CUADERNOS DE ESTUDIO: aprendizaje autodidacta profundo de Eris. estado (cuaderno abierto/cerrados), abrir (tem
+
+## curar
+- `curar_memoria` — CURADORA DE MEMORIA de Eris. Gestiona la memoria como un jefe de despacho: (1) EXPIRACION por politicas: reten
 
 ## curiosity
 - `curiosity_engine` — Cuenta un dato curioso; opcionalmente filtrado por tema.

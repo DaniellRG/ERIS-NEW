@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
-DATA_DIR = Path(r"D:\Eris_Source\data")
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TRANSACTIONS_FILE = DATA_DIR / "finance_transactions.json"
 CATEGORIES_FILE = DATA_DIR / "finance_categories.json"
 BUDGETS_FILE = DATA_DIR / "finance_budgets.json"

@@ -18,8 +18,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-_CRED_FILE = Path(r"D:\Eris_Source\config\credentials.json")
-_TOKEN_FILE = Path(r"D:\Eris_Source\config\token_calendar.json")
+_BASE_DIR = Path(__file__).resolve().parent.parent
+_CRED_FILE = _BASE_DIR / "config" / "credentials.json"
+_TOKEN_FILE = _BASE_DIR / "config" / "token_calendar.json"
 _CALENDAR_ID = "primary"
 
 

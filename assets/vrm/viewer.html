@@ -42,6 +42,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin, VRMUtils } from './lib/three-vrm.module.min.js';
+window.__dbgStage = 'imports-ok';
 
 let renderer, scene, camera, clock;
 let vrm = null;
@@ -106,10 +107,12 @@ function init() {
 
 function loadVrm() {
     const loader = new GLTFLoader();
+    window.__dbgStage = 'loadVrm-called';
     loader.register((parser) => new VRMLoaderPlugin(parser));
     loader.load(
         'Eris.vrm',
         (gltf) => {
+            window.__dbgStage = 'gltf-loaded';
             const loaded = gltf.userData.vrm;
             VRMUtils.removeUnnecessaryVertices(loaded.scene);
             VRMUtils.combineSkeletons(loaded.scene);

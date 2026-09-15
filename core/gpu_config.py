@@ -74,8 +74,15 @@ def configure_gpu():
         if _is_linux:
             # Linux/Wayland: d3d11 no existe; Qt WebEngine aborta con
             # "Unsupported Graphics API: 4" si QSG_RHI_BACKEND no es opengl.
-            _chromium_flags += "--no-sandbox "
-            os.environ["QSG_RHI_BACKEND"] = "opengl"
+            # AMD/Wayland sin driver GL utilizable → segfault de WebEngine salvo
+            # FORZAR software rendering (ANGLE + SwiftShader).
+            _chromium_flags += (
+                "--no-sandbox "
+                "--disable-gpu "
+                "--use-gl=angle "
+                "--use-angle=swiftshader "
+            )
+            os.environ["QSG_RHI_BACKEND"] = "software"
         else:
             os.environ["QSG_RHI_BACKEND"] = "d3d11"
         os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = _chromium_flags

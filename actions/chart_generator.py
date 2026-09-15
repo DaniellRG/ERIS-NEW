@@ -9,7 +9,7 @@ Actions:
   compare    — Multiple series comparison
   list       — List generated charts
 
-Storage: D:/Eris_Source/data/charts/
+Storage: data/charts/ (relativo al proyecto)
 Uses matplotlib with Agg backend (non-interactive). Saves as PNG.
 """
 from __future__ import annotations
@@ -18,10 +18,16 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+    _MPL_OK = True
+except Exception:
+    plt = None  # type: ignore[assignment]
+    ticker = None  # type: ignore[assignment]
+    _MPL_OK = False
 
 _BASE_DIR = Path(__file__).resolve().parent.parent
 _OUTPUT_DIR = _BASE_DIR / "data" / "charts"
@@ -95,6 +101,10 @@ def _save(fig, path: str) -> str:
 def chart_generator(parameters: dict = None, player=None) -> str:
     params = parameters or {}
     action = str(params.get("action", "bar")).strip().lower()
+
+    if not _MPL_OK:
+        return ("Error: matplotlib no está instalado en esta plataforma. "
+                "Ejecutá: pip install matplotlib")
 
     if player:
         try:

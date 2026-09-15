@@ -24,7 +24,7 @@ _browser = None
 _page = None
 _playwright = None
 
-_SCREENSHOT_DIR = Path(r"D:\Eris_Source\data\screenshots")
+_SCREENSHOT_DIR = Path(__file__).resolve().parent.parent / "data" / "screenshots"
 _SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 

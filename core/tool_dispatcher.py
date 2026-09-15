@@ -63,6 +63,51 @@ _SPECIAL_TOOLS = frozenset({
 })
 
 
+_FAIL_PREFIXES = ("error", "no configurado", "no encontrado", "not found",
+                  "unknown action", "unknown tool", "no devolvio", "no devolvió",
+                  "excedió el timeout", "excedio el timeout", "no se pudo",
+                  "no se puede", "falló", "fallo", "se canceló",
+                  "operación abortada", "operacion abortada", "timeout", "fail")
+_EMPTY_HINT = "no devolvió ningún resultado"
+
+
+def _result_status(result) -> str:
+    """Clasifica el resultado de una tool de forma HONESTA → 'ok' | 'error' | 'vacío'.
+
+    No es un simple startswith('error'): los módulos fallan con {'error':...},
+    'No configurado…', 'Not found…', 'Unknown action…', etc. Si se marca un fallo
+    como éxito, Eris 'siente' éxito, aprende la lección equivocada y lo narra
+    como logro (invención)."""
+    try:
+        if result is None:
+            return "vacío"
+        if isinstance(result, dict):
+            if result.get("error") not in (None, "", False):
+                return "error"
+            if result.get("ok") is True or result.get("success") is True:
+                return "ok"
+            if "result" in result:
+                return _result_status(result.get("result"))
+            if "error" in result:
+                return "error"
+            return "ok"
+        text = str(result).strip()
+        if not text:
+            return "vacío"
+        lower = text.lower()
+        if lower.startswith(_FAIL_PREFIXES):
+            return "error"
+        if _EMPTY_HINT in lower:
+            return "vacío"
+        signal = lower[:120]
+        if any(w in signal for w in ("error", "timeout", "abortada",
+                                     "no configurado", "not found", "fail")):
+            return "error"
+    except Exception:
+        pass
+    return "ok"
+
+
 class ToolDispatcher:
     """Dispatches tool calls from the Gemini live session to the appropriate action."""
 
@@ -368,7 +413,7 @@ class ToolDispatcher:
         except ImportError:
             record_action = db_tool_log = react_to_success = react_to_failure = None
 
-        _ok = not str(result).lower().startswith("error")
+        _ok = _result_status(result) in ("ok",)
         _HOOKS = []
 
         if record_action:
@@ -393,12 +438,12 @@ class ToolDispatcher:
             intent = None
         try:
             from core.metrics_dashboard import record_tool_usage as _mu
-            _mu(name, not str(result).startswith("ERROR"), 0)
+            _mu(name, _result_status(result) == "ok", 0)
         except Exception:
             pass
         try:
             from core.capability_self_assessment import record_tool_usage as _ca
-            _ca(name, not str(result).startswith("ERROR"), 0)
+            _ca(name, _result_status(result) == "ok", 0)
         except Exception:
             pass
         try:
@@ -465,7 +510,7 @@ class ToolDispatcher:
         try:
             from core.neuro_spheres import neuro_spheres as _ns_tool
             _ns_result = str(result)[:1000]
-            _ns_success = not _ns_result.lower().startswith("error")
+            _ns_success = _result_status(result) == "ok"
 
             # --- NODO DE ACTIVIDAD (siempre que la tool funcione) ---
             _NS_MAP = {
@@ -621,10 +666,16 @@ class ToolDispatcher:
 
         print(f"[ERIS] 📤 {name} → {str(result)[:80]}")
 
+        try:
+            from core.truth_audit import record_tool
+            record_tool(name, _result_status(result), str(result)[:160])
+        except Exception:
+            pass
+
         # ── Command Deck: marcar intent como terminado ──
         try:
             from core.command_deck import log_intent
-            _ok = not str(result).lower().startswith("error")
+            _ok = _result_status(result) in ("ok",)
             log_intent(name, args, status=("done" if _ok else "error"),
                        result=str(result)[:120])
         except Exception:
@@ -645,7 +696,7 @@ class ToolDispatcher:
             from core.ui_panels import get_terminal_panel
             _tp = get_terminal_panel()
             if _tp:
-                _ok = not str(result).lower().startswith("error")
+                _ok = _result_status(result) in ("ok",)
                 _tp.log_tool_result(name, str(result), ok=_ok)
         except Exception:
             pass
@@ -684,7 +735,9 @@ class ToolDispatcher:
                 try:
                     fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
                     r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
-                    return r or f"Herramienta {name} ejecutada."
+                    if r is None or (isinstance(r, (str, list, dict)) and len(str(r)) == 0):
+                        return f"Herramienta {name} no devolvió ningún resultado (se ejecutó, pero sin datos que CONFIRMEN que hizo algo — decilo con honestidad, no inventes el éxito)."
+                    return r
                 except asyncio.TimeoutError:
                     return f"Herramienta {name} excedió el timeout de {_TOOL_TIMEOUT}s (operación pesada abortada)."
             except Exception as e:
@@ -708,7 +761,9 @@ class ToolDispatcher:
                 try:
                     fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
                     r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
-                    return r or f"Herramienta {name} ejecutada."
+                    if r is None or (isinstance(r, (str, list, dict)) and len(str(r)) == 0):
+                        return f"Herramienta {name} no devolvió ningún resultado (se ejecutó, pero sin datos que CONFIRMEN que hizo algo — decilo con honestidad, no inventes el éxito)."
+                    return r
                 except asyncio.TimeoutError:
                     return f"Herramienta {name} excedió el timeout de {_TOOL_TIMEOUT}s (operación pesada abortada)."
         except Exception as dyn_e:

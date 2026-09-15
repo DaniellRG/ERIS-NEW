@@ -10,11 +10,12 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
-HISTORY_PATH = Path("D:/Eris_Source/data/browser_history.json")
+_BASE_DIR = Path(__file__).resolve().parent.parent
+HISTORY_PATH = _BASE_DIR / "data" / "browser_history.json"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
 }
-DOWNLOAD_DIR = Path("D:/Eris_Source/data/downloads")
+DOWNLOAD_DIR = _BASE_DIR / "data" / "downloads"
 
 
 def _load_history():

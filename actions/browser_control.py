@@ -94,6 +94,12 @@ def browser_control(parameters: dict, player=None) -> str:
     if not action:
         return "Error: No se especificó acción."
 
+    # Wayland/sin X11: el control del navegador se hace con ydotool/hyprctl.
+    if pyautogui is None:
+        return ("browser_control requiere pyautogui (X11). En Wayland controlá el "
+                "navegador con computer_control (hotkey/click/click_text/focus_window) "
+                "o wayland_input, o usá browser via Playwright/CDP.")
+
     target_window = _find_browser()
     if not target_window:
         return "No se encontró navegador abierto."

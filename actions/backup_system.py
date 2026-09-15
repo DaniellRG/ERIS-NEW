@@ -9,6 +9,24 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 BACKUPS_DIR = os.path.join(DATA_DIR, "backups")
 METADATA_FILE = os.path.join(DATA_DIR, "backups.json")
 
+# Carpetas que NUNCA se copian en un backup (case-insensitive). Evita que
+# un respaldo de ~ o del proyecto se coma discos/tiempo con venvs, caches,
+# node_modules o los propios backups.
+_IGNORED = {
+    "node_modules", "__pycache__", ".git", ".hg", ".svn", ".cache", ".mypy_cache",
+    ".pytest_cache", ".ruff_cache", ".venv", ".venv-linux", ".venv-windows",
+    "venv", "dist", "build", "target", "backups", "trash", ".trash", "snap",
+    ".local", ".cache", "nsrrp", ".npm", ".m2", ".gradle", ".cargo",
+}
+
+# Tope de sanidad: si un crawl encuentra más archivos que esto, fallamos con un
+# mensaje claro en vez de congelar la sesión minutos o llenar el disco.
+_MAX_FILES = 120_000
+
+
+def _ignored(name: str) -> bool:
+    return name.lower() in _IGNORED
+
 
 def _load_metadata():
     if os.path.exists(METADATA_FILE):
@@ -40,7 +58,10 @@ def _file_hash(path):
 def _scan_directory(directory):
     file_data = {}
     for root, dirs, files in os.walk(directory):
+        dirs[:] = [d for d in dirs if not _ignored(d)]
         for fname in files:
+            if _ignored(fname):
+                continue
             full = os.path.join(root, fname)
             rel = os.path.relpath(full, directory)
             try:
@@ -52,6 +73,12 @@ def _scan_directory(directory):
                 }
             except (OSError, PermissionError):
                 pass
+        if len(file_data) > _MAX_FILES:
+            raise RuntimeError(
+                f"El source tiene más de {_MAX_FILES} archivos: "
+                f"abortando (ruta demasiado grande para respaldar). "
+                f"Pedile a ERIS que respalde un scope chico (memory/config/data/knowledge)."
+            )
     return file_data
 
 
@@ -75,8 +102,28 @@ def backup_system(parameters: dict, player=None) -> str:
         return f"Unknown action: {action}. Valid: create, restore, list, delete, schedule, status, diff"
 
 
+_SCOPES = {
+    "all": BASE_DIR,
+    "memory": os.path.join(BASE_DIR, "memory"),
+    "config": os.path.join(BASE_DIR, "config"),
+    "core": os.path.join(BASE_DIR, "core"),
+    "actions": os.path.join(BASE_DIR, "actions"),
+    "skills": os.path.join(BASE_DIR, "skills"),
+    "libraries": os.path.join(BASE_DIR, "libraries"),
+    "knowledge": os.path.join(BASE_DIR, "data", "knowledge"),
+    "vault": os.path.join(BASE_DIR, "vault"),
+}
+
+
 def _create_backup(parameters: dict):
-    source = parameters.get("source", os.path.expanduser("~"))
+    # Default seguro: el PROYECTO de ERIS (nunca el HOME completo, que
+    # congelaba la sesión escaneando ~100k archivos y podía llenar el disco).
+    scope = str(parameters.get("scope") or "all").lower()
+    source = parameters.get("source", None)
+    if not source:
+        source = _SCOPES.get(scope, _SCOPES["all"])
+    if not os.path.isdir(source):
+        return f"Source inexistente: {source}. Usá 'scope' (memory/config/core/actions/skills/libraries/knowledge/vault/all) o 'source' con una ruta."
     backup_type = parameters.get("type", "incremental").lower()
     name = parameters.get("name", f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
 
@@ -88,7 +135,11 @@ def _create_backup(parameters: dict):
     if name in existing_names:
         return f"Backup '{name}' already exists. Choose a different name."
 
-    file_manifest = _scan_directory(source)
+    try:
+        file_manifest = _scan_directory(source)
+    except RuntimeError as e:
+        shutil.rmtree(backup_dir, ignore_errors=True)
+        return f"Backup abortado: {e}"
     manifest_path = os.path.join(backup_dir, "manifest.json")
     with open(manifest_path, "w") as f:
         json.dump({"files": file_manifest, "source": source, "type": backup_type}, f, indent=2)

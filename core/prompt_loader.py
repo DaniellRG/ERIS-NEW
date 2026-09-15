@@ -5,6 +5,33 @@ from core.platform_self import system_portrait_markdown
 _prompt_cache: dict = {"mtime": -1.0, "size": -1, "text": None}
 
 
+def _portabilize(text: str) -> str:
+    """Reemplaza rutas Windows hardcodeadas del prompt por las rutas REALES
+    de esta máquina (el archivo canonical sigue valiendo para Windows)."""
+    try:
+        base = str(PROMPT_PATH.resolve().parent.parent)  # raíz del proyecto
+        vault = ""
+        try:
+            from core.logging_setup import get_obsidian_vault
+            v = get_obsidian_vault()
+            if v:
+                vault = str(v)
+        except Exception:
+            vault = ""
+        if not vault:
+            vault = base + "/vault"
+        # 1) Específicas primero (vault real del usuario + vault interno)
+        for old in (r"D:\Eris_NEW\BaseDatosObsidian\BaseObsiEris",
+                    "D:/Eris_NEW/BaseDatosObsidian/BaseObsiEris",
+                    r"D:\Eris_Source\vault", "D:/Eris_Source/vault"):
+            text = text.replace(old, vault)
+        # 2) Genéricas del proyecto (snapshots, skills, data, etc.)
+        text = text.replace(r"D:\Eris_Source", base).replace("D:/Eris_Source", base)
+    except Exception:
+        pass
+    return text
+
+
 def load_system_prompt() -> str:
     """Prompt del sistema cacheado con invalidación por mtime (el archivo no
     cambia durante la ejecución; se relee solo si cambió en disco)."""
@@ -102,6 +129,7 @@ def load_system_prompt() -> str:
         )
     try:
         portrait = system_portrait_markdown()
+        base = _portabilize(base)
         if portrait:
             text = base + "\n\n" + portrait
         else:

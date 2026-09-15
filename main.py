@@ -1909,6 +1909,43 @@ class ErisLive:
                 print(f"[ERIS] Aviso por voz falló: {e}")
         threading.Thread(target=_job, daemon=True).start()
 
+    def _voice_resilient_fallback(self):
+        """Auto-reparación de voz: si la cuota de TTS en nube (Gemini/elevens/fish)
+        se agota, Eris pasa SOLA a TTS local (kokoro si está, sino edge) y lo
+        persiste, para no quedarse muda. Después de llamarla, si el usuario quiere
+        volver, solo cambia el backend en Ajustes."""
+        from pathlib import Path as _P
+        import json as _j
+        _cfg_path = _P(__file__).resolve().parent / "config" / "api_keys.json"
+        _cur = "gemini"
+        try:
+            _all = _j.loads(_cfg_path.read_text(encoding="utf-8"))
+            _cur = str(_all.get("tts_backend", "gemini")).lower()
+        except Exception:
+            _all = {}
+        if _cur in ("kokoro", "pykokoro", "edge"):
+            if getattr(self, "_voice_resilient", False):
+                self.ui.write_log("SYS: Voz ya en modo local (resiliente).")
+            return
+        _new = "edge"
+        try:
+            import pykokoro  # noqa: F401
+            _new = "kokoro"
+        except Exception:
+            pass
+        _all["tts_backend"] = _new
+        self._voice_resilient = True
+        try:
+            _cfg_path.write_text(_j.dumps(_all, indent=2, ensure_ascii=False), encoding="utf-8")
+            print(f"[ERIS] 💾 Cuota de voz agotada → tts_backend={_new} (persistido).")
+            self.ui.write_log(f"SYS: 💸 Cuota de voz en nube agotada. Pasé a TTS local ({_new}). Mi voz sigue conmigo.")
+        except Exception as _e:
+            print(f"[ERIS] Voice fallback persist error: {_e}")
+        try:
+            self._remember("Hoy agoté la cuota de voz en nube. Pasé sola a TTS local (" + _new + ") para seguir hablando. Puedo volver a nube si me lo piden.")
+        except Exception:
+            pass
+
     def _on_stop_pressed(self):
         """Llamado desde el hilo de la UI al presionar DETENER o ESC."""
         self._stop_requested.set()
@@ -3026,6 +3063,16 @@ class ErisLive:
         except Exception:
             pass
 
+        # ── VERIFICACIÓN: la evidencia REAL de las últimas tools + corrección
+        #    si en el turno anterior Eris afirmó un éxito que no pasó. ──
+        try:
+            from core.truth_audit import evidence_block
+            _ev = evidence_block()
+            if _ev:
+                parts.insert(-1, _ev)
+        except Exception:
+            pass
+
         # ── Smart trim: nunca cortar lo esencial (personalidad, relación,
         #    estilo, memoria, digest). Se recorta solo la cola del prompt base.
         #    30000 chars ≈ ~7.5K tokens. Gemini Live (native audio) deja de
@@ -3668,6 +3715,23 @@ class ErisLive:
                             if out_full:
                                 self._remember(f"ERIS: {out_full}")
                                 self._last_tool_context = f"Última respuesta: {out_full[:200]}"
+                                # ── Auditoría de veracidad: cruzar lo que dijo contra el registro real
+                                #    de tools (no inventar éxitos). Si se detecta
+                                #    una afirmación sin respaldo, se anota la
+                                #    corrección EN MEMORIA para que la mentira no
+                                #    quede guardada como verdad. ──
+                                try:
+                                    from core.truth_audit import audit_turn
+                                    _audit_flags = audit_turn(out_full)
+                                    if _audit_flags:
+                                        self._remember(
+                                            f"AUDITORÍA DE VERACIDAD — en mi última respuesta "
+                                            f"afirmé: '{out_full[:140]}' pero el registro real "
+                                            f"muestra lo contrario: {_audit_flags[0][:140]}. "
+                                            f"Lo reconozco y no lo vuelvo a afirmar sin verificar."
+                                        )
+                                except Exception:
+                                    pass
                             # ── Resumen de sesión (memoria liviana, no historial) ──
                             try:
                                 if full_in or out_full:
@@ -4417,6 +4481,16 @@ class ErisLive:
                     elif "voice" in msg.lower() or "speaker" in msg.lower():
                         print(f"[ERIS] ⚠️ Voz no valida: {msg[:200]}")
                         self.ui.write_log("SYS: ⚠️ Voz no valida. Revisá Ajustes > Voz.")
+                    elif ("quota" in msg.lower() or "resource_exhausted" in msg.upper()
+                          or "429" in msg or "E006" in msg):
+                        print(f"[ERIS] 💸 Cuota de voz/nube agotada ({msg[:120]})")
+                        self._voice_resilient_fallback()
+                        consecutive_fails += 1
+                        if not getattr(self, "_quota_warned", False):
+                            self._quota_warned = True
+                            self.ui.write_log("SYS: ⚠️ Cuota de la nube agotada. Voz en modo resiliente local.")
+                        else:
+                            print("[ERIS] Cuota sigue agotada — mantengo backoff.")
                     elif "1007" in msg or "invalid argument" in msg.lower() or "invalid frame" in msg.lower():
                         print(f"[ERIS] ⚠️ 1007: {msg[:200]}")
                         self.ui.write_log("SYS: Respuesta muy grande. Reconectando...")

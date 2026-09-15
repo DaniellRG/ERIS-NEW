@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' qrc:; img-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:;">
+<title>ERIS — Avatar 3D</title>
+<style>
+    html, body {
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        background: transparent !important;
+        overflow: hidden;
+    }
+    body { cursor: grab; }
+    body.dragging { cursor: grabbing; }
+    #scene { position: fixed; inset: 0; }
+    #scene canvas { background: transparent !important; }
+    #loading {
+        position: fixed; inset: 0; display: flex;
+        align-items: center; justify-content: center;
+        color: rgba(200,220,210,0.6);
+        font: 11px 'Segoe UI', sans-serif; letter-spacing: 2px;
+        pointer-events: none; text-transform: uppercase;
+    }
+    #loading.hide { display: none; }
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<div id="loading">Cargando a Eris…</div>
+<pre id="dbg" style="position:fixed;left:4px;top:4px;background:rgba(0,0,0,0.7);color:#ff7;font:10px monospace;padding:6px;max-width:96%;white-space:pre-wrap;z-index:99;pointer-events:none;"></pre>
+
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script type="importmap">
+{
+    "imports": {
+        "three": "./lib/three.module.js",
+        "three/addons/": "./lib/examples/jsm/"
+    }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { VRMLoaderPlugin, VRMUtils } from './lib/three-vrm.module.min.js';
+window.__dbgStage = 'imports-ok';
+window.__THREE = THREE;
+
+let renderer, scene, camera, clock;
+let vrm = null;
+let currentState = 'IDLE';
+let volume = 0.0;
+let loadOK = false;
+
+const MOUTH = { aa: 0.0, oh: 0.0 };
+const emotional_map = {
+    'alegria': 'happy', 'euforia': 'happy', 'entusiasmo': 'happy', 'gratitud': 'happy',
+    'amor': 'happy', 'orgullo': 'happy',
+    'tristeza': 'sad', 'triste': 'sad', 'soledad': 'sad', 'pena': 'sad',
+    'nerviosismo': 'surprised', 'nerviosa': 'surprised', 'preocupada': 'surprised',
+    'asombro': 'surprised', 'sorpresa': 'surprised', 'curiosidad': 'surprised',
+    'curiosa': 'surprised', 'sospecha': 'surprised',
+    'cansancio': 'relaxed', 'cansada': 'relaxed', 'aburrimiento': 'relaxed',
+    'aburrida': 'relaxed', 'tranquilidad': 'relaxed', 'tranquila': 'relaxed',
+    'calma': 'relaxed', 'neutral': 'relaxed',
+    'enojo': 'angry', 'enojada': 'angry', 'frustrada': 'angry', 'molesta': 'angry',
+    'seria': 'surprised', 'seca': 'surprised',
+};
+
+// Amplitud de la pose neutra: con el modelo cargado se inspeccionan los huesos
+// para bajar los brazos desde la T-Pose a una pose natural y relajada.
+let poseScale = 1.0;
+const TimeMul = new THREE.Vector3(0, 0.001, 0);
+const Zero = new THREE.Vector3(0, 0, 0);
+
+function notifyReady() {
+    try {
+        if (pyBridge && pyBridge.model_loaded) pyBridge.model_loaded();
+    } catch (e) { /* pyBridge pode ainda não existir */ }
+}
+
+function init() {
+    window.__dbgStage = 'init-called';
+    try {
+        clock = new THREE.Clock();
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
+        window.__getCam = function () {
+            return [(camera.position.x).toFixed(3), (camera.position.y).toFixed(3), (camera.position.z).toFixed(3),
+                    (camera.fov), (camera.aspect).toFixed(2)];
+        };
+
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, premultipliedAlpha: false });
+        window.__dbgStage = 'renderer-ok';
+        window.__shaderErrors = [];
+        renderer.debug.checkShaderErrors = true;
+        renderer.debug.onShaderError = (gl, program, vs, fs) => {
+            window.__shaderErrors.push({
+                vlog: String(gl.getShaderInfoLog(vs) || '').slice(0, 400),
+                flog: String(gl.getShaderInfoLog(fs) || '').slice(0, 400)
+            });
+        };
+        renderer.setClearColor(0x000000, 0);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        document.getElementById('scene').appendChild(renderer.domElement);
+        window.__dbgStage = 'append-ok';
+
+        // Luces para piel 3B / HRM
+        const hemi = new THREE.HemisphereLight(0xffffff, 0x8890aa, 1.0);
+        scene.add(hemi);
+        const key = new THREE.DirectionalLight(0xffffff, 1.15);
+        key.position.set(1.2, 2.2, 2);
+        scene.add(key);
+        const fill = new THREE.DirectionalLight(0xffffff, 0.35);
+        fill.position.set(-1.5, 0.5, 1.5);
+        scene.add(fill);
+        const rim = new THREE.DirectionalLight(0x88ccff, 0.45);
+        rim.position.set(-2, 1.2, -2.5);
+        scene.add(rim);
+
+        // CUBO DE PRUEBA: si aparece, cámara/frustum OK y el problema es el modelo
+        const testBox = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.MeshBasicMaterial({ color: 0xff3333 })
+        );
+        testBox.name = 'TEST_BOX';
+        scene.add(testBox);
+        window.__testBox = testBox;
+
+        loadVrm();
+        animate();
+    } catch (e) {
+        window.__dbgStage = 'init-ERR: ' + (e && e.message ? e.message : String(e));
+        window.__eris_errors = window.__eris_errors || [];
+        window.__eris_errors.push('init: ' + (e && e.message ? e.message : String(e)));
+        console.error('init error', e);
+    }
+}
+
+function loadVrm() {
+    const loader = new GLTFLoader();
+    window.__dbgStage = 'loadVrm-called';
+    loader.register((parser) => new VRMLoaderPlugin(parser));
+    loader.load(
+        'Eris.vrm',
+        (gltf) => {
+            window.__dbgStage = 'gltf-loaded';
+            const loaded = gltf.userData.vrm;
+            VRMUtils.removeUnnecessaryVertices(loaded.scene);
+            VRMUtils.combineSkeletons(loaded.scene);
+            vrm = loaded;
+            window.vrm = vrm;
+            scene.add(vrm.scene);
+            // Encuadre primero (posiciona la cámara) y luego la pose natural
+            frameAvatar();
+            naturalPose(0);
+            document.getElementById('loading').classList.add('hide');
+            loadOK = true;
+            notifyReady();
+        },
+        undefined,
+        (err) => {
+            window.__eris_errors = window.__eris_errors || [];
+            window.__eris_errors.push(String(err && err.message ? err.message : err).slice(0, 500));
+            document.getElementById('loading').textContent = 'No se pudo cargar Eris.vrm';
+            console.error('VRM load error:', err);
+        }
+    );
+}
+
+// ── Pose neutra natural ──
+// (la pose la maneja naturalPose(), ver abajo)
+
+function frameAvatar() {
+    if (!vrm) return;
+    const box = new THREE.Box3().setFromObject(vrm.scene);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const dist = (size.y * 0.5) / Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5));
+    camera.position.set(center.x, center.y + size.y * 0.15, center.z + dist * 1.05);
+    camera.lookAt(center.x, center.y + size.y * 0.5, center.z);
+    if (vrm.springBoneManager) vrm.springBoneManager.reset();
+}
+
+function setExpressionFromName(name) {
+    if (!vrm || !vrm.expressionManager) return;
+    const preset = emotional_map[name] || 'relaxed';
+    clearExpression();
+    vrm.expressionManager.setValue(preset, 0.9);
+}
+
+function clearExpression() {
+    if (!vrm || !vrm.expressionManager) return;
+    for (const e of ['happy', 'sad', 'surprised', 'angry', 'relaxed']) {
+        vrm.expressionManager.setValue(e, 0.0);
+    }
+}
+
+// ── Lip-sync suave y VERAZ: la boca se cierra cuando no hay volumen ──
+function applyMouth(dt) {
+    const talking = volume >= 0.03;
+    const targetAa = talking ? Math.min(volume, 0.55) : 0.0;
+    const targetOh = talking ? Math.min(volume * 0.35, 0.22) : 0.0;
+    const speed = talking ? Math.min(1.0, dt * 18) : Math.min(1.0, dt * 30);
+    MOUTH.aa += (targetAa - MOUTH.aa) * speed;
+    MOUTH.oh += (targetOh - MOUTH.oh) * speed;
+    if (!vrm || !vrm.expressionManager) return;
+    vrm.expressionManager.setValue('aa', Math.max(0, MOUTH.aa));
+    vrm.expressionManager.setValue('oh', Math.max(0, MOUTH.oh));
+}
+
+let blinkTimer = 2 + Math.random() * 3;
+let blinkVal = 0.0;
+
+function tickBlink(dt) {
+    blinkTimer -= dt;
+    if (blinkTimer <= 0) {
+        blinkVal = 1.0;
+        blinkTimer = 2.5 + Math.random() * 3.5;
+    } else {
+        blinkVal = Math.max(0, blinkVal - dt * 8);
+    }
+    if (vrm && vrm.expressionManager) {
+        vrm.expressionManager.setValue('blink', blinkVal);
+    }
+}
+
+// ── Parámetros de animación (ajustables en vivo desde Python) ──
+// Cada valor controla un movimiento. expuestos en window.ANIM para poder
+// retunearlos con vrm.setAnimParam('brazos_apertura', x) sin tocar el código.
+window.ANIM = {
+    abertura_brazos: 0.12,      // inclinación "A" de los brazos (rad extra)
+    swing_brazos: 0.015,        // vaivén de los brazos al costado
+    flex_codos: 0.55,           // cuánto se doblan los codos hacia adelante
+    flex_munecas: 0.05,         // relajación de las muñecas
+    curva_dedos: 0.15,          // curvatura de los dedos hacia la palma
+    respiracion: 0.015,         // amplitud de la respiración (pecho)
+    balanceo_caderas: 0.005,    // leve sway de cadera
+    giro_cuerpo: 0.06,          // giro lento del cuerpo (yaw)
+    peso_giro: 0.025,           // desplazamiento del peso al girar
+    contragiro_tronco: 0.35,    // cuánto el torso resiste el giro
+    compensa_cabeza: 0.8,       // cuánto la cabeza mira al frente al girar
+    mirada_cabeza: 0.035,       // sutileza de la mirada
+    peso_piernas: 0.008,        // transferencia de peso en las piernas
+    flote: 0.004,               // flote vertical sutil
+};
+window.setAnimParam = function (name, value) {
+    if (window.ANIM && name in window.ANIM) {
+        const v = Number(value);
+        if (Number.isFinite(v)) window.ANIM[name] = v;
+    }
+};
+window.applyAnimConfig = function (cfg) {
+    if (cfg && window.ANIM) {
+        for (const k of Object.keys(window.ANIM)) {
+            const v = Number(cfg[k]);
+            if (Number.isFinite(v)) window.ANIM[k] = v;
+        }
+    }
+};
+
+// Cálculo del eje "adelante" del personaje y flexión anatómica de codo.
+let avatarFrame = { up: null, forward: null };
+
+function computeAvatarFrame() {
+    const FALLBACK_FWD = new THREE.Vector3(0, 0, 1);
+    const FALLBACK_UP = new THREE.Vector3(0, 1, 0);
+    try {
+        const hips = new THREE.Vector3();
+        vrm.humanoid.getRawBoneNode('hips').getWorldPosition(hips);
+        const head = new THREE.Vector3();
+        vrm.humanoid.getRawBoneNode('head').getWorldPosition(head);
+        const fwd = new THREE.Vector3().subVectors(camera.position, hips);
+        fwd.y = 0;
+        if (fwd.lengthSq() < 1e-6) {
+            fwd.copy(FALLBACK_FWD);
+        }
+        fwd.normalize();
+        if (!Number.isFinite(fwd.x) || !Number.isFinite(fwd.y) || !Number.isFinite(fwd.z)) {
+            fwd.copy(FALLBACK_FWD);
+        }
+        const up = new THREE.Vector3().subVectors(head, hips);
+        if (up.lengthSq() < 1e-6) {
+            up.copy(FALLBACK_UP);
+        }
+        up.normalize();
+        if (!Number.isFinite(up.x) || !Number.isFinite(up.y) || !Number.isFinite(up.z)) {
+            up.copy(FALLBACK_UP);
+        }
+        avatarFrame.up = up;
+        avatarFrame.forward = fwd;
+    } catch (e) {
+        avatarFrame.forward = FALLBACK_FWD;
+        avatarFrame.up = FALLBACK_UP;
+    }
+}
+
+// Flexiona un hueso (codo/muñeca) hacia "adelante". Cálculo DETERMINISTA por
+// frame: parte del quaternion del PADRE (que fijamos hoy mismo con Euler) y
+// compone la flexión en espacio mundo. NO toca el estado previo del hueso, así
+// que nunca se acumula ni se dispara.
+function bendJointTowardFront(node, angle) {
+    if (!node || node.parent == null) return;
+    if (!avatarFrame.up || !avatarFrame.forward) return;
+    try {
+        const down = avatarFrame.up.clone().negate();
+        const axis = new THREE.Vector3().crossVectors(down, avatarFrame.forward).normalize();
+        if (axis.lengthSq() < 1e-6) return;
+        const flexWorld = new THREE.Quaternion().setFromAxisAngle(axis, angle);
+        const wp = new THREE.Quaternion();
+        node.parent.getWorldQuaternion(wp);
+        const wpInv = wp.clone().invert();
+        const local = wpInv.multiply(flexWorld).multiply(wp);
+        node.quaternion.copy(local);
+        if (node.rotation) node.rotation.setFromQuaternion(local);
+    } catch (e) { /* hueso ausente: ignorar */ }
+}
+
+function naturalPose(t) {
+    if (!vrm || !vrm.humanoid) return;
+    computeAvatarFrame();
+    const A = window.ANIM;
+    const N = (name) => vrm.humanoid.getNormalizedBoneNode(name);
+    const rot = (node, x, y, z) => {
+        if (node && node.rotation) {
+            node.rotation.x = x || 0;
+            node.rotation.y = y || 0;
+            node.rotation.z = z || 0;
+        }
+    };
+
+    const HANG = Math.PI / 2; // 90°: baja el brazo desde la T-pose
+
+    // ── Giro lento del cuerpo con peso real ──
+    // El cuerpo rota suavemente (periodo ~28s). Al girar, el peso se desplaza
+    // a la pierna contraria, el torso "resiste" parcialmente y la cabeza
+    // compensa para seguir mirando al frente: así se ve que "tiene peso".
+    const turnY = Math.sin(t * 0.23) * A.giro_cuerpo;
+    const turnSpeed = Math.cos(t * 0.23);           // dirección del giro
+    const hipsX = Math.cos(t * 0.65) * A.balanceo_caderas;
+    const hipsZ = Math.sin(t * 0.8) * A.balanceo_caderas;
+
+    // ── Cadera: yaw (giro) + leve sway ──
+    const hips = N('hips');
+    rot(hips, hipsX, turnY, hipsZ);
+    if (hips && hips.position) {
+        // peso: al girar el cuerpo se desplaza hacia el lado contrario
+        hips.position.x = -turnSpeed * A.peso_giro;
+        hips.position.y = Math.abs(Math.sin(t * 0.23)) * A.flote;
+    }
+
+    // ── Torso: respiración + resiste parcialmente el giro (contrarrotación) ──
+    rot(N('spine'),
+        0.01 + Math.sin(t * 0.9) * 0.008,
+        -turnY * A.contragiro_tronco,
+        Math.sin(t * 0.7) * 0.008);
+    rot(N('chest'),
+        A.respiracion + Math.sin(t * 1.6) * A.respiracion * 0.5,
+        -turnY * A.contragiro_tronco * 0.7,
+        0);
+
+    // ── Cabeza: compensa el giro para mirar al frente + mirada sutil ──
+    rot(N('head'),
+        0.02 + Math.sin(t * 0.32) * A.mirada_cabeza,
+        -turnY * A.compensa_cabeza + Math.sin(t * 0.42) * A.mirada_cabeza * 1.8,
+        Math.sin(t * 0.23) * A.mirada_cabeza * 0.85);
+    const head = N('head');
+    rot(N('neck'), head ? head.rotation.x * 0.4 : 0, head ? head.rotation.y * 0.2 : 0, 0);
+
+    // ── Brazos: colgando a los costados, leve inclinación "A" ──
+    const sway = Math.sin(t * 1.05) * A.swing_brazos;
+    // contra-swing al girar (la inercia mueve los brazos al lado opuesto del giro)
+    const turnSwing = -turnSpeed * A.peso_giro * 0.9;
+    rot(N('leftUpperArm'), 0.04 + Math.sin(t * 0.8) * A.swing_brazos * 1.6, 0, -(HANG - A.abertura_brazos) + sway + turnSwing);
+    rot(N('rightUpperArm'), 0.04 - Math.sin(t * 0.8) * A.swing_brazos * 1.6, 0, (HANG - A.abertura_brazos) - sway - turnSwing);
+
+    // ── Codos y muñecas: flexionados hacia adelante (brazo relajado) ──
+    bendJointTowardFront(N('leftLowerArm'), A.flex_codos + Math.sin(t * 1.2) * 0.03);
+    bendJointTowardFront(N('rightLowerArm'), A.flex_codos - Math.sin(t * 1.2) * 0.03);
+    bendJointTowardFront(N('leftHand'), A.flex_munecas + Math.sin(t * 1.4) * 0.02);
+    bendJointTowardFront(N('rightHand'), A.flex_munecas - Math.sin(t * 1.4) * 0.02);
+
+    // ── Dedos: ligeramente curvados hacia la palma ──
+    const curl = A.curva_dedos;
+    const sides = { left: -1, right: 1 };
+    for (const [side, dir] of Object.entries(sides)) {
+        for (const f of ['Index', 'Middle', 'Ring', 'Little']) {
+            if (N(side + f + 'Proximal')) rot(N(side + f + 'Proximal'), 0, 0, dir * curl);
+            if (N(side + f + 'Intermediate')) rot(N(side + f + 'Intermediate'), 0, 0, dir * curl * 1.4);
+            if (N(side + f + 'Distal')) rot(N(side + f + 'Distal'), 0, 0, dir * curl * 0.9);
+        }
+    }
+
+    // ── Piernas: transferencia de peso (al girar carga la pierna contraria) ──
+    const wX = Math.sin(t * 0.7) * A.peso_piernas + turnSpeed * A.peso_giro * 0.8;
+    rot(N('leftUpperLeg'), Math.max(0, wX), 0, 0);
+    rot(N('rightUpperLeg'), Math.min(0, wX), 0, 0);
+    rot(N('leftLowerLeg'), -Math.abs(wX) * 0.4, 0, 0);
+    rot(N('rightLowerLeg'), Math.abs(wX) * 0.4, 0, 0);
+    rot(N('leftFoot'), 0, 0, 0);
+    rot(N('rightFoot'), 0, 0, 0);
+}
+
+let isSpeaking = false;
+
+function tickAnim() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (vrm) {
+        const t = clock.elapsedTime;
+
+        naturalPose(t);
+        applyMouth(dt);
+        tickBlink(dt);
+        if (vrm.update) vrm.update(dt);
+    }
+    if (renderer) renderer.render(scene, camera);
+    // muestreo DENTRO del frame (el buffer se borra tras presentar)
+    window.__frames = (window.__frames || 0) + 1;
+    if (renderer && (window.__frames % 30 === 10)) {
+        try {
+            const gl = renderer.getContext();
+            const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+            const px = new Uint8Array(w * h * 4);
+            gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            let non = 0;
+            for (let i = 3; i < px.length; i += 4) { if (px[i] > 8) non++; }
+            window.__renderSample = { nonEmpty: non, total: px.length / 4, w: w, h: h };
+        } catch (e) {
+            window.__renderSample = { err: String(e && e.message || e) };
+        }
+    }
+}
+
+window.__renderFrameNow = function (checkName) {
+    try {
+        if (!vrm) return { ok: false, why: 'no-vrm' };
+        naturalPose(0);
+        if (vrm.update) vrm.update(0);
+        renderer.render(scene, camera);
+        const gl = renderer.getContext();
+        const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+        const px = new Uint8Array(w * h * 4);
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        let non = 0, red = 0;
+        for (let i = 0; i < px.length; i += 4) {
+            if (px[i + 3] > 8) {
+                non++;
+                if (px[i] > 200 && px[i + 1] < 80 && px[i + 2] < 80) red++;
+            }
+        }
+        return { ok: true, nonEmpty: non, red: red, total: px.length / 4, w: w, h: h, check: checkName };
+    } catch (e) {
+        return { ok: false, err: String(e && e.message || e) };
+    }
+};
+
+window.__rendererInfo = function () {
+    try {
+        if (!renderer) return null;
+        renderer.render(scene, camera);
+        const gl = renderer.getContext();
+        return { calls: renderer.info.render.calls, triangles: renderer.info.render.triangles,
+                 last: String(gl.getError()) };
+    } catch (e) { return { err: String(e && e.message || e) }; }
+};
+
+window.__geoDump = function () {
+    const out = { meshes: [], bones: [] };
+    try {
+        vrm.scene.updateMatrixWorld(true);
+        if (vrm.humanoid) {
+            const bones = ['hips','spine','chest','neck','head','leftUpperArm','rightUpperArm','leftLowerArm','rightLowerArm','leftUpperLeg','rightUpperLeg'];
+            for (const n of bones) {
+                const raw = vrm.humanoid.getRawBoneNode(n);
+                const norm = vrm.humanoid.getNormalizedBoneNode(n);
+                const fin = (v,q)=>{ const vv=v.get().toArray(); return vv.map(x=>Number.isFinite(x)?x: 'NAN').join(','); };
+                if (raw) out.bones.push({ n, raw: raw.getWorldPosition(new THREE.Vector3()).toArray().map(x=>x.toFixed(2)),
+                    quat: raw.quaternion.toArray().map(x=>Number.isFinite(x)?x.toFixed(3):'NAN') });
+            }
+        }
+        vrm.scene.traverse((o) => {
+            if (o.isMesh) {
+                const g = o.geometry;
+                const attrib = g.getAttribute('position');
+                let nan = 0, mm = 0;
+                if (attrib) {
+                    for (let i = 0; i < attrib.count; i++) {
+                        const x = attrib.getX(i), y = attrib.getY(i), z = attrib.getZ(i);
+                        const r = Math.sqrt(x*x+y*y+z*z); if (r > mm) mm = r;
+                        if (!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(z)||isNaN(x)||isNaN(y)||isNaN(z)) nan++;
+                    }
+                }
+                out.meshes.push({ name: o.name, verts: attrib ? attrib.count : 0, nan, maxR: mm.toFixed(3),
+                    isSkinned: !!o.isSkinnedMesh,
+                    boneRefs: o.isSkinnedMesh && o._originalMatrixWorld ? 'orig' : (o.skeleton ? o.skeleton.bones.length : 0) });
+            }
+        });
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__skeletonHealth = function () {
+    const out = { nanMats: 0, totalMats: 0, normQS: {}, cam: null };
+    try {
+        vrm.humanoid.update();
+        vrm.scene.updateMatrixWorld(true);
+        let bad = [];
+        vrm.scene.traverse((o) => {
+            if (o.isSkinnedMesh && o.skeleton) {
+                o.skeleton.updateMatrixWorld && o.skeleton.updateMatrixWorld(true);
+                for (const bn of o.skeleton.bones) {
+                    out.totalMats++;
+                    const e = bn.matrixWorld.elements;
+                    let hasNaN = false;
+                    for (let i = 0; i < 16; i++) if (!Number.isFinite(e[i]) || isNaN(e[i])) { hasNaN = true; break; }
+                    if (hasNaN) { bad.push(bn.name); out.nanMats++; }
+                }
+            }
+        });
+        out.badBones = bad.slice(0, 10);
+        const N = (nm) => { const b = vrm.humanoid.getNormalizedBoneNode(nm); return b ? b.quaternion.toArray().map(x => Number.isFinite(x) ? x.toFixed(3) : 'NAN') : null; };
+        out.normQS = { hips: N('hips'), spine: N('spine'), chest: N('chest'), head: N('head'),
+                       lUA: N('leftUpperArm'), rUA: N('rightUpperArm'), lLA: N('leftLowerArm'), rLA: N('rightLowerArm') };
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__renderPristine = function () {
+    const out = { non: 0, total: 0, w: 0, h: 0 };
+    try {
+        renderer.render(scene, camera);
+        const gl = renderer.getContext();
+        const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+        const px = new Uint8Array(w * h * 4);
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        let non = 0;
+        for (let i = 3; i < px.length; i += 4) if (px[i] > 8) non++;
+        return { non, total: px.length / 4, w, h };
+    } catch (e) { return { err: String(e && e.message || e) }; }
+};
+
+window.__skinMockTest = function () {
+    const out = { maxVtxTex: null, glErr: null, hit: 0, total: 0, mesh: null, patched: false };
+    try {
+        const gl = renderer.getContext();
+        out.maxVtxTex = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+        let target = null;
+        vrm.scene.traverse((o) => { if (!target && o.isSkinnedMesh && o.visible) target = o; });
+        if (!target) { out.err = 'no skinned mesh'; return out; }
+        out.mesh = target.name + ':' + target.geometry.attributes.position.count;
+        const testMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        window.__cacheBit = (window.__cacheBit || 0) + 1;
+        const bit = window.__cacheBit;
+        testMat.customProgramCacheKey = () => 'skintest' + bit;
+        const CUSTOM = (
+            '#ifdef USE_SKINNING\n' +
+            '\tuniform mat4 bindMatrix;\n' +
+            '\tuniform mat4 bindMatrixInverse;\n' +
+            '\tmat4 getBoneMatrix( const in float i ) {\n' +
+            '\t\treturn mat4( 1.0 );\n' +
+            '\t}\n' +
+            '#endif'
+        );
+        testMat.onBeforeCompile = (shader) => {
+            window.__skinLog = (window.__skinLog || []) + '|obc:' + shader.vertexShader.length;
+            const before = shader.vertexShader;
+            out.hasInclude = before.includes('skinning_pars_vertex');
+            out.hasSkinDef = before.includes('USE_SKINNING');
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <skinning_pars_vertex>', CUSTOM
+            );
+            out.patched = before !== shader.vertexShader;
+            out.afterHasIdent = shader.vertexShader.includes('return mat4( 1.0 )');
+        };
+        const orig = target.material;
+        target.material = testMat;
+        renderer.compile(scene, camera);
+        const kokBefore = JSON.stringify(out);
+        const r = __renderPristine();
+        out.kokChanged = kokBefore !== JSON.stringify(out);
+        target.material = orig;
+        out.hit = r.non; out.total = r.total;
+        out.glErr = String(gl.getError());
+    } catch (e) { out.err = String(e && e.message || e); }
+    out.skinLog = window.__skinLog || '';
+    out.shaderErrors = (window.__shaderErrors || []).slice(-6);
+    return out;
+};
+
+window.__passthroughProbe = function () {
+    const out = { hit: 0, total: 0, obj: null };
+    try {
+        let target = null;
+        vrm.scene.traverse((o) => { if (!target && o.isSkinnedMesh && o.visible) target = o; });
+        if (!target) { out.err = 'no skinned mesh'; return out; }
+        out.obj = target.name;
+        const mat = new THREE.ShaderMaterial({
+            vertexShader: 'void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
+            fragmentShader: 'void main(){ gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 ); }'
+        });
+        window.__cacheBit = (window.__cacheBit || 0) + 1;
+        const bit = window.__cacheBit;
+        mat.customProgramCacheKey = () => 'passthru' + bit;
+        mat.frustumCulled = false;
+        const orig = target.material;
+        target.material = mat;
+        const r = __renderPristine();
+        target.material = orig;
+        out.hit = r.non; out.total = r.total;
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__glProbe = function () {
+    const out = { v2: false, version: '', floatVtx: false, extFloat: null, uploadOk: null, glErr: null };
+    try {
+        const gl = renderer.getContext();
+        out.v2 = renderer.capabilities.isWebGL2;
+        out.version = String(gl.getParameter(gl.VERSION));
+        out.floatVtx = renderer.capabilities.floatVertexTextures;
+        out.extFloat = !!(gl.getExtension('OES_texture_float'));
+        let t = null;
+        vrm.scene.traverse((o) => { if (!t && o.isSkinnedMesh) t = o; });
+        if (t) {
+            const g = t.geometry;
+            out.attrs = {};
+            for (const k of Object.keys(g.attributes)) {
+                const a = g.attributes[k];
+                out.attrs[k] = { ctor: a.array && a.array.constructor.name, item: a.itemSize, normalized: a.normalized, gpu: a.gpuType || null, count: a.count };
+            }
+        }
+        const arr = new Float32Array(16); arr.fill(1.0);
+        const tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, out.v2 ? gl.RGBA32F : gl.RGBA, 2, 2, 0,
+            gl.RGBA, gl.FLOAT, arr);
+        out.uploadOk = String(gl.getError());
+        gl.deleteTexture(tex);
+        out.glErr = String(gl.getError());
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__skinNoSkeletonTest = function () {
+    const out = { hit: 0, total: 0, glErr: '', glErrPost: '' };
+    try {
+        let target = null;
+        vrm.scene.traverse((o) => { if (!target && o.isSkinnedMesh && o.visible) target = o; });
+        if (!target) { out.err = 'no skinned mesh'; return out; }
+        const CUSTOM = (
+            '#ifdef USE_SKINNING\n' +
+            '\tuniform mat4 bindMatrix;\n' +
+            '\tuniform mat4 bindMatrixInverse;\n' +
+            '\tmat4 getBoneMatrix( const in float i ) {\n' +
+            '\t\treturn mat4( 1.0 );\n' +
+            '\t}\n' +
+            '#endif'
+        );
+        const mat = new THREE.MeshBasicMaterial({ color: 0xff6600 });
+        window.__cacheBit = (window.__cacheBit || 0) + 1;
+        const bit = window.__cacheBit;
+        mat.customProgramCacheKey = () => 'nosk' + bit;
+        mat.onBeforeCompile = (shader) => {
+            shader.vertexShader = shader.vertexShader.replace('#include <skinning_pars_vertex>', CUSTOM);
+        };
+        const gl = renderer.getContext();
+        gl.getError();
+        const savedSkel = target.skeleton;
+        target.skeleton = null;
+        const savedMat = target.material;
+        target.material = mat;
+        const r = __renderPristine();
+        out.hit = r.non; out.total = r.total;
+        out.glErr = String(gl.getError());
+        target.material = savedMat;
+        target.skeleton = savedSkel;
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__skinNoAttrsTest = function () {
+    const out = { hit: 0, total: 0, glErr: '' };
+    try {
+        let t = null;
+        vrm.scene.traverse((o) => { if (!t && o.isSkinnedMesh && o.visible) t = o; });
+        if (!t) { out.err = 'no skinned mesh'; return out; }
+        const gclone = t.geometry.clone();
+        gclone.deleteAttribute('skinIndex');
+        gclone.deleteAttribute('skinWeight');
+        const clone = new THREE.SkinnedMesh(gclone, new THREE.MeshBasicMaterial({ color: 0x00aaff }));
+        clone.frustumCulled = false;
+        clone.matrix.copy(t.matrixWorld);
+        clone.matrixAutoUpdate = false;
+        vrm.scene.add(clone);
+        const gl = renderer.getContext();
+        gl.getError();
+        const r = __renderPristine();
+        out.render = r;
+        out.hit = r.non; out.total = r.total;
+        out.glErr = String(gl.getError());
+        vrm.scene.remove(clone);
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+window.__plainMeshProbe = function () {
+    let out = { raw: null, skinned: null, plusBox: null };
+    try {
+        const before = renderer.render;
+        let saved = null;
+        vrm.scene.traverse((o) => {
+            if (o.isSkinnedMesh && !saved) {
+                saved = o;
+            }
+        });
+        if (!saved) return { err: 'no skinned mesh' };
+        // 1) geometria raw como Mesh normal (sin skinning, sin skeleton)
+        const plain = new THREE.Mesh(saved.geometry, new THREE.MeshBasicMaterial({ color: 0x33ccff }));
+        plain.matrixAutoUpdate = false;
+        plain.matrix.copy(saved.matrixWorld);
+        plain.matrixWorldNeedsUpdate = true;
+        plain.frustumCulled = false;
+        vrm.scene.add(plain);
+        out.plain = __renderPristine();
+        vrm.scene.remove(plain);
+        // 2) SkinnedMesh pero con material red (como control ya teniamos 0)
+        // 3) control: cubo rojo en esa posicion
+        const box = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+        box.position.set(0, 0.4, 0);
+        vrm.scene.add(box);
+        out.plusBox = __renderPristine();
+        vrm.scene.remove(box);
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+};
+
+function animate() {
+    tickAnim();
+}
+
+// rAF no dispara en offscreen/headless (sin vsync); el timer es el loop real,
+// suficiente también en pantalla con GPU (30 fps).
+setInterval(animate, 33);
+
+window.addEventListener('resize', () => {
+    if (!camera || !renderer) return;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── API para el puente Python (runJavaScript) ──
+window.updateState = function (state) {
+    currentState = state || 'IDLE';
+    if (vrm && vrm.expressionManager) {
+        if (state === 'SPEAKING') {
+            setExpressionFromName('alegria');
+        } else if (state === 'MUTED' || state === 'ERROR') {
+            clearExpression();
+            MOUTH.aa = 0.0;
+            MOUTH.oh = 0.0;
+        } else if (state === 'IDLE' || state === 'LISTENING') {
+            clearExpression();
+            MOUTH.aa = 0.0;
+            MOUTH.oh = 0.0;
+        }
+    }
+};
+
+window.updateVolume = function (level) {
+    volume = Math.max(0.0, Math.min(1.0, level || 0.0));
+    window.__volume = volume;
+};
+
+window.setExpression = function (name) {
+    setExpressionFromName(name || 'neutral');
+};
+
+window.resetExpression = function () {
+    clearExpression();
+};
+
+// ── Puente QWebChannel ──
+let pyBridge = null;
+if (typeof QWebChannel !== 'undefined') {
+    new QWebChannel(qt.webChannelTransport, (channel) => {
+        pyBridge = channel.objects.pyBridge;
+        if (loadOK && pyBridge && pyBridge.model_loaded) pyBridge.model_loaded();
+    });
+}
+
+init();
+
+// ── DEPURACIÓN: volcado de estado al DOM ──
+window.__dbg = {
+    started: Date.now(),
+    phases: [],
+    log: function (msg, data) {
+        this.phases.push(msg + (data !== undefined ? ' :: ' + JSON.stringify(data) : ''));
+        const pre = document.getElementById('dbg');
+        if (pre) pre.textContent = this.phases.join('\n');
+    }
+};
+setTimeout(function poll() {
+    try {
+        const out = document.getElementById('dbg');
+        const canvas = document.querySelector('#scene canvas');
+        const info = {};
+        if (window.vrm) {
+            info.modelLoaded = true;
+            const THREE = window.__THREE;
+            const box = new THREE.Box3().setFromObject(window.vrm.scene);
+            info.boxSize = box.getSize(new THREE.Vector3()).toArray();
+            info.boxCenter = box.getCenter(new THREE.Vector3()).toArray();
+            info.sceneChildren = window.vrm.scene.children.length;
+            info.visible = window.vrm.scene.visible;
+            const pos = new THREE.Vector3();
+            if (window.vrm.scene.getWorldPosition && window.vrm.scene.getWorldPosition(pos)) {
+                info.worldPos = [pos.x.toFixed(3), pos.y.toFixed(3), pos.z.toFixed(3)];
+            }
+            if (window.__camPos) info.camera = window.__camPos;
+            else if (window.__getCam) info.camera = window.__getCam();
+        } else {
+            info.modelLoaded = false;
+            info.errors = window.__eris_errors || [];
+        }
+        if (canvas) {
+            info.canvasSize = [canvas.width, canvas.height];
+            const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+            if (gl) {
+                const px = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+                gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                let nonEmpty = 0, sumAlpha = 0;
+                for (let i = 3; i < px.length; i += 4) { if (px[i] > 8) { nonEmpty++; sumAlpha += px[i]; } }
+                info.pixels = px.length / 4;
+                info.nonEmptyAlphaPixels = nonEmpty;
+                info.pctVisible = (100 * nonEmpty / (px.length / 4)).toFixed(2) + '%';
+            } else {
+                info.gl = 'NO CONTEXT';
+            }
+        } else {
+            info.canvas = 'MISSING';
+        }
+        window.__dbg.log('DEBUG-TRACA', info);
+    } catch (e) { window.__dbg.log('DEBUG-ERR', String(e)); }
+    setTimeout(poll, 500);
+}, 500);
+</script>
+</body>
+</html>

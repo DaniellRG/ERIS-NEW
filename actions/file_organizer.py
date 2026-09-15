@@ -6,7 +6,7 @@ import hashlib
 import shutil
 from pathlib import Path
 
-DATA_DIR = Path(r"D:\Eris_Source\data")
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 RULES_PATH = DATA_DIR / "organizer_rules.json"
 HISTORY_PATH = DATA_DIR / "organizer_history.json"
 

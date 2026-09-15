@@ -317,6 +317,7 @@ def crear_tool(name: str, description: str, funciones: list = None) -> dict:
     # Mapa action → función, generado desde `funciones`
     action_lines = []
     fn_defs = []
+    act_fns = []
     for fn in (funciones or []):
         act = re.sub(r"[^a-z0-9_]", "", (fn.get("action") or fn.get("name") or "procesar").lower())
         fname = re.sub(r"[^a-z0-9_]", "", (fn.get("fn_name") or act or "procesar").lower())
@@ -336,6 +337,7 @@ def crear_tool(name: str, description: str, funciones: list = None) -> dict:
             f"    \"\"\"{desc}\"\"\"\n"
             f"{body_ok}\n"
         )
+        act_fns.append((act, fname))
     module_code = (
         '"""\n'
         f"{safe}.py — Tool creada por Eris en runtime.\n\n{description}\n"
@@ -370,11 +372,44 @@ def crear_tool(name: str, description: str, funciones: list = None) -> dict:
     except Exception as e:
         file_path.unlink(missing_ok=True)
         return {"error": f"Error cargando la tool generada: {e}"}
+
+    # PRUEBA DE HUMO (skill lifecycle del research 2026: crear→validar→persistir):
+    # la tool se EJECUTA antes de declararse. Si falla o vuelve vacío/error, se
+    # borra y NO queda declarada (nada de "tools declaradas pero rotas").
+    try:
+        _smoke = func({"action": "status"})
+    except Exception as e:
+        file_path.unlink(missing_ok=True)
+        return {"error": f"La tool '{safe}' falló su prueba de humo (status): {e}. No quedó creada."}
+    try:
+        _tx = _smoke if isinstance(_smoke, str) else json.dumps(_smoke or {}, ensure_ascii=False)
+    except Exception:
+        _tx = str(_smoke or "")
+    if not _tx.strip() or '"error"' in _tx.lower():
+        file_path.unlink(missing_ok=True)
+        return {"error": f"La tool '{safe}' respondió vacío/error en la prueba de humo: {_tx[:160]}. No quedó creada."}
+
+    # Ejecutar cada action custom con params vacíos: una referencia rota
+    # (NameError/ImportError) = tool inútil → rechazo. Faltar parámetros es legítimo.
+    _acciones_probadas = []
+    for _act, _fname in act_fns:
+        if _act == "status":
+            continue
+        try:
+            _out = func({"action": _act})
+            _acciones_probadas.append(f"{_act}=ok")
+        except (NameError, ImportError) as e:
+            file_path.unlink(missing_ok=True)
+            return {"error": f"La tool '{safe}' tiene la acción '{_act}' con referencia rota ({e}). No quedó creada."}
+        except Exception as e:
+            _acciones_probadas.append(f"{_act}=por_params({type(e).__name__})")
+
     try:
         from core.tool_registry import register_tool
         register_tool(safe, func)
-    except Exception:
-        pass
+    except Exception as e:
+        file_path.unlink(missing_ok=True)
+        return {"error": f"La tool '{safe}' no pudo registrarse en runtime: {e}. No quedó creada."}
 
     # Persistir declaración (para que sobreviva al reinicio)
     props = {"action": {"type": "STRING",
@@ -412,12 +447,18 @@ def crear_tool(name: str, description: str, funciones: list = None) -> dict:
         "description": description,
         "declaration": decl,
         "created": datetime.now().isoformat(),
+        "evaluada": True,
+        "prueba_smoke": _tx[:80],
+        "acciones_probadas": _acciones_probadas,
     })
     _save_state(st)
     return {"status": "creada", "tipo": "tool", "name": safe,
             "file": str(file_path),
             "disponible_ya": True,
-            "modo_uso": f'Invocá la tool "{safe}" directamente (ya registrada en runtime) con action="..."'}
+            "evaluada": True,
+            "prueba_smoke": _tx[:80],
+            "acciones_probadas": _acciones_probadas,
+            "modo_uso": f'Invocá la tool "{safe}" directamente (ya registrada en runtime, con prueba de humo y acciones verificadas) con action="..."'}
 
 
 # ─────────────────────────────────────────────────────────────────────

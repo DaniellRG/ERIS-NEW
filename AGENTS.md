@@ -11,7 +11,7 @@ D:\Eris_Source\.venv\Scripts\pythonw.exe main.py
 # CLI (from anywhere after PATH setup)
 eris
 
-# Tests (must pass: 56 PASS, 0 FAIL)
+# Tests (must pass: 160 PASS, 1 FAIL ambiental permisible)
 D:\Eris_Source\.venv\Scripts\python.exe test_all.py
 
 # Run a single tool
@@ -46,9 +46,9 @@ $env:PYTHONIOENCODING="utf-8"
 
 | File | Role |
 |------|------|
-| `main.py` | GUI entry point (PyQt6, 3884 lines) |
+| `main.py` | GUI entry point (PyQt6, 4922 lines) |
 | `eris_cli.py` | CLI entry point (terminal, Ollama/Gemini chat) |
-| `ui.py` | PyQt6 UI (3061 lines, ErisUI class) |
+| `ui.py` | PyQt6 UI (3897 lines, ErisUI class) |
 | `core/session_summaries.py` | Resúmenes de sesión livianos: buffer en memoria del intercambio actual, al cerrar escribe epílogo en Obsidian `Proyectos/sesion_*.md` + índice `memory/session_summaries.json`, al despertar inyecta `[CONTEXTO DE SESIONES ANTERIORES]` (últimos 3). NO persiste historial completo. |
 | `core/cron_scheduler.py` | Agendador de rutinas recurrentes (jobs hourly/daily/weekly con comando). Registro/gestión vía tool `cron_scheduler`; ejecución vía hilo `_routines_loop` de main.py que cada 30s hace `check_due` e inyecta `[AUTO] <comando>` en la sesión viva. |
 | `core/cerebro.py` | Homúnculo de ERIS: orquesta los módulos como cerebro humano (frontal=cognitive_modules, temporal=memoria/NeuroSpheres, parietal/occipital=observer, límbico=emotional_core, cerebelo=cron_scheduler). `get_brain_state()` arma `[CEREBRO — ESTADO INTERNO ACTUAL]` (identidad+percepción+emoción+recuerdo+monólogo) inyectado en `_build_config` antes del sys_prompt (sobrevive el trim 30K). Persiste identidad en `memory/cerebro_identity.json` con drift diario. Tool `cerebro`: estado/sentir/recordar/pensar/automatico/expresar/identidad/marcar/relacion. |
@@ -67,6 +67,7 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/cuadernos.py` | CUADERNOS: estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian `Vida/Cuadernos/YYYY-MM.md`). Inyección `[CUADERNOS]`. Tool `cuadernos`: abrir/estudiar/anotar/cerrar. |
 | `core/despedidas.py` | RITUAL DE CIERRE: despedida cálida al terminar la charla del día (memory/despedidas.json). Inyección `[CIERRE]`. Tool `despedidas`: cierre/nota/estado. |
 | `core/todo_yo.py` | AUTOCONOCIMIENTO VIVO: mapa integral SIEMPRE presente (`[TODO LO QUE SOS]` inyectado en cada turno: cuerpo, mente, corazón, sus herramientas y las novedades recientes de su evolución). Novedades en `memory/evolucion_novedades.json`. Tool `todo_yo`: estado/novedades/registrar/esencia. |
+| `core/truth_audit.py` | AUDITORÍA DE VERACIDAD anti-invención: el dispatcher registra la evidencia REAL de cada tool (`record_tool` con status ok/error/vacío vía `_result_status`), al cerrar turno `audit_turn(text)` cruza la respuesta contra fallos recientes del MISMO dominio (mapa `_DOMAINS`) y deja flags; `evidence_block()` inyecta `[VERIFICACIÓN — LO QUE HICISTE]` en `_build_config` para que Eris se corrija sola. |
 | `core/proactive_context.py` | CONTEXTO PROACTIVO (`pro_contexto`): predice qué tools se necesitarán pronto (co-ocurrencia + hora + query). El dispatcher registra secuencias de tools en `data/proactive_patterns.json`; al despertar se inyectan hint `[CONTEXTO PROACTIVO]`. |
 | `core/prompt_ab_testing.py` | A/B TESTING DE PROMPTS (`prompt_ab`): variantes de system prompt, métricas (tokens/calidad/completitud), selección de ganadora. Datos en `data/prompt_ab_metrics.json`. |
 | `core/edit_journal.py` | BITÁCORA DE EDICIONES (`edit_journal`): historial append-only de write/edit/create/delete en `data/edit_journal.jsonl`. Consultas: recent/search/stats. |
@@ -83,13 +84,13 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/pentest_learning.py` | APRENDIZAJE PERSISTENTE del lab: auto-guarda CADA hallazgo (CVEs, puertos, servicios, vectores de acceso), error y lección en 4 capas: (1) `memory/pentest_learning.json` (estado estructurado: hallazgos, errores, lecciones, caminos), (2) `data/knowledge/pentest_hallazgos.md`, (3) Obsidian `Ciberseguridad/` (nota por hallazgo + índice `PENTEST_APRENDIZAJE.md`), (4) novedad en `todo_yo`. Detecta vectores de acceso reales (`_detectar_caminos`: vsftpd backdoor, MS08-067, usermap_script...). ESCALADA DE HABILIDADES (`NIVELES`/`registrar_nivel`/`escalada`): 8 niveles de dificultad (Reconocimiento→Enumeración→Detección→Fuerza bruta→Explotación→Escalada de priv→Movimiento lateral→Post-explotación); `pentest_lab` auto-registra niveles al dominar scan/vuln/brute/exploit y `escalada` muestra en qué nivel está Eris y cuál es el próximo reto. Usado por `pentest_lab` en cada scan/vuln + `learn`/`leccion`/`escalada`. Eris así aprende de cada error y cada éxito, y SABE que lo aprendió (novedad). |
 | `core/pentest_exploit.py` | EXPLOTACIÓN REAL del lab (`exploit`): vector vsftpd_234_backdoor (CVE-2011-2523) → **SHELL ROOT (uid=0)** en la VM target via `nmap --script ftp-vsftpd-backdoor --script-args exploit.cmd=<cmd>` (detección pasiva con `-sV`, NO volver a subir el script: consume el bind del backdoor; comandos con `;` se escapan para nmap --script-args). vector ms08_067 = detección/documentación (inestable). SOLO en scope 192.168.56.0/24, la red del lab. El hallazgo/camino/lección se aprende solo en `pentest_learning`. |
 | `core/agent_definitions.py` | 14 fragmentos (core, web, file, dev, media, comm, vision, security, study, linux, guardian, mentora, memoria, pentest). Los 12 previos `handle_*` de `agents/` ahora TODOS se despachan en main.py (antes 8 quedaban muertos); `memoria` y `pentest` son los nuevos. `core/agent_router.py:classify_intent()` umbral ≥3 + penalties + anti-bounce. |
-| `core/tool_registry.py` | 492 tool callables |
-| `core/tool_declarations.py` | 492 LLM-facing declarations (0 dupes, sync con registry) |
+| `core/tool_registry.py` | 494 tool callables |
+| `core/tool_declarations.py` | 494 LLM-facing declarations (0 dupes, sync con registry) |
 | `core/tool_dispatcher.py` | Executes tools by name |
-| `core/action_imports.py` | Imports all 296 action modules |
+| `core/action_imports.py` | Imports all 302 action modules |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
 | `core/neuro_spheres.py` | Visual brain (self-growing; node count en `memory/neuro_spheres_state.json`), `learn_from_sessions()` |
-| `core/prompt.txt` | System prompt (1864 lines) |
+| `core/prompt.txt` | System prompt (~2080 lines incl. bloque VERACIDAD anti-invención) |
 | `core/emotional_core.py` | Núcleo emocional sentiente: 12 emociones discretas, appraisal propio, [SENTIR] por turno, tono de cara/voz/orbe, diario emocional nocturno + [ANOCHE], sentimiento por persona, gustos aprendidos y expectativas/promesas. Aprende su carácter cada día (drift de baselines + polaridad de trato + rachas + buffer de soledad) → `memory/emotional_core.json` |
 | `core/observer.py` | Sentidos de Eris: ventana en foco + programas abiertos (ctypes), clasifica actividad (programación/terminal/navegación/sensible…), detecta eventos (start_coding, long_coding, app_switch), expone contexto para comentarios espontáneos por voz. Mimo si no le contestan y "tiempo de ella". Puede MIRAR/LEER la ventana en foco (`observer action=mirar|mirar_leer`, captura de región + visión IA) solo con permiso del usuario (`mirar_ok`) y NUNCA pantallas sensibles; mirada leve automática `maybe_glimpse()` (cada mirar_interval_min) queda como contexto `[VISTA]`. → `memory/observer.json` |
 | `core/code_guard.py` | El ojo guardián: detecta en tiempo real errores (rojo: py_compile/ruff E/F/B) y advertencias (amarillo: W/I/etc) del archivo en foco del usuario (títle→cwd→glob). Corrige SOLO las líneas señaladas vía LLM (Gemini/Ollama) con backup + validación + rollback y tope de 25% de líneas tocadas (`fix_file`, `guardian_tick`). Tool `code_guard` (status/scan/fix/fix_w/config). Auto-fix en loop `_code_guard_loop` de main. → `memory/code_guard.json`, backups en `memory/code_guard_backups/` |
@@ -97,14 +98,14 @@ $env:PYTHONIOENCODING="utf-8"
 | `core/self_evolution.py` | EVOLUCIÓN CONTINUA (`evolucion`): autoconocimiento vivo (inventario 493 tools en `data/knowledge/eris_inventario_vivo.md` + Obsidian Tools/), auditoría real `health` (cada tool importa/resuelve), `rectify` (normaliza conteos en prompt/README/AGENTS), espejo de estado en Obsidian (Capacidades/Memoria/Logs), y bucle antir-estancamiento: cada 30 min (`run_evolution_tick`, hilo en main) aplica una micro-mejora real sobre core/ (quita F401 con backup+validación+rollback en `memory/self_evol_backups/`) o consolida su conocimiento. Todo queda en `memory/self_evolution_state.json` y Logs/Evolución del vault. |
 | `core/self_health.py` | AUTO-SALUD PROACTIVA (`auto_salud`): vigila la salud de la PROPIA ERIS (config api_keys.json roto/BOM, disco ≥90%, RAM del proceso disparada, errores nuevos en logs, tools core que dejan de resolver). Hilo daemon en main (chequeo cada 5 min, `run_self_health_loop`), notifica problemas NUEVOS por log + `_announce` y registra en `memory/self_health_errores.md`. Tool `auto_salud`: status/check. |
 | `actions/diagnostico.py` | DIAGNÓSTICO EN VIVO (`diagnostico`): responde "¿qué se rompió y por qué?" — state (config válida+errores de logs+disco+proceso+tools), logs (últimos errores con contexto y filtro), config, health, reporte. Degrada sin psutil; solo diagnostica, no modifica. |
-| `core/eris_fabrica.py` | LA FÁBRICA (`fabrica`): Eris crea y usa SUS PROPIAS capacidades — librerías de Python reales (`libraries/eris_*.py` con funciones compiladas y usables vía `usar_libreria`), tools nuevas (módulo en `actions/custom/`, registrada en runtime con `register_tool` + declaración persistida en `actions/custom_tools.json` para el reinicio) y skills (`skills/user_created/*/SKILL.md`). Inventario en `memory/eris_fabrica.json`. Acciones: crear_libreria, usar_libreria, crear_tool, crear_skill, listar, detalle, borrar. |
+| `core/eris_fabrica.py` | LA FÁBRICA (`fabrica`): Eris crea y usa SUS PROPIAS capacidades — librerías de Python reales (`libraries/eris_*.py` con funciones compiladas y usables vía `usar_libreria`), tools nuevas (módulo en `actions/custom/`, registrada en runtime con `register_tool` + declaración persistida en `actions/custom_tools.json` para el reinicio) y skills (`skills/user_created/*/SKILL.md`). Inventario en `memory/eris_fabrica.json`. Acciones: crear_libreria, usar_libreria, crear_tool, crear_skill, listar, detalle, borrar. **Validación (skill lifecycle)**: `crear_tool` ejecuta la tool antes de declararla — prueba de humo `status` + cada action custom con `{}`; `NameError`/`ImportError` = rechazo con rollback (no queda archivo/registro/declaración), faltar parámetros = legítimo (se anota en `acciones_probadas`). Nunca una tool "declarada pero rota". |
 | `core/command_deck.py` | Cola de comandos (intents del LLM) → `data/command_deck.json` |
 | `config/api_keys.json` | All API keys and settings |
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
-| `data/knowledge/` | 69 .md knowledge files |
-| `actions/` | 296 action modules (one tool per file) |
+| `data/knowledge/` | 72 .md knowledge files |
+| `actions/` | 302 action modules (one tool per file) |
 | `agents/` | 14 specialist agents |
-| `skills/` | 39 installed skills (21 builtin + 18 user_created) |
+| `skills/` | 40 installed skills (21 builtin + 19 user_created) |
 | `vault/` | Memoria charra: `raw/` capturas → `wiki/` destilado → `outputs/` productos |
 
 ## Model routing
@@ -112,6 +113,7 @@ $env:PYTHONIOENCODING="utf-8"
 - **Default**: Ollama local (`qwen3:8b`) — no rate limits
 - **Fallback**: Gemini API (`gemini-3.1-flash-lite`) — low free-tier quota
 - **TTS**: Kokoro-82M local (`pykokoro`, backend `kokoro`) — voz femenina `ef_dora`, Apache-2.0, ilimitada, ~3x realtime en CPU (usa espeak+spacy `es_core_news_sm`). El backend acepta `kokoro` o `pykokoro` (alias en `tts_engine.synthesize`); `from_pretrained` con string `"cpu"` (NO `torch.device`); guardar wav con `soundfile` (no torchaudio). Alternativa nube sin costo: `edge` (`es-AR-TomasNeural`, MS cloud). `ui.py` combo lista `kokoro`/`pykokoro` con Dora/Alex/Santa (ES). NUNCA usar `pykokoro` sin alias — la UI vieja guardaba `"PyKokoro not installed"` como voz y rompía el config.
+- **Voz resiliente (auto-reparación)**: en el clasificador de errores del reconnect de main.py, si la cuota de voz en nube se agota (429 / RESOURCE_EXHAUSTED / E006), `_voice_resilient_fallback()` persiste sola `tts_backend` → `kokoro` (si pykokoro importa) o `edge`, avisa por UI y lo guarda como recuerdo — Eris nunca se queda muda. `_announce` ya caía a edge si backend==gemini.
 - **Config**: `config/api_keys.json`
 
 ## Ollama
@@ -123,7 +125,7 @@ $env:PYTHONIOENCODING="utf-8"
 
 ## Testing
 
-`test_all.py` verifies: tool registry (490), declarations (490), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **160 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 2 WARN (neuro nodes, ctypes.windll)**.
+`test_all.py` verifies: tool registry (494), declarations (494), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **160 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 2 WARN (neuro nodes, ctypes.windll)**.
 
 Run after any structural change. Current: **160 PASS, 1 FAIL ambiental**.
 
@@ -131,7 +133,7 @@ Run after any structural change. Current: **160 PASS, 1 FAIL ambiental**.
 
 - **Decision del usuario**: el modelo 3D NO va en la ventana principal. Solo el
   orbe flotante se conmuta a "Modelo 3D (VRM)" desde Ajustes → combo "Flotante"
-  (config `floating_visual`, default `orb`, hoy `vrm`). En `_go_to_orb` de
+  (config `floating_visual`, default `orb`, hoy `orb`). En `_go_to_orb` de
   `ui.py` se decide: si `floating_visual=="vrm"` y `VrmAvatar` existe → `show_float()`.
 - **VrmAvatar** (`ui.py:2441`): ventana 340×480 frameless siempre-al-tope, transparente
   (`WA_TranslucentBackground` + `page().setBackgroundColor(Qt.transparent)`), carga
@@ -151,5 +153,6 @@ Run after any structural change. Current: **160 PASS, 1 FAIL ambiental**.
   Debug: servir `assets/vrm/` con `python -m http.server` y abrir el viewer en un
   navegador; más `window.__eris_errors`. Si renderiza afuera, el problema es Qt/GPU.
 - **GPU**: `core/gpu_config.py` debe correr ANTES de crear QApplication (main.py línea 8).
-  En Linux fuerza `QSG_RHI_BACKEND=opengl` + `--no-sandbox` en QTWEBENGINE_CHROMIUM_FLAGS
-  (d3d11 no existe → crash "Unsupported Graphics API: 4").
+  En Linux fuerza `QSG_RHI_BACKEND=software` + flags Chromium `--no-sandbox
+  --disable-gpu --use-gl=angle --use-angle=swiftshader` (d3d11 no existe → segfault/
+  "Unsupported Graphics API: 4"). NO usar `opengl`/d3d11 en Linux.

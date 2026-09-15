@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;background:transparent">
+<script type="importmap">{"imports":{"three":"./lib/three.module.js","three/addons/":"./lib/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+let OPTS = {alpha:true, antialias:true, premultipliedAlpha:false};
+try { OPTS = Object.assign(OPTS, JSON.parse(new URLSearchParams(location.search).get('opts')||'{}')); } catch(e){}
+let center='none', err='';
+try {
+  const r = new THREE.WebGLRenderer(OPTS);
+  r.setSize(300,300); r.setClearColor(0x000000,0);
+  document.body.appendChild(r.domElement);
+  const s = new THREE.Scene();
+  const c = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  c.position.set(3,3,3); c.lookAt(0,0,0);
+  s.add(new THREE.Mesh(new THREE.BoxGeometry(2,2,2), new THREE.MeshBasicMaterial({color:0xff0000})));
+  r.render(s,c);
+  const gl = r.getContext();
+  const px = new Uint8Array(4);
+  gl.readPixels(150,150,1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);
+  center = px.join(',');
+  err = String(gl.getError());
+} catch(e) { center='THROW:'+(e&&e.message||e); }
+window.__gltest = {opts:OPTS, center:center, err:err};
+document.body.dataset.gltest = JSON.stringify(window.__gltest);
+</script></body></html>

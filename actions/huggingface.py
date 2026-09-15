@@ -11,7 +11,7 @@ Acciones:
   - info  <model_id | dataset_id>  - metadata de un recurso
   - list_files  <dataset_id>  - lista los archivos de un dataset
   - download  <dataset_id> <file> [dest]  - descarga un archivo del dataset a
-    la carpeta de conocimiento (D:/Eris_Source/knowledge) para ingestar con
+    la carpeta de conocimiento (knowledge/) para ingestar con
     knowledge_ingestor / document_rag.
 """
 
@@ -29,7 +29,7 @@ except ImportError:
 _API = "https://huggingface.co/api"
 _HEADERS = {"User-Agent": "ErisAI/2.7 (knowledge ingestion)"}
 _TIMEOUT = 20
-_KNOWLEDGE_DIR = Path("D:/Eris_Source/knowledge")
+_KNOWLEDGE_DIR = Path(__file__).resolve().parent.parent / "knowledge"
 _MAX_DOWNLOAD = 50 * 1024 * 1024  # 50 MB cap por archivo
 
 
@@ -177,4 +177,4 @@ def huggingface(parameters: dict, player=None) -> str:
             "  info id=<model_id|dataset_id>  - metadata de un recurso\n"
             "  list_files id=<dataset_id>  - lista archivos de un dataset\n"
             "  download dataset_id=<id> file=<nombre> [dest]  - descarga a "
-            "D:/Eris_Source/knowledge")
+            "knowledge/")

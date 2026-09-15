@@ -17,7 +17,8 @@ except ImportError:
 
 
 def _get_gemini_key():
-    config_path = Path("D:/Eris_Source/opencode.json")
+    _base = Path(__file__).resolve().parent.parent
+    config_path = _base / "opencode.json"
     if config_path.exists():
         try:
             with open(config_path, "r", encoding="utf-8") as f:
@@ -28,7 +29,7 @@ def _get_gemini_key():
                     key = pdata.get("api_key", "") or pdata.get("apiKey", "")
                     if key:
                         return key
-            env_path = Path("D:/Eris_Source/.env")
+            env_path = _base / ".env"
             if env_path.exists():
                 with open(env_path, "r", encoding="utf-8") as f:
                     for line in f:

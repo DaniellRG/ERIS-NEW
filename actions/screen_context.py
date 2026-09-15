@@ -18,9 +18,10 @@ import time
 from pathlib import Path
 from typing import Any
 
-_SCREENSHOT_DIR = Path(r"D:\Eris_Source\data\screenshots")
+_BASE_DIR = Path(__file__).resolve().parent.parent
+_SCREENSHOT_DIR = _BASE_DIR / "data" / "screenshots"
 _SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
-_HISTORY_FILE = Path(r"D:\Eris_Source\data\screenshot_history.json")
+_HISTORY_FILE = _BASE_DIR / "data" / "screenshot_history.json"
 
 
 def _load_history() -> list:

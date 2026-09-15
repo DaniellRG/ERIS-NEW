@@ -42,6 +42,17 @@ def _base_dir() -> Path:
 
 
 def _get_os() -> str:
+    # Detección real primero (portable): la config puede quedar desactualizada
+    # (p. ej. "windows" en una máquina Linux) y las ramas tomarían el camino wrong.
+    try:
+        if sys.platform.startswith("win"):
+            return "windows"
+        if sys.platform == "darwin":
+            return "mac"
+        if sys.platform.startswith("linux"):
+            return "linux"
+    except Exception:
+        pass
     try:
         cfg = json.loads(
             (_base_dir() / "config" / "api_keys.json").read_text(encoding="utf-8")

@@ -32,6 +32,8 @@ _GEMINI_PRIORITY_TOOLS = [
     "code_assistant", "file_editor", "context_read", "morning_brief",
     "document_handler", "image_analyzer", "translator", "web_jobs",
     "lab_pulse", "curar_memoria",
+    "cron_scheduler", "reminders", "ocr_tool", "google_calendar",
+    "voice_translator", "diagnostico", "wayland_input", "computer_control",
 ]
 
 
@@ -477,7 +479,7 @@ class GeminiTextChat:
         # Build tools payload for Ollama (limitado a _GEMINI_TOOL_CAP igual que
         # Gemini: 493 tools + prompt completo exceden el contexto en CPU/VRAM).
         ollama_tools = []
-        for t in TOOL_DECLARATIONS[:_GEMINI_TOOL_CAP]:
+        for t in _gemini_tools():
             ollama_tools.append({
                 "type": "function",
                 "function": {
@@ -567,7 +569,7 @@ class GeminiTextChat:
         import requests
 
         or_tools = []
-        for t in TOOL_DECLARATIONS[: _GEMINI_TOOL_CAP]:
+        for t in _gemini_tools():
             or_tools.append({
                 "type": "function",
                 "function": {

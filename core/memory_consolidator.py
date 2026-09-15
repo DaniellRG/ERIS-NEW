@@ -7,7 +7,7 @@ Actions:
   search      — Search across all memory files
   backup      — Backup memories before consolidation
 
-Storage: D:/Eris_Source/data/memory/ (JSON memory files)
+Storage: data/memory/ (JSON memory files, relativo al proyecto)
 """
 from __future__ import annotations
 

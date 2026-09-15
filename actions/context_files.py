@@ -54,8 +54,8 @@ DEFAULT_NOTES = """# Eris – Contexto de Proyecto
 ## Estado actual
 - Proyecto: ERIS AI
 - Version: 2.0
-- Fuente: D:/Eris_Source
-- Build: D:/Eris_NEW
+- Fuente: directorio del proyecto (raiz)
+- Build: ERIS_NEW
 - Python: 3.12
 
 ## Lo que estoy aprendiendo

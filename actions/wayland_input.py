@@ -71,6 +71,89 @@ def _resolve_keys(combo: str) -> str:
     return seg
 
 
+def _screen_geom():
+    """Geometría del monitor enfocado (layout logical + scale) para mapear
+    píxeles de grim → coordenadas de ydotool (mismas que hyprctl cursorpos)."""
+    try:
+        import json as _json
+        r = subprocess.run(["hyprctl", "monitors", "-j"],
+                           capture_output=True, text=True, timeout=5)
+        mons = _json.loads(r.stdout)
+        if not mons:
+            return None
+        m = next((x for x in mons if x.get("focused")), mons[0])
+        return {
+            "x": int(m.get("x", 0)), "y": int(m.get("y", 0)),
+            "w": int(m.get("width", 0)), "h": int(m.get("height", 0)),
+            "scale": float(m.get("scale", 1) or 1),
+        }
+    except Exception:
+        return None
+
+
+def _click_text(text: str, player=None) -> str:
+    """Encuentra texto en la pantalla (grim + tesseract) y hace clic en él.
+
+    Cierra el círculo 'ver → actuar' en Wayland sin necesitar visión por LLM:
+    OCR local devuelve coordenadas y ydotool las clica.
+    """
+    if not text or not text.strip():
+        return "Falta 'text' (el texto a buscar en pantalla)."
+    if not shutil.which("tesseract"):
+        return "Error: tesseract no está instalado (`sudo pacman -S tesseract tesseract-data-spa`)."
+    geom = _screen_geom()
+    if geom is None:
+        return "Error: no se pudo resolver la geometría de pantalla (hyprctl monitors)."
+    import json as _json
+    import tempfile
+    r = subprocess.run(["hyprctl", "monitors", "-j"], capture_output=True, text=True, timeout=5)
+    mons = _json.loads(r.stdout)
+    m = next((x for x in mons if x.get("focused")), mons[0])
+    monitor_name = m.get("name")
+    tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+    tmp.close()
+    try:
+        subprocess.run(["grim", "-o", monitor_name, "-t", "png", tmp.name],
+                       capture_output=True, timeout=15, check=True)
+        word = text.strip().lower()
+        ts = subprocess.run(["tesseract", tmp.name, "stdout", "tsv"],
+                            capture_output=True, text=True, timeout=30)
+        best = None
+        for line in ts.stdout.splitlines()[1:]:
+            cols = line.split("\t")
+            if len(cols) < 12:
+                continue
+            try:
+                conf = float(cols[10])
+                token = cols[11].strip().lower()
+            except (ValueError, IndexError):
+                continue
+            if conf < 50 or not token:
+                continue
+            if word in token or token in word:
+                left, top, w, h = int(cols[6]), int(cols[7]), int(cols[8]), int(cols[9])
+                cx = left + w // 2
+                cy = top + h // 2
+                if best is None or abs(w - len(word)) < abs(best[4] - len(word)):
+                    best = (cx, cy, w, token, w)
+        if best is None:
+            return f"No encontré '{text}' en la pantalla (OCR)."
+        cx, cy = best[0], best[1]
+        scale = geom["scale"] or 1
+        lx = int(geom["x"] + cx / scale)
+        ly = int(geom["y"] + cy / scale)
+        subprocess.run([shutil.which("ydotool"), "mousemove", "--absolute", "--", str(lx), str(ly)],
+                       timeout=10)
+        time.sleep(0.05)
+        subprocess.run([shutil.which("ydotool"), "click", "0xC0"], timeout=10)
+        return f"Clic en '{best[3]}' en ({lx},{ly})"
+    finally:
+        try:
+            os.unlink(tmp.name)
+        except OSError:
+            pass
+
+
 def wayland_input(parameters: dict | None = None, player=None) -> str:
     """Input físico real en Wayland (ydotool).
     Acciones: status, move, click, double_click, scroll, drag, type, key,
@@ -176,6 +259,11 @@ def wayland_input(parameters: dict | None = None, player=None) -> str:
         from actions.screen_vision import _capture_screen_base64
         return _capture_screen_base64()
 
+    if action in ("click_text", "buscar_y_click", "clic_en_texto"):
+        return _click_text(parameters.get("text") or parameters.get("target") or "",
+                           player)
+
     return ("Acciones: status, move (x,y), click (button,count), right_click, "
             "double_click, middle_click, scroll (dx,dy), drag (start_x,start_y→x,y), "
-            "type (text), key (key), combo (ctrl+alt+t), press, release, screenshot.")
+            "type (text), key (key), combo (ctrl+alt+t), press, release, screenshot, "
+            "click_text (text: busca por OCR y clic).")

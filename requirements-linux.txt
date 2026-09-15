@@ -69,3 +69,6 @@ sentence-transformers
 rank-bm25
 resemblyzer
 deep-translator
+
+# Graficos (chart_generator)
+matplotlib
