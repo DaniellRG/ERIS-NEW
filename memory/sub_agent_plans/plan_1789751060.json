@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con claridad usando un documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y necesarios con una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar riesgos potenciales y registrarlos en un registro de riesgos ⚠️.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Elaborar un cronograma detallado con un diagrama de Gantt en software de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsabilidades a los miembros del equipo usando una herramienta de gestión de tareas.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Ejecutar las actividades según el cronograma y monitorizar el progreso con un tablero Kanban.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Evaluar resultados y ajustar el plan según lecciones aprendidas.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751060.2075875,
+  "status": "active"
+}

@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo con claridad usando un documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos y limitaciones con una tabla de Excel. [Riesgo: insuficiencia de recursos]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar alternativas mediante un diagrama de árbol usando una herramienta de mapas mentales. [Riesgo: elección de alternativa inadecuada]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Elaborar el plan de acción detallado en un gestor de proyectos (p.ej., Trello). [Riesgo: plazos poco realistas]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Implementar y monitorear con indicadores KPI en un dashboard (p.ej., Power BI). [Riesgo: falta de seguimiento]",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750683.2718308,
+  "status": "active"
+}

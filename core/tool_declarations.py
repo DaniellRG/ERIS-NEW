@@ -7659,6 +7659,20 @@ TOOL_DECLARATIONS.extend([
         }, "required": ["action"]},
     },
     {
+        "name": "opencode_bridge",
+        "description": "PUENTE CON OPENCODE (ayuda mutua en tiempo real): opencode es el agente de la terminal que trabaja con el usuario en sus proyectos; este puente permite que Eris y opencode se ayuden mutuamente. status (estado del bridge), send (ENVIAR una tarea o consulta a opencode con task= y contexto en context=; opencode la resuelve y responde), poll (ver tareas pendientes que opencode dejó), reply (responder a una tarea de opencode con task_id= y response=), conocimiento (simbiosis de memoria: ver aprendizajes que opencode compartió — listar/leer_ultimo/procesado, archivo=), estado_real (fuente de verdad: estado real del sistema que opencode reportó — git/procesos/workspace — para no inventar), sesion (en qué está trabajando el usuario ahora según opencode), setup (pedir a opencode que haga una configuración: tarea=), ab (A/B potenciado: opencode analiza las métricas del A/B y propone una variante de estilo, se guarda como candidata). Usala para colaborar con opencode en cada cosa.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, send, poll, reply, conocimiento, estado_real, sesion, setup, ab"},
+            "task": {"type": "STRING", "description": "Tarea o consulta para opencode"},
+            "context": {"type": "STRING", "description": "Contexto adicional para opencode"},
+            "task_id": {"type": "STRING", "description": "ID de la tarea pendiente (para reply)"},
+            "response": {"type": "STRING", "description": "Respuesta de Eris a una tarea de opencode (para reply)"},
+            "sub": {"type": "STRING", "description": "Sub-acción de conocimiento: listar, leer_ultimo, procesado"},
+            "archivo": {"type": "STRING", "description": "Nombre del archivo de aprendizaje (para conocimiento procesado)"},
+            "tarea": {"type": "STRING", "description": "Tarea de configuración que opencode debe hacer (para setup)"},
+        }, "required": ["action"]},
+    },
+    {
 "name": "pentest_lab",
         "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN real de vectores del lab, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. APRENDE: cada hallazgo (CVEs, puertos, servicios, exploits) se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo; además detecta caminos de acceso. Acciones: status (estado del lab + aprendizaje), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap scripts rápidos + aprende hallazgos), exploit (EXPLOTAR vsftpd_234_backdoor CVE-2011-2523 → shell root real, o usermap_script CVE-2007-2447 → RCE root via Samba, o ms08_067 → detección/documentación; param vectores), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), learn (estado del aprendizaje + escalada), leccion (registrar lección con texto=), escalada (estado de la escalada: qué nivel dominó y qué sigue de fácil a difícil), info (info de una VM), snaps (listar snapshots).",
         "parameters": {"type": "OBJECT", "properties": {
@@ -7684,6 +7698,16 @@ TOOL_DECLARATIONS.extend([
             "dominio": {"type": "STRING", "description": "Dominio del logro: comunicacion, codigo, sistema, archivos, memoria, web, aprender, organizar, social, creatividad, pentest, fabrica"},
             "logro": {"type": "STRING", "description": "Qué dominó Eris (descripción del logro)"},
             "dificultad": {"type": "STRING", "description": "Dificultad 1-8 (default 1)"},
+        }, "required": ["action"]},
+    },
+    {
+        "name": "agente_sub",
+        "description": "TRIPULACIÓN DE SUB-AGENTES de ERIS: Eris administra 19 sub-agentes especializados en 4 capas (orquestación, especialistas de dominio, calidad/gobernanza y meta) para delegar y ejecutar TODO tipo de tareas. listar/equipo (verlos por capa y su estado), iniciar (registrar todos), plan action=plan request=<objetivo> (MissionPlanner descompone el objetivo en pasos), proyectar action=proyectar request=<objetivo> (MissionPlanner ARMA el plan Y LO MATERIALIZA como tareas en cola delegadas al sub-agente correcto — el daemon las despacha sola), delegar/route request=<tarea> (TaskRouter clasifica la intención, elige el sub-agente correcto y ejecuta), ejecutar agent=<sub-agente> request=<tarea> [parametros] (correr una tarea en un sub-agente concreto: MissionPlanner, TaskRouter, DependencyResolver, ResearchAnalyst, CodeEngineer, SystemOperator, DataAnalyst, CreativeWriter, SecurityAuditor, LearningCurator, QualityCritic, MemoryArchivist, FactVerifier, RoutineGovernor, DecisionArbiter, ConnectorHub, EvolutionEngine, SkillForge, PromptOptimizer), mensaje to=<agente> request=<contenido> (enviar un mensaje por el bus interno entre sub-agentes), resolver (DependencyResolver: topo-sort de dependencias), stats (métricas de la tripulación), disponibles (lista de sub-agentes).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "listar, iniciar, plan, proyectar, delegar, ejecutar, mensaje, resolver, stats, disponibles"},
+            "request": {"type": "STRING", "description": "Tarea, objetivo o contenido a procesar (para plan/proyectar/delegar/ejecutar/mensaje)"},
+            "agent": {"type": "STRING", "description": "Nombre del sub-agente a ejecutar (para ejecutar)"},
+            "to": {"type": "STRING", "description": "Sub-agente destino del mensaje en el bus (para mensaje)"},
         }, "required": ["action"]},
     },
 ])
@@ -7770,7 +7794,9 @@ _LIVE_NAMES = {
     "cerebro", "expresion_eris", "vida_interna", "relaciones",
     "autoimagen", "intereses", "retrospectiva", "ambiente", "suenos",
     "caprichos", "tiempo_interno", "festejos", "bienestar", "cuadernos", "despedidas",
-    "todo_yo",
+    "todo_yo", "opencode_bridge",
+    # Tripulación de sub-agentes que Eris administra
+    "agente_sub",
     # Diagnóstico en vivo + Auto-salud proactiva
     "diagnostico", "auto_salud",
     # La Fábrica — Eris crea sus propias capacidades

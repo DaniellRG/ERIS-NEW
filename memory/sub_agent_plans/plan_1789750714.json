@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir objetivo concreto y medible con el documento de visión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos disponibles y limitaciones usando la hoja de inventario.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar el entorno y la competencia con herramienta de análisis FODA.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Establecer indicadores clave de desempeño (KPIs) en la hoja de métricas.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar acciones específicas y asignar responsables en la tabla de tareas.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Implementar el plan siguiendo el cronograma en el software de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Monitorear resultados y ajustar según desviaciones, alertando riesgos críticos en el dashboard.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750714.5701833,
+  "status": "active"
+}

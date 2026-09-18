@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-15 10:35:49 · 494 tools registradas y resolviendo.
+Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -56,6 +56,9 @@ Generado: 2026-09-15 10:35:49 · 494 tools registradas y resolviendo.
 - `agent_bus` — Barrido de eventos del agente: publica y suscribe eventos entre agentes. Acciones: publish, subscribe, emit, l
 - `agent_loop` — Motor de agente autónomo de ERIS: descompone un objetivo en pasos, los ejecuta con herramientas, verifica y co
 - `agent_task` — Ejecuta tareas de agente con un modelo de IA. Acciones: run (ejecutar tarea con task/text, model opcional, mod
+
+## agente
+- `agente_sub` — TRIPULACIÓN DE SUB-AGENTES de ERIS: Eris administra 19 sub-agentes especializados en 4 capas (orquestación, es
 
 ## agi
 - `agi_agent` — Delega una meta a un agente multi-paso que descompone la tarea y la ejecuta. Acciones: plan (crear plan con 'g
@@ -654,6 +657,9 @@ Generado: 2026-09-15 10:35:49 · 494 tools registradas y resolviendo.
 
 ## open
 - `open_app` — Opens application by name
+
+## opencode
+- `opencode_bridge` — PUENTE CON OPENCODE (ayuda mutua en tiempo real): opencode es el agente de la terminal que trabaja con el usua
 
 ## openrouter
 - `openrouter_agent` — Delega una tarea de texto compleja a OpenRouter (genera textos largos por secciones y guarda resultados extens

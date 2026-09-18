@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con el equipo usando una reunión virtual.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos necesarios con una hoja de cálculo (Google Sheets).",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Establecer un cronograma detallado con una herramienta de gestión (Trello o Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades a cada miembro del equipo mediante un documento compartido (Google Docs).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Elaborar los entregables y criterios de éxito con plantillas de proyecto (Microsoft Word).",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Ejecutar las tareas siguiendo el cronograma y registrar avances en la herramienta de gestión. **[Riesgo: retrasos por falta de seguimiento]**",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Monitorear resultados y ajustar el plan según métricas usando un tablero de control (Power BI).",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751091.6549225,
+  "status": "active"
+}

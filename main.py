@@ -496,6 +496,9 @@ class ErisLive:
         # ── Rutinas recurrentes (Eris agenda y ejecuta sola) ──
         self._routines_stop = threading.Event()
         self._routines_thread = None
+        # ── Puente con opencode (ayuda mutua) ──
+        self._opencode_stop = threading.Event()
+        self._opencode_thread = None
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -689,6 +692,30 @@ class ErisLive:
                             self._announce(f"Alerta: {_txt[:180]}")
                         except Exception:
                             pass
+                    # ── Auto-reparación asistida: pedirle a opencode un fix
+                    #    concreto (cooldown 30 min por área para no saturarlo). ──
+                    if prob.get("level") == "error":
+                        _now_h = time.time()
+                        _last = getattr(self, "_health_fix_asked", {})
+                        if _now_h - _last.get(prob["area"], 0) > 1800:
+                            self._health_fix_asked = dict(_last)
+                            self._health_fix_asked[prob["area"]] = _now_h
+                            def _ask_fix(_p=prob):
+                                try:
+                                    from core.opencode_bridge import ask_opencode_fix
+                                    fix, _rec = ask_opencode_fix(_p.get("msg", ""), _p.get("area", ""))
+                                    if fix:
+                                        import json as _j
+                                        _fix_dir = Path(__file__).resolve().parent / "memory"
+                                        _fix_dir.mkdir(parents=True, exist_ok=True)
+                                        _fix_file = _fix_dir / "self_health_opencode.md"
+                                        with _fix_file.open("a", encoding="utf-8") as _fh:
+                                            _fh.write(f"[{time.strftime('%Y-%m-%d %H:%M')}] "
+                                                      f"opencode sugiere para '{_p.get('area')}':\n{fix}\n\n")
+                                        print(f"[ERIS] 🩺 Fix sugerido por opencode guardado: {_fix_file}")
+                                except Exception:
+                                    pass
+                            threading.Thread(target=_ask_fix, daemon=True).start()
                 except Exception:
                     pass
 
@@ -712,6 +739,34 @@ class ErisLive:
             print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
         except Exception as _re:
             print(f"[ERIS] Rutinas init: {_re}")
+        # ── Puente con opencode: Eris revisa sola si opencode le dejó tareas y
+        #    las atiende inyectándolas en su sesión (ayuda mutua en tiempo real).
+        try:
+            self._opencode_stop.clear()
+            self._opencode_thread = threading.Thread(
+                target=self._opencode_loop, daemon=True,
+                name="eris-opencode",
+            )
+            self._opencode_thread.start()
+            print("[ERIS] ◈ Puente con opencode activo (check cada 15s)")
+        except Exception as _oe:
+            print(f"[ERIS] opencode loop init: {_oe}")
+        # ── Tripulación de sub-agentes: Eris administra 19 sub-agentes
+        #    especializados. El daemon registra la tripulación al arrancar y
+        #    despacha tareas en cola no atendidas (frecuencia: 30s). ──
+        try:
+            from core.sub_agent_crew import register_all_sub_agents
+            register_all_sub_agents()
+            print("[ERIS] 🤖 Tripulación de 19 sub-agentes registrada")
+            self._subagents_stop = threading.Event()
+            self._subagents_thread = threading.Thread(
+                target=self._sub_agents_loop, daemon=True,
+                name="eris-sub-agents",
+            )
+            self._subagents_thread.start()
+            print("[ERIS] 🤖 Tripulación activa (check cada 30s)")
+        except Exception as _se:
+            print(f"[ERIS] Tripulación init: {_se}")
         # ── A/B automático de prompts: el daemon prueba variantes de estilo con
         #    el modelo local según ab_interval_hours y aplica la ganadora como
         #    [ESTILO ACTIVO]. Chequea cada hora si toca ronda. ──
@@ -1071,6 +1126,112 @@ class ErisLive:
             print(f"[ERIS] ❌ auto-continue push: {e}")
 
     # ── Rutinas recurrentes: Eris ejecuta sola sus tareas agendadas ──────────
+
+    def _opencode_loop(self):
+        """Hilo daemon: cada 15s revisa si opencode dejó tareas en el puente y
+        las inyecta en la sesión viva para que Eris las atienda y responda
+        (ayuda mutua real opencode <-> Eris). Cada 5 min inyecta además el
+        estado real (git/procesos) y el contexto de sesión que opencode reportó,
+        para que Eris hable con la verdad de los hechos."""
+        while not self._opencode_stop.is_set():
+            try:
+                for _ in range(15):
+                    if self._opencode_stop.wait(1.0):
+                        return
+                if not (self._wake_gate_open and self.session and self._loop):
+                    continue
+                try:
+                    from core.opencode_bridge import poll_pending, _INBOX_DIR, _STATE_REAL_FILE, _SESION_FILE
+                    import json as _json
+                except Exception:
+                    continue
+                for t in poll_pending():
+                    tid = t.get("id", "")
+                    task = t.get("task", "")
+                    if not task:
+                        continue
+                    self.ui.write_log(f"SYS: ◈ opencode pide: {task[:60]}")
+                    print(f"[ERIS] ◈ Tarea de opencode ({tid}): {task[:60]}")
+                    texto = (f"[OPENCODE] opencode (agente de la terminal) te pide: "
+                             f"{task}\nCuando la resuelvas, respondé con la tool "
+                             f"opencode_bridge action=reply task_id={tid} response=<tu respuesta>.")
+                    self._loop.call_soon_threadsafe(self._inject_routine, "opencode", texto)
+                # ── Contexto de verdad proactivo (throttle 5 min) ──
+                _now_oc = time.time()
+                if (getattr(self, "_last_oc_ctx", 0.0) + 300.0) < _now_oc:
+                    self._last_oc_ctx = _now_oc
+                    _ctx_lines = []
+                    try:
+                        if _STATE_REAL_FILE.exists():
+                            _sr = _json.loads(_STATE_REAL_FILE.read_text(encoding="utf-8"))
+                            _gs = (_sr.get("git_status") or "").splitlines()
+                            _gs_count = len([l for l in _gs if not l.strip().startswith("?") and l.strip()])
+                            _procs = (_sr.get("procesos") or "")[:120]
+                            _ctx_lines.append(
+                                f"[ESTADO REAL (opencode)] git: {_gs_count} archivos modificados | "
+                                f"procesos: {_procs}"
+                            )
+                    except Exception:
+                        pass
+                    try:
+                        if _SESION_FILE.exists():
+                            _sj = _json.loads(_SESION_FILE.read_text(encoding="utf-8"))
+                            _rs = (_sj.get("resumen") or "").strip()
+                            if _rs:
+                                _ctx_lines.append(f"[CONTEXTO DE SESIÓN (opencode)] El usuario está en: {_rs[:160]}")
+                    except Exception:
+                        pass
+                    try:
+                        _new_know = sorted(_INBOX_DIR.glob("*.md"))
+                        if _new_know:
+                            _latest = _new_know[-1]
+                            _head = _latest.read_text(encoding="utf-8")[:160]
+                            _ctx_lines.append(f"[OPENCODE TE COMPARTIÓ (simbiosis)] {_latest.name}: {_head}")
+                    except Exception:
+                        pass
+                    if _ctx_lines:
+                        self.ui.write_log("SYS: ◈ contexto opencode inyectado")
+                        texto_ctx = "\n".join(_ctx_lines)
+                        self._loop.call_soon_threadsafe(
+                            self._inject_routine, "opencode-ctx", texto_ctx
+                        )
+            except Exception as _oe:
+                print(f"[ERIS] ◈ opencode loop: {_oe}")
+
+    def _sub_agents_loop(self):
+        """Hilo daemon: cada 30s la tripulación despacha tareas en cola que
+        quedaron sin atender (creadas por MissionPlanner u otros sub-agentes),
+        para que Eris los administre sola incluso sin pedido explícito."""
+        while not self._subagents_stop.is_set():
+            try:
+                for _ in range(30):
+                    if self._subagents_stop.wait(1.0):
+                        return
+                try:
+                    from core.sub_agents import get_sub_agent_registry
+                    from core.sub_agent_crew import dispatch_to_sub_agent
+                    reg = get_sub_agent_registry()
+                except Exception:
+                    continue
+                requeued = 0
+                try:
+                    requeued = reg.requeue_stuck_tasks()
+                    if requeued:
+                        print(f"[ERIS] 🤖 {requeued} tarea(s) trabada(s) re-encoladas")
+                except Exception:
+                    pass
+                pending = reg.get_pending_tasks()
+                if not pending:
+                    continue
+                for task in pending[:2]:
+                    try:
+                        self.ui.write_log(f"SYS: 🤖 Tripulación → {task.agent_key}: {task.description[:60]}")
+                        out = dispatch_to_sub_agent(task.agent_key, task.params)
+                        print(f"[ERIS] 🤖 {task.agent_key} → {str(out)[:80]}")
+                    except Exception as _ea:
+                        print(f"[ERIS] 🤖 sub-agente {task.agent_key}: {_ea}")
+            except Exception as _sa:
+                print(f"[ERIS] 🤖 tripulación loop: {_sa}")
 
     def _routines_loop(self):
         """Hilo daemon: cada 30s revisa cron_scheduler y ejecuta los jobs vencidos
@@ -3073,6 +3234,22 @@ class ErisLive:
         except Exception:
             pass
 
+        # ── Guardrail anti-repetición: si su última respuesta repitió una
+        #    muletilla/construcción reciente, se lo avisa ANTES de responder
+        #    para que lo haga distinto. Máx 1 nudge cada ~2 turnos. ──
+        try:
+            from core.repetition_guard import recent_replies, block
+            _recents = recent_replies()
+            if _recents:
+                _rb = block(_recents[-1])
+                if _rb:
+                    _now_rg = time.time()
+                    if (getattr(self, "_last_rep_nudge", 0.0) + 60.0) < _now_rg:
+                        self._last_rep_nudge = _now_rg
+                        parts.insert(-1, _rb)
+        except Exception:
+            pass
+
         # ── Smart trim: nunca cortar lo esencial (personalidad, relación,
         #    estilo, memoria, digest). Se recorta solo la cola del prompt base.
         #    30000 chars ≈ ~7.5K tokens. Gemini Live (native audio) deja de
@@ -3732,6 +3909,21 @@ class ErisLive:
                                         )
                                 except Exception:
                                     pass
+                                # ── Guardrail anti-repetición: guarda la respuesta
+                                #    final y detecta muletillas/reconstrucciones. ──
+                                try:
+                                    from core.repetition_guard import remember_reply
+                                    remember_reply(out_full)
+                                except Exception:
+                                    pass
+                                # ── Telegram: si el turno vino del chat, reenviar
+                                #    la respuesta completa de ERIS allí. ──
+                                try:
+                                    _tgb = getattr(self, "_telegram_bridge", None)
+                                    if _tgb and _tgb.is_pending_chat():
+                                        _tgb.send(out_full)
+                                except Exception:
+                                    pass
                             # ── Resumen de sesión (memoria liviana, no historial) ──
                             try:
                                 if full_in or out_full:
@@ -3834,10 +4026,33 @@ class ErisLive:
                                         try:
                                             from core.tts_engine import synthesize
                                             async def _do_kokoro(_chunks=_parts):
-                                                for _s in _chunks:
-                                                    pcm = await synthesize(_s.strip(), backend=_tb)
-                                                    if pcm and len(pcm) > 100:
-                                                        self.audio_in_queue.put_nowait(pcm)
+                                                # ── Streaming local: prefetch solapado.
+                                                #    Mientras suena la frase actual, la siguiente YA
+                                                #    se está sintetizando → cero huecos entre frases
+                                                #    (voz local continua, no entrecortada). ──
+                                                import asyncio as _k_as
+                                                async def _synth(_s, _tb=_tb):
+                                                    try:
+                                                        return await synthesize(_s.strip(), backend=_tb)
+                                                    except Exception:
+                                                        return None
+                                                _pend = _k_as.create_task(_synth(_chunks[0]))
+                                                for _j, _s2 in enumerate(_chunks[1:], start=1):
+                                                    _nxt = (_k_as.create_task(_synth(_s2))
+                                                            if _j < len(_chunks) else None)
+                                                    _pcm = await _pend
+                                                    if _pcm and len(_pcm) > 100:
+                                                        try:
+                                                            self.audio_in_queue.put_nowait(_pcm)
+                                                        except Exception:
+                                                            pass
+                                                    _pend = _nxt
+                                                _pcm = await _pend
+                                                if _pcm and len(_pcm) > 100:
+                                                    try:
+                                                        self.audio_in_queue.put_nowait(_pcm)
+                                                    except Exception:
+                                                        pass
                                             _lf.run_until_complete(_do_kokoro())
                                         finally:
                                             _lf.close()
@@ -4332,6 +4547,28 @@ class ErisLive:
                             print("[ERIS] 🛡️ Guardian de ERIS activo (monitoreo en background)")
                         except Exception as _gd_e:
                             print(f"[ERIS] Guardian init error: {_gd_e}")
+                        # Start Telegram bridge (solo activo si hay token+enabled)
+                        try:
+                            from core.telegram_bridge import TelegramBridge
+                            def _tg_on_message(_txt):
+                                self._inject_text(f"[TELEGRAM] {_txt}")
+                            self._telegram_bridge = TelegramBridge(_tg_on_message)
+                            self._telegram_bridge.start()
+                            _tg_cfg_ok = __import__("json").loads(
+                                (Path(__file__).resolve().parent / "config" / "api_keys.json")
+                                .read_text(encoding="utf-8")
+                            ).get("telegram_enabled", False)
+                            if _tg_cfg_ok:
+                                print("[ERIS] Telegram bridge activo")
+                        except Exception as _tge:
+                            print(f"[ERIS] Telegram bridge init error: {_tge}")
+                        # Start opencode bridge (ayuda mutua con opencode)
+                        try:
+                            from core.opencode_bridge import start_bridge
+                            start_bridge()
+                            print("[ERIS] ◈ Puente con opencode activo en :6789")
+                        except Exception as _obe:
+                            print(f"[ERIS] opencode bridge init error: {_obe}")
                         # Auto morning brief (6am–12pm, once per day)
                         _hour = __import__("datetime").datetime.now().hour
                         if 6 <= _hour < 12 and not already_briefed_today():

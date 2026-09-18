@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo concreto del plan usando un documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar datos y recursos disponibles mediante entrevistas y encuestas (riesgo: información incompleta).",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar fortalezas, debilidades, oportunidades y amenazas con una matriz FODA en una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Establecer hitos y plazos claros empleando un diagrama de Gantt en una herramienta de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsables y recursos a cada tarea y validar el plan en una reunión de revisión (riesgo: falta de compromiso).",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751466.794278,
+  "status": "active"
+}

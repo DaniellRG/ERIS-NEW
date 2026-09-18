@@ -51,5 +51,31 @@
       },
       "required": []
     }
+  },
+  {
+    "name": "eris_omarecorder_bridge",
+    "description": "Puente conceptual inspirado en OmaRecorder para encapsular grabación de audio y transcripción local optimizada en el entorno Omarchy del usuario.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "record_local": {
+          "type": "STRING",
+          "description": "Graba audio localmente."
+        },
+        "transcribe_local": {
+          "type": "STRING",
+          "description": "Transcribe un archivo de audio localmente."
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
   }
 ]

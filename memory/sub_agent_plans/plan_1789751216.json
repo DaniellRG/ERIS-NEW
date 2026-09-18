@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal del proyecto con claridad usando un documento de visión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los recursos disponibles y limitaciones empleando una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar riesgos potenciales y registrar mitigaciones en una matriz de riesgos ⚠️ Riesgo: subestimar costos o plazos.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar acciones concretas y asignar responsables mediante un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Implementar un sistema de seguimiento y evaluación con herramientas de gestión de proyectos ⚠️ Riesgo: falta de monitoreo continuo.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751216.7020066,
+  "status": "active"
+}

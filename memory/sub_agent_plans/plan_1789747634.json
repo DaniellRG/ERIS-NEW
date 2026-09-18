@@ -1,0 +1,12 @@
+{
+  "objective": "investiga los ultimos agentes de IA en 2026",
+  "steps": [
+    {
+      "order": 1,
+      "action": "investiga los ultimos agentes de IA en 2026",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789747634.951978,
+  "status": "active"
+}

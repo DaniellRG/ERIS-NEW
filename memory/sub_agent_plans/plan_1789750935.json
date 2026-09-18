@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir objetivo claro del plan con documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos disponibles y limitaciones usando hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Establecer hitos y cronograma con herramienta de gestión de proyectos (Trello, Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades a cada miembro mediante correo electrónico.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Evaluar riesgos potenciales ⚠️ y registrar mitigaciones en una tabla de riesgos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Revisar y validar el plan con los interesados mediante reunión virtual (Zoom).",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Monitorear el progreso y ajustar el plan según sea necesario con un dashboard de seguimiento.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750935.4319994,
+  "status": "active"
+}

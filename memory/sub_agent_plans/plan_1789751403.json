@@ -1,0 +1,12 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "¿Podrías especificar qué tipo de plan necesitas? Por ejemplo, ¿un plan de proyecto, un plan de negocio, un plan de estudio, un plan de marketing, etc.? Con esa información podré desglosar los pasos de",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751403.8847673,
+  "status": "active"
+}

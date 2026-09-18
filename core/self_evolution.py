@@ -216,8 +216,78 @@ def _fixable_f401(path: Path) -> int | None:
     return None
 
 
+_TEST_GATE_BASELINE_FAIL = ("eris.bat",)
+_TEST_GATE_TIMEOUT = 150
+
+
+def _test_gate(path: Path, deep: bool = True) -> list:
+    """Revisión de verdad (Ouroboros: 'reviewed core evolution'): antes de
+    commitear un auto-cambio, se PRUEBA en un subproceso — el módulo editado
+    debe importar, el sync registry/declaraciones debe seguir intacto y, si
+    `deep`, la suite completa (test_all.py) no puede romper nada nuevo.
+    Devuelve lista de errores; vacía = gate aprobado."""
+    rel = str(path).replace(str(_BASE), "").lstrip("\\/")
+    script = (
+        "import sys, json, importlib.util\n"
+        f"sys.path.insert(0, {str(_BASE)!r})\n"
+        "errs = []\n"
+        f"_target = {str(path)!r}\n"
+        "try:\n"
+        "    _m = importlib.util.spec_from_file_location('__evolve_gate', _target)\n"
+        "    _mod = importlib.util.module_from_spec(_m)\n"
+        "    _m.loader.exec_module(_mod)\n"
+        "except Exception as _e:\n"
+        "    errs.append('no importa: %s: %s' % (type(_e).__name__, _e))\n"
+        "try:\n"
+        "    from core.tool_registry import _TOOLS\n"
+        "    from core.tool_declarations import TOOL_DECLARATIONS\n"
+        "    _n, _d = len(_TOOLS), len([t for t in TOOL_DECLARATIONS if isinstance(t, dict)])\n"
+        "    if _n != _d:\n"
+        "        errs.append('sync tools: registry=%d declaraciones=%d' % (_n, _d))\n"
+        "except Exception as _e:\n"
+        "    errs.append('check tools fallo: %s: %s' % (type(_e).__name__, _e))\n"
+        "print('###GATE###' + json.dumps({'errs': errs}, ensure_ascii=False))\n"
+    )
+    if deep:
+        script += (
+            "try:\n"
+            "    import subprocess\n"
+            "    r = subprocess.run([sys.executable, 'test_all.py'],\n"
+            "                       cwd=" + repr(str(_BASE)) + ", capture_output=True, text=True,\n"
+            "                       timeout=120)\n"
+            "    out = (r.stdout or '') + (r.stderr or '')\n"
+            "    for line in out.splitlines():\n"
+            "        ls = line.strip()\n"
+            "        if ls.startswith('[FAIL]'):\n"
+            "            _fname = ls.replace('[FAIL]', '').strip()\n"
+            "            if not any(b in _fname for b in " + repr(_TEST_GATE_BASELINE_FAIL) + "):\n"
+            "                errs.append('test_all FALLA nuevo: %s' % _fname)\n"
+            "        if 'TESTS FALLARON' in ls:\n"
+            "            break\n"
+            "except Exception as _e:\n"
+            "    errs.append('test_all no corrió: %s: %s' % (type(_e).__name__, _e))\n"
+        )
+    script += "print('###GATEEND###')\n"
+    try:
+        r = subprocess.run([sys.executable, "-c", script], cwd=str(_BASE),
+                           capture_output=True, text=True, timeout=_TEST_GATE_TIMEOUT)
+    except Exception as e:
+        return [f"gate no corrió: {type(e).__name__}: {e}"]
+    import json as _json
+    text = (r.stdout or "") + "\n" + (r.stderr or "")
+    m = re.search(r"###GATE###(.+?)(###GATEEND###|$)", text, re.S)
+    if not m:
+        return [f"gate sin resultado (exit {r.returncode}): {text[-300:]}"]
+    try:
+        errs = _json.loads(m.group(1)).get("errs", [])
+    except Exception:
+        errs = [f"gate ilegible: {m.group(1)[-200:]}"]
+    return errs
+
+
 def run_micro_fix(path: Path) -> str:
-    """Elimina una F401 (import sin uso) con backup + validación + rollback."""
+    """Elimina una F401 (import sin uso) con backup + VALIDACIÓN + TEST-GATE
+    (revisión real antes de commitear, estilo Ouroboros) + rollback."""
     rel = str(path).replace(str(_BASE), "").lstrip("\\/")
     if rel in _PROTECTED:
         return f"Omitido {rel}: archivo protegido del auto-parche."
@@ -252,11 +322,43 @@ def run_micro_fix(path: Path) -> str:
         path.write_text(original, encoding="utf-8")
         return (f"Parche en {rel} invalidó el código; revertí (import "
                 f"'{removed.strip()}' restaurado).")
+    # ── TEST-GATE (revisión real antes de commitear) ──
+    _gate_errs = _test_gate(path, deep=True)
+    if _gate_errs:
+        path.write_text(original, encoding="utf-8")
+        st["last_revert"] = _now()
+        _save_state(st)
+        det = "; ".join(_gate_errs)[:300]
+        msg = (f"Micro-mejora en {rel} DESAPROBADA por la revisión: {det}. "
+               f"Revertí el cambio. Backup conservado.")
+        log_vault("micro-mejoras", [msg])
+        return msg
+    # ── REVISOR EXTERNO (opencode como segundo par de ojos) ──
+    #    El diff ya pasó la suite local; opencode lo revisa antes de commitear.
+    #    'reject' revierte; 'approve'/'skip' dejan el cambio (el test-gate es
+    #    el filtro duro; opencode es el filtro contextual).
+    _verdict, _motive = ("skip", "")
+    try:
+        from core.opencode_bridge import review_diff
+        _verdict, _motive = review_diff(rel, original, new)
+    except Exception as _rve:
+        _motive = f"revisor no disponible ({_rve})"
+    if _verdict == "reject":
+        path.write_text(original, encoding="utf-8")
+        st["last_revert"] = _now()
+        _save_state(st)
+        msg = (f"Micro-mejora en {rel} RECHAZADA por opencode (revisor externo): "
+               f"{_motive}. Revertí el cambio. Backup conservado.")
+        log_vault("micro-mejoras", [msg])
+        return msg
     st["last_fix_time"] = datetime.now().timestamp()
     st["last_fix"], st["last_fix_when"] = rel, _now()
+    st["last_gate"] = _now()
+    st["last_reviewer"] = _verdict
     _save_state(st)
     msg = (f"Micro-mejora aplicada en {rel}: quité la F401 "
-           f"('{removed.strip()}'). Backup + validación OK.")
+           f"('{removed.strip()}'). Backup + validación + test-gate OK (suite limpia)"
+           + (f" + revisor opencode: {_verdict} ({_motive[:80]})." if _motive else ""))
     log_vault("micro-mejoras", [msg])
     return msg
 

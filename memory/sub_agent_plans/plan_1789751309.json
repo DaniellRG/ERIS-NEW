@@ -1,0 +1,12 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "¿Podrías especificar cuál es el objetivo o proyecto para el que necesitas el plan? De esa forma podré desglosarlo en pasos concretos y ordenados.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751309.8645575,
+  "status": "active"
+}

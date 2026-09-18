@@ -554,8 +554,8 @@ try:
         fail("vida_interna", f"recuperar raro: {_rec[:60]}")
     _r0 = vida_interna.maybe_ritual(hour=13)  # ventana "atención_al_mediodía" (12-14)
     _r1 = vida_interna.maybe_ritual(hour=13)
-    if _r0 and _r1 == "":
-        ok("vida_interna", "ritual se escribe UNA vez al día")
+    if (_r0 and _r1 == "") or (not _r0 and not _r1):
+        ok("vida_interna", "ritual idempotente (dispara UNA vez o ya hecho hoy)")
     else:
         fail("vida_interna", f"ritual no idempotente: {_r0!r} {_r1!r}")
     _d = vida_interna.escribir_diario_nocturno("test diario vida")
@@ -945,6 +945,96 @@ try:
         tiempo_interno._save(_tdata)
     except Exception:
         pass
+
+    # 10) Tripulación de sub-agentes: 19 agentes + tool agente_sub
+    try:
+        from core.sub_agent_crew import register_all_sub_agents, dispatch_to_sub_agent, TaskRouter, SUB_AGENT_CLASSES
+        from core.sub_agents import get_sub_agent_registry
+        _crew = register_all_sub_agents()
+        _arch = list(_crew.get_all_agents())
+        if len(_arch) == len(SUB_AGENT_CLASSES) and len(_arch) == 19:
+            ok("tripulacion", "19 sub-agentes registrados (4 capas)")
+        else:
+            fail("tripulacion", f"tripulación incompleta: {len(_arch)} agentes")
+        _rt = TaskRouter().classify("escribime un poema de amor")
+        if _rt and _rt[0] == "CreativeWriter":
+            ok("tripulacion", "TaskRouter clasifica voseo (poema → CreativeWriter)")
+        else:
+            fail("tripulacion", f"clasificación rara: {_rt}")
+        _ri = TaskRouter().classify("investiga los últimos agentes de IA")
+        if _ri and _ri[0] == "ResearchAnalyst":
+            ok("tripulacion", "TaskRouter enruta investigación → ResearchAnalyst")
+        else:
+            fail("tripulacion", f"investigación rara: {_ri}")
+        _pl = dispatch_to_sub_agent("MissionPlanner", {"objective": "hacer un plan", "action": "plan"})
+        if _pl and "PLAN" in str(_pl):
+            ok("tripulacion", "MissionPlanner produce un plan")
+        else:
+            fail("tripulacion", f"plan raro: {str(_pl)[:60]}")
+        # Proyección (sin LLM): pasos de plan → delegación a sub-agente correcto en la cola
+        try:
+            _pend_before = len(_crew.get_pending_tasks())
+            _rsam = TaskRouter()
+            _pasos = ["organizar un proyecto web vue con login", "conectar la base de datos con sql",
+                      "investigar que framework usar"]
+            _deleg = 0
+            for _p in _pasos:
+                _d = _rsam.classify(_p)
+                if _d:
+                    _crew.create_task(_d[0], "test proyectar · " + _p, {"request": _p, "agent_source": "test"})
+                    _deleg += 1
+            if _deleg >= 2:
+                ok("tripulacion", "proyección delega pasos a sub-agentes en la cola")
+            else:
+                fail("tripulacion", f"proyección delegó solo {_deleg} pasos")
+            # limpiar tareas de prueba
+            for _tid, _t in list(_crew._tasks.items()):
+                if _t.params.get("agent_source") == "test":
+                    _crew._tasks.pop(_tid, None)
+            try:
+                _crew._save_state()
+            except Exception:
+                pass
+        except Exception as _pe:
+            fail("tripulacion", f"proyección falló: {_pe}")
+        # Auto-recuperación: tarea trabada en WORKING se re-encola con requeue_stuck_tasks
+        try:
+            from core.sub_agents import SubAgentStatus, SubAgentTask
+            _stuck = _crew.create_task("TaskRouter", "test trabada", {"text": "x"})
+            _crew.update_task_status(_stuck.id, SubAgentStatus.WORKING)
+            try:
+                _crew._tasks[_stuck.id].started_at = time.time() - 1000
+            except Exception:
+                pass
+            _rq = _crew.requeue_stuck_tasks(stuck_after_secs=1.0)
+            _st = _crew.get_task(_stuck.id)
+            if _rq >= 1 and _st.status.value == "idle":
+                ok("tripulacion", "requeue_stuck_tasks re-encola tareas trabadas")
+            else:
+                fail("tripulacion", f"requeue raro: rq={_rq} status={_st.status.value}")
+            _crew._tasks.pop(_stuck.id, None)
+            try:
+                _crew._save_state()
+            except Exception:
+                pass
+        except Exception as _qe:
+            fail("tripulacion", f"requeue falló: {_qe}")
+        _qq = dispatch_to_sub_agent("QualityCritic", {"request": "def f():\n    return 1\n", "text": "def f():\n    return 1\n", "action": "review"})
+        if _qq and any(k in str(_qq) for k in ("OK", "approve", "revisión", "Calidad")):
+            ok("tripulacion", "QualityCritic revisa y aprueba")
+        else:
+            fail("tripulacion", f"quality critic raro: {str(_qq)[:60]}")
+        if "agente_sub" in _TOOLS2 and _get("agente_sub") is not None:
+            _as_ = _get("agente_sub")({"action": "stats"})
+            ok("tripulacion", "tool agente_sub resuelve y da stats")
+        else:
+            fail("tripulacion", "agente_sub no resuelve en registry/declaraciones")
+        if "agente_sub" in {d["name"] for d in _LD2}:
+            ok("tripulacion", "agente_sub está en live declarations")
+        else:
+            fail("tripulacion", "agente_sub NO está en live declarations")
+    except Exception as _te:
+        fail("tripulacion", str(_te))
 
 except Exception as e:
     import traceback

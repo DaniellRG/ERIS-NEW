@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo con claridad usando un documento de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos y restricciones con una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Recopilar datos relevantes mediante entrevistas y encuestas.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Analizar la información con herramientas de análisis (ej. Excel, Power BI) **[Riesgo: datos incompletos]**.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar el plan de acción detallado en un gestor de proyectos (ej. Trello, Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Ejecutar y monitorear el plan, ajustando según indicadores de desempeño **[Riesgo: desviaciones de plazo]**.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750619.896301,
+  "status": "active"
+}

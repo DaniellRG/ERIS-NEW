@@ -1,0 +1,12 @@
+{
+  "objective": "organizar un proyecto de web educativa con 5 secciones",
+  "steps": [
+    {
+      "order": 1,
+      "action": "organizar un proyecto de web educativa con 5 secciones",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789747710.8535664,
+  "status": "active"
+}

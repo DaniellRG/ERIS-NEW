@@ -1,0 +1,13 @@
+{
+  "objective": "organizar un proyecto de web educativa vue con 5 secciones y login",
+  "steps": [
+    {
+      "order": 1,
+      "action": "organizar un proyecto de web educativa vue con 5 secciones y login",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750087.8570502,
+  "status": "proyectado",
+  "delegated": {}
+}

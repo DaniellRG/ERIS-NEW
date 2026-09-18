@@ -182,6 +182,16 @@ def sync_remote_skills() -> str:
             continue
         target_dir = SYNCED_DIR / name
         target_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            from yaml import safe_load  # opcional
+        except Exception:
+            safe_load = None
+        ok, issues, _meta = _validate_skill_content(content, name, safe_load)
+        if not ok:
+            # No instalar basura: una SKILL.md inválida no entra al catálogo.
+            shutil.rmtree(target_dir, ignore_errors=True)
+            errors.append(f"{name}: RECHAZADA (validación): {'; '.join(issues)}")
+            continue
         (target_dir / "SKILL.md").write_text(content, encoding="utf-8")
         downloaded += 1
 
@@ -272,7 +282,7 @@ def skill_view(name: str) -> str:
 def skill_manage(parameters: dict, player=None) -> str:
     """
     CRUD operations for skills.
-    Actions: sync, create, patch, edit, delete, list, view
+    Actions: sync, create, patch, edit, delete, list, view, validate, import
     """
     params = parameters or {}
     # Compatibilidad: el nombre de la skill puede llegar como 'skill' (declaración
@@ -293,6 +303,67 @@ def skill_manage(parameters: dict, player=None) -> str:
         if not name:
             return "Especifica el nombre de la skill."
         return skill_view(name)
+
+    if action in ("validate", "validar"):
+        # Evaluación de salud del SKILL.md: frontmatter completo + cuerpo real.
+        name = params.get("name", "")
+        content = params.get("content", "")
+        try:
+            from yaml import safe_load  # opcional
+        except Exception:
+            safe_load = None
+        if not content:
+            path = _find_skill_path(name) if name else None
+            if not path:
+                return ("Especifica 'name' (skill instalada) o 'content' (SKILL.md crudo).")
+            content = path.read_text(encoding="utf-8")
+        ok, issues, meta = _validate_skill_content(content, name, safe_load)
+        head = meta or {}
+        msg = (f"VALIDACIÓN de '{head.get('name') or name}': {'APROBADA ✓' if ok else 'RECHAZADA ✗'}\n"
+               + ("\n".join(f"- {i}" for i in issues) if issues else "Sin problemas.")
+               + f"\nCampo descripción: {head.get('description','')[:80] or 'FALTA'}")
+        return msg
+
+    if action in ("import", "importar"):
+        # Importar una skill EXTERNA (URL https o ruta local) con validación
+        # estricta antes de instalarla (modelo OuroborosHub: no instalar basura).
+        source = params.get("source", "") or params.get("url", "") or params.get("path", "")
+        name_hint = params.get("name", "")
+        if not source:
+            return ("Especifica 'source' (URL del SKILL.md o ruta local). "
+                    "Acciones: sync, create, patch, edit, delete, list, view, validate, import.")
+        try:
+            from yaml import safe_load  # opcional
+        except Exception:
+            safe_load = None
+        try:
+            if source.startswith(("http://", "https://")):
+                req = urllib.request.Request(source, headers={"User-Agent": "ERIS/1.0"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    content = resp.read().decode("utf-8")
+            else:
+                src_path = Path(source).expanduser()
+                if not src_path.exists():
+                    return f"No existe la ruta local '{source}'."
+                content = src_path.read_text(encoding="utf-8")
+        except Exception as e:
+            return f"No se pudo leer la skill externa: {e}"
+
+        ok, issues, meta = _validate_skill_content(content, name_hint, safe_load)
+        if not ok:
+            return ("IMPORT RECHAZADO (validación): " + "; ".join(issues)
+                    + " — no se instaló nada.")
+        name = (name_hint or (meta.get("name") or "")) .strip().lower().replace(" ", "-")
+        name = re.sub(r"[^a-z0-9-]", "", name)
+        if not name:
+            return "IMPORT RECHAZADO: la skill no declara un 'name' válido."
+        target_dir = USER_CREATED_DIR / name
+        if target_dir.exists():
+            return f"La skill '{name}' ya está instalada. Usá action='edit' para reemplazarla."
+        target_dir.mkdir(parents=True, exist_ok=True)
+        (target_dir / "SKILL.md").write_text(content, encoding="utf-8")
+        _rebuild_index()
+        return (f"Skill '{name}' IMPORTADA y validada ✓ (fuente: {source[:80]}).")
 
     if action == "create":
         name = params.get("name", "").strip().lower().replace(" ", "-")
@@ -378,7 +449,31 @@ def skill_manage(parameters: dict, player=None) -> str:
         except Exception as e:
             return f"Error eliminando '{name}': {e}"
 
-    return f"Accion desconocida: '{action}'. Opciones: sync, create, patch, edit, delete, list, view."
+    return f"Accion desconocida: '{action}'. Opciones: sync, create, patch, edit, delete, list, view, validate, import."
+
+
+def _validate_skill_content(content: str, name: str = "",
+                            safe_load=None) -> tuple[bool, list[str], dict]:
+    """Valida un SKILL.md: frontmatter presente con name+description, cuerpo
+    real (no solo portada), y sin formatos corruptos. Devuelve (ok, issues, meta)."""
+    issues = []
+    meta = _parse_frontmatter(content)
+    if not meta:
+        issues.append("no hay YAML frontmatter (debe empezar con '---').")
+    if not meta.get("name"):
+        issues.append("falta el campo 'name' en el frontmatter.")
+    if not meta.get("description"):
+        issues.append("falta el campo 'description' (necesario para el índice).")
+    body = content.split("---", 2)[2].strip() if content.startswith("---") else content.strip()
+    if len(body) < 40:
+        issues.append("el cuerpo del SKILL.md es demasiado corto (¿solo portada?).")
+    if safe_load:
+        try:
+            safe_load(content)
+        except Exception:
+            issues.append("el YAML del frontmatter no es válido.")
+    ok = not issues
+    return ok, issues, meta
 
 
 def _find_skill_path(name: str) -> Path | None:

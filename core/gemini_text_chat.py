@@ -34,6 +34,7 @@ _GEMINI_PRIORITY_TOOLS = [
     "lab_pulse", "curar_memoria",
     "cron_scheduler", "reminders", "ocr_tool", "google_calendar",
     "voice_translator", "diagnostico", "wayland_input", "computer_control",
+    "opencode_bridge", "agente_sub", "todo_yo",
 ]
 
 

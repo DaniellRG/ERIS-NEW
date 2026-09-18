@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo con claridad usando un documento de visión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar datos relevantes mediante investigación de mercado y encuestas con Google Forms.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar fortalezas, debilidades, oportunidades y amenazas con una matriz FODA en una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar acciones concretas y asignar responsables usando Trello o Asana. ⚠️ Riesgo: Sobrecarga de tareas si no se priorizan.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer un cronograma y hitos con un diagrama de Gantt en Microsoft Project.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Monitorear el progreso y ajustar el plan en reuniones semanales, visualizando métricas en un dashboard de Power BI.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750651.742091,
+  "status": "active"
+}

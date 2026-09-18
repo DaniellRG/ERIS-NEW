@@ -612,6 +612,11 @@ _TOOLS = {
     "cuadernos":             ("core.cuadernos", "cuadernos_tool"),
     "despedidas":            ("core.despedidas", "despedidas_tool"),
     "todo_yo":               ("core.todo_yo", "todo_yo_tool"),
+    # ── BRIDGE CON OPENCODE: ayuda mutua con el agente de la terminal ──
+    "opencode_bridge":       ("core.opencode_bridge", "bridge_tool"),
+
+    # ── TRIPULACIÓN: sub-agentes especializados que Eris administra ──
+    "agente_sub":            ("actions.sub_agent_manager", "sub_agent_manager"),
 }
 
 

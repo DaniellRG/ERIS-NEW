@@ -1,0 +1,12 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "hacer un plan",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750525.3674943,
+  "status": "active"
+}

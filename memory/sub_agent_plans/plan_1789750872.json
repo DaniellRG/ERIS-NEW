@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir objetivo claro y medible con el equipo de trabajo.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar datos relevantes usando herramientas de investigación (encuestas, bases de datos).",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar la información en una hoja de cálculo o software de análisis.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Priorizar acciones mediante una matriz de Eisenhower.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Elaborar un cronograma detallado con software de gestión de proyectos (ej. Trello, Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Revisar y validar el plan con todos los stakeholders [Riesgo: falta de alineación o compromiso].",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750872.6119885,
+  "status": "active"
+}

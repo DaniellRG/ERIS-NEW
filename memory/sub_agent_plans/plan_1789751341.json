@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con el equipo en una reunión de kickoff usando videoconferencia.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar y listar los recursos necesarios en una hoja de cálculo. **[Riesgo: subestimar recursos críticos]**",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Establecer un cronograma detallado con la herramienta de gestión de proyectos (ej. Trello o Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades a cada miembro mediante una matriz RACI en el mismo documento de planificación.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Configurar indicadores de desempeño (KPIs) y crear un tablero de seguimiento en PowerBI.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Revisar el progreso semanalmente, ajustar el plan según desviaciones y comunicar cambios a todos los stakeholders. **[Riesgo: falta de comunicación o retrasos no detectados]**",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751341.3585627,
+  "status": "active"
+}

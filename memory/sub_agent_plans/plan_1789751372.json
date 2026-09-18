@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo del plan con claridad usando un documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identifica los recursos disponibles y limitaciones con una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analiza el entorno y posibles obstáculos, marcando riesgos críticos [Riesgo: falta de presupuesto].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Genera alternativas de acción y evalúa su viabilidad con una matriz de decisiones.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Selecciona la mejor alternativa y asigna responsabilidades usando una herramienta de gestión de proyectos (ej. Trello).",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establece un cronograma detallado con hitos en un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Define indicadores de seguimiento y métodos de control, usando un dashboard.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Revisa y aprueba el plan con los stakeholders, documentando aprobaciones.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751372.9958804,
+  "status": "active"
+}

@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con la herramienta de brainstorming.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar información relevante usando fuentes de datos, entrevistas y encuestas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar la información y priorizar acciones con una matriz de priorización.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar acciones concretas y asignar responsables en un documento de proyecto.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer cronograma y recursos con un diagrama de Gantt. **[Riesgo: retrasos por falta de recursos]**",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Implementar y monitorear el progreso con reuniones semanales y un tablero Kanban. **[Riesgo: desviación de metas]**",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750777.212329,
+  "status": "active"
+}

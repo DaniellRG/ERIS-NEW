@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir objetivo claro y medible con el equipo usando una herramienta de documentos colaborativos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos necesarios y asignar responsables mediante una hoja de cálculo de gestión.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar riesgos potenciales y crear una matriz de riesgos en un documento dedicado. **[Riesgo: falta de recursos, retrasos]**",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Elaborar cronograma detallado con la herramienta de gestión de proyectos (ej. Trello o Asana).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Ejecutar tareas según el cronograma y monitorear avances con informes semanales. **[Riesgo: desviación de plazos]**",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750588.2147262,
+  "status": "active"
+}

@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo específico del proyecto con claridad usando una hoja de cálculo o documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar datos relevantes y requisitos del cliente mediante entrevistas y encuestas con la herramienta Google Forms.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar la información obtenida y detectar posibles obstáculos; ⚠️ identificar riesgos de alcance y recursos.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Establecer metas medibles y plazos realistas empleando la metodología SMART en un tablero Kanban.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar las acciones concretas y asignar responsabilidades usando un software de gestión de proyectos como Trello.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Aprobar el plan con los stakeholders y documentar los criterios de éxito en un informe de Word.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Implementar un sistema de seguimiento y control semanal mediante reportes automáticos en Power BI; ⚠️ monitorear desviaciones de tiempo y presupuesto.",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751435.52146,
+  "status": "active"
+}

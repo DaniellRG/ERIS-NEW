@@ -28,6 +28,31 @@ _VARIANTS = [
     {"name": "concisa", "prompt": "Respondé muy conciso: 2-4 frases, sin rodeos ni relleno.", "weight": 1.0},
 ]
 
+
+def _variants() -> list[dict]:
+    """Variantes base + las propuestas por opencode (A/B potenciado) que aún
+    no se probaron. Si una candidata ya tiene tests, la dejamos actuar vía
+    metrics, no la duplicamos. Nunca supera 6 variantes por ronda."""
+    merged = list(_VARIANTS)
+    cands = _load(_BASE / "data" / "prompt_ab_candidates.json", []) or []
+    if isinstance(cands, list):
+        try:
+            from core.prompt_ab_testing import PromptABTest
+            test = PromptABTest("estilo_auto", _VARIANTS)
+            known = {t["name"] for t in test.metrics.get("variants", {})} | {
+                v["name"] for v in _VARIANTS
+            }
+        except Exception:
+            known = {v["name"] for v in _VARIANTS}
+        for c in cands:
+            name = str(c.get("origen", "opencode")) + "_" + str(c.get("fecha", ""))[:10].replace("-", "")
+            prompt = str(c.get("estilo", "")).strip()
+            if not prompt or name in known:
+                continue
+            merged.append({"name": name, "prompt": prompt[:500], "weight": 1.0})
+            known.add(name)
+    return merged[:6]
+
 _FALLBACK_PROBES = [
     "Contame qué es lo más importante que aprendiste hoy.",
     "¿Cómo estás?",
@@ -123,7 +148,7 @@ def _apply_winner():
     """Si hay ganadora con suficiente data, la persiste como estilo activo."""
     try:
         from core.prompt_ab_testing import PromptABTest
-        test = PromptABTest("estilo_auto", _VARIANTS)
+        test = PromptABTest("estilo_auto", _variants())
         winner = test.get_winner()
         if not winner:
             return None
@@ -161,11 +186,11 @@ def run_ab_round() -> str:
         return "SIN ronda: aún no corresponde (última hace menos del intervalo)."
     try:
         from core.prompt_ab_testing import PromptABTest
-        test = PromptABTest("estilo_auto", _VARIANTS)
+        test = PromptABTest("estilo_auto", _variants())
         probes = _probes()
         total_gen = 0
         for probe in probes:
-            for variant in _VARIANTS:
+            for variant in _variants():
                 resp, tokens = _generate(probe, variant["prompt"])
                 if not resp:
                     continue

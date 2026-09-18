@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con claridad usando un documento de texto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar a los interesados y recopilar sus requisitos mediante entrevistas o encuestas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar la información recopilada y detectar posibles obstáculos [Riesgo: datos incompletos].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar acciones concretas y asignar responsables en una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer indicadores de seguimiento y programar revisiones periódicas [Riesgo: incumplimiento de plazos].",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789751184.8446562,
+  "status": "active"
+}

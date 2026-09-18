@@ -1,0 +1,32 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo del plan con la herramienta de lluvia de ideas.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos y limitaciones usando una hoja de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Elaborar un cronograma detallado con un diagrama de Gantt en Microsoft Project. [Riesgo: estimaciones inexactas pueden causar retrasos]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades a los miembros del equipo mediante una matriz RACI en Trello. [Riesgo: sobrecarga de trabajo]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Monitorear el progreso y ajustar el plan semanalmente con informes de seguimiento en Power BI. [Riesgo: falta de retroalimentación]",
+      "status": "pending"
+    }
+  ],
+  "created_at": 1789750809.6795416,
+  "status": "active"
+}
