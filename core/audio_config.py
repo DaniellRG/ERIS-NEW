@@ -15,8 +15,8 @@ LIVE_MODEL_FALLBACKS = [
 ]
 _live_model_index = 0  # índice del modelo actual en uso
 CHANNELS            = 1
-SEND_SAMPLE_RATE    = 16000
-RECEIVE_SAMPLE_RATE = 24000
+SEND_SAMPLE_RATE    = 16000   # Gemini Live espera 16kHz; se resamplea si el hw no lo soporta
+RECEIVE_SAMPLE_RATE = 48000   # El speaker 6 (Ryzen) solo soporta 48kHz en Linux; se resamplea al reproducir
 CHUNK_SIZE          = 128      # 8ms chunks — mic input (keep small for low latency)
 PLAY_CHUNK_SIZE     = 240      # 10ms chunks — playback (smaller = lower latency)
 
@@ -164,20 +164,21 @@ def _mic_rate_for(idx: int | None, require_energy: bool | None = None) -> int | 
 
 
 def _can_open_out(idx: int | None) -> bool:
-    """True si el dispositivo abre de verdad como salida a RECEIVE_SAMPLE_RATE."""
+    """True si el dispositivo existe y tiene canales de salida a RECEIVE_SAMPLE_RATE.
+    NO abre un stream real (evita crash en PulseAudio/PipeWire)."""
     import sounddevice as sd
     try:
-        s = sd.RawOutputStream(
-            device=idx,
-            samplerate=RECEIVE_SAMPLE_RATE,
-            channels=CHANNELS,
-            dtype="int16",
-            blocksize=PLAY_CHUNK_SIZE,
-        )
-        s.start()
-        s.stop()
-        s.close()
-        return True
+        devs = sd.query_devices()
+        if idx is not None:
+            if 0 <= idx < len(devs):
+                d = devs[idx]
+                return int(d.get("max_output_channels", 0)) > 0
+            return False
+        # idx=None: buscar primer dispositivo con salida
+        for d in devs:
+            if int(d.get("max_output_channels", 0)) > 0:
+                return True
+        return False
     except Exception:
         return False
 
@@ -286,9 +287,13 @@ def _ordered_candidates(kind: str, cfg: dict) -> list[int]:
 def resolve_mic() -> int | None:
     """Detecta automáticamente cualquier micro conectado, sin marcas fijas.
 
-    Orden: mic_device de config (si sigue válido) -> default de Windows ->
-    mics físicos (los que suenan a mic/auricular primero) -> cualquier entrada
-    que abra a 16 kHz. El que funcione se persiste en config/api_keys.json.
+    Orden: mic_device de config (si sigue válido y su rate funciona) -> default de
+    Windows -> mics físicos (los que suenan a mic/auricular primero) -> cualquier
+    entrada que abra a 16 kHz. El que funcione se persiste en config/api_keys.json.
+
+    NOTA: si el config tiene mic_device_rate, se usa PRIMERO antes de recalcular
+    con _mic_rate_for(), para respetar la tasa nativa del hardware (ej. 44100Hz
+    en ALC257 que no soporta 16000Hz).
     """
     cfg = {}
     try:
@@ -296,6 +301,28 @@ def resolve_mic() -> int | None:
         cfg = load_api_keys() or {}
     except Exception:
         pass
+    # Si el config tiene mic_device_rate y el dispositivo existe, probarlo primero
+    cfg_idx = cfg.get("mic_device")
+    cfg_rate = cfg.get("mic_device_rate")
+    if cfg_idx is not None and cfg_rate is not None:
+        try:
+            idx = int(cfg_idx)
+            rate = int(cfg_rate)
+            full = _device_name(idx)
+            if full and not _virtual_name(full) and _can_open_mic(idx, rate):
+                # Verificar que trae audio real (no virtual muerto)
+                if not _is_virtual(idx) or _sample_has_audio(idx, rate):
+                    if cfg.get("mic_device") != idx or cfg.get("mic_device_rate") != rate:
+                        try:
+                            cfg["mic_device"] = idx
+                            cfg["mic_device_name"] = _device_name(idx)
+                            cfg["mic_device_rate"] = rate
+                            save_api_keys(cfg)
+                        except Exception:
+                            pass
+                    return idx
+        except Exception:
+            pass
     # Pass 1: con energía real AHORA (el mic que de verdad escucha). Nunca virtuales.
     for idx in _ordered_candidates("input", cfg):
         if _is_virtual(idx):
@@ -334,8 +361,11 @@ def resolve_mic() -> int | None:
 def resolve_speaker() -> int | None:
     """Detecta automáticamente cualquier salida conectada, sin marcas fijas.
 
-    Orden: speaker_device de config (si sigue válido) -> default de Windows ->
-    salidas físicas -> cualquier salida que abra a 24 kHz. Se persiste en config.
+    Orden: speaker_device de config (si sigue válido y abre) -> default de Windows ->
+    salidas físicas -> cualquier salida que abra. Se persiste en config.
+
+    NOTA: el speaker 6 (Ryzen) en Linux solo soporta 48000Hz; el testeo de apertura
+    usa RECEIVE_SAMPLE_RATE (actualizado previamente a 48000Hz).
     """
     cfg = {}
     try:
@@ -343,6 +373,23 @@ def resolve_speaker() -> int | None:
         cfg = load_api_keys() or {}
     except Exception:
         pass
+    # Si el config tiene speaker_device, intentar ese primero
+    cfg_idx = cfg.get("speaker_device")
+    if cfg_idx is not None:
+        try:
+            idx = int(cfg_idx)
+            full = _device_name(idx)
+            if full and not _virtual_name(full) and _can_open_out(idx):
+                if cfg.get("speaker_device") != idx:
+                    try:
+                        cfg["speaker_device"] = idx
+                        cfg["speaker_device_name"] = _device_name(idx)
+                        save_api_keys(cfg)
+                    except Exception:
+                        pass
+                return idx
+        except Exception:
+            pass
     for idx in _ordered_candidates("output", cfg):
         if _can_open_out(idx):
             try:
@@ -461,6 +508,12 @@ def resolve_waveout() -> int | None:
     físicas (altavoces/auriculares). Descarta virtuales, SPDIF, HDMI y loops.
     """
     try:
+        import platform as _plat
+        if _plat.system() != "Windows":
+            return None
+    except Exception:
+        return None
+    try:
         from core.win_audio_output import winmm_output_devices, winmm_probe
     except Exception:
         return None
@@ -529,3 +582,7 @@ def get_eris_voice() -> str:
         return voice
     except Exception:
         return "Aoede"
+
+# Reduccion de ganancia del microfono para evitar saturacion (RMS > 0.9 = saturado)
+# En Linux con PipeWire/pulse, se puede ajustar via pactl
+MIC_GAIN_DB = -12.0  # Reduccion de 12dB para evitar saturacion del ALC257

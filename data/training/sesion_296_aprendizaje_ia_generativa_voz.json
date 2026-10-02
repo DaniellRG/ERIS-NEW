@@ -1,0 +1,91 @@
+{
+  "sesion": 296,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo — IA generativa + integración de voz (real_time_tts + voice_cloning + voice_profile + image_generator)",
+  "herramientas_estudiadas": {
+    "real_time_tts": "disponible",
+    "voice_cloning": "disponible",
+    "voice_profile": "disponible",
+    "image_generator": "disponible"
+  },
+  "acciones_descubiertas": {
+    "real_time_tts": [
+      "pause",
+      "queue",
+      "resume",
+      "speak",
+      "speed",
+      "status",
+      "stop",
+      "voice"
+    ],
+    "voice_cloning": [
+      "clone",
+      "speak",
+      "status",
+      "voices"
+    ],
+    "voice_profile": [
+      "list",
+      "params",
+      "set",
+      "status"
+    ],
+    "image_generator": [
+      "from_url",
+      "generate",
+      "history",
+      "info"
+    ]
+  },
+  "ejercicios_funcionales": {
+    "real_time_tts": {
+      "status": "estado del TTS (XTTS v2 no disponible, Edge TTS no instalado)",
+      "speed": "configuración de velocidad actual",
+      "voice": "configuración de voz actual"
+    },
+    "voice_cloning": {
+      "status": "estado de clonación (XTTS v2 no disponible por Python >=3.12)",
+      "voices": "listado de voces (Edge TTS necesario)"
+    },
+    "voice_profile": {
+      "params": "parámetros actuales (voice_name, speed, pitch, volume)",
+      "set": "cambio de perfil (voice_name, speed, pitch)"
+    },
+    "image_generator": {
+      "generate": "generar imagen con Pollinations.ai (funciona, 28KB PNG en data/generated_images/)",
+      "info": "backends de generación (Pollinations.ai activo)"
+    }
+  },
+  "discrepancias": [
+    "XTTS v2: no disponible (requiere Python <3.12, el sistema tiene Python 3.14.7)",
+    "Edge TTS: no instalado → voices() da error",
+    "voice_cloning clone: requiere audio .wav/.mp3 de referencia (para clonar una voz)",
+    "voice_cloning speak: requiere 'text' para generar audio"
+  ],
+  "integracion_voz_pipeline": {
+    "desc": "Pipeline de voz de ERIS: real_time_tts (generación) + voice_profile (config) + voice_cloning (personalización avanzada)",
+    "estado_actual": "real_time_tts funcional (con voz por defecto Aoede/edge-tts)",
+    "limitaciones": [
+      "XTTS v2 no disponible (Python 3.14 vs requerido <3.12)",
+      "edge_tts no instalado (pip install edge-tts)",
+      "voice_cloning no funcional hasta que XTTS o edge-tts estén disponibles"
+    ],
+    "acciones_para_voz_personalizada": [
+      "Instalar edge-tts: pip install edge-tts (para más voces y lenguajes)",
+      "Configurar voice_profile con la nueva voz instalada",
+      "Configurar real_time_tts para usar la voz personalizada",
+      "Probar speak con textos de prueba"
+    ]
+  },
+  "lecciones": [
+    "real_time_tts: 8 acciones — status/speed/voice funcionales (sintetizador base funciona)",
+    "voice_cloning: 4 acciones — API existe pero XTTS v2 no disponible (Python 3.14 >= 3.12 limitación)",
+    "voice_profile: 4 acciones — totalmente funcional (list, params, set, status)",
+    "image_generator: generate funciona con Pollinations.ai (imágenes gratuitas sin API key)",
+    "El pipeline de voz requiere edge-tts instalado para más funcionalidad",
+    "El procedimiento de 9 pasos valida consistentemente herramientas de IA generativa"
+  ],
+  "proximo_paso": "S297 (N4_e1 — reflexión maestra): ciclo S288-S296 completo + estado general del sistema. 13 dominios consolidados.",
+  "memory_error": "no disponible"
+}

@@ -6,6 +6,23 @@ Handles OneDrive redirection, Spanish localizations, and standard fallbacks.
 import os
 import ctypes
 from pathlib import Path
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 def get_special_folder(csidl: int) -> Path:
     """Gets the path of a Windows special folder using SHGetFolderPathW."""
@@ -13,7 +30,7 @@ def get_special_folder(csidl: int) -> Path:
         from ctypes import wintypes
         buf = ctypes.create_unicode_buffer(wintypes.MAX_PATH)
         # CSIDL constants: 0 = CSIDL_DESKTOP, 5 = CSIDL_PERSONAL (Documents)
-        if ctypes.windll.shell32.SHGetFolderPathW(None, csidl, None, 0, buf) == 0:
+        if _SHELL32.SHGetFolderPathW(None, csidl, None, 0, buf) == 0:
             p = Path(buf.value)
             if p.exists():
                 return p

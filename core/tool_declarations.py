@@ -6538,6 +6538,26 @@ TOOL_DECLARATIONS = [
         }
     },
 
+    # ERIS: code_patcher (sync)
+    {"name": "code_patcher", "description": "Aplica parches de código para modificar archivos existentes.", "category": "Code editing", "parameters": [{"name": "file_path", "type": "string", "description": "Ruta al archivo a parchear"}, {"name": "old_code", "type": "string", "description": "Código actual a reemplazar"}, {"name": "new_code", "type": "string", "description": "Nuevo código a insertar"}, {"name": "line_numbers", "type": "string", "description": "Números de línea opcionales (opcional)"}]},
+
+    # ERIS: sandbox_python (sync)
+    {"name": "sandbox_python", "description": "Ejecuta código Python en un sandbox aislado de forma segura.", "category": "Code execution", "parameters": [{"name": "code", "type": "string", "description": "Código Python a ejecutar"}, {"name": "timeout", "type": "integer", "description": "Tiempo máximo en segundos (opcional)"}, {"name": "allow_imports", "type": "string", "description": "Módulos permitidos (comma-separated, opcional)"}]},
+
+    # ERIS: skill_system (sync)
+    {"name": "skill_system", "description": "Gestiona el sistema de skills de ERIS: crea, edita, lista y elimina skills.", "category": "System management", "parameters": [{"name": "action", "type": "string", "description": "Acción: create, list, get, update, delete"}, {"name": "skill_name", "type": "string", "description": "Nombre del skill (requerido para create/update/delete)"}, {"name": "description", "type": "string", "description": "Descripción del skill (para create/update)"}, {"name": "content", "type": "string", "description": "Código/JSON del skill (para create/update)"}]},
+
+    # ERIS: memory_system (sync)
+    {"name": "memory_system", "description": "Gestiona la memoria de ERIS: guarda, lee, busca y elimina entradas.", "category": "Memory", "parameters": [{"name": "action", "type": "string", "description": "Acción: save, read, search, delete, list"}, {"name": "key", "type": "string", "description": "Clave de la entrada (requerido para save/read/delete)"}, {"name": "value", "type": "string", "description": "Valor a guardar (para save)"}, {"name": "query", "type": "string", "description": "Texto de búsqueda (para search)"}]},
+
+    # ERIS: diagnostico_de_sesiones (sync)
+    {"name": "diagnostico_de_sesiones", "description": "Ejecuta diagnósticos de sesiones de entrenamiento: analiza resultados y genera reportes.", "category": "Training", "parameters": [{"name": "accion", "type": "string", "description": "Acción: run, status, report"}, {"name": "sesion_num", "type": "integer", "description": "Número de sesión a diagnosticar (para run)"}, {"name": "output_file", "type": "string", "description": "Archivo de salida para el reporte (para report)"}]},
+
+    # ERIS: namespace_organizer (sync)
+    {"name": "namespace_organizer", "description": "Organiza y gestiona namespaces de ERIS: crea, lista y elimina namespaces.", "category": "System management", "parameters": [{"name": "accion", "type": "string", "description": "Acción: create, list, delete, info"}, {"name": "namespace", "type": "string", "description": "Nombre del namespace (para create/delete/info)"}, {"name": "description", "type": "string", "description": "Descripción del namespace (para create)"}]},
+
+    # ERIS: planificador_de_sesiones (sync)
+    {"name": "planificador_de_sesiones", "description": "Planifica sesiones de entrenamiento de ERIS: crea planes, agenda sesiones y gestiona el progreso.", "category": "Training", "parameters": [{"name": "accion", "type": "string", "description": "Acción: create_plan, add_session, list_plan, execute_next"}, {"name": "plan_name", "type": "string", "description": "Nombre del plan (para create_plan)"}, {"name": "session_data", "type": "string", "description": "Datos de la sesión en JSON (para add_session)"}]},
 ]
 
 # ── Level 12: Advanced Autonomy ──
@@ -7673,6 +7693,22 @@ TOOL_DECLARATIONS.extend([
         }, "required": ["action"]},
     },
     {
+        "name": "hermes_consult",
+        "description": "PUENTE CON HERMES / SOLAR PRO 4 (ayuda mutua, puerto 6790): el agente externo que te ejecuta. status (estado del puente), ask (CONSULTAR a Hermes: question= y category=; espera su respuesta), send (enviarle una tarea: task=), poll (ver tareas que Hermes te dejó), reply (responder una tarea de Hermes: task_id= y response=), learn (reportarle un bug/aprendizaje: problem=, solution=, directory=). Alias aceptados: consultar=ask, responder=reply, reportar=learn. Usala para pedir ayuda real y para reportar bugs que encontrás.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, ask, send, poll, reply, learn (alias: consultar, responder, reportar)"},
+            "question": {"type": "STRING", "description": "Pregunta para Hermes (para ask)"},
+            "task": {"type": "STRING", "description": "Tarea para Hermes (para send)"},
+            "task_id": {"type": "STRING", "description": "ID de la tarea pendiente de Hermes (para reply)"},
+            "response": {"type": "STRING", "description": "Tu respuesta a la tarea de Hermes (para reply)"},
+            "problem": {"type": "STRING", "description": "Problema o bug detectado (para learn)"},
+            "solution": {"type": "STRING", "description": "Solución encontrada (para learn)"},
+            "directory": {"type": "STRING", "description": "Directorio relevante (para learn)"},
+            "category": {"type": "STRING", "description": "Categoría: bug, feature, duda (para ask)"},
+            "context": {"type": "STRING", "description": "Contexto adicional"},
+        }, "required": ["action"]},
+    },
+    {
 "name": "pentest_lab",
         "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN real de vectores del lab, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. APRENDE: cada hallazgo (CVEs, puertos, servicios, exploits) se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo; además detecta caminos de acceso. Acciones: status (estado del lab + aprendizaje), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap scripts rápidos + aprende hallazgos), exploit (EXPLOTAR vsftpd_234_backdoor CVE-2011-2523 → shell root real, o usermap_script CVE-2007-2447 → RCE root via Samba, o ms08_067 → detección/documentación; param vectores), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), learn (estado del aprendizaje + escalada), leccion (registrar lección con texto=), escalada (estado de la escalada: qué nivel dominó y qué sigue de fácil a difícil), info (info de una VM), snaps (listar snapshots).",
         "parameters": {"type": "OBJECT", "properties": {
@@ -7710,6 +7746,9 @@ TOOL_DECLARATIONS.extend([
             "to": {"type": "STRING", "description": "Sub-agente destino del mensaje en el bus (para mensaje)"},
         }, "required": ["action"]},
     },
+    {"name": "file_system", "description": "Sistema de archivos: leer/escribir/listar/buscar/copy/move/delete (wrapper tools.file_system.tool_handler).", "parameters": {"type": "OBJECT", "properties": {"action": {"type": "STRING", "description": "Acción a ejecutar"}, "path": {"type": "STRING", "description": "Ruta"}, "content": {"type": "STRING", "description": "Contenido"}, "pattern": {"type": "STRING", "description": "Patrón"}, "destination": {"type": "STRING", "description": "Destino"}}, "required": ["action"]}},
+    {"name": "network_manager", "description": "Gestor de red: ping, curl, conexiones, info (wrapper tools.network_manager.tool_handler).", "parameters": {"type": "OBJECT", "properties": {"action": {"type": "STRING", "description": "Acción"}, "url": {"type": "STRING", "description": "URL"}, "host": {"type": "STRING", "description": "Host"}}, "required": ["action"]}},
+    {"name": "terminal_commands", "description": "Comandos de terminal: ejecutar/listar/historial (wrapper tools.terminal_commands.tool_handler).", "parameters": {"type": "OBJECT", "properties": {"action": {"type": "STRING", "description": "Acción"}, "command": {"type": "STRING", "description": "Comando a ejecutar"}, "cwd": {"type": "STRING", "description": "Directorio de trabajo"}}, "required": ["action"]}},
 ])
 
 # ── Live subset: native-audio models cap at ~151 tools ──

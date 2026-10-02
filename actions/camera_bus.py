@@ -34,6 +34,30 @@ def _pick_index(parameters):
         return 0
 
 
+def _probe_max_index(limit=4):
+    """Encuentra el máximo indice de cámara real sin abrir índices inexistentes.
+    En Linux usa los /dev/videoN presentes; en Windows prueba abriendo hasta `limit`."""
+    if os.name != "nt":
+        try:
+            import glob
+            nums = []
+            for p in glob.glob("/dev/video*"):
+                try:
+                    nums.append(int(p.replace("/dev/video", "")))
+                except Exception:
+                    pass
+            return sorted(nums)[-1] if nums else 0
+        except Exception:
+            return 0
+    for i in range(limit, -1, -1):
+        cap = cv2.VideoCapture(i)
+        ok = cap.isOpened()
+        cap.release()
+        if ok:
+            return i
+    return 0
+
+
 def _capture(index=0):
     if not HAS_CV2:
         return None, "OpenCV (cv2) no esta instalado."
@@ -143,8 +167,9 @@ def camera_bus(parameters: dict, player=None) -> str:
     if action == "info":
         if not HAS_CV2:
             return "OpenCV no esta instalado."
+        max_idx = _probe_max_index()
         found = []
-        for i in range(4):
+        for i in range(max_idx + 1):
             cap = None
             for backend in ([cv2.CAP_DSHOW, cv2.CAP_MSMF, 0] if os.name == "nt" else [0]):
                 cap = cv2.VideoCapture(i, backend)

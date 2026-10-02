@@ -1,0 +1,56 @@
+{
+  "sesion": 295,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: procedimiento de 9 pasos al dominio IA generativa",
+  "herramientas_estudiadas": {
+    "image_generator": "disponible",
+    "voice_cloning": "disponible",
+    "voice_profile": "disponible"
+  },
+  "acciones_descubiertas": {
+    "image_generator": [
+      "from_url",
+      "generate",
+      "history",
+      "info"
+    ],
+    "voice_cloning": [
+      "clone",
+      "speak",
+      "status",
+      "voices"
+    ],
+    "voice_profile": [
+      "list",
+      "params",
+      "set",
+      "status"
+    ]
+  },
+  "ejercicios_funcionales": {
+    "image_generator": {
+      "from_url": "descargar imagen desde URL pública (placeholder.com)",
+      "generate": "crear imagen con prompt (dependencias de imagen)",
+      "history": "historial de generaciones",
+      "info": "metadatos de IA generativa"
+    },
+    "voice_cloning": {
+      "status": "estado del servicio de clonación",
+      "voices": "lista de voces disponibles"
+    },
+    "voice_profile": {
+      "list": "lista de perfiles de voz",
+      "status": "estado de perfiles"
+    }
+  },
+  "herramientas_no_disponibles": [],
+  "discrepancias": [],
+  "lecciones": [
+    "image_generator: 4 acciones (from_url, generate, history, info) — profundizadas en S295 (S288 solo history)",
+    "voice_cloning: 4 acciones (clone, speak, status, voices) — exploradas por primera vez",
+    "voice_profile: 4 acciones (list, params, set, status) — perfiles configurables",
+    "El procedimiento de 9 pasos se transfiere al dominio IA generativa con consistencia 100%"
+  ],
+  "proximo_paso": "S296 (N4_e3 — aprendizaje): profundizar en voice_cloning + integrar con el sistema de audio ERIS (real_time_tts) para voz personalizada",
+  "memory_error": "no disponible"
+}

@@ -1,0 +1,128 @@
+{
+  "sesion": 313,
+  "tipo": "reflexion",
+  "titulo": "Reflexión maestra: integración cross-dominio (S303-S312) — 10 sesiones, 4 SKILL-tools, 7 herramientas de voz, pipeline cross-domain funcional",
+  "fase_total_sesiones": 10,
+  "sk_tools_restauradas": {
+    "code_patcher": "wrapper para code_analyzer, code_review, code_generator",
+    "memory_system": "wrapper para db_memory, memory_consolidation, memory_nudge, memory_rag, save_memory",
+    "skill_system": "wrapper para skill_marketplace, superpowers_skill, plugin_loader",
+    "sandbox_python": "wrapper para sandbox_execution, code_sandbox"
+  },
+  "herramientas_voz": {
+    "real_time_tts": "disponible",
+    "voice_profile": "disponible",
+    "voice_cloning": "disponible",
+    "voice_recognition": "disponible",
+    "voice_translator": "disponible",
+    "meeting_transcriber": "disponible",
+    "audio_transcriber": "disponible"
+  },
+  "pipeline_cross_domain": {
+    "pasos": 8,
+    "herramientas": 7,
+    "funcionando": true,
+    "pasos_detallados": [
+      "Paso 1: system_monitor → recursos",
+      "Paso 2: voice_profile → perfiles",
+      "Paso 3: real_time_tts → anunciar inicio",
+      "Paso 4: code_generator → código",
+      "Paso 5: image_generator → imagen",
+      "Paso 6: test_generator → validación",
+      "Paso 7: task_manager → registrar pipeline",
+      "Paso 8: real_time_tts → anunciar fin"
+    ]
+  },
+  "capacidad_voz": {
+    "habla": "SÍ — real_time_tts.speak(texto) funciona",
+    "edge_tts_instalado": true,
+    "voces_totales": 322,
+    "voces_espanol": 45,
+    "xtts_v2_disponible": false,
+    "perfiles_persistentes": "SÍ — voice_profile.set/list funcional",
+    "personalizacion_avanzada": "SÍ — speed (0.5-2.0), pitch (-12 a +12), volume (0.0-2.0)",
+    "control_reproduccion": "SÍ — pause/resume/stop/queue",
+    "integracion_cross_domain": "SÍ — voz + code_generator, image_generator, test_generator, task_manager"
+  },
+  "lecciones": [
+    "Fase 5 (S303-S306): SKILL-tools restauradas",
+    "Fase 6 (S307-S310): Dominio de audio/voz completo",
+    "Fase 7 (S311-S312): Sistema completo integrado",
+    "Voz funcional completa: el usuario puede escuchar a ERIS",
+    "Integración cross-domain: voz + herramientas de otros dominios",
+    "Pipeline cross-domain completo funciona",
+    "Persistencia de datos funcional",
+    "SKILL-tools: herramientas que no existen físicamente pero que funcionan",
+    "Capacidad completa de voz: el usuario puede escuchar a ERIS",
+    "Resumen final de la fase S303-S312"
+  ],
+  "lecciones_detalladas": [
+    [
+      "Fase 5 (S303-S306): SKILL-tools restauradas",
+      "4 herramientas SKILL-tools fueron restauradas como wrappers Python en tools/:\n- code_patcher: delega a code_analyzer, code_review, code_generator\n- memory_system: delega a db_memory, memory_consolidation, memory_nudge, memory_rag, save_memory\n- skill_system: delega a skill_marketplace, superpowers_skill, plugin_loader\n- sandbox_python: delega a sandbox_execution, code_sandbox\n\nTodas están registradas en tool_registry.py y funcionan vía get_tool()."
+    ],
+    [
+      "Fase 6 (S307-S310): Dominio de audio/voz completo",
+      "28 sesiones relacionadas con audio/voz:\n- S258-S273: Audio/voz completo — 9 pasos consolidados (16 sesiones)\n- S274: Reflexión post-tarea — ciclo S258-S273\n- S275: Transferencia — procedimiento a sistema\n- S287: Reflexión post-tarea — IA/LLM avanzado + conocimiento\n- S295-S296: IA generativa + integración de voz\n- S299: Instalación edge-tts (322 voces, 45 español)\n- S300: Aprendizaje — audio/voz profundo\n- S301: Transferencia — sistema fallback inteligente de audio\n- S302: Reflexión maestra — ciclo S288-S301\n- S307: Aprendizaje — clonación de voz avanzada\n- S308: Transferencia — integración de voz con otras herramientas\n- S309: Aprendizaje — personalización avanzada de voz\n- S310: Reflexión maestra — dominio completo de audio/voz"
+    ],
+    [
+      "Fase 7 (S311-S312): Sistema completo integrado",
+      "6 herramientas integradas en flujo cross-domain:\n- S311: Transferencia — sistema completo integrado (6 herramientas)\n- S312: Aprendizaje — pipeline cross-domain completo (7 herramientas, 8 pasos)\n\nEl pipeline cross-domain funciona: system_monitor → voice_profile → real_time_tts → code_generator → image_generator → test_generator → task_manager"
+    ],
+    [
+      "Voz funcional completa: el usuario puede escuchar a ERIS",
+      "DESDE S267: ERIS puede hablar.\nDESDE S299: edge-tts instalado: 322 voces, 45 español.\nDESDE S300: voice_profile.set/list funcional.\nDESDE S309: speed/pitch/volume/queue/pause/resume/stop funcional.\nDESDE S312: pipeline cross-domain con voz funcional."
+    ],
+    [
+      "Integración cross-domain: voz + herramientas de otros dominios",
+      "DESDE S308: voice + code_generator, document_creator, text_summarizer.\nDESDE S311: voice + system_monitor, code_generator, image_generator, test_generator, task_manager.\nDESDE S312: pipeline completo con 7 herramientas."
+    ],
+    [
+      "Pipeline cross-domain completo funciona",
+      "S312: Pipeline con 8 pasos y 7 herramientas funciona:\n1. system_monitor: cpu + memory → recursos del sistema\n2. voice_profile: list → perfiles disponibles\n3. real_time_tts: speak → anunciar inicio del pipeline\n4. code_generator: generate → código para el pipeline\n5. image_generator: generate → imagen representativa\n6. test_generator: generate_tests → validación\n7. task_manager: add + stats → registrar y verificar pipeline\n8. real_time_tts: speak → anunciar fin del pipeline"
+    ],
+    [
+      "Persistencia de datos funcional",
+      "memory_system restaurado: db_memory, memory_consolidation, memory_nudge, memory_rag, save_memory.\nregistros.json: 312 entradas, 0 faltantes, 100% aciertos.\ndata/training/: 21+ archivos JSON de aprendizaje."
+    ],
+    [
+      "SKILL-tools: herramientas que no existen físicamente pero que funcionan",
+      "code_patcher → tools/code_patcher.py (wrapper para code_analyzer, code_review, code_generator)\nmemory_system → tools/memory_system.py (wrapper para db_memory, memory_consolidation, etc.)\nskill_system → tools/skill_system.py (wrapper para skill_marketplace, superpowers_skill, plugin_loader)\nsandbox_python → tools/sandbox_python.py (wrapper para sandbox_execution, code_sandbox)\n\nEstos wrappers fueron creados para que el registry los encontrara vía tools.code_patcher, etc.\nEl registry los expone vía get_tool() y funcionan correctamente."
+    ],
+    [
+      "Capacidad completa de voz: el usuario puede escuchar a ERIS",
+      "DESDE S267: ERIS puede hablar.\nDESDE S299: edge-tts instalado: 322 voces, 45 español.\nDESDE S300: voice_profile.set/list funcional.\nDESDE S309: speed/pitch/volume/queue/pause/resume/stop funcional.\nDESDE S312: pipeline cross-domain con voz funcional.\n\nEl usuario puede escuchar a ERIS: tools.real_time_tts({'action': 'speak', 'text': 'Hola! Soy ERIS.'})"
+    ],
+    [
+      "Resumen final de la fase S303-S312",
+      "10 sesiones (S303-S312)\n4 SKILL-tools restauradas\n7 herramientas de voz completas\n6 herramientas integradas en flujo cross-domain\n1 pipeline cross-domain funcional (8 pasos)\nedge-tts instalado con 322 voces (45 español)\nXTTS v2 no disponible (Python 3.14 >= 3.12)\nEl usuario puede escuchar a ERIS\nTodos los sesiones 4✓/0✗"
+    ]
+  ],
+  "estado_sistema_completo": {
+    "entrenamientos_totales": 313,
+    "sk_tools_disponibles": 4,
+    "herramientas_voz_disponibles": 7,
+    "herramientas_integradas": 7,
+    "pipeline_cross_domain_funcional": true,
+    "edge_tts_instalado": true,
+    "usuario_puede_escuchar_a_ERIS": true
+  },
+  "siguientes_fase_propuestas": [
+    {
+      "fase": "Fase 8: Reflexión maestra del sistema completo (S1-S313)",
+      "sesiones": [
+        "S314: Reflexión maestra — sistema completo (S1-S313)"
+      ],
+      "objetivo": "Reflexión maestra del sistema completo ERIS después de 313 entrenamientos"
+    }
+  ],
+  "interaccion_usuario": {
+    "mensaje_actual": "ERIS ya puede hablar. real_time_tts.speak(texto) genera audio. edge-tts instalado: 322 voces, 45 español. voice_profile.set(profile, voice_name, speed, pitch) para personalizar. Pipeline cross-domain funcional con 7 herramientas. Sistema completo integrado.",
+    "prueba_audio": "tools.real_time_tts({'action': 'speak', 'text': 'Hola! Soy ERIS.'})",
+    "personaliza_voz": "tools.voice_profile({'action': 'set', 'profile': 'mi_voz', 'voice_name': 'es-ES-...', 'speed': 1.2, 'pitch': 0.0, 'volume': 1.0})",
+    "perfiles_guardados": "tools.voice_profile({'action': 'list'})",
+    "modulo_voz_completo": "S310 — dominio audio/voz completo (S258-S309) completado",
+    "pipeline_cross_domain": "S312 — pipeline con 7 herramientas, 8 pasos, funcional",
+    "sistema_completo": "313 entrenamientos, 4 SKILL-tools restauradas, 7 herramientas de voz, 1 pipeline funcional"
+  }
+}

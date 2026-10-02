@@ -1,7 +1,17 @@
 {
-  "fecha": "2026-09-15 12:10:35",
-  "git_status": "M AGENTS.md\n M README.md\n M actions/custom_tools.json\n M config/eris_style.json\n M core/ab_automated.py\n M core/prompt.txt\n M core/self_evolution.py\n M core/tool_declarations.py\n M core/tool_registry.py\n M data/knowledge/eris_inventario_vivo.md\n M main.py\n M memory/git_diario.md\n M skills/skill_registry.py\n M \"vault/Logs/Evoluci\\303\\263n - 2026-09-15.md\"\n?? actions/custom/eris_omarecorder_bridge.py\n?? core/opencode_bridge.py\n?? core/repetition_guard.py\n?? core/telegram_bridge.py\n?? data/opencode/\n?? tools/opencode_helper.py",
-  "git_ultimo": "ae3c87b docs(actions): AGENTS.md (+88)",
-  "procesos": "5026 opencode | 10748 opencode",
-  "workspace": "/home/soul/Eris/ERIS-NEW"
+  "fecha": "2026-09-18 14:13:50",
+  "git_status": "M core/sub_agent_crew.py, M core/tool_declarations.py, M core/self_evolution.py, M actions/sub_agent_manager.py, M AGENTS.md, M core/prompt.txt, M test_all.py, M data/knowledge/eris_inventario_vivo.md",
+  "procesos": "ERIS PID 224807 (main.py) | Apache NetBeans 30 corriendo | opencode",
+  "workspace": "/home/soul/Eris/ERIS-NEW",
+  "tripulacion": {
+    "agentes": 25,
+    "nuevos": [
+      "TaskSpecifier",
+      "ProgressTracker",
+      "ActionGuard",
+      "SelectiveForgetter",
+      "TraceKeeper"
+    ],
+    "baseline_test_all": "177 PASS / 1 FAIL ambiental / 2 WARN"
+  }
 }

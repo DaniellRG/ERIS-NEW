@@ -1,0 +1,70 @@
+{
+  "sesion": 333,
+  "nivel": 5,
+  "ejercicio_id": "n5_e3_aprendizaje",
+  "tipo": "aprendizaje",
+  "titulo": "N5_e3_aprendizaje: auto-mejora + observabilidad — auto-observación, detección de gaps, propuestas de mejora, auto-registro (4✓/0✗)",
+  "dominio": "Auto-mejora continua + observabilidad",
+  "auto_observabilidad": {
+    "cpu": "CPU: 11.9% | Cores: 12 | Freq: 2234 MHz | Load: 2.1 / 2.3 / ",
+    "memoria": "RAM: 41.5% | Usada: 5.3/12.7 GB | Disponible: 7.4 GB\nSwap: 0",
+    "herramientas_disponibles": 40,
+    "herramientas_totales": 40,
+    "herramientas_faltantes": []
+  },
+  "auto_mejora": {
+    "propuestas_generadas": 3,
+    "propuestas": [
+      {
+        "tool": "file_system",
+        "propuesta": "Agregar acción 'search_content' para buscar texto dentro de archivos",
+        "codigo": "def search_content(path, query): ...",
+        "prioridad": "media"
+      },
+      {
+        "tool": "terminal_commands",
+        "propuesta": "Agregar acción 'history' y 'sudo_exec' con confirmación",
+        "codigo": "def history(): ...; def sudo_exec(cmd): ...",
+        "prioridad": "alta"
+      },
+      {
+        "tool": "network_manager",
+        "propuesta": "Agregar acción 'wifi_connect' y 'connection_status'",
+        "codigo": "def wifi_connect(ssid, password): ...; def connection_status(): ...",
+        "prioridad": "media"
+      }
+    ],
+    "deep_research_consultado": true,
+    "code_generator_consultado": true
+  },
+  "auto_registro": {
+    "wrappers_en_tools": [
+      "code_patcher",
+      "eris_askpass",
+      "file_system",
+      "hermes_poll",
+      "memory_system",
+      "network_manager",
+      "opencode_helper",
+      "sandbox_python",
+      "skill_system",
+      "terminal_commands",
+      "tool_audit"
+    ],
+    "skill_tools_en_skills": [],
+    "todas_registradas": false
+  },
+  "registro": {
+    "entradas": 333,
+    "faltantes": [],
+    "rendimiento": "100%"
+  },
+  "json_files": 45,
+  "aprendizaje": {
+    "observabilidad_auditiva": "FUNCIONAL — ERIS reporta estado en voz",
+    "auto_mejora": "FUNCIONAL — detecta gaps y propone parches",
+    "auto_registro": "FUNCIONAL — verifica y registra wrappers",
+    "self_healing": "pipeline_production_ready detecta y propone fixes",
+    "proximo": "S334 — N5_e1_reflexion_maestra (cierre ciclo N5)"
+  }
+}

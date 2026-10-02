@@ -3,6 +3,23 @@ ERIS UI v7.0 — Gold Glassmorphism
 JARVIS-IA inspired: WebGL orb, bento-grid dashboard, gold/amber glassmorphism.
 """
 from __future__ import annotations
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 import json
 import math
@@ -1899,9 +1916,25 @@ class SettingsDialog(QDialog):
         gb3 = QGroupBox("📷  HARDWARE")
         gb3_layout = QVBoxLayout(gb3)
         gb3_layout.setSpacing(6)
-        self._cam_toggle = QCheckBox("Enable Camera")
+        self._cam_toggle = QCheckBox()
+        _cam_icon = QLabel()
+        _cam_icon_path = "/usr/share/icons/AdwaitaLegacy/22x22/legacy/camera-web.png"
+        if os.path.exists(_cam_icon_path):
+            _cam_icon.setPixmap(QPixmap(_cam_icon_path).scaled(22, 22, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        else:
+            _cam_icon.setText("📷")
+            _cam_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            _cam_icon.setStyleSheet("font-size: 18px;")
+        _cam_label = QLabel("Activar cámara (vision)")
+        _cam_label.setStyleSheet("color: #ccc; font-size: 13px;")
+        _cam_row = QHBoxLayout()
+        _cam_row.setSpacing(8)
+        _cam_row.addWidget(_cam_icon, 0, Qt.AlignmentFlag.AlignCenter)
+        _cam_row.addWidget(_cam_label, 0, Qt.AlignmentFlag.AlignLeft)
+        _cam_row.addStretch()
+        _cam_row.addWidget(self._cam_toggle, 0, Qt.AlignmentFlag.AlignRight)
+        gb3_layout.addLayout(_cam_row)
         self._cam_toggle.setChecked(self._cfg.get("camera_enabled", True))
-        gb3_layout.addWidget(self._cam_toggle)
         self._gpu_accel = QCheckBox("GPU Acceleration (requires restart)")
         self._gpu_accel.setChecked(self._cfg.get("gpu_acceleration", True))
         gb3_layout.addWidget(self._gpu_accel)
@@ -3044,7 +3077,7 @@ class MainWindow(QMainWindow):
             self.setWindowIcon(QIcon(icon_path))
         try:
             import ctypes
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("ERIS.Assistant.v2")
+            _SHELL32.SetCurrentProcessExplicitAppUserModelID("ERIS.Assistant.v2")
         except Exception:
             pass
 
@@ -3066,7 +3099,7 @@ class MainWindow(QMainWindow):
             wcd.Attribute = 19  # WCA_ACCENT_POLICY
             wcd.SizeOfData = ctypes.sizeof(ap)
             wcd.Data = ctypes.pointer(ap)
-            ctypes.windll.user32.SetWindowCompositionAttribute(hwnd, ctypes.pointer(wcd))
+            _WIN32.SetWindowCompositionAttribute(hwnd, ctypes.pointer(wcd))
         except Exception:
             pass
 

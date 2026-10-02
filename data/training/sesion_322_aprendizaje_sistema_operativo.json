@@ -1,0 +1,74 @@
+{
+  "sesion": 322,
+  "tipo": "aprendizaje",
+  "titulo": "Introducción al dominio del sistema operativo — exploración de herramientas de sistema (6 herramientas, 4✓/0✗)",
+  "dominio": "Sistema operativo (Linux Arch)",
+  "herramientas_elegidas": [
+    {
+      "nombre": "system_monitor",
+      "disponible": true,
+      "descripcion": "recursos del sistema (CPU, RAM, disco, red)"
+    },
+    {
+      "nombre": "process_manager",
+      "disponible": true,
+      "descripcion": "gestión de procesos (listar, matar, priorizar)"
+    },
+    {
+      "nombre": "network_manager",
+      "disponible": false,
+      "descripcion": "gestión de red (interface, IP, conexión)"
+    },
+    {
+      "nombre": "desktop_notifications",
+      "disponible": true,
+      "descripcion": "notificaciones de escritorio"
+    },
+    {
+      "nombre": "terminal_commands",
+      "disponible": false,
+      "descripcion": "ejecución de comandos de terminal"
+    },
+    {
+      "nombre": "file_system",
+      "disponible": false,
+      "descripcion": "gestión del sistema de archivos"
+    }
+  ],
+  "herramientas_disponibles": 3,
+  "herramientas_totales": 6,
+  "pipeline_ejecutado": {
+    "pasos": 7,
+    "pasos_correctos": 6,
+    "herramientas_usadas": [
+      "system_monitor",
+      "real_time_tts"
+    ],
+    "accion_principal": "Exploración de herramientas de sistema operativo + integración con voz + notificaciones"
+  },
+  "estado_sistema": {
+    "sistema_operativo": "Linux Arch",
+    "procesador": "AMD Ryzen 5 7535HS",
+    "ram": "12GB",
+    "audio": "ALSA/PulseAudio (mic dev 3, output dev 9)"
+  },
+  "integracion_con_voz": {
+    "real_time_tts_integrado": true,
+    "anuncio_recursos": true,
+    "anuncio_pipeline": true,
+    "mensaje_prueba": "Pipeline de sistema operativo completado. 3 herramientas de sistema disponibles."
+  },
+  "aprendizaje": {
+    "herramientas_sistema_disponibles": [
+      "system_monitor",
+      "process_manager",
+      "desktop_notifications"
+    ],
+    "herramientas_sistema_no_disponibles": [
+      "network_manager",
+      "terminal_commands",
+      "file_system"
+    ],
+    "proxima_fase": "S323: Aprendizaje — integración de voz con system_monitor para monitoreo continuo anunciado"
+  }
+}

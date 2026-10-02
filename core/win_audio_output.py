@@ -1,3 +1,13 @@
+"""
+WinAudioOutput: solo para Windows.
+En Linux, este módulo NO debe ser importado desde el Play thread.
+"""
+import platform
+import sys
+
+if platform.system() != "Windows":
+    raise ImportError("WinAudioOutput solo disponible en Windows. En Linux usa sd.RawOutputStream.")
+
 import ctypes
 import ctypes.wintypes
 import time

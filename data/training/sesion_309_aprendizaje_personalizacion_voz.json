@@ -1,0 +1,87 @@
+{
+  "sesion": 309,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo: personalización avanzada de voz (real_time_tts speed/pitch/volume/queue + voice_profile set/list)",
+  "herramientas_estudiadas": {
+    "real_time_tts": {
+      "acciones": [
+        "pause",
+        "queue",
+        "resume",
+        "speak",
+        "speed",
+        "status",
+        "stop",
+        "voice"
+      ],
+      "parametros_avanzados": {
+        "speed": "velocidad de habla (0.5-2.0): 0.5=lento, 1.0=normal, 1.5=rápido, 2.0=muy rápido",
+        "pitch": "tono/pitch (-12 a +12): -6=grave, 0=normal, +6=agudo, +12=muy agudo",
+        "volume": "volumen (0.0-2.0): 0.0=silencio, 0.5=bajo, 1.0=medio, 1.5=alto, 2.0=muy alto",
+        "voice": "voz activa del motor TTS",
+        "queue": "cola de mensajes para reproducir en secuencia",
+        "pause/resume/stop": "control de reproducción"
+      },
+      "combinaciones": "speed + pitch + volume + voice"
+    },
+    "voice_profile": {
+      "acciones": [
+        "list",
+        "params",
+        "set",
+        "status"
+      ],
+      "persistencia": "set guarda perfiles con todos los parámetros (voice_name, speed, pitch, volume)",
+      "list": "lista perfiles guardados",
+      "params": "parámetros soportados del perfil",
+      "status": "estado del perfil activo con description, set_action, etc."
+    }
+  },
+  "ejercicios_avanzados": {
+    "speed_control": "True — speed: 0.5 (lento), 1.0 (normal), 1.5 (rápido)",
+    "speak_con_speed": "speak con diferentes velocidades (normal, rápido, lento)",
+    "status_tts": "True — estado actual del motor TTS",
+    "pause_resume_stop": "True — control de reproducción",
+    "queue_mensajes": "True — cola de mensajes",
+    "voice_profile_params": "True — parámetros soportados",
+    "voice_profile_status": "True — estado del perfil activo",
+    "voice_profile_set_avanzado": "True — perfil con speed+pitch+volume",
+    "voice_profile_list": "True — lista de perfiles guardados",
+    "combinacion_avanzada": "True — speed+pitch+volume+voice juntos"
+  },
+  "perfiles_guardados": [
+    {
+      "name": "eris_default",
+      "description": "Voz natural de Eris"
+    },
+    {
+      "name": "eris_calmada",
+      "description": "Voz suave y pausada"
+    },
+    {
+      "name": "eris_emocionada",
+      "description": "Voz animada y rapida"
+    },
+    {
+      "name": "eris_seria",
+      "description": "Voz formal y directa"
+    },
+    {
+      "name": "eris_juguetona",
+      "description": "Voz alegre y expressiva"
+    }
+  ],
+  "discrepancias": [
+    "voice_profile.set() puede no aceptar perfiles con nombres no existentes",
+    "XTTS v2 no disponible (Python 3.14 >= 3.12)"
+  ],
+  "lecciones": [
+    "real_time_tts permite control granular de voz: speed (0.5-2.0), pitch (-12 a +12), volume (0.0-2.0)",
+    "Combinaciones avanzadas son posibles: speed + pitch + volume + voice",
+    "voice_profile guarda perfiles persistentes con todos los parámetros",
+    "pause/resume/stop permiten control de reproducción",
+    "queue permite acumular mensajes para reproducir en secuencia",
+    "El flujo completo es: voice_profile.set (configurar perfil) → real_time_tts.speak (usar perfil)"
+  ],
+  "proximo_paso": "S310 (reflexión maestra): audio/voz completo (S258-S309). Revisión final del dominio de voz."
+}

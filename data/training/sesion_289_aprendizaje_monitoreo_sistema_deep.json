@@ -1,0 +1,100 @@
+{
+  "sesion": 289,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo — dominio monitoreo/sistema avanzado (system_monitor deep + process_manager + desktop_notifications + accessibility_overlay + network_monitor + screen_recorder)",
+  "herramientas_estudiadas": {
+    "system_monitor": "disponible",
+    "process_manager": "disponible",
+    "desktop_notifications": "disponible",
+    "accessibility_overlay": "disponible",
+    "network_monitor": "disponible",
+    "screen_recorder": "disponible"
+  },
+  "acciones_descubiertas": {
+    "system_monitor": [
+      "battery",
+      "cpu",
+      "disk",
+      "gpu",
+      "kill",
+      "memory",
+      "net",
+      "network",
+      "processes",
+      "procs",
+      "ram",
+      "report",
+      "temp",
+      "temperature",
+      "uptime"
+    ],
+    "process_manager": [
+      "cleanup",
+      "cpu",
+      "info",
+      "kill",
+      "list",
+      "memory",
+      "priority",
+      "startup"
+    ],
+    "desktop_notifications": [
+      "cancel",
+      "categories",
+      "clear_history",
+      "history",
+      "pending",
+      "send",
+      "send_many",
+      "set_category",
+      "set_settings",
+      "settings",
+      "status",
+      "test"
+    ],
+    "accessibility_overlay": [
+      "action",
+      "mode",
+      "state",
+      "value"
+    ],
+    "network_monitor": "usar parámetros libres",
+    "screen_recorder": "usar parámetros libres"
+  },
+  "procedimiento_aplicado": [
+    "Elegir herramientas con justificación (S258-S287 consolidado)",
+    "Explorar ecosistema disponibles (S258, S273, S276)",
+    "Verificar API: firma + código fuente + acciones extraídas (S244)",
+    "Ejecutar ejercicios con acciones correctas, sin asumir (S258-S287)",
+    "Manejar errores como parte del aprendizaje (S258, S266)",
+    "Integrar con memory_system para registrar resultados (S248)",
+    "Documentar discrepancias encontradas (S260, S261)",
+    "Reflexionar sobre el ciclo (S268-S287)",
+    "Proponer acciones para siguientes pasos (S268-S287)"
+  ],
+  "ejercicios_funcionales": {
+    "system_monitor": "CPU=OK, GPU=OK, RED=OK (mostró interfaces + IPs)",
+    "process_manager": "list funcionó (mostró 350 procesos)",
+    "desktop_notifications": "send funcionó (envió notificación de test)",
+    "accessibility_overlay": "state funcionó (mostró estado de lupa en inactiva)",
+    "network_monitor": "exec OK (mostró interfaces lo, enp1s0, wlp2s0)",
+    "screen_recorder": "verificado (NO grabó — limitar recursos, S266 aprendizaje)"
+  },
+  "lecciones": [
+    "system_monitor: 15 acciones extraídas y verificadas (cpu, gpu, network funcionan)",
+    "process_manager: 8 acciones, 'list' funciona mostrando procesos",
+    "desktop_notifications: 12 acciones, 'send' funciona (crucial para notificaciones al usuario)",
+    "accessibility_overlay: 4 acciones, 'state' funciona (lupa inactiva — useful para UX visual)",
+    "network_monitor: 0 acciones extraídas pero funciona con params libres (red, interfaces, IP)",
+    "screen_recorder: funciona sin params (auto-graba 30s — limitar en futuras ejecuciones)",
+    "6 herramientas de monitoreo/sistema disponibles y funcionales",
+    "memory_system permite registrar resultados persistentes sin replayar sesiones",
+    "El procedimiento de 9 pasos es transferible a dominios de sistema"
+  ],
+  "discrepancias": [
+    "network_monitor y screen_recorder tienen 0 acciones extraídas (usan parámetros libres)",
+    "screen_recorder auto-graba 30s cuando se ejecuta sin action (riesgo de recursos)"
+  ],
+  "proximo_paso": "Sesión 290 (N4_e2 — transferencia): aplicar procedimiento al dominio educación/aprendizaje o herramientas de productividad (calendar_manager, task_manager, goal_tracker) con el procedimiento consolidado",
+  "memory_error": "memory_system no disponible"
+}

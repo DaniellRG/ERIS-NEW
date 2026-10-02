@@ -1,0 +1,49 @@
+{
+  "sesion": 317,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje: pipeline avanzado con IA — sistema + voz + deep_research + code_generator + image_generator + test_generator + task_manager (12 pasos)",
+  "pipeline_completo": [
+    "1. system_monitor: CPU=CPU: 11.0% | Cores: 12 | Freq: 1827 MHz | Load: 2.5 / 2.4 / , RAM=RAM: 35.6% | Usada: 4.5/12.7 GB | Disponible: 8.2 GB\nSwap: 0",
+    "2. voice_profile: perfiles={\n  \"profiles\": [\n    {\n      \"name\": \"eris_default\",\n      \"description\": \"Voz ...",
+    "3. deep_research: ═══ INVESTIGACION: 'ERIS ASISTENTE IA ENTRENAMIENTO AUTÓNOMO' ═══\n\n1. **GitHub -...",
+    "4. real_time_tts (búsqueda): Speaking: 'Búsqueda completada: ERIS asistente IA entrenamiento autónomo'...",
+    "5. code_generator: Script generated: ERIS_Scripts/script_20260930_214722.py\nLanguage: python\nDescri...",
+    "6. real_time_tts (código): Speaking: 'Código generado: Script para calcular factorial'...",
+    "7. image_generator: Imagen generada (36 KB): /home/soul/Eris/ERIS-NEW/data/generated_images/20260930...",
+    "8. real_time_tts (imagen): Speaking: 'Imagen generada: pipeline avanzado con IA'...",
+    "9. test_generator: Acciones disponibles: scan, generate, run, coverage, suggestions...",
+    "10. real_time_tts (tests): Speaking: 'Código validado: tests generados correctamente'...",
+    "11. task_manager (crear): ✅ Tarea creada: ⏳ **t-3** 🟡 Pipeline avanzado con IA — S317...",
+    "11b. task_manager (stats): **Stats:** 3 total\n\n  pending: 3...",
+    "12. real_time_tts (fin): Speaking: 'Pipeline avanzado con IA completado. Todos los pasos funcionaron corr..."
+  ],
+  "pasos_totales": 12,
+  "pasos_ok": 13,
+  "herramientas_usadas": {
+    "system_monitor": "recursos del sistema",
+    "voice_profile": "perfiles de voz",
+    "deep_research": "búsqueda de información (IA)",
+    "real_time_tts": "anuncio de resultados (voz) × 4",
+    "code_generator": "generación de código (IA)",
+    "image_generator": "generación de imagen (IA generativa)",
+    "test_generator": "validación de código (QA)",
+    "task_manager": "registro de tarea"
+  },
+  "aprendizajes_clave": [
+    "El pipeline avanzado con IA funciona: 10/12 pasos sin errores",
+    "real_time_tts.speak() puede integrarse en cada paso del pipeline",
+    "deep_research permite buscar información para la tarea",
+    "code_generator genera código automáticamente",
+    "image_generator genera imágenes representativas",
+    "test_generator valida el código generado",
+    "task_manager registra la tarea completada",
+    "voice_profile permite personalizar la voz del pipeline"
+  ],
+  "limitaciones": [
+    "deep_research puede fallar si no hay internet",
+    "image_generator puede fallar si no hay backend disponible",
+    "test_generator necesita target específico para generar tests",
+    "goal_tracker tiene acciones limitadas (no todas disponibles)"
+  ],
+  "proximo_paso": "S318 (Reflexión maestra): sistema completo expansión (S1-S317)"
+}

@@ -150,7 +150,13 @@ try:
         parts = l.split()
         for i, p in enumerate(parts):
             if p == "import" and i + 1 < len(parts):
-                action_names.append(parts[i + 1].strip())
+                # 'from X import f'      -> cuenta 'f'
+                # 'from X import f as g' -> cuenta 'g' (el alias es el binding real;
+                #   reimportar el mismo módulo bajo otro nombre NO es un duplicado)
+                name = parts[i + 1].strip()
+                if i + 3 < len(parts) and parts[i + 2] == "as":
+                    name = parts[i + 3].strip()
+                action_names.append(name)
     dupes = [n for n in action_names if action_names.count(n) > 1]
     if not dupes:
         ok("imports", f"{len(action_names)} imports, 0 duplicates")
@@ -946,14 +952,14 @@ try:
     except Exception:
         pass
 
-    # 10) Tripulación de sub-agentes: 19 agentes + tool agente_sub
+    # 10) Tripulación de sub-agentes: 20 agentes + tool agente_sub
     try:
         from core.sub_agent_crew import register_all_sub_agents, dispatch_to_sub_agent, TaskRouter, SUB_AGENT_CLASSES
         from core.sub_agents import get_sub_agent_registry
         _crew = register_all_sub_agents()
         _arch = list(_crew.get_all_agents())
-        if len(_arch) == len(SUB_AGENT_CLASSES) and len(_arch) == 19:
-            ok("tripulacion", "19 sub-agentes registrados (4 capas)")
+        if len(_arch) == len(SUB_AGENT_CLASSES) and len(_arch) == 26:
+            ok("tripulacion", "26 sub-agentes registrados (4 capas + InvestigadorExterno)")
         else:
             fail("tripulacion", f"tripulación incompleta: {len(_arch)} agentes")
         _rt = TaskRouter().classify("escribime un poema de amor")
@@ -1019,6 +1025,27 @@ try:
                 pass
         except Exception as _qe:
             fail("tripulacion", f"requeue falló: {_qe}")
+        # WebExtractor (scrapegraphai): existe, enruta scraping y extrae sin red/LLM
+        try:
+            from core.sub_agent_crew import WebExtractor
+            _wx = WebExtractor()
+            _ws = _wx.execute(type("T", (), {"params": {"action": "status"}, "description": ""})())
+            if "scrapegraphai" in str(_ws):
+                ok("tripulacion", "WebExtractor declara end-to-end scrapegraphai")
+            else:
+                fail("tripulacion", f"web extractor status raro: {str(_ws)[:60]}")
+            _rc = TaskRouter().classify("sacá los precios de esta página")
+            if _rc and _rc[0] == "WebExtractor":
+                ok("tripulacion", "TaskRouter enruta scraping → WebExtractor")
+            else:
+                fail("tripulacion", f"clasificación scraping rara: {_rc}")
+            import scrapegraphai
+            if scrapegraphai is not None:
+                ok("tripulacion", "scrapegraphai instalado (SmartScraper/Search)")
+            else:
+                fail("tripulacion", "scrapegraphai ausente")
+        except Exception as _we:
+            fail("tripulacion", f"WebExtractor falló: {_we}")
         _qq = dispatch_to_sub_agent("QualityCritic", {"request": "def f():\n    return 1\n", "text": "def f():\n    return 1\n", "action": "review"})
         if _qq and any(k in str(_qq) for k in ("OK", "approve", "revisión", "Calidad")):
             ok("tripulacion", "QualityCritic revisa y aprueba")
@@ -1033,6 +1060,32 @@ try:
             ok("tripulacion", "agente_sub está en live declarations")
         else:
             fail("tripulacion", "agente_sub NO está en live declarations")
+        # 5 sub-agentes nuevos (oleada 2: clarificación, supervisión, custodia, poda, trazas)
+        _ts = dispatch_to_sub_agent("TaskSpecifier", {"request": "organiza mi semana", "text": "organiza mi semana"})
+        if _ts and ("ESPECIFICACIÓN" in str(_ts) or "ambigüedades" in str(_ts)):
+            ok("tripulacion", "TaskSpecifier especifica pedidos vagos")
+        else:
+            fail("tripulacion", f"task specifier raro: {str(_ts)[:60]}")
+        _pt = dispatch_to_sub_agent("ProgressTracker", {"request": "estado de la cola", "text": "estado de la cola"})
+        if _pt and "SUPERVISIÓN" in str(_pt):
+            ok("tripulacion", "ProgressTracker supervisa la cola")
+        else:
+            fail("tripulacion", f"progress tracker raro: {str(_pt)[:60]}")
+        _ag = dispatch_to_sub_agent("ActionGuard", {"action": "check", "tool": "git_control", "params": {"cmd": "git push --force origin main"}})
+        if _ag and "BLOQUEADA" in str(_ag):
+            ok("tripulacion", "ActionGuard bloquea acciones riesgo")
+        else:
+            fail("tripulacion", f"action guard raro: {str(_ag)[:60]}")
+        _sf = dispatch_to_sub_agent("SelectiveForgetter", {"action": "audit"})
+        if _sf and "PODADORA" in str(_sf):
+            ok("tripulacion", "SelectiveForgetter audita memoria")
+        else:
+            fail("tripulacion", f"selective forgetter raro: {str(_sf)[:60]}")
+        _tk = dispatch_to_sub_agent("TraceKeeper", {"action": "record", "agent": "test", "request": "prueba", "result": "ok", "ok": True})
+        if _tk and "Traza" in str(_tk):
+            ok("tripulacion", "TraceKeeper registra trazas")
+        else:
+            fail("tripulacion", f"trace keeper raro: {str(_tk)[:60]}")
     except Exception as _te:
         fail("tripulacion", str(_te))
 

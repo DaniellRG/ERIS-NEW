@@ -4,6 +4,23 @@ import json
 import sys
 import shutil
 from pathlib import Path
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 _IS_LINUX = sys.platform.startswith("linux")
 _IS_WINDOWS = sys.platform == "win32"
@@ -132,7 +149,7 @@ def _monitor_off():
         return "Monitor apagado" if r.returncode == 0 else f"Error al apagar monitor: {(r.stderr or '').strip()}"
     try:
         import ctypes
-        ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
+        _WIN32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
         return "Monitor apagado"
     except Exception as e:
         return f"Error al apagar monitor: {e}"
@@ -144,7 +161,7 @@ def _monitor_on():
         return "Monitor encendido" if r.returncode == 0 else f"Error al encender monitor: {(r.stderr or '').strip()}"
     try:
         import ctypes
-        ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, -1)
+        _WIN32.SendMessageW(0xFFFF, 0x0112, 0xF170, -1)
         return "Monitor encendido"
     except Exception as e:
         return f"Error al encender monitor: {e}"

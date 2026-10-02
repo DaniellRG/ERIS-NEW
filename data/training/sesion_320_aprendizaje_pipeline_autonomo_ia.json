@@ -1,0 +1,54 @@
+{
+  "sesion": 320,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje: pipeline autónomo con IA — sistema decide qué herramientas usar (12 pasos, 9 herramientas únicas)",
+  "pipeline_autonomo": {
+    "tarea_ejemplo": "Generar un script Python que calcule el factorial de un número, generar una imagen representativa, ejecutar tests de validación, y registrar la tarea completada",
+    "pasos_ejecutados": [
+      "1. system_monitor → verificar recursos del sistema",
+      "2. voice_profile → verificar perfil de voz",
+      "3. deep_research → buscar información sobre la tarea",
+      "4. real_time_tts → anunciar resultados de búsqueda (voz)",
+      "5. code_generator → generar código Python",
+      "6. real_time_tts → anunciar código generado (voz)",
+      "7. image_generator → generar imagen representativa",
+      "8. real_time_tts → anunciar imagen generada (voz)",
+      "9. test_generator → validar código (QA)",
+      "10. real_time_tts → anunciar validación (voz)",
+      "11. task_manager → registrar tarea completada",
+      "12. real_time_tts → anunciar fin del pipeline (voz)"
+    ],
+    "pasos_correctos": 12,
+    "pasos_totales": 12,
+    "herramientas_usadas": [
+      "code_generator",
+      "deep_research",
+      "test_generator",
+      "voice_profile",
+      "real_time_tts",
+      "system_monitor",
+      "task_manager",
+      "image_generator"
+    ],
+    "herramientas_totales_usadas": 8
+  },
+  "aprendizajes_clave": [
+    "El pipeline autónomo con IA funciona correctamente",
+    "El sistema puede decidir qué herramientas usar basándose en el contexto",
+    "system_monitor permite verificar recursos antes de ejecutar",
+    "voice_profile permite configurar el perfil de voz del pipeline",
+    "deep_research permite buscar información para la tarea",
+    "real_time_tts.speak() puede integrarse en cada paso del pipeline",
+    "code_generator genera código automáticamente",
+    "image_generator genera imágenes representativas",
+    "test_generator valida el código generado",
+    "task_manager registra la tarea completada",
+    "El pipeline aprendido puede ser reutilizado para futuras tareas"
+  ],
+  "limitaciones": [
+    "deep_research puede fallar si no hay internet",
+    "image_generator puede fallar si no hay backend disponible",
+    "test_generator necesita target específico para generar tests"
+  ],
+  "proximo_paso": "S321 (Reflexión maestra): sistema completo IA avanzada (S1-S320)"
+}

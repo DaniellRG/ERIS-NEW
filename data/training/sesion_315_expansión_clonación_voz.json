@@ -1,0 +1,46 @@
+{
+  "sesion": 315,
+  "tipo": "expansión",
+  "titulo": "Expansión de capacidades: clonación de voz real + integración total",
+  "estado_edge_tts": "funcional (322 voces, 45 español)",
+  "alternativas_exploradas": {
+    "Piper TTS": "Rápido, offline, Python puro — recomendado para clonación local",
+    "Coqui TTS (XTTS)": "GitHub — clonación de voz avanzada, requiere Python <3.12 ó versión compatible",
+    "Silero TTS": "PyTorch-based, modelos pre-entrenados de Sberbank",
+    "APIs externas": "ElevenLabs, PlayHT, Descript — requieren API key"
+  },
+  "expansión_intentada": [
+    [
+      "Piper TTS",
+      "instalado"
+    ],
+    [
+      "Coqui TTS (XTTS)",
+      "falló:   error: subprocess-exited-with-error\n  \n  × Getting requirements to build wheel did not run success"
+    ],
+    [
+      "PyTorch",
+      "no funciona: Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    im"
+    ]
+  ],
+  "metas_no_alcanzadas": [
+    "XTTS v2 aún no funcional (Python 3.14 incompatibilidad)",
+    "Coqui TTS desde GitHub: posible fallo de dependencias",
+    "Piper TTS: instalación exitosa o pendiente"
+  ],
+  "propuesta_siguiente_fase": {
+    "fase": "Fase 10: Expansión avanzada de voz",
+    "obstaculos": [
+      "Python 3.14 vs. compatibilidad de librerías de clonación de voz",
+      "XTTS v2 requiere Python <3.12 (problema de dependencias)",
+      "Coqui TTS desde GitHub puede tener problemas de dependencias",
+      "Piper TTS es la solución más prometedora para Python 3.14"
+    ],
+    "soluciones_propuestas": [
+      "Usar Piper TTS como solución principal para clonación de voz",
+      "Explorar silero-tts (PyTorch) si PyTorch funciona",
+      "Si hay API key, explorar integración con ElevenLabs",
+      "Si no hay API key, enfocarse en soluciones locales"
+    ]
+  }
+}

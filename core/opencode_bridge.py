@@ -66,7 +66,9 @@ class _BridgeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/api/status":
-            self._send_json({"status": "ok", "port": _PORT, "pending": len(_pending_tasks)})
+            stored = (_load_json(_QUEUE_FILE) or {}).get("tasks", [])
+            self._send_json({"status": "ok", "port": _PORT,
+                             "pending": len(stored) + len(_pending_tasks)})
         elif self.path.startswith("/api/response/"):
             task_id = self.path.split("/")[-1]
             resp = _load_json(_RESPONSE_FILE) or {}
@@ -99,6 +101,11 @@ class _BridgeHandler(BaseHTTPRequestHandler):
                     "timestamp": time.time(),
                 }
                 _pending_tasks.append(task)
+                # Persistir en disco: si ERIS duerme (gate cerrado) la tarea
+                # queda guardada para el próximo despertar (no se pierde).
+                saved = (_load_json(_QUEUE_FILE) or {}).get("tasks", [])
+                saved.append(task)
+                _save_json(_QUEUE_FILE, {"tasks": saved[-50:]})
             self._send_json({"status": "ok", "task_id": task_id})
 
         elif self.path == "/api/ask":
@@ -228,25 +235,34 @@ def review_diff(rel: str, original: str, new: str) -> tuple[str, str]:
 
 
 def ask_opencode_fix(problem: str, area: str = "") -> tuple[str, str]:
-    """AUTO-REPARACIÓN ASISTIDA (#2): Eris detecta un problema (self_health) y
-    le pide a opencode diagnóstico + fix concreto. Devuelve (fix, recomendación).
-    Si opencode no está disponible devuelve ('', motivo)."""
+    """AUTO-REPARACIÓN ASISTIDA (#2): ERIS detecta un problema y pide ayuda a Hermes.
+
+    NOTA: OpenCode está DESACTIVADO para evitar consumo de tokens.
+    ERIS ahora usa el puente Hermes (Solar Pro 4) directamente.
+    Esta función redirige a Hermes bridge si está disponible.
+    """
     try:
-        if not bridge_up():
-            return ("", "bridge de opencode no disponible")
-        prompt = (
-            "ERIS (asistente de IA) detectó un problema en su propio sistema. "
-            "Actuás como su ingeniero de soporte.\n"
-            f"Área: {area or 'sin área'}\nProblema: {problem}\n\n"
-            "Respondé en 3 líneas: (1) diagnóstico breve, (2) fix concreto y seguro "
-            "(archivo exacto y cambio, o comando), (3) verificación. Si no sabés, "
-            "proponé cómo diagnosticarlo. Conciso y directo."
+        from core.hermes_bridge import consultar_a_hermes, bridge_up as hermes_up
+        if not hermes_up():
+            return ("", "Hermes no disponible")
+        result = consultar_a_hermes(
+            f"ERIS detectó un problema y necesita ayuda para resolverlo.\n"
+            f"Área: {area or 'sin área'}\n"
+            f"Problema: {problem}\n\n"
+            f"Actuá como ingeniero de soporte experto de ERIS (asistente IA).\n"
+            f"Respondé en 3 líneas concisas:\n"
+            f"1. DIAGNÓSTICO: qué está fallando\n"
+            f"2. FIX: cambio concreto y seguro (archivo + diff o comando exacto)\n"
+            f"3. VERIFICACIÓN: cómo comprobar\n"
+            f"Si no sabés el fix, decí cómo diagnosticarlo paso a paso.\n\n"
+            f"NOTA: ERIS ahora usa este puente Hermes (puerto 6790), no opencode.",
+            category="bug",
+            context=f"auto-reparación ERIS - área: {area}",
         )
-        res = send_to_opencode(prompt, f"auto-reparación de ERIS ({area})")
-        answer = (res.get("answer") or "").strip() or (res.get("message") or "")
+        answer = (result.get("answer") or "").strip() or (result.get("message") or "")
         return (answer, answer)
     except Exception as e:
-        return ("", f"opencode no disponible: {e}")
+        return ("", f"Hermes no disponible: {e}")
 
 
 def _server_thread():
@@ -308,10 +324,12 @@ def send_to_opencode(task: str, context: str = "") -> dict:
 
 
 def poll_pending() -> list[dict]:
-    """Devuelve las tareas pendientes para ERIS."""
+    """Devuelve las tareas pendientes para ERIS (cola persistida en disco:
+    si ERIS duerme con el gate de vigilia cerrado, las tareas NO se pierden;
+    quedan para el próximo despertar)."""
     with _LOCK:
-        tasks = _pending_tasks.copy()
-        _pending_tasks.clear()
+        tasks = (_load_json(_QUEUE_FILE) or {}).get("tasks", [])
+        _save_json(_QUEUE_FILE, {"tasks": []})
     return tasks
 
 

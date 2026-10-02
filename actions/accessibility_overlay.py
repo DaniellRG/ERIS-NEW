@@ -8,6 +8,23 @@ Acciones:
   high_contrast   - Overlay de alto contraste sobre la pantalla (semi-transparente)
 """
 from __future__ import annotations
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 import json
 import os
@@ -141,12 +158,20 @@ def _read_selection():
             py = sys.executable
             subprocess.run([py, "-c", script, text[:2000], tmp_wav],
                            capture_output=True, timeout=30)
-            from core.win_audio_output import play_file
-            try:
-                play_file(tmp_wav)
-            except Exception:
-                import winsound
-                winsound.PlaySound(tmp_wav, winsound.SND_FILENAME)
+            # Solo Windows: play_file de winmm (no importar win_audio_output en Linux)
+            import platform as _pl
+            if _pl.system() == "Windows":
+                import importlib.util as _iutil
+                if _iutil.find_spec("core.win_audio_output") is not None:
+                    try:
+                        from core.win_audio_output import play_file
+                        try:
+                            play_file(tmp_wav)
+                        except Exception:
+                            import winsound as _winsound
+                            _winsound.PlaySound(tmp_wav, _winsound.SND_FILENAME)
+                    except Exception:
+                        pass
         except Exception:
             pass
 
@@ -179,7 +204,7 @@ def _toggle_hc_shortcut(mode):
     """Simula Win+Ctrl+C vía keybd_event (mejor esfuerzo)."""
     try:
         import ctypes
-        keybd_event = ctypes.windll.user32.keybd_event
+        keybd_event = _WIN32.keybd_event if _IS_WIN else None
         KEYEVENTF_KEYUP = 0x0002
         VK_LWIN, VK_CONTROL, VK_C = 0x5B, 0x11, 0x43
         for vk in (VK_LWIN, VK_CONTROL, VK_C):

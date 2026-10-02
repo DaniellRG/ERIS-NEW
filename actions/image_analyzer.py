@@ -77,7 +77,7 @@ def _call_gemini(image_base64, prompt, mime_type="image/png"):
     api_key = _get_gemini_key()
     if not api_key:
         return "Error: Gemini API key not found. Configure it in opencode.json or set GEMINI_API_KEY environment variable."
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
     payload = {
         "contents": [{
             "parts": [
@@ -175,7 +175,6 @@ def _call_ollama(image_base64, prompt):
             return ""
         available = [m.get("name", "") for m in resp.json().get("models", [])]
         if not any(model in m for m in available):
-            print(f"[ImageAnalyzer] Ollama vision model '{model}' not found. Available: {available}")
             return ""
     except Exception:
         return ""

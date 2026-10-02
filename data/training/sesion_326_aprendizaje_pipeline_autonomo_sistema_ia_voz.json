@@ -1,0 +1,71 @@
+{
+  "sesion": 326,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje: pipeline autónomo de sistema + IA con voz — 8 pasos, 7 herramientas, 3 dominios (sistema + IA + voz) (4✓/0✗)",
+  "pipeline_autonomo": {
+    "pasos": 8,
+    "herramientas": [
+      [
+        "system_monitor",
+        "detectar recursos del sistema"
+      ],
+      [
+        "deep_research",
+        "investigar monitoreo con IA"
+      ],
+      [
+        "code_generator",
+        "generar script autónomo de monitoreo"
+      ],
+      [
+        "desktop_notifications",
+        "notificar al usuario"
+      ],
+      [
+        "real_time_tts",
+        "anunciar en voz"
+      ],
+      [
+        "task_manager",
+        "registrar pipeline completado"
+      ],
+      [
+        "memory_system",
+        "guardar aprendizaje"
+      ],
+      [
+        "real_time_tts",
+        "anunciar fin del pipeline"
+      ]
+    ],
+    "dominios_integrados": [
+      "sistema",
+      "IA",
+      "voz",
+      "productividad",
+      "persistencia"
+    ]
+  },
+  "recursos_detectados": {
+    "cpu": "CPU: 16.8% | Cores: 12 | Freq: 3440 MHz | Load: 2.7 / 2.9 / 2.7",
+    "memoria": "RAM: 40.9% | Usada: 5.2/12.7 GB | Disponible: 7.5 GB\nSwap: 0.0% | 0.0/25.4 GB"
+  },
+  "script_generado": "Script generated: ERIS_Scripts/script_20260930_225151.py\nLanguage: python\nDescription: Script autóno",
+  "autonomia": {
+    "trigger": "system_monitor detecta recursos",
+    "investigacion": "deep_research investiga con IA",
+    "solucion": "code_generator genera código",
+    "feedback": "desktop_notifications + real_time_tts anuncian",
+    "gestion": "task_manager registra",
+    "persistencia": "memory_system guarda aprendizaje"
+  },
+  "aprendizaje": {
+    "pipeline_autonomo_completado": true,
+    "sistema_detecta_y_actua": true,
+    "voz_integrada": true,
+    "notificaciones_visuales": true,
+    "tarea_registrada": true,
+    "aprendizaje_guardado": true,
+    "proximo_paso": "S327: Reflexión maestra — sistema completo integración OS + IA avanzada (S1-S326)"
+  }
+}

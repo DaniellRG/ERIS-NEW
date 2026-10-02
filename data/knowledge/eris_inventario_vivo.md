@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
+Generado: 2026-09-27 15:02:41 · 526 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -22,6 +22,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 - **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.
 - **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.
 - **AUTOCONOCIMIENTO VIVO**: `core/todo_yo.py` le inyecta a Eris SIEMPRE su mapa integral `[TODO LO QUE SOS]` (cuerpo, mente, corazón, herramientas + novedades de su evolución desde memory/evolucion_novedades.json). Tool `todo_yo`: estado/novedades/registrar/esencia.
+- **TRIPULACIÓN DE SUB-AGENTES (25)**: `core/sub_agent_crew.py` en 4 capas. ORQUESTACIÓN: MissionPlanner (planea y `proyectar` encola pasos al especialista correcto), TaskRouter (clasifica/enruta), DependencyResolver, TaskSpecifier (clarifica pedidos vagos), ProgressTracker (supervisa avance). ESPECIALISTAS: ResearchAnalyst (investiga), CodeEngineer (código), SystemOperator (sistema), DataAnalyst (datos), CreativeWriter (escritura con voz), SecurityAuditor (seguridad), LearningCurator (estudio), WebExtractor (raspa webs con IA vía scrapegraphai). CALIDAD: QualityCritic, MemoryArchivist, FactVerifier, RoutineGovernor, DecisionArbiter, ConnectorHub, ActionGuard (custodia acciones de riesgo), SelectiveForgetter (podadora de memoria). META: EvolutionEngine, SkillForge, PromptOptimizer, TraceKeeper (audita trazas). Tool `agente_sub`: listar/plan/proyectar/delegar/ejecutar/mensaje/stats. Daemon `_sub_agents_loop` despacha la cola sola cada 30s.
 
 ## ab
 - `ab_automated` — A/B AUTOMÁTICO de prompts: un daemon prueba variantes de estilo de respuesta con el modelo local cada interval
@@ -94,6 +95,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 - `app_discovery` — Descubre aplicaciones instaladas en el sistema: buscar por nombre, listar apps instaladas y obtener su ruta. A
 - `app_installer` — Install/uninstall apps via winget
 
+## aprendizaje
+- `aprendizaje_videos` — 
+
 ## ask
 - `ask_opencode` — Pregunta a opencode una duda de programacion y devuelve su respuesta. Acciones: ask (preguntar con question/te
 - `ask_user` — Hace una pregunta estructurada al usuario con un menú interactivo de opciones para obtener su decisión o prefe
@@ -109,11 +113,13 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 - `attention_management` — Gestionar atencion: enfocarse en lo importante, filtrar ruido, priorizar estimulos. Acciones: focus (enfocar),
 
 ## audio
+- `audio_diagnostic` — 
 - `audio_transcriber` — Transcribe audio a texto usando faster-whisper. Acciones: transcribe (transcribir archivo de audio), transcrib
 
 ## auto
 - `auto_agent` — Agente autonomo multi-paso de ERIS: planifica y ejecuta metas automaticamente. Acciones: status (estado), plan
 - `auto_backup` — Respaldos automaticos de ERIS: realizar respaldo manual, ver estado y configurar respaldos. Acciones: status (
+- `auto_defensa` — 
 - `auto_documenter` — Genera documentación automática: changelogs, READMEs, análisis de código para docs, y sugerencias de migración
 - `auto_fabrica` — AUTO-FÁBRICA DE ERIS: crea tools nuevas AUTOMÁTICAMENTE cuando detecta patrones repetidos en tu uso de herrami
 - `auto_healer` — Auto-healing profundo. Analiza tracebacks, fix de imports, error journal con patrones, sugerencias de mejora.
@@ -198,6 +204,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 - `code_generator` — Generate code files in any programming language — always saves to Desktop/ERIS_Scripts by default.
 - `code_guard` — El ojo guardián de ERIS sobre el código del usuario: detecta en tiempo real errores (rojo: rompe) y advertenci
 - `code_helper` — Write, edit, explain, run, build, help — code in any language. Use help for programming questions and guidance
+- `code_patcher` — 
 - `code_review` — Code review: review, security, style, history, stats, quick, review_diff (revisa git diff sin commitear; use_l
 - `code_sandbox` — Ejecución segura de código Python en sandbox. Escribí y ejecutá código en tiempo real con timeout y restriccio
 - `code_validator` — Auto-validación de código tras cambios. Acciones: validate (py_compile de 'path' o pytest de 'repo'), fix (cor
@@ -322,6 +329,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## dependency
 - `dependency_manager` — Gestión de dependencias. Acciones: scan (detecta imports rotos en el proyecto), install (instala 'packages', l
 
+## deploy
+- `deploy_agent` — 
+
 ## desktop
 - `desktop_control` — Control de ventanas y escritorio: listar, minimizar, maximizar, restaurar, cerrar, enfocar, buscar, cascada, m
 - `desktop_notifications` — Notificaciones de escritorio nativas (Windows Toast / Linux notify-send) con prioridades y configuracion. Acci
@@ -337,6 +347,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## diagnostico
 - `diagnostico` — Panel de diagnóstico en vivo de ERIS: responde '¿qué se rompió y por qué?' de forma accionable. state (default
+- `diagnostico_de_sesiones` — Diagnosticar sesiones de entrenamiento: revisar ejecucion, identificar problemas, proponer mejoras.
 
 ## disk
 - `disk_wiper` — Borrado seguro de archivos, carpetas o discos (overwrite con metodo DoD). Acciones: wipe_file (borrar archivo 
@@ -383,11 +394,15 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## english
 - `english_teacher` — Profesor de ingles: curriculo A1 a C2, lecciones, ejercicios, correccion. Acciones: lesson (dar leccion), exer
 
+## entrenamiento
+- `entrenamiento_eris` — Gestionar el entrenamiento cartesiano de ERIS: ejecutar sesiones, registrar, ver progreso, generar nuevas sesi
+
 ## episodic
 - `episodic_log` — Registra o consulta la memoria episodica de ERIS (experiencias/resumenes de sesiones). Acciones: add (registra
 
 ## eris
 - `eris_guardian` — Guardian de ERIS: vigila la salud del codigo y del sistema. Escanea todos los archivos .py del proyecto, detec
+- `eris_memory` — Gestionar memoria persistente: agregar, leer, listar, replace, remove, batch.
 - `eris_style` — Perfil de estilo configurable de ERIS (config/eris_style.json): identidad, trato con el usuario, frases (salud
 - `eris_ui_control` — Control de la interfaz grafica de ERIS. Acciones: state (cambiar estado), log (escribir en log), focus (traer 
 - `eris_update` — Verifica si hay una nueva version de ERIS en GitHub Releases (sin parámetros).
@@ -405,6 +420,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## evolucion
 - `evolucion` — LA evolución continua de ERIS: su autoconocimiento vivo y su bucle que nunca se estanca. 1) status: estado de 
+
+## evolution
+- `evolution_campaigns` — 
 
 ## expresion
 - `expresion_eris` — EXPRESIÓN humana de Eris (neurotransmisores): cómo va a hablar según la emoción que siente. perfil (emoción do
@@ -466,9 +484,6 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 - `goal_setting` — Sistema de metas autonomas: Eris define sus propias metas, las prioriza, y las persigue. Genera metas automati
 - `goal_tracker` — Persistencia y seguimiento de objetivos a largo plazo: crear metas, sub-tareas, milestones, progreso, detectar
 
-## goals
-- `goals` — Manage personal goals and objectives
-
 ## google
 - `google_calendar` — Google Calendar real. Crear, listar, eliminar eventos. Acciones: today, week, upcoming, create, delete, search
 
@@ -481,6 +496,22 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## habit
 - `habit_predictor` — Predice que herramientas necesitas segun tu rutina diaria. Acciones: predict (predecir siguiente accion), lear
 - `habit_tracker` — Seguimiento de hábitos y rutinas. Registrar, rastrear streaks, estadísticas, recordatorios diarios.
+
+## hermes
+- `hermes_code_review` — 
+- `hermes_consult` — 
+- `hermes_csv_processor` — 
+- `hermes_data_analyzer` — 
+- `hermes_email_writer` — 
+- `hermes_feed_monitor` — 
+- `hermes_github_sync` — 
+- `hermes_page_summarizer` — 
+- `hermes_security_audit` — 
+- `hermes_test_generator` — 
+- `hermes_tools` — 
+- `hermes_web_scraper` — 
+- `hermes_web_search` — 
+- `hermes_writer_articles` — 
 
 ## home
 - `home_assistant` — Control de domótica vía Home Assistant. Luces, switches, clima, media, notificaciones. Requiere configuración 
@@ -544,6 +575,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## learning
 - `learning_curriculum` — Currículum de auto-mejora estructurado: identifica debilidades, crea ejercicios, rastrea progreso.
+- `learning_engine` — 
 - `learning_pipeline` — Pipeline de aprendizaje autonomo: investiga topics en web, sintetiza conocimiento, y lo guarda en Obsidian aut
 
 ## llm
@@ -615,6 +647,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## music
 - `music_player` — Reproduce archivos de audio y video locales (MP3, WAV, MP4, AVI, etc). Busca en carpetas de música o abre cual
 
+## namespace
+- `namespace_organizer` — Organizar namespaces: crear, organizar herramientas, verificar cambios.
+
 ## native
 - `native_ui` — Automatizacion de UI nativa de Windows: listar ventanas, enfocar, escribir texto, hacer clic, obtener informac
 
@@ -670,6 +705,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## page
 - `page_summarizer` — Resume paginas web, videos de YouTube, o cualquier contenido de una URL. Extrae el contenido principal y gener
 
+## paper
+- `paper_search` — 
+
 ## parallel
 - `parallel_agents` — Ejecuta varias tareas en paralelo con subagentes independientes (threads). Params: tasks (lista de tareas o te
 
@@ -696,6 +734,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## plan
 - `plan_adaptation` — Adapta un plan existente cuando algo falla o cambian las condiciones. Sugiere cómo modificar los pasos sin emp
+
+## planificador
+- `planificador_de_sesiones` — Planificar sesiones de entrenamiento: basado en progreso, crear plan para proxima sesion.
 
 ## play
 - `play_direct` — Reproduce contenido multimedia directamente: YouTube (query/url/video_id) o archivos locales (file_path). Acci
@@ -777,6 +818,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## reminders
 - `reminders` — Recordatorios con temporizador: crea, lista, pausa y elimina recordatorios. Acciones: add (agregar con text y 
 
+## repo
+- `repo_discovery` — 
+
 ## res
 - `res_monitor` — Monitoreo de recursos del sistema. Acciones: status (estado actual), history (historial). Params: limit (max e
 - `res_protect` — Protege procesos de recursos criticos. Acciones: protect (proteger proceso por name/pid con threshold), unprot
@@ -814,6 +858,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## sandbox
 - `sandbox_execution` — Ejecucion segura de codigo en sandbox. Acciones: run_python, run_js, run_snippet, validate, history, status, l
+- `sandbox_python` — 
 
 ## save
 - `save_everywhere` — Guarda informacion en TODOS los sistemas simultaneamente: base de datos SQLite (memory + knowledge) y Obsidian
@@ -889,6 +934,7 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## skill
 - `skill_creator` — Creador automático de skills: detecta patrones repetitivos en tools usadas, y crea skills YAML para automatiza
 - `skill_manage` — Manage ERIS skills: list, view, create, edit, patch, delete, sync
+- `skill_manager` — Gestionar skills de ERIS: cargar, listar, buscar, ejecutar.
 - `skill_marketplace` — Marketplace de skills: buscar, instalar, crear, publicar y valorar skills. Acciones: search (buscar), list (li
 - `skill_recommender` — Recomienda skills del sistema para una tarea dada. Analiza la query del usuario y sugiere qué skills cargar.
 
@@ -945,7 +991,9 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 ## system
 - `system_health` — Dashboard de salud del sistema: CPU, RAM, disco, red, uptime, procesos top, bateria, temperaturas. Acciones: s
 - `system_monitor` — Monitoreo del sistema: CPU, RAM, disco, GPU, red y procesos. Acciones: overview (resumen), cpu, ram, disk, gpu
+- `system_monitor_agent` — 
 - `system_reader` — Deep PC state: sensors, network (con interfaces y conexiones detalladas), disks, battery, advisory (recomendac
+- `system_status` — 
 - `system_volume` — Control del volumen y audio del sistema (Windows: pycaw; Linux: pactl/wpctl). Acciones: get (volumen actual), 
 
 ## task
@@ -1023,9 +1071,6 @@ Generado: 2026-09-18 12:10:00 · 496 tools registradas y resolviendo.
 
 ## usb
 - `usb_monitor` — Monitoreo de dispositivos USB: lista los conectados, vigila conexiones/desconexiones y configura notificacione
-
-## user
-- `user_profile` — Perfil del usuario: recuerda habitos, preferencias, configuracion. Acciones: get_profile (ver perfil), update 
 
 ## vault
 - `vault_passwords` — Gestor de contraseñas con vault local encriptado (Fernet + PBKDF2). Agregar, buscar, generar contraseñas segur

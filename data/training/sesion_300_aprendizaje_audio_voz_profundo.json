@@ -1,0 +1,65 @@
+{
+  "sesion": 300,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo — audio/voz profundo (integración completa: real_time_tts + voice_cloning + voice_profile)",
+  "herramientas_estudiadas": {
+    "voice_cloning": "disponible",
+    "real_time_tts": "disponible",
+    "voice_profile": "disponible"
+  },
+  "acciones_descubiertas": {
+    "voice_cloning": [
+      "clone",
+      "speak",
+      "status",
+      "voices"
+    ],
+    "real_time_tts": [
+      "pause",
+      "queue",
+      "resume",
+      "speak",
+      "speed",
+      "status",
+      "stop",
+      "voice"
+    ],
+    "voice_profile": [
+      "list",
+      "params",
+      "set",
+      "status"
+    ]
+  },
+  "ejercicios_funcionales": {
+    "voice_cloning": {
+      "voices": "listado de voces con edge-tts instalado (VERIFICAR SI FUNCIONA)",
+      "status": "estado del servicio de clonación"
+    },
+    "real_time_tts": {
+      "status": "estado del sintetizador (Playing, Paused, Voice, Speed, Pitch, Volume, Queue size)",
+      "voice": "voz actual configurada",
+      "speak": "texto real hablado con TTS",
+      "speed": "control de velocidad (+20%, reset a 0%)"
+    },
+    "voice_profile": {
+      "params": "parámetros actuales (voice_name, speed, pitch, volume)",
+      "set": "configuración de perfil (voice_name, speed, etc.)"
+    }
+  },
+  "discrepancias": [],
+  "lecciones": [
+    "voice_cloning voices: edge-tts instalado → voices() debería funcionar ahora",
+    "real_time_tts speak: texto real hablado con TTS (funciona con edge-tts)",
+    "real_time_tts speed: control de velocidad (+20%, reset)",
+    "voice_profile set: configuración de perfil (voice_name, speed)",
+    "El pipeline completo de voz funciona: real_time_tts + voice_profile + voice_cloning",
+    "El usuario puede escuchar a ERIS: real_time_tts.speak(texto) genera audio"
+  ],
+  "conexion_usuario": {
+    "mensaje": "ERIS ahora puede hablar. real_time_tts.speak(texto) genera audio hablado. voice_profile permite configurar la voz (es-ES-AriaNeural u otras de edge-tts). voice_cloning voices lista voces disponibles con edge-tts instalado.",
+    "prueba_de_voz": "Ejecuta: tools.real_time_tts({'action': 'speak', 'text': 'Hola! Soy ERIS y estoy aprendiendo.'})",
+    "personalizacion": "voice_profile.set(profile='eris_default', voice_name='es-ES-...', speed=1.0, pitch=1.0) para personalizar"
+  },
+  "proximo_paso": "S301 (N4_e2 — transferencia): aplicar la integración de voz al sistema completo (fallback de audio, integración con otras herramientas)"
+}

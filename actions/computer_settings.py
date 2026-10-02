@@ -1,12 +1,30 @@
 """computer_settings.py — Clean Win32/system settings controls."""
 import os
 import sys
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
+
 
 def computer_settings(parameters: dict, response=None, player=None) -> str:
     """Adjust system settings like volume, brightness, or active window states."""
     action = parameters.get("action", "").lower()
     value = parameters.get("value", "")
-    
+
     if action == "volume":
         try:
             import pyautogui
@@ -43,27 +61,33 @@ def computer_settings(parameters: dict, response=None, player=None) -> str:
             return msg
         except Exception as e:
             return f"Failed to adjust volume: {e}"
-            
+
     elif action in ("minimize", "window_minimize"):
         try:
             import ctypes
-            hwnd = ctypes.windll.user32.GetForegroundWindow()
+            hwnd = _WIN32.GetForegroundWindow() if _IS_WIN else None
             if hwnd:
-                ctypes.windll.user32.ShowWindow(hwnd, 6)  # SW_MINIMIZE = 6
+                _WIN32.ShowWindow(hwnd, 6)  # SW_MINIMIZE = 6
                 return "Active window minimized."
             return "No active window found."
         except Exception as e:
             return f"Failed to minimize window: {e}"
 
-    elif action in ("maximize", "window_maximize"):
-        try:
-            import ctypes
-            hwnd = ctypes.windll.user32.GetForegroundWindow()
-            if hwnd:
-                ctypes.windll.user32.ShowWindow(hwnd, 3)  # SW_MAXIMIZE = 3
-                return "Active window maximized."
-            return "No active window found."
-        except Exception as e:
-            return f"Failed to maximize window: {e}"
+    # En Linux: usar herramientas nativas (pactl, notify-send, etc.)
+    if not _IS_WIN:
+        import subprocess as _sp
+        if action in ("brightness",):
+            try:
+                r = _sp.run(["brightnessctl", "set", str(value)], capture_output=True, text=True, timeout=10)
+                return f"Brightness set to {value}%" if r.returncode == 0 else f"brightnessctl failed: {r.stderr}"
+            except Exception as e:
+                return f"Could not set brightness: {e}"
+        if action == "notification":
+            try:
+                _sp.run(["notify-send", "ERIS", str(value)], timeout=5)
+                return "Notification sent."
+            except Exception as e:
+                return f"notify-send failed: {e}"
 
-    return f"Settings action '{action}' is not supported yet, sir."
+    return "Action not recognized."
+

@@ -1,0 +1,66 @@
+{
+  "sesion": 325,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: aplicar pipeline avanzado a tareas del sistema — 9 pasos, limpieza + informe + voz (4✓/0✗)",
+  "tarea_del_sistema": "Limpiar archivos temporales, generar informe de uso de disco, y notificar al usuario en voz",
+  "pipeline_aplicado": {
+    "pasos": 9,
+    "herramientas": [
+      [
+        "system_monitor",
+        "verificar espacio en disco"
+      ],
+      [
+        "deep_research",
+        "investigar mejores prácticas de limpieza"
+      ],
+      [
+        "code_generator",
+        "generar script de limpieza"
+      ],
+      [
+        "desktop_notifications",
+        "notificar inicio de limpieza"
+      ],
+      [
+        "real_time_tts",
+        "anunciar inicio de limpieza (voz)"
+      ],
+      [
+        "limpieza",
+        "ejecutar limpieza de cache + thumbnails"
+      ],
+      [
+        "system_monitor",
+        "verificar espacio después de limpiar"
+      ],
+      [
+        "desktop_notifications + real_time_tts",
+        "notificar limpieza completada"
+      ],
+      [
+        "task_manager",
+        "registrar pipeline completado"
+      ]
+    ],
+    "dominios_integrados": [
+      "sistema",
+      "IA",
+      "voz",
+      "productividad"
+    ],
+    "accion_real_ejecutada": true,
+    "limpieza_real": [
+      "pip cache purge",
+      "rm -rf ~/.cache/thumbnails/*"
+    ]
+  },
+  "aprendizaje": {
+    "pipeline_aplicado_exitosamente": true,
+    "accion_real_ejecutada": true,
+    "voz_integrada": true,
+    "notificaciones_visuales": true,
+    "tarea_registrada": true,
+    "proximo_paso": "S326: Aprendizaje — pipeline autónomo de sistema + IA con voz y notificaciones"
+  }
+}

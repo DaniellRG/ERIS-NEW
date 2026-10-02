@@ -1,0 +1,8 @@
+[
+  {
+    "timestamp": "2026-10-01 10:41:41",
+    "problem": "hermes_bridge.py + tools/hermes_poll.py borrados durante entrenamiento",
+    "solution": "Reconstruidos desde .pyc, verificados bytecode, puente funcional (6790)",
+    "directory": "/home/soul/Eris/ERIS-NEW"
+  }
+]

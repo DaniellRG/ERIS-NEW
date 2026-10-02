@@ -183,7 +183,7 @@ ERIS_MAP = {
         "media_agent.py": {"desc": "Agente media — Spotify, YouTube, image gen, TikTok"},
         "productivity_agent.py": {"desc": "Agente productividad — calendar, email, drive, docs"},
         "dev_agent.py": {"desc": "Agente dev — code help, git, codebase, knowledge base"},
-        "opencode_bridge.py": {"desc": "Puente opencode — conecta ERIS con opencode CLI"},
+        "opencode_bridge.py": {"desc": "Puente Hermes — conecta ERIS con Hermes/Solar Pro 4 para consulta directa y aprendizaje continuo. OpenCode DESACTIVADO (gasta tokens)."},
     },
 
     "bios": {

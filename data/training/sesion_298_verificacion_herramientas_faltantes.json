@@ -1,0 +1,58 @@
+{
+  "sesion": 298,
+  "tipo": "inspeccion",
+  "titulo": "Verificación y estado de herramientas ERIS faltantes",
+  "herramientas_objetivo": {
+    "code_patcher": {
+      "descripcion": "Parcheo de código — herramienta de code generation/patch",
+      "disponible": false
+    },
+    "sandbox_python": {
+      "descripcion": "Ejecución segura de código Python — sandbox execution",
+      "disponible": false
+    },
+    "skill_system": {
+      "descripcion": "Sistema de gestión de skills — skill management",
+      "disponible": false
+    },
+    "memory_system": {
+      "descripcion": "Sistema de memoria persistente — persistent memory",
+      "disponible": false
+    }
+  },
+  "acciones_tomadas": [
+    "Inventario de herramientas disponibles en actions/",
+    "Verificación de code_patcher, sandbox_python, skill_system, memory_system",
+    "Intento de registro/restauración de herramientas faltantes",
+    "Documentación de resultados"
+  ],
+  "herramientas_disponibles": [],
+  "herramientas_faltantes": [
+    "code_patcher",
+    "sandbox_python",
+    "skill_system",
+    "memory_system"
+  ],
+  "acciones_recomendadas": [
+    {
+      "accion": "Restaurar code_patcher",
+      "estado_actual": "FALTANTE",
+      "accion_recomendada": "Verificar si existe módulo físico o crear herramienta"
+    },
+    {
+      "accion": "Restaurar sandbox_python",
+      "estado_actual": "FALTANTE",
+      "accion_recomendada": "Verificar si existe módulo físico o crear herramienta"
+    },
+    {
+      "accion": "Restaurar skill_system",
+      "estado_actual": "FALTANTE",
+      "accion_recomendada": "Verificar si existe módulo físico o crear herramienta"
+    },
+    {
+      "accion": "Restaurar memory_system",
+      "estado_actual": "FALTANTE",
+      "accion_recomendada": "Verificar si existe módulo físico o crear herramienta"
+    }
+  ]
+}

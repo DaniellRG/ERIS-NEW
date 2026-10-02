@@ -53,8 +53,8 @@ def configure_gpu():
             # caso; "false" solo desactiva en máquinas de baja capacidad.
             if manual is True:
                 gpu_enabled = True
-            else:
-                gpu_enabled = _detect_capable_platform()
+            elif manual is False:
+                gpu_enabled = False
         else:
             gpu_enabled = _detect_capable_platform()
     except Exception:

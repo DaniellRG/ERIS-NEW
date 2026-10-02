@@ -1,0 +1,27 @@
+============================================================
+  REPORTE COMPLETO DE ANÁLISIS DE CÓDIGO
+  Target: /home/soul/Eris/ERIS-NEW
+  Fecha: 2026-09-30 17:25:00
+============================================================
+
+────────────────────────────────────────
+Ruff no disponible (pip install ruff)
+
+────────────────────────────────────────
+Radon no disponible (pip install radon)
+
+────────────────────────────────────────
+Mypy no disponible (pip install mypy)
+
+────────────────────────────────────────
+Bandit no disponible (pip install bandit)
+
+────────────────────────────────────────
+Pylint no disponible
+
+────────────────────────────────────────
+pip-audit no disponible
+
+────────────────────────────────────────
+jscpd no disponible (npm install -g jscpd)
+Necesita Node.js instalado.

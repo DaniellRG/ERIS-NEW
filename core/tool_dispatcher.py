@@ -11,6 +11,23 @@ import threading
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
@@ -886,9 +903,9 @@ class ToolDispatcher:
         if action in ("window_minimize", "minimize"):
             try:
                 import ctypes
-                hwnd = ctypes.windll.user32.GetForegroundWindow()
+                hwnd = _WIN32.GetForegroundWindow()
                 if hwnd:
-                    ctypes.windll.user32.ShowWindow(hwnd, 6)
+                    _WIN32.ShowWindow(hwnd, 6)
                     return "Ventana activa minimizada."
                 return "No se encontró ninguna ventana activa."
             except Exception as e:
@@ -897,9 +914,9 @@ class ToolDispatcher:
         if action in ("window_maximize", "maximize"):
             try:
                 import ctypes
-                hwnd = ctypes.windll.user32.GetForegroundWindow()
+                hwnd = _WIN32.GetForegroundWindow()
                 if hwnd:
-                    ctypes.windll.user32.ShowWindow(hwnd, 3)
+                    _WIN32.ShowWindow(hwnd, 3)
                     return "Ventana activa maximizada."
                 return "No se encontró ninguna ventana activa."
             except Exception as e:

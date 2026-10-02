@@ -1,0 +1,48 @@
+{
+  "sesion": 323,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: integración de voz con system_monitor + process_manager + desktop_notifications (3 herramientas, 4✓/0✗)",
+  "dominio": "Sistema operativo (Linux Arch)",
+  "herramientas_integradas": [
+    {
+      "nombre": "system_monitor",
+      "disponible": true,
+      "descripcion": "Anunciar recursos del sistema",
+      "accion_voz": "Anuncia recursos/procesos/notificaciones con real_time_tts.speak()"
+    },
+    {
+      "nombre": "process_manager",
+      "disponible": true,
+      "descripcion": "Anunciar procesos críticos",
+      "accion_voz": "Anuncia recursos/procesos/notificaciones con real_time_tts.speak()"
+    },
+    {
+      "nombre": "desktop_notifications",
+      "disponible": true,
+      "descripcion": "Notificar al usuario",
+      "accion_voz": "Anuncia recursos/procesos/notificaciones con real_time_tts.speak()"
+    }
+  ],
+  "herramientas_disponibles": 3,
+  "herramientas_totales": 3,
+  "pipeline_ejecutado": {
+    "pasos": 3,
+    "pasos_correctos": 3,
+    "herramientas_usadas": [
+      "system_monitor",
+      "process_manager",
+      "desktop_notifications"
+    ],
+    "voz_integrada": true
+  },
+  "aprendizaje": {
+    "pattern": "tool.execute(action) → tts.speak('result')",
+    "herramientas_con_voz": [
+      "system_monitor",
+      "process_manager",
+      "desktop_notifications"
+    ],
+    "herramientas_sin_voz": [],
+    "proximo_paso": "S324: Aprendizaje — pipeline avanzado de sistema con IA y voz"
+  }
+}

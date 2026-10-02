@@ -12,11 +12,28 @@ _IS_LINUX = sys.platform.startswith("linux")
 # Lazy deps de Windows (evitan romper el import del módulo en Linux).
 gw = None
 pyautogui = None
-_WIN32 = None
+_WIN32 = _WIN32
 
 _SWP_NOZORDER = 0x0004
 _SWP_NOACTIVATE = 0x0010
 _SWP_SHOWWINDOW = 0x0040
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 
 def _ensure_win32():
@@ -27,7 +44,7 @@ def _ensure_win32():
         import pygetwindow as _gw
         gw = _gw
         pyautogui = _pyautogui
-        _WIN32 = ctypes.windll.user32
+        _WIN32 = _WIN32 if _IS_WIN else None
 
 def _move_resize(hwnd, x, y, w, h):
     """Win32 SetWindowPos — no activate needed, no focus stealing."""

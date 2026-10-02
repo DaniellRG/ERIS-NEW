@@ -1,0 +1,121 @@
+{
+  "sesion": 290,
+  "tipo": "transferencia",
+  "titulo": "Transferencia del procedimiento de 9 pasos al dominio herramientas de productividad",
+  "herramientas_estudiadas": {
+    "calendar_manager": "disponible",
+    "task_manager": "disponible",
+    "goal_tracker": "disponible",
+    "file_organizer": "disponible",
+    "file_profiler": "disponible",
+    "deep_research": "disponible"
+  },
+  "acciones_descubiertas": {
+    "calendar_manager": [
+      "configure_gcal",
+      "create",
+      "delete",
+      "export",
+      "import_gcal",
+      "list",
+      "reminders",
+      "search",
+      "status",
+      "today",
+      "tomorrow",
+      "update",
+      "week"
+    ],
+    "task_manager": [
+      "add",
+      "delete",
+      "list",
+      "move",
+      "overdue",
+      "search",
+      "stats",
+      "update"
+    ],
+    "goal_tracker": [
+      "active",
+      "complete_st",
+      "create",
+      "milestone",
+      "next",
+      "progress",
+      "stalled",
+      "state",
+      "summary",
+      "update"
+    ],
+    "file_organizer": [
+      "disk_space",
+      "find_duplicates",
+      "learn",
+      "organize",
+      "stats",
+      "undo"
+    ],
+    "file_profiler": [
+      "file",
+      "project"
+    ],
+    "deep_research": [
+      "count",
+      "num_results",
+      "query",
+      "search",
+      "text",
+      "title"
+    ]
+  },
+  "procedimiento_aplicado": [
+    "Elegir herramientas con justificación (S258-S289 consolidado)",
+    "Explorar ecosistema disponibles (S258, S273, S276)",
+    "Verificar API: firma + código fuente + acciones extraídas (S244)",
+    "Ejecutar ejercicios con acciones correctas, sin asumir (S258-S289)",
+    "Manejar errores como parte del aprendizaje (S258, S266)",
+    "Integrar con memory_system para registrar resultados (S248)",
+    "Documentar discrepancias encontradas (S260, S261)",
+    "Reflexionar sobre el ciclo (S268-S289)",
+    "Proponer acciones para siguientes pasos (S268-S289)"
+  ],
+  "ejercicios_funcionales": {
+    "calendar_manager": "list verificado",
+    "task_manager": "list + stats verificados",
+    "goal_tracker": "active + state verificados",
+    "file_organizer": "disk_space + find_duplicates verificados",
+    "file_profiler": "project verificado (proyecto ERIS)",
+    "deep_research": "search verificado (query ERIS entrenamiento)"
+  },
+  "herramientas_no_disponibles": [
+    "schedule_manager",
+    "notification_scheduler",
+    "project_manager",
+    "project_tracker",
+    "data_export",
+    "data_backup",
+    "backup_manager",
+    "dashboard_builder",
+    "report_generator",
+    "command_deck",
+    "knowledge_manager"
+  ],
+  "lecciones": [
+    "6 herramientas de productividad disponibles y funcionales",
+    "calendar_manager: 8 acciones (configure_gcal, create, delete, export, import_gcal, list, reminders, search)",
+    "task_manager: 8 acciones (add, delete, list, move, overdue, search, stats, update)",
+    "goal_tracker: 8 acciones (active, complete_st, create, milestone, next, progress, stalled, state)",
+    "file_organizer: 6 acciones (disk_space, find_duplicates, learn, organize, stats, undo)",
+    "file_profiler: 2 acciones (file, project) — project funciona con path del proyecto",
+    "deep_research: 6 acciones (count, num_results, query, search, text, title) — search funciona con query",
+    "8 herramientas de productividad NO disponibles en este entorno",
+    "El procedimiento de 9 pasos es transferible a dominios de productividad",
+    "memory_system permite registrar resultados persistentes"
+  ],
+  "discrepancias": [
+    "11 herramientas de productividad no disponibles en este entorno",
+    "recordatorio/reminder tiene 0 acciones extraídas (usa parámetros libres)"
+  ],
+  "proximo_paso": "Sesión 291 (N4_e1 — reflexión): ciclo S288-S290 + estado general del sistema. Consolidar el procedimiento en 11 dominios."
+}

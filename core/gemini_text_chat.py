@@ -25,16 +25,93 @@ _GEMINI_TOOL_CAP = 120
 # Tools imprescindibles que SIEMPRE deben llegar a Gemini, aunque esten fuera
 # del bloque inicial de declaraciones (ordenadas por dominio).
 _GEMINI_PRIORITY_TOOLS = [
-    "ask_user", "fabrica", "procedimientos", "auto_fabrica", "mcp_bridge", "pro_contexto", "prompt_ab", "edit_journal", "token_saver", "world_model", "auto_mejora", "sesiones", "ab_automated", "informe_semanal", "memoria", "pentest_lab", "system_monitor", "window_manager", "weather_report", "screen_vision",
-    "network_monitor", "emo_core", "obsidian_note", "send_message",
-    "whatsapp", "telegram_bot", "desktop_notifications", "reminder",
-    "scheduler", "goals", "knowledge_base", "user_profile", "git_control",
-    "code_assistant", "file_editor", "context_read", "morning_brief",
-    "document_handler", "image_analyzer", "translator", "web_jobs",
-    "lab_pulse", "curar_memoria",
-    "cron_scheduler", "reminders", "ocr_tool", "google_calendar",
-    "voice_translator", "diagnostico", "wayland_input", "computer_control",
-    "opencode_bridge", "agente_sub", "todo_yo",
+    "hermes_web_search",
+    "hermes_web_scraper",
+    "hermes_page_summarizer",
+    "hermes_data_analyzer",
+    "hermes_csv_processor",
+    "hermes_writer_articles",
+    "hermes_email_writer",
+    "hermes_code_review",
+    "hermes_test_generator",
+    "hermes_security_audit",
+    "hermes_feed_monitor",
+    "hermes_github_sync",
+    "ask_user",
+    "fabrica",
+    "procedimientos",
+    "auto_fabrica",
+    "mcp_bridge",
+    "pro_contexto",
+    "prompt_ab",
+    "edit_journal",
+    "token_saver",
+    "world_model",
+    "auto_mejora",
+    "sesiones",
+    "ab_automated",
+    "informe_semanal",
+    "memoria",
+    "pentest_lab",
+    "system_monitor",
+    "window_manager",
+    "weather_report",
+    "screen_vision",
+    "network_monitor",
+    "emo_core",
+    "obsidian_note",
+    "send_message",
+    "web_search",
+    "webfetch",
+    "super_search",
+    "web_navigation",
+    "browser_unified",
+    "terminal_agent",
+    "shell_session",
+    "shell_executor",
+    "open_app",
+    "app_discovery",
+    "file_manager",
+    "file_api",
+    "code_engineer",
+    "code_assistant",
+    "whatsapp",
+    "telegram_bot",
+    "desktop_notifications",
+    "reminder",
+    "scheduler",
+    "goals",
+    "knowledge_base",
+    "user_profile",
+    "git_control",
+    "code_assistant",
+    "file_editor",
+    "context_read",
+    "morning_brief",
+    "document_handler",
+    "image_analyzer",
+    "translator",
+    "web_jobs",
+    "lab_pulse",
+    "curar_memoria",
+    "cron_scheduler",
+    "reminders",
+    "ocr_tool",
+    "google_calendar",
+    "voice_translator",
+    "diagnostico",
+    "wayland_input",
+    "computer_control",
+    "opencode_bridge",
+    "agente_sub",
+    "todo_yo",
+    "paper_search",
+    "repo_discovery",
+    "evolution_campaigns",
+    "learning_engine",
+    "aprendizaje_videos",
+    "auto_defensa",
+    "evolucion"
 ]
 
 
@@ -243,7 +320,7 @@ def _get_groq_config() -> dict:
 
 
 class GeminiTextChat:
-    """Multi-turn chat with tool execution. Uses Ollama (local) by default, Gemini as fallback."""
+    """Multi-turn chat with tool execution. Gemini primario → OpenRouter → Groq → Ollama (failover secuencial)."""
 
     def __init__(self, tool_dispatcher=None):
         self._dispatcher = tool_dispatcher
@@ -256,48 +333,61 @@ class GeminiTextChat:
             "Sé concisa pero expresiva en tus respuestas."
         )
 
-        # Determine backend
-        ollama_cfg = _get_ollama_config()
-        self._use_ollama = ollama_cfg["enabled"] and self._check_ollama(ollama_cfg["base_url"])
+        # ── Configurar todos los backends; preferencia: Gemini → OpenRouter → Groq → Ollama ──
 
-        if self._use_ollama:
-            import requests
-            self._ollama_base = ollama_cfg["base_url"]
-            self._ollama_model = ollama_cfg["model"]
+        # Gemini (primario)
+        self._use_gemini = False
+        try:
+            api_key = _get_api_key()
+            if api_key:
+                from google import genai
+                self._client = genai.Client(api_key=api_key, http_options={"api_version": "v1beta"})
+                self._use_gemini = True
+            else:
+                self._client = None
+        except Exception:
             self._client = None
-            self._backend = f"ollama:{self._ollama_model}"
-        else:
-            from google import genai
-            self._client = genai.Client(api_key=_get_api_key(), http_options={"api_version": "v1beta"})
-            self._ollama_base = None
-            self._ollama_model = None
-            self._backend = f"gemini:{_get_chat_model()}"
 
-        # OpenRouter como fallback cuando Gemini está saturado / sin cuota.
+        # OpenRouter (fallback 1)
         or_cfg = _get_openrouter_config()
-        self._use_openrouter = or_cfg["enabled"]
+        self._use_openrouter = or_cfg["enabled"] and bool(or_cfg["api_key"])
         self._openrouter_api_key = or_cfg["api_key"]
         self._openrouter_model = or_cfg["model"]
-        self._openrouter_url = or_cfg["base_url"] + "/chat/completions"
+        self._openrouter_url = or_cfg["base_url"].rstrip("/") + "/chat/completions"
         self._openrouter_max_tokens = or_cfg.get("max_tokens") or 640
         self._openrouter_use_compact = bool(or_cfg.get("use_compact", True))
         self._system_compact = self._load_compact_prompt()
 
-        # Groq: cerebro grande en la nube (~280 tps), contexto 131K → prompt
-        # completo de Eris + tools + historial largo. Se activa si hay API key.
+        # Groq (fallback 2)
         groq_cfg = _get_groq_config()
         self._use_groq = groq_cfg["enabled"]
         self._groq_api_key = groq_cfg["api_key"]
         self._groq_model = groq_cfg["model"]
-        self._groq_url = groq_cfg["base_url"] + "/chat/completions"
+        self._groq_url = groq_cfg["base_url"].rstrip("/") + "/chat/completions"
         self._groq_max_tokens = groq_cfg.get("max_tokens") or 4096
         self._groq_use_compact = bool(groq_cfg.get("use_compact", False))
-        if self._use_groq:
+
+        # Ollama (fallback 3, local)
+        ollama_cfg = _get_ollama_config()
+        self._use_ollama = ollama_cfg["enabled"] and self._check_ollama(ollama_cfg["base_url"])
+        if self._use_ollama:
+            self._ollama_base = ollama_cfg["base_url"]
+            self._ollama_model = ollama_cfg["model"]
+        else:
+            self._ollama_base = None
+            self._ollama_model = None
+
+        # Backend preferido según prioridad
+        if self._use_gemini:
+            self._backend = f"gemini:{_get_chat_model()}"
+        elif self._use_openrouter:
+            self._backend = f"openrouter:{self._openrouter_model}"
+        elif self._use_groq:
             self._backend = f"groq:{self._groq_model}"
         elif self._use_ollama:
             self._backend = f"ollama:{self._ollama_model}"
         else:
-            self._backend = f"gemini:{_get_chat_model()}"
+            self._backend = "none"
 
     def _check_ollama(self, base_url: str) -> bool:
         """Check if Ollama is reachable."""
@@ -325,33 +415,50 @@ class GeminiTextChat:
         self._history.clear()
 
     async def chat(self, user_text: str) -> str:
+        """Gemini → OpenRouter → Groq → Ollama. Cada backend falla → siguiente."""
         await self._compact_history()
-        if self._use_groq:
-            result = await self._chat_groq(user_text)
-            if not result or not result.startswith("Error de Groq"):
+        # 1. Gemini (primario)
+        if self._use_gemini:
+            result = await self._chat_gemini(user_text)
+            if result and not result.startswith("Error de Gemini"):
                 return result or "Listo."
-        if self._use_ollama:
-            return await self._chat_ollama(user_text)
+        # 2. OpenRouter (fallback 1)
         if self._use_openrouter:
             result = await self._chat_openrouter(user_text)
-            if not result or not result.startswith("Error de OpenRouter"):
+            if result and not result.startswith("Error de OpenRouter"):
                 return result or "Listo."
-        return await self._chat_gemini(user_text)
+        # 3. Groq (fallback 2)
+        if self._use_groq:
+            result = await self._chat_groq(user_text)
+            if result and not result.startswith("Error de Groq"):
+                return result or "Listo."
+        # 4. Ollama (fallback 3, local)
+        if self._use_ollama:
+            return await self._chat_ollama(user_text)
+        return "No hay backend de lenguaje disponible."
 
     async def stream_chat(self, user_text: str, on_token=None) -> str:
         """Igual que chat() pero transmite tokens al callback `on_token` si se provee."""
         await self._compact_history()
-        if self._use_groq:
-            result = await self._chat_groq(user_text, on_token=on_token)
-            if not result or not result.startswith("Error de Groq"):
+        # 1. Gemini (primario)
+        if self._use_gemini:
+            result = await self._chat_gemini(user_text, on_token=on_token)
+            if result and not result.startswith("Error de Gemini"):
                 return result or "Listo."
-        if self._use_ollama:
-            return await self._chat_ollama(user_text, on_token=on_token)
+        # 2. OpenRouter (fallback 1)
         if self._use_openrouter:
             result = await self._chat_openrouter(user_text, on_token=on_token)
-            if not result or not result.startswith("Error de OpenRouter"):
+            if result and not result.startswith("Error de OpenRouter"):
                 return result or "Listo."
-        return await self._chat_gemini(user_text, on_token=on_token)
+        # 3. Groq (fallback 2)
+        if self._use_groq:
+            result = await self._chat_groq(user_text, on_token=on_token)
+            if result and not result.startswith("Error de Groq"):
+                return result or "Listo."
+        # 4. Ollama (fallback 3, local)
+        if self._use_ollama:
+            return await self._chat_ollama(user_text, on_token=on_token)
+        return "No hay backend de lenguaje disponible."
 
     # ── Compactación de contexto ──
 

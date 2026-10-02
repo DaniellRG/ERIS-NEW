@@ -1,0 +1,37 @@
+{
+  "sesion": 311,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: sistema completo integrado (system_monitor + code_generator + real_time_tts + image_generator + test_generator + task_manager)",
+  "herramientas_integradas": {
+    "system_monitor + real_time_tts": "fallback inteligente de recursos → calidad de voz",
+    "code_generator + real_time_tts": "generar código + anunciar con voz",
+    "image_generator + real_time_tts": "generar imagen + anunciar con voz",
+    "test_generator + real_time_tts": "validar código + anunciar resultado",
+    "task_manager": "registrar tarea del sistema integrado"
+  },
+  "flujo_completo": [
+    "system_monitor: cpu + memory → verificado",
+    "code_generator: generate → código generado",
+    "real_time_tts: speak → resultado anunciado con voz",
+    "image_generator: generate → imagen generada",
+    "test_generator: generate_tests + coverage → validado",
+    "task_manager: create + stats → tarea registrada"
+  ],
+  "ejercicios_funcionales": {
+    "integracion_1": "system_monitor.cpu + memory + real_time_tts.speak con fallback — ✓",
+    "integracion_2": "code_generator.generate + real_time_tts.speak — ✓",
+    "integracion_3": "image_generator.generate + real_time_tts.speak — ✓",
+    "integracion_4": "test_generator.generate_tests + real_time_tts.speak — ✓",
+    "integracion_5": "task_manager.create + stats — ✓"
+  },
+  "discrepancias": [],
+  "lecciones": [
+    "Sistema completo integrado funciona cross-domain",
+    "system_monitor + real_time_tts: fallback inteligente basado en recursos",
+    "code_generator + real_time_tts: flujo generar+anunciar funcional",
+    "image_generator + real_time_tts: flujo imagen+voz funcional",
+    "test_generator + real_time_tts: flujo testear+anunciar funcional",
+    "task_manager permite gestionar el flujo de trabajo del sistema"
+  ],
+  "proximo_paso": "S312 (aprendizaje): uso conjunto de herramientas cross-dominio — profundizar en la integración para crear un agente autónomo"
+}

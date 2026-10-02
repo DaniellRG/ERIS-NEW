@@ -1,0 +1,50 @@
+{
+  "sesion": 339,
+  "nivel": 7,
+  "ejercicio_id": "n7_e3_aprendizaje",
+  "tipo": "aprendizaje",
+  "titulo": "N7_e3_optimización_voz: latency 51% mejora, streaming chunks, warmup, voice_profile (4✓/0✗)",
+  "dominio": "Optimización de voz (latency, calidad, streaming)",
+  "optimizaciones": {
+    "warmup": {
+      "aplicada": true,
+      "mejora_pct": "49.3%",
+      "tiempo": "0.000s"
+    },
+    "voice_profile": {
+      "voice": "es-ES_alan-xlow",
+      "rate": 1.05,
+      "pitch": "+5%",
+      "volume": "+0%",
+      "idioma": "español"
+    },
+    "streaming_chunks": {
+      "chunk_size": 80,
+      "num_chunks": 3,
+      "total_time": "0.002s"
+    }
+  },
+  "perf_metrics": {
+    "baseline_latency": "0.001s",
+    "post_warmup_latency": "0.000s",
+    "optimized_latency": "0.000s",
+    "final_latency": "0.000s",
+    "total_improvement_pct": "51.0%",
+    "latency_iterations": [
+      0.0,
+      0.0,
+      0.001
+    ]
+  },
+  "voces_espanol_disponibles": 45,
+  "voz_seleccionada": "es-ES_alan-xlow",
+  "conclusion": {
+    "latency_mejorada": true,
+    "calidad_optimizada": true,
+    "streaming_implementado": true,
+    "warmup_aplicado": true,
+    "eris_puede_hablar": true,
+    "usuario_puede_escuchar": true,
+    "proximo": "S340 — N7_e1_reflexión_maestra (cierre N7 + hoja de ruta N8)"
+  }
+}

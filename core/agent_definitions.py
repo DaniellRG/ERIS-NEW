@@ -133,6 +133,22 @@ AGENT_DEFINITIONS = {
         "tools": ['pentest_lab'],
         "handler": 'core.pentest_lab.pentest_lab',
     },
+    "system_monitor": {
+        "name": 'SystemMonitorAgent',
+        "description": 'SYSTEM MONITOR: supervisión proactiva del sistema. Monitorea CPU, RAM, disco, red, procesos y temperatura en tiempo real. Detecta problemas de rendimiento, alertas de recursos críticos, y permite chequeos manuales y reportes detallados. Puede correr en background o on-demand.',
+        "keywords": ['monitor del sistema', 'monitoreo', 'supervisión', 'system monitor', 'estado del sistema', 'cpu', 'ram', 'disco', 'procesos', 'uso de cpu', 'uso de ram', 'temperatura', 'rendimiento', 'alertas', 'recursos', 'chequeo', 'reporte', 'analisis de sistema', 'health check', 'estado', 'rendimiento del sistema', 'procesos altos', 'cpu alto', 'ram alto', 'limpiar', 'optimizar'],
+        "penalty_keywords": ['spotify', 'musica', 'youtube', 'email', 'calendario', 'escribir', 'crear archivo', 'codigo', 'programar', 'juego', 'pelicula', 'navegador', 'ventana', 'volumen', 'brillo', 'configuracion'],
+        "tools": ['system_status', 'system_monitor_agent', 'audio_diagnostic'],
+        "handler": 'agents.system_monitor_agent.system_monitor_agent',
+    },
+    "deploy": {
+        "name": 'DeployAgent',
+        "description": 'DEPLOY AGENT: especialista en DevOps y despliegue de ERIS. Maneja docker (ps, images, logs, build, stop), git (status, log, commit, push, pull, branch), empaquetado (pacman, pip, requirements), limpieza de archivos (disk space, cache, tmp), backups y mantenimiento del sistema. Ideal para tareas de infraestructura, CI/CD, contenerización y administración de sistemas.',
+        "keywords": ['deploy', 'desplegar', 'docker', 'contenedor', 'container', 'git push', 'git commit', 'git pull', 'git status', 'git log', 'git branch', 'empaquetar', 'paquete', 'pacman', 'makepkg', 'pkgbuild', 'pip', 'requirements', 'dependencias', 'instalar paquete', 'limpieza', 'cache', 'tmp', 'backup', 'respaldo', 'copia de seguridad', 'mantenimiento', 'actualizar sistema', 'update system', 'docker ps', 'docker images', 'docker logs', 'docker build', 'docker compose'],
+        "penalty_keywords": ['spotify', 'musica', 'youtube', 'email', 'calendario', 'juego', 'pelicula', 'codigo', 'programar', 'editar archivo', 'escribir'],
+        "tools": ['deploy_agent'],
+        "handler": 'agents.deploy_agent.deploy_agent',
+    },
 }
 
 

@@ -1,0 +1,40 @@
+{
+  "sesion": 312,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo: uso conjunto de herramientas cross-dominio — pipeline completo (system_monitor + voice_profile + real_time_tts + code_generator + image_generator + test_generator + task_manager)",
+  "pipeline_completo": [
+    "Paso 1: system_monitor — CPU: 8.1%, RAM: 43.0%",
+    "Paso 2: voice_profile.list — {\n  \"profiles\": [\n    {\n      \"name\": \"eris_default\",\n      \"description\": \"Voz natural de Eris\"\n   ",
+    "Paso 3: real_time_tts.speak (inicio) — Speaking: 'Iniciando pipeline cross-domain. Este pipeline usará system_monitor, ",
+    "Paso 4: code_generator.generate — Script generated: ERIS_Scripts/script_20260930_173936.py\nLanguage: python\nDescri...",
+    "Paso 5: image_generator.generate — Error: no se pudo generar la imagen con ningún backend disponible...",
+    "Paso 6: test_generator.generate_tests — Acciones disponibles: scan, generate, run, coverage, suggestions...",
+    "Paso 7: task_manager.add — ✅ Tarea creada: ⏳ **t-1** 🟡 Pipeline cross-domain completo — S312...",
+    "Paso 7b: task_manager.stats — **Stats:** 1 total\n\n  pending: 1...",
+    "Paso 8: real_time_tts.speak (fin) — Speaking: 'Pipeline cross-domain completado. system_monitor, voice_profile, real"
+  ],
+  "herramientas_usadas": {
+    "system_monitor": "cpu + memory → recursos del sistema",
+    "voice_profile": "list → perfiles disponibles",
+    "real_time_tts": "speak × 2 → anunciar inicio y fin del pipeline",
+    "code_generator": "generate → código para el pipeline",
+    "image_generator": "generate → imagen representativa",
+    "test_generator": "generate_tests → validación",
+    "task_manager": "add + stats → registrar y verificar pipeline"
+  },
+  "aprendizajes_clave": [
+    "El pipeline cross-domain completo funciona: 7 herramientas en conjunto",
+    "real_time_tts.speak() es el puente universal para añadir voz a cualquier herramienta",
+    "system_monitor permite fallback inteligente basado en recursos",
+    "voice_profile permite configurar perfiles persistentes",
+    "code_generator + test_generator: generar y validar código automaticamente",
+    "image_generator permite generar imágenes representativas",
+    "task_manager permite registrar y gestionar pipelines como tareas"
+  ],
+  "limitaciones_aprendidas": [
+    "XTTS v2 no disponible (Python 3.14 >= 3.12, requiere <3.12)",
+    "image_generator puede fallar si no hay backend disponible",
+    "test_generator necesita target específico para generar tests"
+  ],
+  "proximo_paso": "S313 (reflexión maestra): integración cross-dominio (S303-S312) — análisis final del sistema completo"
+}

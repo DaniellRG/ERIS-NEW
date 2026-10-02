@@ -161,6 +161,7 @@ def build_inventory_md() -> int:
              "- **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.",
              "- **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.",
              "- **AUTOCONOCIMIENTO VIVO**: `core/todo_yo.py` le inyecta a Eris SIEMPRE su mapa integral `[TODO LO QUE SOS]` (cuerpo, mente, corazón, herramientas + novedades de su evolución desde memory/evolucion_novedades.json). Tool `todo_yo`: estado/novedades/registrar/esencia.",
+             "- **TRIPULACIÓN DE SUB-AGENTES (25)**: `core/sub_agent_crew.py` en 4 capas. ORQUESTACIÓN: MissionPlanner (planea y `proyectar` encola pasos al especialista correcto), TaskRouter (clasifica/enruta), DependencyResolver, TaskSpecifier (clarifica pedidos vagos), ProgressTracker (supervisa avance). ESPECIALISTAS: ResearchAnalyst (investiga), CodeEngineer (código), SystemOperator (sistema), DataAnalyst (datos), CreativeWriter (escritura con voz), SecurityAuditor (seguridad), LearningCurator (estudio), WebExtractor (raspa webs con IA vía scrapegraphai). CALIDAD: QualityCritic, MemoryArchivist, FactVerifier, RoutineGovernor, DecisionArbiter, ConnectorHub, ActionGuard (custodia acciones de riesgo), SelectiveForgetter (podadora de memoria). META: EvolutionEngine, SkillForge, PromptOptimizer, TraceKeeper (audita trazas). Tool `agente_sub`: listar/plan/proyectar/delegar/ejecutar/mensaje/stats. Daemon `_sub_agents_loop` despacha la cola sola cada 30s.",
              ""]
     for key in sorted(groups):
         lines.append(f"## {key}")
@@ -390,6 +391,43 @@ def evolve(dry_run: bool = False, targets: list | None = None) -> str:
 def run_evolution_tick() -> str:
     """Tick del loop de evolución continua (lo llama el hilo de main)."""
     try:
+        st = _load_state()
+        ticks = int(st.get("tick_count", 0)) + 1
+        st["tick_count"] = ticks
+        _save_state(st)
+        # Cada 3 ticks: campaña de evolución (papers+repos dble revisión/ELO)
+        if ticks % 3 == 0:
+            try:
+                from core.evolution_campaigns import run_campaign
+                camp = run_campaign()
+                log_vault("evolución", [camp])
+                return f"{camp} | {run_self_care_tick()}"
+            except Exception as ce:
+                st["evolution_campaign_error"] = f"{type(ce).__name__}: {ce}"
+                _save_state(st)
+                log_vault("evolución", [f"campaña falló (continúo con micro-fix): {type(ce).__name__}"])
+        # Cada 6 ticks: ciclo de estudio continuo (aprende papers/repos/videos)
+        if ticks % 6 == 0:
+            try:
+                from core.learning_engine import study_cycle
+                study = study_cycle()
+                log_vault("evolución", [study[:400]])
+                return f"{study[:200]} | {run_self_care_tick()}"
+            except Exception as ce:
+                st["learning_error"] = f"{type(ce).__name__}: {ce}"
+                _save_state(st)
+                log_vault("evolución", [f"ciclo de estudio falló (sigo con micro-fix): {type(ce).__name__}"])
+        # Cada 9 ticks: auto-defensa preventiva (audita su máquina, no ataca nada)
+        if ticks % 9 == 0:
+            try:
+                from core.auto_defensa import defensa_tick
+                defn = defensa_tick()
+                log_vault("evolución", [defn[:300]])
+                return f"{defn[:150]} | {run_self_care_tick()}"
+            except Exception as ce:
+                st["defense_error"] = f"{type(ce).__name__}: {ce}"
+                _save_state(st)
+                log_vault("evolución", [f"auto-defensa falló (sigo con micro-fix): {type(ce).__name__}"])
         out = evolve()
         log_vault("evolución", [out])
         st = _load_state()

@@ -1,0 +1,62 @@
+{
+  "sesion": 336,
+  "nivel": 6,
+  "ejercicio_id": "n6_e3_aprendizaje",
+  "tipo": "aprendizaje",
+  "titulo": "N6_e3_aprendizaje: testing pipeline production-ready — bridge API inactiva, test1 7/7, test2 3/3 (4✓/0✗)",
+  "dominio": "Testing pipeline + bridge API + carga",
+  "bridge_api": {
+    "puerto": 6790,
+    "activo": false,
+    "main_py_activo": false,
+    "observacion": "Bridge API solo funciona cuando ERIS main.py (PyQt6) está activo"
+  },
+  "tests": {
+    "test_1_pipeline_basico": {
+      "componentes": [
+        "deep_research",
+        "code_generator",
+        "test_generator",
+        "document_creator",
+        "desktop_notifications",
+        "task_manager",
+        "memory_system"
+      ],
+      "pasados": 7,
+      "total": 7,
+      "status": "PASS"
+    },
+    "test_2_carga_paralela": {
+      "componentes": [
+        "system_monitor",
+        "image_generator",
+        "text_summarizer"
+      ],
+      "pasados": 3,
+      "total": 3,
+      "status": "PASS"
+    }
+  },
+  "pipeline": {
+    "production_ready": "FUNCIONAL (S332)",
+    "test_status": "PASS",
+    "load_status": "ESTABLE"
+  },
+  "testing_plan_bridge": {
+    "paso_1": "Iniciar main.py (PyQt6)",
+    "paso_2": "Verificar bridge API (puerto 6790) activo",
+    "paso_3": "GET /api/status",
+    "paso_4": "POST /api/pipeline {consulta: ..., steps: ...}",
+    "paso_5": "GET /api/response/{id}",
+    "paso_6": "Validar outputs (code, tests, doc, voz, task, memory)"
+  },
+  "json_files": 47,
+  "imagenes_generadas": 7,
+  "aprendizaje": {
+    "pipeline_test": "PASS — todos los componentes funcionan",
+    "carga_test": "PASS — pipeline estable bajo carga paralela",
+    "bridge_api": "Documentado — requiere main.py activo",
+    "voctor": "ERIS puede hablar, usuarios pueden escuchar",
+    "proximo": "S337 — N6_e1_reflexion_maestra (cierre ciclo N6)"
+  }
+}

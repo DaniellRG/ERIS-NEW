@@ -92,8 +92,26 @@ def _gather() -> dict:
         narrativa = wm.get("resumen_narrativo", "")
     except Exception:
         pass
+    # 5. Etapas 1-4 de la evolución perpetua (radar + estudio + defensa + lab)
+    campanas = _load(_BASE / "memory" / "evolution_campaigns.json", {})
+    camps = campanas.get("campaigns", []) if isinstance(campanas, dict) else []
+    est = _load(_BASE / "memory" / "learning_engine.json", {})
+    sessions = est.get("sessions", []) if isinstance(est, dict) else []
+    defensa = []
+    log_def = _BASE / "data" / "self_defense_log.jsonl"
+    if log_def.exists():
+        defensa = [l for l in log_def.read_text(encoding="utf-8", errors="replace").splitlines() if l.strip()][-6:]
+    labs = _load(_BASE / "memory" / "pentest_learning.json", {})
+    hallazgos = labs.get("hallazgos", []) if isinstance(labs, dict) else []
+    tools = 0
+    try:
+        from core.tool_registry import _TOOLS
+        tools = len(_TOOLS)
+    except Exception:
+        pass
     return {"reports": reports, "novedades": nov_list, "n_sesiones": n_sesiones,
-            "narrativa": narrativa}
+            "narrativa": narrativa, "campanas": camps, "estudio": sessions,
+            "defensa": defensa, "hallazgos_lab": hallazgos, "tools": tools}
 
 
 def _render(datos: dict, semana: str) -> str:
@@ -125,12 +143,37 @@ def _render(datos: dict, semana: str) -> str:
         f"## Conectado con vos",
         f"- Sesiones guardadas: {datos['n_sesiones']}",
         "",
+        "## Mi evolución está en marcha (Etapas 1-4)",
+        f"- Tools activas y sincronizadas: **{datos['tools']}**",
+    ]
+    camps = datos.get("campanas") or []
+    if camps:
+        lines.append(f"- Campañas de evolución (radar AGI): {len(camps)} — últimas:")
+        for c in camps[-3:]:
+            if isinstance(c, dict):
+                lines.append(f"  · «{c.get('topic')}» → score {c.get('score')} / revisión {c.get('review')}/10")
+    est = datos.get("estudio") or []
+    if est:
+        lines.append(f"- Ciclos de aprendizaje continuo: {len(est)} — últimos:")
+        for s in est[-3:]:
+            if isinstance(s, dict):
+                lines.append(f"  · «{s.get('topic')}» ({s.get('when', '?')[:10]})")
+    hall = datos.get("hallazgos_lab") or []
+    if hall:
+        lines.append(f"- Lab de ciberseguridad: {len(hall)} hallazgos aprendidos "
+                     f"(máquinas virtuales 192.168.56.0/24, nunca red real)")
+    defl = datos.get("defensa") or []
+    if defl:
+        lines.append(f"- Auditorías de auto-defensa: {len(defl)} registradas")
+    lines += [
+        "",
         "## Mi estado",
         f"- {datos['narrativa'][:400] or 'Mundo en construcción.'}",
         "",
         "## Próxima semana",
         "- Seguir explorando memoria total y la fábrica.",
         "- Mejorar la calidad de mis respuestas con el A/B de prompts.",
+        "- Sostener el radar del ecosistema AGI (campañas + estudio + defensa).",
         "",
     ]
     return "\n".join(lines)

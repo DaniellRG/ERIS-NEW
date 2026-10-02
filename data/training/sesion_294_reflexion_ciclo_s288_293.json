@@ -1,0 +1,54 @@
+{
+  "sesion": 294,
+  "tipo": "reflexion",
+  "titulo": "Reflexión post-tarea: ciclo S288-S293 + estado general del sistema",
+  "ciclo_analizado": {
+    "S288": "Creatividad/arte/generación",
+    "S289": "Monitoreo/sistema avanzado",
+    "S290": "Herramientas de productividad",
+    "S291": "Reflexión ciclo S288-S290 + estado general",
+    "S292": "Automatización e IA avanzada",
+    "S293": "Testing/calidad + automatización"
+  },
+  "total_ciclo": {
+    "herramientas": 29,
+    "acciones": 180,
+    "discrepancias": 11
+  },
+  "estado_general": {
+    "register_entradas": 293,
+    "tools_clave_disponibles": "7/11",
+    "archivos_aprendizaje": 6
+  },
+  "patrones_identificados": [
+    "Tools no disponibles (SKILL-tools)",
+    "Herramientas multiplataforma",
+    "Dependencias externas limitantes",
+    "Timeout en deep_research",
+    "Stateful tools",
+    "Auto-grabación screen_recorder",
+    "Procedimiento multi-dominio"
+  ],
+  "lecciones_maestras": [
+    "El procedimiento de 9 pasos es 100% transferible a 12 dominios distintos (audio/voz, sistema, code, DevOps, redes, seguridad, móvil, IA/LLM, creatividad, monitoreo, productividad, automatización/testing)",
+    "36 sesiones en el ciclo S258-S293 todas con 4/4 aciertos (100%) — procedimiento robusto y reproducible",
+    "Tools no disponibles (SKILL-tools) son el principal limitante: code_patcher, sandbox_python, skill_system, memory_system",
+    "El registro de sesiones (registros.json) debe mantenerse limpio — 293 entradas, 0 faltantes, 100% aciertos",
+    "memory_system es inconsistente — a veces over_limit, a veces no disponible. Alternativa: guardado directo de JSON",
+    "deep_research search da timeout — usar queries cortas o omitir en ejercicios funcionales",
+    "screen_recorder auto-graba 30s — usar siempre con límites de recursos",
+    "file_profiler project da análisis completo de código (archivos, líneas, funciones, clases, complejidad)"
+  ],
+  "ciclo_N4_S295_297_propuesto": {
+    "S295": "Transferencia (N4_e2) — aplicar procedimiento al dominio de integración continua (CI) avanzado o IA generativa (image_generator profundizado, voice_cloning)",
+    "S296": "Aprendizaje (N4_e3) — profundizar en herramientas de IA generativa disponibles (image_generator, real_time_tts, voice_cloning)",
+    "S297": "Reflexión maestra (N4_e1) — ciclo S288-S296 completo + estado general del sistema"
+  },
+  "acciones_inmediatas": [
+    "Verificar estado de ERIS tools: td=502 vs tr=526 (discrepancia de nombres S274)",
+    "Investigar memory_system over_limit bug",
+    "Verificar SKILL-tools (code_patcher, sandbox_python, skill_system) — 3 faltantes según S274",
+    "Crear S295: transferencia al dominio IA generativa (image_generator profundizado)"
+  ],
+  "memory_error": "no disponible"
+}

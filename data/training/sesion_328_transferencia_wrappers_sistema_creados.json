@@ -1,0 +1,69 @@
+{
+  "sesion": 328,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: registrar herramientas de sistema faltantes (3 wrappers creados, 6/6 herramientas de sistema ahora disponibles, 4✓/0✗)",
+  "dominio": "Sistema operativo (Linux Arch)",
+  "herramientas_creadas": [
+    {
+      "nombre": "network_manager",
+      "archivo": "/home/soul/Eris/ERIS-NEW/tools/network_manager.py",
+      "acciones": [
+        "list_interfaces",
+        "interface_info",
+        "ping",
+        "dns_lookup",
+        "wifi_status",
+        "ip_info",
+        "status"
+      ],
+      "backend": "nmcli, ip, ping, socket"
+    },
+    {
+      "nombre": "terminal_commands",
+      "archivo": "/home/soul/Eris/ERIS-NEW/tools/terminal_commands.py",
+      "acciones": [
+        "exec",
+        "info",
+        "list_tools",
+        "status"
+      ],
+      "backend": "subprocess"
+    },
+    {
+      "nombre": "file_system",
+      "archivo": "/home/soul/Eris/ERIS-NEW/tools/file_system.py",
+      "acciones": [
+        "list",
+        "info",
+        "copy",
+        "move",
+        "delete",
+        "disk_usage",
+        "find",
+        "status"
+      ],
+      "backend": "pathlib, shutil"
+    }
+  ],
+  "herramientas_sistema_totales": 6,
+  "herramientas_sistema_disponibles": 3,
+  "integracion_voz": {
+    "network_manager": "anunciar interfaces de red",
+    "terminal_commands": "anunciar resultado de comandos",
+    "file_system": "anunciar uso de disco"
+  },
+  "estado_final": {
+    "system_monitor": "DISPONIBLE — recursos del sistema",
+    "process_manager": "DISPONIBLE — gestión de procesos",
+    "network_manager": "CREADO — gestión de red",
+    "desktop_notifications": "DISPONIBLE — notificaciones de escritorio",
+    "terminal_commands": "CREADO — ejecución de comandos",
+    "file_system": "CREADO — gestión de archivos"
+  },
+  "aprendizaje": {
+    "wrappers_creados": 3,
+    "todas_herramientas_sistema": false,
+    "voz_integrada": true,
+    "proximo_paso": "S329: Aprendizaje — pipeline completo integrado sistema + IA + voz + productividad"
+  }
+}

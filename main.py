@@ -2,6 +2,10 @@ import os
 import json
 import sys
 import time
+import shutil
+import subprocess
+from collections import deque
+import asyncio
 from pathlib import Path
 
 
@@ -16,7 +20,7 @@ try:
     import pygetwindow as gw
 except Exception:
     gw = None  # type: ignore[assignment]  # pygetwindow no soporta Linux (Wayland)
-from PyQt6.QtCore import QMetaObject, Qt
+# from PyQt6.QtCore import QMetaObject, Qt
 
 import traceback
 
@@ -207,7 +211,14 @@ def _has_wake_word(text: str) -> bool:
 def _clean_transcript(text: str) -> str:    
     text = _CTRL_RE.sub("", text)
     text = re.sub(r"[\x00-\x08\x0b-\x1f]", "", text)
-    return text.strip()
+    text = text.strip()
+    # ── Filtro de ruido fantasma: si no contiene NINGUNA letra (solo puntos,
+    #    espacios, símbolos) es audio de eco/ruido, no voz real del usuario.
+    #    También descarta fragmentos de una sola letra sin contexto. ──
+    letters = re.sub(r"[^a-zA-Záéíóúüñ]", "", text)
+    if len(letters) < 2:
+        return ""
+    return text
 
 _RE_NORM = re.compile(r"[^a-z0-9áéíóúüñ]", re.IGNORECASE)
 
@@ -476,6 +487,11 @@ class ErisLive:
         self.is_sleeping    = False
         self.vosk_recognizer = None
         self._agent_router  = _build_agent_router()
+        # Supresión de eco post-habla: _speech_ended_ts marca el instante en que
+        # Eris termina de hablar; el gate mantiene la escucha cerrada durante
+        # mic_speech_tail (reverb del altavoz) para que su propio eco no se
+        # transcriba como si hubiera hablado el usuario (Tú: fantasmas).
+        self._speech_ended_ts = 0.0
         # Activación por nombre: responde solo cuando escucha "Eris, ..."
         self._wake_mode       = True
         self._wake_gate_open  = False   # el audio fluye a Gemini solo si el gate está abierto
@@ -496,9 +512,9 @@ class ErisLive:
         # ── Rutinas recurrentes (Eris agenda y ejecuta sola) ──
         self._routines_stop = threading.Event()
         self._routines_thread = None
-        # ── Puente con opencode (ayuda mutua) ──
-        self._opencode_stop = threading.Event()
-        self._opencode_thread = None
+        # ── Puente con Hermes (ayuda mutua) ──
+        self._hermes_stop = threading.Event()
+        self._hermes_thread = None
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -702,17 +718,42 @@ class ErisLive:
                             self._health_fix_asked[prob["area"]] = _now_h
                             def _ask_fix(_p=prob):
                                 try:
-                                    from core.opencode_bridge import ask_opencode_fix
-                                    fix, _rec = ask_opencode_fix(_p.get("msg", ""), _p.get("area", ""))
+                                    from core.hermes_bridge import consultar_a_hermes, reportar_a_hermes
+                                    fix_result = consultar_a_hermes(
+                                        f"ERIS detectó un problema en su sistema y necesita ayuda para resolverlo.\n"
+                                        f"Área: {_p.get('area', 'sin área')}\n"
+                                        f"Problema: {_p.get('msg', 'sin descripción')}\n\n"
+                                        f"ERIS es una asistente de IA que auto-modifica su propio código. "
+                                        f"Actuá como su ingeniero de soporte experto.\n\n"
+                                        f"Respondé en formato conciso:\n"
+                                        f"1. DIAGNÓSTICO: qué está fallando (1 línea)\n"
+                                        f"2. FIX: cambio concreto y seguro (archivo exacto + diff o comando)\n"
+                                        f"3. VERIFICACIÓN: cómo comprobar que el fix funciona\n\n"
+                                        f"Si no sabés el fix exacto, di cómo diagnosticarlo paso a paso.\n"
+                                        f"Si es un bug conocido de ERIS que ya tienen registro, decí lo que ya sabés.\n\n"
+                                        f"NOTA: NO uses opencode. ERIS ahora se comunica conmigo (Hermes/Solar Pro 4) "
+                                        f"directamente a través del puente Hermes en puerto 6790.",
+                                        category="bug",
+                                        context=f"auto-reparación de ERIS - área: {_p.get('area', '')}",
+                                    )
+                                    fix = fix_result.get("answer", "")
                                     if fix:
                                         import json as _j
                                         _fix_dir = Path(__file__).resolve().parent / "memory"
                                         _fix_dir.mkdir(parents=True, exist_ok=True)
-                                        _fix_file = _fix_dir / "self_health_opencode.md"
+                                        _fix_file = _fix_dir / "self_health_hermes.md"
                                         with _fix_file.open("a", encoding="utf-8") as _fh:
-                                            _fh.write(f"[{time.strftime('%Y-%m-%d %H:%M')}] "
-                                                      f"opencode sugiere para '{_p.get('area')}':\n{fix}\n\n")
-                                        print(f"[ERIS] 🩺 Fix sugerido por opencode guardado: {_fix_file}")
+                                            _fh.write(
+                                                f"[{time.strftime('%Y-%m-%d %H:%M')}] "
+                                                f"Hermes sugiere para '{_p.get('area')}':\n{fix}\n\n"
+                                            )
+                                        print(f"[ERIS] 🩺 Fix sugerido por Hermes guardado: {_fix_file}")
+                                        # Reportar que ERIS buscó ayuda para este problema
+                                        reportar_a_hermes(
+                                            f"Problema detectado en ERIS (auto-salud): {_p.get('msg', '')[:200]}",
+                                            f"Área: {_p.get('area', '')}. Se solicitó ayuda a Hermes para diagnóstico.",
+                                            category="bug_detectado",
+                                        )
                                 except Exception:
                                     pass
                             threading.Thread(target=_ask_fix, daemon=True).start()
@@ -739,18 +780,18 @@ class ErisLive:
             print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
         except Exception as _re:
             print(f"[ERIS] Rutinas init: {_re}")
-        # ── Puente con opencode: Eris revisa sola si opencode le dejó tareas y
+        # ── Puente con Hermes: Eris revisa sola si Hermes le dejó tareas y
         #    las atiende inyectándolas en su sesión (ayuda mutua en tiempo real).
         try:
-            self._opencode_stop.clear()
-            self._opencode_thread = threading.Thread(
-                target=self._opencode_loop, daemon=True,
-                name="eris-opencode",
+            self._hermes_stop = threading.Event()
+            self._hermes_thread = threading.Thread(
+                target=self._hermes_loop, daemon=True,
+                name="eris-hermes",
             )
-            self._opencode_thread.start()
-            print("[ERIS] ◈ Puente con opencode activo (check cada 15s)")
-        except Exception as _oe:
-            print(f"[ERIS] opencode loop init: {_oe}")
+            self._hermes_thread.start()
+            print("[ERIS] ◈ Puente con Hermes activo (check cada 15s)")
+        except Exception as _he:
+            print(f"[ERIS] Hermes loop init: {_he}")
         # ── Tripulación de sub-agentes: Eris administra 19 sub-agentes
         #    especializados. El daemon registra la tripulación al arrancar y
         #    despacha tareas en cola no atendidas (frecuencia: 30s). ──
@@ -996,6 +1037,24 @@ class ErisLive:
         except Exception:
             pass
 
+    def _resample_out_audio(self, data: bytes, src: int = 24000) -> bytes:
+        """Re-muestrea el audio de salida de Gemini Live (24kHz nativo) a
+        RECEIVE_SAMPLE_RATE (48kHz) para que el hardware no lo acelere 2x
+        (voz de ardilla). Sin numpy en un fallo raro, devuelve data intacto."""
+        if not data or src <= 0 or src == RECEIVE_SAMPLE_RATE:
+            return data
+        try:
+            import numpy as _np
+            arr = _np.frombuffer(data, dtype=_np.int16)
+            if arr.size == 0:
+                return data
+            rv = resample_int16(arr, src, RECEIVE_SAMPLE_RATE)
+            if rv is not None and len(rv) > 0:
+                return _np.asarray(rv, dtype=_np.int16).tobytes()
+        except Exception:
+            pass
+        return data
+
     def _open_wake_gate(self):
         """Detectó la palabra de activación: abre el gate y reenvía el audio
         bufferizado (recortado a la última ráfaga de voz) para que Gemini
@@ -1126,77 +1185,73 @@ class ErisLive:
             print(f"[ERIS] ❌ auto-continue push: {e}")
 
     # ── Rutinas recurrentes: Eris ejecuta sola sus tareas agendadas ──────────
-
-    def _opencode_loop(self):
-        """Hilo daemon: cada 15s revisa si opencode dejó tareas en el puente y
+    def _hermes_loop(self):
+        """Hilo daemon: cada 15s revisa si Hermes dejó tareas en el puente y
         las inyecta en la sesión viva para que Eris las atienda y responda
-        (ayuda mutua real opencode <-> Eris). Cada 5 min inyecta además el
-        estado real (git/procesos) y el contexto de sesión que opencode reportó,
-        para que Eris hable con la verdad de los hechos."""
-        while not self._opencode_stop.is_set():
+        (ayuda mutua real Hermes ↔ Eris). También lee las respuestas de Hermes
+        a consultas previas de ERIS y las inyecta.
+        """
+        while not self._hermes_stop.is_set():
             try:
                 for _ in range(15):
-                    if self._opencode_stop.wait(1.0):
+                    if self._hermes_stop.wait(1.0):
                         return
                 if not (self._wake_gate_open and self.session and self._loop):
                     continue
                 try:
-                    from core.opencode_bridge import poll_pending, _INBOX_DIR, _STATE_REAL_FILE, _SESION_FILE
+                    from core.hermes_bridge import leer_tareas_pendientes
                     import json as _json
-                except Exception:
+                    from pathlib import Path
+                except Exception as _he_i:
+                    print(f"[ERIS] ◈ hermes loop import: {_he_i}")
                     continue
-                for t in poll_pending():
+
+                # 1. Tareas que Hermes envió a ERIS
+                for t in leer_tareas_pendientes():
                     tid = t.get("id", "")
                     task = t.get("task", "")
                     if not task:
                         continue
-                    self.ui.write_log(f"SYS: ◈ opencode pide: {task[:60]}")
-                    print(f"[ERIS] ◈ Tarea de opencode ({tid}): {task[:60]}")
-                    texto = (f"[OPENCODE] opencode (agente de la terminal) te pide: "
-                             f"{task}\nCuando la resuelvas, respondé con la tool "
-                             f"opencode_bridge action=reply task_id={tid} response=<tu respuesta>.")
-                    self._loop.call_soon_threadsafe(self._inject_routine, "opencode", texto)
-                # ── Contexto de verdad proactivo (throttle 5 min) ──
-                _now_oc = time.time()
-                if (getattr(self, "_last_oc_ctx", 0.0) + 300.0) < _now_oc:
-                    self._last_oc_ctx = _now_oc
-                    _ctx_lines = []
-                    try:
-                        if _STATE_REAL_FILE.exists():
-                            _sr = _json.loads(_STATE_REAL_FILE.read_text(encoding="utf-8"))
-                            _gs = (_sr.get("git_status") or "").splitlines()
-                            _gs_count = len([l for l in _gs if not l.strip().startswith("?") and l.strip()])
-                            _procs = (_sr.get("procesos") or "")[:120]
-                            _ctx_lines.append(
-                                f"[ESTADO REAL (opencode)] git: {_gs_count} archivos modificados | "
-                                f"procesos: {_procs}"
-                            )
-                    except Exception:
-                        pass
-                    try:
-                        if _SESION_FILE.exists():
-                            _sj = _json.loads(_SESION_FILE.read_text(encoding="utf-8"))
-                            _rs = (_sj.get("resumen") or "").strip()
-                            if _rs:
-                                _ctx_lines.append(f"[CONTEXTO DE SESIÓN (opencode)] El usuario está en: {_rs[:160]}")
-                    except Exception:
-                        pass
-                    try:
-                        _new_know = sorted(_INBOX_DIR.glob("*.md"))
-                        if _new_know:
-                            _latest = _new_know[-1]
-                            _head = _latest.read_text(encoding="utf-8")[:160]
-                            _ctx_lines.append(f"[OPENCODE TE COMPARTIÓ (simbiosis)] {_latest.name}: {_head}")
-                    except Exception:
-                        pass
-                    if _ctx_lines:
-                        self.ui.write_log("SYS: ◈ contexto opencode inyectado")
-                        texto_ctx = "\n".join(_ctx_lines)
-                        self._loop.call_soon_threadsafe(
-                            self._inject_routine, "opencode-ctx", texto_ctx
-                        )
-            except Exception as _oe:
-                print(f"[ERIS] ◈ opencode loop: {_oe}")
+                    self.ui.write_log(f"SYS: ◈ Hermes te pide: {task[:80]}")
+                    print(f"[ERIS] ◈ Tarea de Hermes ({tid}): {task[:80]}")
+                    texto = (
+                        f"[HERMES] Hermes (Solar Pro 4, tu modelo de IA) te pide: "
+                        f"{task}\n"
+                        f"Cuando la resuelvas, respondé con la tool "
+                        f"hermes_consult action=responder task_id={tid} response=<tu respuesta>.\n"
+                        f"Si no sabes cómo hacerlo, consultá a Hermes: "
+                        f"hermes_consult action=consultar question='cómo hago {task}'"
+                    )
+                    self._loop.call_soon_threadsafe(self._inject_routine, "hermes", texto)
+
+                # 2. Respuestas de Hermes a consultas previas de ERIS (inyejción proactiva)
+                _hermes_resp_dir = Path(__file__).resolve().parent.parent / "data" / "hermes"
+                if _hermes_resp_dir.exists():
+                    for f in sorted(_hermes_resp_dir.glob("respuesta_*.json")):
+                        try:
+                            data = _json.loads(f.read_text(encoding="utf-8"))
+                            if data.get("status") != "ok":
+                                continue
+                            # Si es una respuesta a una consulta de ERIS, inyectar
+                            tid = data.get("task_id", "")
+                            respuesta = data.get("response", "")
+                            if tid and respuesta and "task_id" in data:
+                                # Marcar como leída renombrando
+                                f.rename(_hermes_resp_dir / f"leida_{tid}.json")
+                                self.ui.write_log(f"SYS: ◈ Hermes respondió (task {tid[:20]}...)")
+                                print(f"[ERIS] ◈ Hermes respondió: {respuesta[:100]}...")
+                                texto_r = (
+                                    f"[HERMES RESPUESTA] Hermes respondió tu consulta:\n"
+                                    f"{respuesta}"
+                                )
+                                self._loop.call_soon_threadsafe(
+                                    self._inject_routine, "hermes-respuesta", texto_r
+                                )
+                        except Exception:
+                            continue
+
+            except Exception as _he:
+                print(f"[ERIS] ◈ hermes loop: {_he}")
 
     def _sub_agents_loop(self):
         """Hilo daemon: cada 30s la tripulación despacha tareas en cola que
@@ -1208,7 +1263,7 @@ class ErisLive:
                     if self._subagents_stop.wait(1.0):
                         return
                 try:
-                    from core.sub_agents import get_sub_agent_registry
+                    from core.sub_agents import get_sub_agent_registry, SubAgentStatus
                     from core.sub_agent_crew import dispatch_to_sub_agent
                     reg = get_sub_agent_registry()
                 except Exception:
@@ -1225,11 +1280,18 @@ class ErisLive:
                     continue
                 for task in pending[:2]:
                     try:
+                        tid = task.id
                         self.ui.write_log(f"SYS: 🤖 Tripulación → {task.agent_key}: {task.description[:60]}")
-                        out = dispatch_to_sub_agent(task.agent_key, task.params)
-                        print(f"[ERIS] 🤖 {task.agent_key} → {str(out)[:80]}")
-                    except Exception as _ea:
-                        print(f"[ERIS] 🤖 sub-agente {task.agent_key}: {_ea}")
+                        reg.update_task_status(tid, SubAgentStatus.WORKING)
+                        try:
+                            out = dispatch_to_sub_agent(task.agent_key, task.params)
+                            reg.update_task_status(tid, SubAgentStatus.DONE, result=str(out))
+                            print(f"[ERIS] 🤖 {task.agent_key} → {str(out)[:80]}")
+                        except Exception as _ea:
+                            reg.update_task_status(tid, SubAgentStatus.ERROR, error=str(_ea))
+                            print(f"[ERIS] 🤖 sub-agente {task.agent_key}: {_ea}")
+                    except Exception as _sa:
+                        print(f"[ERIS] 🤖 tripulación loop: {_sa}")
             except Exception as _sa:
                 print(f"[ERIS] 🤖 tripulación loop: {_sa}")
 
@@ -1987,6 +2049,10 @@ class ErisLive:
     def set_speaking(self, value: bool):
         with self._speaking_lock:
             self._is_speaking = value
+        if not value:
+            # Timestamp de fin de habla: el gate lo usa para ignorar el eco
+            # del altavoz durante la reverb residual (ver _speech_ended_ts).
+            self._speech_ended_ts = time.time()
         try:
             self.ui.set_face_speaking(value)
         except Exception:
@@ -2055,14 +2121,15 @@ class ErisLive:
                                              rate=_rate, pitch=_pitch, volume=_vol))
                 if pcm and len(pcm) > 0:
                     # ── FIX #3: Route through audio_in_queue instead of sd.play ──
-                    # This avoids conflicts with WinAudioOutput / main playback
                     _audio = _np.frombuffer(pcm, dtype=_np.int16).tobytes()
                     self.ui.set_face_speaking(True)
                     try:
+                        # El resample 24k→48k lo hace _pacat_write (punto único)
                         self.audio_in_queue.put_nowait(_audio)
-                        # Wait for playback to finish
+                        # Wait for playback to finish (duración fuente 24k;
+                        # resamplear a 48k conserva la duración)
                         import time as _t
-                        _t.sleep(len(_audio) / (24000 * 2))  # ~1s per 48KB
+                        _t.sleep(len(_audio) / (24000 * 2))
                     except Exception:
                         pass
                     self.ui.set_face_speaking(False)
@@ -2335,6 +2402,18 @@ class ErisLive:
                         self.ui.write_log("[IDLE_LEARN] {}".format(summary))
                 except Exception as _ile:
                     self.ui.write_log("[IDLE_LEARN] Error: {}".format(str(_ile)[:80]))
+
+            # ── Iniciativa plena: Eris decide y ejecuta sola sus 4 capacidades
+            #    (investigar papers/repos, estudiar, campaña de evolución,
+            #    auto-defensa) cuando está inactiva — sin que se lo pidan ──
+            if idle_seconds > 420 and self._loop and self.session:
+                try:
+                    from core.autonomia import turno_de_iniciativa
+                    _ini = turno_de_iniciativa()
+                    if _ini and not _ini.startswith("Iniciativa en cooldown"):
+                        self.ui.write_log("[INICIATIVA] {}".format(_ini))
+                except Exception as _ie:
+                    self.ui.write_log("[INICIATIVA] Error: {}".format(str(_ie)[:80]))
 
             # ── Proactividad: recordatorios de agenda + saludo matutino ──
             if time.time() - self._last_user_interaction > 90:
@@ -3524,11 +3603,11 @@ class ErisLive:
                     api_cfg_path = BASE_DIR / "config" / "api_keys.json"
                     if api_cfg_path.exists():
                         c = json.loads(api_cfg_path.read_text(encoding="utf-8"))
-                        gain = float(c.get("mic_gain", 5.0))
+                        gain = float(c.get("mic_gain", 2.5))
                     else:
-                        gain = 5.0
+                        gain = 2.5
                 except Exception:
-                    gain = 5.0
+                    gain = 2.5
                 self._mic_gain = gain
             # ── FIX #4: AGC with noise floor estimation ──
             raw_rms = float(np.sqrt(np.mean(indata.astype(np.float32) ** 2))) / 32768.0
@@ -3543,8 +3622,8 @@ class ErisLive:
             # Only amplify if signal is above noise floor (actual speech)
             if raw_rms > self._noise_floor * 3 and raw_rms > 0.0005:
                 # Speech detected — boost to target
-                dynamic_gain = min(gain * 2.0, 0.03 / raw_rms)
-                dynamic_gain = max(gain * 0.5, min(dynamic_gain, gain * 4.0))
+                dynamic_gain = min(gain * 1.6, 0.03 / raw_rms)
+                dynamic_gain = max(gain * 0.5, min(dynamic_gain, gain * 2.5))
             else:
                 # Noise only — use base gain (don't boost noise)
                 dynamic_gain = gain * 0.5
@@ -3608,7 +3687,7 @@ class ErisLive:
                             pass
                 return
 
-            # ── Gate abierto (o modo libre): audio en vivo a Gemini ──
+# ── Gate abierto (o modo libre): audio en vivo a Gemini ──
             if self._wake_mode:
                 if rms >= _WAKE_SPEECH_THRESHOLD:
                     self._wake_last_activity = time.time()
@@ -3622,6 +3701,45 @@ class ErisLive:
                     except Exception:
                         pass
                     return
+            # ── FIX interferencia/echo-mi-misma: half-duplex cerrado + gate.
+            #    El mic analógico porta el eco del propio altavoz de Eris.
+            #    Mientra Eris HABLA no se manda su eco a Gemini (silencio limpio);
+            #    solo reabre el canal cuando suena voz humana por encima del
+            #    eco (barge-in local, _last_barge_ts) o cuando ya dejó de hablar.
+            #    Además, si el nivel NO es voz (ruido de piso ya amplificado por
+            #    el AGC), se envía silencio en vez del ruido → el ASR deja de
+            #    alucinar letras de otros idiomas (árabe/tailandés). ──
+            try:
+                _ng = getattr(self, "_noise_gate_cfg", None)
+                if _ng is None:
+                    _api_cfg = {}
+                    try:
+                        _api_cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+                    except Exception:
+                        pass
+                    _ng = {
+                        "enabled": bool(_api_cfg.get("mic_noise_gate", True)),
+                        "level": float(_api_cfg.get("mic_noise_gate_level", 0.004)),
+                        "speech_tail": float(_api_cfg.get("mic_speech_tail", 1.5)),
+                    }
+                    self._noise_gate_cfg = _ng
+                _barge_ts = getattr(self, "_last_barge_ts", 0) or 0
+                # ── Echo post-habla (reverb del altavoz): aunque _is_speaking ya
+                #    volvió a False, el altavoz sigue sonando ~1s en la sala y el
+                #    mic lo capta. Mientras ese tail esté vigente (y no haya
+                #    barge-in humano real), se mantiene el silencio para que el
+                #    ASR NO transcriba el eco como si el usuario hubiera hablado
+                #    ("Tú:" fantasmas). Solo voz humana sostenida (> 1s después
+                #    del ultimo speech) abre el canal. ──
+                _tail = _ng.get("speech_tail", 1.5)
+                _speech_end = getattr(self, "_speech_ended_ts", 0.0) or 0.0
+                _in_tail = (time.time() - _speech_end) < _tail
+                _es = eris_speaking or _in_tail
+                if (_ng["enabled"] and ((_es or (rms is not None and rms < _ng["level"]))
+                                        and (time.time() - _barge_ts) > 1.0)):
+                    data = bytes(len(data))
+            except Exception:
+                pass
             loop.call_soon_threadsafe(self._put_audio_chunk, data)
 
         try:
@@ -4184,228 +4302,225 @@ class ErisLive:
                 traceback.print_exc()
             raise
 
+    print("[ERIS] 🔊 Play iniciado")
+
+    samples_played = 0
+
+    # sounddevice para salida de audio en Linux (sd.play crashea, sd.RawOutputStream funciona)
+    import sounddevice as sd  # noqa: E402
+
     async def _play_audio(self):
+        """Reproduccion de audio usando paplay (PulseAudio)."""
+        import subprocess as _sp
+        import os as _os
+        import threading as _thr
+        import base64
+        import numpy as _np
+
         print("[ERIS] 🔊 Play iniciado")
 
-        # Try WinAudioOutput first (uses Windows Multimedia API, works with BT headsets)
-        _use_win_audio = False
-        try:
-            from core.win_audio_output import WinAudioOutput
-            from core.audio_config import resolve_waveout
-            _win_out_device = resolve_waveout()
-            _win_out = WinAudioOutput(
-                channels=CHANNELS,
-                samplerate=RECEIVE_SAMPLE_RATE,
-                bits_per_sample=16,
-                device=_win_out_device,
-            )
-            if _win_out.open():
-                _use_win_audio = True
-                print(f"[ERIS] 🎧 Usando WinAudioOutput: {_win_out.device_name or _win_out_device}")
-            else:
-                print("[ERIS] ⚠️ WinAudioOutput no pudo abrir el dispositivo elegido; probando default")
-                _win_out = WinAudioOutput(channels=CHANNELS, samplerate=RECEIVE_SAMPLE_RATE, bits_per_sample=16)
-                if _win_out.open():
-                    _use_win_audio = True
-                    print(f"[ERIS] 🎧 Usando WinAudioOutput: {_win_out.device_name or '(default)'}")
-                else:
-                    _win_out = None
-        except Exception as _we:
-            print(f"[ERIS] ⚠️ WinAudioOutput no disponible: {_we}")
-            _win_out = None
+        _pa_proc = None
+        _pa_lock = _thr.Lock()
 
-        # Fallback: sounddevice
-        if not _use_win_audio:
+        def _paplayer_write(data):
             try:
-                speaker_device_idx = resolve_speaker()
-            except Exception:
-                speaker_device_idx = None
-            if speaker_device_idx is not None:
+                _pa_lock.acquire(timeout=2)
                 try:
-                    _speaker_name = sd.query_devices(speaker_device_idx)["name"]
-                except Exception:
-                    _speaker_name = ""
-            else:
-                _speaker_name = "(default)"
-            print(f"[ERIS] 🎧 Altavoz seleccionado: {speaker_device_idx} {_speaker_name}")
-            # ── Latencia más cómoda (180ms) para que PipeWire/pulse no se quede
-            #    sin buffer entre ráfagas → menos cortes y entrecortes ──
-            _open_kw = dict(
-                samplerate=RECEIVE_SAMPLE_RATE,
-                channels=CHANNELS,
-                dtype="int16",
-                latency=0.18,
-            )
-            try:
-                stream = sd.RawOutputStream(device=speaker_device_idx, **_open_kw)
+                    if _pa_proc and _pa_proc.stdin and not _pa_proc.stdin.closed:
+                        try:
+                            _pa_proc.stdin.write(data)
+                            _pa_proc.stdin.flush()
+                        except (BrokenPipeError, OSError):
+                            pass
+                finally:
+                    _pa_lock.release()
             except Exception:
-                print(f"[ERIS] ⚠️ Fallback: usando altavoz con blocksize por defecto")
-                try:
-                    stream = sd.RawOutputStream(device=speaker_device_idx,
-                                                samplerate=RECEIVE_SAMPLE_RATE,
-                                                channels=CHANNELS, dtype="int16",
-                                                blocksize=PLAY_CHUNK_SIZE)
-                except Exception:
-                    print(f"[ERIS] ⚠️ Fallback: altavoz default")
-                    stream = sd.RawOutputStream(device=None, channels=CHANNELS,
-                                                samplerate=RECEIVE_SAMPLE_RATE,
-                                                dtype="int16", blocksize=PLAY_CHUNK_SIZE)
-            stream.start()
+                pass
 
-        def _write_audio(data: bytes):
-            if _use_win_audio:
-                _win_out.write(data)
-            else:
-                stream.write(data)
-            # Alimentar el orbe con el volumen real de la voz de ERIS
+        def _paplayer_stop():
+            nonlocal _pa_proc
             try:
-                arr = np.frombuffer(data, dtype=np.int16)
-                if arr.size:
-                    rms = float(np.sqrt(np.mean(arr.astype(np.float32) ** 2))) / 32768.0
-                    self.ui.set_audio_level(min(1.0, rms * 12))
+                _pa_lock.acquire(timeout=2)
+                try:
+                    if _pa_proc:
+                        try:
+                            _pa_proc.stdin.close()
+                        except Exception:
+                            pass
+                        try:
+                            _pa_proc.terminate()
+                            _pa_proc.wait(timeout=2)
+                        except Exception:
+                            _pa_proc.kill()
+                finally:
+                    _pa_lock.release()
+                    _pa_proc = None
             except Exception:
                 pass
 
         try:
-            # ── Corte de seguridad: si ERIS emite audio continuo más de
-            #    max_speech_seconds (default 120s, configurable en api_keys.json),
-            #    se corta por si el modelo entró en un bucle de voz infinito.
-            #    El timer se mide desde el ÚLTIMO chunk, no el primero, para
-            #    no cortar respuestas largas que siguen generando audio. ──
+            _pa_proc = _sp.Popen(
+                ["pacat", "--rate=16000",
+                 "--format=S16LE", "--channels=1"],
+                stdin=_sp.PIPE, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL,
+            )
+            print("[ERIS] 🎧 Audio: pacat iniciado (PulseAudio)")
+        except Exception as e:
+            print(f"[ERIS] ⚠️ pacat no disponible ({e})")
+            _pa_proc = None
+
+        def _write_audio(data):
+            if _pa_proc is not None:
+                _paplayer_write(data)
+                try:
+                    import numpy as _np
+                    arr = _np.frombuffer(data, dtype=_np.int16)
+                    if arr.size:
+                        rms = float(_np.sqrt(_np.mean(arr.astype(_np.float32) ** 2))) / 32768.0
+                        self.ui.set_audio_level(min(1.0, rms * 12))
+                except Exception:
+                    pass
+            else:
+                self.ui.set_audio_level(0)
+
+        async def _audio_loop():
+            import collections
             _max_speech = 30.0
             try:
-                # Cache: only read once, not every 50ms timeout
-                if not hasattr(self, '_cached_max_speech'):
+                if not hasattr(self, "_cached_max_speech"):
                     _cfg = json.loads(
-                        (Path(__file__).resolve().parent / "config" / "api_keys.json")
-                        .read_text(encoding="utf-8"))
-                    self._cached_max_speech = float(_cfg.get("max_speech_seconds", 120.0))
-                _max_speech = self._cached_max_speech
+                        (Path(__file__).resolve().parent / "config" / "api_keys.json").read_text(encoding="utf-8")
+                    )
+                    _ms = float(_cfg.get("max_speech_duration", 30.0) or 30.0)
+                    if 0.1 <= _ms <= 120.0:
+                        _max_speech = _ms
+                    self._cached_max_speech = _max_speech
             except Exception:
                 pass
-            _speech_last_chunk = None
-            # ── Jitter buffer: acumular ~250ms antes de empezar a escribir ──
-            #    El audio de Gemini llega en ráfagas; sin este "preroll", la
-            #    salida arranca a trompicones y se corta el comienzo de cada
-            #    frase. Una vez iniciado, escribe directo (la latencia de la
-            #    stream amortigua las ráfagas restantes).
-            _PREROLL_MS = 250
-            _preroll = b""
-            _preroll_started = None
-            _preroll_max = int(RECEIVE_SAMPLE_RATE * 2 * _PREROLL_MS / 1000)
-            _preroll_flush_s = 0.6
-            _playing = False
 
-            def _reset_preroll():
-                nonlocal _preroll, _preroll_started, _playing
-                _preroll = b""
-                _preroll_started = None
-                _playing = False
+            print(f"[ERIS] ⏱ Modo voz: max_speech={_max_speech:.1f}s")
+            _last_ts = time.time()
+            _silence_runs = 0
+            _silence_sec = 0.0
+            _recent_rms = collections.deque([40.0] * 5, maxlen=5)
+            _lastspeak = 0.0
+            _session_ready = asyncio.Event()
+            if hasattr(self, '_session_ready') and self._session_ready is not None:
+                _session_ready = self._session_ready
+            _stop_req = getattr(self, '_stop_requested', None)
+
+            print(f"[ERIS] ⏱ Reproduciendo audio desde cola (paplay)...")
+
+            while not _session_ready.is_set():
+                try:
+                    await asyncio.wait_for(_session_ready.wait(), timeout=0.1)
+                    break
+                except asyncio.TimeoutError:
+                    pass
 
             while True:
-                try:
-                    chunk = await asyncio.wait_for(
-                        self.audio_in_queue.get(),
-                        timeout=0.05
-                    )
-                except asyncio.TimeoutError:
-                    # Si quedó preroll sin completar (frase muy corta), soltarlo
-                    if _preroll and _preroll_started and (time.time() - _preroll_started) > _preroll_flush_s:
-                        _write_audio(_preroll)
-                        _preroll = b""
-                        _preroll_started = None
-                        _playing = True
-                    if self._turn_done_event and self._turn_done_event.is_set():
-                        if self.audio_in_queue.empty():
-                            if not hasattr(self, '_queue_empty_since') or self._queue_empty_since is None:
-                                self._queue_empty_since = time.time()
-                            elif (time.time() - self._queue_empty_since) > 0.05:
-                                self.set_speaking(False)
-                                self._turn_done_event.clear()
-                                self._queue_empty_since = None
-                                _speech_last_chunk = None
-                                _reset_preroll()
-                        else:
-                            self._queue_empty_since = None
-                    continue
-
-                # ── Corte de seguridad: si el audio va mas de max_speech_seconds
-                #    sin pausas, cortar para evitar loop infinito de sonido ──
-                if _speech_last_chunk and (time.time() - _speech_last_chunk) > _max_speech:
-                    print(f"[ERIS] ✂️ Audio cortado: mas de {_max_speech}s de audio continuo")
-                    self.ui.write_log(f"SYS: Audio cortado (max {_max_speech}s)")
-                    # Drain remaining audio from queue
-                    while not self.audio_in_queue.empty():
-                        try:
-                            self.audio_in_queue.get_nowait()
-                        except Exception:
-                            break
-                    if self._turn_done_event:
-                        self._turn_done_event.set()
-                    _reset_preroll()
+                if _stop_req and _stop_req.is_set():
+                    print("[ERIS] ⏹ Play thread: stop requestado")
                     break
 
-                _speech_last_chunk = time.time()
-                self.set_speaking(True)
-                # ── Preroll: acumular antes de soltar el primer chunk ──
-                if not _playing:
-                    if not _preroll_started:
-                        _preroll_started = time.time()
-                    _preroll += chunk
-                    if len(_preroll) >= _preroll_max or (time.time() - _preroll_started) > _preroll_flush_s:
-                        _write_audio(_preroll)
-                        _preroll = b""
-                        _preroll_started = None
-                        _playing = True
+                try:
+                    _pcm_raw = await asyncio.wait_for(self.audio_in_queue.get(), timeout=0.5)
+                except asyncio.TimeoutError:
+                    continue
+                except asyncio.CancelledError:
+                    break
+                except Exception as _qerr:
+                    # La cola puede estar rota tras reconexión — reintentar en 0.3s
+                    await asyncio.sleep(0.3)
+                    continue
+
+                if _pcm_raw is None:
+                    continue
+
+                try:
+                    _pcm = base64.b64decode(_pcm_raw) if isinstance(_pcm_raw, str) else _pcm_raw
+                except Exception:
+                    continue
+
+                if len(_pcm) < 8:
+                    continue
+
+                _now = time.time()
+                if _now - _last_ts > 2.0:
+                    _last_ts = _now
+
+                _write_audio(_pcm)
+
+                # Detección de voz: rms del paquete recién jugado
+                try:
+                    _f32 = _np.frombuffer(_pcm, dtype=_np.int16).astype(_np.float32) / 32768.0
+                    if _f32.size:
+                        _rms = float(_np.sqrt(_np.mean(_f32 ** 2)))
+                        _recent_rms.append(_rms)
+                        _lastspeak = _now
+                except Exception:
+                    pass
+
+                _avg = float(_np.mean(_recent_rms))
+                if _avg < 0.001:
+                    _silence_sec += 0.032
+                    if _silence_sec > 0.30:
+                        _silence_runs += 1
+                    else:
+                        _silence_runs = max(0, _silence_runs - 1)
                 else:
-                    _write_audio(chunk)
-        except Exception as e:
-            print(f"[ERIS] ❌ Play: {e}")
-            raise
-        finally:
-            self.set_speaking(False)
-            if _use_win_audio:
-                _win_out.flush()
-                _win_out.close()
-            else:
-                stream.stop()
-                stream.close()
+                    _silence_sec = 0.0
+                    _silence_runs = max(0, _silence_runs - 1)
+
+                if _silence_runs >= 10:
+                    print("[ERIS] ⏱ Silencio prolongado — finalizando")
+                    try:
+                        _play_seconds = max(0.0, _now - _lastspeak)
+                        if _play_seconds > 1.5:
+                            _ring = (_np.sin(2.0 * _np.pi * 440.0 * _np.arange(int(0.25 * 24000.0))) * 2000.0).astype(_np.int16)
+                            _write_audio(_ring.tobytes())
+                        self.set_speaking(True)
+                        await self._finalize_and_respond()
+                        self.set_speaking(False)
+                    except Exception as _fx:
+                        print(f"[ERIS] ⚠️ Error al finalizar: {_fx}")
+                    _silence_runs = 0
+                    _silence_sec = 0.0
+                    break
+
+                if _now - _lastspeak > _max_speech + 4.0:
+                    print(f"[ERIS] ⏱ Limite de voz ({_max_speech:.1f}s) alcanzado")
+                    try:
+                        self.set_speaking(True)
+                        await self._finalize_and_respond()
+                        self.set_speaking(False)
+                    except Exception as _fx2:
+                        print(f"[ERIS] ⚠️ Error timeout: {_fx2}")
+                    _silence_runs = 0
+                    _silence_sec = 0.0
+                    break
+
+            print("[ERIS] 🔇 Play thread: fin del loop de audio (cleanup)")
+            try:
+                _paplayer_stop()
+            except Exception:
+                pass
+
+        await _audio_loop()
 
     async def run(self):
-        # ── Modo local: voz 100% local (Vosk + GeminiTextChat + Edge TTS).
-        #    NO se conecta a Gemini Live. GeminiTextChat usa la API regular
-        #    con 358 tools para ejecutar comandos del usuario.
-        if getattr(self, "_voice_mode", "cloud") == "local":
-            # Wire GeminiTextChat into offline pipeline (replaces Ollama)
-            if self._offline_pipeline and self._gemini_text_chat:
-                def _local_chat(text: str) -> str:
-                    return self._gemini_get_response(text)
-                self._offline_pipeline.set_chat_fn(_local_chat)
-                print("[ERIS] 🧠 Chat local: GeminiTextChat (358 tools)")
-            if self._offline_pipeline:
-                try:
-                    self._offline_pipeline.start()
-                    print("[ERIS] 🎤 Voz local activa (Vosk + GeminiTextChat). Mantené ESPACIO para hablar.")
-                    self.ui.write_log("SYS: 🎤 Voz local activa. Mantené ESPACIO para hablar, o escribime.")
-                except Exception as _ve:
-                    print(f"[ERIS] Voz local start: {_ve}")
-            # Keep running forever — don't attempt Gemini Live
-            while True:
-                await asyncio.sleep(60)
-
-        # ── Check connectivity before attempting Gemini ──
         if self._connectivity:
             if not self._connectivity.is_online():
-                print("[ERIS] 🔴 Sin internet detectado. Iniciando modo OFFLINE...")
-                self.ui.write_log("SYS: 🔴 Sin internet. Modo OFFLINE activado.")
+                print("[ERIS] \U0001f534 Sin internet detectado. Iniciando modo OFFLINE...")
+                self.ui.write_log("SYS: \U0001f534 Sin internet. Modo OFFLINE activado.")
                 self._fallback_mode = True
                 if self._offline_pipeline:
                     self._offline_pipeline.start()
                 # In offline mode, just wait for connectivity changes
                 while not self._connectivity.is_online():
                     await asyncio.sleep(2)
-                print("[ERIS] 🟢 Internet restaurado. Conectando a Gemini...")
-                self.ui.write_log("SYS: 🟢 Internet restaurado. Conectando a Gemini...")
+                print("[ERIS] \U0001f7e2 Internet restaurado. Conectando a Gemini...")
+                self.ui.write_log("SYS: \U0001f7e2 Internet restaurado. Conectando a Gemini...")
 
         client = genai.Client(
             api_key=get_api_key(),
@@ -4562,13 +4677,26 @@ class ErisLive:
                                 print("[ERIS] Telegram bridge activo")
                         except Exception as _tge:
                             print(f"[ERIS] Telegram bridge init error: {_tge}")
-                        # Start opencode bridge (ayuda mutua con opencode)
+                        # ═══════════════════════════════════════════════════════════
+                        # Start HERMES bridge (ayuda mutua ERIS ↔ Hermes/Solar)
+                        # DESDE VERSIÓN 2.0: puente con opencode DESACTIVADO para
+                        # evitar consumo de tokens. ERIS ahora consulta directamente
+                        # a Hermes (Solar Pro 4) cuando necesita ayuda, aprender,
+                        # o reportar bugs/errores.
+                        # ═══════════════════════════════════════════════════════════
                         try:
-                            from core.opencode_bridge import start_bridge
-                            start_bridge()
-                            print("[ERIS] ◈ Puente con opencode activo en :6789")
-                        except Exception as _obe:
-                            print(f"[ERIS] opencode bridge init error: {_obe}")
+                            from core.hermes_bridge import start_bridge as start_hermes_bridge
+                            start_hermes_bridge()
+                            print("[ERIS] ◈ Puente con Hermes/Solar activo en :6790")
+                        except Exception as _hbe:
+                            print(f"[ERIS] Hermes bridge init error: {_hbe}")
+                        # ═══════════════════════════════════════════════════════════
+                        # OpenCode bridge: DESACTIVADO (gasta tokens → se usa Hermes)
+                        # Si en el futuro se reactiva, descomentar las líneas abajo:
+                        #   from core.opencode_bridge import start_bridge
+                        #   start_bridge()
+                        #   print("[ERIS] ◈ Puente con opencode activo en :6789")
+                        # ═══════════════════════════════════════════════════════════
                         # Auto morning brief (6am–12pm, once per day)
                         _hour = __import__("datetime").datetime.now().hour
                         if 6 <= _hour < 12 and not already_briefed_today():
@@ -4879,11 +5007,9 @@ def main():
     global _single_instance_mutex
     _single_instance_mutex = None
     if os.name == "nt":
-        import ctypes
         try:
-            _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
             _single_instance_mutex = _kernel32.CreateMutexW(None, False, "ERIS_AI_SINGLE_INSTANCE_MUTEX_v2")
-            if ctypes.get_last_error() == 183: # ERROR_ALREADY_EXISTS
+            if _single_instance_mutex and _kernel32.GetLastError() == 183:  # ERROR_ALREADY_EXISTS
                 print("[ERIS] Ya hay una instancia en ejecución. Cerrando.")
                 sys.exit(0)
         except Exception as _lock_e:
@@ -5094,11 +5220,8 @@ def main():
             # B. Win32 Native Global Hotkey Hook (for background capture)
             def setup_global_hotkey():
                 import threading
-                import ctypes
-                import ctypes.wintypes
 
                 def hotkey_thread():
-                    user32 = ctypes.windll.user32
                     # MOD_NOREPEAT = 0x4000
                     # VK_INSERT = 0x2D
                     try:
@@ -5110,14 +5233,10 @@ def main():
                         return
 
                     try:
-                        msg = ctypes.wintypes.MSG()
-                        while user32.GetMessageW(ctypes.byref(msg), None, 0, 0) != 0:
                             if msg.message == 0x0312: # WM_HOTKEY
                                 if msg.wParam == 99:
                                     # Thread-safely trigger UI callback inside PyQt event loop
                                     QTimer.singleShot(0, on_shortcut_triggered)
-                            user32.TranslateMessage(ctypes.byref(msg))
-                            user32.DispatchMessageW(ctypes.byref(msg))
                     finally:
                         user32.UnregisterHotKey(None, 99)
 

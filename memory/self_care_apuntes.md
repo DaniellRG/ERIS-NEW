@@ -96,3 +96,27 @@
 
 ## 2026-09-12 18:48:00 · config
 - no puedo inventar estas claves: ['tts_voice']
+
+## 2026-09-19 07:42:56 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 18:10:15 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 18:18:15 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 18:26:20 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 18:34:06 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 18:44:18 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 19:36:19 · config
+- no puedo inventar estas claves: ['speaker_device']
+
+## 2026-09-19 19:42:37 · config
+- no puedo inventar estas claves: ['speaker_device']

@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central y los criterios de éxito con un documento de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificá restricciones operativas, dependencias críticas y recursos disponibles [RIESGO: supuestos no validados pueden invalidar el cronograma].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá el objetivo en entregables específicos y secuenciales usando una estructura de desglose del trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigná responsables, herramientas y presupuesto estimado a cada tarea con una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecé el cronograma con hitos de control y plazos límite usando un diagrama de Gantt [RIESGO: subestimación de tiempos en la ruta crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Diseñá protocolos de contingencia y mitigación para los riesgos de alto impacto detectados.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validá y aprobá la línea base del plan con los líderes de la misión antes de la ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1790826154.1492634
+}

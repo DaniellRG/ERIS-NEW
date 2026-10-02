@@ -1,7 +1,7 @@
 """actions/sub_agent_manager.py — Tool oficial 'agente_sub' de ERIS.
 
 Eris administra SU tripulación de sub-agentes especializados desde este tool:
-  - listar/status: ver los 19 sub-agentes y su estado
+  - listar/status: ver los 25 sub-agentes y su estado
   - delegar: enrutar una tarea al mejor sub-agente (dispatch_to_sub_agent)
   - planificar: MissionPlanner descompone un objetivo
   - ejecutar[agent]: crear tarea para un sub-agente concreto y correrla

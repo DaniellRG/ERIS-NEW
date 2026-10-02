@@ -7,6 +7,23 @@ contenido, solo títulos/procesos), clasifica qué está haciendo, detecta
 eventos significativos (arrancó a programar, abrió un proyecto, cambió de
 programa, lleva tiempo laburando) y los expone para que ERIS pueda hablar
 espontáneamente como quien acompaña desde el costado.
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = __WIN32
+    _KERNEL32 = __KERNEL32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 Diseño:
   * Poll liviano con ctypes (sin dependencias), ventana en foco por llamada.
@@ -37,8 +54,8 @@ _BASE = Path(__file__).resolve().parent.parent
 _STATE_FILE = _BASE / "memory" / "observer.json"
 
 if os.name == "nt":
-    _U32 = ctypes.windll.user32
-    _PID = ctypes.windll.kernel32
+    _U32 = _WIN32
+    _PID = _KERNEL32
 else:
     _U32 = None
     _PID = None

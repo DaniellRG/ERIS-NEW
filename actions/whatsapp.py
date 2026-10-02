@@ -9,6 +9,23 @@ try:
     import pyautogui
 except Exception:
     pyautogui = None
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = __WIN32
+    _KERNEL32 = __KERNEL32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CONTACTS_FILE = BASE_DIR / "config" / "whatsapp_contacts.json"
@@ -168,16 +185,16 @@ def whatsapp(parameters: dict, player=None) -> str:
                 output.close()
                 
                 # Windows clipboard API calls
-                ctypes.windll.user32.OpenClipboard(None)
-                ctypes.windll.user32.EmptyClipboard()
+                _WIN32.OpenClipboard(None)
+                _WIN32.EmptyClipboard()
                 # CF_DIB = 8
-                ctypes.windll.user32.SetClipboardData(8, ctypes.windll.kernel32.GlobalAlloc(0x0002, len(data)))
+                _WIN32.SetClipboardData(8, _KERNEL32.GlobalAlloc(0x0002, len(data)))
                 # Copy the BMP binary data to allocated memory
-                h_clip_mem = ctypes.windll.user32.GetClipboardData(8)
-                p_clip_mem = ctypes.windll.kernel32.GlobalLock(h_clip_mem)
+                h_clip_mem = _WIN32.GetClipboardData(8)
+                p_clip_mem = _KERNEL32.GlobalLock(h_clip_mem)
                 ctypes.cdll.msvcrt.memcpy(p_clip_mem, data, len(data))
-                ctypes.windll.kernel32.GlobalUnlock(h_clip_mem)
-                ctypes.windll.user32.CloseClipboard()
+                _KERNEL32.GlobalUnlock(h_clip_mem)
+                _WIN32.CloseClipboard()
                 
                 time.sleep(1.0)
                 # Paste the copied image

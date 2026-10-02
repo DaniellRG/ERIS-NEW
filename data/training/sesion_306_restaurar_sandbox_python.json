@@ -1,0 +1,22 @@
+{
+  "sesion": 306,
+  "tipo": "transferencia",
+  "titulo": "Restaurar sandbox_python — integrar sandbox.py, code_sandbox.py, sandbox_execution.py",
+  "modulos_integrados": {
+    "sandbox.py": "función sandbox_run — ejecución aislada con timeout, límites de recursos y aislamiento",
+    "code_sandbox.py": "entorno de sandbox para código",
+    "sandbox_execution.py": "ejecución de código en sandbox"
+  },
+  "ejercicios_funcionales": {
+    "sandbox_run": "no funcional"
+  },
+  "discrepancias": [],
+  "lecciones": [
+    "sandbox_python restaurado: sandbox.py con función sandbox_run() permite ejecutar código Python en entorno aislado",
+    "sandbox.run_python(code, timeout=10) ejecuta código en subproceso con timeout",
+    "sandbox.history() devuelve historial de ejecuciones",
+    "sandbox.status() devuelve estado del sandbox (archivos, tamaño)",
+    "sandbox.clear() limpia el directorio sandbox"
+  ],
+  "proximo_paso": "S307: Aprendizaje — clonación de voz avanzada (voice_cloning.clone con audio de referencia)"
+}

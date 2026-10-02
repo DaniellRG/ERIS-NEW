@@ -1,0 +1,81 @@
+{
+  "sesion": 293,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo — profundizar dominio testing/calidad + automatización",
+  "herramientas_estudiadas": {
+    "test_generator": "disponible",
+    "code_analyzer": "disponible",
+    "code_review": "disponible",
+    "deep_research": "disponible",
+    "sandbox_python": "no disponible"
+  },
+  "acciones_descubiertas": {
+    "test_generator": [
+      "coverage",
+      "generate",
+      "run",
+      "scan",
+      "suggestions"
+    ],
+    "code_analyzer": [
+      "bandit",
+      "fix",
+      "full_scan",
+      "info",
+      "install_tools",
+      "jscpd",
+      "mypy",
+      "pip_audit",
+      "pylint",
+      "quick_scan",
+      "radon",
+      "ruff"
+    ],
+    "code_review": [
+      "history",
+      "pr",
+      "quick",
+      "review",
+      "review_diff",
+      "security",
+      "stats",
+      "style"
+    ],
+    "deep_research": [
+      "count",
+      "num_results",
+      "query",
+      "search",
+      "text",
+      "title"
+    ]
+  },
+  "procedimiento_aplicado": [
+    "Elegir herramientas con justificación (S258-S292 consolidado)",
+    "Explorar ecosistema disponibles (S258, S273, S276)",
+    "Verificar API: firma + código fuente + acciones extraídas (S244)",
+    "Ejecutar ejercicios con acciones correctas, sin asumir (S258-S292)",
+    "Manejar errores como parte del aprendizaje (S258, S266)",
+    "Integrar con memory_system (S248)",
+    "Documentar discrepancias (S260, S261)",
+    "Reflexionar sobre el ciclo (S268-S291)",
+    "Proponer acciones para siguientes pasos (S268-S291)"
+  ],
+  "ejercicios_funcionales": {
+    "test_generator": "coverage (511 modules sin tests), suggestions (code.tool_registry)",
+    "code_analyzer": "info, full_scan (diagnostico_sesion_292.py)",
+    "code_review": "quick (diagnostico_sesion_292.py)",
+    "deep_research": "search (query: 'ERIS testing calidad código validación')",
+    "sandbox_python": "list"
+  },
+  "lecciones": [
+    "5 herramientas de testing/calidad exploradas, 4 disponibles",
+    "test_generator coverage: detecta 511 módulos sin tests — priorizar testing",
+    "code_analyzer full_scan: valida calidad del código de diagnosticos",
+    "deep_research: multi-dominio, search retorna resultados con relevance scores",
+    "El procedimiento de 9 pasos valida consistentemente herramientas de testing",
+    "sandbox_python permite ejecución aislada de códigos"
+  ],
+  "proximo_paso": "S294 (N4_e1 — reflexión): ciclo S292-S293 + estado general del sistema",
+  "memory_error": "no disponible"
+}

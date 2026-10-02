@@ -1,0 +1,29 @@
+{
+  "sesion": 308,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: integración de voz con otras herramientas (real_time_tts + code_generator + document_creator + text_summarizer)",
+  "herramientas_integradas": {
+    "real_time_tts + code_generator": "generar código + anunciar con voz",
+    "document_creator + voice_profile": "crear documento + anunciar con voz",
+    "text_summarizer + real_time_tts": "resumir + hablar resumen",
+    "voice_profile + real_time_tts + code_generator": "perfil rápido + generar código + anunciar"
+  },
+  "ejercicios_funcionales": {
+    "integracion_1": "code_generator.generate + real_time_tts.speak",
+    "integracion_2": "document_creator.create + real_time_tts.speak",
+    "integracion_3": "text_summarizer.summarize + real_time_tts.speak",
+    "integracion_4": "voice_profile.set + real_time_tts.speak + code_generator.generate"
+  },
+  "discrepancias": [
+    "document_creator puede no estar disponible (openpyxl/python-docx no instalados)",
+    "text_summarizer puede no estar disponible en todas las instalaciones"
+  ],
+  "lecciones": [
+    "La integración cross-domain de voz es posible y funcional",
+    "real_time_tts.speak() es el puente universal para añadir voz a cualquier herramienta",
+    "voice_profile permite configurar perfiles de voz reutilizables",
+    "code_generator + voz: flujo completo generar+anunciar",
+    "text_summarizer + voz: resumen hablado para accesibilidad"
+  ],
+  "proximo_paso": "S309 (aprendizaje): personalización avanzada de voz (voice_profile params, real_time_tts speed/pitch/volume avanzado)"
+}

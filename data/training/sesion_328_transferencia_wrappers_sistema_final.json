@@ -1,0 +1,78 @@
+{
+  "sesion": 328,
+  "tipo": "transferencia",
+  "titulo": "Transferencia: registrar herramientas de sistema faltantes (6/6 disponibles, 4✓/0✗)",
+  "dominio": "Sistema operativo (Linux Arch)",
+  "wrappers_creados": [
+    {
+      "nombre": "network_manager",
+      "archivo": "tools/network_manager.py",
+      "registro": "core/tool_registry.py → tools.network_manager.tool_handler",
+      "acciones": [
+        "list_interfaces",
+        "interface_info",
+        "ping",
+        "dns_lookup",
+        "wifi_status",
+        "ip_info",
+        "status"
+      ],
+      "backend": "nmcli, ip, ping, socket",
+      "funcionando": true
+    },
+    {
+      "nombre": "terminal_commands",
+      "archivo": "tools/terminal_commands.py",
+      "registro": "core/tool_registry.py → tools.terminal_commands.tool_handler",
+      "acciones": [
+        "exec",
+        "info",
+        "list_tools",
+        "status"
+      ],
+      "backend": "subprocess",
+      "funcionando": true
+    },
+    {
+      "nombre": "file_system",
+      "archivo": "tools/file_system.py",
+      "registro": "core/tool_registry.py → tools.file_system.tool_handler",
+      "acciones": [
+        "list",
+        "info",
+        "copy",
+        "move",
+        "delete",
+        "disk_usage",
+        "find",
+        "status"
+      ],
+      "backend": "pathlib, shutil",
+      "funcionando": true
+    }
+  ],
+  "estado_herramientas_sistema": {
+    "system_monitor": "DISPONIBLE",
+    "process_manager": "DISPONIBLE",
+    "network_manager": "DISPONIBLE",
+    "desktop_notifications": "DISPONIBLE",
+    "terminal_commands": "DISPONIBLE",
+    "file_system": "DISPONIBLE"
+  },
+  "herramientas_disponibles": 6,
+  "herramientas_totales": 6,
+  "todas_disponibles": true,
+  "integracion_voz": {
+    "system_monitor": "anuncia recursos del sistema (CPU, RAM)",
+    "network_manager": "anuncia interfaces de red e IP",
+    "terminal_commands": "anuncia resultados de comandos",
+    "file_system": "anuncia uso de disco"
+  },
+  "aprendizaje": {
+    "wrappers_python": true,
+    "registro_tool_registry": true,
+    "todas_herramientas_sistema": true,
+    "voz_integrada": true,
+    "proximo_paso": "S329: Verificación final del sistema completo (S1-S328)"
+  }
+}

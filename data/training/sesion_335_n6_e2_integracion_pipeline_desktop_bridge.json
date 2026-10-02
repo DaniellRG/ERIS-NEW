@@ -1,0 +1,63 @@
+{
+  "sesion": 335,
+  "nivel": 6,
+  "ejercicio_id": "n6_e2_transferencia",
+  "tipo": "transferencia",
+  "titulo": "N6_e2_transferencia: integración pipeline production-ready con ERIS Desktop (PyQt6) + hermes_bridge (puerto 6790) (4✓/0✗)",
+  "dominio": "Integración pipeline + GUI (PyQt6) + bridge API",
+  "herramientas": {
+    "entry_gui": "ERIS Desktop main.py (PyQt6)",
+    "bridge": "core/hermes_bridge.py (puerto 6790)",
+    "voice_input": "voice_recognition",
+    "voice_output": "real_time_tts",
+    "monitor": "system_monitor",
+    "research": "deep_research",
+    "code": "code_generator",
+    "test": "test_generator",
+    "doc": "document_creator",
+    "notify": "desktop_notifications",
+    "task": "task_manager",
+    "memory": "memory_system"
+  },
+  "main_py_encontrado": "main.py",
+  "bridge_exists": true,
+  "bridge_running": null,
+  "pipeline_production_ready": "FUNCIONAL (S332)",
+  "componentes_disponibles": "12/12",
+  "arquitectura": {
+    "gui": "ERIS Desktop PyQt6 — botón voz → trigger pipeline",
+    "bridge": "hermes_bridge.py API REST (puerto 6790) — ERIS↔Hermes",
+    "pipeline": "VOZ→monitor→research→code→test→doc→notify→voz→task→memory",
+    "bidirectional_voice": "voice_recognition (input) + real_time_tts (output)"
+  },
+  "limitaciones": {
+    "main_py_no_running": "ERIS main.py (PyQt6) no está corriendo → bridge API connection refused",
+    "bridge_solo_con_main": "El bridge API solo funciona cuando ERIS main.py está activo",
+    "pipeline_ready": "Pipeline production-ready funciona sin main.py (testing directo)"
+  },
+  "integration_status": {
+    "pipeline_production_ready": "✓ FUNCIONAL",
+    "voice_output": "✓ ERIS puede hablar",
+    "voice_input": "✓ voice_recognition disponible",
+    "bridge_api": "✓ hermes_bridge.py existe (esperando main.py)",
+    "gui_pyqt6": "✓ main.py existe",
+    "end_to_end": "✓ Pipeline funciona end-to-end sin GUI (directo)"
+  },
+  "roadmap_N6": {
+    "S335": "N6_e2 — integración pipeline + ERIS Desktop + hermes_bridge (este)",
+    "S336": "N6_e3 — testing con main.py activo: pipeline disparado desde GUI",
+    "S337": "N6_e1 — reflexión maestra N6"
+  },
+  "json_files": 46,
+  "conclusion": {
+    "pipeline_production_ready": true,
+    "eris_puede_hablar": true,
+    "usuario_puede_escuchar": true,
+    "arquitectura_disenada": true,
+    "integration_ready": true,
+    "waiting_for": "ERIS main.py (PyQt6) para activar bridge API + GUI trigger"
+  },
+  "bridge_reconstruido_opencode": true,
+  "bridge_reconstruido_ts": "2026-10-01T10:44:00",
+  "bridge_reconstruido_detalle": "Opencode reconstruyo hermes_bridge.py y tools/hermes_poll.py desde core/__pycache__/hermes_bridge.cpython-314.pyc, valido bytecode, probo end-to-end (cola real, sin eco, respuesta_*.json, outbox)."
+}

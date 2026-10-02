@@ -1,0 +1,56 @@
+{
+  "sesion": 324,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje: pipeline avanzado de sistema con IA y voz — 6 pasos, 3 dominios integrados (sistema + IA + voz) (4✓/0✗)",
+  "dominio": "Sistema operativo + IA + Voz",
+  "pipeline_avanzado": {
+    "pasos": 6,
+    "pasos_correctos": 6,
+    "herramientas": [
+      [
+        "system_monitor",
+        "Detectar recursos del sistema"
+      ],
+      [
+        "deep_research",
+        "Investigar problemas con IA"
+      ],
+      [
+        "real_time_tts",
+        "Anunciar recursos en voz"
+      ],
+      [
+        "code_generator",
+        "Generar script de monitoreo"
+      ],
+      [
+        "task_manager",
+        "Registrar pipeline como tarea"
+      ],
+      [
+        "desktop_notifications",
+        "Notificar al usuario + voz"
+      ]
+    ],
+    "dominios_integrados": [
+      "sistema operativo",
+      "IA (deep_research, code_generator)",
+      "voz (real_time_tts)"
+    ],
+    "autonomia": "system_monitor detecta → deep_research investiga → code_generator resuelve"
+  },
+  "aprendizaje": {
+    "pipeline_avanzado_con_ia": true,
+    "pipeline_autonomo_combinado": true,
+    "dominios_integrados": [
+      "sistema",
+      "IA",
+      "voz"
+    ],
+    "voz_integrada_en_pipeline": true,
+    "notificaciones_visuales": true,
+    "codigo_generado": true,
+    "tarea_registrada": true,
+    "proximo_paso": "S325: Transferencia — aplicar pipeline avanzado a tareas del sistema"
+  }
+}

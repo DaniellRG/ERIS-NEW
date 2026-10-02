@@ -89,6 +89,123 @@
       "description": "hello world function",
       "created_at": "2026-08-08T19:15:04.636459",
       "run_count": 0
+    },
+    "af04fd19": {
+      "id": "af04fd19",
+      "filename": "script_20260930_173003.py",
+      "filepath": "ERIS_Scripts/script_20260930_173003.py",
+      "language": "python",
+      "description": "función para calcular factorial",
+      "created_at": "2026-09-30T17:30:03.921692",
+      "run_count": 0
+    },
+    "c100d5cb": {
+      "id": "c100d5cb",
+      "filename": "script_20260930_173003.py",
+      "filepath": "ERIS_Scripts/script_20260930_173003.py",
+      "language": "python",
+      "description": "lista de números primos hasta 100",
+      "created_at": "2026-09-30T17:30:03.924472",
+      "run_count": 0
+    },
+    "4cc971cb": {
+      "id": "4cc971cb",
+      "filename": "script_20260930_173544.py",
+      "filepath": "ERIS_Scripts/script_20260930_173544.py",
+      "language": "python",
+      "description": "script para calcular el factorial de un número",
+      "created_at": "2026-09-30T17:35:44.448618",
+      "run_count": 0
+    },
+    "f659f998": {
+      "id": "f659f998",
+      "filename": "script_20260930_173749.py",
+      "filepath": "ERIS_Scripts/script_20260930_173749.py",
+      "language": "python",
+      "description": "script para calcular el factorial de un número",
+      "created_at": "2026-09-30T17:37:49.682422",
+      "run_count": 0
+    },
+    "9a90f920": {
+      "id": "9a90f920",
+      "filename": "script_20260930_173936.py",
+      "filepath": "ERIS_Scripts/script_20260930_173936.py",
+      "language": "python",
+      "description": "pipeline cross-domain que usa system_monitor, voice_profile, real_time_tts, image_generator, test_generator, task_manager",
+      "created_at": "2026-09-30T17:39:36.462162",
+      "run_count": 0
+    },
+    "5b504861": {
+      "id": "5b504861",
+      "filename": "script_20260930_214544.py",
+      "filepath": "ERIS_Scripts/script_20260930_214544.py",
+      "language": "python",
+      "description": "Script que dice hola",
+      "created_at": "2026-09-30T21:45:44.351554",
+      "run_count": 0
+    },
+    "1034bbd7": {
+      "id": "1034bbd7",
+      "filename": "script_20260930_214722.py",
+      "filepath": "ERIS_Scripts/script_20260930_214722.py",
+      "language": "python",
+      "description": "Script que calcula factorial",
+      "created_at": "2026-09-30T21:47:22.314636",
+      "run_count": 0
+    },
+    "8c1e9cb1": {
+      "id": "8c1e9cb1",
+      "filename": "script_20260930_215145.py",
+      "filepath": "ERIS_Scripts/script_20260930_215145.py",
+      "language": "python",
+      "description": "Script que calcula el factorial de un número",
+      "created_at": "2026-09-30T21:51:45.991930",
+      "run_count": 0
+    },
+    "71433d0a": {
+      "id": "71433d0a",
+      "filename": "script_20260930_224750.py",
+      "filepath": "ERIS_Scripts/script_20260930_224750.py",
+      "language": "python",
+      "description": "Script de monitoreo de recursos del sistema (CPU, RAM, disco, red) para Linux Arch",
+      "created_at": "2026-09-30T22:47:50.660224",
+      "run_count": 0
+    },
+    "86ed0dcc": {
+      "id": "86ed0dcc",
+      "filename": "script_20260930_224955.py",
+      "filepath": "ERIS_Scripts/script_20260930_224955.py",
+      "language": "bash",
+      "description": "Script de limpieza de archivos temporales en Linux",
+      "created_at": "2026-09-30T22:49:55.150787",
+      "run_count": 0
+    },
+    "cde92671": {
+      "id": "cde92671",
+      "filename": "script_20260930_225006.py",
+      "filepath": "ERIS_Scripts/script_20260930_225006.py",
+      "language": "bash",
+      "description": "Script bash para limpiar archivos temporales en Linux Arch: journalctl, pip cache, thumbnails, logs antiguos",
+      "created_at": "2026-09-30T22:50:06.295334",
+      "run_count": 0
+    },
+    "794d99bb": {
+      "id": "794d99bb",
+      "filename": "script_20260930_225150.py",
+      "filepath": "ERIS_Scripts/script_20260930_225150.py",
+      "language": "python",
+      "description": "Script autónomo de monitoreo de sistema que detecta y reporta recursos",
+      "created_at": "2026-09-30T22:51:50.553070",
+      "run_count": 0
+    },
+    "42515d66": {
+      "id": "42515d66",
+      "filename": "script_20260930_225151.py",
+      "filepath": "ERIS_Scripts/script_20260930_225151.py",
+      "language": "python",
+      "description": "Script autónomo que monitorea CPU, RAM, disco y red del sistema, detecta anomalías, investiga con IA, genera reportes y anuncia en voz",
+      "created_at": "2026-09-30T22:51:51.058475",
+      "run_count": 0
     }
   }
 }

@@ -42,7 +42,25 @@ def get_obsidian_vault() -> Path:
 
 def setup_logging():
     """Redirect stdout/stderr to log file and suppress subprocess console windows."""
-    # ── Rotate oversized log & cleanup old backups ─
+    import logging as _logging
+    
+    _logging.basicConfig(level=_logging.WARNING, force=True)
+    
+    _ALSA_STDERR_RESTORED = None
+    
+    # ── Suppress ALSA/sounddevice stderr spam on Linux ────────────────────
+    _ALSA_STDERR_RESTORED = None
+
+    if sys.platform != "win32":
+        try:
+            _null_fd = os.open("/dev/null", os.O_WRONLY)
+            _dup_stderr = os.dup(2)
+            os.dup2(_null_fd, 2)
+            os.close(_null_fd)
+            _ALSA_STDERR_RESTORED = _dup_stderr
+        except Exception:
+            _ALSA_STDERR_RESTORED = None
+
     _MAX_LOG_MB = 2
     _rotate_msg = None
     try:
@@ -94,6 +112,14 @@ def setup_logging():
             print(_rotate_msg)
     except Exception:
         pass
+    finally:
+        # Restaurar stderr de ALSA si fue redirigido
+        if _ALSA_STDERR_RESTORED is not None:
+            try:
+                os.dup2(_ALSA_STDERR_RESTORED, 2)
+                os.close(_ALSA_STDERR_RESTORED)
+            except Exception:
+                pass
 
     # ── Suppress console windows from all child subprocesses ─────────────────
     if sys.platform == "win32":

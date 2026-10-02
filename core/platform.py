@@ -4,6 +4,23 @@ Detects the OS and provides unified interfaces for Windows and Linux.
 100% additive — Windows functionality is preserved, Linux is added.
 """
 from __future__ import annotations
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
 
 import os
 import shutil
@@ -388,7 +405,7 @@ def show_messagebox(title: str, message: str, icon: str = "info"):
                 "error": 0x10,
                 "question": 0x20,
             }
-            ctypes.windll.user32.MessageBoxW(
+            _WIN32.MessageBoxW(
                 0, message, title, icon_map.get(icon, 0x40)
             )
         except Exception:
@@ -415,7 +432,7 @@ def set_app_user_model_id(app_id: str = "ERIS.Assistant.v2.2.CrossPlatform"):
     if IS_WINDOWS:
         try:
             import ctypes
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+            _SHELL32.SetCurrentProcessExplicitAppUserModelID(app_id)
         except Exception:
             pass
 

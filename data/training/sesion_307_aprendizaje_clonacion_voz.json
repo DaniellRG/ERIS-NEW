@@ -1,0 +1,66 @@
+{
+  "sesion": 307,
+  "tipo": "aprendizaje",
+  "titulo": "Aprendizaje autónomo: clonación de voz avanzada (voice_cloning + voice_profile + real_time_tts)",
+  "herramientas_estudiadas": {
+    "voice_cloning": "4 acciones (clone, speak, status, voices) — edge-tts como backend",
+    "voice_profile": "4 acciones (list, params, set, status) — persistencia de perfiles",
+    "real_time_tts": "8 acciones (pause, queue, resume, speak, speed, status, stop, voice) — motor TTS"
+  },
+  "acciones_descubiertas": {
+    "voice_cloning": [
+      "clone",
+      "speak",
+      "status",
+      "voices"
+    ],
+    "voice_profile": [
+      "list",
+      "params",
+      "set",
+      "status"
+    ],
+    "real_time_tts": [
+      "pause",
+      "queue",
+      "resume",
+      "speak",
+      "speed",
+      "status",
+      "stop",
+      "voice"
+    ]
+  },
+  "ejercicios_funcionales": {
+    "voice_cloning_status": "True",
+    "voice_cloning_voices": "True",
+    "voice_profile_status": "True",
+    "voice_profile_params": "True",
+    "voice_cloning_clone": "True",
+    "voice_cloning_speak": "True",
+    "voice_profile_set": "True",
+    "voice_profile_list": "True",
+    "real_time_tts_speak": "True"
+  },
+  "resultados_clave": {
+    "edge_tts_instalado": true,
+    "total_voces_edge": 322,
+    "voces_espanol": 45,
+    "xtts_v2_disponible": false,
+    "python_version": "3.14 (XTTS requiere <3.12)"
+  },
+  "discrepancias": [
+    "XTTS v2 no disponible: Python 3.14 >= 3.12, requiere <3.12",
+    "voice_cloning fallback a edge-tts: funcional pero no es clonación real",
+    "voice_profile.set() no acepta parámetros rudos (necesita perfi_name)"
+  ],
+  "lecciones": [
+    "voice_cloning está disponible pero con limitaciones por Python 3.14",
+    "edge-tts proporciona 322 voces alternativas (45 español)",
+    "voice_profile permite persistencia de perfiles de voz",
+    "voice_cloning.clone() puede fallar si XTTS no está disponible",
+    "real_time_tts.speak() es el motor principal de síntesis de voz",
+    "La combinación voice_cloning + voice_profile + real_time_tts permite flujo completo de clonación"
+  ],
+  "proximo_paso": "S308 (transferencia): integración de voz con otras herramientas (text_generator, code_generator, document_creator con voz)"
+}

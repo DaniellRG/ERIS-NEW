@@ -5,13 +5,32 @@ ERIS recuerda que abrio, minimizo y cerro. Puede reportar su estado.
 import pygetwindow as gw
 import ctypes
 import json
+
+import platform as _plat
+_IS_WIN = _plat.system() == "Windows"
+if not _IS_WIN:
+    class _Noop:
+        def __call__(self, *a, **kw): return 0
+        def __getitem__(self, k): return _Noop()
+        def __getattr__(self, n): return _Noop()
+    _WIN32 = _Noop()
+    _KERNEL32 = _Noop()
+    _SHELL32 = _Noop()
+    _WINMM = _Noop()
+else:
+    import ctypes as _ctypes
+    _WIN32 = _ctypes.windll.user32
+    _KERNEL32 = _ctypes.windll.kernel32
+    _SHELL32 = _ctypes.windll.shell32
+    _WINMM = _ctypes.windll.winmm
+
 import subprocess
 import time
 import os
 from pathlib import Path
 from datetime import datetime
 
-_WIN32 = ctypes.windll.user32
+_WIN32 = _WIN32
 HWND_TOPMOST = -1
 HWND_NOTOPMOST = -2
 SW_MINIMIZE = 6
