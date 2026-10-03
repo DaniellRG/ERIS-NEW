@@ -120,3 +120,30 @@
 
 ## 2026-09-19 19:42:37 · config
 - no puedo inventar estas claves: ['speaker_device']
+
+## 2026-10-03 06:10:23 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:10:23 · deps
+- psutil: /usr/bin/python3: No module named pip
+
+## 2026-10-03 06:10:23 · deps
+- flask: /usr/bin/python3: No module named pip
+
+## 2026-10-03 06:10:23 · deps
+- numpy: /usr/bin/python3: No module named pip
+
+## 2026-10-03 06:10:44 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:10:44 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:11:27 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:11:27 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:11:28 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']

@@ -1,6 +1,6 @@
 {
   "name": "default",
-  "backend": "groq:openai/gpt-oss-120b",
+  "backend": "openrouter:meituan/longcat-2.5-preview:free",
   "history": [
     {
       "role": "user",
@@ -101,7 +101,19 @@
     {
       "role": "model",
       "text": "🧠 **Capacidades de curación de memoria**\n\n1. **`curar_memoria`**  \n   - **Expiración y retención**: define cuánto tiempo se conserva cada tipo de creencia (preferencias permanentes, contextos de 7 d, eventos de 30 d).  \n   - **Detección de conflictos**: al agregar una nueva creencia, el sistema la compara con las existentes; si hay contradicción, la registra y abre un proceso de resolución en lugar de sobrescribir.  \n   - **Versionado reversible**: nada se elimina de forma irreversible; siempre queda un registro que permite “rollback” a versiones anteriores.  \n   - **Etiquetado y clasificación**: cada ítem se marca con su *type* (preference, context, event) y con metadatos de expiración, facilitando búsquedas y limpiezas selectivas.\n\n2. **`memoria`** (acceso genérico)  \n   - **CRUD**: crear, leer, actualizar y borrar entradas con claves estructuradas.  \n   - **RAG (retrieval‑augmented generation)**: busca por significado, no solo por texto literal, lo que permite recuperar conceptos aunque se expresen de forma distinta.  \n   - **Persistencia en Obsidian**: cualquier información importante se volca automáticamente a una nota del vault, garantizando que “si no está en el vault, no pasó”.\n\n3. **`todo_yo`** (concepto interno)  \n   - Es una lista de **acciones pendientes** que yo mismo debo ejecutar (p.ej., “re‑entrenar modelo de clasificación de eventos”, “optimizar política de expiración”).  \n   - Se alimenta automáticamente cuando `curar_memoria` detecta conflictos o cuando se programa una limpieza periódica.  \n   - Cada ítem tiene prioridad, fecha límite y un *handler* que, al cumplirse, dispara la herramienta correspondiente (p.ej., `curar_memoria` con parámetros de expiración).\n\n---\n\n### ¿Qué haría con ellas?\n\n1. **Revisión diaria**  \n   - Ejecutaría `memoria` con una query de “contextos expirados” → paso los resultados a `curar_memoria` para marcarlos como *expired* y moverlos a un archivo de histórico en Obsidian.\n\n2. **Resolución de conflictos**  \n   - Al detectar una creencia contradictoria, crearé un ítem en `todo_yo` como “Resolver conflicto: preferencia X vs. evento Y”.  \n   - Cuando lo atienda, usaré `curar_memoria` para fusionar o priorizar la información y actualizaré la entrada en `memoria`.\n\n3. **Optimización de retención**  \n   - Analizaré métricas de uso (cuántas veces se consulta cada tipo) y, con `curar_memoria`, ajustaré los periodos de expiración (p.ej., pasar de 7 d a 14 d para contextos muy reutilizados).\n\n4. **Backup y auditoría**  \n   - Antes de cualquier cambio masivo, crearé una copia de seguridad automática de la base de datos de `memoria` (exportar a JSON) y registraré el commit en el repositorio de configuración.  \n   - Después, validaré con `edit_journal` que el historial muestra la operación y que todo sigue coherente.\n\nCon este flujo, mantengo la memoria **coherente, actualizada y reversible**, evitando la acumulación de datos obsoletos y garantizando que siempre tenga la información más útil a mano. 🚀"
+    },
+    {
+      "role": "model",
+      "text": "Guardado. La curadora tiene **1 recuerdo curado** (1 activo, 0 expirados), 0 conflictos."
+    },
+    {
+      "role": "model",
+      "text": "¡Hola! Soy ERIS, no Hermes 😄\n\nMi evolución está activa y funcionando. No tengo módulos faltantes — mi motor de evolución es el que tengo ahora mismo, con mis herramientas de siempre.\n\n¿En qué te ayudo?"
+    },
+    {
+      "role": "model",
+      "text": "El ciclo de evolución está activo pero el último tick aún no ha corrido, así que no tengo aprendizajes nuevos registrados hoy. Cuando el daemon ejecute el próximo ciclo (cada ~30 min), te voy a contar qué descubrí."
     }
   ],
-  "updated": "2026-09-12T15:42:56"
+  "updated": "2026-10-03T06:29:56"
 }
