@@ -636,15 +636,6 @@ _TOOLS = {
 
     # ERIS: memory_system (sync)
     "memory_system": ("tools.memory_system", "tool_handler"),
-
-    # ERIS: diagnostico_de_sesiones (sync)
-    "diagnostico_de_sesiones": ("tools.skills.diagnostico_de_sesiones", "tool_handler"),
-
-    # ERIS: namespace_organizer (sync)
-    "namespace_organizer": ("tools.skills.namespace_organizer", "tool_handler"),
-
-    # ERIS: planificador_de_sesiones (sync)
-    "planificador_de_sesiones": ("tools.skills.planificador_de_sesiones", "tool_handler"),
 }
 
 

@@ -30,7 +30,6 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-_WIN32 = _WIN32
 HWND_TOPMOST = -1
 HWND_NOTOPMOST = -2
 SW_MINIMIZE = 6

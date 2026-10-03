@@ -12,7 +12,6 @@ _IS_LINUX = sys.platform.startswith("linux")
 # Lazy deps de Windows (evitan romper el import del módulo en Linux).
 gw = None
 pyautogui = None
-_WIN32 = _WIN32
 
 _SWP_NOZORDER = 0x0004
 _SWP_NOACTIVATE = 0x0010

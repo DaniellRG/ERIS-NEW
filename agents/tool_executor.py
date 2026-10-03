@@ -95,10 +95,43 @@ class ToolExecutor:
             kwargs = self._dispatcher._build_kwargs(tool, params)
             result = tool(**kwargs)
             if asyncio.iscoroutine(result):
-                result = asyncio.run(result)
+                result = self._run_coroutine(result)
             return str(result)
         except Exception as e:
             return f"Error ejecutando {tool_name}: {type(e).__name__}: {str(e)[:200]}"
+
+    @staticmethod
+    def _run_coroutine(coro):
+        """Resuelve una corrutina aunque ya haya un event loop corriendo.
+
+        `asyncio.run()` explota con 'asyncio.run() cannot be called from a
+        running event loop' cuando el executor corre dentro de la GUI (que ya
+        tiene su loop). En ese caso la corrutina se resuelve en un hilo propio.
+        """
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            # No hay loop corriendo en este hilo → camino normal.
+            return asyncio.run(coro)
+
+        # Hay un loop corriendo: resolver en un hilo aparte con su propio loop.
+        import threading
+        box: Dict[str, Any] = {}
+
+        def _worker():
+            try:
+                box["result"] = asyncio.run(coro)
+            except Exception as e:  # propagar el error al hilo que llamó
+                box["error"] = e
+
+        t = threading.Thread(target=_worker, daemon=True)
+        t.start()
+        t.join(timeout=120)
+        if "error" in box:
+            raise box["error"]
+        if t.is_alive():
+            raise TimeoutError(f"la corrutina de {getattr(coro, '__qualname__', 'tool')} superó 120s")
+        return box.get("result", "")
 
     def execute_batch(self, tasks: List[Dict[str, Any]]) -> List[str]:
         """Ejecuta un batch de tasks."""

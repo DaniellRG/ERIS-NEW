@@ -12,6 +12,29 @@ _BASE = Path(__file__).resolve().parent.parent
 _MEMORY = _BASE / "memory"
 _STATE_FILE = _MEMORY / "multilang_state.json"
 
+
+def _load_state() -> dict:
+    """Carga el estado persistido (o un estado vacío si no existe/corrupto)."""
+    try:
+        if _STATE_FILE.exists():
+            data = json.loads(_STATE_FILE.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return data
+    except Exception:
+        pass
+    return {"terms": {}, "topics": [], "detections": 0}
+
+
+def _save_state(state: dict) -> None:
+    """Persiste el estado. Best-effort: nunca rompe la tool si falla el disco."""
+    try:
+        _MEMORY.mkdir(parents=True, exist_ok=True)
+        _STATE_FILE.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        pass
+
 LANGUAGES = {
     "es": "Espanol",
     "en": "English",

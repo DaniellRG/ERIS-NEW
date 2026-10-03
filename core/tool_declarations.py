@@ -6549,15 +6549,6 @@ TOOL_DECLARATIONS = [
 
     # ERIS: memory_system (sync)
     {"name": "memory_system", "description": "Gestiona la memoria de ERIS: guarda, lee, busca y elimina entradas.", "category": "Memory", "parameters": [{"name": "action", "type": "string", "description": "Acción: save, read, search, delete, list"}, {"name": "key", "type": "string", "description": "Clave de la entrada (requerido para save/read/delete)"}, {"name": "value", "type": "string", "description": "Valor a guardar (para save)"}, {"name": "query", "type": "string", "description": "Texto de búsqueda (para search)"}]},
-
-    # ERIS: diagnostico_de_sesiones (sync)
-    {"name": "diagnostico_de_sesiones", "description": "Ejecuta diagnósticos de sesiones de entrenamiento: analiza resultados y genera reportes.", "category": "Training", "parameters": [{"name": "accion", "type": "string", "description": "Acción: run, status, report"}, {"name": "sesion_num", "type": "integer", "description": "Número de sesión a diagnosticar (para run)"}, {"name": "output_file", "type": "string", "description": "Archivo de salida para el reporte (para report)"}]},
-
-    # ERIS: namespace_organizer (sync)
-    {"name": "namespace_organizer", "description": "Organiza y gestiona namespaces de ERIS: crea, lista y elimina namespaces.", "category": "System management", "parameters": [{"name": "accion", "type": "string", "description": "Acción: create, list, delete, info"}, {"name": "namespace", "type": "string", "description": "Nombre del namespace (para create/delete/info)"}, {"name": "description", "type": "string", "description": "Descripción del namespace (para create)"}]},
-
-    # ERIS: planificador_de_sesiones (sync)
-    {"name": "planificador_de_sesiones", "description": "Planifica sesiones de entrenamiento de ERIS: crea planes, agenda sesiones y gestiona el progreso.", "category": "Training", "parameters": [{"name": "accion", "type": "string", "description": "Acción: create_plan, add_session, list_plan, execute_next"}, {"name": "plan_name", "type": "string", "description": "Nombre del plan (para create_plan)"}, {"name": "session_data", "type": "string", "description": "Datos de la sesión en JSON (para add_session)"}]},
 ]
 
 # ── Level 12: Advanced Autonomy ──
