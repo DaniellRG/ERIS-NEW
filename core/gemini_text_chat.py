@@ -738,7 +738,15 @@ class GeminiTextChat:
                         args = {}
                 print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
                 result = await self._execute_tool(name, args)
-                tool_results.append({"role": "tool", "content": str(result)})
+                # OpenAI-compatible endpoints (OpenRouter, Nous Portal) exigen
+                # `tool_call_id` que empareje la respuesta con el tool_call; sin
+                # él, el proveedor devuelve 500 en la 2ª ronda.
+                tr = {"role": "tool", "content": str(result)}
+                if tc.get("id"):
+                    tr["tool_call_id"] = tc["id"]
+                if name:
+                    tr["name"] = name
+                tool_results.append(tr)
 
             msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
             msgs.extend(tool_results)

@@ -34,6 +34,13 @@ def get_api_key() -> str:
     return _cfg().get("openrouter_api_key", "")
 
 
+def get_base_url() -> str:
+    """Base URL configurable: permite apuntar a cualquier endpoint
+    OpenAI-compatible (OpenRouter, Nous Portal, etc.). Default: OpenRouter."""
+    base = _cfg().get("openrouter_base_url", "") or "https://openrouter.ai/api/v1"
+    return base.rstrip("/")
+
+
 def is_available() -> bool:
     return bool(get_api_key())
 
@@ -45,13 +52,14 @@ def chat(
     temperature: float = 0.7,
     max_tokens: int = 1024,
 ) -> str:
-    """Send a chat prompt to OpenRouter and return the response text."""
+    """Send a chat prompt to an OpenAI-compatible endpoint and return the text."""
     cfg = _cfg()
     api_key = cfg.get("openrouter_api_key", "")
     if not api_key:
         raise RuntimeError("No OpenRouter API key configured (openrouter_api_key).")
     if model is None:
         model = cfg.get("openrouter_model", DEFAULT_MODEL)
+    url = get_base_url() + "/chat/completions"
 
     messages = []
     if system:
@@ -67,7 +75,7 @@ def chat(
     }
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
-        BASE_URL,
+        url,
         data=data,
         headers={
             "Authorization": f"Bearer {api_key}",

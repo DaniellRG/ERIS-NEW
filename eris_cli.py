@@ -429,15 +429,21 @@ def main():
 
     print(BANNER)
 
-    # Verificar API key
+    # Verificar API key (Gemini directo, o un proveedor OpenAI-compatible
+    # como OpenRouter / Nous Portal vía openrouter_api_key)
     try:
         cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
         api_key = cfg.get("gemini_api_key", "")
-        if not api_key:
+        or_key = cfg.get("openrouter_api_key", "")
+        if not api_key and not or_key:
             print(f"{C.RED}No hay API key configurada.{C.RESET}")
             print(f"{C.DIM}Configurá tu key en: {API_CONFIG_PATH}{C.RESET}")
             return
-        print(f"{C.DIM}API key: ...{api_key[-6:]}{C.RESET}")
+        if api_key:
+            print(f"{C.DIM}API key Gemini: ...{api_key[-6:]}{C.RESET}")
+        else:
+            print(f"{C.DIM}Backend OpenAI-compatible: {cfg.get('openrouter_model','?')} "
+                  f"@ {cfg.get('openrouter_base_url','?')}{C.RESET}")
     except Exception as e:
         print(f"{C.RED}Error leyendo config: {e}{C.RESET}")
         print(f"{C.DIM}Archivo: {API_CONFIG_PATH}{C.RESET}")

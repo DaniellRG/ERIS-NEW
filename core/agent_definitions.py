@@ -1,8 +1,9 @@
 """core/agent_definitions.py — SINGLE SOURCE OF TRUTH de los agentes de ERIS.
 
-12 agentes especializados. Cada agente domina un dominio con tools que
+16 agentes especializados. Cada agente domina un dominio con tools que
 EXISTEN de verdad (registry==declarations). Claves: core, web, file, dev,
-media, comm, vision, security, study, linux, guardian, mentora.
+media, comm, vision, security, study, linux, guardian, mentora, memoria,
+pentest, system_monitor, deploy.
 core/agent_router.py importa ESTA definición (no la duplica).
 """
 

@@ -3,6 +3,47 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/) (no released de
 versiones formales; ERIS es un proyecto vivo que evoluciona por sesiones).
 
+## [2026-10-03] — Reconstrucción del motor de evolución continua (4 módulos perdidos)
+
+Los 4 módulos que `run_evolution_tick` y la "iniciativa plena" necesitaban
+estaban **borrados del disco** (sin `.pyc` de respaldo). Ambos call sites en
+`main.py` estaban envueltos en `try/except`, así que ERIS no crasheaba — pero
+el motor autónomo quedaba degradado a "consolidar inventario": sin estudiar,
+sin campañas, sin auto-defensa, sin iniciativa.
+
+- **`core/evolution_campaigns.py`** (NUEVO): `run_campaign()` + tool
+  `evolution_campaigns` (`evolve_campaigns`). Radar AGI (papers+repos) → ideas
+  → doble revisión → puntuación ELO → `data/evolution_campaigns.json` + `.log`.
+- **`core/learning_engine.py`** (NUEVO): `study_cycle()` + tool
+  `learning_engine`. Investigar→estudiar→cristalizar en
+  `skills/evolution_learning/*_SKILL.md` + RAG + novedad en `todo_yo`. Estado en
+  `memory/learning_engine.json`.
+- **`core/auto_defensa.py`** (NUEVO): `defensa_tick()` + tool `auto_defensa`.
+  Audita la propia máquina (puertos loopback vs expuestos, sudo NOPASSWD,
+  permisos, updates, sshd, CVEs del lab). Bitácora `data/self_defense_log.jsonl`.
+- **`core/autonomia.py`** (NUEVO): `turno_de_iniciativa()` — iniciativa plena
+  (investigar/estudiar/campaña/defensa) con cooldown. Nota: `core/autonomy.py`
+  (sin la 'i') es OTRO módulo y sigue igual.
+- **`core/self_evolution.py`** (FIX): el tick evaluaba `%3`→`%6`→`%9` con
+  `return` en cada rama; como 6 y 9 son múltiplos de 3, la campaña tapaba al
+  estudio y a la defensa (nunca corrían). Reordenado a **9→6→3** (el intervalo
+  más específico primero).
+- **`core/gpu_config.py`** (FIX): `UnboundLocalError` cuando
+  `config/api_keys.json` existe pero sin clave `gpu_acceleration` (manual=None
+  no asignaba `gpu_enabled`). Ahora hay default seguro al inicio. Crash latente
+  de boot en Linux.
+- **`core/gemini_text_chat.py`** (FIX): el path OpenAI-compatible
+  (OpenRouter/Nous Portal) no enviaba `tool_call_id` en las respuestas `role=tool`
+  → el proveedor devolvía 500 en la 2ª ronda de tool-calling. Ahora empareja
+  cada resultado con su `tool_call.id` (+ `name`).
+- **`eris_cli.py`** (FIX): el CLI exigía `gemini_api_key`; ahora acepta también
+  un backend OpenAI-compatible vía `openrouter_api_key` (OpenRouter / Nous
+  Portal), mostrando el modelo y base_url.
+- **Verificado**: sync 507/507, `py_compile` de los 4 módulos OK, cada uno corre
+  end-to-end, tick 3/6/9 disparan campaña/estudio/defensa respectivamente, y
+  ERIS conversa por CLI (usó `show_expression`, `curar_memoria`, `evolucion`,
+  `pentest_lab`). test_all: los FAIL ambientales bajan (api_keys ya no falta).
+
 ## [2026-09-07] — Fix Live 1011 crónico + modelo estable
 
 - `LIVE_TOOL_DECLARATIONS` excluye los **nombres reservados** de Gemini Live

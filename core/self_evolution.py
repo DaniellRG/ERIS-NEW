@@ -395,28 +395,10 @@ def run_evolution_tick() -> str:
         ticks = int(st.get("tick_count", 0)) + 1
         st["tick_count"] = ticks
         _save_state(st)
-        # Cada 3 ticks: campaña de evolución (papers+repos dble revisión/ELO)
-        if ticks % 3 == 0:
-            try:
-                from core.evolution_campaigns import run_campaign
-                camp = run_campaign()
-                log_vault("evolución", [camp])
-                return f"{camp} | {run_self_care_tick()}"
-            except Exception as ce:
-                st["evolution_campaign_error"] = f"{type(ce).__name__}: {ce}"
-                _save_state(st)
-                log_vault("evolución", [f"campaña falló (continúo con micro-fix): {type(ce).__name__}"])
-        # Cada 6 ticks: ciclo de estudio continuo (aprende papers/repos/videos)
-        if ticks % 6 == 0:
-            try:
-                from core.learning_engine import study_cycle
-                study = study_cycle()
-                log_vault("evolución", [study[:400]])
-                return f"{study[:200]} | {run_self_care_tick()}"
-            except Exception as ce:
-                st["learning_error"] = f"{type(ce).__name__}: {ce}"
-                _save_state(st)
-                log_vault("evolución", [f"ciclo de estudio falló (sigo con micro-fix): {type(ce).__name__}"])
+        # ── Orden por especificidad: 9 → 6 → 3 ──
+        # Cada bloque hace `return`, así que el intervalo más específico debe
+        # evaluarse PRIMERO. Si no, el múltiplo de 3 (campaña) tapa al 6 (estudio)
+        # y al 9 (defensa) — porque 6 y 9 también son múltiplos de 3.
         # Cada 9 ticks: auto-defensa preventiva (audita su máquina, no ataca nada)
         if ticks % 9 == 0:
             try:
@@ -428,6 +410,28 @@ def run_evolution_tick() -> str:
                 st["defense_error"] = f"{type(ce).__name__}: {ce}"
                 _save_state(st)
                 log_vault("evolución", [f"auto-defensa falló (sigo con micro-fix): {type(ce).__name__}"])
+        # Cada 6 ticks: ciclo de estudio continuo (aprende papers/repos/videos)
+        if ticks % 6 == 0:
+            try:
+                from core.learning_engine import study_cycle
+                study = study_cycle()
+                log_vault("evolución", [study[:400]])
+                return f"{study[:200]} | {run_self_care_tick()}"
+            except Exception as ce:
+                st["learning_error"] = f"{type(ce).__name__}: {ce}"
+                _save_state(st)
+                log_vault("evolución", [f"ciclo de estudio falló (sigo con micro-fix): {type(ce).__name__}"])
+        # Cada 3 ticks: campaña de evolución (papers+repos dble revisión/ELO)
+        if ticks % 3 == 0:
+            try:
+                from core.evolution_campaigns import run_campaign
+                camp = run_campaign()
+                log_vault("evolución", [camp])
+                return f"{camp} | {run_self_care_tick()}"
+            except Exception as ce:
+                st["evolution_campaign_error"] = f"{type(ce).__name__}: {ce}"
+                _save_state(st)
+                log_vault("evolución", [f"campaña falló (continúo con micro-fix): {type(ce).__name__}"])
         out = evolve()
         log_vault("evolución", [out])
         st = _load_state()

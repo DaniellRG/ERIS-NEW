@@ -38,6 +38,7 @@ def configure_gpu():
     (`gpu_acceleration`) siempre tiene prioridad.
     """
     base_dir = None
+    gpu_enabled = _detect_capable_platform()  # default seguro (evita UnboundLocalError)
     try:
         if getattr(sys, "frozen", False):
             base_dir = Path(sys.executable).parent
@@ -51,6 +52,7 @@ def configure_gpu():
             # Linux de escritorio) siempre activa la aceleración para que las
             # animaciones sean fluidas. Un "true" manual fuerza GPU en cualquier
             # caso; "false" solo desactiva en máquinas de baja capacidad.
+            # Si `manual` es None (clave ausente) se conserva el default del SO.
             if manual is True:
                 gpu_enabled = True
             elif manual is False:
