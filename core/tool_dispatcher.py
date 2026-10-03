@@ -811,6 +811,35 @@ class ToolDispatcher:
             kwargs["player"] = self.ui
         if "speak" in sig.parameters:
             kwargs["speak"] = self._eris.speak
+
+        # Tools con VARIOS parámetros nombrados (ej. safe_edit(filepath, old_text,
+        # new_text)): el primer param se llenó con el dict entero, lo cual está mal.
+        # Si el primer param NO se llama parameters/params y la firma declara más
+        # de un argumento requerido, mapear cada nombre desde el dict de args.
+        _named = [p for p in params if p not in ("player", "speak", "self")]
+        if first not in ("parameters", "params") and len(_named) > 1 and isinstance(args, dict):
+            required = [
+                p for p in _named
+                if sig.parameters[p].default is inspect.Parameter.empty
+                and sig.parameters[p].kind in (
+                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                    inspect.Parameter.KEYWORD_ONLY,
+                )
+            ]
+            if len(required) > 1:
+                mapped = {}
+                for p in _named:
+                    if p in args:
+                        mapped[p] = args[p]
+                    elif p == first and not args:
+                        mapped[p] = ""
+                if "player" in sig.parameters:
+                    mapped["player"] = self.ui
+                if "speak" in sig.parameters:
+                    mapped["speak"] = self._eris.speak
+                # Solo usar el mapeo si cubre todos los requeridos.
+                if all(p in mapped for p in required):
+                    return mapped
         return kwargs
 
     # ── Special handlers ──

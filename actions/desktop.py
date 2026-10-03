@@ -2,9 +2,26 @@
 desktop.py — Control completo de escritorio + MEMORIA de acciones.
 ERIS recuerda que abrio, minimizo y cerro. Puede reportar su estado.
 """
-import pygetwindow as gw
 import ctypes
 import json
+
+# pygetwindow es Windows-only: se importa lazy para que el módulo cargue en
+# Linux y las tools que NO dependen de ventanas (memoria de acciones, estado)
+# sigan funcionando. Las que sí las necesitan avisan con un error claro.
+try:
+    import pygetwindow as gw
+except Exception:
+    gw = None
+
+
+def _need_gw():
+    """Devuelve pygetwindow o lanza un error explicativo si no está disponible."""
+    if gw is None:
+        raise RuntimeError(
+            "pygetwindow no soporta este sistema (Windows-only). "
+            "El control de ventanas nativo requiere Windows."
+        )
+    return gw
 
 import platform as _plat
 _IS_WIN = _plat.system() == "Windows"
@@ -129,7 +146,7 @@ def _get_hwnd(window):
 
 def _find_windows(name: str):
     name_lower = name.lower()
-    return [w for w in gw.getAllWindows()
+    return [w for w in _need_gw().getAllWindows()
             if w.title.strip() and name_lower in w.title.lower()]
 
 
@@ -207,7 +224,7 @@ def _wait_for_window(app_name: str, before_hwnds: set = None, timeout: float = 5
             keywords.extend(vals)
     start = time.time()
     while time.time() - start < timeout:
-        for w in gw.getAllWindows():
+        for w in _need_gw().getAllWindows():
             if not w.title.strip():
                 continue
             hwnd = _get_hwnd(w)
@@ -224,7 +241,7 @@ def _wait_for_window(app_name: str, before_hwnds: set = None, timeout: float = 5
 def _list_windows(params: dict) -> str:
     show_hidden = params.get("show_hidden", False)
     windows = []
-    for w in gw.getAllWindows():
+    for w in _need_gw().getAllWindows():
         if not w.title.strip():
             continue
         if not show_hidden and (w.width < 50 or w.height < 50):
@@ -247,7 +264,7 @@ def _list_windows(params: dict) -> str:
 
 def _list_detailed(params: dict) -> str:
     windows = []
-    for w in gw.getAllWindows():
+    for w in _need_gw().getAllWindows():
         if not w.title.strip() or w.width < 50 or w.height < 50:
             continue
         hwnd = _get_hwnd(w)
@@ -410,7 +427,7 @@ def _search_windows(params: dict) -> str:
 
 
 def _count_windows() -> str:
-    visible = [w for w in gw.getAllWindows() if w.title.strip() and w.width > 50 and w.height > 50]
+    visible = [w for w in _need_gw().getAllWindows() if w.title.strip() and w.width > 50 and w.height > 50]
     minimized = sum(1 for w in visible if w.isMinimized)
     maximized = sum(1 for w in visible if w.isMaximized)
     normal = len(visible) - minimized - maximized
@@ -463,7 +480,7 @@ def _set_opacity(params: dict) -> str:
 
 def _minimize_all() -> str:
     count = 0
-    for w in gw.getAllWindows():
+    for w in _need_gw().getAllWindows():
         if w.title.strip() and w.width > 50 and w.height > 50 and not w.isMinimized:
             try:
                 hwnd = _get_hwnd(w)
@@ -478,7 +495,7 @@ def _minimize_all() -> str:
 
 def _restore_all() -> str:
     count = 0
-    for w in gw.getAllWindows():
+    for w in _need_gw().getAllWindows():
         if w.title.strip() and w.isMinimized:
             try:
                 hwnd = _get_hwnd(w)
@@ -494,7 +511,7 @@ def _restore_all() -> str:
 
 
 def _cascade_windows() -> str:
-    visible = [w for w in gw.getAllWindows()
+    visible = [w for w in _need_gw().getAllWindows()
                if w.title.strip() and w.width > 100 and w.height > 80 and not w.isMinimized]
     if not visible:
         return "No hay ventanas para cascada"
@@ -508,7 +525,7 @@ def _cascade_windows() -> str:
 
 
 def _tile_horizontal() -> str:
-    visible = [w for w in gw.getAllWindows()
+    visible = [w for w in _need_gw().getAllWindows()
                if w.title.strip() and w.width > 100 and w.height > 80 and not w.isMinimized]
     if not visible:
         return "No hay ventanas para tiles"
@@ -524,7 +541,7 @@ def _tile_horizontal() -> str:
 
 
 def _tile_vertical() -> str:
-    visible = [w for w in gw.getAllWindows()
+    visible = [w for w in _need_gw().getAllWindows()
                if w.title.strip() and w.width > 100 and w.height > 80 and not w.isMinimized]
     if not visible:
         return "No hay ventanas para tiles"
@@ -551,7 +568,7 @@ def _get_foreground() -> str:
 
 
 def _get_status() -> str:
-    visible = [w for w in gw.getAllWindows() if w.title.strip() and w.width > 50 and w.height > 50]
+    visible = [w for w in _need_gw().getAllWindows() if w.title.strip() and w.width > 50 and w.height > 50]
     minimized = sum(1 for w in visible if w.isMinimized)
     maximized = sum(1 for w in visible if w.isMaximized)
     foreground = _get_foreground()
@@ -582,7 +599,7 @@ def _open_app(params: dict) -> str:
     if not app:
         return "Error: se requiere 'app'"
     before_hwnds = set()
-    for w in gw.getAllWindows():
+    for w in _need_gw().getAllWindows():
         hwnd = _get_hwnd(w)
         if hwnd:
             before_hwnds.add(hwnd)

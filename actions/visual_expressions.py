@@ -1,5 +1,22 @@
-import tkinter as tk
 import threading
+
+# tkinter necesita libtk del sistema. Si falta, el módulo igual carga y la tool
+# avisa con un error claro en vez de romper el import (y con él, todo el registro).
+try:
+    import tkinter as tk
+except Exception:
+    tk = None
+
+
+def _need_tk():
+    """Devuelve tkinter o lanza un error explicativo si falta libtk."""
+    if tk is None:
+        raise RuntimeError(
+            "tkinter no está disponible: falta libtk8.6.so del sistema. "
+            "En Arch/CachyOS: sudo pacman -S tk"
+        )
+    return tk
+
 
 class VisualExpressionsInterface:
     def __init__(self):
@@ -15,7 +32,7 @@ class VisualExpressionsInterface:
 
         def run():
             self.running = True
-            self.root = tk.Tk()
+            self.root = _need_tk().Tk()
             self.root.title("Eris Visual Expressions")
             self.root.geometry("400x400")
             
@@ -26,7 +43,7 @@ class VisualExpressionsInterface:
             y = (self.root.winfo_screenheight() // 2) - (height // 2)
             self.root.geometry(f'+{x}+{y}')
 
-            self.canvas = tk.Canvas(self.root, width=400, height=400, bg='white')
+            self.canvas = _need_tk().Canvas(self.root, width=400, height=400, bg='white')
             self.canvas.pack()
             self.draw_face()
             self.update_expression(self.expression)
@@ -57,9 +74,9 @@ class VisualExpressionsInterface:
             self.canvas.delete(self.face_elements['mouth'])
             
             if expression == "happy":
-                self.face_elements['mouth'] = self.canvas.create_arc(150, 230, 250, 270, start=0, extent=-180, fill='black', style=tk.ARC, width=3)
+                self.face_elements['mouth'] = self.canvas.create_arc(150, 230, 250, 270, start=0, extent=-180, fill='black', style=_need_tk().ARC, width=3)
             elif expression == "sad":
-                self.face_elements['mouth'] = self.canvas.create_arc(150, 250, 250, 290, start=0, extent=180, fill='black', style=tk.ARC, width=3)
+                self.face_elements['mouth'] = self.canvas.create_arc(150, 250, 250, 290, start=0, extent=180, fill='black', style=_need_tk().ARC, width=3)
             elif expression == "surprised":
                 self.face_elements['mouth'] = self.canvas.create_oval(185, 235, 215, 265, fill='black')
             else: # neutral
