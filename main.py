@@ -1505,6 +1505,34 @@ class ErisLive:
         except Exception:
             pass
 
+        # ── ActionDetector: ejecutar acciones concretas directamente ──
+        try:
+            from core.action_detector import get_action_detector
+            from agents.tool_executor import get_tool_executor
+            detector = get_action_detector()
+            action = detector.detect(text)
+            if action and action.get("confidence", 0) >= 0.8:
+                executor = get_tool_executor()
+                tool_name = action["tool"]
+                params = action["params"]
+                if executor.can_execute(tool_name):
+                    if self.ui:
+                        self.ui.set_state("THINKING")
+                        self.ui.write_log(f"SYS: ejecutando {tool_name}...")
+                    result = executor.execute(tool_name, params)
+                    if self.ui:
+                        self.ui.write_log(f"SYS: {tool_name} → {result[:200]}")
+                    # La respuesta se muestra en el chat
+                    if hasattr(self, '_gemini_text_chat') and self._gemini_text_chat:
+                        threading.Thread(
+                            target=self._gemini_chat_sync,
+                            args=(f"[Resultado de {tool_name}]: {result}\n\nRespondé al usuario con este resultado.",),
+                            daemon=True,
+                        ).start()
+                    return
+        except Exception as _ad_err:
+            print(f"[ActionDetector] error: {_ad_err}")
+
         # ── Multi-agente: ONLY intercept very specific code creation requests ──
         # Everything else goes to Gemini Live which handles open_app, web_search, etc.
         if self._agent_router is not None:
