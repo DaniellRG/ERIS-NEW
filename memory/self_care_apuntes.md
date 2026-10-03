@@ -270,3 +270,6 @@
 
 ## 2026-10-03 18:01:29 · config
 - no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 18:14:02 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
