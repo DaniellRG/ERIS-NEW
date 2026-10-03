@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal con el usuario mediante preguntas de clarificación",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y restricciones con herramienta de análisis de viabilidad",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Descomponer el objetivo en 3-8 pasos concretos y ordenados",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar herramientas específicas para cada paso según corresponda",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Marcar puntos de riesgo en pasos críticos con indicadores de alerta ⚠️",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecer métricas de éxito medibles para cada fase",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Definir checkpoints de revisión con el usuario para validar avance",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Documentar el plan final en formato estructurado para ejecución",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791067073.3636715
+}
