@@ -113,3 +113,6 @@ data/knowledge/crack/rockyou_full.txt
 diagnostico_sesion_*.py
 ERIS_Scripts/
 data/generated_images/
+
+# Temporal de TTS (se regenera en cada síntesis)
+data/_temp_speech.mp3

@@ -147,3 +147,27 @@
 
 ## 2026-10-03 06:11:28 · config
 - no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:44:38 · config
+- no puedo inventar estas claves: ['fish_api_key', 'mic_device', 'speaker_device']
+
+## 2026-10-03 06:44:38 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 06:54:07 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-03 06:54:07 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 07:02:07 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-03 07:02:07 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 07:32:07 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 07:32:07 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip

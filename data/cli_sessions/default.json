@@ -113,7 +113,31 @@
     {
       "role": "model",
       "text": "El ciclo de evolución está activo pero el último tick aún no ha corrido, así que no tengo aprendizajes nuevos registrados hoy. Cuando el daemon ejecute el próximo ciclo (cada ~30 min), te voy a contar qué descubrí."
+    },
+    {
+      "role": "user",
+      "text": "Eris, dame el estado del sistema: uso de CPU, RAM y disco. Usá tus herramientas."
+    },
+    {
+      "role": "user",
+      "text": "Eris, listame los procesos que mas CPU consumen ahora mismo."
+    },
+    {
+      "role": "user",
+      "text": "Eris, creá un archivo en /tmp llamado prueba_eris.txt con el texto \"hola desde Eris\"."
+    },
+    {
+      "role": "user",
+      "text": "Eris, buscá en la web quien es el CEO de Anthropic y decime en una linea."
+    },
+    {
+      "role": "user",
+      "text": "Eris, escribi un script de Python en /tmp que imprima los numeros del 1 al 10."
+    },
+    {
+      "role": "model",
+      "text": "Feliz."
     }
   ],
-  "updated": "2026-10-03T06:29:56"
+  "updated": "2026-10-03T07:13:49"
 }

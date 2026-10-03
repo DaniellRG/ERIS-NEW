@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Lanzar un producto",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Organizar un evento",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Aprender una habilidad",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Crear una estrategia de marketing",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Planificar un viaje",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "*Dime tu objetivo y lo desgloso en pasos accionables.**",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791027793.4721065
+}
