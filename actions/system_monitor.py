@@ -4,6 +4,9 @@ import os
 import time
 import psutil
 
+# Ruta raíz del disco por defecto según el SO (C:\ en Windows, / en Linux).
+_DEFAULT_DISK = "C:\\" if os.name == "nt" else "/"
+
 
 def system_monitor(parameters: dict = None, player=None) -> str:
     """Full system monitor: cpu, ram, disk, network, gpu, battery, processes, uptime."""
@@ -16,7 +19,7 @@ def system_monitor(parameters: dict = None, player=None) -> str:
         elif action == "ram" or action == "memory":
             return _ram_info()
         elif action == "disk":
-            return _disk_info(params.get("path", "C:\\"))
+            return _disk_info(params.get("path", _DEFAULT_DISK))
         elif action == "network" or action == "net":
             return _network_info()
         elif action == "gpu":
@@ -67,7 +70,9 @@ def _ram_info() -> str:
     return msg
 
 
-def _disk_info(path: str = "C:\\") -> str:
+def _disk_info(path: str = None) -> str:
+    if not path:
+        path = _DEFAULT_DISK
     try:
         usage = psutil.disk_usage(path)
         read_bytes = psutil.disk_io_counters().read_bytes if psutil.disk_io_counters() else 0

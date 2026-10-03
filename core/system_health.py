@@ -3,6 +3,7 @@ import json
 import psutil
 import time
 from pathlib import Path
+import os
 
 _BASE = Path(__file__).resolve().parent.parent
 _MEMORY = _BASE / "memory"
@@ -13,7 +14,7 @@ def system_health_tool(parameters: dict = None, player=None) -> str:
     if action == "status":
         cpu = psutil.cpu_percent(interval=0.5)
         mem = psutil.virtual_memory()
-        disk_c = psutil.disk_usage("C:\\") if Path("C:\\").exists() else None
+        disk_c = psutil.disk_usage("C:\\" if os.name == "nt" else "/")
         disk_d = psutil.disk_usage("D:\\") if Path("D:\\").exists() else None
         net = psutil.net_io_counters()
         boot = psutil.boot_time()

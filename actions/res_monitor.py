@@ -4,6 +4,7 @@ res_monitor.py — Monitoreo de recursos del sistema (CPU/RAM/disco/red/redes).
 Acciones: status, top (procesos top).
 """
 from __future__ import annotations
+import os
 
 
 def res_monitor(parameters: dict = None, player=None) -> str:
@@ -37,14 +38,14 @@ def res_monitor(parameters: dict = None, player=None) -> str:
     cpu = psutil.cpu_percent(interval=0.3)
     mem = psutil.virtual_memory()
     swap = psutil.swap_memory()
-    disk = psutil.disk_usage("C:\\")
+    disk = psutil.disk_usage("C:\\" if os.name == "nt" else "/")
     net = psutil.net_io_counters()
     lines = [
         "RECURSOS DEL SISTEMA",
         f"  CPU: {cpu}%",
         f"  RAM: {mem.percent}% (usada {mem.used // (1024**3)} GB)",
         f"  Swap: {swap.percent}%",
-        f"  Disco C: {disk.percent}% ({disk.free // (1024**3)} GB libres)",
+        f"  Disco: {disk.percent}% ({disk.free // (1024**3)} GB libres)",
         f"  Red: enviados {net.bytes_sent // (1024**2)} MB, recibidos {net.bytes_recv // (1024**2)} MB",
     ]
     try:

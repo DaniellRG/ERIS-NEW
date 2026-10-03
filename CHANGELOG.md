@@ -3,6 +3,31 @@
 Formato: [Keep a Changelog](https://keepachangelog.com/) (no released de
 versiones formales; ERIS es un proyecto vivo que evoluciona por sesiones).
 
+## [2026-10-03] — Fix de 3 bugs detectados en tareas reales (dispatcher + Linux)
+
+Detectados al someter a ERIS a una batería de tareas reales (sistema, archivos,
+código, web). ERIS las resolvió igual porque se auto-recupera probando tools
+alternativas, pero cada bug quedó corregido de raíz:
+
+- **`file_api` roto (`got an unexpected keyword argument 'parameters'`)**:
+  `core/tool_dispatcher._generic_dispatch` llamaba a TODAS las tools con
+  `parameters=`, pero 7 tools (file_api, file_system, mission, network_manager,
+  terminal_commands, hermes_consult, opencode_bridge) reciben `params=`.
+  Nuevo helper `_build_kwargs()` adapta el nombre del primer argumento a la
+  firma REAL de cada tool (+ player/speak solo si los declara). Arregla las 7.
+- **`web_search` sin backend**: faltaba el paquete `ddgs` en el venv. Instalado
+  (`ddgs==9.16.0`). Ahora devuelve resultados reales.
+- **Tools Windows-céntricas crasheaban en Linux**: `system_monitor._disk_info`,
+  `file_controller` (largest/disk_usage), `res_monitor`, `dashboard`,
+  `hud_terminal`, `proactive_comms`, `resource_manager` y `system_health` tenían
+  `"C:\\"` hardcodeado (y la declaración de `system_monitor` le decía al LLM
+  "default C:\\"). Ahora el default depende del SO (`/` en Linux, `C:\\` en
+  Windows) y la descripción es neutral. `system_monitor` reporta "Disco /: 16.4%"
+  en Linux en vez de intentar leer `C:\`.
+
+Verificado: sync 507/507 intacto, los 3 arreglos corren end-to-end, y ERIS
+resuelve las mismas tareas sin necesidad de auto-recuperación.
+
 ## [2026-10-03] — Reconstrucción del motor de evolución continua (4 módulos perdidos)
 
 Los 4 módulos que `run_evolution_tick` y la "iniciativa plena" necesitaban

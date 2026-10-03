@@ -96,9 +96,9 @@ def file_controller(parameters: dict, player=None) -> str:
         elif action == "glob":
             return _glob_files(resolved_path or os.path.expanduser("~"), glob_pattern)
         elif action == "largest":
-            return _largest_files(resolved_path or "C:\\", count)
+            return _largest_files(resolved_path or _default_root(), count)
         elif action == "disk_usage":
-            return _disk_usage(resolved_path or "C:\\")
+            return _disk_usage(resolved_path or _default_root())
         elif action == "info":
             return _file_info(resolved_path)
         else:
@@ -420,3 +420,9 @@ def _file_info(path: str) -> str:
 
 
 import fnmatch
+
+
+def _default_root() -> str:
+    """Raíz del disco por defecto según el SO (C:\\ en Windows, / en Linux)."""
+    return "C:\\" if os.name == "nt" else "/"
+

@@ -132,7 +132,7 @@ TOOL_DECLARATIONS = [
             "type": "OBJECT",
             "properties": {
                 "action": {"type": "STRING", "description": "overview, report, cpu, ram, disk, gpu, network, processes, top, disk_info, kill"},
-                "path": {"type": "STRING", "description": "Unidad a inspeccionar para disk_info (default C:\\)"},
+                "path": {"type": "STRING", "description": "Punto de montaje/disco a inspeccionar para disk_info (Linux: '/', '/home'; Windows: 'C:\\\\'). Default: raiz del sistema ('/' en Linux, 'C:\\\\' en Windows)."},
                 "sort": {"type": "STRING", "description": "Orden de procesos: cpu, ram, name (default cpu)"},
                 "count": {"type": "INTEGER", "description": "Cantidad de procesos a listar (default 10)"},
                 "name": {"type": "STRING", "description": "Nombre del proceso a matar (kill)"},

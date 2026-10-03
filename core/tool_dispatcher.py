@@ -745,10 +745,7 @@ class ToolDispatcher:
         func = get_tool(name)
         if func is not None:
             try:
-                sig = inspect.signature(func)
-                kwargs = {"parameters": args, "player": self.ui}
-                if "speak" in sig.parameters:
-                    kwargs["speak"] = self._eris.speak
+                kwargs = self._build_kwargs(func, args)
                 try:
                     fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
                     r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
@@ -771,10 +768,7 @@ class ToolDispatcher:
                         func = getattr(module, attr_name)
                         break
             if func:
-                sig = inspect.signature(func)
-                kwargs = {"parameters": args, "player": self.ui}
-                if "speak" in sig.parameters:
-                    kwargs["speak"] = self._eris.speak
+                kwargs = self._build_kwargs(func, args)
                 try:
                     fut = loop.run_in_executor(TOOL_EXECUTOR, lambda: func(**kwargs))
                     r = await asyncio.wait_for(fut, _TOOL_TIMEOUT)
@@ -787,6 +781,37 @@ class ToolDispatcher:
             pass
 
         return f"Unknown tool: {name}. No se encontró en tool_registry ni en actions."
+
+    def _build_kwargs(self, func, args: dict) -> dict:
+        """Construye los kwargs correctos para una tool según su FIRMA real.
+
+        La mayoría de las tools reciben `parameters=<dict>` (476), pero algunas
+        (file_api, file_system, mission, network_manager, terminal_commands,
+        hermes_consult, opencode_bridge) reciben `params=<dict>`. Otras reciben
+        un primer argumento con otro nombre. Sin esta adaptación, esas tools
+        fallan con `got an unexpected keyword argument 'parameters'`.
+        """
+        try:
+            sig = inspect.signature(func)
+        except (TypeError, ValueError):
+            return {"parameters": args, "player": self.ui}
+        params = list(sig.parameters)
+        if not params:
+            return {}
+        first = params[0]
+        # Nombre del primer parámetro posicional: aceptar el nombre real
+        if first == "parameters":
+            kwargs = {"parameters": args}
+        elif first == "params":
+            kwargs = {"params": args}
+        else:
+            kwargs = {first: args}
+        # player/speak opcionales, solo si la firma los declara
+        if "player" in sig.parameters:
+            kwargs["player"] = self.ui
+        if "speak" in sig.parameters:
+            kwargs["speak"] = self._eris.speak
+        return kwargs
 
     # ── Special handlers ──
 

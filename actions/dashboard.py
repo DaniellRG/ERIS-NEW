@@ -4,6 +4,7 @@ dashboard.py — Panel de estado del sistema y de ERIS.
 Acciones: system (CPU/RAM/disco/bateria), eris (estado de ERIS), all.
 """
 from __future__ import annotations
+import os
 
 
 def _system_info() -> list[str]:
@@ -13,7 +14,7 @@ def _system_info() -> list[str]:
     lines.append(f"  CPU: {cpu}% ({psutil.cpu_count()} nucleos)")
     mem = psutil.virtual_memory()
     lines.append(f"  RAM: {mem.percent}% ({mem.used // (1024**3)}/{mem.total // (1024**3)} GB)")
-    disk = psutil.disk_usage("C:\\")
+    disk = psutil.disk_usage("C:\\" if os.name == "nt" else "/")
     lines.append(f"  Disco C: {disk.percent}% ({disk.free // (1024**3)} GB libres)")
     try:
         bat = psutil.sensors_battery()

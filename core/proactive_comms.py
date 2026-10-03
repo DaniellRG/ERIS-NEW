@@ -7,6 +7,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+import os
 
 _BASE = Path(__file__).resolve().parent.parent
 _MEMORY = _BASE / "memory"
@@ -89,7 +90,7 @@ def check_important_events() -> list:
     # 3. Espacio en disco bajo
     import shutil
     try:
-        usage = shutil.disk_usage("C:\\")
+        usage = shutil.disk_usage("C:\\" if os.name == "nt" else "/")
         if usage.free < 5 * 1024**3:
             events.append({
                 "type": "low_disk",

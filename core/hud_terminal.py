@@ -17,6 +17,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,7 +40,7 @@ def _system_vitals() -> str:
         import psutil
         cpu = psutil.cpu_percent(interval=0.3)
         mem = psutil.virtual_memory()
-        disk = psutil.disk_usage("C:\\")
+        disk = psutil.disk_usage("C:\\" if os.name == "nt" else "/")
         net = psutil.net_io_counters()
         lines.append(f"  CPU  : {cpu:5.1f}%   Núcleos: {psutil.cpu_count(logical=False)}")
         lines.append(f"  RAM  : {mem.used/2**30:.1f} / {mem.total/2**30:.1f} GB  ({mem.percent:.0f}%)")

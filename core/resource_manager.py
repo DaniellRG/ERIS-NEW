@@ -119,7 +119,7 @@ def optimize_cache() -> dict:
 def disk_check() -> dict:
     """Verifica espacio en disco."""
     results = {"partitions": []}
-    for partition in ["C:\\", "D:\\"]:
+    for partition in (["C:\\", "D:\\"] if os.name == "nt" else ["/", "/home"]):
         try:
             usage = shutil.disk_usage(partition)
             results["partitions"].append({
