@@ -1511,6 +1511,7 @@ class ErisLive:
             from agents.tool_executor import get_tool_executor
             detector = get_action_detector()
             action = detector.detect(text)
+            print(f"[DEBUG ActionDetector] text='{text[:50]}' → action={action}")
             if action and action.get("confidence", 0) >= 0.8:
                 executor = get_tool_executor()
                 tool_name = action["tool"]
