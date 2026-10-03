@@ -3,6 +3,10 @@
     "tool_dispatcher": {
       "count": 5,
       "last": "2026-09-19T18:28:13.754657"
+    },
+    "main": {
+      "count": 1,
+      "last": "2026-10-03T14:58:12.055281"
     }
   },
   "tool_calls": {
