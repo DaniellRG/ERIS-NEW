@@ -14,6 +14,7 @@ ACTION_PATTERNS = {
     "open_url": {
         "patterns": [
             r"abr[ií]\s+(.+?)\s+(en\s+)?(el\s+)?navegador",
+            r"abr[ií]\s+(www\.)?([\w-]+\.(com|org|net|ar|io|dev)[\w/.-]*)",
             r"abr[ií]\s+(youtube|google|gmail|whatsapp|telegram|discord|spotify|netflix)",
             r"naveg[aá]\s+a\s+(.+)",
             r"open\s+(.+?)\s+(in\s+)?(the\s+)?browser",
@@ -25,7 +26,8 @@ ACTION_PATTERNS = {
     "search_web": {
         "patterns": [
             r"busc[aá]\s+(.+?)\s+(en\s+)?(internet|google|la\s+web)",
-            r"busc[aá]\s+informaci[oó]n\s+sobre\s+(.+)",
+            r"busc[aá]\s+(informaci[oó]n|info|datos|algo)\s+(sobre|acerca\s+de|de)\s+(.+)",
+            r"busc[aá]\s+(.+)",
             r"qu[eé]\s+es\s+(.+)",
             r"qui[eé]n\s+es\s+(.+)",
             r"search\s+(.+?)\s+(on\s+)?(the\s+)?(internet|web|google)",
@@ -61,6 +63,7 @@ ACTION_PATTERNS = {
     "create_file": {
         "patterns": [
             r"cre[aá]\s+(un\s+)?archivo\s+(llamado\s+)?(.+?)\s+con\s+(el\s+)?texto\s+(.+)",
+            r"cre[aá]\s+(un\s+)?archivo\s+(llamado\s+)?([\w/.-]+\.\w+)\s*$",
             r"escrib[ií]\s+(un\s+)?script\s+(python|javascript|html|css)\s+en\s+(.+)",
             r"create\s+(a\s+)?file\s+(called\s+)?(.+?)\s+with\s+(the\s+)?text\s+(.+)",
             r"write\s+(a\s+)?(python|javascript|html|css)\s+script\s+in\s+(.+)",

@@ -676,6 +676,17 @@ class GeminiTextChat:
     async def _chat_openrouter(self, user_text: str, on_token=None) -> str:
         import requests
 
+        # Refrescar la key desde el agent_key vivo de Hermes (rota ~1h).
+        # Sin esto, Eris queda con una key vieja y responde 401.
+        try:
+            from core.token_sync import sync_token
+            sync_token()
+            fresh = _get_openrouter_config().get("api_key", "")
+            if fresh:
+                self._openrouter_api_key = fresh
+        except Exception:
+            pass
+
         or_tools = []
         for t in _gemini_tools():
             or_tools.append({

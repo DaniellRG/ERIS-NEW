@@ -3677,8 +3677,8 @@ class _MarshalBridge(QObject):
     def _run(self, fn):
         try:
             fn()
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[MarshalBridge] error: {e}", flush=True)
 
 
 class ErisUI:
@@ -3813,6 +3813,16 @@ class ErisUI:
 
     def set_state(self, state: str):
         self._marshal(self._win.set_state, state)
+
+    def inject_text(self, text: str):
+        """API pública (thread-safe): inyecta texto en la GUI.
+
+        Reusa el bridge de `_marshal` para correr el callback en el hilo de Qt,
+        exactamente como si el usuario hubiera escrito en el campo de texto.
+        """
+        cb = self._win.on_text_command
+        if cb:
+            self._marshal(cb, text)
 
     def write_log(self, text: str):
         self._marshal(self._win.write_log, text)

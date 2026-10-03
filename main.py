@@ -888,10 +888,11 @@ class ErisLive:
         except Exception as _abe:
             print(f"[ERIS] Auto-backup scheduler init: {_abe}")
 
-        # Health endpoint (liveness para el watchdog; sin chat móvil)
+        # Health endpoint (liveness para el watchdog) + canal /chat para
+        # inyectar texto de forma programática (sin keystrokes sintéticos).
         if _mobile_start:
             try:
-                _health_url = _mobile_start(port=8765)
+                _health_url = _mobile_start(port=8765, inject_callback=self._inject_chat_text)
                 print(f"[MAIN] Endpoint de salud: {_health_url}")
             except Exception as _me:
                 print(f"[MAIN] Error iniciando endpoint de salud: {_me}")
@@ -1433,6 +1434,20 @@ class ErisLive:
             pass
 
 
+    def _inject_chat_text(self, text: str):
+        """Inyecta texto en la GUI desde fuera (endpoint HTTP /chat).
+
+        Delega en `ui.inject_text`, que reusa el bridge thread-safe (`_marshal`)
+        para correr el callback en el hilo de Qt — el mismo camino que el
+        teclado. Sin esto, escribir desde un hilo de red crashea Qt.
+        """
+        try:
+            self.ui.inject_text(text)
+            return
+        except Exception as e:
+            print(f"[inject] ui.inject_text falló: {e}", flush=True)
+        self._on_text_command(text)
+
     def _on_text_command(self, text: str):
         self._last_user_interaction = time.time()  # Reset idle timer
 
@@ -1511,9 +1526,6 @@ class ErisLive:
             from agents.tool_executor import get_tool_executor
             detector = get_action_detector()
             action = detector.detect(text)
-            print(f"[DEBUG ActionDetector] text='{text[:50]}' → action={action}")
-            if self.ui:
-                self.ui.write_log(f"[DEBUG ActionDetector] text='{text[:50]}' → action={action}")
             if action and action.get("confidence", 0) >= 0.8:
                 executor = get_tool_executor()
                 tool_name = action["tool"]

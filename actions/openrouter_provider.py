@@ -31,6 +31,12 @@ def _cfg() -> dict:
 
 
 def get_api_key() -> str:
+    # Auto-sync con el agent_key vivo de Hermes (rota ~1h). Best-effort.
+    try:
+        from core.token_sync import sync_token
+        sync_token()
+    except Exception:
+        pass
     return _cfg().get("openrouter_api_key", "")
 
 
@@ -54,7 +60,7 @@ def chat(
 ) -> str:
     """Send a chat prompt to an OpenAI-compatible endpoint and return the text."""
     cfg = _cfg()
-    api_key = cfg.get("openrouter_api_key", "")
+    api_key = get_api_key()  # incluye auto-sync del agent_key de Hermes
     if not api_key:
         raise RuntimeError("No OpenRouter API key configured (openrouter_api_key).")
     if model is None:
