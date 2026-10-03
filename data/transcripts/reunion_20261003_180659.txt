@@ -1,0 +1,1 @@
+Error: No se encontro el modelo Vosk en data/vosk-model-es.

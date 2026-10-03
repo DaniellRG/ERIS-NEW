@@ -1,0 +1,17 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo y alcance del plan con la herramienta Notion.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar datos y recursos necesarios con la herramienta",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791068959.7188113
+}
