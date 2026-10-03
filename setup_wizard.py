@@ -93,7 +93,11 @@ def chat_ready() -> bool:
 
 def needs_setup() -> bool:
     cfg = load_config()
-    return not cfg.get("gemini_api_key", "").strip()
+    # Gemini directo O un backend OpenAI-compatible (OpenRouter / Nous Portal)
+    # cuentan como "configurado". Sin ninguno, hay que abrir el wizard.
+    has_gemini = bool(cfg.get("gemini_api_key", "").strip())
+    has_openai_compat = bool(cfg.get("openrouter_api_key", "").strip())
+    return not (has_gemini or has_openai_compat)
 
 
 # ── Modo headless ──────────────────────────────────────────────────────────

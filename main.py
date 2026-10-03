@@ -1769,7 +1769,10 @@ class ErisLive:
             loop = asyncio.get_event_loop()
 
             def _analyze():
-                client = genai.Client(api_key=get_api_key())
+                api_key = get_api_key()
+                if not api_key:
+                    return "No hay API key de Gemini configurada para analizar audio."
+                client = genai.Client(api_key=api_key)
                 from core.model_config import get_model
                 resp = client.models.generate_content(
                     model=get_model("vision"),
@@ -4522,8 +4525,13 @@ class ErisLive:
                 print("[ERIS] \U0001f7e2 Internet restaurado. Conectando a Gemini...")
                 self.ui.write_log("SYS: \U0001f7e2 Internet restaurado. Conectando a Gemini...")
 
+        _api_key = get_api_key()
+        if not _api_key:
+            print("[ERIS] Sin API key de Gemini: chat por texto deshabilitado (usá openrouter_api_key).")
+            self.ui.write_log("SYS: Sin API key de Gemini. Configurá openrouter_api_key para chat por texto.")
+            return
         client = genai.Client(
-            api_key=get_api_key(),
+            api_key=_api_key,
             http_options={"api_version": "v1beta"}
         )
 
