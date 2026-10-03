@@ -267,3 +267,6 @@
 
 ## 2026-10-03 17:53:27 · deps
 - flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 18:01:29 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']

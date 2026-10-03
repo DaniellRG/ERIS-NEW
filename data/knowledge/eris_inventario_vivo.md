@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-10-03 17:08:39 · 507 tools registradas y resolviendo.
+Generado: 2026-10-03 18:04:01 · 504 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -339,7 +339,6 @@ Generado: 2026-10-03 17:08:39 · 507 tools registradas y resolviendo.
 
 ## diagnostico
 - `diagnostico` — Panel de diagnóstico en vivo de ERIS: responde '¿qué se rompió y por qué?' de forma accionable. state (default
-- `diagnostico_de_sesiones` — Ejecuta diagnósticos de sesiones de entrenamiento: analiza resultados y genera reportes.
 
 ## disk
 - `disk_wiper` — Borrado seguro de archivos, carpetas o discos (overwrite con metodo DoD). Acciones: wipe_file (borrar archivo 
@@ -623,9 +622,6 @@ Generado: 2026-10-03 17:08:39 · 507 tools registradas y resolviendo.
 ## music
 - `music_player` — Reproduce archivos de audio y video locales (MP3, WAV, MP4, AVI, etc). Busca en carpetas de música o abre cual
 
-## namespace
-- `namespace_organizer` — Organiza y gestiona namespaces de ERIS: crea, lista y elimina namespaces.
-
 ## native
 - `native_ui` — Automatizacion de UI nativa de Windows: listar ventanas, enfocar, escribir texto, hacer clic, obtener informac
 
@@ -708,9 +704,6 @@ Generado: 2026-10-03 17:08:39 · 507 tools registradas y resolviendo.
 
 ## plan
 - `plan_adaptation` — Adapta un plan existente cuando algo falla o cambian las condiciones. Sugiere cómo modificar los pasos sin emp
-
-## planificador
-- `planificador_de_sesiones` — Planifica sesiones de entrenamiento de ERIS: crea planes, agenda sesiones y gestiona el progreso.
 
 ## play
 - `play_direct` — Reproduce contenido multimedia directamente: YouTube (query/url/video_id) o archivos locales (file_path). Acci
