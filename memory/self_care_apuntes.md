@@ -195,3 +195,45 @@
 
 ## 2026-10-03 15:38:11 · deps
 - flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 15:54:08 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 15:54:08 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:02:08 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-03 16:02:08 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:07:21 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 16:07:21 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:15:22 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 16:15:22 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:39:28 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 16:39:28 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:47:28 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 16:47:28 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
+
+## 2026-10-03 16:54:26 · config
+- no puedo inventar estas claves: ['gemini_api_key', 'fish_api_key']
+
+## 2026-10-03 16:54:26 · deps
+- flask: /home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python: No module named pip
