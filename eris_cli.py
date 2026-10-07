@@ -103,11 +103,10 @@ def _delete_session(name: str) -> bool:
 
 # ── ASCII Art Banner ──
 BANNER = rf"""
-{C.CYAN}{C.BOLD}  _____ _____  ___ _____ _____ _   _ _____ 
-  | ____|_   _|/ _ \_   _| ____| \ | |_   _|
-  |  _|   | | | | | || | |  _| |  \| | | |  
-  | |___  | | | |_| || | | |___| |\  | | |  
-  |_____| |_|  \___/ |_| |_____|_| \_| |_|  
+{C.CYAN}{C.BOLD} ____  ____  ____  ___      __    ___  ____  _  _  ____ 
+( ___)(  _ \)(  _)/ __)    /__\  / __)( ___)( \( )(_  _)
+ )__)  )   / _)(_ \__ \   /(__)\( (_-. )__)  )  (   )(  
+(____)(_)\_)(____)(___/  (__)(__)\___/(____)(_)\_)\_)(__) 
 {C.RESET}{C.DIM}  Asistente IA — Modo Terminal{C.RESET}
 {C.GRAY}  Escribe tu mensaje y presiona Enter. '/salir' para cerrar.{C.RESET}
 """
