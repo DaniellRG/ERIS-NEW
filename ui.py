@@ -3055,7 +3055,7 @@ class MainWindow(QMainWindow):
             pass
 
     def _setup_window(self):
-        self.setWindowTitle("ERIS")
+        self.setWindowTitle("ERIS-AGENT")
         self.setMinimumSize(500, 400)
         self.resize(1000, 750)
         # Center on screen
@@ -3316,7 +3316,7 @@ class MainWindow(QMainWindow):
         icon_path = str(_base_dir() / "assets" / "ICOERIS.ico")
         icon = QIcon(icon_path) if os.path.exists(icon_path) else QIcon()
         self._tray = QSystemTrayIcon(icon, self)
-        self._tray.setToolTip("ERIS")
+        self._tray.setToolTip("ERIS-AGENT")
         menu = QMenu()
         show_a = menu.addAction("Show")
         show_a.triggered.connect(lambda: (self.show(), self.raise_(), self.activateWindow()))
