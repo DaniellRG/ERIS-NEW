@@ -4,7 +4,7 @@ Supports two backends:
   1. Ollama (local, no rate limits) — default
   2. Gemini API (cloud, rate limited) — fallback
 """
-import json, time, traceback
+import json, time, traceback, sys
 from pathlib import Path
 
 from core.tool_declarations import TOOL_DECLARATIONS
@@ -319,6 +319,39 @@ def _get_groq_config() -> dict:
     }
 
 
+def _get_xkairo_config() -> dict:
+    """Config de xKiro: proveedor OpenAI-compatible alternativo.
+
+    La key se resuelve vía core.key_manager (auto-gestión: scoped-token creation
+    cuando xKiro lo permite, fallback a key de config, o petición al usuario).
+    xKiro es el proveedor con más chances de permitir 'crear keys' programáticas
+    (scoped sub-keys), que es lo que buscamos para la auto-gestión de Eris.
+    """
+    from core.audio_config import get_config
+    cfg = get_config()
+    # El key_manager decide: valida la key on-the-fly, rota si vence, crea scoped.
+    try:
+        from core.key_manager import resolve_key
+        resolved = resolve_key(provider="xkiro", purpose="chat-fallback")
+        api_key = resolved.get("key", "") if resolved and not resolved.get("need_user_input") else ""
+        if resolved and resolved.get("need_user_input"):
+            print(f"[ERIS] KeyManager: {resolved.get('message', '')[:120]}", file=sys.stderr)
+    except Exception:
+        api_key = ""
+    # Fallback: si el key_manager no resolvió, usar la guardada en config
+    if not api_key:
+        api_key = cfg.get("xkairo_api_key", "")
+    return {
+        "enabled": bool(api_key),
+        "api_key": api_key,
+        "model": cfg.get("xkairo_model", "deepseek/deepseek-chat"),
+        "base_url": (cfg.get("xkairo_base_url", "https://api.xkiro.com/v1") or
+                     "https://api.xkiro.com/v1").rstrip("/"),
+        "max_tokens": cfg.get("xkairo_max_tokens", 2048),
+        "use_compact": bool(cfg.get("xkairo_use_compact", True)),
+    }
+
+
 class GeminiTextChat:
     """Multi-turn chat with tool execution. Gemini primario → OpenRouter → Groq → Ollama (failover secuencial)."""
 
@@ -356,6 +389,15 @@ class GeminiTextChat:
         self._openrouter_url = or_cfg["base_url"].rstrip("/") + "/chat/completions"
         self._openrouter_max_tokens = or_cfg.get("max_tokens") or 640
         self._openrouter_use_compact = bool(or_cfg.get("use_compact", True))
+
+        # xKiro (fallback 1.5 — proveedor con scoped-token capability)
+        xk_cfg = _get_xkairo_config()
+        self._use_xkairo = xk_cfg["enabled"] and bool(xk_cfg["api_key"])
+        self._xkairo_api_key = xk_cfg["api_key"]
+        self._xkairo_model = xk_cfg["model"]
+        self._xkairo_url = xk_cfg["base_url"].rstrip("/") + "/chat/completions"
+        self._xkairo_max_tokens = xk_cfg.get("max_tokens") or 1024
+        self._xkairo_use_compact = bool(xk_cfg.get("use_compact", True))
         self._system_compact = self._load_compact_prompt()
 
         # Groq (fallback 2)
@@ -427,6 +469,11 @@ class GeminiTextChat:
             result = await self._chat_openrouter(user_text)
             if result and not result.startswith("Error de OpenRouter"):
                 return result or "Listo."
+        # 2.5. xKiro (failover intermedio — proveedor con scoped-key capability)
+        if self._use_xkairo:
+            result = await self._chat_xkairo(user_text)
+            if result and not result.startswith("Error de xKiro"):
+                return result or "Listo."
         # 3. Groq (fallback 2)
         if self._use_groq:
             result = await self._chat_groq(user_text)
@@ -449,6 +496,11 @@ class GeminiTextChat:
         if self._use_openrouter:
             result = await self._chat_openrouter(user_text, on_token=on_token)
             if result and not result.startswith("Error de OpenRouter"):
+                return result or "Listo."
+        # 2.5. xKiro (failover intermedio — proveedor con scoped-key capability)
+        if self._use_xkairo:
+            result = await self._chat_xkairo(user_text, on_token=on_token)
+            if result and not result.startswith("Error de xKiro"):
                 return result or "Listo."
         # 3. Groq (fallback 2)
         if self._use_groq:
@@ -722,16 +774,49 @@ class GeminiTextChat:
                 },
                 timeout=120,
             )
+            if r.status_code == 401:
+                return None  # trigger retry con rotacion de key
             r.raise_for_status()
             data = r.json()
             c = data["choices"][0]["message"]
             return c.get("content", ""), c.get("tool_calls", [])
 
-        for _round in range(6):
+        # Reintentos con rotación de key ante 401 (key vencida → key_manager rota)
+        for attempt in range(3):
             try:
-                content, tool_calls = _round_response()
+                rr = _round_response()
+            except requests.exceptions.HTTPError as e:
+                if e.response is not None and e.response.status_code == 401 and attempt < 2:
+                    print(f"[ERIS] OpenRouter 401 → rotando key (intento {attempt+1}/3)", file=sys.stderr)
+                    try:
+                        from core.key_manager import rotate_on_401
+                        new_key = rotate_on_401(provider="openrouter", old_key=self._openrouter_api_key)
+                        if new_key and new_key.get("key"):
+                            self._openrouter_api_key = new_key["key"]
+                            continue
+                    except Exception:
+                        pass
+                    return f"Error de OpenRouter: key 401 (intento {attempt+1}/3)."
+                return f"Error de OpenRouter: {e}"
             except Exception as e:
                 return f"Error de OpenRouter: {e}"
+
+            if rr is None:
+                # _round_response devolvió None por 401 → rotar y reintentar
+                if attempt < 2:
+                    print(f"[ERIS] OpenRouter 401 → rotando key (intento {attempt+1}/3)", file=sys.stderr)
+                    try:
+                        from core.key_manager import rotate_on_401
+                        new_key = rotate_on_401(provider="openrouter", old_key=self._openrouter_api_key)
+                        if new_key and new_key.get("key"):
+                            self._openrouter_api_key = new_key["key"]
+                            continue
+                    except Exception:
+                        pass
+                    return "Error de OpenRouter: key 401 y no se pudo rotar."
+                return "Error de OpenRouter: agotados reintentos de key."
+
+            content, tool_calls = rr
 
             if not tool_calls:
                 self._append_model_content(content)
@@ -765,7 +850,123 @@ class GeminiTextChat:
         self._append_model_content(content)
         return content or "Listo."
 
-    async def _chat_groq(self, user_text: str, on_token=None) -> str:
+    async def _chat_xkairo(self, user_text: str, on_token=None) -> str:
+        """Chat por API de xKiro (OpenAI-compatible). Proveedor alternativo con
+        scoped-token capability — ahi Eris puede crear keys efímeras via key_manager.
+        Failover con retry: ante 401, el key_manager rota la key y reintenta."""
+        import requests
+
+        # Refrescar key via key_manager (valida/crea scoped si xKiro lo permite)
+        try:
+            from core.key_manager import resolve_key, rotate_on_401
+        except Exception:
+            resolve_key = rotate_on_401 = None
+
+        for attempt in range(3):
+            # Resolver key fresca (el manager valida on-the-fly y crea scoped)
+            api_key = self._xkairo_api_key
+            if not api_key and resolve_key:
+                try:
+                    resolved = resolve_key(provider="xkiro", purpose="chat")
+                    if resolved and resolved.get("key"):
+                        api_key = resolved["key"]
+                except Exception:
+                    pass
+            if not api_key:
+                return "Error de xKiro: no hay API key disponible."
+
+            xk_tools = []
+            for t in _gemini_tools():
+                xk_tools.append({
+                    "type": "function",
+                    "function": {
+                        "name": t["name"],
+                        "description": t.get("description", ""),
+                        "parameters": t.get("parameters", {"type": "object", "properties": {}}),
+                    },
+                })
+            system_text = self._system_compact if (self._xkairo_use_compact and self._system_compact) else self._system
+            msgs = [{"role": "system", "content": system_text}]
+            for msg in self._history[:-1]:
+                role = "assistant" if getattr(msg, "role", "model") == "model" else "user"
+                text = " ".join(getattr(p, "text", "") or "" for p in getattr(msg, "parts", [])) if hasattr(msg, "parts") else str(msg)
+                if text.strip():
+                    msgs.append({"role": role, "content": text.strip()})
+            msgs.append({"role": "user", "content": user_text})
+
+            def _round_response():
+                payload = {
+                    "model": self._xkairo_model,
+                    "messages": msgs,
+                    "tools": xk_tools,
+                    "max_tokens": self._xkairo_max_tokens,
+                    "temperature": 0.7,
+                }
+                r = requests.post(
+                    self._xkairo_url,
+                    json=payload,
+                    headers={"Authorization": f"Bearer {api_key}",
+                             "Content-Type": "application/json"},
+                    timeout=120,
+                )
+                if r.status_code == 401:
+                    return None  # trigger retry con rotacion
+                r.raise_for_status()
+                data = r.json()
+                c = data["choices"][0]["message"]
+                return c.get("content", ""), c.get("tool_calls", [])
+
+            for _round in range(6):
+                try:
+                    rr = _round_response()
+                except Exception as e:
+                    return f"Error de xKiro: {e}"
+
+                if rr is None:
+                    # 401 → rotar key y reintentar el intento completo
+                    print(f"[ERIS] xKiro 401 → rotando key (intento {attempt+1}/3)", file=sys.stderr)
+                    if rotate_on_401:
+                        try:
+                            new_key = rotate_on_401(provider="xkiro", old_key=api_key)
+                            if new_key and new_key.get("key"):
+                                api_key = new_key["key"]
+                                self._xkairo_api_key = api_key
+                                continue  # reintentar el for-attempt
+                        except Exception:
+                            pass
+                    return f"Error de xKiro: key 401 (intento {attempt+1}/3)."
+
+                content, tool_calls = rr
+                if not tool_calls:
+                    self._append_model_content(content)
+                    return content or "Listo."
+
+                # Execute tool calls
+                tool_results = []
+                for tc in tool_calls:
+                    func = tc.get("function", {})
+                    name = func.get("name", "")
+                    args = func.get("arguments", {})
+                    if isinstance(args, str):
+                        try: args = json.loads(args)
+                        except Exception: args = {}
+                    print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
+                    result = await self._execute_tool(name, args)
+                    tr = {"role": "tool", "content": str(result)}
+                    if tc.get("id"):
+                        tr["tool_call_id"] = tc["id"]
+                    if name:
+                        tr["name"] = name
+                    tool_results.append(tr)
+
+                msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
+                msgs.extend(tool_results)
+
+            self._append_model_content(content)
+            return content or "Listo."
+
+        return "Error de xKiro: agotados los reintentos de key."
+
         """Chat por API de Groq (GPT-OSS 120B, ~500 tps). El tier gratuito limita
         cada request a ~8000 tokens: usa system compacto + tools miniaturizadas
         con presupuesto de tokens, y trunca el historial viejo si hace falta.
@@ -908,6 +1109,133 @@ class GeminiTextChat:
                 role="model",
                 parts=[types.Part.from_text(text=text)]
             ))
+
+    async def _chat_groq(self, user_text: str, on_token=None) -> str:
+        """Chat por API de Groq (GPT-OSS 120B, ~500 tps). El tier gratuito limita
+        cada request a ~8000 tokens: usa system compacto + tools miniaturizadas
+        con presupuesto de tokens, y trunca el historial viejo si hace falta.
+        Formato OpenAI-compatible: role 'tool' es válido aquí."""
+        import json as _json
+        import requests
+
+        # Presupuesto: ~8000 tokens/request (tier gratuito). Fijamos un margen.
+        _BUDGET = 7800
+        gq_tools = _groq_tools(limit_tokens=5000)
+        system_text = self._system_compact if (self._groq_use_compact and self._system_compact) else self._system
+
+        def _estimate(msgs_list: list) -> int:
+            return sum((len(m.get("content", "")) + 8) // 4 + 1 for m in msgs_list)
+
+        def _build_msgs() -> list:
+            out = [{"role": "system", "content": system_text}]
+            for msg in self._history[:-1]:
+                role = "assistant" if getattr(msg, "role", "model") == "model" else "user"
+                if hasattr(msg, "parts"):
+                    text = " ".join(getattr(p, "text", "") or "" for p in msg.parts if getattr(p, "text", None))
+                else:
+                    text = str(msg)
+                if text.strip():
+                    out.append({"role": role, "content": text.strip()})
+            out.append({"role": "user", "content": user_text})
+            # Truncar historial viejo si excede el presupuesto (deja system + user)
+            while len(out) > 2 and _estimate(out) > _BUDGET - 4000:
+                out.pop(1)
+            return out
+
+        msgs = _build_msgs()
+
+        def _round_response(tools):
+            payload = {
+                "model": self._groq_model,
+                "messages": msgs,
+                "tools": tools if tools else None,
+                "max_tokens": min(self._groq_max_tokens or 4096, 2048),
+                "temperature": 0.7,
+                "stream": False,
+            }
+            r = requests.post(
+                self._groq_url,
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {self._groq_api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=180,
+            )
+            if r.status_code == 401:
+                raise RuntimeError("API key de Groq inválida (401)")
+            r.raise_for_status()
+            data = r.json()
+            c = data["choices"][0]["message"]
+            return c.get("content", ""), c.get("tool_calls", [])
+
+        current_tools = gq_tools
+        content = ""
+        retried = False
+        last_tool_name = None
+        for _round in range(6):
+            try:
+                content, tool_calls = _round_response(current_tools)
+            except Exception as e:
+                err_str = str(e)
+                # El modelo nombró una tool que no estaba declarada (el prompt
+                # compacto conoce más tools de las que entran por presupuesto) → se
+                # agrega esa tool como extra y se reintenta.
+                if "was not in request.tools" in err_str:
+                    import re as _re
+                    m = _re.search(r"call tool '([^']+)'", err_str)
+                    if m and not retried:
+                        retried = True
+                        extra = m.group(1)
+                        print(f"[Groq] ➕ Tool '{extra}' no declarada → agregada como extra")
+                        current_tools = _groq_tools(limit_tokens=5000, extras=[extra])
+                        try:
+                            content, tool_calls = _round_response(current_tools)
+                        except Exception as e2:
+                            return f"Error de Groq: {e2}"
+                    else:
+                        return f"Error de Groq: {e}"
+                elif not retried and ("413" in err_str or "429" in err_str or "Request too large" in err_str):
+                    retried = True
+                    extras = [last_tool_name] if last_tool_name else None
+                    current_tools = _groq_tools(limit_tokens=2000, extras=extras)
+                    msgs = _build_msgs()
+                    while len(msgs) > 2 and _estimate(msgs) > _BUDGET - 2000:
+                        msgs.pop(1)
+                    try:
+                        content, tool_calls = _round_response(current_tools)
+                    except Exception as e2:
+                        return f"Error de Groq: {e2}"
+                else:
+                    return f"Error de Groq: {e}"
+
+            if not tool_calls:
+                self._append_model_content(content)
+                if on_token:
+                    for part in content.split():
+                        on_token(part + " ")
+                return content or "Listo."
+
+            tool_results = []
+            for tc in tool_calls:
+                fn = tc.get("function", {})
+                name = fn.get("name", "")
+                args = fn.get("arguments", {})
+                if isinstance(args, str):
+                    try:
+                        args = _json.loads(args)
+                    except Exception:
+                        args = {}
+                print(f"[Groq] 🔧 Tool: {name}({list(args.keys())})")
+                result = await self._execute_tool(name, args)
+                last_tool_name = name
+                tool_results.append({"role": "tool", "tool_call_id": tc.get("id", ""), "content": str(result)})
+
+            msgs.append({"role": "assistant", "content": content, "tool_calls": tool_calls})
+            msgs.extend(tool_results)
+
+        self._append_model_content(content)
+        return content or "Listo."
 
     # ── Gemini backend ──
 
