@@ -48,6 +48,20 @@ TOOL_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="eris-tool"
 # explosion de ~12 threads OS por llamada de tool que agotaba la memoria.
 _HOOK_EXECUTOR = ThreadPoolExecutor(max_workers=2, thread_name_prefix="eris-hook")
 
+# ── Politica de permisos: si el permission_gate EXCEPCIONA, estas tools NO se
+# ejecutan (fail-closed) y el resto si, para no tumbar el flujo normal.
+# Antes el bloque iba en `except Exception: pass` = fail-open: cualquier error
+# del gate dejaba correr hasta `terminal_agent rm -rf /`.
+_RISKY_TOOLS = frozenset({
+    "terminal_agent", "shell_session", "elevated", "shell_execute",
+    "pc_control", "process_manager", "git_control", "file_api",
+    "shutdown_eris", "clean", "force_push",
+})
+
+# Referencia al timer de apagado (mantiene vivo el hilo y permite cancelarlo).
+_SHUTDOWN_TIMER: threading.Timer | None = None
+_SHUTDOWN_DELAY_S = 8  # paridad con el `timeout /t 8` de la rama Windows
+
 # ── Throttle de auto-aprendizaje: evita registrar cada fallo como lección ──
 _LEARN_LOCK = threading.Lock()
 _LEARN_LOG: dict[str, float] = {}      # "tool:error_prefix" -> last learn timestamp
@@ -164,6 +178,7 @@ class ToolDispatcher:
         resilient.register_task(task_id, name, args)
 
         # ── Permission gate: check for dangerous operations ──
+        # Fail-closed: si el gate revienta, las tools de riesgo NO corren.
         try:
             from core.permission_gate import get_permission_gate
             gate = get_permission_gate()
@@ -176,8 +191,19 @@ class ToolDispatcher:
                     id=fc.id, name=name,
                     response={"result": f"Permiso denegado por el usuario para '{name}': {perm.reason}"}
                 )
-        except Exception:
-            pass
+        except Exception as _ge:
+            if name in _RISKY_TOOLS:
+                _why = (f"Permission gate fallo ({type(_ge).__name__}: {_ge}) y "
+                        f"'{name}' es una tool de riesgo: NO se ejecuto nada.")
+                resilient.task_completed(task_id, f"Permiso denegado: {_why}")
+                self.ui.write_log(f"DENY: {_why}")
+                return types.FunctionResponse(
+                    id=fc.id, name=name,
+                    response={"result": f"Permiso denegado: {_why}"}
+                )
+            # Riesgo bajo: se ejecuta igual (no romper el flujo normal), pero
+            # el fallo del gate queda visible en logs.
+            print(f"[ERIS] ⚠️ permission_gate fallo en '{name}': {type(_ge).__name__}: {_ge}")
 
         # ── UNDO hook (patrón /undo de opencode): snapshot previo de archivos ──
         # Antes de ejecutar, respaldamos el estado de los archivos que la tool
@@ -191,17 +217,41 @@ class ToolDispatcher:
             pass
 
         # ── Special: shutdown ──
+        # Multiplataforma. La version anterior solo armaba el cmd de Windows:
+        # en Linux `creationflags` lanzaba ValueError, ese bloque NO estaba en
+        # ningun `try` y la excepcion subia hasta tumbar la sesion entera en
+        # vez de apagarse. Ahora hay rama por SO + try, y SIEMPRE se devuelve
+        # FunctionResponse (exito o error) para que el LLM vea el resultado.
         if name == "shutdown_eris":
-            resilient.task_completed(task_id, "Apagando ERIS.")
             self.ui.write_log("SYS: Apagando ERIS...")
-            my_pid = os.getpid()
-            import subprocess
-            cmd = f'start /b timeout /t 8 /nobreak >nul & taskkill /F /PID {my_pid}'
-            subprocess.Popen(["cmd", "/c", cmd], creationflags=0x08000000 | 0x00000008)
-            return types.FunctionResponse(
-                id=fc.id, name=name,
-                response={"result": "Apagando ERIS. ¡Hasta luego, señor! Me apago ahora."}
-            )
+            try:
+                my_pid = os.getpid()
+                if os.name == "nt":
+                    import subprocess
+                    cmd = f'start /b timeout /t {_SHUTDOWN_DELAY_S} /nobreak >nul & taskkill /F /PID {my_pid}'
+                    subprocess.Popen(["cmd", "/c", cmd], creationflags=0x08000000 | 0x00000008)
+                else:
+                    # Timer daemon: la respuesta se manda ANTES de morir,
+                    # igual que el `timeout /t 8` de Windows.
+                    import signal
+                    global _SHUTDOWN_TIMER
+                    _SHUTDOWN_TIMER = threading.Timer(
+                        _SHUTDOWN_DELAY_S, os.kill, args=(my_pid, signal.SIGTERM))
+                    _SHUTDOWN_TIMER.daemon = True
+                    _SHUTDOWN_TIMER.start()
+                resilient.task_completed(task_id, "Apagando ERIS.")
+                return types.FunctionResponse(
+                    id=fc.id, name=name,
+                    response={"result": "Apagando ERIS. ¡Hasta luego, señor! Me apago ahora."}
+                )
+            except Exception as _se:
+                _msg = (f"No pude apagarme ({type(_se).__name__}: {_se}). "
+                        "Cerra la sesion a mano.")
+                resilient.task_completed(task_id, f"Shutdown falló: {_se}")
+                return types.FunctionResponse(
+                    id=fc.id, name=name,
+                    response={"result": _msg}
+                )
 
         # ── Special: save_memory ──
         if name == "save_memory":
