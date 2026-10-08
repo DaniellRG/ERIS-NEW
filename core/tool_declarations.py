@@ -7302,24 +7302,35 @@ TOOL_DECLARATIONS.extend([
 
 
 def load_custom_tools(BASE_DIR):
-    """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS."""
+    """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
+
+    Blindado: una entrada sin 'name' (o no-dict) se DESCARTA con warning en vez
+    de appendearse — una entrada malformada aquí rompía `decl["name"]` en todos
+    los constructores de tools (Gemini/Groq/Ollama) y tumbaba el chat entero
+    con `KeyError: 'name'` (bug 2026-10-08, entrada lab_pulse a medias).
+    """
+    def _append_valid(path):
+        with open(path, "r", encoding="utf-8") as _f:
+            _items = json.load(_f)
+        if not isinstance(_items, list):
+            return
+        _existing = {td.get("name") for td in TOOL_DECLARATIONS if isinstance(td, dict)}
+        for _t in _items:
+            if not isinstance(_t, dict) or not isinstance(_t.get("name"), str) or not _t["name"]:
+                print(f"[tool_declarations] ⚠️  Entrada malformada en {path.name} "
+                      f"(sin 'name'): descartada -> {str(_t)[:80]}")
+                continue
+            if _t["name"] not in _existing:
+                TOOL_DECLARATIONS.append(_t)
+                _existing.add(_t["name"])
+
     try:
         _custom_tools_path = BASE_DIR / "actions" / "custom_tools.json"
         if _custom_tools_path.exists():
-            with open(_custom_tools_path, "r", encoding="utf-8") as _f:
-                _custom = json.load(_f)
-            if isinstance(_custom, list):
-                for _t in _custom:
-                    if _t.get("name") not in [td["name"] for td in TOOL_DECLARATIONS]:
-                        TOOL_DECLARATIONS.append(_t)
+            _append_valid(_custom_tools_path)
         _extra_tools_path = BASE_DIR / "config" / "extra_tools.json"
         if _extra_tools_path.exists():
-            with open(_extra_tools_path, "r", encoding="utf-8") as _f:
-                _extra = json.load(_f)
-            if isinstance(_extra, list):
-                for _t in _extra:
-                    if _t.get("name") not in [td["name"] for td in TOOL_DECLARATIONS]:
-                        TOOL_DECLARATIONS.append(_t)
+            _append_valid(_extra_tools_path)
     except Exception:
         pass
 
