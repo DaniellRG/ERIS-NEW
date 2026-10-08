@@ -175,7 +175,7 @@ _TOOLS = {
     "agent_loop":            ("core.agent_architecture", "agent_loop"),
 
     # ── Updater ──
-    "eris_update":           ("core.updater", "check_for_update"),
+    "eris_update":           ("core.tool_wrappers", "eris_update"),
 
     # ── Meta ──
     "ollama_status":         ("core.model_router", "status"),
@@ -387,7 +387,7 @@ _TOOLS = {
     # ── NEW: Core Modules (reliability upgrades) ──
     "file_api":              ("core.file_api", "file_api"),
     "ast_analyze":           ("core.ast_editor", "analyze_file"),
-    "ast_edit":              ("core.ast_editor", "safe_edit"),
+    "ast_edit":              ("core.tool_wrappers", "ast_edit"),
     "shell_session":         ("core.shell_session", "run_shell_tool"),
     "maintenance":           ("core.maintenance_scheduler", "maintenance"),
     "wayland_input":         ("actions.wayland_input", "wayland_input"),
@@ -398,11 +398,11 @@ _TOOLS = {
     "agelix":                ("agents.agenlix_agent", "agelix"),
     "guardiana":             ("agents.guardiana_agent", "guardiana"),
     "mentora":               ("agents.mentora_agent", "mentora"),
-    "memory_unified":        ("core.memory_unified", "get_memory"),
+    "memory_unified":        ("core.tool_wrappers", "memory_unified_tool"),
     "task_engine":           ("core.task_engine", "TaskEngine"),
-    "permission_gate":       ("core.permission_gate", "get_permission_gate"),
+    "permission_gate":       ("core.tool_wrappers", "permission_gate_tool"),
     "permission_policy":     ("core.permission_gate", "permission_policy_tool"),
-    "agent_bus":             ("core.agent_bus", "get_agent_bus"),
+    "agent_bus":             ("core.tool_wrappers", "agent_bus_tool"),
     "save_memory":           ("actions.save_memory", "save_memory"),
     "console_log":           ("actions.console_log", "console_log"),
     "context7":              ("actions.context7", "handle_context7"),
