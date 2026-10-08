@@ -35,3 +35,5 @@ vosk
 qtawesome
 python-docx
 openpyxl
+# Scraping IA (sub_agent_crew WebExtractor: SmartScraperGraph/SearchGraph)
+scrapegraphai

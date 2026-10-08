@@ -16,6 +16,7 @@ monitoreo del sistema (system_monitor_agent), empaquetado nativo
 - **Console is cp1252**: emojis → `UnicodeEncodeError`. Use `$env:PYTHONIOENCODING="utf-8"` or write to file.
 - **config/api_keys.json**: must be UTF-8 **without BOM**. BOM → crash on load. Write with `Path.write_text(json, encoding="utf-8")` or PowerShell: `[System.IO.File]::WriteAllText($p, $json, (New-Object System.Text.UTF8Encoding($false)))`.
 - **Tool sync is sacred**: after adding/removing tools, edit BOTH `core/tool_registry.py` AND `core/tool_declarations.py`, then verify `len(registry) == len(declarations)` and 0 duplicates. Restart Eris.
+- **Entradas de `custom_tools.json`/`extra_tools.json` SIEMPRE con `"name"`**: `load_custom_tools()` descarta (con warning) cualquier entrada sin `name` — una entrada a medias ahí se appendeaba a `TOOL_DECLARATIONS` y rompía `decl["name"]` en TODOS los constructores de tools (Gemini/Groq/Ollama/OpenRouter) con `KeyError: 'name'`, tumbando el chat entero (bug 2026-10-08, `lab_pulse` editada a medias). No "arreglar" quitando el guard: el guard es el blindaje.
 - **Gemini limita a 128 function_declarations**: con las 504 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
 - **ARRAY type rejected by Gemini**: use `STRING` with JSON-encoded content in declarations (see `actions/office_tools.py` for pattern).
 - **Ollama tool_calls**: `arguments` arrives as `dict` (not string) — check `isinstance(raw_args, dict)` before `json.loads`.
@@ -76,8 +77,8 @@ monitoreo del sistema (system_monitor_agent), empaquetado nativo
 | `core/pentest_learning.py` | APRENDIZAJE PERSISTENTE del lab: auto-guarda CADA hallazgo (CVEs, puertos, servicios, vectores de acceso), error y lección en 4 capas: (1) `memory/pentest_learning.json` (estado estructurado: hallazgos, errores, lecciones, caminos), (2) `data/knowledge/pentest_hallazgos.md`, (3) Obsidian `Ciberseguridad/` (nota por hallazgo + índice `PENTEST_APRENDIZAJE.md`), (4) novedad en `todo_yo`. Detecta vectores de acceso reales (`_detectar_caminos`: vsftpd backdoor, MS08-067, usermap_script...). ESCALADA DE HABILIDADES (`NIVELES`/`registrar_nivel`/`escalada`): 8 niveles de dificultad (Reconocimiento→Enumeración→Detección→Fuerza bruta→Explotación→Escalada de priv→Movimiento lateral→Post-explotación); `pentest_lab` auto-registra niveles al dominar scan/vuln/brute/exploit y `escalada` muestra en qué nivel está Eris y cuál es el próximo reto. Usado por `pentest_lab` en cada scan/vuln + `learn`/`leccion`/`escalada`. Eris así aprende de cada error y cada éxito, y SABE que lo aprendió (novedad). |
 | `core/pentest_exploit.py` | EXPLOTACIÓN REAL del lab (`exploit`): vector vsftpd_234_backdoor (CVE-2011-2523) → **SHELL ROOT (uid=0)** en la VM target via `nmap --script ftp-vsftpd-backdoor --script-args exploit.cmd=<cmd>` (detección pasiva con `-sV`, NO volver a subir el script: consume el bind del backdoor; comandos con `;` se escapan para nmap --script-args). vector ms08_067 = detección/documentación (inestable). SOLO en scope 192.168.56.0/24, la red del lab. El hallazgo/camino/lección se aprende solo en `pentest_learning`. |
 | `core/agent_definitions.py` | 14 fragmentos (core, web, file, dev, media, comm, vision, security, study, linux, guardian, mentora, memoria, pentest). Los 12 previos `handle_*` de `agents/` ahora TODOS se despachan en main.py (antes 8 quedaban muertos); `memoria` y `pentest` son los nuevos. `core/agent_router.py:classify_intent()` umbral ≥3 + penalties + anti-bounce. |
-| `core/tool_registry.py` | 507 tool callables |
-| `core/tool_declarations.py` | 507 LLM-facing declarations (0 dupes, sync 507/507 verificado) |
+| `core/tool_registry.py` | 504 tool callables |
+| `core/tool_declarations.py` | 504 LLM-facing declarations (0 dupes, sync 504/504 verificado) |
 | `core/tool_dispatcher.py` | Executes tools by name |
 | `core/action_imports.py` | Imports all 302 action modules |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
@@ -127,9 +128,9 @@ monitoreo del sistema (system_monitor_agent), empaquetado nativo
 
 ## Testing
 
-`test_all.py` verifies: tool registry (507), declarations (507), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **177 PASS / 1 FAIL ambiental (`cli: eris.bat`) / 2 WARN (neuro nodes, ctypes.windll)**.
+`test_all.py` verifies: tool registry (504), declarations (504), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **176 PASS / 1 FAIL ambiental (`cli: eris.bat`, path Windows hardcodeado) / 3 WARN (neuro nodes, chromadb no instalado, ctypes.windll)**.
 
-Test after any structural change. Current: **177 PASS, 1 FAIL ambiental**.
+Test after any structural change. Current: **176 PASS, 1 FAIL ambiental, 3 WARN**.
 
 ## Avatar VRM 3D (flotante, Eris.vrm)
 

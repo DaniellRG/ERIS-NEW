@@ -72,3 +72,6 @@ deep-translator
 
 # Graficos (chart_generator)
 matplotlib
+
+# Scraping IA (sub_agent_crew WebExtractor: SmartScraperGraph/SearchGraph)
+scrapegraphai
