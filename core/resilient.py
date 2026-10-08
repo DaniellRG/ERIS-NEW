@@ -60,6 +60,31 @@ class TaskManager:
                 pending[task_id]["started"] = datetime.now().isoformat()
                 self._save(_PENDING_FILE, pending)
 
+    def is_pending(self, task_id: str) -> bool:
+        """Check if a task_id still pending (not yet completed/failed)."""
+        with _lock:
+            pending = self._load(_PENDING_FILE)
+            return task_id in pending
+
+    def close_orphan(self, task_id: str, reason: str = "orphan"):
+        """P2 FIX: if task_id still pending (post-hook exception skipped
+        task_completed), mark it as failed so no eternal pending."""
+        with _lock:
+            pending = self._load(_PENDING_FILE)
+            task = pending.pop(task_id, None)
+            if task:
+                self._save(_PENDING_FILE, pending)
+                completed = self._load(_COMPLETED_FILE)
+                completed[task_id] = {
+                    "id": task_id,
+                    "tool": task.get("tool", "?"),
+                    "result_preview": f"ORPHAN-CLOSED: {reason[:200]}",
+                    "completed": datetime.now().isoformat(),
+                    "retries": task.get("retries", 0),
+                }
+                self._save(_COMPLETED_FILE, completed)
+                print(f"[RESILIENT] orphan task closed: {task.get('tool','?')} ({task_id})")
+
     def task_completed(self, task_id: str, result: str):
         """Task finished successfully — remove from pending, log to completed."""
         with _lock:

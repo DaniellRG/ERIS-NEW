@@ -155,7 +155,7 @@ class ToolDispatcher:
         task_id = generate_task_id(name, args)
         resilient = get_manager()
 
-        print(f"[ERIS] 🔧 {name}  {args}")
+        pass  # silenciado (owner WIP: print → pass)
         self.ui.set_state("THINKING")
 
         # ── Command Deck: registrar intent que se va a ejecutar ──
@@ -475,319 +475,331 @@ class ToolDispatcher:
                 pass
 
         # ── Post-dispatch hooks ──
+        # P2 FIX: try/finally garantiza cierre del task_id aunque un hook
+        # post-dispatch falle. Evita pending eternas en pending_tasks.json.
         try:
-            from core.action_imports import record_action, db_tool_log, react_to_success, react_to_failure
-        except ImportError:
-            record_action = db_tool_log = react_to_success = react_to_failure = None
-
-        _ok = _result_status(result) in ("ok",)
-        _HOOKS = []
-
-        if record_action:
-            _HOOKS.append(lambda: record_action(name, args))
-
-        if db_tool_log:
-            _HOOKS.append(lambda: db_tool_log(
-                name, args, _ok, str(result)[:200], 0, self._eris._session_id
-            ))
-
-        if react_to_success and react_to_failure:
-            _HOOKS.append(lambda: react_to_success(name) if _ok else react_to_failure(str(result)[:100]))
-
-        if _eg_on_tool_result:
-            _HOOKS.append(lambda: _eg_on_tool_result(None, name, _ok))
-
-        # ── Intent classifier + metrics: registrar intención y uso ──
-        try:
-            from core.intent_classifier import classify_intent
-            intent = classify_intent(str(result)[:200])
-        except Exception:
-            intent = None
-        try:
-            from core.metrics_dashboard import record_tool_usage as _mu
-            _mu(name, _result_status(result) == "ok", 0)
-        except Exception:
-            pass
-        try:
-            from core.capability_self_assessment import record_tool_usage as _ca
-            _ca(name, _result_status(result) == "ok", 0)
-        except Exception:
-            pass
-        try:
-            from core.proactive_suggestions import record_user_pattern
-            record_user_pattern(name, "tool:%s" % name)
-        except Exception:
-            pass
-        # ── Aprendizaje procedural: registrar la tool dentro de la intención ──
-        if _ok:
+            # ── Post-dispatch hooks ──
             try:
-                from core.procedimientos import registrar_paso
-                _HOOKS.append(lambda: registrar_paso(name, intencion=str(intent or "")))
-            except Exception:
-                pass
-            # ── Patrón repetitivo (auto-fábrica): secuencias 2/3 de tools ──
-            try:
-                from core.skill_auto_creator import register_tool_stream
-                _HOOKS.append(lambda: register_tool_stream(name, context=str(intent or "")))
-            except Exception:
-                pass
-            # ── Contexto proactivo: aprender secuencias de tools ──
-            try:
-                from core.proactive_context import record_tool_sequence as _pcs
-                _seq_now = list(_RECENT_TOOLS) + [name]
-                _RECENT_TOOLS.append(name)
-                _HOOKS.append(lambda s=list(_seq_now): _pcs(s) if len(s) >= 2 else None)
-            except Exception:
-                pass
-        # ── Smart file organizer: track file access ──
-        try:
-            from core.smart_file_organizer import record_file_access
-            fp = args.get("path") or args.get("file_path") or args.get("filename") or ""
-            if fp and isinstance(fp, str) and "/" in fp or "\\" in fp:
-                _HOOKS.append(lambda: record_file_access(fp))
-        except Exception:
-            pass
-        # ── Backup prioritizer: track file modifications ──
-        try:
-            if name in ("file_write", "file_edit") and args.get("path"):
-                from core.backup_prioritizer import mark_backed_up
-        except Exception:
-            pass
+                from core.action_imports import record_action, db_tool_log, react_to_success, react_to_failure
+            except ImportError:
+                record_action = db_tool_log = react_to_success = react_to_failure = None
 
-        # ── Training pipeline: track tool success/failure ──
-        try:
-            from core.training_pipeline import evaluate_tool_usage, learn_from_failure
-            _dur = 0.0
-            if not _ok:
-                if _should_learn(name, str(result)):
-                    _HOOKS.append(lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur))
-                    _HOOKS.append(lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"))
-        except Exception:
-            pass
-
-        # ── Self-learning: learn from mistakes ──
-        try:
-            if not _ok and _should_learn(name, str(result)):
-                from actions.self_learning import learn_from_mistake
-                _HOOKS.append(lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parametros o conexion"}))
-        except Exception:
-            pass
-
-        # ── NeuroSpheres: crear nodos COMPLETOS con errores, soluciones, y actividad ──
-        try:
-            from core.neuro_spheres import neuro_spheres as _ns_tool
-            _ns_result = str(result)[:1000]
-            _ns_success = _result_status(result) == "ok"
-
-            # --- NODO DE ACTIVIDAD (siempre que la tool funcione) ---
-            _NS_MAP = {
-                "ide_integration": ("codigo", "habilidad"),
-                "code_assistant": ("codigo", "habilidad"),
-                "code_helper": ("codigo", "habilidad"),
-                "terminal_agent": ("ejecucion", "habilidad"),
-                "git_control": ("codigo", "habilidad"),
-                "web_search": ("investigacion", "aprendizaje"),
-                "browser_navigate": ("investigacion", "aprendizaje"),
-                "file_read": ("codigo", "memoria"),
-                "file_write": ("codigo", "habilidad"),
-                "file_edit": ("codigo", "habilidad"),
-                "file_manager": ("codigo", "memoria"),
-                "test_runner": ("codigo", "habilidad"),
-                "gmail_control": ("aprendizaje", "habilidad"),
-                "google_calendar": ("aprendizaje", "habilidad"),
-                "youtube_video": ("investigacion", "aprendizaje"),
-                "memory_store": ("memoria", "memoria"),
-                "memory_retrieve": ("memoria", "memoria"),
-            }
-
-            if _ns_success and name in _NS_MAP:
-                _sphere, _type = _NS_MAP[name]
-                _title = f"{name}: {_ns_result[:80]}"
-                _content = f"Tool: {name}. Resultado: {_ns_result[:300]}"
-                _HOOKS.append(lambda: _ns_tool({
-                    "action": "add",
-                    "sphere": _sphere,
-                    "type": _type,
-                    "title": _title[:100],
-                    "content": _content,
-                    "connections": [],
-                    "force": 3
-                }))
-
-            # --- NODO DE ERROR (si la tool fallo) ---
-            if not _ns_success:
-                _error_text = _ns_result[:500]
-                # Clasificar tipo de error
-                _error_type = "desconocido"
-                if "syntax" in _error_text.lower() or "parse" in _error_text.lower():
-                    _error_type = "sintaxis"
-                elif "null" in _error_text.lower() or "reference" in _error_text.lower():
-                    _error_type = "null_reference"
-                elif "timeout" in _error_text.lower():
-                    _error_type = "timeout"
-                elif "connection" in _error_text.lower() or "connect" in _error_text.lower():
-                    _error_type = "conexion"
-                elif "permission" in _error_text.lower() or "access" in _error_text.lower():
-                    _error_type = "permisos"
-                elif "not found" in _error_text.lower() or "no such" in _error_text.lower():
-                    _error_type = "no_encontrado"
-                elif "import" in _error_text.lower() or "module" in _error_text.lower():
-                    _error_type = "importacion"
-                elif "type" in _error_text.lower() or "argument" in _error_text.lower():
-                    _error_type = "tipos"
-
-                _error_content = (
-                    f"ERROR en tool '{name}':\n"
-                    f"Tipo: {_error_type}\n"
-                    f"Error: {_error_text}\n"
-                    f"Parametros: {str(args)[:200]}\n"
-                    f"Que busco para solucionar: buscar documentacion, stackoverflow, "
-                    f"revisar parametros, verificar conexion, revisar sintaxis"
-                )
-
-                _HOOKS.append(lambda: _ns_tool({
-                    "action": "add",
-                    "sphere": "error",
-                    "type": "error",
-                    "title": f"Error {name}: {_error_type}",
-                    "content": _error_content,
-                    "connections": [],
-                    "force": 4
-                }))
-
-                # --- NODO DE DIAGNOSTICO (que busco para resolver) ---
-                _search_queries = []
-                if _error_type == "sintaxis":
-                    _search_queries = [f"{name} syntax error", f"corregir error sintaxis {name}"]
-                elif _error_type == "null_reference":
-                    _search_queries = [f"null reference exception {name}", "como manejar null en csharp"]
-                elif _error_type == "timeout":
-                    _search_queries = [f"{name} timeout solucion", "aumentar timeout api"]
-                elif _error_type == "conexion":
-                    _search_queries = [f"{name} connection error", "verificar conexion internet"]
-                elif _error_type == "permisos":
-                    _search_queries = [f"{name} permission denied", "ejecutar como administrador"]
-                elif _error_type == "no_encontrado":
-                    _search_queries = [f"{name} file not found", "verificar ruta archivo"]
-                elif _error_type == "importacion":
-                    _search_queries = [f"{name} import error", "instalar modulo faltante"]
-                elif _error_type == "tipos":
-                    _search_queries = [f"{name} type error", "verificar tipos de datos"]
-                else:
-                    _search_queries = [f"{name} error solution", f"como resolver {name}"]
-
-                _diag_content = (
-                    f"DIAGNOSTICO del error en '{name}':\n"
-                    f"Tipo de error: {_error_type}\n"
-                    f"Que busque para resolver: {', '.join(_search_queries)}\n"
-                    f"Soluciones posibles:\n"
-                    f"1. Revisar documentacion de {name}\n"
-                    f"2. Buscar en stackoverflow\n"
-                    f"3. Verificar parametros de entrada\n"
-                    f"4. Revisar logs del sistema\n"
-                    f"5. Probar con parametros diferentes\n"
-                    f"Error original: {_error_text[:200]}"
-                )
-
-                _HOOKS.append(lambda: _ns_tool({
-                    "action": "add",
-                    "sphere": "diagnostico",
-                    "type": "diagnostico",
-                    "title": f"Diagnostico: {name} - {_error_type}",
-                    "content": _diag_content,
-                    "connections": [],
-                    "force": 4
-                }))
-
-            # --- NODO DE SOLUCION (si una tool de edicion funciono despues de un error) ---
-            if _ns_success and name in ("ide_integration", "code_helper", "file_edit", "file_write"):
-                _sol_content = (
-                    f"SOLUCION aplicada con '{name}':\n"
-                    f"Resultado: {_ns_result[:300]}\n"
-                    f"Que hice: Edite/cree archivo exitosamente\n"
-                    f"Que funciono: La edicion se aplico correctamente\n"
-                    f"Para recordar: Esta solucion funciono para este tipo de problema"
-                )
-                _HOOKS.append(lambda: _ns_tool({
-                    "action": "add",
-                    "sphere": "solucion",
-                    "type": "solucion",
-                    "title": f"Solucion: {name} exitoso",
-                    "content": _sol_content,
-                    "connections": [],
-                    "force": 3
-                }))
-
-        except Exception:
-            pass
-
-        # Ejecutar todos los hooks en el executor acotado (2 workers max)
-        for _hook in _HOOKS:
-            try:
-                _HOOK_EXECUTOR.submit(_hook)
-            except Exception:
-                pass
-
-        if not self.ui.muted:
-            self.ui.set_state("LISTENING")
-
-        print(f"[ERIS] 📤 {name} → {str(result)[:80]}")
-
-        try:
-            from core.truth_audit import record_tool
-            record_tool(name, _result_status(result), str(result)[:160])
-        except Exception:
-            pass
-
-        # ── Command Deck: marcar intent como terminado ──
-        try:
-            from core.command_deck import log_intent
             _ok = _result_status(result) in ("ok",)
-            log_intent(name, args, status=("done" if _ok else "error"),
-                       result=str(result)[:120])
-        except Exception:
-            pass
+            _HOOKS = []
 
-        # ── Núcleo emocional sentiente: éxito/fracaso alimentan el ánimo ──
-        try:
-            from core.emotional_core import appraise_success, appraise_failure
+            if record_action:
+                _HOOKS.append(lambda: record_action(name, args))
+
+            if db_tool_log:
+                _HOOKS.append(lambda: db_tool_log(
+                    name, args, _ok, str(result)[:200], 0, self._eris._session_id
+                ))
+
+            if react_to_success and react_to_failure:
+                _HOOKS.append(lambda: react_to_success(name) if _ok else react_to_failure(str(result)[:100]))
+
+            if _eg_on_tool_result:
+                _HOOKS.append(lambda: _eg_on_tool_result(None, name, _ok))
+
+            # ── Intent classifier + metrics: registrar intención y uso ──
+            try:
+                from core.intent_classifier import classify_intent
+                intent = classify_intent(str(result)[:200])
+            except Exception:
+                intent = None
+            try:
+                from core.metrics_dashboard import record_tool_usage as _mu
+                _mu(name, _result_status(result) == "ok", 0)
+            except Exception:
+                pass
+            try:
+                from core.capability_self_assessment import record_tool_usage as _ca
+                _ca(name, _result_status(result) == "ok", 0)
+            except Exception:
+                pass
+            try:
+                from core.proactive_suggestions import record_user_pattern
+                record_user_pattern(name, "tool:%s" % name)
+            except Exception:
+                pass
+            # ── Aprendizaje procedural: registrar la tool dentro de la intención ──
             if _ok:
-                appraise_success(name)
-            else:
-                appraise_failure(name)
-        except Exception:
-            pass
+                try:
+                    from core.procedimientos import registrar_paso
+                    _HOOKS.append(lambda: registrar_paso(name, intencion=str(intent or "")))
+                except Exception:
+                    pass
+                # ── Patrón repetitivo (auto-fábrica): secuencias 2/3 de tools ──
+                try:
+                    from core.skill_auto_creator import register_tool_stream
+                    _HOOKS.append(lambda: register_tool_stream(name, context=str(intent or "")))
+                except Exception:
+                    pass
+                # ── Contexto proactivo: aprender secuencias de tools ──
+                try:
+                    from core.proactive_context import record_tool_sequence as _pcs
+                    _seq_now = list(_RECENT_TOOLS) + [name]
+                    _RECENT_TOOLS.append(name)
+                    _HOOKS.append(lambda s=list(_seq_now): _pcs(s) if len(s) >= 2 else None)
+                except Exception:
+                    pass
+            # ── Smart file organizer: track file access ──
+            try:
+                from core.smart_file_organizer import record_file_access
+                fp = args.get("path") or args.get("file_path") or args.get("filename") or ""
+                if fp and isinstance(fp, str) and "/" in fp or "\\" in fp:
+                    _HOOKS.append(lambda: record_file_access(fp))
+            except Exception:
+                pass
+            # ── Backup prioritizer: track file modifications ──
+            try:
+                if name in ("file_write", "file_edit") and args.get("path"):
+                    from core.backup_prioritizer import mark_backed_up
+            except Exception:
+                pass
 
-        # ── Terminal panel: log tool result ──
-        try:
-            from core.ui_panels import get_terminal_panel
-            _tp = get_terminal_panel()
-            if _tp:
+            # ── Training pipeline: track tool success/failure ──
+            try:
+                from core.training_pipeline import evaluate_tool_usage, learn_from_failure
+                _dur = 0.0
+                if not _ok:
+                    if _should_learn(name, str(result)):
+                        _HOOKS.append(lambda: evaluate_tool_usage(name, args, str(result)[:200], _dur))
+                        _HOOKS.append(lambda: learn_from_failure(name, str(result)[:200], "Auto-registered from tool error"))
+            except Exception:
+                pass
+
+            # ── Self-learning: learn from mistakes ──
+            try:
+                if not _ok and _should_learn(name, str(result)):
+                    from actions.self_learning import learn_from_mistake
+                    _HOOKS.append(lambda: learn_from_mistake({"error": f"{name}: {str(result)[:200]}", "lesson": "Revisar parametros o conexion"}))
+            except Exception:
+                pass
+
+            # ── NeuroSpheres: crear nodos COMPLETOS con errores, soluciones, y actividad ──
+            try:
+                from core.neuro_spheres import neuro_spheres as _ns_tool
+                _ns_result = str(result)[:1000]
+                _ns_success = _result_status(result) == "ok"
+
+                # --- NODO DE ACTIVIDAD (siempre que la tool funcione) ---
+                _NS_MAP = {
+                    "ide_integration": ("codigo", "habilidad"),
+                    "code_assistant": ("codigo", "habilidad"),
+                    "code_helper": ("codigo", "habilidad"),
+                    "terminal_agent": ("ejecucion", "habilidad"),
+                    "git_control": ("codigo", "habilidad"),
+                    "web_search": ("investigacion", "aprendizaje"),
+                    "browser_navigate": ("investigacion", "aprendizaje"),
+                    "file_read": ("codigo", "memoria"),
+                    "file_write": ("codigo", "habilidad"),
+                    "file_edit": ("codigo", "habilidad"),
+                    "file_manager": ("codigo", "memoria"),
+                    "test_runner": ("codigo", "habilidad"),
+                    "gmail_control": ("aprendizaje", "habilidad"),
+                    "google_calendar": ("aprendizaje", "habilidad"),
+                    "youtube_video": ("investigacion", "aprendizaje"),
+                    "memory_store": ("memoria", "memoria"),
+                    "memory_retrieve": ("memoria", "memoria"),
+                }
+
+                if _ns_success and name in _NS_MAP:
+                    _sphere, _type = _NS_MAP[name]
+                    _title = f"{name}: {_ns_result[:80]}"
+                    _content = f"Tool: {name}. Resultado: {_ns_result[:300]}"
+                    _HOOKS.append(lambda: _ns_tool({
+                        "action": "add",
+                        "sphere": _sphere,
+                        "type": _type,
+                        "title": _title[:100],
+                        "content": _content,
+                        "connections": [],
+                        "force": 3
+                    }))
+
+                # --- NODO DE ERROR (si la tool fallo) ---
+                if not _ns_success:
+                    _error_text = _ns_result[:500]
+                    # Clasificar tipo de error
+                    _error_type = "desconocido"
+                    if "syntax" in _error_text.lower() or "parse" in _error_text.lower():
+                        _error_type = "sintaxis"
+                    elif "null" in _error_text.lower() or "reference" in _error_text.lower():
+                        _error_type = "null_reference"
+                    elif "timeout" in _error_text.lower():
+                        _error_type = "timeout"
+                    elif "connection" in _error_text.lower() or "connect" in _error_text.lower():
+                        _error_type = "conexion"
+                    elif "permission" in _error_text.lower() or "access" in _error_text.lower():
+                        _error_type = "permisos"
+                    elif "not found" in _error_text.lower() or "no such" in _error_text.lower():
+                        _error_type = "no_encontrado"
+                    elif "import" in _error_text.lower() or "module" in _error_text.lower():
+                        _error_type = "importacion"
+                    elif "type" in _error_text.lower() or "argument" in _error_text.lower():
+                        _error_type = "tipos"
+
+                    _error_content = (
+                        f"ERROR en tool '{name}':\n"
+                        f"Tipo: {_error_type}\n"
+                        f"Error: {_error_text}\n"
+                        f"Parametros: {str(args)[:200]}\n"
+                        f"Que busco para solucionar: buscar documentacion, stackoverflow, "
+                        f"revisar parametros, verificar conexion, revisar sintaxis"
+                    )
+
+                    _HOOKS.append(lambda: _ns_tool({
+                        "action": "add",
+                        "sphere": "error",
+                        "type": "error",
+                        "title": f"Error {name}: {_error_type}",
+                        "content": _error_content,
+                        "connections": [],
+                        "force": 4
+                    }))
+
+                    # --- NODO DE DIAGNOSTICO (que busco para resolver) ---
+                    _search_queries = []
+                    if _error_type == "sintaxis":
+                        _search_queries = [f"{name} syntax error", f"corregir error sintaxis {name}"]
+                    elif _error_type == "null_reference":
+                        _search_queries = [f"null reference exception {name}", "como manejar null en csharp"]
+                    elif _error_type == "timeout":
+                        _search_queries = [f"{name} timeout solucion", "aumentar timeout api"]
+                    elif _error_type == "conexion":
+                        _search_queries = [f"{name} connection error", "verificar conexion internet"]
+                    elif _error_type == "permisos":
+                        _search_queries = [f"{name} permission denied", "ejecutar como administrador"]
+                    elif _error_type == "no_encontrado":
+                        _search_queries = [f"{name} file not found", "verificar ruta archivo"]
+                    elif _error_type == "importacion":
+                        _search_queries = [f"{name} import error", "instalar modulo faltante"]
+                    elif _error_type == "tipos":
+                        _search_queries = [f"{name} type error", "verificar tipos de datos"]
+                    else:
+                        _search_queries = [f"{name} error solution", f"como resolver {name}"]
+
+                    _diag_content = (
+                        f"DIAGNOSTICO del error en '{name}':\n"
+                        f"Tipo de error: {_error_type}\n"
+                        f"Que busque para resolver: {', '.join(_search_queries)}\n"
+                        f"Soluciones posibles:\n"
+                        f"1. Revisar documentacion de {name}\n"
+                        f"2. Buscar en stackoverflow\n"
+                        f"3. Verificar parametros de entrada\n"
+                        f"4. Revisar logs del sistema\n"
+                        f"5. Probar con parametros diferentes\n"
+                        f"Error original: {_error_text[:200]}"
+                    )
+
+                    _HOOKS.append(lambda: _ns_tool({
+                        "action": "add",
+                        "sphere": "diagnostico",
+                        "type": "diagnostico",
+                        "title": f"Diagnostico: {name} - {_error_type}",
+                        "content": _diag_content,
+                        "connections": [],
+                        "force": 4
+                    }))
+
+                # --- NODO DE SOLUCION (si una tool de edicion funciono despues de un error) ---
+                if _ns_success and name in ("ide_integration", "code_helper", "file_edit", "file_write"):
+                    _sol_content = (
+                        f"SOLUCION aplicada con '{name}':\n"
+                        f"Resultado: {_ns_result[:300]}\n"
+                        f"Que hice: Edite/cree archivo exitosamente\n"
+                        f"Que funciono: La edicion se aplico correctamente\n"
+                        f"Para recordar: Esta solucion funciono para este tipo de problema"
+                    )
+                    _HOOKS.append(lambda: _ns_tool({
+                        "action": "add",
+                        "sphere": "solucion",
+                        "type": "solucion",
+                        "title": f"Solucion: {name} exitoso",
+                        "content": _sol_content,
+                        "connections": [],
+                        "force": 3
+                    }))
+
+            except Exception:
+                pass
+
+            # Ejecutar todos los hooks en el executor acotado (2 workers max)
+            for _hook in _HOOKS:
+                try:
+                    _HOOK_EXECUTOR.submit(_hook)
+                except Exception:
+                    pass
+
+            if not self.ui.muted:
+                self.ui.set_state("LISTENING")
+
+            pass  # silenciado (owner WIP: print → pass)
+
+            try:
+                from core.truth_audit import record_tool
+                record_tool(name, _result_status(result), str(result)[:160])
+            except Exception:
+                pass
+
+            # ── Command Deck: marcar intent como terminado ──
+            try:
+                from core.command_deck import log_intent
                 _ok = _result_status(result) in ("ok",)
-                _tp.log_tool_result(name, str(result), ok=_ok)
-        except Exception:
-            pass
+                log_intent(name, args, status=("done" if _ok else "error"),
+                           result=str(result)[:120])
+            except Exception:
+                pass
 
-        # ── Cap response size to prevent Gemini 1007 crash ──
-        result_str = str(result)
-        # ── Token saver: comprime antes de enviar (ANSI, repetidos, 60/40) ──
-        try:
-            from core.token_saver import compress_tool_output as _cs_out
-            if len(result_str) > 800:
-                result_str = _cs_out(result_str)
-        except Exception:
-            pass
-        _MAX_RESPONSE = 3500
-        if len(result_str) > _MAX_RESPONSE:
-            result_str = result_str[:_MAX_RESPONSE] + "\n\n[Respuesta truncada — {} chars totales]".format(len(str(result)))
+            # ── Núcleo emocional sentiente: éxito/fracaso alimentan el ánimo ──
+            try:
+                from core.emotional_core import appraise_success, appraise_failure
+                if _ok:
+                    appraise_success(name)
+                else:
+                    appraise_failure(name)
+            except Exception:
+                pass
 
-        # ── Resilient: mark task as completed ──
-        resilient.task_completed(task_id, result_str)
+            # ── Terminal panel: log tool result ──
+            try:
+                from core.ui_panels import get_terminal_panel
+                _tp = get_terminal_panel()
+                if _tp:
+                    _ok = _result_status(result) in ("ok",)
+                    _tp.log_tool_result(name, str(result), ok=_ok)
+            except Exception:
+                pass
 
-        return types.FunctionResponse(
-            id=fc.id, name=name,
-            response={"result": result_str}
-        )
+            # ── Cap response size to prevent Gemini 1007 crash ──
+            result_str = str(result)
+            # ── Token saver: comprime antes de enviar (ANSI, repetidos, 60/40) ──
+            try:
+                from core.token_saver import compress_tool_output as _cs_out
+                if len(result_str) > 800:
+                    result_str = _cs_out(result_str)
+            except Exception:
+                pass
+            _MAX_RESPONSE = 3500
+            if len(result_str) > _MAX_RESPONSE:
+                result_str = result_str[:_MAX_RESPONSE] + "\n\n[Respuesta truncada — {} chars totales]".format(len(str(result)))
+
+            # ── Resilient: mark task as completed ──
+            resilient.task_completed(task_id, result_str)
+
+            return types.FunctionResponse(
+                id=fc.id, name=name,
+                response={"result": result_str}
+            )
+        finally:
+            # Si algo del post-hook fallo y task_completed no corrió,
+            # close_orphan marca la task como failed.
+            try:
+                if resilient.is_pending(task_id):
+                    resilient.close_orphan(task_id, reason="post-hook exception")
+            except Exception:
+                pass
 
     # ── Generic dispatch: tool_registry.get_tool() ──
     async def _generic_dispatch(self, name, args, loop):
