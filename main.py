@@ -512,9 +512,6 @@ class ErisLive:
         # ── Rutinas recurrentes (Eris agenda y ejecuta sola) ──
         self._routines_stop = threading.Event()
         self._routines_thread = None
-        # ── Puente con Hermes (ayuda mutua) ──
-        self._hermes_stop = threading.Event()
-        self._hermes_thread = None
         try:
             from memory.config_manager import BASE_DIR as _BD
             _wake_cfg_path = _BD / "config" / "api_keys.json"
@@ -708,55 +705,6 @@ class ErisLive:
                             self._announce(f"Alerta: {_txt[:180]}")
                         except Exception:
                             pass
-                    # ── Auto-reparación asistida: pedirle a opencode un fix
-                    #    concreto (cooldown 30 min por área para no saturarlo). ──
-                    if prob.get("level") == "error":
-                        _now_h = time.time()
-                        _last = getattr(self, "_health_fix_asked", {})
-                        if _now_h - _last.get(prob["area"], 0) > 1800:
-                            self._health_fix_asked = dict(_last)
-                            self._health_fix_asked[prob["area"]] = _now_h
-                            def _ask_fix(_p=prob):
-                                try:
-                                    from core.hermes_bridge import consultar_a_hermes, reportar_a_hermes
-                                    fix_result = consultar_a_hermes(
-                                        f"ERIS detectó un problema en su sistema y necesita ayuda para resolverlo.\n"
-                                        f"Área: {_p.get('area', 'sin área')}\n"
-                                        f"Problema: {_p.get('msg', 'sin descripción')}\n\n"
-                                        f"ERIS es una asistente de IA que auto-modifica su propio código. "
-                                        f"Actuá como su ingeniero de soporte experto.\n\n"
-                                        f"Respondé en formato conciso:\n"
-                                        f"1. DIAGNÓSTICO: qué está fallando (1 línea)\n"
-                                        f"2. FIX: cambio concreto y seguro (archivo exacto + diff o comando)\n"
-                                        f"3. VERIFICACIÓN: cómo comprobar que el fix funciona\n\n"
-                                        f"Si no sabés el fix exacto, di cómo diagnosticarlo paso a paso.\n"
-                                        f"Si es un bug conocido de ERIS que ya tienen registro, decí lo que ya sabés.\n\n"
-                                        f"NOTA: NO uses opencode. ERIS ahora se comunica conmigo (Hermes/Solar Pro 4) "
-                                        f"directamente a través del puente Hermes en puerto 6790.",
-                                        category="bug",
-                                        context=f"auto-reparación de ERIS - área: {_p.get('area', '')}",
-                                    )
-                                    fix = fix_result.get("answer", "")
-                                    if fix:
-                                        import json as _j
-                                        _fix_dir = Path(__file__).resolve().parent / "memory"
-                                        _fix_dir.mkdir(parents=True, exist_ok=True)
-                                        _fix_file = _fix_dir / "self_health_hermes.md"
-                                        with _fix_file.open("a", encoding="utf-8") as _fh:
-                                            _fh.write(
-                                                f"[{time.strftime('%Y-%m-%d %H:%M')}] "
-                                                f"Hermes sugiere para '{_p.get('area')}':\n{fix}\n\n"
-                                            )
-                                        print(f"[ERIS] 🩺 Fix sugerido por Hermes guardado: {_fix_file}")
-                                        # Reportar que ERIS buscó ayuda para este problema
-                                        reportar_a_hermes(
-                                            f"Problema detectado en ERIS (auto-salud): {_p.get('msg', '')[:200]}",
-                                            f"Área: {_p.get('area', '')}. Se solicitó ayuda a Hermes para diagnóstico.",
-                                            category="bug_detectado",
-                                        )
-                                except Exception:
-                                    pass
-                            threading.Thread(target=_ask_fix, daemon=True).start()
                 except Exception:
                     pass
 
@@ -780,18 +728,6 @@ class ErisLive:
             print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
         except Exception as _re:
             print(f"[ERIS] Rutinas init: {_re}")
-        # ── Puente con Hermes: Eris revisa sola si Hermes le dejó tareas y
-        #    las atiende inyectándolas en su sesión (ayuda mutua en tiempo real).
-        try:
-            self._hermes_stop = threading.Event()
-            self._hermes_thread = threading.Thread(
-                target=self._hermes_loop, daemon=True,
-                name="eris-hermes",
-            )
-            self._hermes_thread.start()
-            print("[ERIS] ◈ Puente con Hermes activo (check cada 15s)")
-        except Exception as _he:
-            print(f"[ERIS] Hermes loop init: {_he}")
         # ── Tripulación de sub-agentes: Eris administra 19 sub-agentes
         #    especializados. El daemon registra la tripulación al arrancar y
         #    despacha tareas en cola no atendidas (frecuencia: 30s). ──
@@ -1184,75 +1120,6 @@ class ErisLive:
             await self.session.send_realtime_input(text=nudge)
         except Exception as e:
             print(f"[ERIS] ❌ auto-continue push: {e}")
-
-    # ── Rutinas recurrentes: Eris ejecuta sola sus tareas agendadas ──────────
-    def _hermes_loop(self):
-        """Hilo daemon: cada 15s revisa si Hermes dejó tareas en el puente y
-        las inyecta en la sesión viva para que Eris las atienda y responda
-        (ayuda mutua real Hermes ↔ Eris). También lee las respuestas de Hermes
-        a consultas previas de ERIS y las inyecta.
-        """
-        while not self._hermes_stop.is_set():
-            try:
-                for _ in range(15):
-                    if self._hermes_stop.wait(1.0):
-                        return
-                if not (self._wake_gate_open and self.session and self._loop):
-                    continue
-                try:
-                    from core.hermes_bridge import leer_tareas_pendientes
-                    import json as _json
-                    from pathlib import Path
-                except Exception as _he_i:
-                    print(f"[ERIS] ◈ hermes loop import: {_he_i}")
-                    continue
-
-                # 1. Tareas que Hermes envió a ERIS
-                for t in leer_tareas_pendientes():
-                    tid = t.get("id", "")
-                    task = t.get("task", "")
-                    if not task:
-                        continue
-                    self.ui.write_log(f"SYS: ◈ Hermes te pide: {task[:80]}")
-                    print(f"[ERIS] ◈ Tarea de Hermes ({tid}): {task[:80]}")
-                    texto = (
-                        f"[HERMES] Hermes (Solar Pro 4, tu modelo de IA) te pide: "
-                        f"{task}\n"
-                        f"Cuando la resuelvas, respondé con la tool "
-                        f"hermes_consult action=responder task_id={tid} response=<tu respuesta>.\n"
-                        f"Si no sabes cómo hacerlo, consultá a Hermes: "
-                        f"hermes_consult action=consultar question='cómo hago {task}'"
-                    )
-                    self._loop.call_soon_threadsafe(self._inject_routine, "hermes", texto)
-
-                # 2. Respuestas de Hermes a consultas previas de ERIS (inyejción proactiva)
-                _hermes_resp_dir = Path(__file__).resolve().parent.parent / "data" / "hermes"
-                if _hermes_resp_dir.exists():
-                    for f in sorted(_hermes_resp_dir.glob("respuesta_*.json")):
-                        try:
-                            data = _json.loads(f.read_text(encoding="utf-8"))
-                            if data.get("status") != "ok":
-                                continue
-                            # Si es una respuesta a una consulta de ERIS, inyectar
-                            tid = data.get("task_id", "")
-                            respuesta = data.get("response", "")
-                            if tid and respuesta and "task_id" in data:
-                                # Marcar como leída renombrando
-                                f.rename(_hermes_resp_dir / f"leida_{tid}.json")
-                                self.ui.write_log(f"SYS: ◈ Hermes respondió (task {tid[:20]}...)")
-                                print(f"[ERIS] ◈ Hermes respondió: {respuesta[:100]}...")
-                                texto_r = (
-                                    f"[HERMES RESPUESTA] Hermes respondió tu consulta:\n"
-                                    f"{respuesta}"
-                                )
-                                self._loop.call_soon_threadsafe(
-                                    self._inject_routine, "hermes-respuesta", texto_r
-                                )
-                        except Exception:
-                            continue
-
-            except Exception as _he:
-                print(f"[ERIS] ◈ hermes loop: {_he}")
 
     def _sub_agents_loop(self):
         """Hilo daemon: cada 30s la tripulación despacha tareas en cola que
@@ -4729,20 +4596,7 @@ class ErisLive:
                         except Exception as _tge:
                             print(f"[ERIS] Telegram bridge init error: {_tge}")
                         # ═══════════════════════════════════════════════════════════
-                        # Start HERMES bridge (ayuda mutua ERIS ↔ Hermes/Solar)
-                        # DESDE VERSIÓN 2.0: puente con opencode DESACTIVADO para
-                        # evitar consumo de tokens. ERIS ahora consulta directamente
-                        # a Hermes (Solar Pro 4) cuando necesita ayuda, aprender,
-                        # o reportar bugs/errores.
-                        # ═══════════════════════════════════════════════════════════
-                        try:
-                            from core.hermes_bridge import start_bridge as start_hermes_bridge
-                            start_hermes_bridge()
-                            print("[ERIS] ◈ Puente con Hermes/Solar activo en :6790")
-                        except Exception as _hbe:
-                            print(f"[ERIS] Hermes bridge init error: {_hbe}")
-                        # ═══════════════════════════════════════════════════════════
-                        # OpenCode bridge: DESACTIVADO (gasta tokens → se usa Hermes)
+                        # OpenCode bridge: DESACTIVADO (gasta tokens)
                         # Si en el futuro se reactiva, descomentar las líneas abajo:
                         #   from core.opencode_bridge import start_bridge
                         #   start_bridge()

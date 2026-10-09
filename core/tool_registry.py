@@ -618,10 +618,6 @@ _TOOLS = {
     "todo_yo":               ("core.todo_yo", "todo_yo_tool"),
     # ── BRIDGE CON OPENCODE: ayuda mutua con el agente de la terminal ──
     "opencode_bridge":       ("core.opencode_bridge", "bridge_tool"),
-    # ── BRIDGE CON HERMES: puerto 6790, ayuda mutua real con Solar Pro 4 ──
-    # (main.py inyecta instrucciones 'hermes_consult action=...' al modelo,
-    #  así que DEBE estar registrada o el LLM no tiene con qué responder)
-    "hermes_consult":        ("core.hermes_bridge", "herramienta_eris"),
 
     # ── TRIPULACIÓN: sub-agentes especializados que Eris administra ──
     "agente_sub":            ("actions.sub_agent_manager", "sub_agent_manager"),

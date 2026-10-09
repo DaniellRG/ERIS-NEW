@@ -235,17 +235,13 @@ def review_diff(rel: str, original: str, new: str) -> tuple[str, str]:
 
 
 def ask_opencode_fix(problem: str, area: str = "") -> tuple[str, str]:
-    """AUTO-REPARACIÓN ASISTIDA (#2): ERIS detecta un problema y pide ayuda a Hermes.
-
-    NOTA: OpenCode está DESACTIVADO para evitar consumo de tokens.
-    ERIS ahora usa el puente Hermes (Solar Pro 4) directamente.
-    Esta función redirige a Hermes bridge si está disponible.
-    """
+    """AUTO-REPARACIÓN ASISTIDA (#2): ERIS detecta un problema y pide ayuda al
+    revisor del puente opencode. Si el puente no está disponible devuelve
+    ("", motivo) y NUNCA bloquea (el test-gate local sigue siendo el filtro)."""
     try:
-        from core.hermes_bridge import consultar_a_hermes, bridge_up as hermes_up
-        if not hermes_up():
-            return ("", "Hermes no disponible")
-        result = consultar_a_hermes(
+        if not bridge_up():
+            return ("", "bridge de opencode no disponible")
+        result = send_to_opencode(
             f"ERIS detectó un problema y necesita ayuda para resolverlo.\n"
             f"Área: {area or 'sin área'}\n"
             f"Problema: {problem}\n\n"
@@ -254,15 +250,13 @@ def ask_opencode_fix(problem: str, area: str = "") -> tuple[str, str]:
             f"1. DIAGNÓSTICO: qué está fallando\n"
             f"2. FIX: cambio concreto y seguro (archivo + diff o comando exacto)\n"
             f"3. VERIFICACIÓN: cómo comprobar\n"
-            f"Si no sabés el fix, decí cómo diagnosticarlo paso a paso.\n\n"
-            f"NOTA: ERIS ahora usa este puente Hermes (puerto 6790), no opencode.",
-            category="bug",
-            context=f"auto-reparación ERIS - área: {area}",
+            f"Si no sabés el fix, decí cómo diagnosticarlo paso a paso.",
+            f"auto-reparación ERIS - área: {area}",
         )
         answer = (result.get("answer") or "").strip() or (result.get("message") or "")
         return (answer, answer)
     except Exception as e:
-        return ("", f"Hermes no disponible: {e}")
+        return ("", f"revisor no disponible: {e}")
 
 
 def _server_thread():

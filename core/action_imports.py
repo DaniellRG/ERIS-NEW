@@ -2054,10 +2054,6 @@ try:
 except Exception:
     opencode_bridge = None
 try:
-    from core.hermes_bridge import herramienta_eris as hermes_consult
-except Exception:
-    hermes_consult = None
-try:
     from actions.sub_agent_manager import sub_agent_manager as agente_sub
 except Exception:
     agente_sub = None

@@ -853,7 +853,7 @@ class ToolDispatcher:
 
         La mayoría de las tools reciben `parameters=<dict>` (476), pero algunas
         (file_api, file_system, mission, network_manager, terminal_commands,
-        hermes_consult, opencode_bridge) reciben `params=<dict>`. Otras reciben
+        opencode_bridge) reciben `params=<dict>`. Otras reciben
         un primer argumento con otro nombre. Sin esta adaptación, esas tools
         fallan con `got an unexpected keyword argument 'parameters'`.
         """

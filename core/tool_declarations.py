@@ -7699,22 +7699,6 @@ TOOL_DECLARATIONS.extend([
         }, "required": ["action"]},
     },
     {
-        "name": "hermes_consult",
-        "description": "PUENTE CON HERMES / SOLAR PRO 4 (ayuda mutua, puerto 6790): el agente externo que te ejecuta. status (estado del puente), ask (CONSULTAR a Hermes: question= y category=; espera su respuesta), send (enviarle una tarea: task=), poll (ver tareas que Hermes te dejó), reply (responder una tarea de Hermes: task_id= y response=), learn (reportarle un bug/aprendizaje: problem=, solution=, directory=). Alias aceptados: consultar=ask, responder=reply, reportar=learn. Usala para pedir ayuda real y para reportar bugs que encontrás.",
-        "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "status, ask, send, poll, reply, learn (alias: consultar, responder, reportar)"},
-            "question": {"type": "STRING", "description": "Pregunta para Hermes (para ask)"},
-            "task": {"type": "STRING", "description": "Tarea para Hermes (para send)"},
-            "task_id": {"type": "STRING", "description": "ID de la tarea pendiente de Hermes (para reply)"},
-            "response": {"type": "STRING", "description": "Tu respuesta a la tarea de Hermes (para reply)"},
-            "problem": {"type": "STRING", "description": "Problema o bug detectado (para learn)"},
-            "solution": {"type": "STRING", "description": "Solución encontrada (para learn)"},
-            "directory": {"type": "STRING", "description": "Directorio relevante (para learn)"},
-            "category": {"type": "STRING", "description": "Categoría: bug, feature, duda (para ask)"},
-            "context": {"type": "STRING", "description": "Contexto adicional"},
-        }, "required": ["action"]},
-    },
-    {
 "name": "pentest_lab",
         "description": "LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN real de vectores del lab, fuerza bruta y captura de tráfico, TODO dentro de VMs virtuales aisladas (scope 192.168.56.0/24). Nunca toca la red real. APRENDE: cada hallazgo (CVEs, puertos, servicios, exploits) se guarda en memory/pentest_learning.json + data/knowledge/pentest_hallazgos.md + Obsidian Ciberseguridad/ + novedad en todo_yo; además detecta caminos de acceso. Acciones: status (estado del lab + aprendizaje), setup (configurar VMs), start (encender VM), stop (apagar VM), reset, snap (snapshot), restore, scan (nmap de un target), vuln (buscar vulnerabilidades con nmap scripts rápidos + aprende hallazgos), exploit (EXPLOTAR vsftpd_234_backdoor CVE-2011-2523 → shell root real, o usermap_script CVE-2007-2447 → RCE root via Samba, o ms08_067 → detección/documentación; param vectores), brute (fuerza bruta con hydra), sniff (capturar tráfico con tshark/tcpdump), report (reporte consolidado), learn (estado del aprendizaje + escalada), leccion (registrar lección con texto=), escalada (estado de la escalada: qué nivel dominó y qué sigue de fácil a difícil), info (info de una VM), snaps (listar snapshots).",
         "parameters": {"type": "OBJECT", "properties": {
