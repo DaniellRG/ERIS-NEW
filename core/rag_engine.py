@@ -37,6 +37,70 @@ _model_name = "all-MiniLM-L6-v2"
 _load_lock = threading.Lock()
 
 
+class _TfidfModel:
+    """P4 FIX: fallback ligero (numpy puro) cuando sentence-transformers
+    no está instalado (no requiere torch/sentence-transformers ~2GB).
+    Implementa TF-IDF + cosine similarity con numpy.
+    """
+    def __init__(self, notes: list):
+        import numpy as np
+        from collections import Counter
+        self._np = np
+        # Tokenizar todos los chunks
+        self._docs = [n.get("chunk", "") for n in notes]
+        self._tokens = [self._tokenize(d) for d in self._docs]
+        # Vocabulary
+        self._vocab = {}
+        for toks in self._tokens:
+            for t in toks:
+                if t not in self._vocab:
+                    self._vocab[t] = len(self._vocab)
+        V = len(self._vocab)
+        # IDF
+        self._idf = np.zeros(V, dtype=np.float64)
+        N = max(len(self._docs), 1)
+        import math
+        for j, t in enumerate(self._vocab):
+            df = sum(1 for toks in self._tokens if t in toks)
+            self._idf[j] = math.log((N + 1) / (df + 1)) + 1.0
+        # TF-IDF matrix
+        self._tfidf = np.zeros((len(self._docs), V), dtype=np.float64)
+        for i, toks in enumerate(self._tokens):
+            c = Counter(toks)
+            for t, f in c.items():
+                j = self._vocab[t]
+                self._tfidf[i, j] = f * self._idf[j]
+        # Normalize rows
+        norms = np.linalg.norm(self._tfidf, axis=1, keepdims=True) + 1e-10
+        self._tfidf = self._tfidf / norms
+        self._notes = notes
+
+    @staticmethod
+    def _tokenize(text: str) -> list:
+        import re
+        return re.findall(r"[a-záéíóúñ_]+", text.lower())
+
+    def encode(self, texts: list, **kwargs) -> "np.ndarray":
+        """Devuelve embeddings TF-IDF para una lista de queries.
+        Acepta **kwargs (show_progress_bar, batch_size) para compatibilidad
+        con la interfaz de sentence-transformers (se ignoran)."""
+        import numpy as np
+        V = len(self._vocab)
+        out = np.zeros((len(texts), V), dtype=np.float64)
+        for i, text in enumerate(texts):
+            toks = self._tokenize(text)
+            c = {}
+            for t in toks:
+                c[t] = c.get(t, 0) + 1
+            for t, f in c.items():
+                if t in self._vocab:
+                    j = self._vocab[t]
+                    out[i, j] = f * self._idf[j]
+            norm = np.linalg.norm(out[i]) + 1e-10
+            out[i] = out[i] / norm
+        return out
+
+
 def _get_vault_path() -> Path:
     """Resuelve el vault de Obsidian real (env o get_obsidian_vault)."""
     env = os.environ.get("ERIS_OBSIDIAN_VAULT")
@@ -64,7 +128,15 @@ def _get_model():
                     from sentence_transformers import SentenceTransformer
                     _model = SentenceTransformer(_model_name)
                 except Exception:
-                    return None
+                    # P4 FIX: fallback TF-IDF con numpy cuando sentence-transformers
+                    # no está disponible (no requiere torch/sentence-transformers).
+                    # Construye el vocabulario directamente desde _collect_notes().
+                    try:
+                        notes = _collect_notes()
+                        if notes:
+                            _model = _TfidfModel(notes)
+                    except Exception:
+                        return None
     return _model
 
 
@@ -222,7 +294,11 @@ def index_todo() -> str:
     if not notes:
         return "No encontré notas en ninguna fuente."
     chunks = [n["chunk"] for n in notes]
-    embeddings = model.encode(chunks, show_progress_bar=False, batch_size=64)
+    # P4: si el modelo es TF-IDF fallback, encode ignora show_progress_bar/batch_size
+    try:
+        embeddings = model.encode(chunks, show_progress_bar=False, batch_size=64)
+    except TypeError:
+        embeddings = model.encode(chunks)
     _save_index(embeddings, notes)
     by_src = {}
     for n in notes:
@@ -319,7 +395,7 @@ def rag_engine(parameters: dict = None, player=None) -> str:
             return "Necesito una consulta. Ej: 'cómo funciona el sistema digestivo'"
         model = _get_model()
         if model is None:
-            return "sentence-transformers no disponible."
+            return "Índice activo con TF-IDF (numpy). No se encontraron notas indexadas. Usá 'index' para crear el índice."
         embeddings, notes = _load_index()
         if notes is None or len(notes) == 0:
             return "Sin índice. Usá 'index' para crearlo."
