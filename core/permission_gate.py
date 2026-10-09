@@ -65,7 +65,10 @@ DANGEROUS_COMMANDS = [
     (re.compile(r"\bnet\s+user", re.I), "Modificar usuarios"),
     (re.compile(r"\bmkfs\b", re.I), "Formatear sistema de archivos"),
     (re.compile(r"\bdd\s+if=", re.I), "Sobreescibir disco con dd"),
-    (re.compile(r">\\s*/dev/sd", re.I), "Redirigir a dispositivo de bloque"),
+    (re.compile(r"\bdd\b[^\n]*\bof=/dev/(sd|nvme|hd|mmcblk)", re.I), "Escribir directo a disco con dd"),
+    (re.compile(r">\s*/dev/(sd|nvme|hd|mmcblk)", re.I), "Redirigir a dispositivo de bloque"),
+    (re.compile(r"(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?(ba|z|da|k)?sh\b", re.I), "Pipe de descarga a shell"),
+    (re.compile(r"\brm\s+(-[rf]+\s+)+(~|/home|\$HOME)(/|\s|$)", re.I), "Borrar home del usuario"),
 ]
 
 # Risky tools (tool_name -> risk description)
@@ -84,9 +87,38 @@ DANGEROUS_TOOLS = {
     "shutdown_eris": "Apagar ERIS",
 }
 
-# Tools that always need confirmation (even with UI allow-all)
-ALWAYS_CONFIRM = {"elevated", "shell_execute", "terminal_agent", "shell_session",
-                  "pc_control", "shutdown_eris", "git_control", "process_manager"}
+# Tools that always need confirmation (riesgo alto intrínseco, sin importar args)
+ALWAYS_CONFIRM = {"elevated", "shell_execute", "shutdown_eris"}
+
+# Comandos de solo lectura que NO piden confirmación (evaluación por comando).
+_SAFE_PREFIXES = (
+    "ls", "cat", "pwd", "echo", "whoami", "date", "uptime", "uname", "df", "du",
+    "free", "grep", "head", "tail", "wc", "which", "whereis", "file", "stat",
+    "tree", "ps", "top", "env", "printenv", "hostname", "id", "groups",
+    "locale", "cal", "less", "more", "man", "clear",
+    "git status", "git log", "git diff", "git show", "git branch",
+    "git remote -v", "git rev-parse",
+)
+
+
+def _is_safe_command(cmd: str) -> bool:
+    """True si el comando es de solo lectura y no tiene operadores ni expansión."""
+    c = (cmd or "").strip()
+    if not c:
+        return False
+    # Operadores de shell, redirecciones, sustitución o expansión → no seguro.
+    if re.search(r"[;&|><`$]", c):
+        return False
+    tokens = c.split()
+    if not tokens:
+        return False
+    first = tokens[0].split("/")[-1]
+    if first in ("sudo", "doas", "su"):
+        return False
+    for pref in _SAFE_PREFIXES:
+        if c == pref or c.startswith(pref + " "):
+            return True
+    return False
 
 # Tools that are always safe (no confirmation needed)
 ALWAYS_SAFE = {"read", "info", "list", "list_history", "session_info", "status", "text", "html", "links", "meta", "screenshot"}
@@ -180,17 +212,48 @@ class PermissionGate:
         if tool_name in ALWAYS_CONFIRM:
             return True, "high", DANGEROUS_TOOLS.get(tool_name, f"Tool riesgosa: {tool_name}")
 
-        # Check tool-level risk
-        if tool_name in DANGEROUS_TOOLS:
-            return True, "medium", DANGEROUS_TOOLS[tool_name]
-
-        # Check command-level risk for terminal commands
+        # ── Shell: evaluar el COMANDO concreto, no toda la tool ──
+        # (antes terminal_agent/shell_session iban a ALWAYS_CONFIRM → hasta 'ls'
+        #  pedía confirmación y el chequeo por comando quedaba código muerto)
         if tool_name in ("terminal_agent", "shell_session"):
             cmd = params.get("command", "") or params.get("cmd", "")
-            if isinstance(cmd, str):
-                for pattern, desc in DANGEROUS_COMMANDS:
-                    if pattern.search(cmd):
-                        return True, "high", f"{desc}: {cmd[:80]}"
+            if not isinstance(cmd, str) or not cmd.strip():
+                return False, "safe", ""
+            for pattern, desc in DANGEROUS_COMMANDS:
+                if pattern.search(cmd):
+                    return True, "high", f"{desc}: {cmd[:80]}"
+            if _is_safe_command(cmd):
+                return False, "safe", ""
+            return True, "medium", f"Comando shell a confirmar: {cmd[:80]}"
+
+        # ── pc_control: solo energía/sesión es crítico ──
+        if tool_name == "pc_control":
+            action = str(params.get("action", "")).lower()
+            if action in ("shutdown", "reboot", "restart", "poweroff", "halt",
+                          "suspend", "hibernate", "logoff"):
+                return True, "high", f"Control de energía: {action}"
+            return False, "safe", ""
+
+        # ── process_manager: matar procesos pide confirmación ──
+        if tool_name == "process_manager":
+            action = str(params.get("action", "")).lower()
+            if action in ("kill", "killall", "terminate", "stop", "end"):
+                target = params.get("pid", "") or params.get("name", "") or params.get("process", "")
+                return True, "high", f"Terminar proceso: {target}"
+            return False, "safe", ""
+
+        # ── git_control: force/filter alto, push/reset medio ──
+        if tool_name == "git_control":
+            action = str(params.get("action", "")).lower()
+            if action in ("force_push", "filter_branch"):
+                return True, "high", f"Git {action}"
+            if action in ("push", "commit", "reset", "reset_hard", "clean"):
+                return True, "medium", f"Git {action}"
+            return False, "safe", ""
+
+        # Check tool-level risk (delete/write/elevated/shell_execute/force_push/clean)
+        if tool_name in DANGEROUS_TOOLS:
+            return True, "medium", DANGEROUS_TOOLS[tool_name]
 
         # Check file overwrite risk
         if tool_name in ("file_editor", "file_controller", "file_api"):
@@ -202,14 +265,6 @@ class PermissionGate:
                 path = params.get("path", "") or params.get("file", "")
                 if path and Path(path).exists():
                     return True, "medium", f"Sobreescribir: {path}"
-
-        # Git push without force
-        if tool_name == "git_control":
-            action = params.get("action", "")
-            if action == "push":
-                return True, "medium", "Git push"
-            if action in ("force_push", "filter_branch"):
-                return True, "high", f"Git {action}"
 
         return False, "safe", ""
 
