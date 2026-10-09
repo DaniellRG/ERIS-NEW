@@ -69,16 +69,23 @@ except Exception:
 
 def _focus_game():
     """Find and focus the game window."""
+    # P5: pygetwindow no funciona en Wayland (devuelve None tras except).
+    # Degradar graceful en vez de AttributeError.
+    if gw is None:
+        return False
     game_kw = ["Sons", "Forest", "Steam", "game", "Game", "Valheim", "Minecraft", "Elden", "Dark Souls", "Cyberpunk"]
-    for win in gw.getAllWindows():
-        t = win.title.strip()
-        if t and any(kw.lower() in t.lower() for kw in game_kw):
-            try:
-                if win.isMinimized: win.restore()
-                win.activate()
-                time.sleep(0.3)
-                return True
-            except Exception: pass
+    try:
+        for win in gw.getAllWindows():
+            t = win.title.strip()
+            if t and any(kw.lower() in t.lower() for kw in game_kw):
+                try:
+                    if win.isMinimized: win.restore()
+                    win.activate()
+                    time.sleep(0.3)
+                    return True
+                except Exception: pass
+    except Exception:
+        pass
     return False
 
 # Game controls
