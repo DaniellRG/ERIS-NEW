@@ -7338,11 +7338,12 @@ def load_custom_tools(BASE_DIR):
 TOOL_DECLARATIONS.extend([
     {
         "name": "agent_bus",
-        "description": "Barrido de eventos del agente: publica y suscribe eventos entre agentes. Acciones: publish, subscribe, emit, list.",
+        "description": "Bus de agentes: lista agentes/colas, publica eventos y lee bandejas de mensajes entre agentes. Acciones: list, publish, inbox.",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "publish, subscribe, emit, list"},
-            "event": {"type": "STRING", "description": "Nombre del evento"},
-            "data": {"type": "STRING", "description": "Datos del evento (JSON)"},
+            "action": {"type": "STRING", "description": "list, publish, inbox"},
+            "event": {"type": "STRING", "description": "Nombre del evento (publish)"},
+            "data": {"type": "STRING", "description": "Datos del evento en JSON (publish)"},
+            "agent": {"type": "STRING", "description": "Agente cuya bandeja leer (inbox)"},
         }, "required": ["action"]},
     },
     {
@@ -7355,12 +7356,14 @@ TOOL_DECLARATIONS.extend([
     },
     {
         "name": "ast_edit",
-        "description": "Edita codigo Python de forma segura manipulando el AST. Agrega, elimina o modifica funciones, clases e imports.",
+        "description": "Analiza o edita codigo Python. Acciones: analyze (estructura del archivo), edit (reemplaza old_text por new_text), add_import (agrega un import), remove_import (quita un import).",
         "parameters": {"type": "OBJECT", "properties": {
-            "file": {"type": "STRING", "description": "Ruta del archivo a editar"},
-            "action": {"type": "STRING", "description": "add_function, remove_function, add_import, rename"},
-            "target": {"type": "STRING", "description": "Nombre de la funcion/clase a modificar"},
-            "code": {"type": "STRING", "description": "Codigo nuevo"},
+            "action": {"type": "STRING", "description": "analyze, edit, add_import, remove_import"},
+            "file": {"type": "STRING", "description": "Ruta del archivo Python"},
+            "old_text": {"type": "STRING", "description": "Texto a reemplazar (edit)"},
+            "new_text": {"type": "STRING", "description": "Texto nuevo (edit)"},
+            "target": {"type": "STRING", "description": "Modulo a quitar (remove_import)"},
+            "code": {"type": "STRING", "description": "Linea de import a agregar (add_import)"},
         }, "required": ["action"]},
     },
     {
@@ -7374,20 +7377,21 @@ TOOL_DECLARATIONS.extend([
     },
     {
         "name": "memory_unified",
-        "description": "Memoria unificada: acceso centralizado a todas las capas de memoria (semantica, episodica, working, long-term).",
+        "description": "Memoria unificada: acceso centralizado a todas las capas (semantica, episodica, facts, working). Acciones: status, search, store, retrieve, recent.",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "search, store, retrieve, consolidate, status"},
-            "query": {"type": "STRING", "description": "Termino de busqueda"},
-            "category": {"type": "STRING", "description": "Categoria de memoria"},
+            "action": {"type": "STRING", "description": "status, search, store, retrieve, recent"},
+            "query": {"type": "STRING", "description": "Termino de busqueda (search) o texto a guardar (store)"},
+            "category": {"type": "STRING", "description": "Categoria de memoria (store/retrieve)"},
+            "key": {"type": "STRING", "description": "Clave dentro de la categoria (store/retrieve)"},
         }, "required": ["action"]},
     },
     {
         "name": "permission_gate",
-        "description": "Control de permisos: verifica y aprueba/deniega operaciones peligrosas antes de ejecutarlas.",
+        "description": "Control de permisos: verifica, aprueba o deniega tools peligrosas y muestra las reglas activas. Acciones: status, check, approve, deny, list_rules.",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "check, approve, deny, list_rules"},
-            "tool_name": {"type": "STRING", "description": "Nombre de la tool a verificar"},
-            "args": {"type": "STRING", "description": "Argumentos de la tool"},
+            "action": {"type": "STRING", "description": "status, check, approve, deny, list_rules"},
+            "tool_name": {"type": "STRING", "description": "Nombre de la tool a verificar/aprobar/denegar"},
+            "args": {"type": "STRING", "description": "Argumentos de la tool en JSON (check)"},
         }, "required": ["action"]},
     },
     {
