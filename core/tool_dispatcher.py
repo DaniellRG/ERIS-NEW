@@ -154,6 +154,8 @@ class ToolDispatcher:
         args = dict(fc.args or {})
         task_id = generate_task_id(name, args)
         resilient = get_manager()
+        # Loop de evento para run_in_executor (usado por gate, dispatch, hooks)
+        loop = asyncio.get_event_loop()
 
         pass  # silenciado (owner WIP: print → pass)
         self.ui.set_state("THINKING")
@@ -179,12 +181,15 @@ class ToolDispatcher:
 
         # ── Permission gate: check for dangerous operations ──
         # Fail-closed: si el gate revienta, las tools de riesgo NO corren.
+        # P3(f) FIX: gate.check() puede llamar a ui.ask (input() en CLI) que
+        # bloquea el event loop. Ejecutarlo en run_in_executor para no bloquear.
         try:
             from core.permission_gate import get_permission_gate
             gate = get_permission_gate()
             if hasattr(self.ui, 'ask'):
                 gate.set_ui_callback(self.ui.ask)
-            perm = gate.check(name, args)
+            perm = await loop.run_in_executor(
+                None, lambda: gate.check(name, args))
             if not perm.allowed:
                 resilient.task_completed(task_id, f"Permiso denegado: {perm.reason}")
                 return types.FunctionResponse(
@@ -287,7 +292,6 @@ class ToolDispatcher:
 
         loop = asyncio.get_event_loop()
         result = "Done."
-
         try:
             # ── Special: eris_ui_control ──
             if name == "eris_ui_control":

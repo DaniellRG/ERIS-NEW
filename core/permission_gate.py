@@ -48,7 +48,7 @@ def _reload_rules() -> dict:
 
 # Risky command patterns
 DANGEROUS_COMMANDS = [
-    (re.compile(r"\brm\s+(-[rf]+\s+)?/", re.I), "Eliminar archivos/directorios"),
+    (re.compile(r"\brm\s+(-[rf]+\s+)?/", re.I), "Eliminar archivos/directorios críticos"),
     (re.compile(r"\bdel\s+(/[sfq]\s+)?[A-Z]:\\", re.I), "Eliminar archivos en Windows"),
     (re.compile(r"\bformat\s+[A-Z]:", re.I), "Formatear disco"),
     (re.compile(r"\brmdir\s+(/s\s+)?[A-Z]:\\", re.I), "Eliminar directorio en Windows"),
@@ -56,9 +56,16 @@ DANGEROUS_COMMANDS = [
     (re.compile(r"\bgit\s+push\s+--force", re.I), "Git force push"),
     (re.compile(r"\bgit\s+push", re.I), "Git push"),
     (re.compile(r"\bgit\s+reset\s+--hard", re.I), "Git reset hard"),
-    (re.compile(r"\bshutdown", re.I), "Apagar/reiniciar sistema"),
+    (re.compile(r"\bshutdown\b", re.I), "Apagar/reiniciar sistema"),
+    (re.compile(r"\bsudo\s+reboot\b", re.I), "Reiniciar con sudo"),
+    (re.compile(r"\breboot\b", re.I), "Reiniciar sistema"),
+    (re.compile(r"\bhalt\b", re.I), "Detener sistema"),
+    (re.compile(r"\bpoweroff\b", re.I), "Apagar sistema"),
     (re.compile(r"\bsystemctl\s+(stop|disable|restart)", re.I), "Detener servicio"),
     (re.compile(r"\bnet\s+user", re.I), "Modificar usuarios"),
+    (re.compile(r"\bmkfs\b", re.I), "Formatear sistema de archivos"),
+    (re.compile(r"\bdd\s+if=", re.I), "Sobreescibir disco con dd"),
+    (re.compile(r">\\s*/dev/sd", re.I), "Redirigir a dispositivo de bloque"),
 ]
 
 # Risky tools (tool_name -> risk description)
@@ -69,12 +76,19 @@ DANGEROUS_TOOLS = {
     "shell_execute": "ShellExecute COM",
     "force_push": "Git force push",
     "clean": "Git clean (elimina archivos sin trackear)",
+    "terminal_agent": "Ejecutar comando shell",
+    "shell_session": "Ejecutar comando shell",
+    "pc_control": "Control de energia/hardware",
+    "process_manager": "Gestionar procesos del sistema",
+    "git_control": "Operaciones de git (push, force, etc.)",
+    "shutdown_eris": "Apagar ERIS",
 }
 
-# Tools that always need confirmation
-ALWAYS_CONFIRM = {"elevated", "shell_execute"}
+# Tools that always need confirmation (even with UI allow-all)
+ALWAYS_CONFIRM = {"elevated", "shell_execute", "terminal_agent", "shell_session",
+                  "pc_control", "shutdown_eris", "git_control", "process_manager"}
 
-# Tools that are always safe
+# Tools that are always safe (no confirmation needed)
 ALWAYS_SAFE = {"read", "info", "list", "list_history", "session_info", "status", "text", "html", "links", "meta", "screenshot"}
 
 
@@ -171,11 +185,12 @@ class PermissionGate:
             return True, "medium", DANGEROUS_TOOLS[tool_name]
 
         # Check command-level risk for terminal commands
-        if tool_name == "terminal_agent":
+        if tool_name in ("terminal_agent", "shell_session"):
             cmd = params.get("command", "") or params.get("cmd", "")
-            for pattern, desc in DANGEROUS_COMMANDS:
-                if pattern.search(cmd):
-                    return True, "high", f"{desc}: {cmd[:80]}"
+            if isinstance(cmd, str):
+                for pattern, desc in DANGEROUS_COMMANDS:
+                    if pattern.search(cmd):
+                        return True, "high", f"{desc}: {cmd[:80]}"
 
         # Check file overwrite risk
         if tool_name in ("file_editor", "file_controller", "file_api"):
@@ -229,7 +244,13 @@ class PermissionGate:
                 self._log_decision(tool_name, params, False, "callback_error")
                 return PermissionResult(False, "callback_error")
 
-        # No UI available — allow by default (backward compatible)
+        # P3 FIX: fail-closed para riesgo high/critical SIN UI.
+        # Herramientas comunes (safe/low/medium) siguen permitidas para no
+        # romper el flujo normal, pero riesgo elevado sin UI se niega.
+        if risk in ("high", "critical"):
+            self._log_decision(tool_name, params, False, "no_ui_high_risk")
+            return PermissionResult(False, f"deny_no_ui: {desc}")
+        # No UI available — allow by default para riesgo low
         self._log_decision(tool_name, params, True, "no_ui")
         return PermissionResult(True, "no_ui_available")
 
