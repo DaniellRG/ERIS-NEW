@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo SMART principal con la plantilla de definición de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar las partes interesadas clave y sus requisitos usando una matriz de poder/interés. [Riesgo: Omisión de stakeholders críticos]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar el objetivo en entregables concretos mediante una Estructura de Desglose de Trabajo (EDT/WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estimar recursos, costos y duración para cada paquete de trabajo con datos históricos o juicio de expertos. [Riesgo: Optimismo en estimaciones]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Secuenciar actividades y determinar la ruta crítica utilizando un diagrama de red o software de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Asignar responsabilidades claras a cada tarea mediante una matriz RACI. [Riesgo: Ambigüedad en roles]",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Identificar riesgos potenciales y definir planes de mitigación con una matriz de probabilidad e impacto.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Consolidar el cronograma, presupuesto y recursos en el plan base y obtener la aprobación formal de los patrocinadores.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791579758.129049
+}

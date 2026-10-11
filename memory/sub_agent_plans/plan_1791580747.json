@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal y los KPIs de éxito con una sesión de brainstorming.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar el contexto interno y externo utilizando la matriz FODA. ⚠️ Riesgo: Sesgo cognitivo en la autoevaluación.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar stakeholders clave y sus expectativas con un mapa de partes interesadas.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosar el objetivo en hitos entregables usando la técnica WBS (Estructura de Desglose del Trabajo).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Estimar recursos necesarios (tiempo, presupuesto, personal) con una hoja de cálculo de costos. ⚠️ Riesgo: Subestimación de imprevistos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Secuenciar tareas y dependencias creando un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Evaluar riesgos potenciales y definir planes de contingencia con una matriz de probabilidad/impacto.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Validar la viabilidad del plan con el equipo clave y aprobar la línea base.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791580747.3986766
+}

@@ -10,7 +10,14 @@ import os
 import sys
 import signal
 import traceback
+import threading
+import queue as _queue
 from pathlib import Path
+
+try:
+    import readline
+except Exception:
+    readline = None
 
 # ── Setup paths ──
 BASE_DIR = Path(__file__).resolve().parent
@@ -36,6 +43,57 @@ class C:
 
 # ── Sesiones persistidas ──
 _SESSIONS_DIR = BASE_DIR / "data" / "cli_sessions"
+
+# ── Autocompletado con readline ──
+CLI_CMDS = [
+    "/salir", "/exit", "/quit", "/q",
+    "/reset", "/help", "/menu", "/ayuda", "/comandos",
+    "/clear", "/tools", "/memoria", "/status",
+    "/sesion", "/sesion lista", "/sesion nueva", "/sesion borrar",
+    "/sesion actual", "/sesion salvar",
+]
+
+def _setup_autocomplete():
+    if readline is None:
+        return
+    try:
+        # Historial persistente
+        hist_dir = BASE_DIR / "data"
+        hist_dir.mkdir(parents=True, exist_ok=True)
+        hist_file = hist_dir / "cli_history.txt"
+        try:
+            readline.read_history_file(hist_file)
+        except Exception:
+            pass
+        import atexit
+        atexit.register(readline.write_history_file, hist_file)
+        readline.set_history_length(1000)
+    except Exception:
+        pass
+
+    def completer(text, state):
+        try:
+            buf = readline.get_line_buffer()
+            buf_l = buf.lstrip()
+            # Autocompletar comandos que empiecen con /
+            if buf_l.startswith("/"):
+                matches = [c for c in CLI_CMDS if c.startswith(buf_l)]
+                if state < len(matches):
+                    return matches[state]
+                return None
+            return None
+        except Exception:
+            return None
+
+    readline.set_completer(completer)
+    try:
+        if "libedit" in readline.__doc__ or os.name == "darwin":
+            readline.parse_and_bind("bind -e")
+            readline.parse_and_bind("bind '\t': complete")
+        else:
+            readline.parse_and_bind("tab: complete")
+    except Exception:
+        pass
 
 
 def _safe_name(name: str) -> str:
@@ -103,17 +161,16 @@ def _delete_session(name: str) -> bool:
 
 # ── ASCII Art Banner ──
 BANNER = rf"""
-{C.CYAN}{C.BOLD}██╗  ██╗███████╗██████╗ ███╗   ███╗███████╗███████╗       █████╗  ██████╗ ███████╗███╗   ██╗████████╗
-██║  ██║██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝
-███████║█████╗  ██████╔╝██╔████╔██║█████╗  ███████╗█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║
-██╔══██║██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ╚════██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║
-██║  ██║███████╗██║  ██║██║ ╚═╝ ██║███████╗███████║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝
+{C.CYAN}{C.BOLD}███████╗██████╗ ██╗███████╗       █████╗  ██████╗ ███████╗███╗   ██╗████████╗
+██╔════╝██╔══██╗██║██╔════╝      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝
+█████╗  ██████╔╝██║███████╗█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║
+██╔══╝  ██╔══██╗██║╚════██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║
+███████╗██║  ██║██║███████║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║
+╚══════╝╚═╝  ╚═╝╚═╝╚══════╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝
 {C.RESET}{C.DIM}  Asistente IA — Modo Terminal{C.RESET}
-{C.GRAY}  Escribe tu mensaje y presiona Enter. '/salir' para cerrar.{C.RESET}
+{C.GRAY}  ERIS-AGENT — Escribe tu mensaje, o pulsa '/' para ver menú. '/salir' para cerrar.{C.RESET}
 """
-{HELP_TEXT = f"""\
-HELP_TEXT = f"""
+HELP_TEXT = f"""\
 {C.CYAN}{C.BOLD}Comandos CLI:{C.RESET}
   {C.GREEN}/salir{C.RESET}      Cerrar Eris CLI
   {C.GREEN}/reset{C.RESET}      Limpiar historial de conversación
@@ -128,6 +185,63 @@ HELP_TEXT = f"""
   {C.GREEN}/sesion borrar NOMBRE{C.RESET} Eliminar una sesión guardada
   {C.GREEN}/sesion actual{C.RESET}      Mostrar sesión actual
   {C.GREEN}/sesion salvar{C.RESET}      Guardar la sesión actual
+
+{C.DIM}Tip: Escribe solo {C.GREEN}/{C.RESET}{C.DIM} para ver menú completo con ejemplos para hablarle a Eris.{C.RESET}
+"""
+
+SLASH_MENU = f"""\
+{C.CYAN}{C.BOLD}╔══════════════════════════════════════════════════════════════════════╗{C.RESET}
+{C.CYAN}{C.BOLD}║                        MENÚ DE COMANDOS ERIS                        ║{C.RESET}
+{C.CYAN}{C.BOLD}╚══════════════════════════════════════════════════════════════════════╝{C.RESET}
+
+{C.YELLOW}{C.BOLD}[ COMANDOS DEL CLI ]{C.RESET}
+  {C.GREEN}/salir{C.RESET}                Cerrar Eris CLI
+  {C.GREEN}/reset{C.RESET}                Limpiar historial
+  {C.GREEN}/help{C.RESET}                 Mostrar esta ayuda
+  {C.GREEN}/clear{C.RESET}                Limpiar pantalla
+  {C.GREEN}/tools{C.RESET}                Listar todas las tools ({C.DIM}507{C.RESET})
+  {C.GREEN}/memoria{C.RESET}              Ver memoria de Eris
+  {C.GREEN}/status{C.RESET}               Estado del sistema
+  {C.GREEN}/sesion lista{C.RESET}         Ver sesiones guardadas
+  {C.GREEN}/sesion nueva <nombre>{C.RESET} Crear nueva sesión
+  {C.GREEN}/sesion <nombre>{C.RESET}      Cambiar/cargar sesión
+  {C.GREEN}/sesion borrar <nombre>{C.RESET} Eliminar sesión
+  {C.GREEN}/sesion actual{C.RESET}        Mostrar sesión actual
+  {C.GREEN}/sesion salvar{C.RESET}        Guardar sesión actual
+
+{C.YELLOW}{C.BOLD}[ HABLARLE A ERIS (lenguaje natural) ]{C.RESET}
+  {C.CYAN}Archivos & Directorios{C.RESET}
+    • "lista los archivos de este directorio"
+    • "lee main.py"
+    • "crea archivo.py con este contenido..."
+    • "busca 'HERMES' en todos los .py"
+    • "muestra las últimas 20 líneas de eris.log"
+
+  {C.CYAN}Código{C.RESET}
+    • "revisa este archivo por errores"
+    • "explica qué hace core/gemini_text_chat.py"
+    • "corrige imports rotos"
+    • "ejecuta test_all.py y dime solo fallos"
+
+  {C.CYAN}Sistema & Terminal{C.RESET}
+    • "ejecuta ls -la"
+    • "muestra uso de disco"
+    • "procesos corriendo"
+    • "reinicia servicio..."
+
+  {C.CYAN}Búsqueda & Análisis{C.RESET}
+    • "resumir README.md"
+    • "¿qué hace esta función?"
+    • "encuentra donde se define _main"
+    • "compara estos dos archivos"
+
+  {C.CYAN}Organización{C.RESET}
+    • "ordena archivos por extensión"
+    • "renombra este archivo"
+    • "mueve logs a backups/"
+
+{C.DIM}Todo lo que NO empiece con / se envía directamente a Eris.{C.RESET}
+{C.DIM}Escríbelo en español, natural. Eris elegirá las tools necesarias.{C.RESET}
 """
 
 # ── UI Stub para ToolDispatcher ──
@@ -309,13 +423,51 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
         else:
             print(f"{C.YELLOW}Uso: /sesion [lista|nueva NOMBRE|NOMBRE|borrar NOMBRE|actual|salvar]{C.RESET}")
 
+    # Cola y hilo para input tipo "type-ahead" + barge-in
+    input_queue = _queue.Queue()
+    current_task: asyncio.Task | None = None
+    thinking = {"on": False}
+
+    def _input_reader():
+        while True:
+            try:
+                s = input()
+                input_queue.put(s)
+            except EOFError:
+                break
+            except RuntimeError:
+                break
+            except Exception:
+                continue
+
+    t_reader = threading.Thread(target=_input_reader, daemon=True)
+    t_reader.start()
+
+    async def get_next_input(prompt: str) -> str | None:
+        try:
+            print(prompt, end="", flush=True)
+            while True:
+                try:
+                    line = await asyncio.to_thread(input_queue.get, True, 0.3)
+                    print("\r" + " " * (len(prompt)), end="\r", flush=True)
+                    return line
+                except Exception:
+                    if thinking["on"]:
+                        try:
+                            print(f"\r{C.DIM}⏳ Eris está pensando... (Ctrl+C para interrumpir){C.RESET}", end="", flush=True)
+                        except Exception:
+                            pass
+                    continue
+        except EOFError:
+            return None
+
     while True:
         try:
             # Input con prompt personalizado
-            try:
-                user_input = input(f"{C.GREEN}{C.BOLD}Tú >{C.RESET} ").strip()
-            except EOFError:
+            user_line = await get_next_input(f"{C.GREEN}{C.BOLD}Tú >{C.RESET} ")
+            if user_line is None:
                 break
+            user_input = user_line.rstrip("\n\r").strip()
 
             if not user_input:
                 continue
@@ -323,6 +475,12 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
             # ── Comandos CLI ──
             if user_input.startswith("/"):
                 cmd = user_input.lower().strip()
+
+                # Mostrar menú completo si solo escribe "/" o variantes
+                cmd_clean = user_input.strip().lower()
+                if cmd_clean == "/" or cmd_clean in ("/menu", "/ayuda", "/comandos", "/help"):
+                    print(SLASH_MENU)
+                    continue
 
                 if cmd in ("/salir", "/exit", "/quit", "/q"):
                     _save_session(chat, current_session)
@@ -334,9 +492,7 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
                     print(f"{C.YELLOW}Historial limpiado.{C.RESET}")
                     continue
 
-                elif cmd == "/help":
-                    print(HELP_TEXT)
-                    continue
+
 
                 elif cmd == "/clear":
                     os.system("cls" if os.name == "nt" else "clear")
@@ -385,37 +541,160 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
 
                 else:
                     print(f"{C.YELLOW}Comando no reconocido: {cmd}{C.RESET}")
-                    print(f"{C.DIM}Escribe /help para ver comandos disponibles.{C.RESET}")
+                    print(f"{C.DIM}Escribe / para ver el menú de comandos.{C.RESET}")
                     continue
 
             # ── Chat con streaming de tokens ──
             streamed["on"] = False
-            print(f"  {C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
+            thinking["on"] = True
 
+            async def _run_chat():
+                thinking["on"] = True
+                print(f"  {C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
+                try:
+                    if user_input:
+                        resp = await asyncio.wait_for(
+                            chat.stream_chat(user_input, on_token=_printer),
+                            timeout=120.0
+                        )
+                    else:
+                        resp = await asyncio.wait_for(
+                            chat.stream_chat("", on_token=_printer),
+                            timeout=120.0
+                        )
+                    return resp
+                finally:
+                    thinking["on"] = False
+
+            current_task = asyncio.create_task(_run_chat())
+
+            # Supervisar: si llega nuevo input mientras piensa → BARGE-IN
+            response_final = ""
+            while not current_task.done():
+                try:
+                    pending = input_queue.get_nowait()
+                except _queue.Empty:
+                    await asyncio.sleep(0.10)
+                    continue
+                except Exception:
+                    await asyncio.sleep(0.10)
+                    continue
+
+                # Nuevo mensaje mientras procesa → cancelar (barge-in)
+                try:
+                    if streamed["on"]:
+                        print("\n" + f"{C.YELLOW}⏸ Interrumpido por tu nuevo mensaje...{C.RESET}")
+                    else:
+                        print(f"\n{C.YELLOW}⏸ Interrumpido por tu nuevo mensaje...{C.RESET}")
+                except Exception:
+                    pass
+                current_task.cancel()
+                try:
+                    await asyncio.wait_for(current_task, timeout=5.0)
+                except asyncio.CancelledError:
+                    pass
+                except Exception:
+                    pass
+                current_task = None
+                thinking["on"] = False
+
+                # Procesar el nuevo mensaje inmediatamente (inyectado en contexto)
+                user_input2 = pending.rstrip("\n\r").strip()
+                if not user_input2:
+                    streamed["on"] = False
+                    print(f"  {C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
+                    current_task = asyncio.create_task(_run_chat())
+                    continue
+
+                # Inyectar mensaje en historial (preserva trabajo en curso)
+                try:
+                    chat._history.append({"role": "user", "content": user_input2})
+                except Exception:
+                    pass
+
+                try:
+                    print(f"\n{C.YELLOW}✏️  Mensaje inyectado en contexto...{C.RESET}")
+                except Exception:
+                    pass
+
+                streamed["on"] = False
+                thinking["on"] = True
+                print(f"  {C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
+
+                async def _run_chat2():
+                    thinking["on"] = True
+                    try:
+                        resp = await asyncio.wait_for(
+                            chat.stream_chat("", on_token=_printer),
+                            timeout=120.0
+                        )
+                        return resp
+                    finally:
+                        thinking["on"] = False
+
+                current_task = asyncio.create_task(_run_chat2())
+                user_input = ""
+
+            # Tarea terminó
             try:
-                response = await asyncio.wait_for(
-                    chat.stream_chat(user_input, on_token=_printer),
-                    timeout=120.0
-                )
+                response_final = await current_task
+            except asyncio.CancelledError:
+                response_final = ""
+                if streamed["on"]:
+                    try:
+                        print()
+                    except Exception:
+                        pass
+                try:
+                    print(f"{C.DIM}(interrumpido){C.RESET}")
+                except Exception:
+                    pass
             except asyncio.TimeoutError:
                 print(f"\n{C.RED}Timeout: Eris tardó más de 120s en responder.{C.RESET}")
-                response = ""
+                response_final = ""
             except Exception as e:
                 print(f"\n{C.RED}Error: {e}{C.RESET}")
-                response = ""
+                response_final = ""
+            finally:
+                current_task = None
+                thinking["on"] = False
 
             if streamed["on"]:
                 print()
             else:
-                if response and not response.startswith("\033"):
-                    print(f"{response}")
+                if response_final and not response_final.startswith("\033"):
+                    print(f"{response_final}")
                 else:
-                    print()
+                    pass
 
             _save_session(chat, current_session)
 
         except KeyboardInterrupt:
-            print(f"\n\n{C.YELLOW}Ctrl+C detectado. Escribe '/salir' para cerrar.{C.RESET}\n")
+            # Interrumpir respuesta en curso (barge-in manual), NO salir del CLI
+            if current_task and not current_task.done():
+                try:
+                    if streamed["on"]:
+                        print(f"\n{C.YELLOW}⏸ Interrumpido (Ctrl+C). Puedes seguir escribiendo...{C.RESET}")
+                    else:
+                        print(f"\n{C.YELLOW}⏸ Interrumpido (Ctrl+C). Puedes seguir escribiendo...{C.RESET}")
+                except Exception:
+                    pass
+                current_task.cancel()
+                try:
+                    await asyncio.wait_for(current_task, timeout=3.0)
+                except asyncio.CancelledError:
+                    pass
+                except Exception:
+                    pass
+                current_task = None
+                thinking["on"] = False
+                if streamed["on"]:
+                    try:
+                        print()
+                    except Exception:
+                        pass
+            else:
+                print(f"\n{C.DIM}(Ctrl+C — Sin tarea en curso){C.RESET}")
         except Exception as e:
             print(f"\n{C.RED}Error inesperado: {e}{C.RESET}")
             traceback.print_exc()
@@ -427,6 +706,12 @@ def main():
     signal.signal(signal.SIGINT, lambda *_: None)
 
     print(BANNER)
+
+    # Configurar autocompletado
+    try:
+        _setup_autocomplete()
+    except Exception:
+        pass
 
     # Verificar API key (Gemini directo, o un proveedor OpenAI-compatible
     # como OpenRouter / Nous Portal vía openrouter_api_key)

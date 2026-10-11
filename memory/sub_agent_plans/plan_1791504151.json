@@ -1,0 +1,82 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "*Necesito que especifiques el objetivo** — \"hacer un plan\" no dice qué hay que planificar.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "¿Plan de lanzamiento de un producto?",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "¿Plan de migración de infraestructura?",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "¿Plan de respuesta a un incidente?",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "*Dame el objetivo concreto y lo descompongo en 3-8 pasos.**",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "--",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Definir requisitos funcionales y no funcionales + documento de especificaciones (riesgo: alcance ambiguo)",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Diseñar arquitectura de endpoints + diagrama de secuencia",
+      "status": "pending"
+    },
+    {
+      "order": 9,
+      "action": "Implementar autenticación y rate-limiting + middleware de API (riesgo: deuda de seguridad)",
+      "status": "pending"
+    },
+    {
+      "order": 10,
+      "action": "Escribir tests de integración + suite automatizada (riesgo: cobertura insuficiente)",
+      "status": "pending"
+    },
+    {
+      "order": 11,
+      "action": "Configurar pipeline CI/CD + entorno staging",
+      "status": "pending"
+    },
+    {
+      "order": 12,
+      "action": "Ejecutar pruebas de carga + herramienta de benchmarking (riesgo: cuellos de botella no detectados)",
+      "status": "pending"
+    },
+    {
+      "order": 13,
+      "action": "Documentar guía de uso + portal para desarrolladores",
+      "status": "pending"
+    },
+    {
+      "order": 14,
+      "action": "Desplegar a producción con estrategia canario + monitoreo activo (riesgo: regresión en producción)",
+      "status": "pending"
+    },
+    {
+      "order": 15,
+      "action": "*Ahora decime: ¿qué querés planificar?**",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791504151.3152654
+}

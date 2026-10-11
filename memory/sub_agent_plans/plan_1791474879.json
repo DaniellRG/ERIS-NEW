@@ -1,0 +1,12 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "N. Definir el objetivo general que se desea planificar.\nN. Identificar los recursos disponibles (tiempo, presupuesto, personal) con una lista de verificación.\nN. Desglosar el objetivo en 3-8 pasos con",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791474879.6718974
+}

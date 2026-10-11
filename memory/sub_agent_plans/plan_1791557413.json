@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo SMART con la plantilla de definición de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar stakeholders clave mediante un mapa de partes interesadas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar el trabajo en tareas usando una estructura WBS (Work Breakdown Structure).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estimar recursos y tiempos para cada tarea con matrices de capacidad. ⚠️ Riesgo: Subestimación de plazos.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Secuenciar actividades y definir dependencias en un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Asignar responsables claros utilizando una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Identificar riesgos potenciales y crear un plan de mitigación. ⚠️ Riesgo: Ignorar contingencias críticas.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Validar y aprobar el plan final con los stakeholders principales.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791557413.38254
+}

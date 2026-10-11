@@ -1,0 +1,11 @@
+{
+  "ts": 1791503264.990088,
+  "agent": "test",
+  "action": "record",
+  "request": "prueba",
+  "tools": [
+    ""
+  ],
+  "result": "ok",
+  "ok": true
+}

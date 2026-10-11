@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
+Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -54,7 +54,7 @@ Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
 
 ## agent
 - `agent_as_tool` — Delega una sub-tarea a un agente autónomo especializado. Útil para tareas complejas que benefit de un enfoque 
-- `agent_bus` — Barrido de eventos del agente: publica y suscribe eventos entre agentes. Acciones: publish, subscribe, emit, l
+- `agent_bus` — Bus de agentes: lista agentes/colas, publica eventos y lee bandejas de mensajes entre agentes. Acciones: list,
 - `agent_loop` — Motor de agente autónomo de ERIS: descompone un objetivo en pasos, los ejecuta con herramientas, verifica y co
 - `agent_task` — Ejecuta tareas de agente con un modelo de IA. Acciones: run (ejecutar tarea con task/text, model opcional, mod
 
@@ -104,7 +104,7 @@ Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
 
 ## ast
 - `ast_analyze` — Analiza el AST de un archivo Python para encontrar funciones, clases, imports y dependencias.
-- `ast_edit` — Edita codigo Python de forma segura manipulando el AST. Agrega, elimina o modifica funciones, clases e imports
+- `ast_edit` — Analiza o edita codigo Python. Acciones: analyze (estructura del archivo), edit (reemplaza old_text por new_te
 
 ## attention
 - `attention_management` — Gestionar atencion: enfocarse en lo importante, filtrar ruido, priorizar estimulos. Acciones: focus (enfocar),
@@ -485,9 +485,6 @@ Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
 - `habit_predictor` — Predice que herramientas necesitas segun tu rutina diaria. Acciones: predict (predecir siguiente accion), lear
 - `habit_tracker` — Seguimiento de hábitos y rutinas. Registrar, rastrear streaks, estadísticas, recordatorios diarios.
 
-## hermes
-- `hermes_consult` — PUENTE CON HERMES / SOLAR PRO 4 (ayuda mutua, puerto 6790): el agente externo que te ejecuta. status (estado d
-
 ## home
 - `home_assistant` — Control de domótica vía Home Assistant. Luces, switches, clima, media, notificaciones. Requiere configuración 
 
@@ -583,7 +580,7 @@ Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
 - `memory_rag` — Memoria RAG de ERIS: recuerda/guarda informacion con busqueda semantica, etiquetas y relevancia. Acciones: rem
 - `memory_search` — Consolidación de memoria. Resumir conversaciones, extraer hechos clave, limpiar ruido, buscar en hechos histór
 - `memory_system` — Gestiona la memoria de ERIS: guarda, lee, busca y elimina entradas.
-- `memory_unified` — Memoria unificada: acceso centralizado a todas las capas de memoria (semantica, episodica, working, long-term)
+- `memory_unified` — Memoria unificada: acceso centralizado a todas las capas (semantica, episodica, facts, working). Acciones: sta
 
 ## mentora
 - `mentora` — MENTORA: el MAESTRO de ERIS (superaprendizaje continuo). Aprende de verdad de todo (errores, soluciones, sesio
@@ -693,7 +690,7 @@ Generado: 2026-10-03 18:11:00 · 504 tools registradas y resolviendo.
 - `pentest_lab` — LABORATORIO DE PENTESTING AISLADO en VirtualBox: escaneo de red, detección de vulnerabilidades, EXPLOTACIÓN re
 
 ## permission
-- `permission_gate` — Control de permisos: verifica y aprueba/deniega operaciones peligrosas antes de ejecutarlas.
+- `permission_gate` — Control de permisos: verifica, aprueba o deniega tools peligrosas y muestra las reglas activas. Acciones: stat
 - `permission_policy` — Políticas de permisos estilo opencode (data/permission_rules.json): reglas allow/ask/deny por tool o tool.acci
 
 ## personality

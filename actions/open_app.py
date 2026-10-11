@@ -184,6 +184,24 @@ def open_app(parameters: dict, response=None, player=None) -> str:
                 "firefox": "firefox", "terminal": "foot",
                 "explorador de archivos": "xdg-open", "file manager": "xdg-open",
             }
+            # Navegador genérico: no es un binario único — abrir en el navegador
+            # por defecto (webbrowser usa xdg-open en Wayland/X11).
+            if app_lower in ("navegador", "navegador web", "browser", "internet",
+                             "web browser", "navegador de internet"):
+                for _b in ("google-chrome", "chromium", "brave", "firefox",
+                           "microsoft-edge", "vivaldi", "opera"):
+                    _be = shutil.which(_b)
+                    if _be:
+                        subprocess.Popen([_be], start_new_session=True,
+                                         stdout=subprocess.DEVNULL,
+                                         stderr=subprocess.DEVNULL)
+                        if player:
+                            player.write_log(f"🌐 Abriendo navegador: '{_b}'.")
+                        return f"Navegador '{_b}' iniciado."
+                webbrowser.open("https://www.google.com")
+                if player:
+                    player.write_log("🌐 Abriendo navegador por defecto.")
+                return "Navegador por defecto iniciado."
             _target = _aliases.get(app_lower, app_lower)
             exe = shutil.which(_target) or shutil.which(app_lower)
             if not exe:

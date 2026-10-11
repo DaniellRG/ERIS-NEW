@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=ERIS
+Comment=Asistente IA ERIS
+Exec=/home/soul/ERIS/ERIS-NEW/.venv-linux/bin/python /home/soul/ERIS/ERIS-NEW/main.py
+Icon=/home/soul/ERIS/ERIS-NEW/assets/icon.png
+Terminal=false
+Categories=Utility;Development;ArtificialIntelligence;

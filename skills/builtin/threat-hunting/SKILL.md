@@ -1,3 +1,10 @@
+---
+name: threat-hunting
+description: Caza proactiva de amenazas en la PC: revisar seguridad del sistema, buscar actividad sospechosa, procesos/usuarios/conexiones anómalas y persistencia. Usar cuando pidan revisar la seguridad o buscar amenazas.
+version: 1.0.0
+category: security
+tags: [seguridad, amenazas, hunting, monitoreo]
+---
 # Threat Hunting on Windows
 
 ## When to Use

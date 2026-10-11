@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal y los KPIs de éxito con ERIS Dashboard.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar el entorno interno y externo usando la matriz FODA en ERIS Analyzer. [Riesgo: Sesgo cognitivo]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar las brechas críticas entre la situación actual y la deseada con Gap Analysis Tool.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Generar tres escenarios estratégicos alternativos mediante ERIS Scenario Planner. [Riesgo: Incertidumbre alta]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Evaluar la viabilidad y el impacto de cada escenario con la Matriz de Decisión Ponderada.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Seleccionar la estrategia óptima y asignar recursos clave en ERIS Resource Allocator.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Desglosar la estrategia en hitos trimestrales y tareas operativas en ERIS Roadmap Builder.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Establecer mecanismos de monitoreo y puntos de control en ERIS Control Tower.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791689366.0266845
+}

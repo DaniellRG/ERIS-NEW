@@ -1,3 +1,10 @@
+---
+name: incident-response
+description: Respuesta a incidentes de seguridad en la PC (malware, actividad sospechosa, fuga de datos o compromiso del sistema): aislar, analizar y documentar el incidente sin contaminar la evidencia. Usar cuando se detecte un incidente de seguridad.
+version: 1.0.0
+category: security
+tags: [seguridad, incidentes, respuesta, forense]
+---
 # Incident Response for Windows
 
 ## When to Use

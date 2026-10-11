@@ -1,0 +1,27 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Lanzar un producto",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Escalar una operación",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Ejecutar una misión táctica",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Resolver un problema específico",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791511013.1683016
+}

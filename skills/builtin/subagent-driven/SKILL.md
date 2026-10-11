@@ -1,3 +1,10 @@
+---
+name: subagent-driven
+description: Desarrollo dirigido por sub-agentes: descomponer una tarea en piezas independientes y repartirlas a sub-agentes que corren en paralelo. Usar cuando la tarea se pueda partir en partes sin dependencias entre sí.
+version: 1.0.0
+category: general
+tags: [subagentes, paralelismo, orquestacion]
+---
 # Subagent-Driven Development Skill
 
 ## When to Use

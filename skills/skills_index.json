@@ -309,6 +309,14 @@
     "source": "user_created"
   },
   {
+    "name": "limpieza_temporales",
+    "description": "Limpia archivos temporales del sistema (caché, /tmp, prefetch, etc) para liberar espacio en disco",
+    "category": "general",
+    "tags": [],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
     "name": "metodologia-opencode",
     "description": "Método de trabajo completo del asistente de desarrollo opencode: bucle hipótesis-evidencia, test de verdad, edición mínima, verificación. Usar ante CUALQUIER tarea de código, diagnóstico o automatización para trabajar como un asistente de desarrollo experto.",
     "category": "development",
@@ -319,6 +327,14 @@
       "verificacion",
       "codigo"
     ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "pentest_lab_viaje",
+    "description": "Guía reusable del lab Metasploitable completo: los 8 niveles de dificultad, los 2 exploits reales (vsftpd backdoor CVE-2011-2523 y usermap CVE-2007-2447), sniffing del backdoor, crack offline y aprendizaje persistente.",
+    "category": "general",
+    "tags": [],
     "version": "1.0.0",
     "source": "user_created"
   },

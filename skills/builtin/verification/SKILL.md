@@ -1,3 +1,10 @@
+---
+name: verification
+description: Verificación antes de dar por terminado: autocontrol de que se hizo exactamente lo pedido, que el resultado cumple el formato/errores esperados y que no quedaron cabos sueltos, ANTES de decirle al usuario "listo". Usar tras completar cualquier tarea.
+version: 1.0.0
+category: general
+tags: [verificacion, calidad, cierre]
+---
 # Verification Skill
 
 ## When to Use

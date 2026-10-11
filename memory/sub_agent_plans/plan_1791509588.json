@@ -1,0 +1,27 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "\"Quiero lanzar un producto digital en 30 días\"",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "\"Necesito organizar un evento para 200 personas\"",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "\"Quiero migrar mi infraestructura a la nube este trimestre\"",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "*¿Cuál es tu objetivo?**",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791509588.3452713
+}

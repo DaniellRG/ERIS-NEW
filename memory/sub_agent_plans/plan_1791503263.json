@@ -1,0 +1,12 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Objetivo no especificado. Indicá la misión o meta que querés planificar y la descomponigo en 3-8 acciones estratégicas secuenciales, con herramientas y marcadores de riesgo donde corresponda.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791503263.2326407
+}

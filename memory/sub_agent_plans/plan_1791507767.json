@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Lanzar un producto",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Organizar un evento",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Ejecutar una operación de ERIS",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Resolver un incidente",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Cualquier misión específica",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "*Dame el objetivo y lo desgloso en 3-8 pasos accionables.**",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791507767.1415632
+}

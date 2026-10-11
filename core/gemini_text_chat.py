@@ -713,7 +713,8 @@ class GeminiTextChat:
                         args = json.loads(args)
                     except Exception:
                         args = {}
-                print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
+                # Silenciar logs de tools en CLI para mantener salida limpia
+                pass
                 result = await self._execute_tool(name, args)
                 tool_results.append({"role": "tool", "content": str(result)})
 
@@ -832,7 +833,8 @@ class GeminiTextChat:
                         args = json.loads(args)
                     except Exception:
                         args = {}
-                print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
+                # Silenciar logs de tools en CLI para mantener salida limpia
+                pass
                 result = await self._execute_tool(name, args)
                 # OpenAI-compatible endpoints (OpenRouter, Nous Portal) exigen
                 # `tool_call_id` que empareje la respuesta con el tool_call; sin
@@ -944,13 +946,21 @@ class GeminiTextChat:
                 # Execute tool calls
                 tool_results = []
                 for tc in tool_calls:
-                    func = tc.get("function", {})
-                    name = func.get("name", "")
-                    args = func.get("arguments", {})
+                    if isinstance(tc, dict):
+                        func = tc.get("function", {})
+                    else:
+                        func = getattr(tc, 'function', None) or {}
+                    if isinstance(func, dict):
+                        name = func.get("name", "")
+                        args = func.get("arguments", {})
+                    else:
+                        name = getattr(func, 'name', '') if func else ''
+                        args = getattr(func, 'arguments', {}) if func else {}
                     if isinstance(args, str):
                         try: args = json.loads(args)
                         except Exception: args = {}
-                    print(f"[ErisCLI] 🔧 Tool: {name}({list(args.keys())})")
+                    if not name:
+                        continue  # skip invalid tool call
                     result = await self._execute_tool(name, args)
                     tr = {"role": "tool", "content": str(result)}
                     if tc.get("id"):
@@ -1334,13 +1344,15 @@ class GeminiTextChat:
 
             tool_responses = []
             for fc in function_calls:
-                name = fc.name
-                args = dict(fc.args) if fc.args else {}
+                name = getattr(fc, 'name', None) or (fc.get('name') if isinstance(fc, dict) else '')
+                if not name:
+                    continue
+                args = dict(getattr(fc, 'args', {})) if getattr(fc, 'args', None) else (fc.get('args', {}) if isinstance(fc, dict) else {})
                 print(f"[GeminiText] 🔧 Tool: {name}({list(args.keys())})")
                 result = await self._execute_tool(name, args)
                 if result and result != "None":
                     _snippet = str(result).replace("\n", " ")[:300]
-                    print(f"[GeminiText]   ↳ {_snippet}")
+                    pass
                 tool_responses.append(types.Part.from_function_response(
                     name=name,
                     response={"result": result}

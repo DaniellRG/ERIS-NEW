@@ -1,5 +1,8 @@
 import os
+import shutil
 import subprocess
+import sys
+import urllib.parse
 from pathlib import Path
 
 MEDIA_EXTS = {
@@ -8,17 +11,30 @@ MEDIA_EXTS = {
     ".mpg", ".mpeg", ".3gp",
 }
 
-MUSIC_DIRS = [
-    Path.home() / "Music",
-    Path.home() / "Downloads",
-    Path("E:\\Music"), Path("D:\\Music"),
-    Path("E:\\SteamLibrary\\music"),
-]
+_AUDIO_EXTS = {".mp3", ".wav", ".flac", ".m4a", ".ogg", ".aac", ".wma"}
+
+
+def _music_dirs() -> list[Path]:
+    """Carpetas de música PORTABLES (sin rutas Windows hardcodeadas).
+    Extra: ERIS_MUSIC_DIRS (separadas por os.pathsep)."""
+    dirs = [
+        Path.home() / "Music",
+        Path.home() / "Música",
+        Path.home() / "Downloads",
+    ]
+    env = os.environ.get("ERIS_MUSIC_DIRS", "")
+    for extra in env.split(os.pathsep):
+        if extra.strip():
+            dirs.append(Path(extra.strip()).expanduser())
+    if os.name == "nt":
+        drives = [Path(f"{d}:\\Music") for d in "CDEFGH"]
+        dirs.extend(p for p in drives if p.exists())
+    return dirs
 
 
 def _find_media_files(query: str = "") -> list[Path]:
     files = []
-    for d in MUSIC_DIRS:
+    for d in _music_dirs():
         if d.exists():
             for ext in MEDIA_EXTS:
                 for f in d.rglob(f"*{ext}"):
@@ -27,19 +43,25 @@ def _find_media_files(query: str = "") -> list[Path]:
     return files
 
 
+def _open_path(path: Path) -> None:
+    """Abre un archivo con el reproductor por defecto. Multiplataforma."""
+    p = str(path)
+    if os.name == "nt":
+        os.startfile(p)  # type: ignore[attr-defined]
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", p])
+    else:
+        # Linux/Wayland: xdg-open respeta la app por defecto (mpv/vlc/etc.).
+        opener = shutil.which("xdg-open") or "xdg-open"
+        subprocess.Popen(
+            [opener, p],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+
+
 def _play_file(path: Path, player=None) -> str:
     try:
-        os.startfile(str(path))
-        if player is not None:
-            try:
-                player.set_music(1.0)
-            except Exception:
-                pass
-        return f"Reproduciendo: {path.name}"
-    except Exception:
-        pass
-    try:
-        os.startfile(str(path))
+        _open_path(path)
         if player is not None:
             try:
                 player.set_music(1.0)
@@ -48,6 +70,26 @@ def _play_file(path: Path, player=None) -> str:
         return f"Reproduciendo: {path.name}"
     except Exception as e:
         return f"No pude reproducir {path.name}: {str(e)[:80]}"
+
+
+def _play_youtube(query: str) -> str:
+    """Sin archivo local: abre la búsqueda en el navegador (reproduce en vivo).
+    Metal/francotirador: no descarga nada, usa el navegador por defecto."""
+    if not query:
+        return "No hay archivos locales de música y no me diste qué querés escuchar."
+    url = "https://www.youtube.com/results?search_query=" + urllib.parse.quote(query)
+    try:
+        if os.name == "nt":
+            os.startfile(url)  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", url])
+        else:
+            opener = shutil.which("xdg-open") or "xdg-open"
+            subprocess.Popen([opener, url], stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL)
+        return f"No hay '{query}' local; abrí YouTube con la búsqueda '{query}' en tu navegador."
+    except Exception as e:
+        return f"No encontré '{query}' local y no pude abrir el navegador: {str(e)[:80]}"
 
 
 def music_player(parameters: dict = None, player=None) -> str:
@@ -78,10 +120,10 @@ def music_player(parameters: dict = None, player=None) -> str:
             files = _find_media_files(query)
             if files:
                 return _play_file(files[0], player)
-            return f"No encontré '{query}' en las carpetas de música."
+            return _play_youtube(query)
         files = _find_media_files()
         if not files:
-            return "No hay archivos de música en las carpetas habituales."
+            return "No hay archivos locales de música. Decime qué querés escuchar y lo busco en YouTube."
         return _play_file(files[0], player)
 
     elif action in ("pause", "pausar"):

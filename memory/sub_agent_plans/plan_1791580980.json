@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal y los KPIs de éxito con ERIS Dashboard.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar el entorno interno y externo mediante análisis FODA en ERIS Strategy Module.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar recursos disponibles y limitaciones presupuestarias con ERIS Resource Planner. ⚠️ Riesgo: Subestimación de costos.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Generar escenarios estratégicos alternativos usando ERIS Scenario Simulator.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Seleccionar la estrategia óptima basándose en la probabilidad de éxito en ERIS Decision Matrix.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Desglosar la estrategia en iniciativas tácticas concretas con ERIS Task Breakdown.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Asignar responsables y plazos definidos utilizando ERIS Timeline Manager. ⚠️ Riesgo: Cuellos de botella en recursos críticos.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Validar la coherencia del plan final y exportar el reporte con ERIS Report Generator.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791580980.9877257
+}

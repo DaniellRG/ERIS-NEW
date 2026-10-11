@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo principal y los KPIs de éxito con matriz SMART.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar el contexto interno y externo con análisis FODA. ⚠️ Riesgo: Sesgo cognitivo en la autoevaluación.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar recursos disponibles y restricciones presupuestarias con hoja de cálculo financiera.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosar el objetivo en hitos intermedios cronológicos con diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsables y plazos específicos para cada tarea con matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Detectar posibles obstáculos y definir planes de contingencia con análisis de riesgos. ⚠️ Riesgo: Subestimación de impactos externos.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Establecer mecanismos de monitoreo y frecuencia de revisión con dashboard de control.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Validar la viabilidad del plan con stakeholders clave antes de la ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791689329.1003134
+}
