@@ -208,6 +208,56 @@ def _has_wake_word(text: str) -> bool:
             return True
     return any(_is_name_variation(w) for w in t.split())
 
+# ── Verbos de EJECUCIÓN: el usuario pide HACER algo con la máquina ──
+# Un pedido "ejecutable" (abrí/reproducí/instalá/buscá y poné…) va SIEMPRE al
+# cerebro con las 503 tools, que planifica multi-paso y encadena tools. NO debe
+# secuestrarlo un agente de keyword (web/core/media/…) que ejecuta UNA sola
+# acción o devuelve una búsqueda en vez del efecto pedido (bug real: "abrí el
+# navegador y buscá música y reproducila" caía en el agente web y solo buscaba).
+_EXEC_STEMS = (
+    "abri", "abre", "abrir", "ejecut", "corre", "corré", "correr", "lanz",
+    "inicia", "empezá", "empeza", "reproduc", "pon", "poné", "pone", "ponele", "toca",
+    "instal", "descarg", "crea", "creá", "escrib", "guard", "muev", "mové",
+    "copia", "copiá", "borr", "borrá", "elimin", "apag", "apagá", "reinicia",
+    "subi", "subí", "baja", "bajá", "silenci", "minimiz", "maximiz", "captur",
+    "screenshot", "escane", "escaneá", "despleg", "converti", "convertí",
+    "edit", "genera", "generá", "busc", "busca", "buscá", "encuentra",
+    "resuel", "resol", "resolvé", "resuelve", "resolvi", "calcul", "calcula",
+    "configur", "config", "configura", "configuré", "arm", "arma", "háce", "hace",
+    "hac", "realiz", "realiza", "implement", "aplic", "aplica", "termine", "terminá",
+    "terminar", "diseñ", "diseña", "dibuja", "dibu", "organiza", "organicé", "optim",
+    "optimiza", "mejor", "conecta", "conectá", "verific", "verifica", "chequea", "cheque",
+    "corrigi", "corrige", "prueb", "prueba", "actualiz", "actualiza", "sintetiz", "sintetiza",
+    "analiz", "analiza", "explica", "explic", "document", "documenta", "transcrib", "traduc",
+    "traduce", "resume", "resum", "proces", "procesa", "automatiz", "automatiza", "program",
+    "prográm", "ejercit", "ejercita", "solve", "fix", "fixe", "soluc", "solucion", "arregl",
+    "arregla", "continúa", "continua", "continúo", "completa", "completá", "ordena", "ordern",
+    "maneja", "mane", "llev", "lleva", "haga", "hágalo", "haz", "hazlo", "resuelveme",
+    "resuélveme", "resolveme", "abrime", "abrime", "mostrame musica", "reproduce",
+)
+
+
+def _looks_like_action_request(text: str) -> bool:
+    """True si el texto es un pedido de EJECUCIÓN (no una pregunta/consulta).
+
+    Sirve para que el router multi-agente NO intercepte acciones que el cerebro
+    con tools resuelve mejor. Normaliza acentos y compara por tallo de verbo."""
+    import unicodedata as _uc
+    t = text.lower()
+    t = "".join(c for c in _uc.normalize("NFKD", t) if not _uc.combining(c))
+    t = re.sub(r"[^a-z0-9 ]", " ", t)
+    t = re.sub(r"\s+", " ", t).strip()
+    if not t:
+        return False
+    words = t.split()
+    for w in words:
+        for stem in _EXEC_STEMS:
+            stem_n = "".join(c for c in _uc.normalize("NFKD", stem) if not _uc.combining(c))
+            if w.startswith(stem_n):
+                return True
+    return False
+
+
 def _clean_transcript(text: str) -> str:    
     text = _CTRL_RE.sub("", text)
     text = re.sub(r"[\x00-\x08\x0b-\x1f]", "", text)
@@ -601,6 +651,7 @@ class ErisLive:
         try:
             from core.gemini_text_chat import GeminiTextChat
             self._gemini_text_chat = GeminiTextChat(tool_dispatcher=self._tool_dispatcher)
+            self._restore_chat_history()
         except Exception as _gtc_e:
             print(f"[ERIS] GeminiTextChat init: {_gtc_e}")
 
@@ -1484,16 +1535,25 @@ class ErisLive:
                                     daemon=True,
                                 ).start()
                                 return
-                    # ── Los 10 fragmentos especialistas restantes: web, core, file, media,
-                    #    comm, vision, security, study, memoria y pentest. Registrados
-                    #    en AGENT_DEFINITIONS y el router los clasifica. Se
-                    #    delegan igual que los 3 principales
-                    #    (mentora/guardian/linux). El router ya aplica umbral
-                    #    >=3, keywords con peso y penalizaciones, y anti-bounce
-                    #    para evitar secuestrar el chat. ──
-                    if agent_key and agent_key in ("web", "core", "file", "media",
-                                                    "comm", "vision", "security", "study",
-                                                    "memoria", "pentest"):
+                    # ── Fragmentos especialistas: web, core, file, media, comm,
+                    #    vision, security, study. Registrados en AGENT_DEFINITIONS
+                    #    y el router los clasifica.
+                    #    PERO: si el pedido es una ACCIÓN ejecutable (abrí/reproducí/
+                    #    instalá/buscá y poné…), NO se intercepta — va al cerebro con
+                    #    las 503 tools, que encadena multi-paso. Si no, un agente de
+                    #    keyword devuelve una búsqueda en vez del efecto pedido
+                    #    (bug real: "abrí el navegador y buscá música y reproducila"
+                    #     caía en web y solo buscaba). memoria y pentest NO se gatean:
+                    #    son subsistemas propios (RAG / lab aislado). ──
+                    _subsystem_agents = ("memoria", "pentest")
+                    _capability_agents = ("web", "core", "file", "media",
+                                          "comm", "vision", "security", "study")
+                    _route_agent = (
+                        agent_key in _subsystem_agents
+                        or (agent_key in _capability_agents
+                            and not _looks_like_action_request(text))
+                    )
+                    if agent_key and _route_agent:
                         handler = self._agent_router._handlers.get(agent_key)
                         if handler:
                             if self.ui:
@@ -1554,6 +1614,16 @@ class ErisLive:
                         )
                     except Exception:
                         pass
+                elif self._gemini_text_chat:
+                    # Modo texto (sin Live): registrar el pedido + resultado en el
+                    # historial del cerebro de texto para NO perder el hilo.
+                    try:
+                        self._gemini_chat_sync(
+                            f"[Resultado del fragmento '{agent_key}']: {result_str[:600]}\n\n"
+                            f"Decile al usuario el resultado en 1 frase corta."
+                        )
+                    except Exception:
+                        pass
                 # Also announce locally for non-Gemini TTS
                 # Only announce SHORT results
                 result_stripped = str(result).strip()
@@ -1565,6 +1635,12 @@ class ErisLive:
                         self._announce(first_line)
                 if _mobile_broadcast:
                     _mobile_broadcast(result)
+                # Distill to Obsidian (append-only, fire-and-forget, no bloqueante)
+                try:
+                    from core import obsidian_distill
+                    obsidian_distill.distill_from_text(str(result), context=f"agent:{agent_key} | text:{text}")
+                except Exception:
+                    pass
         except Exception as e:
             self.ui.write_log(f"❌ Error en agente {agent_key}: {e}")
         finally:
@@ -1605,6 +1681,43 @@ class ErisLive:
             if not self.ui.muted:
                 self.ui.set_state("LISTENING")
 
+    # ── Persistencia del historial de chat de texto ──
+    # GeminiTextChat vive en memoria: al cerrar/reiniciar Eris, el historial se
+    # perdía y "se olvidaba" de la charla. Se guarda en data/gui_chat_history.json
+    # y se restaura al arrancar, para que el contexto sobreviva al reinicio.
+    _CHAT_HIST_FILE = "gui_chat_history.json"
+
+    def _chat_hist_path(self):
+        from core.logging_setup import BASE_DIR as _BD
+        return _BD / "data" / self._CHAT_HIST_FILE
+
+    def _restore_chat_history(self):
+        try:
+            if not self._gemini_text_chat:
+                return
+            p = self._chat_hist_path()
+            if p.exists():
+                entries = json.loads(p.read_text(encoding="utf-8"))
+                if isinstance(entries, list) and entries:
+                    self._gemini_text_chat.import_history(entries)
+                    print(f"[ERIS] 💬 Historial de chat restaurado ({len(entries)} entradas)")
+        except Exception as _hre:
+            print(f"[ERIS] No pude restaurar historial de chat: {_hre}")
+
+    def _persist_chat_history(self):
+        try:
+            if not self._gemini_text_chat:
+                return
+            entries = self._gemini_text_chat.export_history()
+            # Cap defensivo: no dejar crecer el archivo sin límite.
+            if isinstance(entries, list) and len(entries) > 200:
+                entries = entries[-200:]
+            self._chat_hist_path().parent.mkdir(parents=True, exist_ok=True)
+            self._chat_hist_path().write_text(
+                json.dumps(entries, ensure_ascii=False, indent=0), encoding="utf-8")
+        except Exception:
+            pass
+
     def _gemini_get_response(self, text: str) -> str:
         """Get response from Gemini text API with tools. Returns text only."""
         try:
@@ -1618,6 +1731,12 @@ class ErisLive:
             if response:
                 self.ui.write_log(f"ERIS: {response}")
                 self.ui.set_state("LISTENING")
+                self._persist_chat_history()
+                try:
+                    from core import obsidian_distill
+                    obsidian_distill.distill_from_text(response, context=f"user:{text}")
+                except Exception:
+                    pass
                 return response
         except Exception as e:
             print(f"[ERIS] GeminiTextChat error: {e}")

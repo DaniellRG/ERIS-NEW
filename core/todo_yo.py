@@ -114,3 +114,38 @@ def todo_yo_tool(parameters: dict = None, player=None) -> str:
     if action in ("esencia", "quien", "quién", "ser"):
         return f"[QUIÉN SOS]\n{_ESENCIA}"
     return "Acciones de Autoconocimiento: estado, novedades, registrar (texto), esencia."
+
+
+def _enrich_from_obsidian(base: str) -> str:
+    try:
+        from core import obsidian_distill
+        vault = obsidian_distill.VAULT
+        parts = []
+        logs = vault / "Logs" / "Aprendizajes.md"
+        if logs.exists():
+            try:
+                txt = logs.read_text("utf-8", errors="replace")
+                if txt:
+                    for line in txt.strip().splitlines()[-5:]:
+                        parts.append(line.strip())
+                    if parts:
+                        parts.insert(0, "Últimos aprendizajes (resumen):")
+            except Exception:
+                pass
+        kpd = vault / "Conocimiento-Profundo"
+        if kpd.exists():
+            try:
+                files = sorted(kpd.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)[:3]
+                if files:
+                    parts.append("Últimos destilados (Conocimiento-Profundo):")
+                    for f in files:
+                        parts.append(f"- {f.name}")
+            except Exception:
+                pass
+        if parts:
+            extra = "\n".join(parts)
+            if len(base) + len(extra) < 3500:
+                return base.rstrip() + "\n\n" + extra + "\n"
+    except Exception:
+        pass
+    return base
