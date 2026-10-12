@@ -8,6 +8,7 @@ import threading
 from pathlib import Path
 from datetime import datetime
 
+from core.platform_compat import run_flags
 _BASE = Path(__file__).resolve().parent.parent
 _CLIPBOARD_FILE = _BASE / "data" / "clipboard_history.json"
 _MAX_HISTORY = 200
@@ -371,7 +372,7 @@ def _format_clipboard(params: dict) -> str:
         result = formatters[fmt]
         try:
             import subprocess
-            process = subprocess.Popen("clip", stdin=subprocess.PIPE, shell=True, creationflags=0x08000000)
+            process = subprocess.Popen("clip", stdin=subprocess.PIPE, shell=True, creationflags=run_flags())
             process.communicate(result.encode("utf-16-le"))
         except Exception:
             pass

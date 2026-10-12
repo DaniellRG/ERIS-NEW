@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from core.platform_compat import run_flags
 try:
     import imageio_ffmpeg
     _FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
@@ -270,7 +271,7 @@ def _play_file(filepath: str) -> str:
         pass
     try:
         import subprocess
-        subprocess.Popen([str(path)], creationflags=0x08000000)
+        subprocess.Popen([str(path)], creationflags=run_flags())
         return f"Reproduciendo: {path.name}"
     except Exception as e:
         return f"No pude reproducir {path.name}: {str(e)[:80]}"

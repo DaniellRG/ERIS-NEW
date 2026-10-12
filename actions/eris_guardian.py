@@ -34,6 +34,7 @@ import urllib.error
 from datetime import datetime
 from pathlib import Path
 
+from core.platform_compat import run_flags
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 BACKUP_DIR = BASE_DIR / "backups"
@@ -613,7 +614,7 @@ def _restart_eris() -> str:
         subprocess.Popen(
             [PYTHON, str(BASE_DIR / "run.py")],
             cwd=str(BASE_DIR),
-            creationflags=0x08000010,  # CREATE_NO_WINDOW | DETACHED_PROCESS
+            creationflags=run_flags(detached=True),  # Windows: CREATE_NO_WINDOW | DETACHED_PROCESS
         )
         _log(f"REINICIO: {killed} proceso(s) terminados, run.py relanzado")
         return f"Reinicio: {killed} proceso(s) terminados y run.py relanzado."

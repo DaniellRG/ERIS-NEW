@@ -19,6 +19,7 @@ IS_WIN = os.name == "nt"
 
 from core.shell_session import get_session, close_session
 
+from core.platform_compat import run_flags
 # ── SendInput helpers for Win+R simulation ──
 user32 = ctypes.windll.user32 if IS_WIN else None
 INPUT_KEYBOARD = 1
@@ -124,7 +125,7 @@ def _open_with_start_process(target: str) -> str:
             ["powershell", "-NoProfile", "-Command",
              f'Start-Process "{target}" -ErrorAction Stop'],
             capture_output=True, text=True, timeout=15,
-            creationflags=0x08000000
+            creationflags=run_flags()
         )
         if result.returncode == 0:
             return f"Abierto: {target}"
@@ -342,7 +343,7 @@ def terminal_agent(parameters: dict, player=None) -> str:
                 ["powershell", "-NoProfile", "-Command",
                  f'(New-Object -ComObject Shell.Application).ShellExecute("{target}")'],
                 capture_output=True, text=True, timeout=15,
-                creationflags=0x08000000
+                creationflags=run_flags()
             )
             result_text = f"ShellExecute: {target}"
             state["history"].append({

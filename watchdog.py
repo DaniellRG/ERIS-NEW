@@ -7,7 +7,7 @@ WORKDIR = Path(r"D:\Eris_Source")
 PYTHON = WORKDIR / ".venv" / "Scripts" / "python.exe"
 SCRIPT = WORKDIR / "run.py"
 LOG = WORKDIR / "data" / "watchdog.log"
-CREATE_NO_WINDOW = 0x08000000
+from core.platform_compat import run_flags  # noqa: E402
 MAX_RESTARTS = 10
 RESTART_WINDOW = 3600  # 1 hour
 
@@ -46,7 +46,7 @@ def main():
             proc = subprocess.Popen(
                 [str(PYTHON), str(SCRIPT)],
                 cwd=str(WORKDIR),
-                creationflags=CREATE_NO_WINDOW,
+                creationflags=run_flags(),
             )
             proc.wait()
             exit_code = proc.returncode

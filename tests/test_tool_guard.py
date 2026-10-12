@@ -233,5 +233,10 @@ def test_tools_fantasma_siguen_vigiladas():
     for t in ("email_sender", "api_invoke", "webhook_sender"):
         assert t in tda.RISKY_API
         assert t not in _TOOLS, "si ya existe, sacar de la lista de fantasmas"
-        # y no las trata como inocuas: un delete queda bloqueado igual
-        assert tda.guard_check(t, {"action": "delete"}).allowed is False
+        # api_invoke y webhook_sender tienen reglas de parametro -> un delete se
+        # bloquea. email_sender solo bloquea envios ("send"), que es su riesgo.
+    assert tda.guard_check("api_invoke", {"action": "delete"}).allowed is False
+    assert tda.guard_check("webhook_sender", {"action": "post"}).allowed is False
+    assert tda.guard_check("email_sender", {"action": "send"}).allowed is False
+    # pero un email de solo texto no es destructivo: queda "risky" (se registra)
+    assert tda.guard_check("email_sender", {"action": "draft"}).allowed is True

@@ -40,6 +40,8 @@ from core.resilient import get_manager, generate_task_id
 
 # Ventana rodante de últimas tools usadas (para secuencias de contexto proactivo)
 from collections import deque as _deque
+
+from core.platform_compat import run_flags
 _RECENT_TOOLS = _deque(maxlen=4)
 
 TOOL_EXECUTOR = ThreadPoolExecutor(max_workers=8, thread_name_prefix="eris-tool")
@@ -234,7 +236,7 @@ class ToolDispatcher:
                 if os.name == "nt":
                     import subprocess
                     cmd = f'start /b timeout /t {_SHUTDOWN_DELAY_S} /nobreak >nul & taskkill /F /PID {my_pid}'
-                    subprocess.Popen(["cmd", "/c", cmd], creationflags=0x08000000 | 0x00000008)
+                    subprocess.Popen(["cmd", "/c", cmd], creationflags=run_flags(detached=True))
                 else:
                     # Timer daemon: la respuesta se manda ANTES de morir,
                     # igual que el `timeout /t 8` de Windows.

@@ -18,6 +18,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from core.platform_compat import run_flags
 BASE_DIR = Path(__file__).resolve().parent.parent
 BACKUP_DIR = BASE_DIR / "backups"
 HEALING_LOG = BASE_DIR / "data" / "self_healing_loop.json"
@@ -64,7 +65,7 @@ def _runtime_test(file_path: Path, timeout: int = 10) -> tuple[bool, str]:
         result = subprocess.run(
             [PYTHON, "-c", f"import ast; ast.parse(open(r'{file_path}', encoding='utf-8').read())"],
             capture_output=True, text=True, timeout=timeout,
-            creationflags=0x08000000
+            creationflags=run_flags()
         )
         if result.returncode == 0:
             return True, "AST parse OK"
@@ -81,7 +82,7 @@ def _ruff_check(file_path: Path) -> tuple[bool, str]:
         result = subprocess.run(
             [PYTHON, "-m", "ruff", "check", str(file_path), "--select=F,E", "--output-format=concise"],
             capture_output=True, text=True, timeout=30,
-            creationflags=0x08000000
+            creationflags=run_flags()
         )
         output = result.stdout.strip()
         if not output or result.returncode == 0:
@@ -293,7 +294,7 @@ def _detect_issues(file_path: Path) -> list[dict]:
         result = subprocess.run(
             [PYTHON, "-m", "ruff", "check", str(file_path), "--select=F,E,B", "--output-format=concise"],
             capture_output=True, text=True, timeout=30,
-            creationflags=0x08000000
+            creationflags=run_flags()
         )
         for line in result.stdout.strip().split("\n"):
             if not line.strip():
@@ -632,7 +633,7 @@ def self_healing_loop(parameters: dict, player=None) -> str:
             subprocess.Popen(
                 [PYTHON, str(BASE_DIR / "main.py")],
                 cwd=str(BASE_DIR),
-                creationflags=0x08000010  # CREATE_NO_WINDOW | DETACHED_PROCESS
+                creationflags=run_flags(detached=True)  # Windows: CREATE_NO_WINDOW | DETACHED_PROCESS
             )
 
             _log(f"RESTART: Killed {killed} processes, starting new ERIS")

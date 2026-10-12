@@ -12,6 +12,7 @@ import time
 import shutil
 from pathlib import Path
 
+from core.platform_compat import run_flags
 BASE_DIR = Path(__file__).resolve().parent.parent
 ANALYSIS_DIR = BASE_DIR / "data" / "code_analysis"
 PYTHON = sys.executable
@@ -26,7 +27,7 @@ def _ensure_tool(name: str, install_cmd: list) -> bool:
     try:
         result = subprocess.run(
             [PYTHON, "-m", name, "--version"],
-            capture_output=True, timeout=10, creationflags=0x08000000
+            capture_output=True, timeout=10, creationflags=run_flags()
         )
         if result.returncode == 0:
             return True
@@ -36,13 +37,13 @@ def _ensure_tool(name: str, install_cmd: list) -> bool:
     try:
         subprocess.run(
             install_cmd, capture_output=True, timeout=120,
-            creationflags=0x08000000
+            creationflags=run_flags()
         )
         # Re-check
         try:
             result = subprocess.run(
                 [PYTHON, "-m", name, "--version"],
-                capture_output=True, timeout=10, creationflags=0x08000000
+                capture_output=True, timeout=10, creationflags=run_flags()
             )
             return result.returncode == 0
         except Exception:
@@ -56,7 +57,7 @@ def _run_tool(cmd: list, timeout: int = 120) -> tuple:
     try:
         result = subprocess.run(
             cmd, capture_output=True, text=True,
-            timeout=timeout, creationflags=0x08000000
+            timeout=timeout, creationflags=run_flags()
         )
         output = result.stdout
         if result.stderr:

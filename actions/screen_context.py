@@ -18,6 +18,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from core.platform_compat import run_flags
 _BASE_DIR = Path(__file__).resolve().parent.parent
 _SCREENSHOT_DIR = _BASE_DIR / "data" / "screenshots"
 _SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
@@ -72,7 +73,7 @@ def _ocr_image(image_path: str) -> str:
                 ["powershell", "-NoProfile", "-Command",
                  f'Add-Type -AssemblyName System.Windows.Forms; '
                  f'[System.Windows.Forms.Clipboard]::SetText("ocr_unavailable")'],
-                capture_output=True, text=True, timeout=10, creationflags=0x08000000)
+                capture_output=True, text=True, timeout=10, creationflags=run_flags())
             return "[pytesseract no instalado — pip install pytesseract + tesseract-ocr]"
         except Exception as e:
             return f"Error OCR: {str(e)[:100]}"

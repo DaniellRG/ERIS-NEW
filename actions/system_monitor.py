@@ -4,6 +4,7 @@ import os
 import time
 import psutil
 
+from core.platform_compat import run_flags
 # Ruta raíz del disco por defecto según el SO (C:\ en Windows, / en Linux).
 _DEFAULT_DISK = "C:\\" if os.name == "nt" else "/"
 
@@ -108,7 +109,7 @@ def _network_info() -> str:
         import subprocess
         result = subprocess.run(
             ["netsh", "wlan", "show", "interfaces"],
-            capture_output=True, text=True, timeout=5, creationflags=0x08000000
+            capture_output=True, text=True, timeout=5, creationflags=run_flags()
         )
         for line in result.stdout.split("\n"):
             line = line.strip()
@@ -130,7 +131,7 @@ def _gpu_info() -> str:
         result = subprocess.run(
             ["nvidia-smi", "--query-gpu=name,memory.used,memory.total,temperature.gpu,utilization.gpu",
              "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=5, creationflags=0x08000000
+            capture_output=True, text=True, timeout=5, creationflags=run_flags()
         )
         if result.returncode == 0 and result.stdout.strip():
             parts = result.stdout.strip().split(", ")

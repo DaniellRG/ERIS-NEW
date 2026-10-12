@@ -4,6 +4,7 @@ import time
 import os
 from datetime import datetime
 from actions.openrouter_agent import openrouter_agent
+from core.platform_compat import desktop_dir
 
 class TaskPriority:
     LOW = 1
@@ -39,7 +40,10 @@ class TaskQueue:
             result = openrouter_agent(query=prompt)
             
             # Guardar en el Escritorio
-            desktop = os.path.join(os.environ["USERPROFILE"], "Desktop")
+            # Antes: os.environ["USERPROFILE"] (solo existe en Windows) -> KeyError
+            # en Linux/macOS. desktop_dir() es portable (XDG en Linux, Escritorio
+            # localizado incluido).
+            desktop = str(desktop_dir())
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = os.path.join(desktop, f"Reporte_ERIS_{timestamp}.txt")
             

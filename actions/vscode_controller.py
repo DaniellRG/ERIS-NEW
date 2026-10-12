@@ -10,6 +10,7 @@ import threading
 import time
 from pathlib import Path
 
+from core.platform_compat import run_flags
 _BASE_DIR = Path(__file__).resolve().parent.parent
 _WATCHERS = {}
 _LIVE_SERVERS = {}
@@ -156,7 +157,7 @@ def _code_cli(args: list) -> str:
         result = subprocess.run(
             ["code"] + args,
             capture_output=True, text=True, timeout=15,
-            creationflags=0x08000000,
+            creationflags=run_flags(),
         )
         output = result.stdout.strip() or result.stderr.strip() or "OK"
         return output[:500]
@@ -184,7 +185,7 @@ def _start_live_server(folder: str, port: int, player=None) -> str:
         proc = subprocess.Popen(
             ["powershell", "-NoProfile", "-Command",
              f"python -m http.server {port} --directory '{folder}'"],
-            creationflags=0x08000000,
+            creationflags=run_flags(),
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
         _LIVE_SERVERS[key] = {"proc": proc, "port": port, "folder": folder, "start": time.time()}
@@ -248,7 +249,7 @@ while($true) {{ Start-Sleep -Seconds 60 }}
     try:
         proc = subprocess.Popen(
             ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", watcher_script],
-            creationflags=0x08000000,
+            creationflags=run_flags(),
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
         _WATCHERS[key] = {"proc": proc, "folder": folder, "command": command, "start": time.time()}

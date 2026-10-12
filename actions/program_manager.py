@@ -16,6 +16,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from core.platform_compat import run_flags
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _run_cmd(cmd: list[str], timeout: int = 60) -> str:
@@ -652,8 +653,7 @@ def _run_program(name_or_path: str, args: str = "") -> str:
                 cmd = [path]
                 if args:
                     cmd.extend(args.split())
-                CREATE_NO_WINDOW = 0x08000000
-                subprocess.Popen(cmd, creationflags=CREATE_NO_WINDOW)
+                subprocess.Popen(cmd, creationflags=run_flags())
                 return f"✅ Programa ejecutado: {name_or_path} ({path})"
             return f"Programa no encontrado: {name_or_path}"
         except Exception as e:
