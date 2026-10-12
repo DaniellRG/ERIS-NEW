@@ -32,6 +32,29 @@ def _portabilize(text: str) -> str:
     return text
 
 
+def _inject_live_counts(text: str) -> str:
+    """Deriva los números vivos (@TOOLS@, @AGENTES@) del registro REAL.
+
+    B15: el prompt estático solía decir "507 tools" o "12 agentes" y se
+    pudría cada vez que el registro crecía. Los tokens se reemplazan en
+    caliente con len(_TOOLS) / len(AGENT_DEFINITIONS); si el import falla
+    (entorno mínimo) se queda el valor estático del archivo.
+    """
+    try:
+        from core.tool_registry import _TOOLS as _tools_reg
+        n_tools = len(_tools_reg)
+        text = text.replace("@TOOLS@", str(n_tools))
+    except Exception:
+        pass
+    try:
+        from core.agent_definitions import AGENT_DEFINITIONS
+        n_agents = len(AGENT_DEFINITIONS)
+        text = text.replace("@AGENTES@", str(n_agents))
+    except Exception:
+        pass
+    return text
+
+
 def load_system_prompt() -> str:
     """Prompt del sistema cacheado con invalidación por mtime (el archivo no
     cambia durante la ejecución; se relee solo si cambió en disco)."""
@@ -130,6 +153,7 @@ def load_system_prompt() -> str:
     try:
         portrait = system_portrait_markdown()
         base = _portabilize(base)
+        base = _inject_live_counts(base)
         if portrait:
             text = base + "\n\n" + portrait
         else:

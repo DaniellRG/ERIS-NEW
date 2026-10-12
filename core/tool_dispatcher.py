@@ -110,15 +110,31 @@ def _result_status(result) -> str:
     No es un simple startswith('error'): los módulos fallan con {'error':...},
     'No configurado…', 'Not found…', 'Unknown action…', etc. Si se marca un fallo
     como éxito, Eris 'siente' éxito, aprende la lección equivocada y lo narra
-    como logro (invención)."""
+    como logro (invención).
+
+    B11 [FIX 2026-10-12]: las claves booleanas `ok`/`success` mandan ANTES que
+    cualquier heurística. Antes, `{"ok": false, ...}` caía en el `return "ok"`
+    final (nada lo detectaba) y la cadena de aprendizaje
+    (proactive_context, skill_auto_creator, training_pipeline, truth_audit,
+    procedimientos) anotaba éxito de un fallo. Ese estado aprendido quedó
+    corrompido y se purga con `purge_learned_state()`.
+    """
     try:
         if result is None:
             return "vacío"
         if isinstance(result, dict):
+            # ── 1. Claves booleanas explícitas: la señal más honesta. ──
+            if "ok" in result:
+                _v = result["ok"]
+                if isinstance(_v, bool):
+                    return "ok" if _v else "error"
+            if "success" in result:
+                _v = result["success"]
+                if isinstance(_v, bool):
+                    return "ok" if _v else "error"
+            # ── 2. Clave de error textual / anidada. ──
             if result.get("error") not in (None, "", False):
                 return "error"
-            if result.get("ok") is True or result.get("success") is True:
-                return "ok"
             if "result" in result:
                 return _result_status(result.get("result"))
             if "error" in result:
@@ -139,6 +155,50 @@ def _result_status(result) -> str:
     except Exception:
         pass
     return "ok"
+
+
+#: Estado aprendido bajo el `_result_status` equivocado (B11). Todos son JSON
+#: regenerables: se borran para que Eris reaprenda desde estados honestos.
+_B11_LEARNED_FILES = (
+    "data/proactive_patterns.json",      # core/proactive_context
+    "data/repetitive_patterns.json",     # core/skill_auto_creator
+    "memory/training_log.json",          # core/training_pipeline
+    "memory/capability_scores.json",     # core/training_pipeline
+    "memory/lessons_learned.json",       # core/training_pipeline
+    "memory/procedimientos.json",        # core/procedimientos
+)
+
+
+def purge_learned_state(force: bool = False) -> list[str]:
+    """Elimina el estado aprendido bajo el clasificador B11 con fallo.
+
+    Se ejecuta una sola vez por instalación (marcador
+    `data/.purge_b11_learned_state`). Si algo falla, nunca revienta la
+    ejecución: deja el/loga y sigue.
+
+    Devuelve la lista de archivos borrados.
+    """
+    from pathlib import Path as _Path
+    _base = _Path(__file__).resolve().parent.parent
+    _marker = _base / "data" / ".purge_b11_learned_state"
+    if not force and _marker.exists():
+        return []
+    removed = []
+    for _rel in _B11_LEARNED_FILES:
+        _p = _base / _rel
+        try:
+            if _p.exists():
+                _p.unlink(missing_ok=True)
+                removed.append(_rel)
+        except Exception:
+            pass
+    try:
+        _marker.parent.mkdir(parents=True, exist_ok=True)
+        _marker.write_text("purged by _result_status B11 fix 2026-10-12\n",
+                           encoding="utf-8")
+    except Exception:
+        pass
+    return removed
 
 
 class ToolDispatcher:

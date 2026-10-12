@@ -98,8 +98,18 @@ class AgentRouter:
         text_norm = _norm(text_lower)
         scores: dict[str, float] = {}
 
+        # B12 [FIX 2026-10-12]: un agente sin handler registrado no puede
+        # ejecutar nada — si gana la clasificación, el turno muere con "no hay
+        # handler". Si el router ya tiene handlers cargados (main.py registra
+        # los vivos) saltamos los huérfanos (hoy: deploy, system_monitor) para
+        # que no le roben el turno a uno que sí puede responder. Con el set
+        # vacío (CLI/tests sin registrar) no filtramos, para no vaciar todo.
+        _have_handlers = bool(self._handlers)
+
         for agent_key, agent_info in self._registry.get("agents", {}).items():
             if not agent_info.get("enabled", True):
+                continue
+            if _have_handlers and agent_key not in self._handlers:
                 continue
 
             score = 0.0

@@ -199,7 +199,7 @@ SLASH_MENU = f"""\
   {C.GREEN}/reset{C.RESET}                Limpiar historial
   {C.GREEN}/help{C.RESET}                 Mostrar esta ayuda
   {C.GREEN}/clear{C.RESET}                Limpiar pantalla
-  {C.GREEN}/tools{C.RESET}                Listar todas las tools ({C.DIM}507{C.RESET})
+  {C.GREEN}/tools{C.RESET}                Listar todas las tools ({C.DIM}@TOOLS@{C.RESET})
   {C.GREEN}/memoria{C.RESET}              Ver memoria de Eris
   {C.GREEN}/status{C.RESET}               Estado del sistema
   {C.GREEN}/sesion lista{C.RESET}         Ver sesiones guardadas
@@ -479,7 +479,12 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
                 # Mostrar menú completo si solo escribe "/" o variantes
                 cmd_clean = user_input.strip().lower()
                 if cmd_clean == "/" or cmd_clean in ("/menu", "/ayuda", "/comandos", "/help"):
-                    print(SLASH_MENU)
+                    try:
+                        from core.tool_registry import get_all_tool_names
+                        _n_tools = len(get_all_tool_names())
+                    except Exception:
+                        _n_tools = ""
+                    print(SLASH_MENU.replace("@TOOLS@", str(_n_tools)))
                     continue
 
                 if cmd in ("/salir", "/exit", "/quit", "/q"):

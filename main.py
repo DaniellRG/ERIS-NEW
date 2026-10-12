@@ -77,6 +77,16 @@ from core.action_imports import (
 from core.logging_setup import BASE_DIR, API_CONFIG_PATH, PROMPT_PATH, LOG_PATH, setup_logging
 setup_logging()
 
+# B11: purgar el estado aprendido bajo el _result_status con fallo (una sola
+# vez por instalación; no rompe la ejecución y no toca archivos si no hay).
+try:
+    from core.tool_dispatcher import purge_learned_state
+    _purged = purge_learned_state()
+    if _purged:
+        print(f"[ERIS] Estado aprendido corrompido por B11 purgado: {', '.join(_purged)}")
+except Exception:
+    pass
+
 from core.audio_config import (
     LIVE_MODEL, CHANNELS, SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE,
     CHUNK_SIZE, PLAY_CHUNK_SIZE, resolve_device, resolve_mic, resolve_speaker,
@@ -236,6 +246,12 @@ _EXEC_STEMS = (
     "resuélveme", "resolveme", "abrime", "abrime", "mostrame musica", "reproduce",
 )
 
+#: Tope de caracteres del resultado de una tool/agente que se le pasa al modelo.
+#: B7 [FIX 2026-10-12]: antes era 300 y encima se le pedía "1 frase corta" — el
+#: modelo NUNCA veía el dato real (clima, archivos, precios) y lo inventaba o
+#: resumía mal. Ahora ve el resultado completo, con un tope prudente de contexto.
+_TOOL_RESULT_MAX_CHARS = 6000
+
 
 def _looks_like_action_request(text: str) -> bool:
     """True si el texto es un pedido de EJECUCIÓN (no una pregunta/consulta).
@@ -256,6 +272,43 @@ def _looks_like_action_request(text: str) -> bool:
             if w.startswith(stem_n):
                 return True
     return False
+
+
+#: Señales de CONSULTA (información), complementarias a `_EXEC_STEMS`.
+_QUERY_CUES = (
+    "que es", "como se", "como funciona", "cual es", "cuales son", "donde esta",
+    "para que sirve", "por que", "explicame", "explica", "contame", "conta ",
+    "resumime", "resumen de", "dame un resumen", "buscame informacion",
+    "busca informacion", "noticias", "clima", "precio", "cotizacion",
+    "definicion", "significa", "diferencia entre", "compara", "analiza",
+    "traduci", "traduce", "quien es", "que opinas", "que pensas",
+)
+_QUERY_STARTS = (
+    "que ", "como ", "cual ", "donde ", "quien ", "cuanto ", "cuando ",
+    "por que ", "para que ", "cuantos ", "cuantas ",
+)
+
+
+def _looks_like_domain_query(text: str) -> bool:
+    """True si el texto parece una CONSULTA de información (no una acción).
+
+    B8 [FIX 2026-10-12]: `_EXEC_STEMS` dejó de ser la única puerta. La decisión
+    de cederle el turno a un fragmento especialista ahora combina DOS señales:
+    que NO parezca una acción (`_looks_like_action_request`) y que SÍ parezca
+    una consulta clara del dominio. Si el pedido no matchea un verbo conocido ni
+    una consulta clara, decide el LLM con sus tools (un solo cerebro), en vez de
+    que un agente de keywords secuestre la charla y devuelva una búsqueda."""
+    import unicodedata as _uc
+    raw = text.strip()
+    if not raw:
+        return False
+    if "?" in raw or "¿" in raw:
+        return True
+    t = raw.lower()
+    t = "".join(c for c in _uc.normalize("NFKD", t) if not _uc.combining(c))
+    if t.startswith(_QUERY_STARTS):
+        return True
+    return any(cue in t for cue in _QUERY_CUES)
 
 
 def _clean_transcript(text: str) -> str:    
@@ -779,13 +832,18 @@ class ErisLive:
             print("[ERIS] 🔁 Rutinas recurrentes activas (check cada 30s)")
         except Exception as _re:
             print(f"[ERIS] Rutinas init: {_re}")
-        # ── Tripulación de sub-agentes: Eris administra 19 sub-agentes
+        # ── Tripulación de sub-agentes: Eris administra 26 sub-agentes
         #    especializados. El daemon registra la tripulación al arrancar y
         #    despacha tareas en cola no atendidas (frecuencia: 30s). ──
         try:
             from core.sub_agent_crew import register_all_sub_agents
             register_all_sub_agents()
-            print("[ERIS] 🤖 Tripulación de 19 sub-agentes registrada")
+            try:
+                from core.sub_agents import get_sub_agent_registry
+                _n_sub = get_sub_agent_registry().get_stats().get("agents_registered", "")
+            except Exception:
+                _n_sub = ""
+            print(f"[ERIS] 🤖 Tripulación de {_n_sub} sub-agentes registrada")
             self._subagents_stop = threading.Event()
             self._subagents_thread = threading.Thread(
                 target=self._sub_agents_loop, daemon=True,
@@ -1545,13 +1603,18 @@ class ErisLive:
                     #    (bug real: "abrí el navegador y buscá música y reproducila"
                     #     caía en web y solo buscaba). memoria y pentest NO se gatean:
                     #    son subsistemas propios (RAG / lab aislado). ──
+                    #    B8 [FIX 2026-10-12]: `_EXEC_STEMS` es UNA señal más, no la
+                    #    única puerta. Un fragmento solo se lleva el turno si además
+                    #    de NO ser acción, SÍ parece una consulta clara de dominio;
+                    #    en cualquier otro caso decide el LLM con sus @TOOLS@ tools. ──
                     _subsystem_agents = ("memoria", "pentest")
                     _capability_agents = ("web", "core", "file", "media",
                                           "comm", "vision", "security", "study")
                     _route_agent = (
                         agent_key in _subsystem_agents
                         or (agent_key in _capability_agents
-                            and not _looks_like_action_request(text))
+                            and not _looks_like_action_request(text)
+                            and _looks_like_domain_query(text))
                     )
                     if agent_key and _route_agent:
                         handler = self._agent_router._handlers.get(agent_key)
@@ -1594,8 +1657,10 @@ class ErisLive:
                 # Feed result back to Gemini Live so it gives a natural spoken response
                 result_str = str(result).strip()
                 if self.session and self._loop:
-                    # Truncate for voice — max 300 chars
-                    short = result_str[:300] + "..." if len(result_str) > 300 else result_str
+                    # B7: pasarle al modelo el resultado COMPLETO (tope prudente),
+                    # no 300 chars. Así habla del dato real y no inventa.
+                    short = (result_str if len(result_str) <= _TOOL_RESULT_MAX_CHARS
+                             else result_str[:_TOOL_RESULT_MAX_CHARS] + "\n…[resultado recortado por tamaño]")
                     # En modo autónomo, el resultado no "cierra" la tarea: es un
                     # trampolín para seguir con el próximo paso, sin saludar ni pedir.
                     if self._auto_cont_on:
@@ -1604,7 +1669,10 @@ class ErisLive:
                                  f"sin esperar al usuario. Cuando termines TODO y lo "
                                  f"verifiques, respondé: '{_AUTO_CONT_DONE_MARKER}'.")
                     else:
-                        _tail = "\n\nDecile al usuario el resultado en 1 frase corta. No leas el resultado completo, solo decí algo como 'Listo, creado' o 'Hecho'."
+                        _tail = ("\n\nBasa tu respuesta en el resultado REAL de arriba. "
+                                 "Si trae datos (clima, archivos, precios, texto, listas), "
+                                 "decíselos al usuario tal cual, sin inventar ni esconderlos. "
+                                 "Si fue una acción (crear, guardar, abrir, enviar), confirmá qué hiciste.")
                     try:
                         asyncio.run_coroutine_threadsafe(
                             self.session.send_realtime_input(
@@ -1619,8 +1687,8 @@ class ErisLive:
                     # historial del cerebro de texto para NO perder el hilo.
                     try:
                         self._gemini_chat_sync(
-                            f"[Resultado del fragmento '{agent_key}']: {result_str[:600]}\n\n"
-                            f"Decile al usuario el resultado en 1 frase corta."
+                            f"[Resultado del fragmento '{agent_key}']: {result_str[:_TOOL_RESULT_MAX_CHARS]}\n\n"
+                            f"Respondé al usuario con lo que devolvió esa herramienta, usado el dato real, sin inventar."
                         )
                     except Exception:
                         pass

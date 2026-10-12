@@ -7,9 +7,13 @@ from unittest.mock import patch
 
 def test_agent_definitions_complete():
     from core.agent_definitions import AGENT_DEFINITIONS
+    # Los 12 del núcleo original siguen siendo obligatorios; hoy la fuente de
+    # verdad tiene más (memoria, pentest, deploy, system_monitor), así que la
+    # aserción es de superset y el conteo se DERIVA (no se hardcodea).
     required_agents = {"core", "web", "file", "dev", "media", "comm",
                        "vision", "security", "study", "linux", "guardian", "mentora"}
-    assert required_agents == set(AGENT_DEFINITIONS.keys())
+    assert required_agents <= set(AGENT_DEFINITIONS.keys())
+    assert len(AGENT_DEFINITIONS) >= 12
 
 
 def test_all_agents_have_required_fields():
@@ -78,11 +82,12 @@ def test_toggle_agent():
 
 
 def test_get_agent_list():
+    from core.agent_definitions import AGENT_DEFINITIONS
     from core.agent_router import get_router
     router = get_router()
     agents = router.get_agent_list()
     assert isinstance(agents, list)
-    assert len(agents) == 12
+    assert len(agents) == len(AGENT_DEFINITIONS)
     for agent in agents:
         assert "key" in agent
         assert "name" in agent
@@ -90,12 +95,13 @@ def test_get_agent_list():
 
 
 def test_get_stats():
+    from core.agent_definitions import AGENT_DEFINITIONS
     from core.agent_router import get_router
     router = get_router()
     stats = router.get_stats()
     assert "handoff_count" in stats
     assert "agents_available" in stats
-    assert stats["agents_available"] == 12
+    assert stats["agents_available"] == len(AGENT_DEFINITIONS)
 
 
 def test_registry_persists(tmp_path):

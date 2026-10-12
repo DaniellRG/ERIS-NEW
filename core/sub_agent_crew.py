@@ -117,13 +117,6 @@ class MissionPlanner(SubAgentBase):
             "status": "active",
             "created": time.time(),
         }
-        # Optimization: Use opencode_bridge for real-time collaboration and state verification
-        # try:
-        #     from opencode_bridge import opencode_bridge
-        #     opencode_bridge.send(task=objective, context=json.dumps(context))
-        # except ImportError:
-        #     pass
-        # Fin de optimizacion
 
     def execute(self, task: SubAgentTask, context: dict = None) -> Any:
         context = context or {}
