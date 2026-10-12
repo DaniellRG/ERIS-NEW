@@ -41,14 +41,26 @@ _PLAN_DIR = _BASE / "memory" / "sub_agent_plans"
 _ROUTER_STATS = _BASE / "data" / "sub_agent_router_stats.json"
 
 
-def _dispatch_tool(tool_name: str, params: dict, player=None) -> Any:
-    """Despacha a una tool REAL del registry (si está disponible)."""
-    try:
+def _dispatch_tool(tool_name: str, params: dict, player=None, source: str = "") -> Any:
+    """Despacha a una tool REAL del registry, pasando por las guardas.
+
+    BUG ARREGLADO 2026-10-12: antes hacía
         from core.tool_dispatcher import dispatch_tool
-        return dispatch_tool(tool_name, params, player=player)
-    except Exception as e:
-        print(f"[SubAgent] dispatch {tool_name}: {e}")
-        return f"[Tool {tool_name} no disponible en este contexto]"
+    sobre un símbolo que NO existe en ese módulo. Las 32 llamadas de la
+    tripulación caían siempre en el `except` y devolvían el string
+    "[Tool X no disponible en este contexto]", que Eris reportaba al usuario
+    como si fuera un resultado. Por eso la agente parecía "hablar con otros":
+    los sub-agentes no podían hacer nada.
+
+    Ahora usa `core.tool_dispatch_api.dispatch_tool`, que:
+      - ejecuta la tool de verdad (por debajo de ToolDispatcher.execute(), que
+        se tragaba las excepciones),
+      - consulta el Custodio de Acciones y el permission gate ANTES de ejecutar,
+      - deja registro en data/tool_audit.jsonl,
+      - y deja SUBIR la excepción en vez de disfrazarla de texto.
+    """
+    from core.tool_dispatch_api import dispatch_tool
+    return dispatch_tool(tool_name, params, host=player, source=source or "tripulacion")
 
 
 def _parse_plan(text: str) -> list[dict]:
@@ -1195,20 +1207,24 @@ class ActionGuard(SubAgentBase):
     """Custodio de Acciones (patrón guardrail human-approval): evalúa
     herramientas con efectos secundarios irreversibles (git, shell, email,
     borrado, envíos) antes de que se ejecuten y marca las que requieren
-    aprobación humana."""
+    aprobación humana.
 
-    _RISKY_API = ("git_control", "email_sender", "file_api", "terminal_agent",
-                  "shell_session", "api_invoke", "webhook_sender",
-                  "process_manager", "pc_control")
-    _BLOCKED_PARAMS = {
-        "git_control": ("git reset --hard", "push --force", "push -f", "rm -rf"),
-        "terminal_agent": ("rm -rf", "mkfs", "dd ", "chmod -R 777", ":(){ :|:& };:"),
-        "shell_session": ("rm -rf", "mkfs", "dd ", "chmod -R 777"),
-        "file_api": ("delete", "trash"),
-        "email_sender": ("send",),
-        "api_invoke": ("delete", "drop", "destroy"),
-        "webhook_sender": ("send", "post"),
-    }
+    BUG ARREGLADO 2026-10-12: las reglas (_RISKY_API / _BLOCKED_PARAMS) estaban
+    duplicadas acá y nunca se conectaron a nada. Ahora salen de
+    `core.tool_dispatch_api`, que es donde las consulta `dispatch_tool` antes de
+    ejecutar — así lo que este sub-agente anuncia y lo que realmente se bloquea
+    no pueden divergir.
+    """
+
+    @property
+    def _RISKY_API(self):
+        from core.tool_dispatch_api import RISKY_API
+        return RISKY_API
+
+    @property
+    def _BLOCKED_PARAMS(self):
+        from core.tool_dispatch_api import BLOCKED_PARAMS
+        return BLOCKED_PARAMS
 
     def __init__(self):
         super().__init__(
@@ -1232,19 +1248,15 @@ class ActionGuard(SubAgentBase):
         if not tool:
             return "Necesito 'tool' y 'params' para custodiar una acción."
 
-        if tool not in self._RISKY_API:
+        # Misma función que usa dispatch_tool: un solo lugar donde decides.
+        from core.tool_dispatch_api import guard_check
+        verdict = guard_check(tool, params)
+
+        if verdict.allowed and verdict.risk == "safe":
             return f"✅ '{tool}' no está en la zona de riesgo; puede ejecutarse."
-
-        joined = json.dumps(params, ensure_ascii=False).lower()
-        for pattern in self._BLOCKED_PARAMS.get(tool, []):
-            if pattern.lower() in joined:
-                return (f"⛔ ACCIÓN BLOQUEADA por el Custodio: {tool} con patrón "
-                        f"'{pattern}'.\nPara ejecutarla igual, requerís aprobación "
-                        f"explícita del usuario (confirm=true).")
-
-        return (f"⚠️ '{tool}' tiene efectos en el sistema. Se puede ejecutar, "
-                "pero conviene confirmar con el usuario antes si hay riesgo de "
-                "efectos irreversibles (borrado, push, envíos).")
+        if not verdict.allowed:
+            return verdict.message
+        return verdict.message
 
 
 class SelectiveForgetter(SubAgentBase):

@@ -116,3 +116,10 @@ data/generated_images/
 
 # Temporal de TTS (se regenera en cada síntesis)
 data/_temp_speech.mp3
+
+# Registro de decisiones del Custodio de Acciones (append-only, datos de runtime)
+data/tool_audit.jsonl
+
+# pytest
+.pytest_cache/
+__pycache__/
