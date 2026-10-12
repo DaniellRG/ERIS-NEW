@@ -28,17 +28,22 @@ from pathlib import Path
 
 # ── Defaults a prueba de futuro (aliases *-latest que Google nunca retira) ─────
 # El primero de cada lista es el preferido; el resto son fallbacks en orden.
+#
+# 2026-10-12: `gemini-2.5-flash-lite` salía en tres cadenas y devolvía 404
+# ("no longer available to new users"). Verificado contra la API con la clave
+# real: `gemini-flash-lite-latest` responde OK y es el mismo tipo de alias
+# estable, que es justamente la filosofía de este módulo.
 _DEFAULT_CHAINS: dict[str, list[str]] = {
     # Conversación / respuestas rápidas de texto
-    "chat":   ["gemini-flash-latest", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"],
+    "chat":   ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.1-flash-lite"],
     # Tareas ligeras / muy rápidas
-    "fast":   ["gemini-flash-latest", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"],
+    "fast":   ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.1-flash-lite"],
     # Razonamiento pesado / calidad
     "pro":    ["gemini-pro-latest", "gemini-flash-latest"],
     # Agentes multi-paso
-    "agent":  ["gemini-flash-latest", "gemini-3.1-flash-lite"],
+    "agent":  ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.1-flash-lite"],
     # Visión (imágenes / pantalla)
-    "vision": ["gemini-flash-latest", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"],
+    "vision": ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.1-flash-lite"],
     # Modelo LIVE de voz (bidiGenerateContent) — NO usa alias -latest
     "live":   ["gemini-3.1-flash-live-preview"],
 }

@@ -133,11 +133,17 @@ if cli_path.exists():
 else:
     fail("cli", "eris_cli.py not found")
 
-bat_path = Path(r"C:\Users\danie\.eris\bin\eris.bat")
-if bat_path.exists():
-    ok("cli", "eris.bat exists")
+# El launcher se comprueba en el repo, no en una ruta absoluta por SO:
+# antes miraba C:\Users\danie\.eris\bin\eris.bat, que solo existe tras instalar
+# en Windows y provocaba un FAIL ambiental espurio en Linux.
+_launchers = [p for p in ("eris", "eris.sh", "eris_cli.py") if (BASE / p).exists()]
+_installers = [p for p in ("install.sh", "install.ps1") if (BASE / p).exists()]
+if _launchers and _installers:
+    ok("cli", f"launchers={','.join(_launchers)} installers={','.join(_installers)}")
+elif _launchers:
+    warn("cli", f"sin instalador en el repo (hay: {','.join(_launchers)})")
 else:
-    fail("cli", "eris.bat not found")
+    fail("cli", "no hay ningun launcher en el repo")
 
 # ── 9. ACTION IMPORTS (no duplicates) ──
 print("[9] ACTION IMPORTS")
