@@ -220,7 +220,7 @@ def _has_wake_word(text: str) -> bool:
 
 # ── Verbos de EJECUCIÓN: el usuario pide HACER algo con la máquina ──
 # Un pedido "ejecutable" (abrí/reproducí/instalá/buscá y poné…) va SIEMPRE al
-# cerebro con las 503 tools, que planifica multi-paso y encadena tools. NO debe
+# cerebro con todas las tools, que planifica multi-paso y encadena tools. NO debe
 # secuestrarlo un agente de keyword (web/core/media/…) que ejecuta UNA sola
 # acción o devuelve una búsqueda en vez del efecto pedido (bug real: "abrí el
 # navegador y buscá música y reproducila" caía en el agente web y solo buscaba).
@@ -1598,7 +1598,7 @@ class ErisLive:
                     #    y el router los clasifica.
                     #    PERO: si el pedido es una ACCIÓN ejecutable (abrí/reproducí/
                     #    instalá/buscá y poné…), NO se intercepta — va al cerebro con
-                    #    las 503 tools, que encadena multi-paso. Si no, un agente de
+                    #    las tools del cerebro, que encadena multi-paso. Si no, un agente de
                     #    keyword devuelve una búsqueda en vez del efecto pedido
                     #    (bug real: "abrí el navegador y buscá música y reproducila"
                     #     caía en web y solo buscaba). memoria y pentest NO se gatean:
@@ -1606,7 +1606,7 @@ class ErisLive:
                     #    B8 [FIX 2026-10-12]: `_EXEC_STEMS` es UNA señal más, no la
                     #    única puerta. Un fragmento solo se lleva el turno si además
                     #    de NO ser acción, SÍ parece una consulta clara de dominio;
-                    #    en cualquier otro caso decide el LLM con sus @TOOLS@ tools. ──
+                    #    en cualquier otro caso decide el LLM con todas sus tools. ──
                     _subsystem_agents = ("memoria", "pentest")
                     _capability_agents = ("web", "core", "file", "media",
                                           "comm", "vision", "security", "study")

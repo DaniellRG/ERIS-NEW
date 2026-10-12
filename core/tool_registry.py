@@ -632,6 +632,16 @@ _TOOLS = {
 
     # ERIS: memory_system (sync)
     "memory_system": ("tools.memory_system", "tool_handler"),
+
+    # ── HERMES (Fase 0.5 / B9): las 7 herramientas reales que Gemini necesita ──
+    #    Antes eran 12 fantasmas en `_GEMINI_PRIORITY_TOOLS` (importadas a None).
+    "hermes_web_search":      ("core.hermes_tools", "hermes_web_search"),
+    "hermes_web_scraper":     ("core.hermes_tools", "hermes_web_scraper"),
+    "hermes_page_summarizer": ("core.hermes_tools", "hermes_page_summarizer"),
+    "hermes_data_analyzer":   ("core.hermes_tools", "hermes_data_analyzer"),
+    "hermes_csv_processor":   ("core.hermes_tools", "hermes_csv_processor"),
+    "hermes_code_review":     ("core.hermes_tools", "hermes_code_review"),
+    "hermes_security_audit":  ("core.hermes_tools", "hermes_security_audit"),
 }
 
 

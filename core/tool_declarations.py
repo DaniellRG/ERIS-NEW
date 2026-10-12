@@ -7298,6 +7298,98 @@ TOOL_DECLARATIONS.extend([
             "required": ["action"],
         }
     },
+    # ── HERMES (Fase 0.5 / B9): declaraciones de las 7 herramientas reales ──
+    {
+        "name": "hermes_web_search",
+        "description": "Busqueda web real-time. Acciones: search (buscar), news (noticias), images. Devuelve resultados con titulo, resumen y URL. Delega en la busqueda DuckDuckGo de Eris.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "query": {"type": "STRING", "description": "Termino de busqueda"},
+                "action": {"type": "STRING", "description": "search (default), news, images"},
+                "max_results": {"type": "STRING", "description": "Maximo de resultados (1-20)"},
+            },
+            "required": ["query"],
+        }
+    },
+    {
+        "name": "hermes_web_scraper",
+        "description": "Descarga una URL y devuelve su TEXTO LIMPIO (sin scripts/estilos/nav): titulo + cuerpo. Opcionalmente lista los enlaces. Usar antes de resumir o analizar una pagina.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "url": {"type": "STRING", "description": "URL a descargar"},
+                "max_chars": {"type": "STRING", "description": "Tope de caracteres del texto (default 8000)"},
+                "links": {"type": "STRING", "description": "true para incluir los enlaces de la pagina"},
+            },
+            "required": ["url"],
+        }
+    },
+    {
+        "name": "hermes_page_summarizer",
+        "description": "Resume una pagina (por url) o un texto pegado. Extractivo por defecto (nunca falla); use_llm=true para resumen con IA. Fiel al texto, sin inventar.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "url": {"type": "STRING", "description": "URL a resumir"},
+                "text": {"type": "STRING", "description": "Texto a resumir (alternativa a url)"},
+                "max_sentences": {"type": "STRING", "description": "Cantidad de frases del resumen (default 6)"},
+                "use_llm": {"type": "STRING", "description": "true para resumen con IA"},
+            },
+            "required": [],
+        }
+    },
+    {
+        "name": "hermes_data_analyzer",
+        "description": "Analiza datos JSON o CSV: estructura, claves, tipos y estadisticas (n/min/max/media/mediana). Acepta 'data' (string JSON) o 'path' (archivo .json/.csv).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "data": {"type": "STRING", "description": "JSON como texto"},
+                "path": {"type": "STRING", "description": "Ruta a archivo .json o .csv"},
+            },
+            "required": [],
+        }
+    },
+    {
+        "name": "hermes_csv_processor",
+        "description": "Lee y procesa un archivo CSV. Acciones: read (default), head (primeras n), columns (columnas), describe (estadisticas), filter (filter_col + filter_val).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "path": {"type": "STRING", "description": "Ruta del CSV"},
+                "action": {"type": "STRING", "description": "read, head, columns, describe, filter"},
+                "n": {"type": "STRING", "description": "Cantidad de filas a mostrar"},
+                "filter_col": {"type": "STRING", "description": "Columna a filtrar (accion filter)"},
+                "filter_val": {"type": "STRING", "description": "Valor a buscar en la columna"},
+            },
+            "required": ["path"],
+        }
+    },
+    {
+        "name": "hermes_code_review",
+        "description": "Revision estatica de codigo: sintaxis (py_compile), linter (ruff) y heuristicas (lineas largas, except desnudo, eval/exec, TODO). Acepta 'path' o 'code'.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "path": {"type": "STRING", "description": "Ruta del archivo a revisar"},
+                "code": {"type": "STRING", "description": "Codigo como texto (alternativa a path)"},
+            },
+            "required": [],
+        }
+    },
+    {
+        "name": "hermes_security_audit",
+        "description": "Auditoria de seguridad basica de un archivo/directorio Python o de un snippet: eval/exec, shell=True, os.system, pickle, yaml.load inseguro, TLS verify=False, secretos hardcodeados, bind 0.0.0.0. Usa bandit si esta disponible.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "path": {"type": "STRING", "description": "Archivo o directorio a auditar"},
+                "code": {"type": "STRING", "description": "Snippet de codigo a auditar"},
+            },
+            "required": [],
+        }
+    },
 ])
 
 

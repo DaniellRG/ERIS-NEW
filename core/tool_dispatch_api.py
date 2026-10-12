@@ -60,7 +60,7 @@ _AUDIT_LOG = _BASE / "data" / "tool_audit.jsonl"
 
 #: Tools con efectos secundarios sobre el sistema.
 #: OJO: `email_sender`, `api_invoke` y `webhook_sender` NO existen hoy en el
-#: registro (503 tools) - quedaron de cuando ActionGuard se escribio. Se dejan
+#: registro - quedaron de cuando ActionGuard se escribio. Se dejan
 #: vigilados por si alguien las construye: vigilar una tool que no existe es
 #: inofensivo, y obviarla seria una trampa si aparece despues.
 RISKY_API = (

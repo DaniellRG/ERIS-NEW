@@ -25,18 +25,17 @@ _GEMINI_TOOL_CAP = 120
 # Tools imprescindibles que SIEMPRE deben llegar a Gemini, aunque esten fuera
 # del bloque inicial de declaraciones (ordenadas por dominio).
 _GEMINI_PRIORITY_TOOLS = [
+    # Hermes (Fase 0.5 / B9): SOLO las 7 que existen de verdad. Las otras 5
+    # (writer_articles, email_writer, test_generator, feed_monitor, github_sync)
+    # salieron hasta que se necesiten: prometerle a Gemini una tool fantasma lo
+    # empuja a "usarla" y a narrar un éxito que nunca pasó.
     "hermes_web_search",
     "hermes_web_scraper",
     "hermes_page_summarizer",
     "hermes_data_analyzer",
     "hermes_csv_processor",
-    "hermes_writer_articles",
-    "hermes_email_writer",
     "hermes_code_review",
-    "hermes_test_generator",
     "hermes_security_audit",
-    "hermes_feed_monitor",
-    "hermes_github_sync",
     "ask_user",
     "fabrica",
     "procedimientos",
@@ -84,7 +83,6 @@ _GEMINI_PRIORITY_TOOLS = [
     "knowledge_base",
     "user_profile",
     "git_control",
-    "code_assistant",
     "file_editor",
     "context_read",
     "morning_brief",
@@ -92,7 +90,6 @@ _GEMINI_PRIORITY_TOOLS = [
     "image_analyzer",
     "translator",
     "web_jobs",
-    "lab_pulse",
     "curar_memoria",
     "cron_scheduler",
     "reminders",
@@ -105,12 +102,6 @@ _GEMINI_PRIORITY_TOOLS = [
     "opencode_bridge",
     "agente_sub",
     "todo_yo",
-    "paper_search",
-    "repo_discovery",
-    "evolution_campaigns",
-    "learning_engine",
-    "aprendizaje_videos",
-    "auto_defensa",
     "evolucion"
 ]
 
