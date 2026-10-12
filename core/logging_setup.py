@@ -15,6 +15,74 @@ PROMPT_PATH     = BASE_DIR / "core" / "prompt.txt"
 PROMPT_COMPACT_PATH = BASE_DIR / "core" / "prompt_compact.txt"
 LOG_PATH        = BASE_DIR / "eris.log"
 
+# ── Rastreador de errores para el buffer en memoria ──────────────────────────
+# `setup_logging` enruta stderr a un _TeeStream; este rastreador recoge las
+# líneas con pinta de error real y las deja en core/error_buffer.py, de donde
+# diagnostico / auto_salud / la UI pueden mostrarlas sin leer el archivo.
+_ERROR_MARKERS = (
+    "Traceback", "Error:", "ERROR ", "ERROR:", "CRITICAL", "FATAL",
+    "Exception", "UnicodeEncodeError", "KeyError", "TypeError",
+    "ValueError", "NameError", "AttributeError", "PermissionError",
+    "RuntimeError", "ImportError", "ModuleNotFoundError", "RecursionError",
+)
+
+
+class _ErrorTracer:
+    """Junta fragmentos hasta la línea completa y captura los bloques de error."""
+
+    __slots__ = ("_pending", "_tb_remaining", "_last", "_last_ts", "_count")
+
+    def __init__(self):
+        self._pending = ""
+        self._tb_remaining = 0
+        self._last = ""
+        self._last_ts = 0.0
+        self._count = 0
+
+    def push(self, data: str) -> None:
+        try:
+            self._pending += data
+            while "\n" in self._pending:
+                line, self._pending = self._pending.split("\n", 1)
+                self._consume(line)
+        except Exception:
+            pass  # rastrear errores nunca debe romper nada
+
+    def _record(self, text: str) -> None:
+        import time as _t
+        from core.error_buffer import record_error
+        # Anti-spam: el mismo error repetido seguido se registra una sola vez
+        # (los loops imprimen miles de veces la misma línea).
+        now = _t.time()
+        if text == self._last and now - self._last_ts < 5:
+            self._count += 1
+            if self._count == 100:
+                record_error(f"(la línea anterior se repitió muchas veces)")
+            return
+        self._last = text
+        self._last_ts = now
+        self._count = 0
+        record_error(text, source="stderr")
+
+    def _consume(self, line: str) -> None:
+        s = line.strip()
+        if not s:
+            self._tb_remaining = 0
+            return
+        if "Traceback (most recent call last):" in s:
+            self._tb_remaining = 6
+            self._record(s)
+            return
+        if self._tb_remaining > 0:
+            self._record(s)
+            self._tb_remaining -= 1
+            return
+        if any(m in s for m in _ERROR_MARKERS):
+            self._record(s)
+
+
+_tracer_stderr = _ErrorTracer()
+
 
 def get_obsidian_vault() -> Path:
     """Devuelve la ruta al vault de Obsidian (memoria persistente de ERIS).
@@ -92,22 +160,74 @@ def setup_logging():
         _log_fh = open(LOG_PATH, "w", encoding="utf-8", buffering=1)
 
         class _TeeStream:
-            def __init__(self, *streams):
+            """Escribe a N streams a la vez (pantalla + archivo de log).
+
+            BUG ARREGLADO 2026-10-12: `fileno()` lanzaba
+            `io.UnsupportedOperation`, y TODO código que preguntaba por el fd
+            de sys.stdout/sys.stderr (logging, os.dup, subprocess con
+            stdout=sys.stdout, argparse) reventaba en silencio. Ahora devuelve
+            el fd del primer stream real, y como último recurso un fd a
+            /dev/null abierto una sola vez (no gotea descriptores).
+            """
+
+            def __init__(self, *streams, tag: str = ""):
                 self._streams = [s for s in streams if s is not None]
+                self._tag = tag
+                self._fallback_fd = None
+
             def write(self, data):
+                if self._tag == "stderr":
+                    _tracer_stderr.push(data)
                 for s in self._streams:
-                    try: s.write(data)
-                    except Exception: pass
+                    try:
+                        s.write(data)
+                    except Exception:
+                        pass
+
             def flush(self):
                 for s in self._streams:
-                    try: s.flush()
-                    except Exception: pass
-            @property
-            def encoding(self): return "utf-8"
-            def fileno(self): raise _io.UnsupportedOperation("fileno")
+                    try:
+                        s.flush()
+                    except Exception:
+                        pass
 
-        sys.stdout = _TeeStream(sys.stdout, _log_fh)
-        sys.stderr = _TeeStream(sys.stderr, _log_fh)
+            @property
+            def encoding(self):
+                return "utf-8"
+
+            @property
+            def errors(self):
+                return "replace"
+
+            def fileno(self):
+                for s in self._streams:
+                    try:
+                        return s.fileno()
+                    except Exception:
+                        continue
+                if self._fallback_fd is None:
+                    import os as _os
+                    self._fallback_fd = _os.open(
+                        getattr(_os, "devnull", "/dev/null"), _os.O_RDWR)
+                return self._fallback_fd
+
+            def isatty(self):
+                return False
+
+            def writable(self):
+                return True
+
+            def readable(self):
+                return False
+
+            def seekable(self):
+                return False
+
+            def write_through(self):
+                return True
+
+        sys.stdout = _TeeStream(sys.stdout, _log_fh, tag="stdout")
+        sys.stderr = _TeeStream(sys.stderr, _log_fh, tag="stderr")
         if _rotate_msg:
             print(_rotate_msg)
     except Exception:

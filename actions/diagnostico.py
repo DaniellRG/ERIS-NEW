@@ -219,14 +219,34 @@ def _render_logs(parameters: dict) -> str:
     n_logs = int(p.get("logs") or 3)
     filtro = str(p.get("filtro") or "").lower()
     errs = _scan_log_errors(n_logs)
+
+    # Buffer en memoria: errores que pasaron por esta ejecución (más frescos
+    # que el archivo). Se suman porque el traceback puede no haber llegado
+    # todavía a eris.log y porque retiene el contexto del bloque.
+    try:
+        from core.error_buffer import recent_errors
+        inmem = recent_errors(15)
+    except Exception:
+        inmem = []
+    if inmem:
+        # Dedup: no repetir lo que ya salió del archivo.
+        file_text = "\n".join(c for x in errs for c in x["context"])
+        inmem = [e for e in inmem if e["text"][:200] not in file_text]
+        if filtro:
+            inmem = [e for e in inmem if filtro in e["text"].lower()]
+
     if filtro:
         errs = [e for e in errs if filtro in "\n".join(e["context"]).lower() or filtro in e["log"].lower()]
-    if not errs:
+
+    if not errs and not inmem:
         return "No se encontraron errores recientes en los logs."
-    lines = [f"ERRORES RECIENTES ({len(errs)}):"]
+
+    lines = [f"ERRORES RECIENTES ({len(errs)} del archivo, {len(inmem)} en memoria):"]
     for i, e in enumerate(errs):
         lines.append(f"\n[{i+1}] {e['log']} — {e['mtime']}")
         lines.extend("  " + c for c in e["context"][:5])
+    for j, e in enumerate(inmem):
+        lines.append(f"\n[mem {j+1}] {e['time']} — {e['text'][:220]}")
     return "\n".join(lines)
 
 
