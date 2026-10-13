@@ -84,6 +84,32 @@ _DOMAINS = {
 _WINDOW = 180.0   # solo fallos recientes (3 min)
 _FLAG_TTL = 600.0 # las correcciones envejecen (10 min) y dejan de mostrarse
 
+# ── Fase 3.4: "no digas listo sin verificar" ─────────────────────────────────
+# El simétrico del "nunca digas no puedo sin intentar 3 formas": no se declara
+# terminado/queda listo sin haber CORRIDO algo (tests, compilación, lint) o
+# RELEÍDO el archivo tras cambiarlo.
+_COMPLETION_CLAIMS = (
+    "tarea completa", "tarea completada", "misión cumplida", "mision cumplida",
+    "quedó listo", "quedo listo", "ya está listo", "ya esta listo",
+    "todo listo", "terminé", "termine", "lo terminé", "lo termine",
+    "ya funciona", "está funcionando", "esta funcionando", "queda funcionando",
+    "quedó andando", "quedo andando", "quedó resuelto", "quedo resuelto",
+    "arreglado", "solucionado", "quedó arreglado", "quedo arreglado",
+)
+# Nombres de tool que CUENTAN como verificación real (fragmentos, minúsculas).
+_VERIFY_TOOLS = (
+    "verify", "test", "pytest", "ruff", "py_compile", "compile", "compileall",
+    "lint", "linter", "code_validator", "code_guard", "lsp", "read_file",
+    "file_read", "read", "grep", "codebase_explorer", "terminal_agent",
+    "shell_session", "mission", "validar", "diagnostico",
+)
+# Nombres de tool que CAMBIAN código/archivos (si se usaron y no hubo
+# verificación, el "listo" es una afirmación sin respaldo).
+_MUTATION_TOOLS = (
+    "file_api", "mission", "code_guard", "code_patcher", "ast_edit",
+    "self_edit", "self_modify", "file_editor", "file_controller", "fabrica",
+)
+
 
 
 def record_tool(name: str, status: str, snippet: str = "") -> None:
@@ -102,38 +128,86 @@ def _bad_recent(window: float = _WINDOW):
                 if now - ts < window and s != "ok"]
 
 
+def _recent_tool_names(window: float = _WINDOW) -> list:
+    """Nombres de las tools usadas en el turno (ventana reciente)."""
+    with _LOCK:
+        now = time.time()
+        return [n for (ts, n, _s, _seg) in _TOOL_LOG if now - ts < window]
+
+
+def _names_match(names, hints) -> bool:
+    low = [str(n).lower() for n in names]
+    return any(any(h in n for h in hints) for n in low)
+
+
+def audit_completion(text: str, tool_names=None) -> list:
+    """Fase 3.4 — no digas "listo" sin verificar.
+
+    Si la respuesta afirma que quedó listo/terminado/arreglado y en el turno se
+    CAMBIÓ código (o archivos) pero NO se corrió NINGUNA verificación (tests,
+    py_compile, ruff, mission verify, releer el archivo), devuelve una bandera.
+    El simétrico del "nunca digas no puedo sin intentar 3 formas".
+
+    Nunca lanza. Sin afirmación de cierre → sin marca. Sin cambios → sin marca.
+    """
+    flags: list = []
+    try:
+        if not text or not isinstance(text, str):
+            return flags
+        low = text.lower()
+        if not any(c in low for c in _COMPLETION_CLAIMS):
+            return flags
+        names = list(tool_names) if tool_names is not None else _recent_tool_names()
+        if not names:
+            return flags
+        if _names_match(names, _VERIFY_TOOLS):
+            return flags          # verificó: no hay nada que reclamar
+        if not _names_match(names, _MUTATION_TOOLS):
+            return flags          # no cambió nada: solo fue charla
+        flags.append(
+            "Afirmaste que quedó listo/terminado, pero en este turno no corriste "
+            "NINGUNA verificación (tests, py_compile, ruff, mission verify) ni "
+            "releíste el archivo tras cambiarlo. Verificá ANTES de decir 'listo'."
+        )
+    except Exception:
+        return flags
+    return flags
+
+
 def audit_turn(text: str) -> list:
     """Cruza la respuesta final del turno contra la evidencia reciente.
 
     Devuelve la lista de flags detectados y los deja guardados para que
-    `evidence_block()` los inyecte en el próximo turno. Solo marca si la
-    afirmación de éxito habla del MISMO dominio que un tool que falló hace
-    menos de 3 minutos (sin afirmación → sin marca; sin fallo → sin marca)."""
+    `evidence_block()` los inyecte en el próximo turno. Dos controles:
+
+    1. Contradicción: afirmó un éxito del MISMO dominio que un tool que falló
+       hace menos de 3 minutos (sin afirmación → sin marca; sin fallo → sin marca).
+    2. Fase 3.4: afirmó "listo/terminado/arreglado" sin verificar tras cambiar
+       archivos (sin cambios → sin marca; con verificación → sin marca)."""
     flags: list = []
     if not text or not isinstance(text, str):
         return flags
     low = text.lower()
     if any(n in low for n in _NEGATORS):
-        return flags
+        return flags          # es honesta (admite un fallo): no la increpamos
     signals = [s for s in _SUCCESS_SIGNALS if s in low]
-    if not signals:
-        return flags
     bad = _bad_recent()
-    if not bad:
-        return flags
-    seen: set = set()
-    for tname, tstatus, _seg in bad:
-        tname_l = tname.lower()
-        keywords = _DOMAINS.get(tname_l, (tname_l,))
-        if any(k in low for k in keywords):
-            if tname_l in seen:
-                continue
-            seen.add(tname_l)
-            flags.append(
-                f"Aseguraste un éxito de \"{tname}\" (\"{signals[0]}…\") pero el "
-                f"registro REAL de este turno muestra: {tname} → {tstatus}. "
-                f"Confésalo abiertamente; no lo des por hecho."
-            )
+    if signals and bad:
+        seen: set = set()
+        for tname, tstatus, _seg in bad:
+            tname_l = tname.lower()
+            keywords = _DOMAINS.get(tname_l, (tname_l,))
+            if any(k in low for k in keywords):
+                if tname_l in seen:
+                    continue
+                seen.add(tname_l)
+                flags.append(
+                    f"Aseguraste un éxito de \"{tname}\" (\"{signals[0]}…\") pero el "
+                    f"registro REAL de este turno muestra: {tname} → {tstatus}. "
+                    f"Confésalo abiertamente; no lo des por hecho."
+                )
+    # Fase 3.4: cierre sin verificación.
+    flags.extend(audit_completion(text))
     if flags:
         with _LOCK:
             now = time.time()
