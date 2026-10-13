@@ -180,7 +180,7 @@ previos son tuyos y no se tocan. **Nunca push.**
 | 1.2 | `9478677` | hecho, con alcance reducido (ver nota) |
 | 1.3 | `9c1e98c` | hecho (fin del eco + 2 tests) |
 | **1 (resto)** | — | **pendiente**: extracción completa de `_build_config` |
-| 2 | — | pendiente (los ojos: `window_detect`) |
+| 2.1–2.4 | `103303e` | hecho (los ojos: `core/window_detect.py`, observer ve en Linux, `codebase_explorer action=map`, evento `privado` sin contenido) |
 | 3 | — | pendiente (que actúe sola) |
 
 **Nota Fase 1.2:** la extracción **completa** de `_build_config()` (~370 líneas,
@@ -193,5 +193,5 @@ y los subagentes lo reciben en `execute(task, context)`. Retomar la extracción
 en una pasada con la GUI a la vista.
 
 **Baseline vigente:** `test_all.py` 177 PASS / 0 FAIL / 3 WARN · sync tools
-510/510 · `pytest tests/` 150 passed (3 fallos pre-existentes en archivos no
+510/510 · `pytest tests/` 165 passed (3 fallos pre-existentes en archivos no
 tocados: `generated/test_weather_report.py` y `tests/test_tool_declarations.py`).
