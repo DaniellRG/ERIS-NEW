@@ -287,7 +287,15 @@ def maybe_glimpse() -> None:
     if session_min < cfg.get("mirar_min_coding_min", 5):
         return
     glimpses = data.get("glimpses", [])
-    interval = cfg.get("mirar_interval_min", 15) * 60
+    interval_min = cfg.get("mirar_interval_min", 15)
+    try:
+        from core.shared_context import get_shared_context
+        _ov = get_shared_context().get_autonomy("observer_mirar_interval_min")
+        if _ov is not None:
+            interval_min = _ov
+    except Exception:
+        pass
+    interval = interval_min * 60
     if glimpses and (time.time() - glimpses[-1]["t"]) < interval:
         return
     threading.Thread(target=_glimpse_worker, args=(fg,), daemon=True).start()
@@ -615,7 +623,17 @@ def should_voice(cooldown_min: int | None = None, max_hour: int | None = None) -
     vc = data.get("voice", {})
     hour_start = vc.get("hour_start", 0)
     cfg = data.get("config", {})
-    cm = cooldown_min if cooldown_min is not None else cfg.get("cooldown_voice_min", 15)
+    cm = cooldown_min
+    if cm is None:
+        # Fase 3.3: el cooldown de voz vive en SharedContext (compartido), con
+        # fallback a la config del observer. Antes 7 min fijos: Eris muda.
+        try:
+            from core.shared_context import get_shared_context
+            cm = get_shared_context().get_autonomy("observer_voice_cooldown_min")
+        except Exception:
+            cm = None
+    if cm is None:
+        cm = cfg.get("cooldown_voice_min", 15)
     if time.time() - hour_start > 3600:
         return True
     if vc.get("count_hour", 0) >= (max_hour if max_hour is not None

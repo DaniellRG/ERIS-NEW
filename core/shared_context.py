@@ -45,6 +45,23 @@ _DEFAULT_IDENTITY = {
     "kind": "asistente",
 }
 
+# ── Cooldowns / umbrales de autonomía en UN solo lugar (Fase 3.3) ────────────
+# Antes cada subsistema tenía su propio número, y varios eran tan altos que la
+# iniciativa de Eris quedaba inaudible. Ahora viven acá y son compartidos por
+# GUI, CLI y cualquier daemon. Bajados respecto de los valores viejos.
+_DEFAULT_AUTONOMY = {
+    "enabled": True,
+    "observer_idle_s": 60,               # observer proactivo (idle mínimo)
+    "iniciativa_idle_s": 420,            # iniciativa plena (antes 420)
+    "iniciativa_cooldown_s": 300,        # entre iniciativas (antes 900)
+    "idle_learning_s": 300,              # aprendizaje en idle
+    "self_improvement_interval_s": 900,  # ciclo de auto-mejora
+    "auto_cont_max_steps": 10,           # tope de avances automáticos
+    "auto_cont_cooldown_s": 4.0,         # espera mínima entre avances
+    "observer_voice_cooldown_min": 4.0,  # entre comentarios en voz (antes 7)
+    "observer_mirar_interval_min": 6,    # entre miradas leves (antes 10)
+}
+
 
 class SharedContext:
     """Estado vivo compartido por GUI, CLI y subagentes (singleton por proceso)."""
@@ -58,6 +75,10 @@ class SharedContext:
         self.foreground_app: Optional[str] = None
         self.identity: dict = dict(_DEFAULT_IDENTITY)
         self.read_only: bool = False
+        # Actividad del usuario: fuente de verdad del "idle" para toda la
+        # autonomía (el observer y los daemons leen de acá, no de su reloj).
+        self.last_activity_ts: float = time.time()
+        self.autonomy: dict = dict(_DEFAULT_AUTONOMY)
         self.updated_at: float = time.time()
 
     # ── conversación reciente ──────────────────────────────────────────────
@@ -137,6 +158,38 @@ class SharedContext:
             self.identity.update({k: v for k, v in fields.items() if v is not None})
             self.updated_at = time.time()
 
+    # ── actividad del usuario / idle (Fase 3.3) ────────────────────────────
+
+    def touch_activity(self, ts: Optional[float] = None) -> None:
+        """Marca actividad del usuario AHORA (o en `ts`). Un solo reloj para
+        GUI, CLI y daemons: la autonomía deja de vivir en islas."""
+        with self._lock:
+            self.last_activity_ts = float(ts) if ts is not None else time.time()
+            self.updated_at = time.time()
+
+    def idle_seconds(self) -> float:
+        """Segundos desde la última actividad del usuario. Nunca negativo."""
+        with self._lock:
+            last = float(self.last_activity_ts or time.time())
+        return max(0.0, time.time() - last)
+
+    def is_idle(self, threshold: float) -> bool:
+        return self.idle_seconds() >= float(threshold)
+
+    # ── configuración de autonomía (un solo lugar) ─────────────────────────
+
+    def set_autonomy(self, **fields) -> None:
+        """Ajusta umbrales/cooldowns de autonomía (p. ej. en runtime)."""
+        with self._lock:
+            for k, v in fields.items():
+                if v is not None:
+                    self.autonomy[k] = v
+            self.updated_at = time.time()
+
+    def get_autonomy(self, key: str, default=None):
+        with self._lock:
+            return self.autonomy.get(key, default)
+
     # ── salida para el prompt y para los subagentes ─────────────────────────
 
     def context_block(self, *, include_convo: bool = True,
@@ -195,6 +248,8 @@ class SharedContext:
             self.foreground_app = None
             self.identity = dict(_DEFAULT_IDENTITY)
             self.read_only = False
+            self.last_activity_ts = time.time()
+            self.autonomy = dict(_DEFAULT_AUTONOMY)
             self.updated_at = time.time()
 
 

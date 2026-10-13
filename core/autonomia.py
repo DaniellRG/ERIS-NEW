@@ -34,7 +34,8 @@ _MEM = _BASE / "memory"
 _STATE_FILE = _MEM / "autonomia.json"
 _lock = threading.Lock()
 
-COOLDOWN_SECONDS = 900  # 15 min entre iniciativas plenas
+COOLDOWN_SECONDS = 300  # fallback; el valor real vive en SharedContext.autonomy
+                        # ("iniciativa_cooldown_s", antes 900 = 15 min: inaudible)
 
 
 def _now() -> str:
@@ -128,6 +129,24 @@ _CAPACIDADES = [
 ]
 
 
+def _cooldown_seconds() -> float:
+    """Cooldown entre iniciativas, desde SharedContext (un solo lugar)."""
+    try:
+        from core.shared_context import get_shared_context
+        return float(get_shared_context().get_autonomy(
+            "iniciativa_cooldown_s", COOLDOWN_SECONDS))
+    except Exception:
+        return float(COOLDOWN_SECONDS)
+
+
+def _enabled() -> bool:
+    try:
+        from core.shared_context import get_shared_context
+        return bool(get_shared_context().get_autonomy("enabled", True))
+    except Exception:
+        return True
+
+
 def turno_de_iniciativa(force: bool = False) -> str:
     """Un turno de iniciativa plena: elige una capacidad (rotando) y la ejecuta.
 
@@ -139,8 +158,11 @@ def turno_de_iniciativa(force: bool = False) -> str:
         state = _load_state()
         now = time.time()
         last = float(state.get("last_run_ts", 0) or 0)
-        if not force and (now - last) < COOLDOWN_SECONDS:
-            restante = int((COOLDOWN_SECONDS - (now - last)) / 60) + 1
+        cooldown = _cooldown_seconds()
+        if not force and not _enabled():
+            return "Iniciativa en cooldown (autonomía desactivada)"
+        if not force and (now - last) < cooldown:
+            restante = int((cooldown - (now - last)) / 60) + 1
             return "Iniciativa en cooldown ({} min restantes)".format(restante)
         rot = int(state.get("rotacion", 0)) % len(_CAPACIDADES)
         nombre, func = _CAPACIDADES[rot]
@@ -164,6 +186,8 @@ def turno_de_iniciativa(force: bool = False) -> str:
 def estado() -> str:
     state = _load_state()
     lines = ["⚡ Iniciativa plena de ERIS — estado",
+             "Activa: {}".format("sí" if _enabled() else "no"),
+             "Cooldown: {:.0f} s".format(_cooldown_seconds()),
              "Turnos: {}".format(state.get("turnos", 0)),
              "Rotación actual: {}".format(state.get("rotacion", 0) % len(_CAPACIDADES)),
              "Capacidades: " + ", ".join(n for n, _ in _CAPACIDADES)]

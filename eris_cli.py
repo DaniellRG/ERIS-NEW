@@ -658,6 +658,7 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
             try:
                 if shared is not None and user_input:
                     shared.note(f"Usuario: {user_input}")
+                    shared.touch_activity()
             except Exception:
                 pass
 
