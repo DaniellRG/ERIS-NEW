@@ -211,6 +211,53 @@ def _architecture_map(path: str = None) -> dict:
     }
 
 
+def _module_one_liner(filepath: Path) -> str:
+    """Primera línea útil de un módulo: el resumen del docstring, o el primer
+    def/class si no hay docstring. Best effort, no rompe."""
+    try:
+        with open(filepath, "r", encoding="utf-8", errors="replace") as fh:
+            head = fh.read(4000)
+    except Exception:
+        return ""
+    try:
+        doc = ast.get_docstring(ast.parse(head))
+        if doc:
+            return doc.strip().splitlines()[0].strip()[:110]
+    except Exception:
+        pass
+    for line in head.splitlines():
+        s = line.strip()
+        if s.startswith(("def ", "class ")):
+            return s.rstrip(":").replace("_", " ")[:110]
+    return ""
+
+
+_SKIP_DIRS = {"__pycache__", "node_modules", ".git", ".venv", "venv",
+              "chroma_db", ".mypy_cache", ".pytest_cache", "dist", "build",
+              "site-packages"}
+
+
+def _project_tree(path: str = None, max_files: int = 60) -> list:
+    """Árbol de módulos .py con UNA línea de qué hace cada uno (2.3)."""
+    root = Path(path) if path else _WORKSPACE
+    out = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames
+                       if not d.startswith(".") and d not in _SKIP_DIRS]
+        for f in sorted(filenames):
+            if not f.endswith(".py"):
+                continue
+            fp = Path(dirpath) / f
+            try:
+                rel = str(fp.relative_to(root))
+            except Exception:
+                rel = str(fp)
+            out.append({"file": rel, "summary": _module_one_liner(fp)})
+            if len(out) >= max_files:
+                return out
+    return out
+
+
 def codebase_explorer(parameters: dict = None, player=None) -> str:
     """Tool entry point."""
     params = parameters or {}
@@ -315,4 +362,15 @@ def codebase_explorer(parameters: dict = None, player=None) -> str:
                 output += f"  {mod}: {count} imports\n"
         return output
 
-    return f"Acción '{action}' no reconocida. Usa: grep, glob, imports, graph, definitions, references, stats, architecture"
+    elif action == "map":
+        path = params.get("path")
+        max_files = int(params.get("limit", 60) or 60)
+        tree = _project_tree(path, max_files)
+        if not tree:
+            return "Sin archivos Python para mapear."
+        out = f"Mapa del proyecto ({len(tree)} archivos, una línea por archivo):\n"
+        out += "\n".join(f"  {t['file']}: {t['summary']}" if t["summary"]
+                         else f"  {t['file']}" for t in tree)
+        return out
+
+    return f"Acción '{action}' no reconocida. Usa: grep, glob, imports, graph, definitions, references, stats, architecture, map"

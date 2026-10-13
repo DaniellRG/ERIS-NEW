@@ -371,6 +371,21 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
         _shared_block = shared.context_block(include_convo=False, include_summary=False)
         if _shared_block:
             chat._system = (chat._system or "") + "\n\n" + _shared_block
+        # ── Fase 2.3: al detectar un proyecto, Eris YA sabe qué hay adentro.
+        #    Solo si hay marcador de proyecto (evita recorrer un cwd cualquiera). ──
+        try:
+            _proj = shared.project_root
+            _root = Path(_proj) if _proj else None
+            _is_proj = bool(_root and _root.is_dir() and any(
+                (_root / m).exists() for m in
+                (".git", "pyproject.toml", "setup.py", "package.json", "Cargo.toml", "go.mod")))
+            if _is_proj:
+                from core.codebase_explorer import codebase_explorer as _cbe
+                _map = _cbe({"action": "map", "path": str(_root), "limit": 60})
+                if _map and not _map.startswith("Sin "):
+                    chat._system = (chat._system or "") + "\n\n[PROYECTO — MAPA]\n" + _map[:4000]
+        except Exception:
+            pass
     except Exception:
         shared = None
 

@@ -41,7 +41,6 @@ silencio (acompaña, no espía).
 """
 from __future__ import annotations
 
-import ctypes
 import json
 import os
 import random
@@ -53,12 +52,16 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent.parent
 _STATE_FILE = _BASE / "memory" / "observer.json"
 
-if os.name == "nt":
-    _U32 = _WIN32
-    _PID = _KERNEL32
-else:
-    _U32 = None
-    _PID = None
+# ── Los ojos viven en un módulo común (Fase 2.1): mantiene vivos los DOS
+#    backends (ctypes/user32 en Windows, hyprctl/xdotool en Linux). Acá solo se
+#    reexpone la API para que el resto del observer no sepa de plataformas. ──
+from core.window_detect import (  # noqa: E402
+    get_foreground as _wd_get_foreground,
+    list_windows as _wd_list_windows,
+    fg_hwnd as _wd_fg_hwnd,
+    window_rect as _wd_window_rect,
+    is_windows as _wd_is_windows,
+)
 
 _LOCK = threading.Lock()
 _cache = {"mtime": 0.0, "data": None}
@@ -76,7 +79,8 @@ _DEFAULTS = {
 
 _GLIMPSE_MAX = 8
 
-# Programas de programación / terminal (mayúsculas/minúsculas normalizadas)
+# Programas de programación / terminal (mayúsculas/minúsculas normalizadas).
+# Incluye las clases típicas de Hyprland/Linux además de los .exe de Windows.
 _CODE_PROCS = {
     "code", "devenv", "pycharm", "pycharm64", "idea", "idea64", "webstorm",
     "webstorm64", "clion", "clion64", "rider", "rider64", "goland",
@@ -87,11 +91,17 @@ _CODE_PROCS = {
     "terminal", "windows terminal", "windowsterminal", "powershell",
     "powershell.exe", "pwsh", "cmd", "cmd.exe", "conhost", "cygwin",
     "git bash", "bash", "wsl", "ubuntu", "wt",
+    # Linux (clases de Hyprland)
+    "code-oss", "codium", "vscodium", "gnome-text-editor", "helix", "hx",
+    "micro", "emacs", "geany", "mousepad", "pluma",
 }
 _TERMINAL_PROCS = {"cmd", "cmd.exe", "powershell", "powershell.exe", "pwsh",
                    "terminal", "windows terminal", "windowsterminal",
                    "conhost", "cygwin", "git bash", "bash", "wsl", "wt",
-                   "alacritty", "wezterm", "konsole", "xterm"}
+                   "alacritty", "wezterm", "konsole", "xterm",
+                   # Linux (clases de Hyprland)
+                   "kitty", "foot", "ghostty", "ptyxis", "gnome-terminal",
+                   "tilix", "terminator", "tmux", "guake", "xfce4-terminal"}
 
 # Sensibles: Eris no comenta estas ventanas. Silencio respetuoso.
 _SENSITIVE_PAT = (
@@ -101,11 +111,17 @@ _SENSITIVE_PAT = (
     "anonim", "credentials", "keyring", "mercadopago", "mercado pago",
     "credential", "hotmart", "pagos", "tarjeta", "cvu", "alias bancario",
 )
-_SENSITIVE_PROCS = {"logonui", "credentialmanager", "vault", "keepassxc"}
+_SENSITIVE_PROCS = {"logonui", "credentialmanager", "vault", "keepassxc",
+                    # Linux
+                    "bitwarden", "1password", "gnome-keyring"}
 
 # Navegadores: el título cambia con cada página -> ruido, no eventos
 _BROWSER_PROCS = {"chrome", "msedge", "edge", "firefox", "opera", "brave",
-                  "vivaldi", "arc", "chromium", "iexplore"}
+                  "vivaldi", "arc", "chromium", "iexplore",
+                  # Linux (clases de Hyprland)
+                  "brave-browser", "chromium-browser", "google-chrome",
+                  "google-chrome-stable", "firefox-esr", "zen", "librewolf",
+                  "floorp", "epiphany", "qutebrowser"}
 
 # Curiosidades para cuando anda "en modo propio" (no lo dicen los sensores)
 _PERSONAL_ACTIVITIES = (
@@ -116,107 +132,15 @@ _PERSONAL_ACTIVITIES = (
     "practicar tonos y expresiones para cuando hables",
 )
 
-# ── Win32 helpers ─────────────────────────────────────────────────────────
-def _fg_hwnd() -> int:
-    if _U32 is None:
-        return 0
-    try:
-        return _U32.GetForegroundWindow()
-    except Exception:
-        return 0
-
-
-def _title_of(hwnd: int) -> str:
-    try:
-        n = _U32.GetWindowTextLengthW(hwnd)
-        if n <= 0:
-            return ""
-        buf = ctypes.create_unicode_buffer(n + 1)
-        _U32.GetWindowTextW(hwnd, buf, n + 1)
-        return buf.value
-    except Exception:
-        return ""
-
-
-def _pid_of(hwnd: int) -> int:
-    pid = ctypes.c_ulong(0)
-    try:
-        _U32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
-        return pid.value
-    except Exception:
-        return 0
-
-
-def _proc_name(pid: int) -> str:
-    try:
-        import psutil
-        return (psutil.Process(pid).name() or "").lower()
-    except Exception:
-        return ""
-
-
+# ── Win32 helpers ── delegados a core/window_detect.py (Fase 2.1) ─────────
 def get_foreground() -> dict:
-    """(proc, title, pid) de la ventana en foco ahora mismo."""
-    hwnd = _fg_hwnd()
-    if not hwnd:
-        return {"pid": 0, "proc": "", "title": ""}
-    pid = _pid_of(hwnd)
-    return {
-        "pid": pid,
-        "proc": _proc_name(pid),
-        "title": (_title_of(hwnd) or "").strip(),
-    }
-
-
-def _list_visible_hwnds(max_n: int = 40) -> list:
-    if _U32 is None:
-        return []
-    out: list = []
-    USER32 = _U32
-
-    @ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
-    def _cb(hwnd, lparam):
-        if len(out) >= max_n:
-            return False
-        if not USER32.IsWindowVisible(hwnd):
-            return True
-        try:
-            n = USER32.GetWindowTextLengthW(hwnd)
-        except Exception:
-            n = 0
-        if n <= 0:
-            return True
-        try:
-            buf = ctypes.create_unicode_buffer(n + 1)
-            USER32.GetWindowTextW(hwnd, buf, n + 1)
-            t = buf.value.strip()
-        except Exception:
-            t = ""
-        if t:
-            out.append((int(hwnd), t))
-        return True
-
-    try:
-        USER32.EnumWindows(_cb, 0)
-    except Exception:
-        pass
-    return out
+    """(proc, title, pid, class) de la ventana en foco ahora mismo."""
+    return _wd_get_foreground()
 
 
 def list_open_windows(max_n: int = 25) -> list:
     """Ventanas visibles con título: [{proc, title}] (sin duplicar)."""
-    seen = set()
-    result = []
-    for hwnd, title in _list_visible_hwnds(max_n=max_n):
-        pid = _pid_of(hwnd)
-        proc = _proc_name(pid) or "?"
-        key = (proc, title)
-        # Enmascarar sensible: listamos igual (ella sabe que están) pero sin ruido
-        if key in seen:
-            continue
-        seen.add(key)
-        result.append({"proc": proc, "title": title, "pid": pid})
-    return result
+    return _wd_list_windows(max_n)
 
 
 # ── Clasificación ─────────────────────────────────────────────────────────
@@ -230,27 +154,11 @@ def _is_sensitive(proc: str, title: str) -> bool:
 
 
 # ── Mirar la ventana en foco (ver/leer sin espiar) ────────────────────────
-def _window_rect(hwnd: int) -> dict | None:
-    if _U32 is None:
-        return None
-    class _RECT(ctypes.Structure):
-        _fields_ = [("left", ctypes.c_long), ("top", ctypes.c_long),
-                    ("right", ctypes.c_long), ("bottom", ctypes.c_long)]
-    r = _RECT()
-    try:
-        if _U32.GetWindowRect(hwnd, ctypes.byref(r)):
-            return {"left": r.left, "top": r.top,
-                    "width": r.right - r.left, "height": r.bottom - r.top}
-    except Exception:
-        pass
-    return None
-
-
 def capture_focus_b64() -> str:
     """Captura SOLO la región de la ventana en foco (sin leer contenido).
     Wayland/Hyprland: ventana activa vía hyprctl; grim full + recorte (grim -g
     no es fiable aquí)."""
-    if _U32 is None:
+    if not _wd_is_windows():
         try:
             import base64, io, json, shutil, subprocess
             from PIL import Image as _PIL
@@ -297,8 +205,8 @@ def capture_focus_b64() -> str:
         from actions.autonomous_agent import capture_region_b64
     except Exception as e:
         return f"Error captura: {e}"
-    hwnd = _fg_hwnd()
-    rect = _window_rect(hwnd) if hwnd else None
+    hwnd = _wd_fg_hwnd()
+    rect = _wd_window_rect(hwnd) if hwnd else None
     if not rect:
         return "Error captura: no se pudo obtener la zona de la ventana"
     return capture_region_b64(rect["left"], rect["top"],
@@ -586,6 +494,9 @@ def poll(force: bool = False) -> list:
             if data["current"].get("kind") != "sensitive":
                 data["current"] = {"proc": proc, "title": title,
                                    "kind": "sensitive", "since": now}
+                # 2.4: queda registrado que pasó a privacidad, pero SIN contenido:
+                # ni proceso, ni título, ni nada que reportar.
+                _add_event(data, {"type": "privado"})
             _save(data)
             return []
 

@@ -190,15 +190,12 @@ def _copy_all():
 # ── IDE Detection ──────────────────────────────────────────────────────────────
 
 def _hyprctl_windows() -> list[str]:
-    """Titulos de ventanas vía hyprctl (Wayland/Hyprland). Devuelve lista vacía si no aplica."""
+    """Titulos de ventanas (Wayland/Hyprland). Delega en core/window_detect.py
+    (Fase 2.1), que mantiene vivos los dos backends y pone la ventana activa
+    primero. Devuelve lista vacía si no aplica."""
     try:
-        out = subprocess.run(
-            ["hyprctl", "clients", "-j"],
-            capture_output=True, text=True, timeout=4,
-        ).stdout
-        import json as _j
-        data = _j.loads(out)
-        return [w.get("title", "") or "" for w in data if isinstance(w, dict)]
+        from core.window_detect import list_windows
+        return [w.get("title", "") or "" for w in list_windows(max_n=40)]
     except Exception:
         return []
 

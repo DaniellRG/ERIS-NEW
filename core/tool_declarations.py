@@ -6825,11 +6825,11 @@ TOOL_DECLARATIONS.extend([
     },
     {
         "name": "codebase_explorer",
-        "description": "Exploración profunda de código: grep regex en archivos, glob por nombre, análisis de imports, dependency graph, find definitions/references, file stats, architecture map del proyecto completo.",
+        "description": "Exploración profunda de código: grep regex en archivos, glob por nombre, análisis de imports, dependency graph, find definitions/references, file stats, architecture map del proyecto completo, y map (árbol del proyecto con una línea de qué hace cada archivo).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "grep, glob, imports, graph, definitions, references, stats, architecture"},
+                "action": {"type": "STRING", "description": "grep, glob, imports, graph, definitions, references, stats, architecture, map"},
                 "pattern": {"type": "STRING", "description": "Regex (grep), glob pattern, o nombre (definitions/references)"},
                 "file": {"type": "STRING", "description": "Archivo a analizar (imports, stats)"},
                 "path": {"type": "STRING", "description": "Directorio raíz de búsqueda"},
