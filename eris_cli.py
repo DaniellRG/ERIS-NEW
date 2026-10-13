@@ -360,6 +360,20 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
     else:
         chat._system = full_prompt
 
+    # ── Fase 1.2: contexto compartido. La CLI deja de ser una isla: fija la raíz
+    #    del proyecto (cwd) y espeja la conversación para que GUI y subagentes
+    #    compartan el mismo contexto. ──
+    shared = None
+    try:
+        from core.shared_context import get_shared_context
+        shared = get_shared_context()
+        shared.detect_project_root(os.getcwd())
+        _shared_block = shared.context_block(include_convo=False, include_summary=False)
+        if _shared_block:
+            chat._system = (chat._system or "") + "\n\n" + _shared_block
+    except Exception:
+        shared = None
+
     backend = chat.backend_name
     backend_color = C.GREEN if "ollama" in backend else C.CYAN
     if "groq" in backend:
@@ -552,6 +566,11 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
             # ── Chat con streaming de tokens ──
             streamed["on"] = False
             thinking["on"] = True
+            try:
+                if shared is not None and user_input:
+                    shared.note(f"Usuario: {user_input}")
+            except Exception:
+                pass
 
             async def _run_chat():
                 thinking["on"] = True
@@ -663,6 +682,12 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
             finally:
                 current_task = None
                 thinking["on"] = False
+
+            try:
+                if shared is not None and response_final:
+                    shared.note(f"Eris: {response_final[:400]}")
+            except Exception:
+                pass
 
             if streamed["on"]:
                 print()

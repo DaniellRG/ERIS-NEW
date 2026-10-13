@@ -139,12 +139,15 @@ class SharedContext:
 
     # ── salida para el prompt y para los subagentes ─────────────────────────
 
-    def context_block(self) -> str:
+    def context_block(self, *, include_convo: bool = True,
+                      include_summary: bool = True) -> str:
         """Bloque de texto para inyectar en el prompt. Vacío si no hay nada."""
+        # include_convo/include_summary: la GUI ya inyecta esas dos partes por su
+        # cuenta; las omite acá para no duplicarlas en el prompt.
         lines: list[str] = []
         with self._lock:
-            recent = self.convo_ctx[-_CONVO_BLOCK_N:]
-            summary = self.session_summary
+            recent = self.convo_ctx[-_CONVO_BLOCK_N:] if include_convo else []
+            summary = self.session_summary if include_summary else ""
             root = self.project_root
             active = self.active_file
             fg = self.foreground_app

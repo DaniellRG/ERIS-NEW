@@ -1482,17 +1482,38 @@ def register_all_sub_agents() -> SubAgentRegistry:
     return registry
 
 
-def dispatch_to_sub_agent(agent_key: str, task_params: dict, registry: Optional[SubAgentRegistry] = None) -> str:
+def _with_shared_context(task_params: Optional[dict], shared_context=None) -> dict:
+    """Fusiona el SharedContext del proceso con los params explícitos de la tarea.
+
+    Los params de la tarea GANAN; el contexto compartido aporta lo que el
+    subagente no recibió (historial, resumen de sesión, proyecto, archivo
+    activo, identidad, read_only). Así el subagente responde con conocimiento
+    de lo que venía pasando (Fase 1.2). Nunca lanza."""
+    try:
+        if shared_context is None:
+            from core.shared_context import get_shared_context
+            shared_context = get_shared_context()
+        base = (shared_context.as_dict() if hasattr(shared_context, "as_dict")
+                else dict(shared_context or {}))
+    except Exception:
+        base = {}
+    return {**base, **(task_params or {})}
+
+
+def dispatch_to_sub_agent(agent_key: str, task_params: dict, registry: Optional[SubAgentRegistry] = None,
+                          shared_context=None) -> str:
     """Crea una tarea y la ejecuta SÍNCRONAMENTE contra un sub-agente.
-    Devuelve string listo para leer."""
+    Devuelve string listo para leer. `shared_context` (o el singleton del
+    proceso) se fusiona en el contexto que recibe `execute(task, context)`."""
     registry = registry or get_sub_agent_registry()
     agent = registry.get_agent(agent_key)
     if not agent:
         return f"No existe el sub-agente '{agent_key}'. \nDisponibles: {', '.join(sorted(registry.get_all_agents()))}"
-    task = registry.create_task(agent_key, str(task_params.get("request") or task_params.get("description") or ""), task_params)
+    context = _with_shared_context(task_params, shared_context)
+    task = registry.create_task(agent_key, str(task_params.get("request") or task_params.get("description") or ""), context)
     registry.update_task_status(task.id, SubAgentStatus.WORKING)
     try:
-        result = agent.execute(task, task_params)
+        result = agent.execute(task, context)
         registry.update_task_status(task.id, SubAgentStatus.DONE, result=result)
         return str(result)
     except Exception as e:
@@ -1500,12 +1521,14 @@ def dispatch_to_sub_agent(agent_key: str, task_params: dict, registry: Optional[
         return f"[{agent_key}] Error: {e}"
 
 
-def route_with_tripulation(text: str, registry: Optional[SubAgentRegistry] = None) -> str:
+def route_with_tripulation(text: str, registry: Optional[SubAgentRegistry] = None,
+                           shared_context=None) -> str:
     """Enruta un texto al mejor sub-agente y lo ejecuta."""
     registry = registry or get_sub_agent_registry()
     router = registry.get_agent("TaskRouter")
-    router_task = registry.create_task("TaskRouter", text, {"text": text, "action": "route"})
-    result = router.execute(router_task, {"text": text})
+    router_ctx = _with_shared_context({"text": text, "action": "route"}, shared_context)
+    router_task = registry.create_task("TaskRouter", text, router_ctx)
+    result = router.execute(router_task, router_ctx)
     registry.update_task_status(router_task.id, SubAgentStatus.DONE, result=result)
     lines = str(result).splitlines()
     if not lines or "Ruta:" not in lines[0]:
@@ -1517,5 +1540,6 @@ def route_with_tripulation(text: str, registry: Optional[SubAgentRegistry] = Non
     if not actual:
         return result + "\n\n(Sin ejecutor directo: ERIS lo resuelve con su flujo normal.)"
     chosen = actual[0]
-    out = dispatch_to_sub_agent(chosen, {"request": text, "text": text, "action": "default"}, registry)
+    out = dispatch_to_sub_agent(chosen, {"request": text, "text": text, "action": "default"}, registry,
+                                shared_context=shared_context)
     return f"⚙️ {chosen} ejecutó la tarea:\n{out}"

@@ -96,6 +96,7 @@ import core.audio_config as _audio_cfg
 
 
 from core.prompt_loader import load_system_prompt
+from core.shared_context import get_shared_context
 
 _CTRL_RE = re.compile(r"<ctrl\d+>", re.IGNORECASE)
 
@@ -604,6 +605,7 @@ class ErisLive:
         self._wake_convo_started = time.time()  # para no loguear cierres triviales
         self._online_logged = False             # para no spamear "ERIS en línea" en cada reconexión
         self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
+        self._shared = get_shared_context()     # Fase 1.2: contexto único (GUI/CLI/subagentes)
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
         self._last_tool_context = ""             # contexto del último tool ejecutado
         # ── Auto-continuación: Eris sigue sola en tareas largas ──
@@ -1395,6 +1397,8 @@ class ErisLive:
                 dropped = self._convo_ctx[:len(self._convo_ctx) - cap]
                 self._convo_ctx = self._convo_ctx[len(self._convo_ctx) - cap:]
                 self._fold_dropped(dropped)
+            # Fase 1.2: espejar el contexto vivo para que CLI/subagentes lo vean.
+            self._shared.set_conversation(self._convo_ctx)
         except Exception:
             pass
 
@@ -1406,6 +1410,7 @@ class ErisLive:
                 digest = digest[:1600] + "…"
             prev = getattr(self, "_session_summary", "") or ""
             self._session_summary = (prev + " " + digest).strip()[-2500:]
+            self._shared.set_session_summary(self._session_summary)
         except Exception:
             pass
 
@@ -3322,6 +3327,15 @@ class ErisLive:
                 "[CONTEXTO DE CONVERSACIÓN RECIENTE (lo que veníamos haciendo)]\n"
                 + "\n".join(self._convo_ctx)
             )
+        # ── Contexto compartido (Fase 1.2): proyecto, archivo activo, app en foco
+        #    y modo solo-lectura. La conversación y el resumen ya se inyectan
+        #    arriba, así que acá van omitidos para no duplicar. ──
+        try:
+            _shared_block = self._shared.context_block(include_convo=False, include_summary=False)
+            if _shared_block:
+                parts.append(_shared_block)
+        except Exception:
+            pass
         # ── Tarea activa: si se cortó a mitad, Eris DEBE continuar ──
         _active = getattr(self, "_active_task", "")
         _tool_ctx = getattr(self, "_last_tool_context", "")
