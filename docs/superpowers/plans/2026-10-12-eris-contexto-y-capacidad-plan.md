@@ -179,7 +179,7 @@ previos son tuyos y no se tocan. **Nunca push.**
 | 1.1 | `da5af25` | hecho (`core/shared_context.py` + 13 tests) |
 | 1.2 | `9478677` | hecho, con alcance reducido (ver nota) |
 | 1.3 | `9c1e98c` | hecho (fin del eco + 2 tests) |
-| **1 (resto)** | — | **pendiente**: extracción completa de `_build_config` |
+| **1 (resto)** | `260fe90` | hecho (`core/context_builder.py:build_system_prompt(host)` reúne el contexto; `main.py:_build_config` delega y deja solo lo Live; GUI con `host=self`; 6 tests). Mesa para CLI/subagentes vía `host`; rewiring del CLI a la mesa común: **pendiente de decisión** |
 | 2.1–2.4 | `103303e` | hecho (los ojos: `core/window_detect.py`, observer ve en Linux, `codebase_explorer action=map`, evento `privado` sin contenido) |
 | 3.1 | `8a693f1` | hecho (módulo `core/intent_reader.py` + 9 tests) |
 | 3.1b | `13c4591` + `6f34ff4` | hecho (CLI: `_turn_intent` + `_intent_system`; GUI: `main.py` clasifica el turno, el Live recibe el prefijo interno y el fallback `GeminiTextChat` inyecta el modo con `mode_system`; helpers compartidos `actionable_mode`/`turn_prefix`/`mode_system` en `core/intent_reader.py`; 36 tests) |
@@ -187,15 +187,16 @@ previos son tuyos y no se tocan. **Nunca push.**
 | 3.3 | `fb29b9b` | hecho (idle + config de autonomía en SharedContext; cooldowns bajados; autonomia/observer/main/CLI enchufados; 11 tests) |
 | 3.4 | `8f7d87c` | hecho (`audit_completion` en truth_audit + mandato simétrico en prompt; 9 tests) |
 
-**Nota Fase 1.2:** la extracción **completa** de `_build_config()` (~370 líneas,
-`main.py:2992-3370`) a un módulo reutilizable **quedó pendiente**. Ese bloque
-está enredado con estado vivo de PyQt/Gemini Live y no es testeable desde este
-box Linux; un corte a ciegas arriesga la GUI. Lo que hoy es reutilizable y común
-a GUI, CLI y subagentes es el **SharedContext** (lo que de verdad decide "qué
-veníamos haciendo"): la GUI lo espeja y lo inyecta, la CLI lo fija y lo espeja,
-y los subagentes lo reciben en `execute(task, context)`. Retomar la extracción
-en una pasada con la GUI a la vista.
+**Nota Fase 1.2 / 1 (resto):** la extracción **completa** de `_build_config()` ya
+se hizo: el armado del contexto vive en `core/context_builder.build_system_prompt(host)`
+(`260fe90`) y `main.py:_build_config` solo conserva lo específico de Gemini Live
+(voz, tools, transcripción, `LiveConnectConfig`). La GUI lo llama con `host=self`.
+Lo único que hoy es reutilizable y común a GUI, CLI y subagentes es el **SharedContext**
+(lo que de verdad decide "qué veníamos haciendo"): la GUI lo espeja y lo inyecta,
+la CLI lo fija y lo espeja, y los subagentes lo reciben en `execute(task, context)`.
+Falta decidir si el CLI usa también el contexto enriquecido completo (paridad
+CLI↔GUI) o conserva su prompt compacto para Ollama.
 
 **Baseline vigente:** `test_all.py` 177 PASS / 0 FAIL / 3 WARN · sync tools
-510/510 · `pytest tests/` 235 passed (3 fallos pre-existentes en archivos no
+510/510 · `pytest tests/` 241 passed (3 fallos pre-existentes en archivos no
 tocados: `generated/test_weather_report.py` y `tests/test_tool_declarations.py`).
