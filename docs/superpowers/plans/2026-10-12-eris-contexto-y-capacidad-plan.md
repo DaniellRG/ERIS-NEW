@@ -162,3 +162,36 @@ Y: **no decir "listo" sin verificar**.
 
 Una fase = un commit. Identidad local `opencode (agente)` — los 117 commits
 previos son tuyos y no se tocan. **Nunca push.**
+
+---
+
+## Estado de ejecución (actualizado 2026-10-12)
+
+| Fase | Commit | Estado |
+|---|---|---|
+| -1 | `29f6b66` | hecho |
+| 0.0 + 0.1 | `c553d91` | hecho |
+| 0.2 | `8410453` | hecho |
+| 0.3 | `9f733d9` | hecho |
+| 0.6 | `0c4c784` | hecho |
+| 0.5 | `ea9d1a7` | hecho |
+| 0.7 | `7958d4b` | hecho (failover real + test que cae el primario) |
+| 1.1 | `da5af25` | hecho (`core/shared_context.py` + 13 tests) |
+| 1.2 | `9478677` | hecho, con alcance reducido (ver nota) |
+| 1.3 | `9c1e98c` | hecho (fin del eco + 2 tests) |
+| **1 (resto)** | — | **pendiente**: extracción completa de `_build_config` |
+| 2 | — | pendiente (los ojos: `window_detect`) |
+| 3 | — | pendiente (que actúe sola) |
+
+**Nota Fase 1.2:** la extracción **completa** de `_build_config()` (~370 líneas,
+`main.py:2992-3370`) a un módulo reutilizable **quedó pendiente**. Ese bloque
+está enredado con estado vivo de PyQt/Gemini Live y no es testeable desde este
+box Linux; un corte a ciegas arriesga la GUI. Lo que hoy es reutilizable y común
+a GUI, CLI y subagentes es el **SharedContext** (lo que de verdad decide "qué
+veníamos haciendo"): la GUI lo espeja y lo inyecta, la CLI lo fija y lo espeja,
+y los subagentes lo reciben en `execute(task, context)`. Retomar la extracción
+en una pasada con la GUI a la vista.
+
+**Baseline vigente:** `test_all.py` 177 PASS / 0 FAIL / 3 WARN · sync tools
+510/510 · `pytest tests/` 150 passed (3 fallos pre-existentes en archivos no
+tocados: `generated/test_weather_report.py` y `tests/test_tool_declarations.py`).
