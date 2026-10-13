@@ -182,7 +182,7 @@ previos son tuyos y no se tocan. **Nunca push.**
 | **1 (resto)** | — | **pendiente**: extracción completa de `_build_config` |
 | 2.1–2.4 | `103303e` | hecho (los ojos: `core/window_detect.py`, observer ve en Linux, `codebase_explorer action=map`, evento `privado` sin contenido) |
 | 3.1 | `8a693f1` | hecho (módulo `core/intent_reader.py` + 9 tests) |
-| 3.1b | `13c4591` | hecho en CLI (`_turn_intent` + `_intent_system` inyecta el modo por turno y lo restaura; 9 tests). GUI: pendiente |
+| 3.1b | `13c4591` + `6f34ff4` | hecho (CLI: `_turn_intent` + `_intent_system`; GUI: `main.py` clasifica el turno, el Live recibe el prefijo interno y el fallback `GeminiTextChat` inyecta el modo con `mode_system`; helpers compartidos `actionable_mode`/`turn_prefix`/`mode_system` en `core/intent_reader.py`; 36 tests) |
 | 3.2 | `f1e4382` | hecho (escrituras por `file_api` con backup en `memory/undo_backups`, líneas exactas, action `deshacer` + `/deshacer` en CLI; 14 tests) |
 | 3.3 | `fb29b9b` | hecho (idle + config de autonomía en SharedContext; cooldowns bajados; autonomia/observer/main/CLI enchufados; 11 tests) |
 | 3.4 | `8f7d87c` | hecho (`audit_completion` en truth_audit + mandato simétrico en prompt; 9 tests) |
@@ -197,5 +197,5 @@ y los subagentes lo reciben en `execute(task, context)`. Retomar la extracción
 en una pasada con la GUI a la vista.
 
 **Baseline vigente:** `test_all.py` 177 PASS / 0 FAIL / 3 WARN · sync tools
-510/510 · `pytest tests/` 217 passed (3 fallos pre-existentes en archivos no
+510/510 · `pytest tests/` 235 passed (3 fallos pre-existentes en archivos no
 tocados: `generated/test_weather_report.py` y `tests/test_tool_declarations.py`).
