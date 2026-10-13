@@ -1697,15 +1697,20 @@ class ErisLive:
                         )
                     except Exception:
                         pass
-                # Also announce locally for non-Gemini TTS
-                # Only announce SHORT results
-                result_stripped = str(result).strip()
-                if len(result_stripped) <= 120 and "\n" not in result_stripped:
-                    self._announce(result_stripped)
-                else:
-                    first_line = result_stripped.split("\n")[0][:120]
-                    if not any(skip in first_line.lower() for skip in ["puedo ayudarte", "disponibles:", "acciones:"]):
-                        self._announce(first_line)
+                # Fase 1.3 — FIN DEL ECO: si hay sesión Live, el resultado ya se
+                # le inyectó a Gemini y Live lo dice por voz. Anunciarlo acá
+                # sería una SEGUNDA voz sobre la misma respuesta. `_announce`
+                # queda SOLO como respaldo local cuando NO hay Live (texto/
+                # offline/CLI), nunca como eco de Live.
+                _live_will_speak = bool(self.session and self._loop)
+                if not _live_will_speak:
+                    result_stripped = str(result).strip()
+                    if len(result_stripped) <= 120 and "\n" not in result_stripped:
+                        self._announce(result_stripped)
+                    else:
+                        first_line = result_stripped.split("\n")[0][:120]
+                        if not any(skip in first_line.lower() for skip in ["puedo ayudarte", "disponibles:", "acciones:"]):
+                            self._announce(first_line)
                 if _mobile_broadcast:
                     _mobile_broadcast(result)
                 # Distill to Obsidian (append-only, fire-and-forget, no bloqueante)
