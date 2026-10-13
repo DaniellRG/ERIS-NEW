@@ -12,6 +12,7 @@ import signal
 import traceback
 import threading
 import queue as _queue
+from contextlib import contextmanager
 from pathlib import Path
 
 try:
@@ -307,6 +308,60 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
     return prompt + cli_addition
 
 
+# ── Fase 3.1b: lectura de intención del turno ──
+# Razones de INVESTIGAR que significan "no hay señal": no se inyecta nada.
+_QUIET_REASONS = (
+    "sin señales claras: el modo que no rompe nada",
+    "ante la duda, investigar",
+)
+
+
+def _turn_intent(text: str, shared):
+    """Devuelve ``(etiqueta, instruccion)`` para el turno.
+
+    Etiqueta = modo accionable ("EDITAR"/"AUTONOMO") o "" (charla o INVESTIGAR
+    explícito). Instrucción = bloque a inyectar, o "" si no hay nada que decir.
+    Nunca lanza.
+    """
+    try:
+        from core.intent_reader import classify, instruction
+        res = classify(text or "", shared)
+        mode = res.get("mode", "")
+        reason = res.get("reason", "")
+        if mode == "INVESTIGAR" and reason in _QUIET_REASONS:
+            return "", ""
+        tag = mode if mode in ("EDITAR", "AUTONOMO") else ""
+        return tag, instruction(mode)
+    except Exception:
+        return "", ""
+
+
+@contextmanager
+def _intent_system(chat, text: str, shared):
+    """Inyecta el modo en el system SOLO durante el turno y lo restaura.
+
+    Yields la etiqueta del modo ("EDITAR"/"AUTONOMO") si se detectó uno accionable,
+    o "" si el turno es charla normal. Garantiza la restauración aunque el turno
+    se cancele (barge-in) o falle.
+    """
+    _orig = getattr(chat, "_system", "")
+    _orig_compact = getattr(chat, "_system_compact", "")
+    tag, instr = _turn_intent(text, shared)
+    try:
+        if instr:
+            if _orig:
+                chat._system = _orig + "\n\n" + instr
+            if _orig_compact:
+                chat._system_compact = _orig_compact + "\n\n" + instr
+        yield tag
+    finally:
+        try:
+            chat._system = _orig
+            chat._system_compact = _orig_compact
+        except Exception:
+            pass
+
+
 # ── Chat principal ──
 async def chat_loop():
     """Loop principal de chat por terminal."""
@@ -589,19 +644,21 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
 
             async def _run_chat():
                 thinking["on"] = True
-                print(f"  {C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
                 try:
-                    if user_input:
-                        resp = await asyncio.wait_for(
-                            chat.stream_chat(user_input, on_token=_printer),
-                            timeout=120.0
-                        )
-                    else:
-                        resp = await asyncio.wait_for(
-                            chat.stream_chat("", on_token=_printer),
-                            timeout=120.0
-                        )
-                    return resp
+                    with _intent_system(chat, user_input, shared) as _mode:
+                        _tag = f"{C.YELLOW}[{_mode}]{C.RESET} " if _mode else ""
+                        print(f"  {_tag}{C.CYAN}{C.BOLD}Eris >{C.RESET} ", end="", flush=True)
+                        if user_input:
+                            resp = await asyncio.wait_for(
+                                chat.stream_chat(user_input, on_token=_printer),
+                                timeout=120.0
+                            )
+                        else:
+                            resp = await asyncio.wait_for(
+                                chat.stream_chat("", on_token=_printer),
+                                timeout=120.0
+                            )
+                        return resp
                 finally:
                     thinking["on"] = False
 
@@ -663,11 +720,12 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
                 async def _run_chat2():
                     thinking["on"] = True
                     try:
-                        resp = await asyncio.wait_for(
-                            chat.stream_chat("", on_token=_printer),
-                            timeout=120.0
-                        )
-                        return resp
+                        with _intent_system(chat, user_input2, shared):
+                            resp = await asyncio.wait_for(
+                                chat.stream_chat("", on_token=_printer),
+                                timeout=120.0
+                            )
+                            return resp
                     finally:
                         thinking["on"] = False
 
