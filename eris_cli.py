@@ -311,26 +311,18 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
 
 
 # ── Fase 3.1b: lectura de intención del turno ──
-# Razones de INVESTIGAR que significan "no hay señal": no se inyecta nada.
-_QUIET_REASONS = (
-    "sin señales claras: el modo que no rompe nada",
-    "ante la duda, investigar",
-)
-
-
 def _turn_intent(text: str, shared):
     """Devuelve ``(etiqueta, instruccion)`` para el turno.
 
     Etiqueta = modo accionable ("EDITAR"/"AUTONOMO") o "" (charla o INVESTIGAR
     explícito). Instrucción = bloque a inyectar, o "" si no hay nada que decir.
-    Nunca lanza.
+    La clasificación vive en ``core.intent_reader.actionable_mode`` (fuente
+    única compartida con la GUI). Nunca lanza.
     """
     try:
-        from core.intent_reader import classify, instruction
-        res = classify(text or "", shared)
-        mode = res.get("mode", "")
-        reason = res.get("reason", "")
-        if mode == "INVESTIGAR" and reason in _QUIET_REASONS:
+        from core.intent_reader import actionable_mode, instruction
+        mode = actionable_mode(text or "", shared)
+        if not mode:
             return "", ""
         tag = mode if mode in ("EDITAR", "AUTONOMO") else ""
         return tag, instruction(mode)

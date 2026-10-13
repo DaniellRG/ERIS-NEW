@@ -84,3 +84,102 @@ def test_instruction_block_per_mode():
     assert "NO edites" in ir.instruction(ir.INVESTIGAR)
     assert "backup" in ir.instruction(ir.EDITAR)
     assert "verific" in ir.instruction(ir.AUTONOMO)
+
+
+# ── Fase 3.1b (GUI): helpers compartidos con la CLI ──
+
+def test_actionable_mode_quiet_chat_is_empty():
+    # Charla y "sin señales" no son accionables: "" (cero ruido en el prompt).
+    assert ir.actionable_mode("hola, ¿cómo estás?", _ctx()) == ""
+    # Un problema SIN contexto es INVESTIGAR (no "quiet"): inyecta el "no edites".
+    assert ir.actionable_mode("Hay un error que no logro solucionar", _ctx()) == ir.INVESTIGAR
+
+
+def test_actionable_mode_strong_auto():
+    assert ir.actionable_mode("arreglalo", _ctx()) == ir.AUTONOMO
+    assert ir.actionable_mode("hacelo funcionar", _ctx()) == ir.AUTONOMO
+
+
+def test_actionable_mode_explicit_investigar_is_returned():
+    # INVESTIGAR explícito SÍ es accionable (inyecta el "no edites"), pero la CLI
+    # no lo etiqueta como edición.
+    assert ir.actionable_mode("investigá por qué falla el login", _ctx()) == ir.INVESTIGAR
+
+
+def test_actionable_mode_editar():
+    assert ir.actionable_mode(
+        "está en la línea 42, cambiala por return True",
+        _ctx(foreground_app="code", active_file="/x/a.py"),
+    ) == ir.EDITAR
+
+
+def test_actionable_mode_never_raises():
+    assert ir.actionable_mode(None, None) == ""
+    assert ir.actionable_mode("", object()) == ""
+
+
+def test_turn_prefix_empty_for_chat():
+    assert ir.turn_prefix("hola, ¿cómo estás?", _ctx()) == ""
+
+
+def test_turn_prefix_wraps_mode_block():
+    p = ir.turn_prefix("arreglalo", _ctx())
+    assert p.startswith("[INSTRUCCIÓN INTERNA — MODO DEL TURNO: AUTONOMO]")
+    assert p.rstrip().endswith("[FIN DE LA INSTRUCCIÓN INTERNA]")
+    assert "No digas 'listo' sin verificar" in p
+
+
+def test_turn_prefix_explicit_investigar_has_block_but_no_auto():
+    p = ir.turn_prefix("investigá por qué falla el login", _ctx())
+    assert "MODO DEL TURNO: INVESTIGAR" in p
+    assert "NO edites" in p
+
+
+def test_turn_prefix_never_raises():
+    assert ir.turn_prefix(None, None) == ""
+
+
+class _DummyChat:
+    def __init__(self, with_compact=True):
+        self._system = "SYS"
+        if with_compact:
+            self._system_compact = "COMPACT"
+
+
+def test_mode_system_injects_and_restores():
+    chat = _DummyChat()
+    with ir.mode_system(chat, "arreglalo", _ctx()) as mode:
+        assert mode == ir.AUTONOMO
+        assert chat._system.startswith("SYS")
+        assert "Modo AUTONOMO" in chat._system
+        assert "Modo AUTONOMO" in chat._system_compact
+    assert chat._system == "SYS"
+    assert chat._system_compact == "COMPACT"
+
+
+def test_mode_system_chat_turn_untouched():
+    chat = _DummyChat()
+    with ir.mode_system(chat, "hola, ¿cómo estás?", _ctx()) as mode:
+        assert mode == ""
+        assert chat._system == "SYS"
+        assert chat._system_compact == "COMPACT"
+
+
+def test_mode_system_restores_even_on_exception():
+    chat = _DummyChat()
+    try:
+        with ir.mode_system(chat, "arreglalo", _ctx()):
+            raise RuntimeError("boom")
+    except RuntimeError:
+        pass
+    assert chat._system == "SYS"
+    assert chat._system_compact == "COMPACT"
+
+
+def test_mode_system_without_compact_attr():
+    chat = _DummyChat(with_compact=False)
+    with ir.mode_system(chat, "arreglalo", _ctx()) as mode:
+        assert mode == ir.AUTONOMO
+        assert "Modo AUTONOMO" in chat._system
+    assert chat._system == "SYS"
+

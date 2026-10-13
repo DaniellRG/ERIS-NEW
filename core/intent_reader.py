@@ -24,6 +24,7 @@ modo que no rompe nada).
 from __future__ import annotations
 
 import unicodedata
+from contextlib import contextmanager
 from typing import Optional
 
 INVESTIGAR = "INVESTIGAR"
@@ -181,3 +182,67 @@ _INSTRUCTIONS = {
 def instruction(mode: str) -> str:
     """Bloque de instrucción para inyectar en el prompt según el modo."""
     return _INSTRUCTIONS.get(mode, _INSTRUCTIONS[INVESTIGAR])
+
+
+# Razones de INVESTIGAR que significan "no hay señal": no se inyecta nada.
+_QUIET_REASONS = (
+    "sin señales claras: el modo que no rompe nada",
+    "ante la duda, investigar",
+)
+
+
+def actionable_mode(text: str, shared=None) -> str:
+    """El modo accionable del turno, o "" si es charla / INVESTIGAR sin señal.
+
+    Fuente de verdad única para CLI y GUI. Nunca lanza."""
+    try:
+        res = classify(text, shared)
+        mode = res.get("mode", "")
+        if mode == INVESTIGAR and res.get("reason", "") in _QUIET_REASONS:
+            return ""
+        return mode
+    except Exception:
+        return ""
+
+
+def turn_prefix(text: str, shared=None) -> str:
+    """Prefijo de instrucción para anteponer al texto del turno.
+
+    Lo usa la GUI (Gemini Live no tiene system por turno): el bloque viaja como
+    parte del mensaje y le dice a Eris en qué modo está. "" si es charla.
+    Nunca lanza."""
+    try:
+        mode = actionable_mode(text, shared)
+        if not mode:
+            return ""
+        return (f"[INSTRUCCIÓN INTERNA — MODO DEL TURNO: {mode}]\n"
+                f"{instruction(mode)}\n"
+                f"[FIN DE LA INSTRUCCIÓN INTERNA]\n\n")
+    except Exception:
+        return ""
+
+
+@contextmanager
+def mode_system(chat, text: str, shared=None):
+    """Inyecta la instrucción del modo en ``chat._system`` / ``_system_compact``
+    SOLO durante el turno y la restaura siempre (mismo contrato que la CLI).
+
+    Yields el modo accionable ("" si es charla). Cubre los backends de
+    ``GeminiTextChat`` (Gemini/OpenAI-style y compactos). Nunca lanza."""
+    _orig = getattr(chat, "_system", "")
+    _orig_c = getattr(chat, "_system_compact", "")
+    try:
+        mode = actionable_mode(text, shared)
+        if mode:
+            instr = instruction(mode)
+            if _orig:
+                chat._system = _orig + "\n\n" + instr
+            if _orig_c:
+                chat._system_compact = _orig_c + "\n\n" + instr
+        yield mode
+    finally:
+        try:
+            chat._system = _orig
+            chat._system_compact = _orig_c
+        except Exception:
+            pass

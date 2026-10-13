@@ -649,6 +649,8 @@ class ErisLive:
         self._online_logged = False             # para no spamear "ERIS en línea" en cada reconexión
         self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
         self._shared = get_shared_context()     # Fase 1.2: contexto único (GUI/CLI/subagentes)
+        self._turn_mode = ""                     # Fase 3.1b: modo del turno (INVESTIGAR/EDITAR/AUTONOMO)
+        self._turn_prefix = ""                   # prefijo interno a anteponer al texto del turno
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
         self._last_tool_context = ""             # contexto del último tool ejecutado
         # ── Auto-continuación: Eris sigue sola en tareas largas ──
@@ -1479,6 +1481,26 @@ class ErisLive:
         self._last_user_interaction = time.time()  # Reset idle timer
         _shared_touch_activity()
 
+        # ── Fase 3.1b (GUI): leer la intención del turno ──
+        # Gemini Live no tiene system por turno, así que el modo viaja como
+        # prefijo interno del mensaje (y como inyección de system en el
+        # fallback GeminiTextChat). Charla sin señales → sin prefijo (cero ruido).
+        self._turn_mode = ""
+        self._turn_prefix = ""
+        try:
+            from core.intent_reader import actionable_mode, turn_prefix as _turn_prefix
+            _mode = actionable_mode(text, self._shared)
+            if _mode:
+                self._turn_mode = _mode
+                self._turn_prefix = _turn_prefix(text, self._shared)
+                if _mode in ("EDITAR", "AUTONOMO") and self.ui:
+                    try:
+                        self.ui.write_log(f"SYS: modo {_mode} para este turno")
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
         # Audio file: process with Gemini Vision (not the realtime audio session)
         if text.startswith("[AUDIO_FILE]"):
             m = re.search(r'path=([^\s|]+)', text)
@@ -1694,8 +1716,11 @@ class ErisLive:
                 threading.Thread(target=self._offline_pipeline.send_text, args=(text,), daemon=True).start()
             return
 
+        # Fase 3.1b: el modo del turno viaja como prefijo interno (Live no tiene
+        # system por turno). Charla sin señales → texto tal cual.
+        _live_text = (self._turn_prefix + text) if self._turn_prefix else text
         asyncio.run_coroutine_threadsafe(
-            self.session.send_realtime_input(text=text),
+            self.session.send_realtime_input(text=_live_text),
             self._loop
         )
 
@@ -1850,7 +1875,19 @@ class ErisLive:
             self.ui.write_log(f"Tú: {text}")
             loop = asyncio.new_event_loop()
             try:
-                response = loop.run_until_complete(self._gemini_text_chat.chat(text))
+                # Fase 3.1b (GUI): inyecta el modo del turno en el system del
+                # chat de texto SOLO durante el turno y lo restaura siempre.
+                _cm = None
+                try:
+                    from core.intent_reader import mode_system as _mode_system
+                    _cm = _mode_system(self._gemini_text_chat, text, self._shared)
+                except Exception:
+                    _cm = None
+                if _cm is not None:
+                    with _cm:
+                        response = loop.run_until_complete(self._gemini_text_chat.chat(text))
+                else:
+                    response = loop.run_until_complete(self._gemini_text_chat.chat(text))
             finally:
                 loop.close()
             if response:
