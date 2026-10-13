@@ -344,7 +344,30 @@ def _get_xkairo_config() -> dict:
 
 
 class GeminiTextChat:
-    """Multi-turn chat with tool execution. Gemini primario → OpenRouter → Groq → Ollama (failover secuencial)."""
+    """Multi-turn chat with tool execution.
+
+    Cadena de failover REAL (Fase 0.7): Gemini (primario) → OpenRouter → xKiro
+    → Groq → Ollama (local, solo si el server responde). Cada backend solo
+    cuenta si está disponible (key presente / Ollama alcanzable), así que nunca
+    se promete un respaldo que no existe."""
+
+    def _pick_backend(self) -> str:
+        """Nombre del backend preferido según disponibilidad REAL.
+
+        BUG 0.7 [FIX 2026-10-12]: antes esta selección omitía xKiro — si SOLO
+        xKiro estaba disponible, `backend_name` mentía 'none' aunque el chat sí
+        podía responder por xKiro. Se alinea con el orden de failover."""
+        if self._use_gemini:
+            return f"gemini:{_get_chat_model()}"
+        if self._use_openrouter:
+            return f"openrouter:{self._openrouter_model}"
+        if self._use_xkairo:
+            return f"xkairo:{self._xkairo_model}"
+        if self._use_groq:
+            return f"groq:{self._groq_model}"
+        if self._use_ollama:
+            return f"ollama:{self._ollama_model}"
+        return "none"
 
     def __init__(self, tool_dispatcher=None):
         self._dispatcher = tool_dispatcher
@@ -357,7 +380,7 @@ class GeminiTextChat:
             "Sé concisa pero expresiva en tus respuestas."
         )
 
-        # ── Configurar todos los backends; preferencia: Gemini → OpenRouter → Groq → Ollama ──
+        # ── Configurar todos los backends; preferencia: Gemini → OpenRouter → xKiro → Groq → Ollama ──
 
         # Gemini (primario)
         self._use_gemini = False
@@ -400,7 +423,10 @@ class GeminiTextChat:
         self._groq_max_tokens = groq_cfg.get("max_tokens") or 4096
         self._groq_use_compact = bool(groq_cfg.get("use_compact", False))
 
-        # Ollama (fallback 3, local)
+        # Ollama (fallback 4, local) — DECISIÓN Fase 0.7: último recurso, y solo
+        # cuenta si el server responde de verdad (`_check_ollama`). Con Ollama
+        # apagado la cadena no lo promete: si no hay nada más, se dice "No hay
+        # backend de lenguaje disponible" en vez de fingir que hay respaldo.
         ollama_cfg = _get_ollama_config()
         self._use_ollama = ollama_cfg["enabled"] and self._check_ollama(ollama_cfg["base_url"])
         if self._use_ollama:
@@ -410,17 +436,8 @@ class GeminiTextChat:
             self._ollama_base = None
             self._ollama_model = None
 
-        # Backend preferido según prioridad
-        if self._use_gemini:
-            self._backend = f"gemini:{_get_chat_model()}"
-        elif self._use_openrouter:
-            self._backend = f"openrouter:{self._openrouter_model}"
-        elif self._use_groq:
-            self._backend = f"groq:{self._groq_model}"
-        elif self._use_ollama:
-            self._backend = f"ollama:{self._ollama_model}"
-        else:
-            self._backend = "none"
+        # Backend preferido según prioridad (incluye xKiro: Fase 0.7)
+        self._backend = self._pick_backend()
 
     def _check_ollama(self, base_url: str) -> bool:
         """Check if Ollama is reachable."""
@@ -448,7 +465,8 @@ class GeminiTextChat:
         self._history.clear()
 
     async def chat(self, user_text: str) -> str:
-        """Gemini → OpenRouter → Groq → Ollama. Cada backend falla → siguiente."""
+        """Failover secuencial real: Gemini → OpenRouter → xKiro → Groq → Ollama.
+        Cada backend que falla (devuelve 'Error de X') cede el turno al siguiente."""
         await self._compact_history()
         # 1. Gemini (primario)
         if self._use_gemini:
