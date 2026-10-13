@@ -41,7 +41,10 @@ _MODIFY_MAP = {
         "create_file": ("path", False),
         "delete": ("path", False),
     },
-    "file_api": {"write": ("path", False), "delete": ("path", False)},
+    # file_api NO figura acá: se auto-respalda en cada escritura vía
+    # snapshot_path(), así el undo también funciona cuando file_api se llama
+    # directo desde código (agents/dev_agent.py, system_agent.py), no solo por
+    # el dispatcher. Evita el doble snapshot.
     "ast_edit": {None: ("file", False)},
     "self_edit": {
         "edit_file": ("file", True),
@@ -149,6 +152,40 @@ def snapshot(name: str, args: dict) -> list[dict]:
     except Exception:
         traceback.print_exc()
         return []
+
+
+def snapshot_path(path, tool: str = "file_api", action: str | None = None) -> dict | None:
+    """Respalda el estado previo de UN path en el anillo de undo.
+
+    Pensado para que ``core.file_api`` respalde cada escritura por sí mismo, sin
+    depender del dispatcher (así el undo funciona igual cuando file_api se llama
+    directo desde código). Devuelve la entrada creada, o ``None`` si falló.
+    """
+    try:
+        resolved = Path(path)
+        if not resolved.is_absolute():
+            resolved = _BASE / resolved
+        existed = resolved.exists()
+        backup = None
+        if existed and resolved.is_file():
+            safe = resolved.name.replace("/", "_").replace("\\", "_")
+            stamp = "{}_{:05d}".format(_TIMEOUT, int(time.time() * 1000) % 100000)
+            backup = _BACKUP_DIR / f"{stamp}_{safe}.bak"
+            shutil.copy2(resolved, backup)
+        entry = {
+            "tool": tool,
+            "action": action,
+            "path": str(resolved),
+            "existed": existed,
+            "backup": str(backup) if backup else None,
+            "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        log = _load_log()
+        log.append(entry)
+        _save_log(log)
+        return entry
+    except Exception:
+        return None
 
 
 def _restore_entry(entry: dict) -> str:

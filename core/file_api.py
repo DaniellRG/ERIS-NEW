@@ -10,6 +10,7 @@ backup management, and consistent parameter schemas.
 from __future__ import annotations
 
 import ast
+import difflib
 import os
 import shutil
 import time
@@ -33,6 +34,75 @@ class FileResult:
 
     def __str__(self):
         return self.message
+
+
+# ── CAMBIOS EXACTOS (Fase 3.2) ───────────────────────────────────────────────
+# Toda escritura tiene que poder decir EXACTAMENTE qué líneas cambió, y dejar
+# un backup en memory/undo_backups/ para que ``deshacer`` (tool `undo` o
+# /deshacer en el chat) revierta el último cambio.
+
+def _ranges(nums: list) -> str:
+    """Comprime [2,3,4,8] → '2-4,8' (1-based, ya ordenado)."""
+    nums = sorted(set(int(n) for n in nums))
+    out = []
+    start = prev = None
+    for n in nums:
+        if start is None:
+            start = prev = n
+        elif n == prev + 1:
+            prev = n
+        else:
+            out.append(f"{start}-{prev}" if start != prev else f"{start}")
+            start = prev = n
+    if start is not None:
+        out.append(f"{start}-{prev}" if start != prev else f"{start}")
+    return ",".join(out)
+
+
+def changed_lines(old: str, new: str) -> dict:
+    """Líneas que cambiaron entre ``old`` y ``new`` (1-based, sin prefijo).
+
+    ``added`` = números de línea en el archivo NUEVO; ``removed`` = en el VIEJO.
+    """
+    old_lines = (old or "").splitlines()
+    new_lines = (new or "").splitlines()
+    added, removed = [], []
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, old_lines, new_lines).get_opcodes():
+        if tag == "equal":
+            continue
+        if tag in ("replace", "delete"):
+            removed.extend(range(i1 + 1, i2 + 1))
+        if tag in ("replace", "insert"):
+            added.extend(range(j1 + 1, j2 + 1))
+    return {"added": added, "removed": removed,
+            "added_count": len(added), "removed_count": len(removed)}
+
+
+def _describe(filepath: str, old: str, new: str) -> str:
+    """Frase corta y exacta de qué cambió."""
+    d = changed_lines(old, new)
+    name = Path(filepath).name
+    if not d["added"] and not d["removed"]:
+        return f"{name}: sin cambios de contenido"
+    bits = []
+    if d["added"]:
+        bits.append(f"+{d['added_count']} línea(s) [{_ranges(d['added'])}]")
+    if d["removed"]:
+        bits.append(f"-{d['removed_count']} línea(s) [{_ranges(d['removed'])}]")
+    total = len((new or "").splitlines())
+    return f"{name}: " + " ".join(bits) + f" (total {total})"
+
+
+def _snapshot_before(filepath: str, action: str):
+    """Backup previo en memory/undo_backups/ (undo por chat). Nunca lanza."""
+    try:
+        from core.file_undo import snapshot_path
+        snapshot_path(filepath, tool="file_api", action=action)
+    except Exception:
+        pass
+
+
+_UNDO_HINT = " · deshacer: /deshacer (o tool `undo`)"
 
 
 # ── READ ──────────────────────────────────────────────────────────────────────
@@ -69,13 +139,24 @@ def write_file(filepath: str, content: str, backup: bool = True) -> FileResult:
         p = Path(filepath)
         p.parent.mkdir(parents=True, exist_ok=True)
 
-        if backup and p.exists():
+        existed = p.exists()
+        old = ""
+        if existed and p.is_file():
+            try:
+                old = p.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                old = ""
+
+        if backup and existed:
             _make_backup(filepath)
+        _snapshot_before(filepath, "write")
 
         with open(p, "w", encoding="utf-8") as f:
             f.write(content)
 
-        return FileResult(True, f"Escrito: {filepath} ({len(content)} chars)")
+        desc = _describe(filepath, old, content)
+        kind = "Creado" if not existed else "Escrito"
+        return FileResult(True, f"{kind}: {filepath} ({len(content)} chars) · {desc}{_UNDO_HINT}")
     except Exception as e:
         return FileResult(False, f"Error escribiendo: {e}")
 
@@ -108,11 +189,13 @@ def edit_file(filepath: str, old_text: str, new_text: str, validate_ast: bool = 
                 return FileResult(False, f"El edit genera syntax error: {e}")
 
         _make_backup(filepath)
+        _snapshot_before(filepath, "edit")
 
         with open(p, "w", encoding="utf-8") as f:
             f.write(new_source)
 
-        return FileResult(True, f"Edit aplicado en {filepath}")
+        desc = _describe(filepath, source, new_source)
+        return FileResult(True, f"Edit aplicado: {filepath} · {desc}{_UNDO_HINT}")
     except Exception as e:
         return FileResult(False, f"Error en edit: {e}")
 
@@ -126,6 +209,7 @@ def multi_edit(filepath: str, edits: list[dict], validate_ast: bool = False) -> 
 
         with open(p, "r", encoding="utf-8") as f:
             source = f.read()
+        original = source
 
         for i, ed in enumerate(edits):
             old = ed.get("old", "")
@@ -143,10 +227,12 @@ def multi_edit(filepath: str, edits: list[dict], validate_ast: bool = False) -> 
                 return FileResult(False, f"Los edits generan syntax error: {e}")
 
         _make_backup(filepath)
+        _snapshot_before(filepath, "multi_edit")
         with open(p, "w", encoding="utf-8") as f:
             f.write(source)
 
-        return FileResult(True, f"{len(edits)} edits aplicados en {filepath}")
+        desc = _describe(filepath, original, source)
+        return FileResult(True, f"{len(edits)} edits aplicados: {filepath} · {desc}{_UNDO_HINT}")
     except Exception as e:
         return FileResult(False, f"Error en multi_edit: {e}")
 
@@ -173,10 +259,12 @@ def insert_in_file(filepath: str, after: str = "", before: str = "", text: str =
             return FileResult(False, "Especificá 'after' o 'before'")
 
         _make_backup(filepath)
+        _snapshot_before(filepath, "insert")
         with open(p, "w", encoding="utf-8") as f:
             f.write(new_source)
 
-        return FileResult(True, f"Texto insertado en {filepath}")
+        desc = _describe(filepath, source, new_source)
+        return FileResult(True, f"Texto insertado: {filepath} · {desc}{_UNDO_HINT}")
     except Exception as e:
         return FileResult(False, f"Error insertando: {e}")
 
@@ -190,15 +278,24 @@ def delete_file(filepath: str, backup: bool = True) -> FileResult:
         if not p.exists():
             return FileResult(False, f"Archivo no existe: {filepath}")
 
+        old = ""
+        if p.is_file():
+            try:
+                old = p.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                old = ""
+
         if backup:
             _make_backup(filepath)
+        _snapshot_before(filepath, "delete")
 
         if p.is_dir():
             shutil.rmtree(p)
-            return FileResult(True, f"Directorio eliminado: {filepath}")
+            return FileResult(True, f"Directorio eliminado: {filepath}{_UNDO_HINT}")
         else:
             p.unlink()
-            return FileResult(True, f"Archivo eliminado: {filepath}")
+            desc = _describe(filepath, old, "")
+            return FileResult(True, f"Archivo eliminado: {filepath} · {desc}{_UNDO_HINT}")
     except Exception as e:
         return FileResult(False, f"Error eliminando: {e}")
 
@@ -401,10 +498,24 @@ def file_api(params: dict) -> str:
     
     Actions: read, write, edit, multi_edit, insert, delete,
              list, mkdir, grep, glob, move, copy, rename, info,
-             backups, restore
+             backups, restore, deshacer (undo), undo_list
     """
     action = params.get("action", "read")
     filepath = params.get("path", "") or params.get("file", "") or params.get("filepath", "")
+
+    # ── Deshacer (Fase 3.2): un `deshacer` por chat, vía el anillo de undo ──
+    if action in ("deshacer", "undo", "restore_undo"):
+        try:
+            from core.file_undo import tool_undo
+            return tool_undo({"action": "undo", "n": params.get("n", 1)})
+        except Exception as e:
+            return f"No pude deshacer: {e}"
+    if action in ("undo_list", "list_undo", "historial_undo"):
+        try:
+            from core.file_undo import tool_undo
+            return tool_undo({"action": "list", "n": params.get("n", 10)})
+        except Exception as e:
+            return f"Error listando undo: {e}"
 
     if action == "read":
         r = read_file(filepath, params.get("offset", 0), params.get("limit", 0))
@@ -441,6 +552,6 @@ def file_api(params: dict) -> str:
     elif action == "restore":
         r = restore_backup(params.get("backup_name", ""), filepath)
     else:
-        return f"Acción desconocida: {action}. Disponibles: read, write, edit, multi_edit, insert, delete, list, mkdir, grep, glob, move, copy, rename, info, backups, restore"
+        return f"Acción desconocida: {action}. Disponibles: read, write, edit, multi_edit, insert, delete, list, mkdir, grep, glob, move, copy, rename, info, backups, restore, deshacer, undo_list"
 
     return str(r.message) if not r.success else (r.message[:3000] if isinstance(r.message, str) else str(r.message)[:3000])

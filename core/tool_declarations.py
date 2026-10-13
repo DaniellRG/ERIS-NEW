@@ -7460,11 +7460,16 @@ TOOL_DECLARATIONS.extend([
     },
     {
         "name": "file_api",
-        "description": "API de archivos: lectura, escritura, busqueda y manipulacion segura de archivos del sistema.",
+        "description": "API de archivos: lectura, escritura y manipulacion segura del sistema. Toda escritura deja backup en memory/undo_backups y el resultado dice exactamente que lineas cambio. Accion 'deshacer' revierte el ultimo cambio.",
         "parameters": {"type": "OBJECT", "properties": {
-            "action": {"type": "STRING", "description": "read, write, list, search, delete, move, copy"},
+            "action": {"type": "STRING", "description": "read, write, edit, multi_edit, insert, delete, list, mkdir, grep, glob, move, copy, rename, info, backups, restore, deshacer, undo_list"},
             "path": {"type": "STRING", "description": "Ruta del archivo"},
-            "content": {"type": "STRING", "description": "Contenido a escribir"},
+            "content": {"type": "STRING", "description": "Contenido a escribir (write)"},
+            "old": {"type": "STRING", "description": "Texto exacto a reemplazar (edit/multi_edit)"},
+            "new": {"type": "STRING", "description": "Texto nuevo (edit/multi_edit)"},
+            "text": {"type": "STRING", "description": "Texto a insertar (insert)"},
+            "after": {"type": "STRING", "description": "Insertar despues de este patron (insert)"},
+            "before": {"type": "STRING", "description": "Insertar antes de este patron (insert)"},
         }, "required": ["action"]},
     },
     {

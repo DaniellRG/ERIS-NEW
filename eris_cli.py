@@ -202,6 +202,8 @@ SLASH_MENU = f"""\
   {C.GREEN}/clear{C.RESET}                Limpiar pantalla
   {C.GREEN}/tools{C.RESET}                Listar todas las tools ({C.DIM}@TOOLS@{C.RESET})
   {C.GREEN}/memoria{C.RESET}              Ver memoria de Eris
+  {C.GREEN}/deshacer{C.RESET}             Deshacer el último cambio de archivo
+  {C.GREEN}/deshacer-lista{C.RESET}       Ver historial de cambios deshacibles
   {C.GREEN}/status{C.RESET}               Estado del sistema
   {C.GREEN}/sesion lista{C.RESET}         Ver sesiones guardadas
   {C.GREEN}/sesion nueva <nombre>{C.RESET} Crear nueva sesión
@@ -615,6 +617,23 @@ Estás operando en modo terminal de texto (sin interfaz gráfica, sin cámara, s
 
                 elif cmd.startswith("/sesion"):
                     _handle_session(cmd)
+                    continue
+
+                elif cmd in ("/deshacer", "/undo"):
+                    # ── Fase 3.2: un deshacer por chat (último cambio de archivo) ──
+                    try:
+                        from core.file_undo import tool_undo
+                        print(f"{C.YELLOW}{tool_undo({'action': 'undo'})}{C.RESET}")
+                    except Exception as e:
+                        print(f"{C.RED}No pude deshacer: {e}{C.RESET}")
+                    continue
+
+                elif cmd in ("/deshacer-lista", "/undo-lista"):
+                    try:
+                        from core.file_undo import tool_undo
+                        print(f"{C.CYAN}{tool_undo({'action': 'list', 'n': 10})}{C.RESET}")
+                    except Exception as e:
+                        print(f"{C.RED}No pude listar: {e}{C.RESET}")
                     continue
 
                 elif cmd == "/status":
