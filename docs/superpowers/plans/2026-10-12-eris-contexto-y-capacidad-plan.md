@@ -181,7 +181,9 @@ previos son tuyos y no se tocan. **Nunca push.**
 | 1.3 | `9c1e98c` | hecho (fin del eco + 2 tests) |
 | **1 (resto)** | — | **pendiente**: extracción completa de `_build_config` |
 | 2.1–2.4 | `103303e` | hecho (los ojos: `core/window_detect.py`, observer ve en Linux, `codebase_explorer action=map`, evento `privado` sin contenido) |
-| 3 | — | pendiente (que actúe sola) |
+| 3.1 | `8a693f1` | hecho (módulo `core/intent_reader.py` + 9 tests) |
+| 3.1b | — | **pendiente**: enchufar el modo al turno (GUI/CLI) |
+| 3.2–3.4 | — | pendiente (nada se rompe / autonomía al SharedContext / verificar antes de "listo") |
 
 **Nota Fase 1.2:** la extracción **completa** de `_build_config()` (~370 líneas,
 `main.py:2992-3370`) a un módulo reutilizable **quedó pendiente**. Ese bloque
