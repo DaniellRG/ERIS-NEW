@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import time
+import uuid
 from pathlib import Path
 
 _BASE = Path(__file__).resolve().parent.parent
@@ -62,7 +63,7 @@ def _save(state: dict) -> None:
 
 
 def _nueva_id() -> str:
-    return "bar_%d" % int(time.time() * 1000)
+    return "bar_" + uuid.uuid4().hex[:12]
 
 
 def _find(state: dict, barrier_id: str) -> dict | None:
@@ -117,7 +118,7 @@ def abrir(goal_ref: dict = None, titulo: str = "", descripcion: str = "",
 
     ahora = time.strftime("%Y-%m-%dT%H:%M:%S")
     b = {
-        "id": "bar_%d" % int(time.time() * 1000),
+        "id": _nueva_id(),
         "goal_ref": goal_ref or {},
         "titulo": titulo,
         "descripcion": descripcion or "",
@@ -235,7 +236,7 @@ def _aplicar_senal(state: dict, senal: dict) -> dict:
 
     ahora = time.strftime("%Y-%m-%dT%H:%M:%S")
     b = {
-        "id": "bar_%d" % int(time.time() * 1000),
+        "id": _nueva_id(),
         "goal_ref": senal.get("goal_ref") or {},
         "titulo": titulo,
         "descripcion": senal.get("descripcion") or "",
@@ -274,6 +275,233 @@ def estado() -> dict:
                         ("resuelta", "abandonada", "escalada")),
         "actualizado": state.get("updated_at", ""),
     }
+
+
+# ── F3: diagnóstico + acopio + deliberación ─────────────────────────────────
+
+def _texto_barrera(b: dict) -> str:
+    partes = [str(b.get("titulo") or ""), str(b.get("descripcion") or "")]
+    for s in b.get("senales", []):
+        if isinstance(s, dict) and s.get("evidencia"):
+            partes.append(str(s["evidencia"]))
+    return "\n".join(p for p in partes if p)
+
+
+def _clasificar(texto: str) -> tuple[str, str, str]:
+    """Heurística: tipo dominante de barrera (§5.2). → (tipo, falta, ruta)."""
+    t = (texto or "").lower()
+    if any(k in t for k in ("modulenotfounderror", "importerror", "no module named",
+                            "command not found", "not installed", "pip install",
+                            "no such file", "not found")):
+        return "dependencia", "un paquete/módulo", "autonomy.auto_install_package"
+    if any(k in t for k in ("permission denied", "permiso denegado", "sudo", "credencial",
+                            "password", "contraseña", "401", "403", "unauthorized")):
+        return "acceso", "credencial o permiso del SO", "zona protegida → pide OK"
+    if any(k in t for k in ("no sé", "no se como", "cómo se hace", "como se hace",
+                            "how to", "tutorial", "aprender", "documentación")):
+        return "conocimiento", "saber cómo", "learning_engine / investigar"
+    if any(k in t for k in ("hardware", "ram", "disco", "disk", "sin espacio",
+                            "memoria insuficiente", "sin tiempo", "dinero")):
+        return "recurso", "datos / hardware / tiempo", "informar/esperar o buscar alternativa"
+    return "capacidad", "una función / tool / servicio", "fabrica.crear_tool|crear_libreria|crear_skill"
+
+
+_RUTA_POR_TIPO = {
+    "conocimiento": ("saber cómo", "learning_engine / investigar"),
+    "capacidad": ("una función / tool / servicio", "fabrica.crear_*"),
+    "dependencia": ("un paquete/módulo", "autonomy.auto_install_package"),
+    "acceso": ("credencial o permiso del SO", "zona protegida → pide OK"),
+    "recurso": ("datos / hardware / tiempo", "informar/esperar"),
+}
+
+
+def _clasificar_llm(texto: str) -> tuple[str, str, str] | None:
+    """Refina con el LLM (best-effort; si no hay proveedor, devuelve None)."""
+    try:
+        from core.model_router import quick_chat
+        out = quick_chat(
+            "Clasificá esta barrera en UN tipo de la lista y respondé solo con la palabra.\n"
+            "Tipos: conocimiento, capacidad, dependencia, acceso, recurso\n"
+            f"Barrera: {texto[:800]}\nTipo:"
+        ).strip().lower()
+        for tipo in ("conocimiento", "dependencia", "acceso", "recurso", "capacidad"):
+            if tipo in out:
+                falta, ruta = _RUTA_POR_TIPO[tipo]
+                return tipo, falta, ruta
+    except Exception:
+        pass
+    return None
+
+
+def diagnosticar(barrier_id: str, usar_llm: bool = False) -> dict:
+    """Clasifica la barrera en un tipo dominante y lo guarda (§5.2)."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    texto = _texto_barrera(b)
+    tipo, falta, ruta = _clasificar(texto)
+    metodo = "heuristica"
+    if usar_llm:
+        llm = _clasificar_llm(texto)
+        if llm:
+            tipo, falta, ruta = llm
+            metodo = "llm"
+    b["diagnostico"] = {"tipo": tipo, "falta": falta, "ruta": ruta,
+                        "metodo": metodo, "texto": texto[:600], "ts": _now()}
+    b["estado"] = "diagnosticada"
+    _log(b, "diagnosticada", f"{tipo} ({metodo})")
+    _save(state)
+    return {"ok": True, "barrera_id": barrier_id, "diagnostico": b["diagnostico"]}
+
+
+def investigar(barrier_id: str, limite: int = 5) -> dict:
+    """Acopio (§5.2b): recetario local primero; si no hay, investiga afuera."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    diag = b.get("diagnostico") or {}
+    query = " ".join(x for x in (b.get("titulo"), diag.get("tipo"), diag.get("falta")) if x)
+
+    paquete = {"query": query, "recetas": [], "fuentes": [], "canales": [], "ts": _now()}
+    try:
+        from core.recetario import buscar as rec_buscar
+        paquete["recetas"] = rec_buscar(query, limite)
+    except Exception as e:
+        paquete["error_recetario"] = str(e)[:200]
+    if paquete["recetas"]:
+        paquete["canales"].append("recetario")
+        paquete["reutilizable"] = True
+    else:
+        try:
+            from core.research_channels import investigar as rc_investigar
+            ext = rc_investigar(query, limite)
+            papers, repos, web = ext.get("papers", []), ext.get("repos", []), ext.get("web", [])
+            paquete["fuentes"] = papers + repos + web
+            paquete["por_canal"] = {"papers": len(papers), "repos": len(repos), "web": len(web)}
+            if paquete["fuentes"]:
+                paquete["canales"].append("web/ddgs")
+        except Exception as e:
+            paquete["error_externo"] = str(e)[:200]
+
+    b["paquete"] = paquete
+    if b.get("estado") in ("abierta", "diagnosticada"):
+        b["estado"] = "investigando"
+    _log(b, "acopio", ", ".join(paquete["canales"]) or "sin fuentes")
+    _save(state)
+    return {"ok": True, "barrera_id": barrier_id, "paquete": paquete}
+
+
+def _pasos_de_receta(receta: dict) -> list[str]:
+    pasos = receta.get("pasos")
+    if isinstance(pasos, list) and pasos:
+        return [str(p) for p in pasos][:6]
+    sol = receta.get("solucion") or receta.get("problema") or ""
+    return [str(sol)] if sol else []
+
+
+def _opciones_plan(paquete: dict, diag: dict) -> list[dict]:
+    opciones: list[dict] = []
+    recetas = paquete.get("recetas") or []
+    fuentes = paquete.get("fuentes") or []
+    tipo = diag.get("tipo", "capacidad")
+
+    if recetas:
+        opciones.append({
+            "id": "A", "enfoque": "reutilizar receta",
+            "detalle": f"Ya vivió algo parecido ({len(recetas)} receta/s): aplicarla directo.",
+            "pasos": _pasos_de_receta(recetas[0]),
+            "impacto": 3, "esfuerzo": 1, "riesgo": "bajo",
+        })
+    if tipo == "dependencia":
+        opciones.append({
+            "id": "B", "enfoque": "instalar dependencia",
+            "detalle": "autonomy.auto_install_package dentro del venv (fuera de él, pide OK).",
+            "pasos": ["identificar el paquete/módulo que falta", "instalarlo en el venv",
+                      "reintentar la acción"],
+            "impacto": 3, "esfuerzo": 1, "riesgo": "medio",
+        })
+    elif tipo == "conocimiento":
+        opciones.append({
+            "id": "B", "enfoque": "estudiar / investigar",
+            "detalle": "learning_engine (investigar→estudiar→cristalizar) sobre las fuentes.",
+            "pasos": ["investigar las fuentes", "estudiar", "cristalizar skill", "usarla"],
+            "impacto": 2, "esfuerzo": 2, "riesgo": "bajo",
+        })
+    elif tipo == "acceso":
+        opciones.append({
+            "id": "B", "enfoque": "pedir credencial/permiso",
+            "detalle": "Es zona protegida: se corta en `esperando_ok` y se le pide OK al dueño.",
+            "pasos": ["explicar qué permiso falta", "esperar OK del dueño", "reanudar"],
+            "impacto": 2, "esfuerzo": 1, "riesgo": "alto",
+        })
+    else:
+        opciones.append({
+            "id": "B", "enfoque": "crear la capacidad",
+            "detalle": "fabrica (tool/librería/skill) y probarla ANTES de usarla.",
+            "pasos": ["ver si ya existe (fabrica listar)", "crear la que falte", "probarla"],
+            "impacto": 3, "esfuerzo": 3, "riesgo": "medio",
+        })
+    if fuentes:
+        opciones.append({
+            "id": "C", "enfoque": "incorporar de fuente externa",
+            "detalle": f"{len(fuentes)} fuente/s hallada/s (revisar licencia; probar aislado).",
+            "pasos": ["elegir la mejor fuente", "probar en code_sandbox (lógica) / venv (red)",
+                      "empaquetar como tool/librería", "usarla"],
+            "impacto": 2, "esfuerzo": 3, "riesgo": "alto",
+        })
+    return opciones
+
+
+_RIESGO_PENALIZACION = {"bajo": 0, "medio": 1, "alto": 3}
+
+
+def _score_plan(o: dict) -> int:
+    return o.get("impacto", 0) * 2 - o.get("esfuerzo", 0) \
+        - _RIESGO_PENALIZACION.get(o.get("riesgo", "medio"), 1)
+
+
+def _elegir_plan(opciones: list[dict], usar_llm: bool = False) -> tuple[dict, str]:
+    """Elige el mejor plan por impacto/esfuerzo/riesgo (LLM best-effort)."""
+    if not opciones:
+        return {}, "sin opciones"
+    if usar_llm:
+        try:
+            from core.model_router import quick_chat
+            detalle = "\n".join(
+                f"{o['id']}) {o['enfoque']}: {o.get('detalle', '')} "
+                f"(impacto {o.get('impacto')}, esfuerzo {o.get('esfuerzo')}, riesgo {o.get('riesgo')})"
+                for o in opciones)
+            out = quick_chat(
+                "Elegí el mejor plan por impacto/esfuerzo/riesgo. Respondé solo con el id.\n"
+                f"{detalle}\nOpción:").strip().upper()
+            for o in opciones:
+                if o["id"] in out[:6]:
+                    return o, "elegido por LLM"
+        except Exception:
+            pass
+    return max(opciones, key=_score_plan), "elegido por heurística (impacto − esfuerzo − riesgo)"
+
+
+def planificar(barrier_id: str, usar_llm: bool = False) -> dict:
+    """Delibera (§5.2b.4 / §5.3): formula 2–3 planes y elige el mejor."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    opciones = _opciones_plan(b.get("paquete") or {}, b.get("diagnostico") or {})
+    elegido, motivo = _elegir_plan(opciones, usar_llm)
+    plan = {"opciones": opciones, "elegido": (elegido or {}).get("id"),
+            "enfoque": (elegido or {}).get("enfoque", ""), "motivo": motivo,
+            "pasos": (elegido or {}).get("pasos", []),
+            "riesgo_nominal": (elegido or {}).get("riesgo", ""),
+            "metodo": "llm" if "LLM" in motivo else "heuristica", "ts": _now()}
+    b["plan"] = plan
+    b["estado"] = "planificada"
+    _log(b, "planificada", f"{plan.get('elegido')}: {plan.get('enfoque')}")
+    _save(state)
+    return {"ok": True, "barrera_id": barrier_id, "plan": plan}
 
 
 def _buscar(barrier_id: str) -> dict | None:
@@ -374,6 +602,37 @@ def barrier_tool(parameters: dict = None, player=None) -> str:
         if not bs:
             return "No hay barreras registradas."
         return "🪨 Barreras:\n" + "\n".join(_fmt_barrera(b) for b in bs)
+
+    if action in ("diagnosticar", "diagnostico"):
+        r = diagnosticar(params.get("id") or params.get("barrera_id") or "",
+                         usar_llm=bool(params.get("usar_llm")))
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        d = r["diagnostico"]
+        return (f"🩺 Barrera {r['barrera_id']}: falta **{d['falta']}** "
+                f"(tipo `{d['tipo']}`, vía {d['ruta']}; método {d['metodo']}).")
+
+    if action in ("investigar", "acopio", "acopiar"):
+        r = investigar(params.get("id") or params.get("barrera_id") or "",
+                       int(params.get("limite") or 5))
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        p = r["paquete"]
+        if p.get("recetas"):
+            return (f"📚 Acopio de {r['barrera_id']}: **{len(p['recetas'])} receta/s del recetario** "
+                    f"→ se puede resolver reutilizando.")
+        return (f"🔎 Acopio de {r['barrera_id']}: {len(p.get('fuentes', []))} fuente/s externas "
+                f"({p.get('por_canal', {})}). Canales: {', '.join(p['canales']) or 'ninguno'}.")
+
+    if action in ("planificar", "plan"):
+        r = planificar(params.get("id") or params.get("barrera_id") or "",
+                       usar_llm=bool(params.get("usar_llm")))
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        pl = r["plan"]
+        return (f"🧭 Plan de {r['barrera_id']}: {len(pl['opciones'])} opción/es; "
+                f"elegida **{pl.get('elegido')} · {pl.get('enfoque')}** ({pl.get('motivo')}). "
+                f"Pasos: {'; '.join(pl.get('pasos', []))}")
 
     if action in ("aprobar", "ok"):
         r = aprobar(params.get("id") or params.get("barrera_id") or "")
