@@ -6,9 +6,9 @@
   detecte que no llega a una meta, entienda qué le falta, se construya lo que le
   falta (herramienta, skill, API, función) y lo use hasta cumplir el objetivo,
   autogestionándose — con evidencia real y sin tocar zonas peligrosas.
-- **Estado:** borrador para aprobación del dueño. Pasó **dos** rondas de revisor
-  independiente (builder-check); sus hallazgos están corregidos y las decisiones que
-  faltan están en §12.
+- **Estado:** **aprobado** por el dueño (2026-10-14). Próximo paso: construir por
+  fases (§10), una = un commit local. Pasó **dos** rondas de revisor independiente
+  (builder-check); las decisiones del dueño están en §12.
 
 > **Revisión 2 (2026-10-14).** El dueño pidió que Eris **investigue afuera**
 > (repos, docs, catálogos tipo `skills.sh`, comandos), **reúna y empaquete** lo que
@@ -586,23 +586,21 @@ aplica) Eris arranca sin crash. **Nota:** agregar las tools `barreras` /
 - Reutilizar `barrier_engine` también para las "tablas de crecimiento" (Proyecto 2)
   — probable, pero se decide cuando lleguemos.
 
-## 12. Decisiones que necesito del dueño
+## 12. Decisiones del dueño (aprobadas 2026-10-14)
 
-1. **Zona protegida — confirmar la lista.** Propuse: sistema operativo, datos
-   personales (`~/.ssh`, `~/.gnupg`, navegador, llaveros, historial) y red de casa.
-   ¿El **home entero** queda protegido, o solo esas partes sensibles (y el resto es
-   zona libre)?
-2. **Presupuesto.** ¿Te cierra **3 enfoques** por barrera, **1 capacidad nueva por
-   enfoque** y un **tope diario** de ~3? ¿O querés otro número?
-3. **Su propio código.** ¿Puede reparar/mejorar el código de Eris dentro de
-   `ERIS-NEW` sola (con backup + validación + rollback), o preferís aprobar vos
-   cada cambio de su propio código?
-4. **Código de terceros.** Cuando investiga y encuentra una tool/skill/paquete
-   (p. ej. de `skills.sh` o un repo), ¿puede **instalarlo y probarlo sola** (con
-   `skill_manage validate`, prueba aislada en `code_sandbox`/venv y anotando
-   licencia), o preferís aprobar vos cada incorporación de código externo?
+El dueño **aprobó** el diseño ("ok"). Respuestas tomadas (las recomendadas; se
+pueden ajustar antes de la fase que las use — F4 es la primera que depende de la 1):
 
-**Defaults que ya tomé** (decime si alguno no te gusta): cuando necesita tu OK, te
-avisa y **sigue con otra cosa** (no queda en pausa); puede **auto-generarse metas**
-para practicar (como ya hace `goal_setting`); y cada resultado deja una **nota
-visible** en Obsidian además de la evidencia.
+1. **Zona protegida = la lista sensible** (SO + datos personales + red de casa), **no**
+   el home entero. Ver §6.
+2. **Presupuesto:** **3 enfoques** por barrera, **1 capacidad nueva** por enfoque,
+   **tope diario 3**.
+3. **Reparar su propio código:** sola, **con salvaguardas** (backup + validación +
+   rollback).
+4. **Código de terceros:** puede **instalarlo/probarlo sola** con validación +
+   entorno aislado y anotando licencia; si el riesgo es alto o duda → pide OK.
+
+**Defaults confirmados:** cuando necesita el OK del dueño, avisa y **sigue con otra
+cosa** (no queda en pausa); puede **auto-generarse metas** para practicar (como ya
+hace `goal_setting`); cada resultado deja una **nota visible en Obsidian** además de
+la evidencia.
