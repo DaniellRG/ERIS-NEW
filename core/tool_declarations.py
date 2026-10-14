@@ -4609,6 +4609,27 @@ TOOL_DECLARATIONS = [
     },
 
     {
+        "name": "barreras",
+        "description": "MOTOR DE BARRERAS: Eris detecta cuándo NO está llegando a una meta y lo declara como una 'barrera' para trabajarla (diagnóstico → acopio → decisión → capacidad → uso → verificación → receta). Acciones: abrir (titulo, descripcion, goal_id, store — declara una barrera a mano cuando te oís decir 'no puedo/no sé/me falta'), scan (dias — busca señales reales: metas estancadas y tareas de la tripulación en error; NO actúa, solo declara), listar (estado, limite), estado (resumen por estado), aprobar (id — OK del dueño para retomar una barrera en esperando_ok), rechazar (id, motivo).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "abrir, scan, listar, estado (default), aprobar, rechazar"},
+                "titulo": {"type": "STRING", "description": "Para abrir: título corto de la barrera"},
+                "descripcion": {"type": "STRING", "description": "Para abrir: qué te falta / por qué no llegás"},
+                "goal_id": {"type": "STRING", "description": "Para abrir: id de la meta asociada"},
+                "store": {"type": "STRING", "description": "Para abrir: store de la meta (goal_tracker, goal_setting, goals, manual)"},
+                "dias": {"type": "STRING", "description": "Para scan: días sin actualizar para considerarla estancada (default 3)"},
+                "estado": {"type": "STRING", "description": "Para listar: filtrar por estado"},
+                "limite": {"type": "STRING", "description": "Para listar: máximo de barreras (default 50)"},
+                "id": {"type": "STRING", "description": "Para aprobar/rechazar: id de la barrera"},
+                "motivo": {"type": "STRING", "description": "Para rechazar: por qué se rechaza"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
         "name": "mcp_bridge",
         "description": "PUENTE MCP: conecta servidores MCP estándar y registra sus herramientas como tools PROPIAS de ERIS (llamables directo). Acciones: bridge (conecta los servers configurados y expone sus tools), add_server (name, command, args — agrega y conecta un server estándar), estado (servers configurados, tools bridged, estado).",
         "parameters": {
@@ -7928,8 +7949,8 @@ _LIVE_NAMES = {
     "diagnostico", "auto_salud",
     # La Fábrica — Eris crea sus propias capacidades
     "fabrica",
-    # Aprendizaje procedural + Auto-fábrica
-    "procedimientos", "auto_fabrica",
+    # Aprendizaje procedural + Auto-fábrica + Motor de barreras
+    "procedimientos", "auto_fabrica", "barreras",
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
