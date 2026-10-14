@@ -11,6 +11,11 @@ before executing them. Supports:
   - Custom rules
 
 Integration: tool_dispatcher calls gate before executing dangerous tools.
+
+F5b (2026-10-13): este gate es el ÁRBITRO ÚNICO de riesgo. Resuelve, en orden de
+precedencia: config/tool_risk.json (override declarativo del dueño) >
+data/permission_rules.json (reglas del usuario) > heurística por tool/comando.
+El Custodio (`guard_check`) sigue adelante con sus bloqueos duros de patrón.
 """
 from __future__ import annotations
 
@@ -25,9 +30,36 @@ _DATA_DIR = _BASE / "data"
 _DATA_DIR.mkdir(parents=True, exist_ok=True)
 _PERMISSION_LOG = _DATA_DIR / "permission_log.json"
 _PERMISSION_RULES = _DATA_DIR / "permission_rules.json"
+# Override declarativo del dueño, por tool y por tool.action (máxima prioridad).
+_TOOL_RISK = _BASE / "config" / "tool_risk.json"
 
 _rules_cache: dict = {}
 _rules_mtime: float = 0.0
+_tool_risk_cache: dict = {}
+_tool_risk_mtime: float = 0.0
+
+
+def _reload_tool_risk() -> dict:
+    """Lee config/tool_risk.json (cacheado por mtime).
+
+    Formato: {"tool": "safe|ask|deny", "tool.action": "..."}. Arranca vacío:
+    sin archivo, el gate hereda el comportamiento actual (permission_rules.json
+    + heurística). Es la vía para marcar riesgo por tool SIN tocar las 510
+    declaraciones."""
+    global _tool_risk_cache, _tool_risk_mtime
+    try:
+        if _TOOL_RISK.exists():
+            m = _TOOL_RISK.stat().st_mtime
+            if m != _tool_risk_mtime:
+                _tool_risk_cache = json.loads(_TOOL_RISK.read_text(encoding="utf-8")) or {}
+                _tool_risk_mtime = m
+            return _tool_risk_cache
+        if _tool_risk_mtime:
+            # El archivo se borró: invalidar la caché.
+            _tool_risk_cache, _tool_risk_mtime = {}, 0.0
+    except Exception:
+        pass
+    return _tool_risk_cache
 
 
 def _reload_rules() -> dict:
@@ -188,12 +220,39 @@ class PermissionGate:
         except Exception:
             return None
 
+    def _match_tool_risk(self, tool_name: str, params: dict) -> str | None:
+        """Resuelve la regla de config/tool_risk.json más específica (owner override)."""
+        try:
+            rules = _reload_tool_risk()
+            action = params.get("action") if isinstance(params, dict) else None
+            keys = []
+            if action:
+                keys.append(f"{tool_name}.{action}")
+            keys.append(tool_name)
+            for key in keys:
+                val = rules.get(key)
+                if isinstance(val, str) and val.strip():
+                    return val.strip().lower()
+            return None
+        except Exception:
+            return None
+
     def assess_risk(self, tool_name: str, params: dict) -> tuple[bool, str, str]:
         """
         Assess risk of a tool call.
         Returns: (needs_confirmation, risk_level, description)
         risk_level: safe, low, medium, high, critical
         """
+        # ── 0) Override del dueño (config/tool_risk.json): MÁXIMA prioridad. ──
+        #    Precedencia final: tool_risk.json > permission_rules.json > heurística.
+        risk_rule = self._match_tool_risk(tool_name, params)
+        if risk_rule == "deny":
+            return True, "critical", f"Bloqueada por tool_risk.json: {tool_name}"
+        if risk_rule == "ask":
+            return True, "medium", f"Confirmación requerida por tool_risk.json: {tool_name}"
+        if risk_rule in ("safe", "allow"):
+            return False, "safe", ""
+
         if tool_name in self._auto_approve:
             return False, "safe", ""
 

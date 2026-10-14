@@ -57,7 +57,9 @@ class ToolExecutor:
                 return False
 
             def ask(self, q, options=None, timeout=30):
-                return True
+                # F5b: fail-closed. Antes devolvía True y auto-aprobaba CUALQUIER
+                # confirmación (bypass real del permission gate en esta ruta).
+                return False
 
             def speak(self, t, **k):
                 pass
@@ -86,10 +88,42 @@ class ToolExecutor:
         }
 
     def execute(self, tool_name: str, params: Dict[str, Any]) -> str:
-        """Ejecuta una tool con los parámetros dados."""
+        """Ejecuta una tool con los parámetros dados, PASANDO por las guardas.
+
+        F5b (2026-10-13): esta ruta tenía un MockUI cuyo ask() devolvía True, así
+        que toda confirmación se auto-aprobaba y el permission gate quedaba
+        sorteado (bypass real de las aprobaciones, usado por ActionDetector en
+        main.py). Ahora se consultan las MISMAS guardas que el chat:
+          1) Custodio (`guard_check`): bloqueos duros por patrón/parámetro.
+          2) Árbitro único (`permission_gate`): mismo criterio de riesgo. Esta
+             ruta no tiene canal interactivo confiable, así que si algo pide
+             confirmación se DENIEGA (fail-closed) en vez de auto-aprobarse.
+        """
         tool = get_tool(tool_name)
         if tool is None:
             return f"Error: tool '{tool_name}' no encontrada"
+
+        # 1) Custodio de acciones (bloqueos duros por patrón/parámetro).
+        try:
+            from core.tool_dispatch_api import guard_check
+            verdict = guard_check(tool_name, params)
+            if not verdict.allowed:
+                return f"⛔ Bloqueado por el Custodio: {verdict.message or verdict.reason}"
+        except Exception as e:
+            return (f"No pude evaluar la seguridad de '{tool_name}' "
+                    f"({type(e).__name__}); se deniega por precaución.")
+
+        # 2) Permission gate: MISMO criterio de riesgo que el chat principal.
+        #    Esta ruta no tiene canal interactivo confiable → fail-closed.
+        try:
+            from core.permission_gate import get_permission_gate
+            needs, risk, desc = get_permission_gate().assess_risk(tool_name, params)
+            if needs:
+                return (f"⛔ '{tool_name}' requiere confirmación "
+                        f"([RIESGO {risk.upper()}] {desc}). Pedila desde el chat "
+                        f"principal, donde Eris puede preguntarte.")
+        except Exception:
+            return f"⛔ No pude evaluar el permiso de '{tool_name}'; se deniega por precaución."
 
         try:
             kwargs = self._dispatcher._build_kwargs(tool, params)

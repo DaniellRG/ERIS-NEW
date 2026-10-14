@@ -274,8 +274,21 @@ class CLIStub:
         return False
 
     def ask(self, question: str, options=None, timeout=30) -> bool:
-        print(f"  {C.YELLOW}{question}{C.RESET}")
-        ans = input(f"  {C.CYAN}[s/n]: {C.RESET}").strip().lower()
+        # F5b: fail-closed si no hay terminal interactiva. Con stdin redirigido
+        # (pipe) o sin TTY, `input()` bloquearía esperando algo que nunca llega
+        # (o leería basura). Sin TTY → denegar sin preguntar.
+        try:
+            if not sys.stdin or not sys.stdin.isatty():
+                print(f"  {question}")
+                print("  (sin terminal interactiva: denegado por seguridad)")
+                return False
+        except Exception:
+            return False
+        print(f"  {question}")
+        try:
+            ans = input("  [s/n]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            return False
         return ans in ("s", "si", "sí", "y", "yes")
 
     # speak stub

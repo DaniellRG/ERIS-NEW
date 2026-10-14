@@ -1,0 +1,3 @@
+{
+  "$comment": "F5b (2026-10-13) — override declarativo de riesgo por tool. Formato: {\"tool\": \"safe|ask|deny\", \"tool.action\": \"safe|ask|deny\"}. Precedencia: tool_risk.json > data/permission_rules.json > heurística. Vacío = comportamiento actual. Así se marca riesgo por tool SIN tocar las 510 declaraciones. Ej: \"terminal_agent.run\": \"ask\", \"read\": \"safe\", \"shutdown_eris\": \"deny\"."
+}
