@@ -207,6 +207,21 @@ def build_system_prompt(host=None) -> str:
     except Exception:
         pass
 
+    # ── CONCIENCIA DEL EQUIPO: pulso de la máquina (CPU/RAM/disco/batería) +
+    #    TODAS las ventanas abiertas (no solo el foco). Barato y cacheado;
+    #    se inyecta cada turno para que Eris sepa cómo está la PC y qué tenés
+    #    abierto, sin tener que consultar una tool. ──
+    try:
+        from core.equipo import pulso as _pulso_eq, ventanas as _vent_eq
+        _pulso_txt = _pulso_eq()
+        if _pulso_txt:
+            parts.append(f"[EQUIPO] {_pulso_txt}")
+        _vent_txt = _vent_eq()
+        if _vent_txt:
+            parts.append(_vent_txt)
+    except Exception:
+        pass
+
     # ── CEREBRO: homúnculo (estado cerebral unificado) + expresión humana.
     #    Se inyecta ANTES del sys_prompt (sobrevive al trim de 30K). ──
     try:

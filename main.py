@@ -2458,6 +2458,7 @@ class ErisLive:
             voice_ok = voice_ok and _quimica
         except Exception:
             pass
+        _announced_tick = False
         for ev in events:
             line = self._observer_line(ev, _emo)
             if not line:
@@ -2477,11 +2478,34 @@ class ErisLive:
                 pass
             self.ui.write_log("[OBSERVACIÓN] " + line)
             self._announce(line)
+            _announced_tick = True
             try:
                 observer.record_comment(line, voice=True)
             except Exception:
                 pass
             break  # un comentario por tick como mucho
+
+        # ── 4) Conciencia del equipo: si la RAM/CPU/disco/batería se disparan,
+        #       lo comenta sola (cooldown de 30 min por tipo en core.equipo). ──
+        try:
+            from core import equipo as _eq
+            for _ev in _eq.eventos():
+                _line = _eq.linea_evento(_ev)
+                if not _line or audio_busy:
+                    continue
+                self.ui.write_log("[EQUIPO] " + _line)
+                if _announced_tick:
+                    break
+                _con_voz = False
+                try:
+                    _con_voz = bool(voice_ok and not getattr(self.ui, "muted", False))
+                except Exception:
+                    _con_voz = False
+                if _con_voz:
+                    self._announce(_line)
+                break  # un comentario por tick como mucho
+        except Exception:
+            pass
 
         # ── 3) Mirada leve automática (segundo plano): entiende en qué laburás
         #       mientras programás. No habla del resultado; queda como [VISTA].
