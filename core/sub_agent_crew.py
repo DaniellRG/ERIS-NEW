@@ -149,6 +149,10 @@ class MissionPlanner(SubAgentBase):
                 router = TaskRouter()
                 created = 0
                 delegated: dict[str, int] = {}
+                # Herencia del "por qué": si el pedido trae goal_id (el modelo lo
+                # toma de [METAS]), se adjunta a cada tarea creada para trazar qué
+                # meta persigue. No cambia el planner ni el esquema de persistencia.
+                goal_id = str(task.params.get("goal_id") or "").strip()
                 n = len(plan["steps"])
                 for s in plan["steps"]:
                     if str(s.get("status", "pending")) == "done":
@@ -159,12 +163,16 @@ class MissionPlanner(SubAgentBase):
                         continue
                     # prioridad invertida: pasos primero (order 1) corren primeros
                     prio = max(1, n - int(s.get("order", 1)) + 1)
-                    registry.create_task(
-                        agent_key,
-                        f"{objective[:60]} · paso {s.get('order')}: {s['action'][:120]}",
-                        {"request": s["action"], "agent_source": "MissionPlanner::" + plan_id},
-                        priority=prio,
-                    )
+                    step_params = {
+                        "request": s["action"],
+                        "agent_source": "MissionPlanner::" + plan_id,
+                    }
+                    desc = f"{objective[:60]} · paso {s.get('order')}: {s['action'][:120]}"
+                    if goal_id:
+                        # Trazabilidad: la tarea queda atada a la meta activa.
+                        step_params["goal_id"] = goal_id
+                        desc = f"{objective[:50]} · (meta {goal_id}) · paso {s.get('order')}: {s['action'][:100]}"
+                    registry.create_task(agent_key, desc, step_params, priority=prio)
                     delegated[agent_key] = delegated.get(agent_key, 0) + 1
                     created += 1
                 lines.append("")

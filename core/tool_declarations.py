@@ -7831,6 +7831,7 @@ TOOL_DECLARATIONS.extend([
             "request": {"type": "STRING", "description": "Tarea, objetivo o contenido a procesar (para plan/proyectar/delegar/ejecutar/mensaje)"},
             "agent": {"type": "STRING", "description": "Nombre del sub-agente a ejecutar (para ejecutar)"},
             "to": {"type": "STRING", "description": "Sub-agente destino del mensaje en el bus (para mensaje)"},
+            "goal_id": {"type": "STRING", "description": "Meta activa que persigue la tarea (opcional; el id sale de [METAS]). Se adjunta a las tareas creadas por plan/proyectar para trazabilidad."},
         }, "required": ["action"]},
     },
     {"name": "file_system", "description": "Sistema de archivos: leer/escribir/listar/buscar/copy/move/delete (wrapper tools.file_system.tool_handler).", "parameters": {"type": "OBJECT", "properties": {"action": {"type": "STRING", "description": "Acción a ejecutar"}, "path": {"type": "STRING", "description": "Ruta"}, "content": {"type": "STRING", "description": "Contenido"}, "pattern": {"type": "STRING", "description": "Patrón"}, "destination": {"type": "STRING", "description": "Destino"}}, "required": ["action"]}},

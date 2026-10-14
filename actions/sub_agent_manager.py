@@ -104,12 +104,18 @@ def sub_agent_manager(parameters: dict = None, player=None) -> str:
     if action in ("plan", "planificar", "plane"):
         if not request:
             return "Para planificar: agente_sub action=plan request=<objetivo>"
-        return dispatch_to_sub_agent("MissionPlanner", {"objective": request, "action": "plan"})
+        payload = {"objective": request, "action": "plan"}
+        if params.get("goal_id"):
+            payload["goal_id"] = str(params.get("goal_id")).strip()
+        return dispatch_to_sub_agent("MissionPlanner", payload)
 
     if action in ("proyectar", "materializar", "enfocar"):
         if not request:
             return "Para proyectar: agente_sub action=proyectar request=<objetivo>"
-        return dispatch_to_sub_agent("MissionPlanner", {"objective": request, "action": "proyectar"})
+        payload = {"objective": request, "action": "proyectar"}
+        if params.get("goal_id"):
+            payload["goal_id"] = str(params.get("goal_id")).strip()
+        return dispatch_to_sub_agent("MissionPlanner", payload)
 
     if action in ("delegar", "route", "enrutar"):
         if not request:

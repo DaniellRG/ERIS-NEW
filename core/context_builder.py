@@ -222,6 +222,17 @@ def build_system_prompt(host=None) -> str:
     except Exception:
         pass
 
+    # ── ALINEACIÓN DE METAS: la meta activa ("el por qué") para que las tareas
+    #    arrastren propósito. Federado de goal_setting + goal_tracker. Barato;
+    #    incluye el id para pasarlo como goal_id a agente_sub/proyectar. ──
+    try:
+        from core.goal_context import linea_meta as _linea_meta
+        _meta_txt = _linea_meta()
+        if _meta_txt:
+            parts.append(_meta_txt)
+    except Exception:
+        pass
+
     # ── CEREBRO: homúnculo (estado cerebral unificado) + expresión humana.
     #    Se inyecta ANTES del sys_prompt (sobrevive al trim de 30K). ──
     try:
