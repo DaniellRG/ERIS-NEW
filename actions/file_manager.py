@@ -230,6 +230,18 @@ def _log_action(action, src, dst):
         DATA_FILE.write_text(json.dumps(log, indent=2, ensure_ascii=False), encoding="utf-8")
     except (json.JSONDecodeError, OSError): pass
 
+def _system_open(path):
+    """Abre una ruta con el programa por defecto (multiplataforma)."""
+    if os.name == "nt":
+        os.startfile(str(path))
+    else:
+        import subprocess
+        import sys
+        opener = "open" if sys.platform == "darwin" else "xdg-open"
+        subprocess.Popen([opener, str(path)],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def _open_file(path):
     if not path:
         return "Especifico que archivo abrir"
@@ -237,7 +249,7 @@ def _open_file(path):
     if not p.exists():
         return "No encontre: {}".format(path)
     try:
-        os.startfile(str(p))
+        _system_open(p)
         _log_action("open", str(p), "")
         return "Abriendo: {} ({})".format(p.name, p.suffix or "sin extension")
     except Exception as e:
@@ -252,7 +264,7 @@ def _open_folder(path):
     if not p.is_dir():
         return "No es una carpeta: {}".format(path)
     try:
-        os.startfile(str(p))
+        _system_open(p)
         _log_action("open_folder", str(p), "")
         return "Carpeta abierta: {}".format(p)
     except Exception as e:

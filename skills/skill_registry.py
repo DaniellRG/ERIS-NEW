@@ -27,15 +27,97 @@ USER_CREATED_DIR = SKILLS_DIR / "user_created"
 BUNDLES_DIR = SKILLS_DIR / "bundles"
 INDEX_FILE = SKILLS_DIR / "skills_index.json"
 
-# Remote skill registry source (community skills index)
-REMOTE_INDEX_URL = os.environ.get(
-    "ERIS_SKILLS_REPO",
-    "https://raw.githubusercontent.com/open-jarvis/skills/main/index.json"
-)
-REMOTE_SKILLS_BASE = os.environ.get(
-    "ERIS_SKILLS_BASE",
-    "https://raw.githubusercontent.com/open-jarvis/skills/main/builtin"
-)
+# Fuentes de skills remotas (comunidad). Override por env ERIS_SKILL_SOURCES (JSON).
+# Cada fuente: {id, owner, repo, branch, root, layout} para GitHub tree, o
+# {id, index_url, base_url} para un index.json legacy plano.
+DEFAULT_SKILL_SOURCES = [
+    {"id": "hermes", "owner": "NousResearch", "repo": "hermes-agent",
+     "branch": "main", "root": "skills", "layout": "categorized"},
+    {"id": "hermes-optional", "owner": "NousResearch", "repo": "hermes-agent",
+     "branch": "main", "root": "optional-skills", "layout": "categorized"},
+]
+
+
+def _skill_sources() -> list[dict[str, Any]]:
+    raw = os.environ.get("ERIS_SKILL_SOURCES", "").strip()
+    if raw:
+        try:
+            data = json.loads(raw)
+            if isinstance(data, list) and data:
+                return data
+        except Exception:
+            pass
+    return DEFAULT_SKILL_SOURCES
+
+
+def _github_token() -> str:
+    tok = os.environ.get("ERIS_GITHUB_TOKEN", "").strip()
+    if tok:
+        return tok
+    try:
+        cfg = SKILLS_DIR.parent / "config" / "api_keys.json"
+        return str(json.loads(cfg.read_text(encoding="utf-8")).get("github_token", "") or "").strip()
+    except Exception:
+        return ""
+
+
+def _gh_headers() -> dict[str, str]:
+    headers = {"User-Agent": "ERIS/1.0"}
+    token = _github_token()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def _fetch_text(url: str, timeout: int = 15) -> str:
+    req = urllib.request.Request(url, headers=_gh_headers())
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.read().decode("utf-8")
+
+
+def _discover_skills(source: dict[str, Any]) -> list[dict[str, str]]:
+    """Descubre skills de una fuente: devuelve [{name, url}].
+
+    Soporta dos layouts reales:
+      - index legacy: {index_url, base_url} -> [{name}] + {base_url}/{name}/SKILL.md
+      - GitHub tree:  {owner, repo, branch, root, layout}
+        layout "flat"        -> <root>/<name>/SKILL.md
+        layout "categorized" -> <root>/<cat>/<name>/SKILL.md
+    """
+    index_url = source.get("index_url")
+    if index_url:
+        data = json.loads(_fetch_text(index_url))
+        base = str(source.get("base_url") or "").rstrip("/")
+        out = []
+        for entry in (data if isinstance(data, list) else []):
+            n = str(entry.get("name", "")).strip()
+            if n:
+                out.append({"name": n, "url": f"{base}/{n}/SKILL.md"})
+        return out
+
+    owner = source.get("owner")
+    repo = source.get("repo")
+    branch = source.get("branch", "main")
+    root = str(source.get("root") or "").strip("/")
+    if not owner or not repo:
+        return []
+    api = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
+    tree = json.loads(_fetch_text(api, timeout=20))
+    prefix = f"{root}/" if root else ""
+    out = []
+    for node in tree.get("tree", []):
+        path = str(node.get("path", ""))
+        if node.get("type") != "blob" or not path.endswith("/SKILL.md"):
+            continue
+        if prefix and not path.startswith(prefix):
+            continue
+        parent = path.rsplit("/", 1)[0]
+        name = parent.rsplit("/", 1)[-1]
+        if not name or name.startswith("_"):
+            continue
+        raw = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}"
+        out.append({"name": name, "url": raw})
+    return out
 
 SYNCED_DIR = SKILLS_DIR / "synced"
 SYNCED_DIR.mkdir(exist_ok=True)
@@ -147,56 +229,67 @@ def _scan_all_skills() -> list[dict[str, Any]]:
     return _scan_skills() + _scan_synced_skills()
 
 
-def sync_remote_skills() -> str:
-    """Fetch remote skills index and download new/updated skills."""
-    try:
-        req = urllib.request.Request(REMOTE_INDEX_URL, headers={"User-Agent": "ERIS/1.0"})
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
-        return f"No se pudo obtener el índice remoto: {e}"
+def sync_remote_skills(limit: int = 50) -> str:
+    """Sincroniza skills desde las fuentes remotas.
 
-    if not isinstance(data, list):
-        return "Formato de índice remoto inválido: se esperaba una lista."
+    Trae, valida e instala solo SKILL.md válidas. ``limit<=0`` = sin tope.
+    Deduplica contra builtin + user_created + synced (por nombre y carpeta).
+    """
+    sources = _skill_sources()
 
-    local_names = {s["name"].lower() for s in _scan_all_skills()}
-    downloaded = 0
-    errors = []
-
-    for entry in data:
-        name = entry.get("name", "").strip().lower().replace(" ", "-")
-        if not name:
-            continue
-        if name in local_names:
-            continue
-        description = entry.get("description", "")
-        category = entry.get("category", "general")
-        tags = entry.get("tags", [])
-        skill_url = f"{REMOTE_SKILLS_BASE}/{name}/SKILL.md"
+    local_names: set[str] = set()
+    for s in _scan_all_skills():
+        local_names.add(str(s.get("name", "")).lower())
         try:
-            skill_req = urllib.request.Request(skill_url, headers={"User-Agent": "ERIS/1.0"})
-            with urllib.request.urlopen(skill_req, timeout=15) as skill_resp:
-                content = skill_resp.read().decode("utf-8")
-        except Exception as e:
-            errors.append(f"{name}: {e}")
-            continue
-        target_dir = SYNCED_DIR / name
-        target_dir.mkdir(parents=True, exist_ok=True)
-        try:
-            from yaml import safe_load  # opcional
+            local_names.add(Path(s["path"]).parent.name.lower())
         except Exception:
-            safe_load = None
-        ok, issues, _meta = _validate_skill_content(content, name, safe_load)
-        if not ok:
-            # No instalar basura: una SKILL.md inválida no entra al catálogo.
-            shutil.rmtree(target_dir, ignore_errors=True)
-            errors.append(f"{name}: RECHAZADA (validación): {'; '.join(issues)}")
+            pass
+
+    try:
+        from yaml import safe_load  # opcional
+    except Exception:
+        safe_load = None
+
+    downloaded = skipped = rejected = 0
+    errors: list[str] = []
+
+    for source in sources:
+        sid = source.get("id") or source.get("repo") or "?"
+        if source.get("enabled", True) is False:
             continue
-        (target_dir / "SKILL.md").write_text(content, encoding="utf-8")
-        downloaded += 1
+        try:
+            entries = _discover_skills(source)
+        except Exception as e:
+            errors.append(f"[{sid}] descubrir: {e}")
+            continue
+
+        for entry in entries:
+            if limit and limit > 0 and downloaded >= limit:
+                break
+            name = str(entry.get("name", "")).strip().lower().replace(" ", "-")
+            if not name or name in local_names:
+                skipped += 1
+                continue
+            try:
+                content = _fetch_text(entry["url"])
+            except Exception as e:
+                errors.append(f"{sid}/{name}: {e}")
+                continue
+            ok, issues, _meta = _validate_skill_content(content, name, safe_load)
+            if not ok:
+                # No instalar basura: una SKILL.md inválida no entra al catálogo.
+                errors.append(f"{sid}/{name}: RECHAZADA (validación): {'; '.join(issues)}")
+                rejected += 1
+                continue
+            target_dir = SYNCED_DIR / name
+            target_dir.mkdir(parents=True, exist_ok=True)
+            (target_dir / "SKILL.md").write_text(content, encoding="utf-8")
+            local_names.add(name)
+            downloaded += 1
 
     _rebuild_index()
-    msg = f"Habilidades sincronizadas: {downloaded} nuevas descargadas."
+    msg = (f"Skills sincronizadas: {downloaded} nuevas, {skipped} salteadas "
+           f"(ya existían), {rejected} rechazadas.")
     if errors:
         msg += f"\nErrores ({len(errors)}): " + "; ".join(errors[:5])
     return msg
@@ -293,7 +386,13 @@ def skill_manage(parameters: dict, player=None) -> str:
     action = params.get("action", "").lower().strip()
 
     if action in ("sync", "sincronizar"):
-        return sync_remote_skills()
+        try:
+            limit = int(params.get("limit", 50))
+        except (TypeError, ValueError):
+            limit = 50
+        if str(params.get("all", "")).lower() in ("1", "true", "si", "sí", "yes"):
+            limit = 0
+        return sync_remote_skills(limit=limit)
 
     if action in ("list", "skills_list"):
         return skills_list()
@@ -467,11 +566,18 @@ def _validate_skill_content(content: str, name: str = "",
     body = content.split("---", 2)[2].strip() if content.startswith("---") else content.strip()
     if len(body) < 40:
         issues.append("el cuerpo del SKILL.md es demasiado corto (¿solo portada?).")
-    if safe_load:
+    # Validar SOLO el bloque de frontmatter, no todo el archivo: un SKILL.md real
+    # es `---\nfrontmatter\n---\ncuerpo`, y `safe_load` sobre el contenido completo
+    # falla siempre (ComposerError: expected a single document). Además, un `:`
+    # sin comillas en `description` (común en Hermes/openclaw) rompe el YAML; si
+    # `_parse_frontmatter` ya extrajo name+description, no lo tratamos como fatal.
+    if safe_load and content.startswith("---"):
+        fm_block = content.split("---", 2)[1]
         try:
-            safe_load(content)
+            safe_load(fm_block)
         except Exception:
-            issues.append("el YAML del frontmatter no es válido.")
+            if not (meta.get("name") and meta.get("description")):
+                issues.append("el YAML del frontmatter no es válido.")
     ok = not issues
     return ok, issues, meta
 
