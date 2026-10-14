@@ -219,6 +219,23 @@
     "source": "user_created"
   },
   {
+    "name": "armar-clase",
+    "description": "Arma una clase/leccion HTML interactiva y autocontenida (portada, slides navegables, quiz con correccion y simulacion opcional) a partir de un tema o de un documento. Cargar cuando el usuario pida una clase, una leccion, un tutorial interactivo, un material de estudio o un quiz.",
+    "category": "educacion",
+    "tags": [
+      "clase",
+      "leccion",
+      "slides",
+      "quiz",
+      "educacion",
+      "tutorial",
+      "interactivo",
+      "estudio"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
     "name": "auditoria-herramientas",
     "description": "Auditoría de alineación entre las declaraciones de herramientas (core/tool_declarations.py) y las funciones reales (core/tool_registry.py). Detecta parámetros declarados que las funciones ignoran en silencio y claves leídas que el modelo nunca envía. Correr periódicamente y tras editar herramientas.",
     "category": "development",
