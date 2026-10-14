@@ -4,12 +4,14 @@
 Lo que hace (Fase "equipo", 2026-10-13):
 
 1. `pulso()`      -> resumen compacto y barato de la máquina (CPU, RAM, disco,
-                     batería), cacheado ~20s, para inyectar en el prompt.
+                     batería, temperaturas de CPU/GPU/NVMe), cacheado ~20s, para
+                     inyectar en el prompt.
 2. `ventanas()`   -> lista CONCISA de ventanas abiertas (no solo el foco),
                      saltando las sensibles. Para el prompt.
-3. `eventos()`    -> umbrales (RAM/CPU/disco/batería) con cooldown persistente;
-                     `linea_evento()` los vuelve una frase natural para que Eris
-                     comente sola cuando algo se dispara.
+3. `eventos()`    -> umbrales (RAM/CPU/disco/batería/temperatura) con cooldown
+                     persistente; `linea_evento()` los vuelve una frase natural
+                     para que Eris comente sola cuando algo se dispara.
+4. `temperaturas()` -> °C disponibles (cpu/gpu/nvme), solo lo que exista.
 
 Nunca lanza: si falta psutil o algo falla, degrada en silencio (devuelve "" / []).
 """
@@ -23,8 +25,9 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent.parent
 _STATE = _BASE / "memory" / "equipo.json"
 
-# Umbrales (porcentaje) y enfriamiento entre comentarios del mismo tipo.
-_UMBRAL = {"ram": 90, "cpu": 90, "disco": 90, "bateria": 15}
+# Umbrales (porcentaje / °C) y enfriamiento entre comentarios del mismo tipo.
+_UMBRAL = {"ram": 90, "cpu": 90, "disco": 90, "bateria": 15,
+           "temp": 85, "temp_nvme": 70}
 _COOLDOWN = 1800.0            # 30 min
 _DISCO = "C:\\" if os.name == "nt" else "/"
 
@@ -52,6 +55,47 @@ def _prime() -> None:
 _prime()
 
 
+def temperaturas() -> dict:
+    """Temperaturas (°C) disponibles: {"cpu":.., "gpu":.., "nvme":..}.
+
+    Mapea sensores reales (k10temp/coretemp→cpu, amdgpu→gpu, nvme→nvme).
+    Devuelve solo lo que existe. Nunca lanza.
+    """
+    ps = _psutil()
+    if ps is None:
+        return {}
+    try:
+        sensors = ps.sensors_temperatures() or {}
+    except Exception:
+        return {}
+    out: dict[str, int] = {}
+    try:
+        for name, entries in sensors.items():
+            low = str(name or "").lower()
+            pick = None
+            for e in entries:
+                cur = getattr(e, "current", None)
+                if cur is None:
+                    continue
+                label = str(getattr(e, "label", "") or "").lower()
+                if label in ("tctl", "tdie"):
+                    pick = cur
+                    break
+                if pick is None:
+                    pick = cur
+            if pick is None:
+                continue
+            if any(k in low for k in ("k10temp", "coretemp", "zenpower", "cpu_thermal")):
+                out["cpu"] = round(pick)
+            elif any(k in low for k in ("amdgpu", "radeon")):
+                out["gpu"] = round(pick)
+            elif "nvme" in low:
+                out["nvme"] = round(pick)
+    except Exception:
+        pass
+    return out
+
+
 def pulso(force: bool = False) -> str:
     """Resumen compacto del estado de la máquina (cacheado ~20s)."""
     now = time.time()
@@ -75,6 +119,16 @@ def pulso(force: bool = False) -> str:
             if b is not None:
                 parts.append(f"Batería {b.percent:.0f}%"
                              + (" (cargando)" if b.power_plugged else ""))
+        except Exception:
+            pass
+        try:
+            temps = temperaturas()
+            if temps.get("cpu") is not None:
+                parts.append(f"CPU {temps['cpu']}°")
+            if temps.get("gpu") is not None:
+                parts.append(f"GPU {temps['gpu']}°")
+            if temps.get("nvme") is not None:
+                parts.append(f"NVMe {temps['nvme']}°")
         except Exception:
             pass
         txt = " · ".join(parts)
@@ -179,6 +233,20 @@ def eventos() -> list:
             out.append({"type": "bateria_baja", "value": round(b.percent)})
     except Exception:
         pass
+    try:
+        temps = temperaturas()
+        t_cpu, t_gpu = temps.get("cpu"), temps.get("gpu")
+        tmax = max([x for x in (t_cpu, t_gpu) if x is not None], default=None)
+        if tmax is not None and tmax >= _UMBRAL["temp"] and _ok(st, "temp", now):
+            _mark(st, "temp", now)
+            out.append({"type": "temp_alta", "value": tmax,
+                        "cpu": t_cpu, "gpu": t_gpu})
+        nv = temps.get("nvme")
+        if nv is not None and nv >= _UMBRAL["temp_nvme"] and _ok(st, "temp_nvme", now):
+            _mark(st, "temp_nvme", now)
+            out.append({"type": "nvme_caliente", "value": nv})
+    except Exception:
+        pass
     st["last"] = now
     _save(st)
     return out
@@ -209,7 +277,17 @@ def linea_evento(ev: dict) -> str:
             f"La batería está al {v}%. ¿Lo enchufás?",
             f"Batería al {v}%, te queda poco. Enchufalo si podés.",
         ])
+    if t == "temp_alta":
+        return random.choice([
+            f"Che, está levantando temperatura ({v}°). Nada crítico, pero ojo con lo que exijas.",
+            f"El equipo viene calentito ({v}°). ¿Le bajamos un poco el ritmo?",
+        ])
+    if t == "nvme_caliente":
+        return random.choice([
+            f"El disco NVMe está a {v}°, algo cálido. Buen momento para no exigirlo.",
+            f"Ojo que el SSD viene a {v}°. Se banca, pero lo sigo.",
+        ])
     return ""
 
 
-__all__ = ["pulso", "ventanas", "eventos", "linea_evento"]
+__all__ = ["pulso", "ventanas", "eventos", "linea_evento", "temperaturas"]
