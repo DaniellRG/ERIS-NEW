@@ -4564,7 +4564,7 @@ TOOL_DECLARATIONS = [
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "listar (default), detalle, borrar, crear_libreria, usar_libreria, crear_tool, crear_skill"},
+                "action": {"type": "STRING", "description": "listar (default), detalle, borrar, reconciliar, crear_libreria, usar_libreria, crear_tool, crear_skill"},
                 "name": {"type": "STRING", "description": "Nombre de la librería/tool/skill"},
                 "purpose": {"type": "STRING", "description": "Para crear_libreria: qué hace la librería"},
                 "functions": {"type": "STRING", "description": "Para crear_libreria: lista JSON de {name, description, code} con las funciones REALES"},

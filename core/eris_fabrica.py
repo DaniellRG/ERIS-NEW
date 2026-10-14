@@ -498,6 +498,161 @@ def crear_skill(name: str, description: str, pasos: str = "") -> dict:
 
 
 # ─────────────────────────────────────────────────────────────────────
+# RECONCILIACIÓN — el catálogo vs. la realidad
+# ─────────────────────────────────────────────────────────────────────
+def _iso_mtime(p: Path) -> str:
+    try:
+        return datetime.fromtimestamp(p.stat().st_mtime).isoformat()
+    except Exception:
+        return datetime.now().isoformat()
+
+
+def _librerias_reales() -> list[dict]:
+    """Librerías que existen de verdad en libraries/eris_*.py."""
+    out: list[dict] = []
+    if not _LIB_BASE.exists():
+        return out
+    if str(_LIB_BASE) not in sys.path:
+        sys.path.insert(0, str(_LIB_BASE))
+    for f in sorted(_LIB_BASE.glob("eris_*.py")):
+        fns: list[str] = []
+        try:
+            mod = importlib.import_module(f.stem)
+            importlib.reload(mod)
+            fns = [x for x in dir(mod) if callable(getattr(mod, x)) and not x.startswith("_")]
+        except Exception:
+            fns = []
+        out.append({
+            "name": f.stem, "type": "libreria", "path": str(f),
+            "purpose": "reconstruida por reconciliar", "functions": fns,
+            "created": _iso_mtime(f),
+        })
+    return out
+
+
+def _tools_reales() -> list[dict]:
+    """Tools que existen de verdad en actions/custom/*.py (+ su declaración)."""
+    decls: dict = {}
+    if _CUSTOM_TOOLS_JSON.exists():
+        try:
+            for t in json.loads(_CUSTOM_TOOLS_JSON.read_text(encoding="utf-8")):
+                if isinstance(t, dict) and t.get("name"):
+                    decls[t["name"]] = t
+        except Exception:
+            pass
+    out: list[dict] = []
+    if _CUSTOM_ACTIONS.exists():
+        for f in sorted(_CUSTOM_ACTIONS.glob("*.py")):
+            decl = decls.get(f.stem)
+            out.append({
+                "name": f.stem, "type": "tool", "path": str(f),
+                "description": (decl or {}).get("description", ""),
+                "declaration": decl,
+                "created": _iso_mtime(f),
+            })
+    return out
+
+
+def _skills_reales() -> list[dict]:
+    """Skills que existen de verdad en skills/user_created/*/SKILL.md."""
+    out: list[dict] = []
+    if not _SKILLS_DIR.exists():
+        return out
+    for d in sorted(_SKILLS_DIR.iterdir()):
+        skill_md = d / "SKILL.md"
+        if not (d.is_dir() and skill_md.exists()):
+            continue
+        desc = ""
+        try:
+            txt = skill_md.read_text(encoding="utf-8", errors="replace")
+            m = re.search(r"^description:\s*(.+)$", txt, re.MULTILINE)
+            if m:
+                desc = m.group(1).strip().strip('"')
+        except Exception:
+            pass
+        out.append({
+            "name": d.name, "type": "skill", "path": str(d),
+            "description": desc, "created": _iso_mtime(skill_md),
+        })
+    return out
+
+
+def reconciliar(aplicar: bool = True) -> dict:
+    """Reconstruye el catálogo (`memory/eris_fabrica.json`) desde la REALIDAD:
+    librerías (`libraries/eris_*.py`), tools (`actions/custom/*.py` +
+    `custom_tools.json`) y skills (`skills/user_created/*/SKILL.md`).
+
+    Idempotente: no duplica ni pisa lo existente (conserva `created` original).
+    Reporta declaraciones sin módulo y items del catálogo sin archivo en disco.
+    """
+    st = _load_state()
+    previos = {i.get("name"): i for i in st.get("items", [])}
+
+    tools_reales = _tools_reales()
+    derivados = _librerias_reales() + tools_reales + _skills_reales()
+    nombres = {d["name"] for d in derivados}
+
+    nuevos: list[str] = []
+    actualizados: list[str] = []
+    finales: list[dict] = []
+    for d in derivados:
+        prev = previos.get(d["name"])
+        if prev is None:
+            nuevos.append(d["name"])
+            finales.append(d)
+            continue
+        item = dict(prev)
+        item.update({k: v for k, v in d.items() if k != "created"})
+        if not item.get("created"):
+            item["created"] = d["created"]
+        if item != prev:
+            actualizados.append(d["name"])
+        finales.append(item)
+
+    # Conservar items del catálogo cuyo artefacto ya no está en disco (no borrar
+    # a ciegas): se listan en `faltan_en_disco` para que el humano decida.
+    faltan: list[str] = []
+    for name, prev in previos.items():
+        if name in nombres:
+            continue
+        path = prev.get("path", "")
+        if path and not Path(path).exists():
+            faltan.append(name)
+        finales.append(prev)
+
+    finales.sort(key=lambda i: (i.get("type", ""), i.get("name", "")))
+
+    declarados = {t.get("name") for t in tools_reales if t.get("name")}
+    if _CUSTOM_TOOLS_JSON.exists():
+        try:
+            declarados = {t["name"] for t in json.loads(
+                _CUSTOM_TOOLS_JSON.read_text(encoding="utf-8"))
+                if isinstance(t, dict) and t.get("name")}
+        except Exception:
+            pass
+    sin_modulo = sorted(declarados - {t["name"] for t in tools_reales})
+
+    if aplicar:
+        st["items"] = finales
+        _save_state(st)
+
+    return {
+        "reconciliado": True,
+        "aplicado": aplicar,
+        "en_catalogo": len(finales),
+        "nuevos": nuevos,
+        "actualizados": actualizados,
+        "faltan_en_disco": faltan,
+        "declaracion_sin_modulo": sin_modulo,
+        "por_tipo": {
+            "libreria": sum(1 for i in finales if i.get("type") == "libreria"),
+            "tool": sum(1 for i in finales if i.get("type") == "tool"),
+            "skill": sum(1 for i in finales if i.get("type") == "skill"),
+        },
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────
 # COMMON
 # ─────────────────────────────────────────────────────────────────────
 def listar() -> dict:
@@ -578,6 +733,10 @@ def eris_fabrica(parameters=None, player=None) -> str:
                     "name": params.get("name", "")})
     if action in ("restaurar", "rollback"):
         return _ok(restaurar(params.get("name", ""), params.get("version", "")))
+
+    if action in ("reconciliar", "reconstruir", "sincronizar"):
+        aplicar = str(params.get("aplicar", "true")).strip().lower() not in ("0", "false", "no")
+        return _ok(reconciliar(aplicar=aplicar))
 
     if action == "crear_libreria":
         functions = params.get("functions") or params.get("funciones") or []
