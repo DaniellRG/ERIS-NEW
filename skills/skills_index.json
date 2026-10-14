@@ -46,17 +46,27 @@
   },
   {
     "name": "incident-response",
-    "description": "",
-    "category": "general",
-    "tags": [],
+    "description": "Respuesta a incidentes de seguridad en la PC (malware, actividad sospechosa, fuga de datos o compromiso del sistema): aislar, analizar y documentar el incidente sin contaminar la evidencia. Usar cuando se detecte un incidente de seguridad.",
+    "category": "security",
+    "tags": [
+      "seguridad",
+      "incidentes",
+      "respuesta",
+      "forense"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
   {
     "name": "malware-analysis",
-    "description": "",
-    "category": "general",
-    "tags": [],
+    "description": "Análisis de malware en la PC: triage de archivos/descargas/comportamientos sospechosos, ejecución aislada en sandbox y veredicto. Usar cuando el usuario reporte archivos o conductas sospechosas, o cuando threat hunting encuentre posible malware.",
+    "category": "security",
+    "tags": [
+      "seguridad",
+      "malware",
+      "analisis",
+      "sandbox"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -78,9 +88,13 @@
   },
   {
     "name": "subagent-driven",
-    "description": "",
+    "description": "Desarrollo dirigido por sub-agentes: descomponer una tarea en piezas independientes y repartirlas a sub-agentes que corren en paralelo. Usar cuando la tarea se pueda partir en partes sin dependencias entre sí.",
     "category": "general",
-    "tags": [],
+    "tags": [
+      "subagentes",
+      "paralelismo",
+      "orquestacion"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -110,9 +124,14 @@
   },
   {
     "name": "threat-hunting",
-    "description": "",
-    "category": "general",
-    "tags": [],
+    "description": "Caza proactiva de amenazas en la PC: revisar seguridad del sistema, buscar actividad sospechosa, procesos/usuarios/conexiones anómalas y persistencia. Usar cuando pidan revisar la seguridad o buscar amenazas.",
+    "category": "security",
+    "tags": [
+      "seguridad",
+      "amenazas",
+      "hunting",
+      "monitoreo"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -134,9 +153,13 @@
   },
   {
     "name": "verification",
-    "description": "",
+    "description": "Verificación antes de dar por terminado: autocontrol de que se hizo exactamente lo pedido, que el resultado cumple el formato/errores esperados y que no quedaron cabos sueltos, ANTES de decirle al usuario \"listo\". Usar tras completar cualquier tarea.",
     "category": "general",
-    "tags": [],
+    "tags": [
+      "verificacion",
+      "calidad",
+      "cierre"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -150,9 +173,14 @@
   },
   {
     "name": "vulnerability-scanning",
-    "description": "",
-    "category": "general",
-    "tags": [],
+    "description": "Escaneo de vulnerabilidades de la PC: auditar seguridad del sistema, apps instaladas/desactualizadas y configuraciones débiles antes de instalar software. Usar cuando pidan auditar vulnerabilidades o revisar la seguridad del equipo.",
+    "category": "security",
+    "tags": [
+      "seguridad",
+      "vulnerabilidades",
+      "auditoria",
+      "hardening"
+    ],
     "version": "1.0.0",
     "source": "builtin"
   },
@@ -171,6 +199,24 @@
     "tags": [],
     "version": "1.0.0",
     "source": "builtin"
+  },
+  {
+    "name": "animacion-html",
+    "description": "Genera animaciones y explicadores animados autocontenidos en HTML (Canvas, SVG+GSAP, Three.js, shaders GLSL) a partir de un pedido en lenguaje natural. Cargar cuando el usuario pida una animacion, un explicador visual, motion graphics o una escena 3D.",
+    "category": "creatividad",
+    "tags": [
+      "animacion",
+      "html",
+      "canvas",
+      "svg",
+      "gsap",
+      "threejs",
+      "glsl",
+      "motion-graphics",
+      "explicador"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
   },
   {
     "name": "auditoria-herramientas",
