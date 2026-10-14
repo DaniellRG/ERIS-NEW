@@ -2318,10 +2318,10 @@ class ErisLive:
                     _audio = _np.frombuffer(pcm, dtype=_np.int16).tobytes()
                     self.ui.set_face_speaking(True)
                     try:
-                        # El resample 24k→48k lo hace _pacat_write (punto único)
+                        # El audio se encola a 24 kHz; pacat lo declara a 24k
+                        # (punto único de reproducción) y PipeWire remuestrea al sink.
                         self.audio_in_queue.put_nowait(_audio)
-                        # Wait for playback to finish (duración fuente 24k;
-                        # resamplear a 48k conserva la duración)
+                        # Wait for playback to finish (duración fuente 24k).
                         import time as _t
                         _t.sleep(len(_audio) / (24000 * 2))
                     except Exception:
@@ -2331,11 +2331,37 @@ class ErisLive:
                 print(f"[ERIS] Aviso por voz falló: {e}")
         threading.Thread(target=_job, daemon=True).start()
 
+    def _tts_backend_works(self, backend: str) -> bool:
+        """True solo si el backend local sintetiza de verdad (no alcanza con que
+        importe: edge puede dar 403 y quedar mudo). Corre en un hilo propio para
+        ser seguro desde un contexto async (el loop del Live)."""
+        import threading as _th
+        _res = {"ok": False}
+
+        def _job():
+            try:
+                import asyncio as _a
+                from core.tts_engine import synthesize
+                _pcm = _a.run(_a.wait_for(synthesize("hola", backend=backend), timeout=8))
+                _res["ok"] = bool(_pcm and len(_pcm) > 100)
+            except Exception:
+                _res["ok"] = False
+
+        _t = _th.Thread(target=_job, daemon=True)
+        _t.start()
+        _t.join(timeout=10)
+        return _res["ok"]
+
     def _voice_resilient_fallback(self):
         """Auto-reparación de voz: si la cuota de TTS en nube (Gemini/elevens/fish)
         se agota, Eris pasa SOLA a TTS local (kokoro si está, sino edge) y lo
         persiste, para no quedarse muda. Después de llamarla, si el usuario quiere
-        volver, solo cambia el backend en Ajustes."""
+        volver, solo cambia el backend en Ajustes.
+
+        Blindaje: solo persiste un backend local que REALMENTE sintetice (ver
+        _tts_backend_works). Si ninguno funciona (p. ej. edge caído/403), NO cambia
+        nada: quedarse en nube es mejor que quedar mudo para siempre. Bug real
+        2026-10-12: persistía `edge` sin edge-tts instalado → silencio total."""
         from pathlib import Path as _P
         import json as _j
         _cfg_path = _P(__file__).resolve().parent / "config" / "api_keys.json"
@@ -2349,12 +2375,20 @@ class ErisLive:
             if getattr(self, "_voice_resilient", False):
                 self.ui.write_log("SYS: Voz ya en modo local (resiliente).")
             return
-        _new = "edge"
-        try:
-            import pykokoro  # noqa: F401
-            _new = "kokoro"
-        except Exception:
-            pass
+        _new = None
+        for _cand in ("kokoro", "edge"):
+            if self._tts_backend_works(_cand):
+                _new = _cand
+                break
+        if _new is None:
+            # Ningún TTS local funcional: no persistimos un backend que dejaría a
+            # Eris muda. Se queda en nube (se recupera sola cuando vuelva la cuota).
+            print("[ERIS] ⚠️ Cuota de voz agotada y sin TTS local funcional: sigo en nube.")
+            try:
+                self.ui.write_log("SYS: ⚠️ Cuota de voz en nube agotada y sin TTS local disponible; reintentaré en nube.")
+            except Exception:
+                pass
+            return
         _all["tts_backend"] = _new
         self._voice_resilient = True
         try:
@@ -4126,8 +4160,12 @@ class ErisLive:
                 pass
 
         try:
+            # El audio que se escribe acá es PCM int16 mono a 24 kHz (Gemini Live
+            # nativo y todos los TTS locales sintetizan a 24k; ver _synthesize_edge
+            # `-ar 24000`). Declarar 16000 lo estiraba 1.5x → voz grave y lenta.
+            # PipeWire/PulseAudio remuestrea 24k→tasa del sink (48k) solo.
             _pa_proc = _sp.Popen(
-                ["pacat", "--rate=16000",
+                ["pacat", "--rate=24000",
                  "--format=S16LE", "--channels=1"],
                 stdin=_sp.PIPE, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL,
             )

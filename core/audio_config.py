@@ -301,6 +301,30 @@ def resolve_mic() -> int | None:
         cfg = load_api_keys() or {}
     except Exception:
         pass
+    # Prioridad por NOMBRE guardado: los índices crudos de ALSA cambian de orden
+    # según qué dispositivos estén ocupados (p. ej. en el arranque ALC257=3 y
+    # YU8=4; si ALC257 está tomado, YU8 pasa a 3). Confiar solo en el índice hacía
+    # que Eris escuchara el mic equivocado (bug 2026-10-12). Si hay nombre guardado
+    # y todavía existe, se usa ESE dispositivo.
+    _cfg_name = str(cfg.get("mic_device_name") or "").strip()
+    if _cfg_name:
+        try:
+            _idx_named = resolve_device(_cfg_name, "input")
+        except Exception:
+            _idx_named = None
+        if _idx_named is not None and not _is_virtual(_idx_named):
+            _rate_named = _mic_rate_for(_idx_named, require_energy=False)
+            if _rate_named is not None:
+                try:
+                    if (cfg.get("mic_device") != _idx_named
+                            or cfg.get("mic_device_rate") != _rate_named):
+                        cfg["mic_device"] = _idx_named
+                        cfg["mic_device_name"] = _device_name(_idx_named)
+                        cfg["mic_device_rate"] = _rate_named
+                        save_api_keys(cfg)
+                except Exception:
+                    pass
+                return _idx_named
     # Si el config tiene mic_device_rate y el dispositivo existe, probarlo primero
     cfg_idx = cfg.get("mic_device")
     cfg_rate = cfg.get("mic_device_rate")
