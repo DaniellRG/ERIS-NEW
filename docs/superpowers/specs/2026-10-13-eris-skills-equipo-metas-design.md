@@ -4,8 +4,8 @@
 - **Proyecto:** `/home/soul/ERIS-NEW`
 - **Origen:** revisión de 4 repos pedidos por el dueño — `open-jarvis/OpenJarvis`,
   `paperclipai/paperclip`, `THU-MAIC/OpenMAIC`, `yihui-dev/awesome-opus5-5-videos`.
-- **Estado:** borrador para aprobación. Nada se construye hasta que el dueño
-  apruebe.
+- **Estado:** aprobado por el dueño el 2026-10-13 (respuestas a §8 incorporadas).
+  Se construye fase por fase, un commit por fase.
 
 > **Recon (hecho).** Antes de escribir esto se exploró el código real (registro de
 > tools, `skill_registry.py`, `equipo.py`, `permission_gate.py`,
@@ -197,11 +197,9 @@ duplicar.
    `ERIS_GITHUB_TOKEN`).
 5. **Reporte claro**: `Traídas N, salteadas M (ya existían), rechazadas K, errores E`.
 
-**Decisiones mías (llamadas del constructor):** default = `openclaw` con `limit=50`;
-`all=true` opt-in. `[REV.2]` **Semilla curada alternativa:** como `openclaw` está en
-inglés y su `SKILL.md` no son tool-calls de Eris, `hermes-agent` (~212, espejo
-Hermes, del que Eris ya copió el formato) es probablemente mejor semilla inicial;
-dejo la elección como pregunta al dueño (§8-Q1).
+**Decisión del dueño (§8-Q1):** fuente por defecto **`hermes-agent`** (~212, curado).
+`openclaw` queda disponible opt-in vía `ERIS_SKILL_SOURCES`. `limit=50` por sync y
+`all=true` opt-in se mantienen. `github_token` opcional (env `ERIS_GITHUB_TOKEN`).
 
 **No cambia:** `skills_list`, `skill_view`, ni la sync de tools.
 
@@ -327,8 +325,9 @@ Se parte en dos sub-fases (cada una un commit).
 - **UI:** el modal ya existe (`ui.ask`). El resultado de cada aprobación se registra
   en `data/permission_log.json` (ya lo hace el gate).
 
-**Decisión mía:** F5b **no cambia qué tools son riesgosas** de entrada; `tool_risk.json`
-arranca **vacío** (hereda el comportamiento actual) y solo unifica el criterio.
+**Decisión del dueño (§8-Q3):** unificar el criterio **y** cerrar el bypass de
+`tool_executor.py`; **no** se cambia qué tools son riesgosas. `tool_risk.json`
+arranca **vacío** (hereda el comportamiento actual).
 
 **Riesgo/anti-objetivo:** fail-closed de más traba a Eris. Por eso el default de
 `tool_risk.json` es vacío y los hard-block se preservan.
@@ -365,18 +364,14 @@ infra de las skills) o con F3; lo pongo en F1 para que F3/F4 lo encuentren listo
 
 ---
 
-## 8. Preguntas abiertas para el dueño
+## 8. Decisiones del dueño (2026-10-13)
 
-1. **F1 — fuentes y tope.** ¿Traigo por defecto de `openclaw/openclaw` (miles de
-   skills, en inglés, no son tool-calls; tope 50) o preferís solo `hermes-agent`
-   (~212, espejo del formato que Eris ya usa)? ¿Registrás un `github_token` en
-   config para evitar el rate limit?
-2. **F3/F4 — salida.** ¿Te sirve `~/Desktop/ERIS_web/animaciones` y
-   `.../clases`? ¿Aceptás CDNs (necesita internet al abrir) o querés libs locales
-   embebidas para que funcione offline?
-3. **F5b — alcance.** ¿Solo unifico el criterio de riesgo (mi recomendación), o
-   querés que además *cambiemos* qué se considera riesgoso? ¿Confirmás que
-   `tool_executor.py` entre en esta fase?
+1. **F1 — fuente:** **solo `hermes-agent`** (~212, curado). `openclaw` opt-in por
+   `ERIS_SKILL_SOURCES`. `github_token` opcional.
+2. **F3/F4 — salida:** `~/Desktop/ERIS_web/animaciones` y `.../clases`, con
+   **CDN** (GSAP/Three.js); el HTML es liviano y requiere internet al abrir.
+3. **F5b — alcance:** unificar el criterio **y** cerrar el bypass de
+   `tool_executor.py`. **No** se cambia qué se considera riesgoso.
 
 ---
 
