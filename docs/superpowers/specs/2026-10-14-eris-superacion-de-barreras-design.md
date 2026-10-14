@@ -6,8 +6,24 @@
   detecte que no llega a una meta, entienda qué le falta, se construya lo que le
   falta (herramienta, skill, API, función) y lo use hasta cumplir el objetivo,
   autogestionándose — con evidencia real y sin tocar zonas peligrosas.
-- **Estado:** borrador para aprobación del dueño. Lo leyó un revisor independiente
-  (builder-check); sus preguntas y las decisiones que faltan están en §12.
+- **Estado:** borrador para aprobación del dueño. Pasó **dos** rondas de revisor
+  independiente (builder-check); sus hallazgos están corregidos y las decisiones que
+  faltan están en §12.
+
+> **Revisión 2 (2026-10-14).** El dueño pidió que Eris **investigue afuera**
+> (repos, docs, catálogos tipo `skills.sh`, comandos), **reúna y empaquete** lo que
+> encuentra para resolver mejor, y que **cada problema superado quede como
+> conocimiento reutilizable** (recetario) para resolver al instante los parecidos.
+> Incorporado en §5.2b (acopio), §5.8b (recetario) y §8b (fuentes).
+
+> **Revisión 3 (2026-10-14).** La 2.ª ronda del revisor encontró afirmaciones falsas
+> y huecos de diseño, ya resueltos: el motor **orquesta** la auto-reparación que ya
+> existe y **no** duplica (§2b; el recetario se apoya en `mistake_learner` +
+> `procedimientos`); la **zona** se evalúa en `permission_gate` (el punto común a
+> ambos caminos), no en `tool_risk.json`/`guard_check` (§6); `esperando_ok` tiene
+> **reanudación** explícita (`aprobar`/`rechazar`, §5.3); se documentan los límites
+> del sandbox (bloquea red/subprocess → servidores se prueban en el venv); la meta
+> se referencia como `goal_ref={store,id}` (§5.5).
 
 > **Método.** Una fase = un commit local, nunca push. Baseline sagrado:
 > `python test_all.py` = 177 PASS / 0 FAIL / 3 WARN, y sync de tools 510/510.
@@ -31,18 +47,23 @@ hoy nada:
    de sub-agentes, y de *goal estancado* en `goal_tracker`),
 2. diagnostica qué le falta (conocimiento, tool, acceso, permiso, recurso, o la
    meta mal definida),
-3. decide el camino **pensando el riesgo antes** de actuar,
-4. se construye esa capacidad (tool / librería / skill / script / API / servidor),
-5. la usa, y
-6. **verifica con evidencia** que llegó de verdad.
+3. **investiga afuera** (repos, docs, catálogos de tools/skills) y **reúne y
+   empaqueta** material para resolverlo mejor,
+4. decide el camino **pensando el riesgo antes** de actuar,
+5. se construye esa capacidad (tool / librería / skill / script / API / servidor),
+6. la usa,
+7. **verifica con evidencia** que llegó de verdad, y
+8. **guarda la receta** para que, ante un problema parecido, lo resuelva al instante.
 
 Este proyecto construye ese bucle: el **motor de superación de barreras**.
 
 **Criterio de éxito.** Con una meta dada (por el dueño o auto-generada), si Eris
 puede alcanzarla con lo que tiene, la alcanza; y si le falta algo, es capaz de
-producir ese algo, usarlo y demostrar con un artefacto verificable que llegó. Si
-no puede, lo dice con honestidad y explica qué necesitaría — nunca miente ni
-declara "listo" sin prueba.
+producir ese algo (creándolo o **trayéndolo de afuera**), usarlo y demostrar con
+un artefacto verificable que llegó. Si no puede, lo dice con honestidad y explica
+qué necesitaría — nunca miente ni declara "listo" sin prueba. Y **cada barrera que
+supera la deja mejor preparada**: su solución queda como receta reutilizable, y
+ante algo parecido la aplica al instante.
 
 **Anti-goals (lo que haría fracasar el proyecto).**
 
@@ -60,13 +81,17 @@ declara "listo" sin prueba.
 |---|---|---|
 | Fábrica | `core/eris_fabrica.py` | `crear_libreria` / `crear_tool` / `crear_skill` con backup, rollback e inventario. **Validación desigual:** `crear_tool` compila + prueba de humo `status` y cada acción; `crear_libreria` solo compila (no ejecuta la función); `crear_skill` no valida nada. |
 | Auto-fábrica | `core/auto_fabrica.py` + `core/skill_auto_creator.py` | Detecta patrones de tools repetidos y crea tools (tope 2/día). |
-| Motor de aprendizaje | `core/learning_engine.py` | `investigar` (papers/repos/web) → `estudiar` → `cristalizar` skill en `skills/evolution_learning/`. |
+| Aprendizaje | `core/learning_engine.py` | `study_cycle` **corre en vivo** (tick de evolución, cada 6) y usa `deep_research`/`web_search`. Pero `paper_search`/`repo_discovery`/`aprendizaje_videos` **no tienen módulo** (imports guardados → `None`, `core/action_imports.py:74-80,1025-1027`): hay que **crear o reemplazar** esos canales. |
+| Skills externas | `skills/skill_registry.py` (`skill_manage`) | `sync` descubre e instala skills de los repos comunitarios de `_skill_sources` (`_discover_skills`); `import` trae **un** SKILL.md por URL https con validación; `validate`, `list`, `view`. Para un catálogo tipo skills.sh hace falta **descubrir** (sync/scrape) y luego importar cada uno. |
+| Sandbox | `core/code_sandbox.py` | `execute_python` (con `_safe_import`); **bloquea red y `subprocess`** → sirve para probar **lógica**, **no** clientes de API ni servidores. `execute_javascript` no usa `_safe_import`. |
+| Memoria semántica | `core/rag_engine.py` | `index`/`search`/`recall` sobre el vault de Obsidian + `memory/*.json` + `data/knowledge/*.md`. Base del recetario (§5.8b). |
+| Web | `web_search`, `web_scraper`, `deep_research` | Buscar y leer páginas, docs, repos, catálogos de tools/skills. |
 | Mission | `core/mission_agent.py` | Protocolo plan→explorar→editar→verificar→step→learn→close. `verify()` corre py_compile/ruff/pytest y no declara "listo" si queda rojo. |
 | Tripulación | `core/sub_agent_crew.py` | MissionPlanner (plan + `proyectar` a cola), TaskRouter, DependencyResolver, **ProgressTracker** (foto de tareas WORKING >120s), QualityCritic, FactVerifier, DecisionArbiter (**stub**, §5.3), ConnectorHub, **ActionGuard**, EvolutionEngine, SkillForge, **TraceKeeper** (trazas replayables `data/agent_traces/`). Re-encolado real: `SubAgentRegistry.requeue_stuck_tasks()`. |
 | Autonomía | `core/autonomy.py` | `LOW_RISK_ACTIONS`, `auto_install_package`, `execute_autonomous`, `run_autonomous_cycle`. |
-| Riesgo / custodia | `core/permission_gate.py`, `core/tool_dispatch_api.py` | `assess_risk`, `guard_check` → `GuardVerdict`, precedencia de `config/tool_risk.json` (**hoy vacío**). `guard_check` solo se consulta en `tool_dispatch_api.dispatch_tool`; el camino del chat (`core/tool_dispatcher.py:249`) solo pasa por `permission_gate` (ver §6). |
+| Riesgo / custodia | `core/permission_gate.py`, `core/tool_dispatch_api.py` | `assess_risk`; `guard_check` (patrones hardcodeados) corre en `dispatch_tool`, `agents/tool_executor.py` y `sub_agent_crew.ActionGuard`. **`permission_gate.check` es el denominador común de ambos caminos** (chat `tool_dispatcher.py:249` y `dispatch_tool`): ahí se evalúan `config/tool_risk.json` (**hoy vacío**) y, cuando el dueño lo confirme, la zona (§6). Sin UI, high/critical → deny; **medium se permite headless** (§5.3). |
 | Verdad / evidencia | `core/truth_audit.py` | `audit_turn`, `evidence_block`; detecta cuando Eris dice algo que las tools no respaldan. |
-| Metas | `core/goal_tracker.py` (`data/goals.json`, **vacío**), `core/goal_setting.py` (`memory/goals.json`), `actions/goals.py` (`config/goals.json`, **user-facing**), `core/goal_context.py` | `get_active_goals`, `get_stalled_goals`, `get_next_step`. `goal_context`/`[METAS]` federan **solo** `goal_setting` + `goal_tracker`; los del tool `goals` hoy son invisibles al prompt (ver §5.1/§5.8). |
+| Metas | `core/goal_tracker.py` (`data/goals.json`, **no existe**), `core/goal_setting.py` (`memory/goals.json`), `actions/goals.py` (`config/goals.json`, **user-facing**), `core/goal_context.py` | `get_active_goals`, `get_stalled_goals`, `get_next_step`. `goal_context`/`[METAS]` federan **solo** `goal_setting` + `goal_tracker`; los del tool `goals` hoy son invisibles al prompt (ver §5.1/§5.8). |
 | Escalada | `core/escalada.py` | 8 niveles × 12 dominios; `registrar_logro(dominio, logro, dificultad)`. |
 | Loops | `main.py` | Hilos daemon: evolución (30 min), learning (cada 6 ticks), defensa (cada 9), auto-fábrica (30 min), tripulación (30 s), rutinas, auto-salud. |
 
@@ -75,6 +100,29 @@ aunque hay artefactos reales en `libraries/`, `actions/custom/` y
 `skills/user_created/`. `fabrica action=listar` devuelve vacío. Esto se repara
 (§7) porque el bucle necesita saber qué capacidades **ya** tiene para no
 reconstruir lo que existe.
+
+### 2b. Piezas de auto-reparación y de lecciones que ya existen (no duplicar)
+
+El motor **orquesta** esto, no lo reescribe:
+
+| Módulo | Qué ya hace | Rol en el bucle |
+|---|---|---|
+| `core/error_recovery.py` | `smart_retry(error, tool, args)`, `ErrorRecovery` | reintento de un paso (5.7) |
+| `core/auto_healer.py` | parsea tracebacks y arregla `ImportError`/`ModuleNotFoundError`/`SyntaxError`/`NameError`/`TypeError`/`FileNotFoundError`… | reparación de `dependencia`/código propio (5.4) |
+| `core/self_healing.py`, `core/self_health.py` | auto-sanación y salud del propio proceso | señal de barrera (5.1) |
+| `core/self_improvement.py` | `SelfEvaluator`, `AutoCorrector`, `LessonLearner` (sube el dominio `aprender` en `escalada`) | diagnóstico + cierre (5.8) |
+| `core/mistake_learner.py` | `record_mistake(pattern,cause,solution,…)`, `create_rule`, `check_before_acting`, `get_related_mistakes` | **base del recetario** (5.8b) |
+| `core/procedimientos.py` | `guardar_procedimiento(nombre,pasos,intencion)`, `buscar_por_intencion`, `registrar_paso`, `atribuir_exito_procedimiento` | **base del recetario** (5.8b) |
+| `core/capability_self_assessment.py` | uso/éxito por tool → capacidades flojas | detectar capacidad faltante o rota (5.1) |
+| `core/autonomous_learner.py` | detecta huecos de conocimiento y estudia temas | ruta `conocimiento` (5.2) |
+| `core/task_engine.py` | motor de tareas/pasos | ejecución del plan (5.5) |
+| `core/idle_learning_loop.py` | aprendizaje cuando está ociosa | acopio en tiempo ocioso (5.2b) |
+
+**Consecuencia:** el "recetario" **no** crea un store nuevo en paralelo;
+**envuelve y une** `mistake_learner` (errores→solución) y `procedimientos`
+(recetas por intención) y los indexa en `rag_engine`. Lo que el motor agrega es
+el **bucle** que hoy falta (detectar→diagnosticar→acopiar→decidir→crear→usar→
+verificar→aprender), apoyado en estas piezas.
 
 ---
 
@@ -120,8 +168,8 @@ Estado persistente: **`data/barreras.json`** (runtime, en `.gitignore`).
 Máquina de estados de una barrera:
 
 ```
-abierta → diagnosticada → planificada → [esperando_ok?] → creada → usada
-        → verificada → resuelta
+abierta → diagnosticada → (recetario | investigando) → planificada
+        → [esperando_ok?] → creada → usada → verificada → resuelta → receta guardada
                          ↘ reintento (otro enfoque) → …
                          ↘ escalada (agotada)
                          ↘ abandonada (meta ya no aplica)
@@ -165,30 +213,77 @@ Clasifica la barrera en **un tipo dominante** (uno solo, para no diluir):
 Salida: `{tipo, falta, porque, evidencia_del_diagnostico}`. Usa heurística +
 LLM (`model_router.quick_chat`) y cita lo que miró (log, error, archivo).
 
+### 5.2b Acopio e investigación (reunir, empaquetar, deliberar)
+
+Antes de decidir, Eris **junta material para resolverlo mejor**:
+
+1. **Primero su propio recetario (§5.8b).** Busca si ya resolvió algo parecido
+   (`rag_engine.recall` + palabras clave). Si hay receta, la reutiliza → puede
+   resolver **al instante** lo que ya vivió.
+2. **Si no, investiga afuera:** `web_search` + `web_scraper` + `deep_research` para
+   buscar en repos, documentación, foros, comandos y **catálogos de tools/skills**
+   (páginas tipo `https://www.skills.sh/` y similares). Para **traer** skills: de un
+   catálogo se descubren las URLs (scrape / `_discover_skills`) y luego
+   `skill_manage import` **una por una** por URL https (valida antes de instalar);
+   `skill_manage sync` sirve para los repos ya declarados en `_skill_sources`.
+   `paper_search`/`repo_discovery` **no tienen módulo**: hay que crearlos o
+   reemplazarlos (§2/§8b).
+3. **Reúne y empaqueta:** construye un **paquete de trabajo** con las fuentes
+   encontradas (URL, licencia, qué hace, cómo se usa, comandos, fragmentos,
+   requisitos). Combina varias fuentes si conviene. **No ejecuta nada todavía.**
+4. **Delibera:** con ese material, razona (LLM) y formula **2–3 planes posibles**,
+   y elige el mejor por impacto / esfuerzo / riesgo. Acá es donde "piensa, se
+   replantea, calcula, analiza, interpreta" — sobre hechos reunidos, no de memoria.
+
+El paquete queda guardado en la barrera, así que sirve de evidencia de *por qué*
+eligió ese camino y alimenta el recetario al cerrar.
+
+**Seguridad del acopio (clave).** *Investigar* (leer la web) es libre. **Incorporar**
+(instalar/ejecutar algo de terceros) pasa por: `skill_manage validate`, prueba en
+`code_sandbox` para **lógica** (ojo: el sandbox **bloquea red y `subprocess`**, así
+que un cliente de API o un servidor **no** se prueba ahí: se prueba en el **venv**
+con puertos en allowlist), anotar la licencia, y el **pre-chequeo de zona** (§6).
+Código de terceros **nunca** corre con acceso a zona protegida; nada de pegar código
+a ciegas.
+
+
 ### 5.3 Decisión (pensar antes de actuar)
 
 Arma un **plan corto** (≤5 pasos) y lo pasa por el **árbitro de riesgo**
-existente (`permission_gate.assess_risk` / `guard_check`):
+existente (`permission_gate.assess_risk` + `guard_check`), que clasifica cada
+paso en `low` / `medium` / `high` / `critical`:
 
-- Si **ningún** paso toca zona protegida ni pide un riesgo alto →
-  `planificada`, sigue sola.
-- Si algún paso toca zona protegida o el Custodio lo bloquea →
-  `esperando_ok`: se detiene **ahí**, avisa al dueño (voz/UI) con el plan y el
-  por qué, y no lo ejecuta hasta el OK. Los **bloqueos duros no se degradan a
-  "ask"** (regla de F5b): directamente se escala.
-- Guarda el plan y la decisión en la barrera (para auditoría y para `escalada`).
+- **low** → sigue sola (`planificada`).
+- **medium** → sigue sola **solo si el paso está en la allowlist del motor**
+  (crear en su workspace, instalar dentro del venv, correr código creado en
+  `code_sandbox`); en cualquier otro caso → `esperando_ok`. **Motivo:** sin UI
+  `permission_gate` deja pasar `medium` headless; el motor **no** lo deja pasar a
+  ciegas.
+- **high / critical** → `esperando_ok`.
+- **zona protegida** (§6) → `esperando_ok`, sea cual sea su riesgo nominal.
+- **bloqueo duro del Custodio** → se **escala** (no se degrada a "ask").
+
+El paso en `esperando_ok` **detiene solo ese paso**: el resto del plan que sea
+seguro puede seguir (no se queda trabada: anti-goal "no se queda haciendo esto").
+Guarda el plan y la decisión en la barrera (auditoría + `escalada`).
+
+**Cómo se reanuda un `esperando_ok`.** La barrera queda `esperando_ok` con el
+paso exacto pendiente y el pedido. El dueño aprueba o rechaza por chat/voz
+("aprobá la barrera `<id>`" / "no") o con la tool `barreras action=aprobar
+id=<id>` / `action=rechazar id=<id>` (con motivo). El tick de `main.py`
+**re-verifica** las aprobadas y **retoma desde el paso pendiente** (no reinicia);
+si rechaza, vuelve al diagnóstico con otro enfoque.
 
 Cuando hay ≥2 enfoques, los compara con el LLM (`model_router.quick_chat`).
 **No** se usa `DecisionArbiter`: es un stub que llena todo con `~0.5` sin evaluar
 (`core/sub_agent_crew.py:1172-1177`).
 
-**Camino de ejecución obligatorio.** El motor **no** usa el dispatcher del chat
-(`core/tool_dispatcher.py`, que solo pasa por `permission_gate`): todo paso
-riesgoso sale por `core.tool_dispatch_api.dispatch_tool` (el mismo que usa la
-tripulación), que sí consulta `guard_check`. Y hace su **propio pre-chequeo de
-zona** (§6) *antes* de despachar: sin UI el gate es fail-closed y devuelve
-**deny** para high/critical, no "ask"; el motor no puede depender de un "ask"
-que en un tick de daemon nunca llega.
+**Camino de ejecución obligatorio.** Todo paso riesgoso sale por
+`core.tool_dispatch_api.dispatch_tool` (el mismo que usa la tripulación), que
+consulta `guard_check` **y** `permission_gate`. Además el motor hace su **propio
+pre-chequeo de zona** (§6) *antes* de despachar: sin UI el gate es fail-closed y
+devuelve **deny** para high/critical, no "ask"; el motor no puede depender de un
+"ask" que en un tick de daemon nunca llega.
 
 ### 5.4 Creación (o reparación)
 
@@ -224,6 +319,10 @@ Eris usa la capacidad recién creada para atacar la meta:
   `dispatch_to_sub_agent`, arrastrando el `goal_id` (herencia de F5a);
 - captura **el resultado crudo** (no su resumen): salida de la tool, exit code,
   contenido del archivo.
+
+**Identidad de la meta.** Los tres stores **no comparten id**. La barrera guarda
+`goal_ref = {store, id}` (p. ej. `{"store":"goal_tracker","id":"goal_123"}`), y
+con eso actualiza y cierra la meta correcta sin adivinar.
 
 ### 5.6 Verificación con evidencia (regla dura)
 
@@ -274,10 +373,37 @@ hay bucle infinito.
 
 ### 5.8 Cierre
 
-- `resuelta` → actualiza la meta **en el store del que salió** (los tres: `goals`,
-  `goal_setting`, `goal_tracker`), registra el logro en `escalada.registrar_logro`
+- `resuelta` → actualiza la meta **en el store de su `goal_ref`** (`goals`,
+  `goal_setting` o `goal_tracker`), registra el logro en `escalada.registrar_logro`
   (dominio según la meta), deja novedad en `todo_yo` y archiva la barrera.
 - `abandonada` → la meta dejó de aplicar; se documenta el motivo.
+
+### 5.8b Recetario de soluciones (aprender de todo)
+
+**Cada barrera** —resuelta o escalada— deja una **receta**:
+
+- **problema** y sus **señales** (para reconocerlo la próxima vez);
+- **diagnóstico** (qué faltaba);
+- **solución**: pasos, comandos, tools/herramientas usadas, capacidad creada;
+- **errores en el camino** y **caminos alternativos** (de una solución, sacar otras);
+- **evidencia** y cómo comprobarlo.
+
+Se guarda en 4 capas (mismo patrón que `pentest_learning`):
+1. `data/knowledge/recetario/*.md` (texto buscable),
+2. Obsidian (tu baúl): `Vida/Recetario/` / `Proyectos/.../Recetario/`,
+3. índice semántico en `rag_engine` (recall instantáneo),
+4. novedad en `todo_yo` + `escalada.registrar_logro(dominio="aprender")`.
+
+**No es un store nuevo.** Se apoya en lo que ya existe (§2b):
+`mistake_learner.record_mistake(pattern, cause, solution, …)` guarda
+problema→causa→solución, y `procedimientos.guardar_procedimiento(nombre, pasos,
+intencion)` guarda la receta de pasos. El motor los **une** (una llamada guarda
+en ambos + las 4 capas) y `recetario.buscar()` consulta los dos + `rag_engine`.
+
+Así **cada error, bug o cosa que no pudo se vuelve conocimiento reutilizable**: la
+próxima vez, §5.2b lo reconoce y lo aplica al instante; y de una solución puede
+derivar caminos para otros problemas. Aplica a **todo**: repararse a sí misma, tus
+cosas, la vida diaria y tu trabajo.
 
 ---
 
@@ -285,13 +411,16 @@ hay bucle infinito.
 
 Hoy el árbitro clasifica por **tool/comando** (heurísticas de `permission_gate`) y
 su único override declarativo, `config/tool_risk.json`, **está vacío**. Nada
-traduce "datos personales" ni "red de casa" a una regla. Y hay **dos caminos**:
-el chat (`tool_dispatcher`) solo pasa por `permission_gate`; `guard_check` corre
-solo en `tool_dispatch_api.dispatch_tool`. Por eso el motor hace dos cosas:
+traduce "datos personales" ni "red de casa" a una regla. El `guard_check` (patrones
+hardcodeados) corre en `tool_dispatch_api.dispatch_tool`, `agents/tool_executor.py`
+y `sub_agent_crew.ActionGuard`, pero **no** lee `tool_risk.json`; **`permission_gate`
+sí, y es el único componente presente en los dos caminos** (chat
+`tool_dispatcher.py:249` y `dispatch_tool`). Por eso el lugar correcto para las
+zonas es **`permission_gate`**, no `guard_check`.
 
-**(A) Pre-chequeo de zona propio, antes de despachar.** Una política nueva
-`config/zone_policy.json` (creada por el diseño, editable por el dueño) define
-patrones → zona. Valores por defecto propuestos:
+**(A) Zona en `permission_gate` (vale en ambos caminos).** Se lo extiende para
+evaluar una política nueva `config/zone_policy.json` (creada por el diseño,
+editable por el dueño) que mapea patrones → zona. Valores por defecto propuestos:
 
 - **Sistema operativo (protegida):** `/etc`, `/usr`, `/boot`, `/var/lib`, gestores
   de paquetes (`pacman`/`apt`/`dnf`), `systemctl`/`sysctl`, `sudo`, `mkfs`,
@@ -304,8 +433,10 @@ patrones → zona. Valores por defecto propuestos:
 - **Su propio proyecto (libre):** `ERIS-NEW/`, su workspace, `libraries/`,
   `actions/custom/`, `skills/user_created/`, `data/`, su lab `192.168.56.0/24`.
 
-Esta política se registra además en el override central (`config/tool_risk.json`)
-para que **todo** camino que pase por `guard_check` la respete, no solo el motor.
+**(B) El motor pre-chequea con el mismo módulo de política** antes de despachar
+(no depende del fail-closed sin UI). **Ojo:** escribir los patrones solo en
+`tool_risk.json` **no alcanza** — ese archivo no llega a `guard_check`; el efecto
+universal se logra en `permission_gate`.
 
 **Reglas duras:**
 
@@ -363,45 +494,85 @@ Módulo nuevo: **`core/server_forge.py`**. Tool: **`server_forge`**.
 
 ---
 
+## 8b. De dónde saca herramientas y conocimiento
+
+El **acopio** (§5.2b) usa fuentes reales, no imaginadas:
+
+- **Catálogos de skills** (modelo OuroborosHub): `skill_manage sync` (repos
+  comunitarios configurados en `skills/skill_registry.py:_skill_sources`) e
+  `import` por URL https — sirve para páginas tipo `https://www.skills.sh/` y
+  similares. **Valida antes de instalar**; descarta lo inválido.
+- **Repos y papers:** `deep_research` (existe y es tool) + `web_scraper`;
+  `repo_discovery` / `paper_search` **no tienen módulo** → crearlos o reemplazarlos
+  (§2).
+- **Web general (docs, foros, comandos):** `web_search` + `web_scraper`.
+- **Paquetes/software:** `autonomy.auto_install_package` dentro del venv; fuera de
+  él, pide OK.
+- **Incorporación:** lo traído se prueba en `code_sandbox` (lógica; para red/servidor
+  se prueba en el **venv** con puertos en allowlist), se convierte en
+  librería/tool/skill vía `fabrica`, y se anota **origen y licencia**. Nada de
+  terceros toca la zona protegida sin OK.
+
+---
+
 ## 9. Interfaces concretas (nombres que el builder puede usar)
 
 - `core/barrier_engine.py`
-  - `abrir(goal_id, titulo, descripcion, origen) -> dict`
+  - `abrir(goal_ref, titulo, descripcion, origen) -> dict` (`goal_ref={store,id}`)
   - `scan() -> list[dict]` (señales → candidatas)
   - `diagnosticar(barrier_id) -> dict`
+  - `investigar(barrier_id) -> dict` (recetario + fuentes → paquete)
   - `planificar(barrier_id) -> dict`
   - `crear(barrier_id) -> dict`
   - `usar(barrier_id) -> dict`
   - `verificar(barrier_id) -> dict`
   - `bucle(barrier_id) -> dict` (corre el ciclo con presupuesto)
+  - `aprobar(barrier_id)` / `rechazar(barrier_id, motivo)` (reanudan `esperando_ok`)
   - `escalar(barrier_id, motivo) -> dict` / `cerrar(barrier_id, estado) -> dict`
   - `estado() -> dict` / `listar() -> list`
-  - `barrier_tool(parameters, player) -> str` (tool `barreras`)
+  - `barrier_tool(parameters, player) -> str` (tool `barreras`: `abrir/scan/listar/
+    estado/aprobar/rechazar`)
+- `core/recetario.py` (nuevo, **wrapper fino** sobre lo existente): `buscar(query)`,
+  `guardar(barrera)`, `reindexar()`. **No** es un store nuevo: llama a
+  `mistake_learner.record_mistake` + `procedimientos.guardar_procedimiento`, escribe
+  las 4 capas de §5.8b e indexa en `rag_engine`.
 - Estado: `data/barreras.json` (gitignore).
-- Seguridad: `config/zone_policy.json` (nueva, editble por el dueño) + registro de
-  sus patrones en `config/tool_risk.json`.
-- Reutiliza: `fabrica`, `learning_engine`, `autonomy`, `permission_gate`,
-  `truth_audit`, `goal_tracker`, `mission_agent.verify`, `server_forge`,
-  `escalada`, `todo_yo`, `TraceKeeper`.
+- Seguridad: `config/zone_policy.json` (nueva, editable por el dueño), evaluada
+  dentro de **`permission_gate`** (el punto común a ambos caminos; ver §6).
+- Reutiliza: `fabrica`, `skill_manage`, `code_sandbox`, `rag_engine`, `web_search`,
+  `web_scraper`, `deep_research`, `autonomy`, `permission_gate`, `truth_audit`,
+  `goal_tracker`, `mission_agent.verify`, `server_forge`, `escalada`, `todo_yo`,
+  `TraceKeeper`, `error_recovery`, `auto_healer`, `mistake_learner`, `procedimientos`.
 
 ---
 
 ## 10. Fases (una fase = un commit local)
 
 Cada fase termina con: `test_all.py` 177/0/3, sync de tools verificada, y (si
-aplica) Eris arranca sin crash.
+aplica) Eris arranca sin crash. **Nota:** agregar las tools `barreras` /
+`server_forge` obliga a editar `core/tool_registry.py` **y**
+`core/tool_declarations.py`, verificar sync y 0 duplicados (el conteo deja de ser
+510; `test_all.py` exige ≥440 y `registry == declarations`).
 
 1. **F1 — Andamiaje y detección.** `core/barrier_engine.py` con el estado,
    `scan()`, `abrir/listar/estado`, tool `barreras`, `data/barreras.json` en
    `.gitignore`. No crea nada todavía.
 2. **F2 — Reconstruir el catálogo.** `fabrica action=reconciliar` (§7).
-3. **F3 — Diagnóstico, decisión y zonas.** Clasificación + plan + `config/zone_policy.json`
-   + pre-chequeo de zona + registro en `config/tool_risk.json` (guardar `esperando_ok`).
-4. **F4 — Creación y uso.** Rutas de `fabrica` + `server_forge` (§8).
-5. **F5 — Verificación y frenos.** Evidencia dura, `falso_positivo`, reintento con
-   otro enfoque, presupuesto y escalada.
-6. **F6 — Wiring y cierre.** Tick en `main.py` + hooks (mission/tripulación/metas);
-   cierre con `goal_tracker`/`escalada`/`todo_yo`.
+3. **F3 — Diagnóstico + acopio.** Clasificación + `recetario` local (sobre
+   `mistake_learner`/`procedimientos`) + investigación externa (`web_search`/
+   `web_scraper`/`deep_research`) + empaquetado + deliberación (`planificar`).
+   Repara/reemplaza los canales sin módulo (`paper_search`/`repo_discovery`).
+4. **F4 — Zonas y decisión.** `config/zone_policy.json` evaluada en
+   **`permission_gate`** (ambos caminos) + pre-chequeo del motor + corte y
+   reanudación de `esperando_ok` (`aprobar`/`rechazar`).
+5. **F5 — Creación y uso.** Rutas de `fabrica` + `server_forge` (§8) + prueba en
+   `code_sandbox` (lógica) y en el **venv** (red/servidor).
+6. **F6 — Verificación y frenos.** Evidencia dura, `falso_positivo`, reintento con
+   otro enfoque (`error_recovery.smart_retry`), presupuesto y escalada.
+7. **F7 — Recetario.** Wrapper sobre `mistake_learner`+`procedimientos`, 4 capas
+   (§5.8b) + índice en `rag_engine` + recall.
+8. **F8 — Wiring y cierre.** Tick en `main.py` + hooks (mission/tripulación/metas);
+   cierre con metas(`goal_ref`)/`escalada`/`todo_yo`.
 
 ---
 
@@ -410,6 +581,8 @@ aplica) Eris arranca sin crash.
 - Cuántos minutos entre ticks y con qué se dispara cada hook.
 - Formato exacto del informe de escalada (texto/JSON/Obsidian).
 - Cómo detecta el LLM el "no puedo" con la menor tasa de falsos positivos.
+- La **lista blanca** de repos/catálogos de confianza (p. ej. cuáles de los
+  "skills.sh y similares") y el orden de prioridad de las fuentes.
 - Reutilizar `barrier_engine` también para las "tablas de crecimiento" (Proyecto 2)
   — probable, pero se decide cuando lleguemos.
 
@@ -421,9 +594,13 @@ aplica) Eris arranca sin crash.
    zona libre)?
 2. **Presupuesto.** ¿Te cierra **3 enfoques** por barrera, **1 capacidad nueva por
    enfoque** y un **tope diario** de ~3? ¿O querés otro número?
-3. **Reparar su propio código.** ¿Puede reparar/mejorar el código de Eris dentro de
+3. **Su propio código.** ¿Puede reparar/mejorar el código de Eris dentro de
    `ERIS-NEW` sola (con backup + validación + rollback), o preferís aprobar vos
    cada cambio de su propio código?
+4. **Código de terceros.** Cuando investiga y encuentra una tool/skill/paquete
+   (p. ej. de `skills.sh` o un repo), ¿puede **instalarlo y probarlo sola** (con
+   `skill_manage validate`, prueba aislada en `code_sandbox`/venv y anotando
+   licencia), o preferís aprobar vos cada incorporación de código externo?
 
 **Defaults que ya tomé** (decime si alguno no te gusta): cuando necesita tu OK, te
 avisa y **sigue con otra cosa** (no queda en pausa); puede **auto-generarse metas**
