@@ -1,5 +1,18 @@
 # Auditoría de disco y ruido de carpetas (2026-10-15)
 
+**EJECUTADO (con OK del dueño):** disco 155 GB → 126 GB (−29 GB), 349 GB libres (27%).
+Papelera vaciada (6.3 GB); cachés limpiadas (~15.5 GB: .cache/yay 6.1 GB, JetBrains 4.2 GB,
+mozilla/chromium/pkg/aether/puccinialin/uv/pip/mise); NuGet 9.8 GB → 0
+(`dotnet nuget locals all --clear`); OpenDevelop (clone ajeno 8.6 GB) eliminado tras
+rescatar `~/Projects/apinuevo/` y `~/Projects/OpenDevelop-cambios-locales.patch`;
+Downloads borrado selectivo (ShowOS.iso 4.5 GB, MonoFramework .pkg de macOS 353 MB, 2 html)
+y el resto ordenado (media → ~/Wallpapers/descargas/, estudios → ~/Documents/Parcial-BD-2/,
+proyecto → ~/Projects/mi_primer_api/); restos de Hermes (`~/.hermes` 46 MB, `~/install.sh`,
+`~/Work/`) movidos a la papelera (recuperables).
+**Conservado MiniOS10 Pro.iso** porque está conectado como DVD de la VM `windowsOS`.
+No se tocó Steam (63 GB), VirtualBox VMs (18 GB) ni `.npm/_npx` (caché de REA de Eris).
+Verificado: `rea` v6.5.0 OK, test_all 177/0/3.
+
 Informe completo: `Logs/Auditoria-ruido-2026-10-15.md` en el vault de Obsidian.
 
 ## Qué es "ruido" en esta PC (con OK del dueño se limpia)
