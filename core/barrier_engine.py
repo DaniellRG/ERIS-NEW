@@ -1126,6 +1126,15 @@ def _evidencia_de(cap: dict, spec: dict, uso: dict | None) -> list[dict]:
     return checks
 
 
+def _dejar_receta(b: dict) -> dict:
+    """Deja la receta de la barrera en las 4 capas (§5.8b). Best-effort."""
+    try:
+        from core import recetario as rec
+        return rec.guardar(barrera=b)
+    except Exception as e:
+        return {"error": f"{type(e).__name__}: {str(e)[:150]}"}
+
+
 def verificar(barrier_id: str) -> dict:
     """Verifica con EVIDENCIA dura (§5.6). Sin evidencia no hay 'resuelta'."""
     state = _load()
@@ -1144,6 +1153,8 @@ def verificar(barrier_id: str) -> dict:
         b["estado"] = "verificada"
         b.pop("paso_pendiente", None)
         _log(b, "verificada", "; ".join(c["nombre"] for c in checks))
+        _save(state)
+        b["receta"] = _dejar_receta(b)
         _save(state)
         _traza("verificar", barrier_id, f"evidencia ok: {[c['nombre'] for c in checks]}", True)
         return {"ok": True, "barrera_id": barrier_id, "evidencia": b["evidencia"],
@@ -1219,6 +1230,8 @@ def escalar(barrier_id: str, motivo: str = "") -> dict:
     b["escalada"] = informe
 
     _log(b, "escalada", f"{informe['motivo']} → nota {ruta}")
+    _save(state)
+    b["receta"] = _dejar_receta(b)
     _save(state)
     _traza("escalar", barrier_id, informe["motivo"], False)
     return {"ok": True, "barrera_id": barrier_id, "escalada": informe}
