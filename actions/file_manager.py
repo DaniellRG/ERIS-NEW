@@ -169,19 +169,45 @@ def _list_dir(directory):
 def _search_files(directory, pattern):
     if not pattern:
         return "¿Qué nombre o extensión buscás?"
-    dir_path = Path(directory or ".").expanduser()
-    if not dir_path.is_dir():
+    dir_path = Path(directory or ".").expanduser().resolve()
+    # Ruta a un ARCHIVO: buscar en su propia carpeta (rglob solo sirve en directorios)
+    if dir_path.is_file():
+        if pattern.lower() in dir_path.name.lower():
+            return f"El archivo coincide: {dir_path}"
+        dir_path = dir_path.parent
+    elif not dir_path.is_dir():
+        # ruta inexistente: buscar el nombre pedido en raíces habituales (con tope, sin .venv/node_modules)
+        alt = Path(directory).expanduser()
+        needles = [alt.name.lower(), pattern.lower()]
+        if alt.name:
+            roots = [Path.home(), Path("/home/soul/Eris_NEW")]
+            scanned = 0
+            for rt in roots:
+                if not rt.is_dir():
+                    continue
+                for r, ds, fns in os.walk(rt):
+                    ds[:] = [d for d in ds if d not in (".venv", "venv", "node_modules",
+                                                        "__pycache__", ".git", ".cache")]
+                    scanned += 1
+                    if scanned > 400:
+                        break
+                    if any(n in f.lower() for f in fns for n in needles if n):
+                        return _search_files(r, pattern)
+                if scanned > 400:
+                    break
         return f"No encontré: {directory}"
 
     matches = []
     for item in dir_path.rglob(f"*{pattern}*"):
         if len(matches) >= 20:
             break
+        if any(part in ("__pycache__", "node_modules", ".git") for part in item.parts):
+            continue
         matches.append(str(item))
 
     if matches:
-        return f"Encontré {len(matches)} resultados:\n" + "\n".join(matches[:20])
-    return f"No encontré archivos con '{pattern}' en {dir_path.name}"
+        return f"Encontré {len(matches)} resultados en {dir_path}:\n" + "\n".join(matches[:20])
+    return f"No encontré archivos con '{pattern}' en {dir_path}"
 
 def _file_info(filepath):
     if not filepath:

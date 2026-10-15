@@ -180,33 +180,52 @@ def _action_grep(parameters: dict, player=None) -> str:
         rx = re.compile(pattern, re.IGNORECASE if ignore_case else 0)
     except re.error as e:
         return f"Error en regex: {e}"
-    exts = {".py", ".pyw", ".js", ".ts", ".tsx", ".json", ".md", ".txt", ".html", ".css", ".bat", ".ps1", ".sh", ".ini", ".toml", ".yaml", ".yml"}
+    exts = {".py", ".pyw", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".txt", ".html", ".css",
+            ".bat", ".ps1", ".sh", ".bash", ".zsh", ".ini", ".toml", ".yaml", ".yml", ".cfg",
+            ".conf", ".env", ".xml", ".csv", ".vue", ".svelte",
+            # fuentes que Eris debe poder buscar también
+            ".c", ".h", ".cpp", ".hpp", ".cc", ".cs", ".java", ".kt", ".rs", ".go", ".rb",
+            ".php", ".lua", ".pl", ".r", ".m", ".swift", ".scala", ".sql", ".gradle", ".properties"}
+    if not os.path.exists(base):
+        return f"No existe la ruta: {base}"
+    # Un ARCHIVO directo: se busca solo en él (os.walk sobre un archivo da vacío).
+    files = []
+    if os.path.isfile(base):
+        files.append((base, os.path.basename(base)))
+    else:
+        for root, dirs, fnames in os.walk(base):
+            dirs[:] = [d for d in dirs if d not in (".git", "node_modules", "__pycache__", "venv", ".venv")]
+            for fn in fnames:
+                if len(files) >= max_files:
+                    break
+                if os.path.splitext(fn)[1].lower() not in exts:
+                    continue
+                fp = os.path.join(root, fn)
+                files.append((fp, os.path.relpath(fp, base)))
+            if len(files) >= max_files:
+                break
     matches = []
     scanned = 0
     total = 0
-    for root, dirs, files in os.walk(base):
-        dirs[:] = [d for d in dirs if d not in (".git", "node_modules", "__pycache__", "venv", ".venv")]
-        for fn in files:
-            if scanned >= max_files:
-                break
-            if os.path.splitext(fn)[1].lower() not in exts:
-                continue
-            scanned += 1
-            fp = os.path.join(root, fn)
-            try:
-                with open(fp, "r", encoding="utf-8", errors="replace") as f:
-                    for i, line in enumerate(f, 1):
-                        if rx.search(line):
-                            matches.append(f"{os.path.relpath(fp, base)}:{i}: {line.rstrip()[:200]}")
-                            total += 1
-                            if total >= 60:
-                                break
-                    if total >= 60:
-                        break
-            except Exception:
-                continue
-        if total >= 60 or scanned >= max_files:
+    for fp, rel in files:
+        if total >= 60:
             break
+        try:
+            if os.path.getsize(fp) > 4_000_000:
+                continue
+        except OSError:
+            continue
+        scanned += 1
+        try:
+            with open(fp, "r", encoding="utf-8", errors="replace") as f:
+                for i, line in enumerate(f, 1):
+                    if rx.search(line):
+                        matches.append(f"{rel}:{i}: {line.rstrip()[:200]}")
+                        total += 1
+                        if total >= 60:
+                            break
+        except Exception:
+            continue
     if not matches:
         return f"Sin coincidencias para /{pattern}/ en {base}."
     head = [f"Coincidencias /{pattern}/ ({total}, archivos: {scanned}):"]
@@ -218,6 +237,14 @@ def _action_glob(parameters: dict, player=None) -> str:
     base = resolve_path(parameters.get("base_path") or ".")
     if not gpat:
         return "Error: se requiere 'glob_pattern' (ej: **/*.py)."
+    if not os.path.exists(base):
+        return f"No existe la ruta: {base}"
+    # Archivo directo: matchear el propio archivo contra el patrón.
+    if os.path.isfile(base):
+        import fnmatch as _fm
+        if _fm.fnmatch(os.path.basename(base), gpat) or _fm.fnmatch(base, gpat):
+            return f"Glob {gpat} (1):\n{os.path.basename(base)}"
+        return f"Sin coincidencias para {gpat} en {base} (es un archivo, no un directorio)."
     hits = glob.glob(os.path.join(base, gpat), recursive=True)[:200]
     if not hits:
         return f"Sin coincidencias para {gpat} en {base}."
