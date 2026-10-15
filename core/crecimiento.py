@@ -59,6 +59,24 @@ def _now() -> str:
     return datetime.now().isoformat(timespec="seconds")
 
 
+# Prefijos que distintas fuentes le ponen al mismo evento (barrera/receta/escalada).
+# Se recortan para deduplicar por EVENTO, no por texto exacto.
+_PREFIJOS = ("[barrera]", "resolví:", "resolvi:", "receta nueva:", "receta:")
+
+
+def _clave(logro: str) -> str:
+    """Clave normalizada de un logro (para deduplicar el mismo evento)."""
+    t = str(logro or "").strip().lower()
+    cambio = True
+    while cambio:
+        cambio = False
+        for p in _PREFIJOS:
+            if t.startswith(p):
+                t = t[len(p):].strip()
+                cambio = True
+    return " ".join(t.split())
+
+
 def _load() -> dict:
     if _FILE.exists():
         try:
@@ -145,19 +163,26 @@ def registrar(dominio: str, logro: str, evidencia: str = "", ruta: str = "",
         state = _load()
         dom = state["dominios"].setdefault(
             dominio, {"nivel": 0, "actualizado": None, "filas": []})
+        clave = _clave(logro)
         for f in dom["filas"]:
-            if f.get("logro") == logro:
-                if evidencia and not f.get("evidencia"):
-                    f["evidencia"] = evidencia
-                if ruta and not f.get("ruta"):
-                    f["ruta"] = ruta
-                f["estado"] = "verificada" if (f.get("evidencia") or f.get("ruta")) else "sin_evidencia"
-                dom["actualizado"] = _now()
-                state["stats"] = _stats(state)
-                _save(state)
-                _escribir_vault(dominio, dom, state, escribir)
-                return {"ok": True, "dominio": dominio, "duplicada": True,
-                        "fila": f, "espejo": espejo}
+            if _clave(f.get("logro")) != clave:
+                continue
+            # Mismo evento ya presente: completar evidencia/ruta si la nueva trae más.
+            tenia = bool(f.get("evidencia") or f.get("ruta"))
+            if evidencia and not f.get("evidencia"):
+                f["evidencia"] = evidencia
+            if ruta and not f.get("ruta"):
+                f["ruta"] = ruta
+            if (f.get("evidencia") or f.get("ruta")) and not tenia and fuente == "barrier":
+                f["fuente"] = "barrier"
+            if f.get("evidencia") or f.get("ruta"):
+                f["estado"] = "verificada"
+            dom["actualizado"] = _now()
+            state["stats"] = _stats(state)
+            _save(state)
+            _escribir_vault(dominio, dom, state, escribir)
+            return {"ok": True, "dominio": dominio, "duplicada": True,
+                    "fila": f, "espejo": espejo}
 
         nivel = _nivel_escalada(dominio) or dom.get("nivel", 0) or 1
         dom["nivel"] = max(dom.get("nivel", 0), nivel)
@@ -228,11 +253,23 @@ def _escribir_maestra(state: dict) -> str | None:
 
 
 def _escribir_vault(dominio: str, dom: dict, state: dict, escribir: bool):
-    """Deja visible la tabla del dominio y la maestra (si `escribir`)."""
+    """Deja visible la tabla del dominio, la maestra y el espejo de conocimiento."""
     if not escribir:
         return
     _escribir_tabla_dominio(dominio, dom)
     _escribir_maestra(state)
+    _escribir_know(state)
+
+
+def _escribir_know(state: dict):
+    try:
+        _KNOW_DIR.mkdir(parents=True, exist_ok=True)
+        _KNOW_FILE.write_text(
+            _md_maestra(state) + "\n\n" + "\n\n".join(
+                _md_dominio(d, state["dominios"].get(d, {})) for d in _dominios()),
+            encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _escribir_tabla_dominio(dominio: str, dom: dict) -> str | None:
@@ -285,12 +322,7 @@ def _regenerar_todo(state: dict) -> list[str]:
     m = _escribir_maestra(state)
     if m:
         rutas.append(m)
-    try:
-        _KNOW_DIR.mkdir(parents=True, exist_ok=True)
-        _KNOW_FILE.write_text(_md_maestra(state) + "\n\n" + "\n\n".join(
-            _md_dominio(d, state["dominios"].get(d, {})) for d in _dominios()), encoding="utf-8")
-    except Exception:
-        pass
+    _escribir_know(state)
     return rutas
 
 
@@ -353,17 +385,33 @@ def estado() -> str:
 def actualizar(reindexar: bool = False) -> dict:
     """Reconstruye las filas desde `escalada` (logros) y el motor de barreras
     (barreras resueltas, con evidencia dura + ruta). No borra filas manuales.
+
+    Un mismo evento puede aparecer en `escalada` con distintos prefijos
+    ("Resolví: X", "Receta nueva: X") además de la fila de barrera: se cuenta
+    UNA vez (gana la fila con evidencia). El nivel de cada dominio se sincroniza
+    desde `escalada` (única fuente de nivel).
     """
     agregadas = 0
 
-    # 1) escalada → filas (con fecha y nivel de origen)
+    # 0) eventos ya cubiertos por una barrera resuelta (clave por evento)
+    cubiertos: set[str] = set()
+    try:
+        from core import barrier_engine as be
+        for b in be._load().get("barreras", []):
+            if b.get("estado") == "resuelta":
+                cubiertos.add(_clave(f"[barrera] {b.get('titulo')}"))
+    except Exception:
+        pass
+
+    # 1) escalada → filas (salteando los eventos ya cubiertos por una barrera)
     try:
         from core.escalada import _load as _esc_load
         esc = _esc_load()
         for dominio, dom in esc.get("dominios", {}).items():
             for lg in dom.get("logros", []):
                 texto = lg.get("logro") if isinstance(lg, dict) else str(lg)
-                fecha = lg.get("fecha") if isinstance(lg, dict) else ""
+                if _clave(texto) in cubiertos:
+                    continue
                 r = registrar(dominio, texto, evidencia="",
                               fuente="escalada", espejar_escalada=False,
                               escribir=False)
@@ -390,6 +438,24 @@ def actualizar(reindexar: bool = False) -> dict:
                           espejar_escalada=False, escribir=False)
             if r.get("ok") and not r.get("duplicada"):
                 agregadas += 1
+    except Exception:
+        pass
+
+    # 3) sincronizar el nivel de los 12 dominios con `escalada` (fuente de nivel)
+    try:
+        from core.escalada import _load as _esc_load, _nivel_dominio
+        esc = _esc_load()
+        with _lock:
+            state = _load()
+            for d in _dominios():
+                nv = _nivel_dominio(esc, d)
+                if not nv:
+                    continue
+                dom = state["dominios"].setdefault(
+                    d, {"nivel": 0, "actualizado": None, "filas": []})
+                dom["nivel"] = max(dom.get("nivel", 0), nv)
+            state["stats"] = _stats(state)
+            _save(state)
     except Exception:
         pass
 
