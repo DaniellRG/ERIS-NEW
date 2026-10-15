@@ -26,19 +26,26 @@ _PY_EXTS = {".py", ".pyw"}
 def resolve_path(p: str) -> str:
     if not p:
         return os.getcwd()
+    # Carpetas de usuario reales (Windows: API/OneDrive; Linux: XDG con fallback a $HOME).
+    try:
+        from actions.path_helper import (get_desktop_path, get_documents_path,
+                                         get_downloads_path)
+        _desktop, _docs, _down = str(get_desktop_path()), str(get_documents_path()), str(get_downloads_path())
+    except Exception:
+        _home = os.path.expanduser("~")
+        _desktop = _docs = _down = _home
+    _home = os.path.expanduser("~")
     shortcuts = {
-        "desktop": os.path.expanduser("~/Desktop"),
-        "escritorio": os.path.expanduser("~/Desktop"),
-        "downloads": os.path.expanduser("~/Downloads"),
-        "descargas": os.path.expanduser("~/Downloads"),
-        "documents": os.path.expanduser("~/Documents"),
-        "documentos": os.path.expanduser("~/Documents"),
-        "home": os.path.expanduser("~"),
-        "casa": os.path.expanduser("~"),
+        "desktop": _desktop, "escritorio": _desktop,
+        "downloads": _down, "descargas": _down,
+        "documents": _docs, "documentos": _docs,
+        "home": _home, "casa": _home,
+        "projects": os.path.join(_home, "Projects"), "proyectos": os.path.join(_home, "Projects"),
     }
     key = p.strip().lower()
     if key in shortcuts:
-        return shortcuts[key]
+        cand = shortcuts[key]
+        return cand if os.path.exists(cand) else _home
     if p == ".":
         return os.getcwd()
     if key.startswith("eris:"):

@@ -24,8 +24,28 @@ else:
     _SHELL32 = _ctypes.windll.shell32
     _WINMM = _ctypes.windll.winmm
 
+def _xdg_dir(varname: str):
+    """Lee XDG_DESKTOP_DIR/XDG_DOWNLOAD_DIR/... de ~/.config/user-dirs.dirs (Linux)."""
+    try:
+        cfg = Path.home() / ".config" / "user-dirs.dirs"
+        if not cfg.exists():
+            return None
+        for line in cfg.read_text(encoding="utf-8", errors="replace").splitlines():
+            line = line.strip()
+            if line.startswith(varname + "="):
+                raw = line.split("=", 1)[1].strip().strip('"')
+                raw = raw.replace("$HOME", str(Path.home())).replace("${HOME}", str(Path.home()))
+                p = Path(raw).expanduser()
+                return p
+    except Exception:
+        pass
+    return None
+
+
 def get_special_folder(csidl: int) -> Path:
     """Gets the path of a Windows special folder using SHGetFolderPathW."""
+    if not _IS_WIN:
+        return None
     try:
         from ctypes import wintypes
         buf = ctypes.create_unicode_buffer(wintypes.MAX_PATH)
@@ -45,7 +65,12 @@ def get_desktop_path() -> Path:
     if p:
         return p
 
-    # 2. Try common OneDrive and localized directories
+    # 2. Linux/XDG: respetar XDG_DESKTOP_DIR si apunta a una carpeta real
+    xdg = _xdg_dir("XDG_DESKTOP_DIR")
+    if xdg and xdg.is_dir():
+        return xdg
+
+    # 3. Try common OneDrive and localized directories
     home = Path.home()
     candidates = [
         home / "OneDrive" / "Desktop",
@@ -57,7 +82,7 @@ def get_desktop_path() -> Path:
         if c.exists():
             return c
             
-    # 3. Fallback to standard environment or home
+    # 4. Fallback to standard environment or home
     user_profile = os.environ.get("USERPROFILE")
     if user_profile:
         dp = Path(user_profile) / "Desktop"
@@ -72,6 +97,10 @@ def get_documents_path() -> Path:
     p = get_special_folder(5)
     if p:
         return p
+
+    xdg = _xdg_dir("XDG_DOCUMENTS_DIR")
+    if xdg and xdg.is_dir():
+        return xdg
 
     # 2. Try common OneDrive and localized directories
     home = Path.home()
@@ -97,7 +126,11 @@ def get_documents_path() -> Path:
 def get_downloads_path() -> Path:
     """Returns the user's actual Downloads path."""
     home = Path.home()
-    
+
+    xdg = _xdg_dir("XDG_DOWNLOAD_DIR")
+    if xdg and xdg.is_dir():
+        return xdg
+
     # Check registry or standard locations
     candidates = [
         home / "Downloads",

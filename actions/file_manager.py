@@ -6,6 +6,15 @@ from datetime import datetime
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "file_log.json"
 
+
+def _resolve_path(p: str) -> str:
+    """Resuelve atajos ('escritorio', 'descargas', 'casa'…) y ~ ; cae a $HOME si la carpeta no existe."""
+    try:
+        from actions.file_editor import resolve_path
+        return resolve_path(p)
+    except Exception:
+        return str(Path(p).expanduser()) if p else "."
+
 FILE_CATEGORIES = {
     "imagen": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg", ".ico"],
     "video": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm"],
@@ -37,17 +46,17 @@ def file_manager(parameters: dict, player=None) -> str:
     elif action in ("organize", "organizar"):
         return _organize(source or str(Path.home() / "Downloads"))
     elif action in ("list", "listar", "contenido"):
-        return _list_dir(source or ".")
+        return _list_dir(_resolve_path(source) if source else ".")
     elif action in ("search", "buscar"):
-        return _search_files(source, pattern)
+        return _search_files(_resolve_path(source) if source else "", pattern)
     elif action in ("info", "informacion"):
-        return _file_info(source)
+        return _file_info(_resolve_path(source) if source else source)
     elif action in ("create_dir", "crear_carpeta"):
         return _create_dir(source)
     elif action in ("open", "abrir", "open_file"):
-        return _open_file(source)
+        return _open_file(_resolve_path(source) if source else source)
     elif action in ("open_folder", "abrir_carpeta"):
-        return _open_folder(source)
+        return _open_folder(_resolve_path(source) if source else source)
     else:
         return (
             "Acciones: move, copy, rename, delete, organize, list, search, info, create_dir, open, open_folder\n"
@@ -146,23 +155,38 @@ def _list_dir(directory):
     if not dir_path.is_dir():
         return f"No encontré: {directory}"
 
-    items = sorted(dir_path.iterdir(), key=lambda x: (x.is_file(), x.name.lower()))
+    try:
+        items = sorted(dir_path.iterdir(), key=lambda x: (x.is_file(), x.name.lower()))
+    except PermissionError:
+        return f"Sin permiso para leer: {directory}"
     lines = []
-    for item in items[:30]:
-        if item.is_dir():
-            lines.append(f"📁 {item.name}/")
-        else:
-            size = item.stat().st_size
-            if size > 1024*1024:
-                size_str = f"{size/(1024*1024):.1f}MB"
-            elif size > 1024:
-                size_str = f"{size/1024:.1f}KB"
+    total_items = 0
+    for item in items:
+        total_items += 1
+        if len(lines) >= 30:
+            continue
+        try:
+            if item.is_symlink() and not item.exists():
+                lines.append(f"🔗 {item.name} (enlace roto)")
+                continue
+            if item.is_dir():
+                lines.append(f"📁 {item.name}/")
             else:
-                size_str = f"{size}B"
-            lines.append(f"📄 {item.name} ({size_str})")
+                size = item.stat().st_size
+                if size > 1024*1024:
+                    size_str = f"{size/(1024*1024):.1f}MB"
+                elif size > 1024:
+                    size_str = f"{size/1024:.1f}KB"
+                else:
+                    size_str = f"{size}B"
+                lines.append(f"📄 {item.name} ({size_str})")
+        except (OSError, PermissionError):
+            lines.append(f"❓ {item.name} (inaccesible)")
 
-    remaining = len(list(dir_path.iterdir())) - 30
+    remaining = total_items - 30
     result = f"Contenido de {dir_path.name} ({len(lines)}{'+' + str(remaining) if remaining > 0 else ''}):\n"
+    result += "\n".join(lines)
+    return result
     result += "\n".join(lines)
     return result
 
