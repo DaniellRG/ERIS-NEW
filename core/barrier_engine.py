@@ -868,7 +868,31 @@ def crear(barrier_id: str, spec: dict = None) -> dict:
         _save(state)
         return {"ok": True, "barrera_id": barrier_id, "capacidad": cap}
 
-    # 2) Crear por la ruta que corresponda.
+    # 2) Frenos de presupuesto (§12.2) — solo al CREAR algo nuevo (reutilizar es gratis).
+    enfoque = str(plan.get("enfoque") or "")
+    intentados = b.setdefault("enfoques_intentados", [])
+    nuevo_enfoque = bool(enfoque) and enfoque not in intentados
+    if nuevo_enfoque and len(intentados) >= _MAX_ENFOQUES:
+        _save(state)
+        esc = escalar(barrier_id, "presupuesto de 3 enfoques agotado")
+        return {"ok": False, "barrera_id": barrier_id,
+                "error": "Presupuesto de enfoques agotado (3). Escalado al dueño.",
+                "escalada": esc.get("escalada")}
+    por_enf = b.setdefault("cap_nuevas_por_enfoque", {})
+    if enfoque and por_enf.get(enfoque, 0) >= _MAX_CAP_POR_ENFOQUE:
+        return {"ok": False, "barrera_id": barrier_id,
+                "error": "Ya creaste una capacidad nueva para este enfoque; "
+                         "probá OTRO enfoque (usá `rechazar`)."}
+    if _capacidades_nuevas_hoy(state) >= _TOPE_DIARIO:
+        _save(state)
+        esc = escalar(barrier_id, "tope diario de 3 capacidades nuevas alcanzado")
+        return {"ok": False, "barrera_id": barrier_id,
+                "error": "Tope diario alcanzado (3 capacidades nuevas). Escalado al dueño.",
+                "escalada": esc.get("escalada")}
+    if nuevo_enfoque:
+        intentados.append(enfoque)
+
+    # 3) Crear por la ruta que corresponda.
     fn = _ROUTE_CREAR.get(tipo)
     if fn is None:
         return {"ok": False, "error": f"Tipo de creación '{tipo}' no soportado. "
@@ -891,6 +915,9 @@ def crear(barrier_id: str, spec: dict = None) -> dict:
            "prueba": r.get("prueba") or "", "ts": _now()}
     b["capacidad"] = cap
     b["estado"] = "creada"
+    if enfoque:
+        b.setdefault("cap_nuevas_por_enfoque", {})
+        b["cap_nuevas_por_enfoque"][enfoque] = b["cap_nuevas_por_enfoque"].get(enfoque, 0) + 1
     _log(b, "creada", f"{cap['capacidad']} ({cap['tipo']}): {cap['prueba'][:100]}")
     _save(state)
     return {"ok": True, "barrera_id": barrier_id, "capacidad": cap}
@@ -963,6 +990,294 @@ def usar(barrier_id: str, invocacion: dict = None) -> dict:
     _log(b, "usada", f"{nombre}: {'ok' if ok else 'error'}")
     _save(state)
     return {"ok": ok, "barrera_id": barrier_id, "uso": uso}
+
+
+# ── F6: verificación con evidencia + frenos (§5.6/§5.7) ──────────────────────
+
+# Presupuesto aprobado por el dueño (§12.2).
+_MAX_ENFOQUES = 3          # enfoques distintos por barrera
+_MAX_CAP_POR_ENFOQUE = 1   # capacidad nueva por enfoque
+_TOPE_DIARIO = 3           # capacidades nuevas por día (todas las barreras)
+_HORAS_PRESUPUESTO = 24    # presupuesto de tiempo por barrera
+
+
+def _hoy() -> str:
+    return time.strftime("%Y-%m-%d")
+
+
+def _capacidades_nuevas_hoy(state: dict) -> int:
+    n = 0
+    for x in state.get("barreras", []):
+        c = x.get("capacidad")
+        if c and c.get("creada_vs_reutilizada") == "creada" \
+                and str(c.get("ts", ""))[:10] == _hoy():
+            n += 1
+    return n
+
+
+def _traza(accion: str, request: str, result: str, ok: bool) -> str:
+    """Traza replayable (mismo formato/dir que TraceKeeper: data/agent_traces/)."""
+    try:
+        d = Path(_BASE) / "data" / "agent_traces"
+        d.mkdir(parents=True, exist_ok=True)
+        run = {"ts": time.time(), "agent": "barrier_engine", "action": accion,
+               "request": str(request)[:200], "tools": ["barreras"],
+               "result": str(result)[:500], "ok": bool(ok)}
+        p = d / f"trace_{int(time.time() * 1000)}.json"
+        p.write_text(json.dumps(run, ensure_ascii=False, indent=2), encoding="utf-8")
+        return str(p)
+    except Exception:
+        return ""
+
+
+def _nota_obsidian(b: dict, titulo: str, cuerpo: str) -> str:
+    """Deja una nota legible (lo que el dueño puede ABRIR) en Obsidian."""
+    try:
+        from core.logging_setup import get_obsidian_vault
+        vault = get_obsidian_vault()
+        carpeta = Path(vault) / "Proyectos" / "barreras"
+        carpeta.mkdir(parents=True, exist_ok=True)
+        safe = "".join(c for c in (b.get("titulo") or "barrera") if c.isalnum() or c in " -_")[:40].strip() or "barrera"
+        fecha = time.strftime("%Y-%m-%d")
+        p = carpeta / f"{fecha} {safe}.md"
+        p.write_text(cuerpo, encoding="utf-8")
+        return str(p)
+    except Exception as e:
+        return f"(no pude escribir la nota: {e})"
+
+
+def _registrar_enfoque(b: dict, enfoque: str) -> None:
+    if not enfoque:
+        return
+    lst = b.setdefault("enfoques_intentados", [])
+    if enfoque not in lst:
+        lst.append(enfoque)
+
+
+def _evidencia_de(cap: dict, spec: dict, uso: dict | None) -> list[dict]:
+    """Chequeos de evidencia dura según el tipo de capacidad (§5.6)."""
+    checks: list[dict] = []
+    tipo = str(cap.get("tipo") or "").lower()
+    path = cap.get("path") or ""
+    nombre = cap.get("capacidad") or ""
+    try:
+        if tipo in ("tool", "herramienta"):
+            from core.tool_registry import get_tool
+            t = get_tool(nombre)
+            checks.append({"nombre": "tool registrada", "ok": callable(t), "detalle": nombre})
+            if callable(t):
+                out = str(t({"action": "status"}))
+                checks.append({"nombre": "tool responde status", "ok": bool(out.strip()),
+                               "detalle": out[:200]})
+        elif tipo in ("libreria", "library"):
+            p = Path(path) if path else None
+            checks.append({"nombre": "archivo .py existe", "ok": bool(p and p.is_file() and p.stat().st_size > 0),
+                           "detalle": path})
+            from core import eris_fabrica as fab
+            fn = None
+            if spec.get("functions"):
+                fn = spec["functions"][0].get("name")
+            if fn:
+                out = fab.usar_libreria(nombre, fn, (spec.get("prueba_params") or {}).get(fn, {}))
+                ok = not (isinstance(out, dict) and out.get("error"))
+                checks.append({"nombre": f"función {fn} ejecuta", "ok": ok,
+                               "detalle": json.dumps(out, ensure_ascii=False, default=str)[:200]})
+        elif tipo == "skill":
+            p = Path(path)
+            sk = (p / "SKILL.md") if p.is_dir() else p
+            checks.append({"nombre": "SKILL.md existe", "ok": bool(sk.is_file() and sk.stat().st_size > 0),
+                           "detalle": str(sk)})
+        elif tipo in ("server", "servidor"):
+            from core import server_forge as sf
+            h = sf.health(nombre)
+            checks.append({"nombre": "GET /health 200", "ok": bool(h.get("ok")),
+                           "detalle": json.dumps(h, ensure_ascii=False)[:200]})
+        elif tipo in ("dependencia", "paquete"):
+            import importlib
+            mod = nombre.split("[")[0].strip()
+            try:
+                importlib.import_module(mod)
+                ok, det = True, f"import {mod} OK"
+            except Exception as e:
+                ok, det = False, str(e)[:200]
+            checks.append({"nombre": f"import {mod}", "ok": ok, "detalle": det})
+        elif tipo in ("reparacion", "reparar"):
+            import py_compile
+            try:
+                py_compile.compile(str(path), doraise=True)
+                ok, det = True, "py_compile OK"
+            except Exception as e:
+                ok, det = False, str(e)[:200]
+            checks.append({"nombre": "py_compile", "ok": ok, "detalle": det})
+        elif tipo == "script":
+            p = Path(path) if path else None
+            checks.append({"nombre": "archivo del script", "ok": bool(p and p.exists() and p.stat().st_size > 0),
+                           "detalle": path})
+        else:
+            p = Path(path) if path else None
+            checks.append({"nombre": "artefacto con ruta", "ok": bool(p and p.exists()),
+                           "detalle": path or "(sin ruta)"})
+    except Exception as e:
+        checks.append({"nombre": "chequeo", "ok": False, "detalle": f"{type(e).__name__}: {e}"})
+
+    if uso and uso.get("resultado_crudo"):
+        checks.append({"nombre": "uso previo devolvió salida", "ok": True,
+                       "detalle": str(uso["resultado_crudo"])[:200]})
+    return checks
+
+
+def verificar(barrier_id: str) -> dict:
+    """Verifica con EVIDENCIA dura (§5.6). Sin evidencia no hay 'resuelta'."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    cap = b.get("capacidad")
+    if not cap:
+        return {"ok": False, "error": "No hay capacidad que verificar: primero `crear`."}
+    spec = dict(b.get("creacion_spec") or {})
+    checks = _evidencia_de(cap, spec, b.get("uso"))
+    evidencia_ok = bool(checks) and all(c["ok"] for c in checks)
+    b["evidencia"] = {"checks": checks, "ok": evidencia_ok, "ts": _now()}
+
+    if evidencia_ok:
+        b["estado"] = "verificada"
+        b.pop("paso_pendiente", None)
+        _log(b, "verificada", "; ".join(c["nombre"] for c in checks))
+        _save(state)
+        _traza("verificar", barrier_id, f"evidencia ok: {[c['nombre'] for c in checks]}", True)
+        return {"ok": True, "barrera_id": barrier_id, "evidencia": b["evidencia"],
+                "estado": "verificada"}
+
+    # No apareció la evidencia (§5.6): ¿Eris había afirmado éxito?
+    afirmo = bool(b.get("uso") and b.get("uso", {}).get("ok"))
+    b["estado"] = "diagnosticada"
+    enfoque = str((b.get("plan") or {}).get("enfoque") or "")
+    if enfoque:
+        b.setdefault("rechazados", []).append(
+            {"ts": _now(), "motivo": "sin evidencia", "enfoque": enfoque})
+    if afirmo:
+        b["falso_positivo"] = {"ts": _now(), "motivo": "afirmó éxito sin evidencia dura",
+                               "checks": checks}
+        _log(b, "falso_positivo", "afirmó éxito y la evidencia no apareció")
+    b.pop("paso_pendiente", None)
+    _save(state)
+    _traza("verificar", barrier_id, f"sin evidencia (falso_positivo={afirmo})", False)
+
+    # Frenos: si ya no quedan enfoques, escalar.
+    if len(b.get("enfoques_intentados", [])) >= _MAX_ENFOQUES:
+        esc = escalar(barrier_id, "se agotaron los enfoques sin evidencia")
+        return {"ok": False, "barrera_id": barrier_id, "evidencia": b["evidencia"],
+                "falso_positivo": afirmo, "error": "sin evidencia; escalado", "escalada": esc}
+    return {"ok": False, "barrera_id": barrier_id, "evidencia": b["evidencia"],
+            "falso_positivo": afirmo,
+            "error": "La evidencia no apareció; vuelve al diagnóstico con otro enfoque."}
+
+
+def escalar(barrier_id: str, motivo: str = "") -> dict:
+    """Escalada al dueño (§5.7): informe legible + nota Obsidian, y frena."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    cap = b.get("capacidad") or {}
+    ev = b.get("evidencia") or {}
+    informe = {
+        "meta": b.get("goal_ref") or b.get("titulo"),
+        "que_faltaba": (b.get("diagnostico") or {}).get("tipo") or b.get("descripcion"),
+        "creado_o_reutilizado": (f"{cap.get('capacidad')} ({cap.get('tipo')}, "
+                                 f"{cap.get('creada_vs_reutilizada')})" if cap else "nada"),
+        "enfoques_intentados": b.get("enfoques_intentados", []),
+        "motivo": motivo or "sin especificar",
+        "evidencia": ev.get("checks") if ev else [],
+        "falso_positivo": bool(b.get("falso_positivo")),
+        "ts": _now(),
+    }
+    b["escalada"] = informe
+    b["estado"] = "escalada"
+    b.pop("paso_pendiente", None)
+
+    lineas = [
+        f"# 🧗 Barrera escalada — {b.get('titulo') or barrier_id}",
+        f"**{informe['ts']}** · id `{barrier_id}`",
+        "",
+        f"- **Meta:** {informe['meta']}",
+        f"- **Qué faltaba:** {informe['que_faltaba']}",
+        f"- **Creó o reutilizó:** {informe['creado_o_reutilizado']}",
+        f"- **Enfoques intentados:** {', '.join(informe['enfoques_intentados']) or '(ninguno)'}",
+        f"- **Motivo de la escalada:** {informe['motivo']}",
+        f"- **Falso positivo:** {'sí' if informe['falso_positivo'] else 'no'}",
+    ]
+    if informe["evidencia"]:
+        lineas += ["", "## Evidencia",
+                   *[f"- {'✅' if c.get('ok') else '❌'} {c.get('nombre')}: {c.get('detalle')}"
+                     for c in informe["evidencia"]]]
+    lineas += ["", "## Qué necesito del dueño", b.get("escalada_pregunta")
+               or "Decidir si cambio de enfoque, me das acceso/dato faltante, o lo dejamos."]
+    ruta = _nota_obsidian(b, b.get("titulo") or "barrera", "\n".join(lineas))
+    informe["nota"] = ruta
+    b["escalada"] = informe
+
+    _log(b, "escalada", f"{informe['motivo']} → nota {ruta}")
+    _save(state)
+    _traza("escalar", barrier_id, informe["motivo"], False)
+    return {"ok": True, "barrera_id": barrier_id, "escalada": informe}
+
+
+def bucle(barrier_id: str, spec: dict = None) -> dict:
+    """Corre el ciclo con presupuesto (§5.7): diag→acopio→plan→decisión→crear→usar→verificar.
+
+    Frena en `esperando_ok` (pide OK) y en el presupuesto (escala). No da nada
+    por hecho sin evidencia.
+    """
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    if b.get("estado") in ("escalada",):
+        return {"ok": False, "error": "La barrera ya está escalada.", "escalada": b.get("escalada")}
+
+    diario: list[str] = []
+
+    def paso(nombre, fn):
+        r = fn()
+        diario.append(nombre)
+        return r
+
+    if not b.get("diagnostico"):
+        paso("diagnosticar", lambda: diagnosticar(barrier_id))
+    b = _buscar(barrier_id) or b
+    if not b.get("plan"):
+        paso("investigar", lambda: investigar(barrier_id))
+        b = _buscar(barrier_id) or b
+        paso("planificar", lambda: planificar(barrier_id))
+        b = _buscar(barrier_id) or b
+    paso("decidir", lambda: decidir(barrier_id))
+    b = _buscar(barrier_id) or b
+
+    if b.get("estado") == "esperando_ok":
+        return {"ok": True, "esperando_ok": True, "barrera_id": barrier_id,
+                "corte": (b.get("decision") or {}).get("corte"), "pasos": diario,
+                "nota": "Necesita tu OK (aprobar) o cambiar de enfoque (rechazar)."}
+
+    if not b.get("capacidad"):
+        r = crear(barrier_id, spec=spec)
+        diario.append("crear")
+        if not r.get("ok"):
+            return {"ok": False, "barrera_id": barrier_id, "pasos": diario,
+                    "error": r.get("error"), "escalada": r.get("escalada")}
+        b = _buscar(barrier_id) or b
+
+    r = usar(barrier_id)
+    diario.append("usar")
+    b = _buscar(barrier_id) or b
+    v = verificar(barrier_id)
+    diario.append("verificar")
+    b = _buscar(barrier_id) or b
+    return {"ok": bool(v.get("ok")), "barrera_id": barrier_id, "pasos": diario,
+            "usar_ok": r.get("ok"), "evidencia": b.get("evidencia"),
+            "falso_positivo": v.get("falso_positivo", False),
+            "estado": b.get("estado"), "escalada": v.get("escalada")}
 
 
 def aprobar(barrier_id: str) -> dict:
@@ -1140,6 +1455,62 @@ def barrier_tool(parameters: dict = None, player=None) -> str:
             return f"⚠️ No se pudo usar: {err}"
         crudo = r["uso"]["resultado_crudo"]
         return f"▶️ Uso de {r['barrera_id']}:\n{crudo[:600]}"
+
+    if action in ("verificar", "verificacion", "verificá"):
+        r = verificar(params.get("id") or params.get("barrera_id") or "")
+        if r.get("error") and "evidencia" not in r:
+            return f"⚠️ {r.get('error')}"
+        ev = r.get("evidencia") or {}
+        lineas = [f"{'✅' if c.get('ok') else '❌'} {c.get('nombre')}: {c.get('detalle')}"
+                  for c in ev.get("checks", [])]
+        if r.get("ok"):
+            return (f"🔬 Barrera {r['barrera_id']} VERIFICADA con evidencia real "
+                    f"(estado {r.get('estado')}):\n" + "\n".join(lineas))
+        cabeza = (f"🚫 Barrera {r['barrera_id']} SIN evidencia"
+                  + (" — FALSO POSITIVO registrado (afirmó éxito)" if r.get("falso_positivo") else "")
+                  + ":\n")
+        if r.get("escalada"):
+            cola = f"\n⤴️ Escalado al dueño ({r['escalada'].get('motivo')}). Nota: {r['escalada'].get('nota')}"
+        else:
+            cola = "\n↩️ Vuelve al diagnóstico con OTRO enfoque (usá `rechazar`)."
+        return cabeza + "\n".join(lineas) + cola
+
+    if action in ("bucle", "ciclo", "resolver"):
+        spec = params.get("spec") or params.get("especificacion")
+        if isinstance(spec, str):
+            try:
+                spec = json.loads(spec)
+            except Exception:
+                spec = None
+        r = bucle(params.get("id") or params.get("barrera_id") or "", spec=spec)
+        if r.get("esperando_ok"):
+            return (f"⏸️ Bucle {r['barrera_id']} corta en esperando_ok: {r.get('corte')}. "
+                    f"Pasos: {', '.join(r.get('pasos', []))}. Necesita tu OK.")
+        if r.get("error") and not r.get("pasos"):
+            return f"⚠️ {r.get('error')}"
+        pasos = ", ".join(r.get("pasos", []))
+        if r.get("ok"):
+            ev = r.get("evidencia") or {}
+            det = "; ".join(c.get("nombre") for c in ev.get("checks", []))
+            return (f"🏁 Bucle {r['barrera_id']} RESUELTO con evidencia. Pasos: {pasos}. "
+                    f"Evidencia: {det}")
+        if r.get("escalada"):
+            return (f"⤴️ Bucle {r['barrera_id']} escalado: {r['escalada'].get('motivo')}. "
+                    f"Pasos: {pasos}. Nota: {r['escalada'].get('nota')}")
+        return (f"↩️ Bucle {r['barrera_id']} sin evidencia ({r.get('error')}). "
+                f"Pasos: {pasos}. Probá otro enfoque (`rechazar`).")
+
+    if action in ("escalar", "escalada"):
+        r = escalar(params.get("id") or params.get("barrera_id") or "",
+                    params.get("motivo") or "")
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        e = r["escalada"]
+        return (f"⤴️ Barrera {r['barrera_id']} escalada al dueño.\n"
+                f"• Motivo: {e['motivo']}\n"
+                f"• Creó/reutilizó: {e['creado_o_reutilizado']}\n"
+                f"• Enfoques: {', '.join(e['enfoques_intentados']) or '(ninguno)'}\n"
+                f"• Nota para el dueño: {e['nota']}")
 
     if action in ("aprobar", "ok"):
         r = aprobar(params.get("id") or params.get("barrera_id") or "")
