@@ -9,7 +9,11 @@ Downloads borrado selectivo (ShowOS.iso 4.5 GB, MonoFramework .pkg de macOS 353 
 y el resto ordenado (media → ~/Wallpapers/descargas/, estudios → ~/Documents/Parcial-BD-2/,
 proyecto → ~/Projects/mi_primer_api/); restos de Hermes (`~/.hermes` 46 MB, `~/install.sh`,
 `~/Work/`) movidos a la papelera (recuperables).
-**Conservado MiniOS10 Pro.iso** porque está conectado como DVD de la VM `windowsOS`.
+**Conservado MiniOS10 Pro.iso** porque está conectado como DVD de la VM `windowsOS`
+(evidencia: los 4 arranques de VBox.log* fueron desde CD-ROM, el .vdi de 18.8 GB contiene
+NTFS + BOOTMGR o sea Windows instalado, y el .rar original ya se borró con la papelera →
+el ISO es la única copia; es un repack de terceros no re-descargable con garantía).
+Decisión: conservar; liberar los 5.9 GB solo si algún día se confirma que la VM arranca de su disco.
 No se tocó Steam (63 GB), VirtualBox VMs (18 GB) ni `.npm/_npx` (caché de REA de Eris).
 Verificado: `rea` v6.5.0 OK, test_all 177/0/3.
 
