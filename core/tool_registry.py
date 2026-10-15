@@ -461,6 +461,7 @@ _TOOLS = {
     "procedimientos":          ("core.procedimientos", "procedimientos"),
     "auto_fabrica":            ("core.auto_fabrica", "auto_fabrica"),
     "barreras":                ("core.barrier_engine", "barrier_tool"),
+    "server_forge":            ("core.server_forge", "server_forge_tool"),
     "mcp_bridge":              ("core.mcp_bridge", "mcp_bridge"),
     "pro_contexto":            ("core.proactive_context", "pro_contexto"),
     "prompt_ab":               ("core.prompt_ab_testing", "prompt_ab"),

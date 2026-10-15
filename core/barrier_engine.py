@@ -624,6 +624,347 @@ def evaluar_zona_texto(texto: str) -> dict:
         return {"zona": "desconocida", "error": str(e)[:200]}
 
 
+# ── F5: creación y uso (§5.4/§5.5) ──────────────────────────────────────────
+
+def _inventario(nombre: str) -> dict | None:
+    """Busca una capacidad por nombre en el inventario real (fabrica + servers)."""
+    if not nombre:
+        return None
+    try:
+        from core import eris_fabrica as fab
+        det = fab.detalle(nombre)
+        if isinstance(det, dict) and det.get("name"):
+            return {"origen": "fabrica", "item": det}
+        for it in fab.listar().get("creadas", []):
+            if it.get("name") == nombre:
+                return {"origen": "fabrica", "item": it}
+    except Exception:
+        pass
+    try:
+        from core import server_forge as sf
+        for s in sf.buscar(nombre):
+            if s.get("name") == nombre:
+                return {"origen": "server_forge", "item": s}
+    except Exception:
+        pass
+    return None
+
+
+def _cap(capacidad: str, tipo: str, path: str, como: str, prueba: str,
+         creada: bool = True) -> dict:
+    return {"ok": True, "capacidad": capacidad, "tipo": tipo, "path": path,
+            "como_se_creo": como,
+            "creada_vs_reutilizada": "creada" if creada else "reutilizada",
+            "prueba": prueba}
+
+
+def _crear_libreria(spec: dict) -> dict:
+    from core import eris_fabrica as fab
+    nombre = spec.get("name") or spec.get("nombre") or ""
+    res = fab.crear_libreria(nombre,
+                             purpose=spec.get("purpose") or spec.get("description") or "",
+                             functions=spec.get("functions") or spec.get("funciones") or [])
+    if not isinstance(res, dict) or res.get("error"):
+        return {"ok": False, "error": str((res or {}).get("error", "la fábrica no devolvió resultado"))}
+    lib = res["name"]
+    fns = res.get("functions") or []
+    # La Fábrica SOLO compila; el motor la PRUEBA ejecutando (diseño §5.4).
+    pruebas = []
+    for fn in fns[:4]:
+        params = (spec.get("prueba_params") or {}).get(fn, {})
+        if not isinstance(params, dict):
+            params = {}
+        try:
+            out = fab.usar_libreria(lib, fn, params)
+            if isinstance(out, dict) and out.get("error"):
+                pruebas.append(f"{fn}=error({str(out['error'])[:60]})")
+            else:
+                pruebas.append(f"{fn}=ok")
+        except Exception as e:
+            pruebas.append(f"{fn}=exc({type(e).__name__})")
+    if not any(p.endswith("=ok") for p in pruebas):
+        # Distinguir "falta dato de prueba" de "la función está rota".
+        if pruebas and all("argument" in p or "missing" in p for p in pruebas):
+            return {"ok": False, "error": ("Hacen falta `prueba_params` para probar la librería "
+                                           f"(argumentos requeridos): {pruebas}")}
+        return {"ok": False, "error": f"La librería {nombre} no pasó la prueba de sus funciones: {pruebas}"}
+    return _cap(lib, "libreria", str(fab._LIB_BASE / (lib + ".py")),
+                "fabrica.crear_libreria", "funciones probadas: " + ", ".join(pruebas))
+
+
+def _crear_tool(spec: dict) -> dict:
+    from core import eris_fabrica as fab
+    r = fab.crear_tool(spec.get("name") or spec.get("nombre") or "",
+                       spec.get("description") or spec.get("descripcion") or "",
+                       funciones=spec.get("funciones") or spec.get("functions") or [])
+    if r.get("error"):
+        return {"ok": False, "error": r["error"]}
+    return _cap(r.get("name"), "tool", r.get("file") or "", "fabrica.crear_tool",
+                "smoke: " + str(r.get("prueba_smoke", ""))[:80])
+
+
+def _crear_skill(spec: dict) -> dict:
+    from core import eris_fabrica as fab
+    r = fab.crear_skill(spec.get("name") or spec.get("nombre") or "",
+                        spec.get("description") or spec.get("descripcion") or "",
+                        pasos=spec.get("pasos") or "")
+    if r.get("error"):
+        return {"ok": False, "error": r["error"]}
+    # La skill se VALIDA aparte (crear_skill no valida nada, §5.4).
+    prueba = "sin_validar"
+    try:
+        from core.tool_registry import get_tool
+        msg = str(get_tool("skill_manage")({"action": "validate", "name": r.get("name")}))
+        if "APROBADA" in msg:
+            prueba = "skill_manage validate: APROBADA"
+        else:
+            return {"ok": False, "error": f"La skill no pasó la validación: {msg[:200]}"}
+    except Exception as e:
+        prueba = f"validate_no_disponible({type(e).__name__})"
+    return _cap(r.get("name"), "skill", r.get("path") or "", "fabrica.crear_skill",
+                prueba)
+
+
+def _crear_server(spec: dict) -> dict:
+    from core import server_forge as sf
+    r = sf.crear(spec.get("name") or spec.get("nombre") or "",
+                 rutas=spec.get("rutas") or spec.get("routes") or [],
+                 host=spec.get("host") or "127.0.0.1",
+                 port=spec.get("port") or 0,
+                 descripcion=spec.get("description") or spec.get("descripcion") or "")
+    if r.get("error"):
+        return {"ok": False, "error": r["error"]}
+    lv = sf.levantar(r["name"])
+    if lv.get("health") != "ok":
+        return {"ok": False, "error": f"El servidor {r['name']} no dio /health 200: {lv.get('health')}"}
+    return _cap(r["name"], "server", r.get("path") or "", "server_forge.crear+levantar",
+                f"/health 200 en {lv.get('health_url')}")
+
+
+def _crear_dependencia(spec: dict) -> dict:
+    pkg = spec.get("package") or spec.get("paquete") or spec.get("name")
+    if not pkg:
+        return {"ok": False, "error": "Falta 'package' en la spec."}
+    try:
+        from core.tool_registry import get_tool
+        out = str(get_tool("autonomy")({"action": "install", "package": pkg,
+                                        "reason": spec.get("razon") or "barrera"}))
+    except Exception as e:
+        return {"ok": False, "error": f"autonomy no disponible: {e}"}
+    return _cap(pkg, "dependencia", "", "autonomy.auto_install_package (venv)",
+                out[:200])
+
+
+def _crear_conocimiento(spec: dict) -> dict:
+    tema = spec.get("tema") or spec.get("name") or ""
+    if not tema:
+        return {"ok": False, "error": "Falta 'tema' para estudiar."}
+    try:
+        from core import learning_engine as le
+        out = le.study_cycle(tema)
+    except Exception as e:
+        return {"ok": False, "error": f"learning_engine no disponible: {e}"}
+    return _cap(tema, "conocimiento", "", "learning_engine.study_cycle", str(out)[:200])
+
+
+def _reparar(spec: dict) -> dict:
+    """Reparación de código propio: cambio mínimo con backup+validación+rollback."""
+    path = spec.get("path") or spec.get("file") or ""
+    code = spec.get("code") or spec.get("contenido")
+    if not path or code is None:
+        return {"ok": False, "error": "Para reparar hacen falta 'path' y el 'code' nuevo."}
+    try:
+        from core.mission_agent import edit as _mission_edit
+        out = str(_mission_edit(path, code, confirm=bool(spec.get("confirm"))))
+    except Exception as e:
+        return {"ok": False, "error": f"mission.edit no disponible: {e}"}
+    ok = "Aplicado" in out
+    return {"ok": ok, "capacidad": path.split("/")[-1], "tipo": "reparacion",
+            "path": path, "como_se_creo": "mission.edit (backup+validación)",
+            "creada_vs_reutilizada": "reparada", "prueba": str(out)[:200]} if ok \
+        else {"ok": False, "error": str(out)[:240]}
+
+
+def _crear_script(spec: dict) -> dict:
+    """Escribe un script en su workspace y lo prueba (lógica: code_sandbox)."""
+    path = spec.get("path") or spec.get("file") or ""
+    code = spec.get("code") or spec.get("contenido") or ""
+    if not path or not code:
+        return {"ok": False, "error": "Para un script hacen falta 'path' y 'code'."}
+    try:
+        p = Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(code, encoding="utf-8")
+    except Exception as e:
+        return {"ok": False, "error": f"No pude escribir el script: {e}"}
+    # Prueba en code_sandbox (lógica pura) antes de darlo por creado.
+    prueba = "sin_probar"
+    try:
+        from core.code_sandbox import execute_python
+        out = str(execute_python(code, timeout=int(spec.get("timeout") or 15)))
+        prueba = out[:200]
+    except Exception as e:
+        prueba = f"code_sandbox no disponible: {e}"
+    return _cap(spec.get("name") or path.split("/")[-1], "script", path,
+                "script en workspace + code_sandbox", prueba)
+
+
+_ROUTE_CREAR = {
+    "libreria": _crear_libreria, "library": _crear_libreria,
+    "tool": _crear_tool, "herramienta": _crear_tool,
+    "skill": _crear_skill,
+    "server": _crear_server, "servidor": _crear_server, "api": _crear_server,
+    "dependencia": _crear_dependencia, "paquete": _crear_dependencia,
+    "conocimiento": _crear_conocimiento, "knowledge": _crear_conocimiento,
+    "reparacion": _reparar, "reparar": _reparar, "fix": _reparar,
+    "script": _crear_script,
+}
+
+
+def _tipo_de_enfoque(plan: dict) -> str:
+    enf = str(plan.get("enfoque") or "").lower()
+    if "reutilizar" in enf:
+        return "recetario"
+    if "instalar dependencia" in enf:
+        return "dependencia"
+    if "estudiar" in enf or "investigar" in enf:
+        return "conocimiento"
+    if "incorporar" in enf:
+        return "incorporada"
+    if "pedir credencial" in enf or "permiso" in enf:
+        return "acceso"
+    return "capacidad"
+
+
+def crear(barrier_id: str, spec: dict = None) -> dict:
+    """Ruta de creación (§5.4): mira el inventario, crea/repara y prueba.
+
+    `spec` describe qué crear: {tipo, name, ...}. Si no se pasa, se reusa la
+    guardada en la barrera o se infiere del plan. Una capacidad NO se da por
+    creada hasta que su test propio pasa.
+    """
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    if spec:
+        b["creacion_spec"] = dict(spec)
+    spec = dict(b.get("creacion_spec") or {})
+    plan = b.get("plan") or {}
+    tipo = str(spec.get("tipo") or _tipo_de_enfoque(plan)).lower()
+    nombre = spec.get("name") or spec.get("nombre") or ""
+
+    # 1) ¿Ya existe? No reconstruir lo que ya tiene (§7).
+    inv = _inventario(nombre) if nombre else None
+    if inv:
+        item = inv["item"]
+        cap = {"capacidad": nombre, "tipo": tipo,
+               "path": item.get("path") or item.get("file") or "",
+               "como_se_creo": inv["origen"], "creada_vs_reutilizada": "reutilizada",
+               "prueba": "ya existía en el inventario", "ts": _now()}
+        b["capacidad"] = cap
+        b["estado"] = "creada"
+        _log(b, "reutilizada_capacidad", f"{nombre} ({inv['origen']})")
+        _save(state)
+        return {"ok": True, "barrera_id": barrier_id, "capacidad": cap}
+
+    # 2) Crear por la ruta que corresponda.
+    fn = _ROUTE_CREAR.get(tipo)
+    if fn is None:
+        return {"ok": False, "error": f"Tipo de creación '{tipo}' no soportado. "
+                                      f"Especificá spec.tipo ∈ {sorted(_ROUTE_CREAR)}."}
+    try:
+        r = fn(spec)
+    except Exception as e:
+        r = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
+    if not r.get("ok"):
+        b.setdefault("intentos", []).append(
+            {"ts": _now(), "resultado": "creacion_fallida", "tipo": tipo,
+             "error": r.get("error", "")[:300]})
+        _log(b, "creacion_fallida", f"{tipo}: {r.get('error','')[:120]}")
+        _save(state)
+        return {"ok": False, "error": r.get("error"), "barrera_id": barrier_id}
+
+    cap = {"capacidad": r.get("capacidad") or nombre, "tipo": r.get("tipo") or tipo,
+           "path": r.get("path") or "", "como_se_creo": r.get("como_se_creo") or "",
+           "creada_vs_reutilizada": r.get("creada_vs_reutilizada") or "creada",
+           "prueba": r.get("prueba") or "", "ts": _now()}
+    b["capacidad"] = cap
+    b["estado"] = "creada"
+    _log(b, "creada", f"{cap['capacidad']} ({cap['tipo']}): {cap['prueba'][:100]}")
+    _save(state)
+    return {"ok": True, "barrera_id": barrier_id, "capacidad": cap}
+
+
+def usar(barrier_id: str, invocacion: dict = None) -> dict:
+    """Uso (§5.5): invoca la capacidad creada y captura el resultado CRUDO."""
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    cap = b.get("capacidad")
+    if not cap:
+        return {"ok": False, "error": "Primero `crear`: la barrera no tiene capacidad."}
+    spec = dict(b.get("creacion_spec") or {})
+    inv = dict(invocacion or spec.get("uso") or {})
+    tipo = str(cap.get("tipo") or "").lower()
+    nombre = cap.get("capacidad") or ""
+    crudo = ""
+    ok = False
+    try:
+        if tipo in ("tool", "herramienta"):
+            from core.tool_registry import get_tool
+            t = get_tool(nombre)
+            if t is None:
+                return {"ok": False, "error": f"La tool '{nombre}' no está registrada."}
+            crudo = str(t(inv.get("params") or inv or {"action": "status"}))
+            ok = bool(crudo.strip()) and '"error"' not in crudo.lower()[:200]
+        elif tipo in ("libreria", "library"):
+            from core import eris_fabrica as fab
+            fn_name = inv.get("function") or (spec.get("functions") or [{}])[0].get("name") or "probar"
+            r = fab.usar_libreria(nombre, fn_name, inv.get("params") or {})
+            crudo = json.dumps(r, ensure_ascii=False, default=str)
+            ok = not (isinstance(r, dict) and r.get("error"))
+        elif tipo in ("skill",):
+            p = Path(cap.get("path") or "")
+            sk = p / "SKILL.md" if p.is_dir() else p
+            crudo = sk.read_text(encoding="utf-8") if sk.exists() else ""
+            ok = len(crudo) > 0
+        elif tipo in ("server", "servidor"):
+            from core import server_forge as sf
+            h = sf.health(nombre)
+            crudo = json.dumps(h, ensure_ascii=False)
+            ok = bool(h.get("ok"))
+        elif tipo in ("dependencia", "paquete"):
+            import importlib
+            mod = nombre.split("[")[0].strip()
+            importlib.import_module(mod)
+            crudo = f"import {mod} OK"
+            ok = True
+        elif tipo in ("reparacion", "reparar"):
+            from core import mission_agent as ma
+            v = ma.verify(cap.get("path") or "")
+            crudo = json.dumps(v, ensure_ascii=False, default=str)
+            ok = "verde" in crudo.lower() or v.get("ok") is True
+        elif tipo in ("script",):
+            from core import code_sandbox as cs
+            code = Path(cap.get("path")).read_text(encoding="utf-8")
+            crudo = cs.execute_python(code, timeout=int(inv.get("timeout") or 15))
+            ok = "error" not in crudo.lower()[:200]
+        else:
+            return {"ok": False, "error": f"No sé usar la capacidad de tipo '{tipo}'."}
+    except Exception as e:
+        return {"ok": False, "error": f"Fallo al usar '{nombre}': {type(e).__name__}: {str(e)[:200]}"}
+
+    uso = {"ok": ok, "resultado_crudo": str(crudo)[:4000], "ts": _now(),
+           "invocacion": inv}
+    b["uso"] = uso
+    b["estado"] = "usada"
+    _log(b, "usada", f"{nombre}: {'ok' if ok else 'error'}")
+    _save(state)
+    return {"ok": ok, "barrera_id": barrier_id, "uso": uso}
+
+
 def aprobar(barrier_id: str) -> dict:
     """Aprueba una barrera en `esperando_ok` para que retome (diseño §5.3)."""
     state = _load()
@@ -771,6 +1112,34 @@ def barrier_tool(parameters: dict = None, player=None) -> str:
         z = evaluar_zona_texto(texto)
         extra = f" ({z.get('motivo')}: '{z.get('match')}')" if z.get("zona") == "protegida" else ""
         return f"🧭 Zona de «{texto[:80]}»: **{z.get('zona')}**{extra}"
+
+    if action in ("crear", "creacion"):
+        spec = params.get("spec") or params.get("especificacion")
+        if isinstance(spec, str):
+            try:
+                spec = json.loads(spec)
+            except Exception:
+                spec = None
+        r = crear(params.get("id") or params.get("barrera_id") or "", spec=spec)
+        if not r.get("ok"):
+            return f"⚠️ No pude crear: {r.get('error')}"
+        c = r["capacidad"]
+        return (f"🛠️ Capacidad **{c['capacidad']}** ({c['tipo']}) — {c['creada_vs_reutilizada']} "
+                f"vía {c['como_se_creo']}. Prueba: {c['prueba'][:120]}. Ruta: {c['path']}")
+
+    if action in ("usar", "uso"):
+        inv = params.get("invocacion") or params.get("params_uso")
+        if isinstance(inv, str):
+            try:
+                inv = json.loads(inv)
+            except Exception:
+                inv = None
+        r = usar(params.get("id") or params.get("barrera_id") or "", invocacion=inv)
+        if not r.get("ok"):
+            err = r.get("error") or (r.get("uso") or {}).get("resultado_crudo", "")[:200]
+            return f"⚠️ No se pudo usar: {err}"
+        crudo = r["uso"]["resultado_crudo"]
+        return f"▶️ Uso de {r['barrera_id']}:\n{crudo[:600]}"
 
     if action in ("aprobar", "ok"):
         r = aprobar(params.get("id") or params.get("barrera_id") or "")
