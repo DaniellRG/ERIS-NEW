@@ -462,6 +462,7 @@ _TOOLS = {
     "auto_fabrica":            ("core.auto_fabrica", "auto_fabrica"),
     "barreras":                ("core.barrier_engine", "barrier_tool"),
     "crecimiento":             ("core.crecimiento", "crecimiento_tool"),
+    "rea":                     ("core.rea_engine", "rea_tool"),
     "server_forge":            ("core.server_forge", "server_forge_tool"),
     "mcp_bridge":              ("core.mcp_bridge", "mcp_bridge"),
     "pro_contexto":            ("core.proactive_context", "pro_contexto"),

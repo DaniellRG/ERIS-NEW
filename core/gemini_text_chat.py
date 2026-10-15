@@ -102,7 +102,8 @@ _GEMINI_PRIORITY_TOOLS = [
     "opencode_bridge",
     "agente_sub",
     "todo_yo",
-    "evolucion"
+    "evolucion",
+    "rea"
 ]
 
 

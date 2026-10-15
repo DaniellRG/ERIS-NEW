@@ -4652,6 +4652,25 @@ TOOL_DECLARATIONS = [
     },
 
     {
+        "name": "rea",
+        "description": "INGENIERÍA INVERSA con REA (morluto/rea): analiza binarios nativos, apps JS/Electron, .NET/managed, APKs, firmware, webs, capturas de red, WASM, EVM, Go/Rust/SQLite. Cada corrida GUARDA la evidencia completa en un archivo abrible y devuelve el evidence_id + la ruta. Sin motor nativo igual funciona en JS/.NET/paquetes/Go/Rust/SQLite. Acciones: estado (default), doctor (salud del server MCP + nº de tools), capacidades (proveedores disponibles/ausentes: Ghidra/Hopper/IDA…), comandos (los ~207 comandos de REA), evidencia (corridas guardadas), mcp (registrar/conectar el server MCP), y atajos que operan sobre 'path': analizar, js (app JS/Electron), go, rust, sqlite, layout (ELF), web, decompilar, abrir. Para cualquier otro comando: action=comando con 'comando' (+ 'arg'/'opciones').",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "estado (default), doctor, capacidades, comandos, evidencia, mcp, analizar, js, go, rust, sqlite, layout, web, decompilar, abrir, comando"},
+                "path": {"type": "STRING", "description": "Ruta del archivo o carpeta a analizar (para analizar/js/go/layout/…)"},
+                "comando": {"type": "STRING", "description": "Para action=comando: nombre exacto del comando REA (p. ej. 'inspect-go-binary')"},
+                "arg": {"type": "STRING", "description": "Para action=comando: argumento posicional (normalmente la ruta)"},
+                "opciones": {"type": "STRING", "description": "Opciones extra del comando, separadas por espacios (p. ej. '--provider ida')"},
+                "timeout": {"type": "STRING", "description": "Segundos máximos (default 300)"},
+                "sub": {"type": "STRING", "description": "Para action=mcp: estado (default), config, conectar"},
+                "archivo": {"type": "STRING", "description": "Para action=evidencia: nombre del archivo a leer"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
         "name": "server_forge",
         "description": "FORJA DE SERVIDORES: crea y levanta un servidor/API HTTP local propio (solo stdlib), con /health como evidencia dura. Escucha en 127.0.0.1 por defecto (otra interfaz es zona protegida y pide OK). Ciclo de vida: crear (name, rutas, host, port, descripcion), levantar (name), estado (name opcional), parar, borrar, health. Rutas = lista JSON de {path, metodo, body, content_type}.",
         "parameters": {
@@ -7990,6 +8009,8 @@ _LIVE_NAMES = {
     "fabrica",
     # Aprendizaje procedural + Auto-fábrica + Motor de barreras + Crecimiento
     "procedimientos", "auto_fabrica", "barreras", "server_forge", "crecimiento",
+    # Ingeniería inversa (REA) absorbida como capacidad propia
+    "rea",
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
