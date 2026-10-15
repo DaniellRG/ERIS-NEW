@@ -57,9 +57,11 @@ def file_manager(parameters: dict, player=None) -> str:
         return _open_file(_resolve_path(source) if source else source)
     elif action in ("open_folder", "abrir_carpeta"):
         return _open_folder(_resolve_path(source) if source else source)
+    elif action in ("mapa", "map", "casa"):
+        return _mapa_casa(parameters)
     else:
         return (
-            "Acciones: move, copy, rename, delete, organize, list, search, info, create_dir, open, open_folder\n"
+            "Acciones: move, copy, rename, delete, organize, list, search, info, create_dir, open, open_folder, mapa\n"
             "Ejemplo: 'abre documento.pdf' o 'abre la carpeta D:\\Fotos'"
         )
 
@@ -266,6 +268,147 @@ def _create_dir(path):
         return f"Carpeta creada: {path}"
     except Exception as e:
         return f"Error al crear carpeta: {e}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MAPA DE LA CASA — dónde vive cada cosa en esta PC
+# ─────────────────────────────────────────────────────────────────────────────
+_PROJECT_MARKERS = ("package.json", "pyproject.toml", "requirements.txt", "setup.py",
+                    "Cargo.toml", "go.mod", "pom.xml", "build.gradle", "build.gradle.kts",
+                    "composer.json", "Gemfile", "Makefile", "CMakeLists.txt", "CMakeCache.txt",
+                    "*.sln", "*.csproj", "*.fsproj", "*.uproject", "*.xcodeproj", "*.ipynb")
+_SKIP_DIRS = {".venv", "venv", "node_modules", "__pycache__", ".git", ".cache", ".local",
+              "site-packages", ".npm", ".nuget", ".dotnet", ".rustup", ".cargo", "snap",
+              "target", "bin", "obj", "dist", "build", ".mozilla", ".config"}
+
+
+def _looks_like_project(d: Path) -> str:
+    import fnmatch
+    try:
+        names = [e.name for e in os.scandir(d)]
+    except (OSError, PermissionError):
+        return ""
+    for marker in _PROJECT_MARKERS:
+        if marker.startswith("*"):
+            if any(fnmatch.fnmatch(n, marker) for n in names):
+                return marker.lstrip("*")
+        elif marker in names:
+            return marker
+    if ".git" in names:
+        return ".git"
+    return ""
+
+
+def _detect_projects(root: Path, max_depth: int = 3, limit: int = 60):
+    """Encuentra carpetas de proyecto (git/npm/pip/cargo/dotnet/…) hasta max_depth."""
+    found = []
+    root = root.resolve()
+    for r, dirs, _files in os.walk(root):
+        rel_depth = len(Path(r).relative_to(root).parts)
+        if rel_depth >= max_depth:
+            dirs[:] = []
+            continue
+        dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
+        marker = _looks_like_project(Path(r))
+        if marker and Path(r) != root:
+            found.append({"ruta": str(Path(r)), "marca": marker})
+            if len(found) >= limit:
+                break
+    return found
+
+
+def _mapa_casa(parameters: dict, player=None) -> str:
+    """Escanea la máquina y devuelve (y guarda) el mapa de 'la casa' de Eris."""
+    home = Path.home()
+    proyectos = _detect_projects(home)
+    # carpetas de primer nivel de la casa
+    primeras = []
+    primeras_nombres = []
+    try:
+        for e in sorted(os.scandir(home), key=lambda x: x.name.lower()):
+            if e.name.startswith("."):
+                continue
+            try:
+                if e.is_dir():
+                    n = sum(1 for _ in os.scandir(e.path))
+                    primeras.append(f"📁 {e.name}/ ({n} elementos)")
+                else:
+                    primeras.append(f"📄 {e.name}")
+                primeras_nombres.append(e.name)
+            except (OSError, PermissionError):
+                primeras.append(f"❓ {e.name} (inaccesible)")
+                primeras_nombres.append(e.name)
+    except (OSError, PermissionError):
+        pass
+
+    # apps instaladas (lanzadores .desktop)
+    apps = []
+    for d in ("/usr/share/applications", "/usr/local/share/applications",
+              str(home / ".local/share/applications")):
+        try:
+            for e in os.scandir(d):
+                if e.name.endswith(".desktop") and "wine" not in e.name.lower():
+                    apps.append(e.name[:-8])
+        except (OSError, PermissionError):
+            continue
+    apps = sorted(set(apps))
+
+    # discos montados
+    discos = []
+    try:
+        for line in open("/proc/mounts", encoding="utf-8", errors="replace"):
+            parts = line.split()
+            if len(parts) >= 3 and parts[2] in ("ext4", "btrfs", "xfs", "vfat", "ntfs", "exfat", "f2fs"):
+                discos.append(f"{parts[1]} ({parts[2]})")
+    except Exception:
+        pass
+
+    atajos = {}
+    for k in ("escritorio", "descargas", "documentos", "casa", "proyectos"):
+        atajos[k] = str(_resolve_path(k))
+
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+    md = [f"# 🏠 Mapa de la casa de Eris ({ts})", "",
+          f"Máquina: `{home}` · Proyectos detectados: {len(proyectos)} · Apps: {len(apps)}", ""]
+    md.append("## Atajos de la casa")
+    md += [f"- **{k}** → `{v}`" for k, v in atajos.items()]
+    md.append("")
+    md.append("## Carpetas de primer nivel")
+    md += [f"- {p}" for p in primeras]
+    md.append("")
+    md.append("## Proyectos de código (por marca de build)")
+    md += [f"- `{p['ruta']}` ({p['marca']})" for p in proyectos] or ["- (ninguno detectado)"]
+    md.append("")
+    md.append("## Discos montados")
+    md += [f"- {d}" for d in discos] or ["- (n/a)"]
+    md.append("")
+    md.append(f"## Aplicaciones instaladas ({len(apps)})")
+    md.append(", ".join(apps[:120]) if apps else "(n/a)")
+    md.append("")
+    texto = "\n".join(md)
+
+    destino = Path(__file__).resolve().parent.parent / "data" / "knowledge" / "mapa_de_la_casa.md"
+    try:
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(texto, encoding="utf-8")
+        guardado = f"Mapa guardado en: {destino}"
+    except Exception as e:
+        guardado = f"(no se pudo guardar el mapa: {e})"
+
+    if player:
+        try:
+            player.write_log(f"🏠 Mapa de la casa: {len(proyectos)} proyectos, {len(apps)} apps")
+        except Exception:
+            pass
+
+    lines = [f"🏠 Mapa de la casa ({home})", "", "Atajos:"]
+    lines += [f"  • {k} → {v}" for k, v in atajos.items()]
+    lines.append(f"\nProyectos de código ({len(proyectos)}):")
+    lines += [f"  • {p['ruta']} ({p['marca']})" for p in proyectos[:25]] or ["  • (ninguno)"]
+    lines.append(f"\nCarpetas de primer nivel: {', '.join(primeras_nombres[:30])}")
+    lines.append(f"Apps instaladas: {len(apps)} · Discos: {len(discos)}")
+    lines.append(guardado)
+    return "\n".join(lines)
 
 def _log_action(action, src, dst):
     try:

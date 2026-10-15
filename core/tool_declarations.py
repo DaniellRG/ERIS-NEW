@@ -3212,7 +3212,7 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "file_manager",
-        "description": "Operaciones con archivos: mover, copiar, renombrar, borrar, listar, buscar, crear directorio, abrir archivo/carpeta. Acciones: move, copy, rename, delete, list, search (busca por nombre en 'source'; 'source' puede ser carpeta, archivo o ruta inexistente — con ruta mala busca en la home), info, create_dir, open, open_folder.",
+        "description": "Operaciones con archivos: mover, copiar, renombrar, borrar, listar, buscar, crear directorio, abrir archivo/carpeta. Acciones: move, copy, rename, delete, list, search (busca por nombre en 'source'; 'source' puede ser carpeta, archivo o ruta inexistente — con ruta mala busca en la home), info, create_dir, open, open_folder, mapa (escanea la PC y devuelve el MAPA DE LA CASA: atajos escritorio/descargas/documentos/casa/proyectos, carpetas de primer nivel, proyectos de código detectados (git/npm/pip/cargo/.sln/.csproj), discos montados y apps instaladas; lo guarda en data/knowledge/mapa_de_la_casa.md).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
