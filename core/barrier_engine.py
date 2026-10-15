@@ -1336,6 +1336,195 @@ def rechazar(barrier_id: str, motivo: str = "") -> dict:
     return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
 
 
+# ── F8: cierre + tick (wiring) ──────────────────────────────────────────────
+
+# Dominios válidos de `escalada`: comunicacion, codigo, sistema, archivos,
+# memoria, web, aprender, organizar, social, creatividad, pentest, fabrica.
+_DOMINIO_META = {
+    "capacidad": "fabrica", "codigo": "codigo", "conocimiento": "aprender",
+    "dependencia": "sistema", "acceso": "sistema", "recurso": "sistema",
+    "servidor": "codigo", "server": "codigo", "libreria": "fabrica",
+    "tool": "fabrica", "skill": "aprender", "reparacion": "codigo",
+    "script": "codigo", "archivos": "archivos", "web": "web",
+}
+
+
+def _logro(dominio: str, texto: str, dificultad: int = 1) -> str:
+    try:
+        from core.escalada import registrar_logro
+        return str(registrar_logro(dominio=dominio or "aprender", logro=texto,
+                                   dificultad=dificultad))[:200]
+    except Exception as e:
+        return f"(escalada no disponible: {e})"
+
+
+def _novedad(texto: str) -> str:
+    try:
+        from core.todo_yo import registrar_novedad
+        return str(registrar_novedad(texto))[:200]
+    except Exception:
+        return ""
+
+
+def _dominio_de(b: dict) -> str:
+    for k in (b.get("capacidad") or {}).get("tipo", ""), \
+             (b.get("diagnostico") or {}).get("tipo", ""):
+        if str(k).lower() in _DOMINIO_META:
+            return _DOMINIO_META[str(k).lower()]
+    return "aprender"
+
+
+def _horas_desde(ts: str) -> float:
+    try:
+        t = time.strptime(str(ts)[:19], "%Y-%m-%dT%H:%M:%S")
+        return (time.time() - time.mktime(t)) / 3600.0
+    except Exception:
+        return 0.0
+
+
+def _cerrar_meta(gr: dict, b: dict) -> dict:
+    """Actualiza la meta en el store de su `goal_ref` (§5.8)."""
+    store = str(gr.get("store") or "").lower()
+    gid = gr.get("id")
+    if not gid:
+        return {"error": "goal_ref sin id"}
+    nota = f"Barrera resuelta con evidencia: {b.get('titulo')}"
+    try:
+        if store == "goal_setting":
+            from core.goal_setting import update_goal as gs_update
+            return gs_update(gid, progress=100, status="completed", milestone=nota)
+        from core.goal_tracker import update_goal as gt_update
+        return gt_update(gid, state="completed", progress=100, note=nota)
+    except Exception as e:
+        return {"error": str(e)[:160]}
+
+
+def _nota_cierre_md(b: dict, estado: str, motivo: str) -> str:
+    cap = b.get("capacidad") or {}
+    ev = b.get("evidencia") or {}
+    checks = ev.get("checks") if isinstance(ev, dict) else []
+    icono = "✅" if estado == "resuelta" else "🚪"
+    lineas = [
+        f"# {icono} Barrera {estado} — {b.get('titulo') or b.get('id')}",
+        f"**{_now()}** · id `{b.get('id')}`"
+        + (f" · meta `{(b.get('goal_ref') or {}).get('store')}:{(b.get('goal_ref') or {}).get('id')}`"
+           if (b.get("goal_ref") or {}).get("id") else ""),
+        "",
+        f"- **Qué faltaba:** {(b.get('diagnostico') or {}).get('tipo') or b.get('descripcion')}",
+        f"- **Creó/reutilizó:** "
+        + (f"{cap.get('capacidad')} ({cap.get('tipo')}, {cap.get('creada_vs_reutilizada')})"
+           if cap else "nada"),
+    ]
+    if checks:
+        lineas += ["", "## Evidencia",
+                   *[f"- {'✅' if c.get('ok') else '❌'} {c.get('nombre')}: {c.get('detalle')}"
+                     for c in checks]]
+    if cap.get("path"):
+        lineas += ["", f"**Cómo comprobarlo:** abrí `{cap['path']}`"]
+    if estado == "abandonada":
+        lineas += ["", f"**Motivo:** {motivo or 'la meta dejó de aplicar'}"]
+    return "\n".join(lineas)
+
+
+def cerrar(barrier_id: str, estado: str = "resuelta", motivo: str = "") -> dict:
+    """Cierra una barrera (§5.8): `resuelta` (actualiza meta + logro + novedad + nota)
+    o `abandonada` (documenta el motivo). Sin evidencia no se cierra como resuelta.
+    """
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    estado = str(estado or "resuelta").strip().lower()
+    if estado not in ("resuelta", "abandonada"):
+        return {"ok": False, "error": "estado ∈ {resuelta, abandonada}."}
+
+    logros = {}
+    if estado == "resuelta":
+        ev = b.get("evidencia")
+        if not (isinstance(ev, dict) and ev.get("ok")):
+            return {"ok": False, "error": "Sin evidencia verificada no cierro como resuelta "
+                                          "(corré `verificar` primero)."}
+        gr = b.get("goal_ref") or {}
+        if gr.get("id"):
+            logros["meta"] = _cerrar_meta(gr, b)
+        dom = _dominio_de(b)
+        logros["escalada"] = _logro(dom, f"Resolví: {b.get('titulo')}", 1)
+        cap = b.get("capacidad") or {}
+        logros["todo_yo"] = _novedad(
+            f"Resolví una barrera con evidencia: «{b.get('titulo')}»"
+            + (f" (capacidad: {cap.get('capacidad')})." if cap else "."))
+    else:
+        b["abandono"] = {"ts": _now(), "motivo": motivo or "la meta dejó de aplicar"}
+
+    b["estado"] = estado
+    b["cerrada"] = _now()
+    b["nota_cierre"] = _nota_obsidian(b, b.get("titulo") or "barrera",
+                                      _nota_cierre_md(b, estado, motivo))
+    _log(b, estado, motivo or "cierre")
+    _save(state)
+    _traza("cerrar", barrier_id, f"{estado}: {motivo}", estado == "resuelta")
+    return {"ok": True, "barrera_id": barrier_id, "estado": estado,
+            "logros": logros, "nota": b["nota_cierre"]}
+
+
+def anotar_fallo(titulo: str, descripcion: str = "", goal_ref: dict = None,
+                 origen: str = "mission") -> dict:
+    """HOOK: una falla real (misión/tripulación/meta/tool) declara una barrera."""
+    return abrir(goal_ref=goal_ref or {}, titulo=titulo,
+                 descripcion=descripcion, origen=origen)
+
+
+def run_barrier_tick() -> str:
+    """Tick del motor (§10 F8): detecta señales, avanza lo que puede sin inventar
+    contenido, cierra lo verificado y escala lo vencido. Nunca crea capacidades
+    (eso necesita un `spec`, que lo aporta Eris o el LLM)."""
+    abiertas = cerradas = escaladas = faltan_ok = 0
+    try:
+        state = _load()
+        for s in _recolectar_senales(3):
+            r = _aplicar_senal(state, s)
+            if not r.get("reutilizada"):
+                abiertas += 1
+        _save(state)
+    except Exception:
+        pass
+
+    try:
+        for b in list(_load().get("barreras", [])):
+            est = b.get("estado")
+            bid = b.get("id")
+            if est == "verificada":
+                if cerrar(bid, "resuelta").get("ok"):
+                    cerradas += 1
+                continue
+            if est in ("resuelta", "abandonada", "escalada"):
+                continue
+            if est != "esperando_ok" and _horas_desde(b.get("creada")) > _HORAS_PRESUPUESTO:
+                escalar(bid, f"presupuesto de tiempo ({_HORAS_PRESUPUESTO} h)")
+                escaladas += 1
+                continue
+            try:
+                if not b.get("diagnostico"):
+                    diagnosticar(bid)
+                bb = _buscar(bid) or b
+                if not bb.get("plan"):
+                    investigar(bid)
+                    planificar(bid)
+                bb = _buscar(bid) or bb
+                if not bb.get("decision"):
+                    decidir(bid)
+                bb = _buscar(bid) or bb
+                if bb.get("estado") == "esperando_ok":
+                    faltan_ok += 1
+            except Exception:
+                pass
+    except Exception as e:
+        return f"tick de barreras falló: {e}"
+
+    return (f"barreras → {abiertas} nuevas, {cerradas} cerradas, "
+            f"{escaladas} escaladas, {faltan_ok} esperando OK")
+
+
 # ── Tool `barreras` ───────────────────────────────────────────────────────────
 
 def _fmt_barrera(b: dict) -> str:
@@ -1524,6 +1713,28 @@ def barrier_tool(parameters: dict = None, player=None) -> str:
                 f"• Creó/reutilizó: {e['creado_o_reutilizado']}\n"
                 f"• Enfoques: {', '.join(e['enfoques_intentados']) or '(ninguno)'}\n"
                 f"• Nota para el dueño: {e['nota']}")
+
+    if action in ("cerrar", "cerrar_barrera"):
+        r = cerrar(params.get("id") or params.get("barrera_id") or "",
+                   params.get("estado") or params.get("status") or "resuelta",
+                   params.get("motivo") or "")
+        if not r.get("ok"):
+            return f"⚠️ No pude cerrar: {r.get('error')}"
+        return (f"🏁 Barrera {r['barrera_id']} cerrada como **{r['estado']}**. "
+                f"Nota: {r['nota']}")
+
+    if action in ("anotar", "hook", "fallo"):
+        r = anotar_fallo(params.get("titulo") or params.get("name") or "",
+                         params.get("descripcion") or params.get("description") or "",
+                         params.get("goal_ref") or {
+                             "store": params.get("store") or "", "id": params.get("goal_id") or ""},
+                         params.get("origen") or "mission")
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        return f"🪨 Barrera {r['barrera']['id']} declarada desde un fallo real."
+
+    if action in ("tick", "correr_tick", "avanzar"):
+        return "🔧 " + run_barrier_tick()
 
     if action in ("aprobar", "ok"):
         r = aprobar(params.get("id") or params.get("barrera_id") or "")

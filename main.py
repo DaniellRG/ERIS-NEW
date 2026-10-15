@@ -900,6 +900,27 @@ class ErisLive:
             print("[ERIS] 🤖 Tripulación activa (check cada 30s)")
         except Exception as _se:
             print(f"[ERIS] Tripulación init: {_se}")
+        # ── Motor de barreras: detecta señales reales (metas estancadas,
+        #    tareas de la tripulación en error), avanza diagnóstico/plan,
+        #    cierra lo VERIFICADO con evidencia y escala lo vencido. Nunca
+        #    crea capacidades solo (eso necesita un `spec` que aporta Eris). ──
+        try:
+            def _barrier_loop():
+                time.sleep(420)  # diferir: no pelear por CPU al arrancar
+                while True:
+                    try:
+                        from core.barrier_engine import run_barrier_tick
+                        _res = run_barrier_tick()
+                        if _res:
+                            print(f"[ERIS] 🧗 {_res}")
+                    except Exception as _be:
+                        print(f"[ERIS] Barreras tick error: {_be}")
+                    time.sleep(1200)  # cada 20 min
+            threading.Thread(target=_barrier_loop, daemon=True,
+                             name="eris-barrier-tick").start()
+            print("[ERIS] 🧗 Motor de barreras activo (tick cada 20 min)")
+        except Exception as _be:
+            print(f"[ERIS] Barreras init: {_be}")
         # ── A/B automático de prompts: el daemon prueba variantes de estilo con
         #    el modelo local según ab_interval_hours y aplica la ganadora como
         #    [ESTILO ACTIVO]. Chequea cada hora si toca ronda. ──
