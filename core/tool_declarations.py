@@ -4610,11 +4610,11 @@ TOOL_DECLARATIONS = [
 
     {
         "name": "barreras",
-        "description": "MOTOR DE BARRERAS: Eris detecta cuándo NO está llegando a una meta y lo declara como una 'barrera' para trabajarla (diagnóstico → acopio → decisión → capacidad → uso → verificación → receta). Acciones: abrir (titulo, descripcion, goal_id, store — declara una barrera a mano cuando te oís decir 'no puedo/no sé/me falta'), scan (dias — busca señales reales: metas estancadas y tareas de la tripulación en error; NO actúa, solo declara), listar (estado, limite), estado (resumen por estado), diagnosticar (id — clasifica qué falta: conocimiento/capacidad/dependencia/acceso/recurso), investigar (id — acopio: recetario local y, si no hay, fuentes externas), planificar (id — formula 2-3 planes y elige el mejor), aprobar (id — OK del dueño para retomar una barrera en esperando_ok), rechazar (id, motivo).",
+        "description": "MOTOR DE BARRERAS: Eris detecta cuándo NO está llegando a una meta y lo declara como una 'barrera' para trabajarla (diagnóstico → acopio → decisión → capacidad → uso → verificación → verificación → receta). Tras `planificar`, `decidir` corre el pre-chequeo de zona (si toca zona protegida o el riesgo es alto, corta en esperando_ok y espera OK). Acciones: abrir (titulo, descripcion, goal_id, store — declara una barrera a mano cuando te oís decir 'no puedo/no sé/me falta'), scan (dias — busca señales reales: metas estancadas y tareas de la tripulación en error; NO actúa, solo declara), listar (estado, limite), estado (resumen por estado), diagnosticar (id — clasifica qué falta: conocimiento/capacidad/dependencia/acceso/recurso), investigar (id — acopio: recetario local y, si no hay, fuentes externas), planificar (id — formula 2-3 planes y elige el mejor), aprobar (id — OK del dueño para retomar una barrera en esperando_ok), rechazar (id, motivo).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "abrir, scan, listar, estado (default), diagnosticar, investigar, planificar, aprobar, rechazar"},
+                "action": {"type": "STRING", "description": "abrir, scan, listar, estado (default), diagnosticar, investigar, planificar, decidir, zona, aprobar, rechazar"},
                 "titulo": {"type": "STRING", "description": "Para abrir: título corto de la barrera"},
                 "descripcion": {"type": "STRING", "description": "Para abrir: qué te falta / por qué no llegás"},
                 "goal_id": {"type": "STRING", "description": "Para abrir: id de la meta asociada"},
@@ -4623,8 +4623,9 @@ TOOL_DECLARATIONS = [
                 "estado": {"type": "STRING", "description": "Para listar: filtrar por estado"},
                 "limite": {"type": "STRING", "description": "Para listar/investigar: máximo de resultados (default 5-50)"},
                 "usar_llm": {"type": "STRING", "description": "Para diagnosticar/planificar: '1' para que use el LLM (best-effort)"},
-                "id": {"type": "STRING", "description": "Para diagnosticar/investigar/planificar/aprobar/rechazar: id de la barrera"},
-                "motivo": {"type": "STRING", "description": "Para rechazar: por qué se rechaza"},
+                "id": {"type": "STRING", "description": "Para diagnosticar/investigar/planificar/decidir/aprobar/rechazar: id de la barrera"},
+                "texto": {"type": "STRING", "description": "Para zona: comando o ruta a clasificar (protegida/libre/desconocida)"},
+                "motivo": {"type": "STRING", "description": "Para rechazar: por qué se rechaza (se propone otro enfoque)"},
             },
             "required": ["action"],
         }

@@ -1,0 +1,50 @@
+{
+  "$comment": "F4 (2026-10-14) — Política de ZONAS del motor de barreras (diseño §6). Editá libremente. 'protegida' SIEMPRE pide OK; 'libre' puede sola; lo demás lo decide el riesgo normal. Los patrones se comparan como subtexto (normalizado, sin distinguir mayúsculas). Evaluada en core/permission_gate (todos los caminos) + pre-chequeo del motor.",
+  "protegida": [
+    {
+      "regla": "so",
+      "motivo": "Sistema operativo",
+      "patrones": [
+        "/etc/", "/usr/", "/boot/", "/sys/", "/proc/", "/dev/sd", "/dev/nvme",
+        "/dev/mmcblk", "mkfs", "fdisk", "parted", "dd if=", "dd of=", "grub",
+        "update-grub", "sudo ", "doas ", "su -", "systemctl ", "systemd",
+        "journalctl", "apt install", "apt-get install", "apt remove",
+        "pacman -s", "dnf install", "yum install", "wpa_passphrase"
+      ]
+    },
+    {
+      "regla": "personal",
+      "motivo": "Datos personales",
+      "patrones": [
+        "~/.ssh", "/.ssh/", "id_rsa", "id_ed25519", "known_hosts", "authorized_keys",
+        "~/.gnupg", "/.gnupg/", ".password-store", ".local/share/keyrings", "keyrings",
+        "login data", "cookies", "~/.mozilla", "/.mozilla/", "~/.config/google-chrome",
+        "/.config/chromium", "~/.bash_history", "/.zsh_history"
+      ]
+    },
+    {
+      "regla": "red",
+      "motivo": "Red de casa",
+      "patrones": [
+        "0.0.0.0", "bind 0.0.0.0", "upnp", "iptables", "nft ", "router", "192.168.0.",
+        "192.168.1.", "10.0.0.", "ssid", "public ip", "ipinfo.io", "ifconfig.me",
+        "nmcli dev"
+      ]
+    }
+  ],
+  "libre": [
+    {
+      "regla": "proyecto",
+      "motivo": "Su propio proyecto",
+      "patrones": [
+        "ERIS-NEW/", "libraries/", "actions/custom/", "skills/user_created/",
+        "data/barreras", "data/pentest", "workspace"
+      ]
+    },
+    {
+      "regla": "lab",
+      "motivo": "Laboratorio aislado (scope de pentest)",
+      "patrones": ["192.168.56."]
+    }
+  ]
+}

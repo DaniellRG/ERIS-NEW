@@ -38,6 +38,15 @@ _rules_mtime: float = 0.0
 _tool_risk_cache: dict = {}
 _tool_risk_mtime: float = 0.0
 
+# F4 (2026-10-14): política de ZONAS (diseño §6). `protegida` (SO, datos
+# personales, red de casa) SIEMPRE pide OK; import opcional para no romper si
+# el módulo faltara (en ese caso no hay zona evaluada, fail-safe en el resto).
+try:
+    from core.zone_policy import evaluar_zona as _evaluar_zona, texto_de as _zona_texto
+except Exception:  # pragma: no cover
+    _evaluar_zona = None
+    _zona_texto = None
+
 
 def _reload_tool_risk() -> dict:
     """Lee config/tool_risk.json (cacheado por mtime).
@@ -152,6 +161,27 @@ def _is_safe_command(cmd: str) -> bool:
             return True
     return False
 
+
+def _zona_desc(tool_name: str, params: dict) -> str | None:
+    """Devuelve la descripción si la llamada entra en ZONA PROTEGIDA, si no None.
+
+    F4 (diseño §6): SO, datos personales y red de casa. La evaluación es la
+    misma política (`core/zone_policy.py`) que usa el motor de barreras, así que
+    ambos caminos coinciden por construcción.
+    """
+    if _evaluar_zona is None:
+        return None
+    try:
+        texto = _zona_texto(tool_name, params)
+        z = _evaluar_zona(texto)
+    except Exception:
+        return None
+    if z.get("zona") == "protegida":
+        motivo = z.get("motivo") or "zona protegida"
+        match = z.get("match") or ""
+        return f"Zona PROTEGIDA ({motivo}): '{match}'"
+    return None
+
 # Tools that are always safe (no confirmation needed)
 ALWAYS_SAFE = {"read", "info", "list", "list_history", "session_info", "status", "text", "html", "links", "meta", "screenshot"}
 
@@ -248,6 +278,15 @@ class PermissionGate:
         risk_rule = self._match_tool_risk(tool_name, params)
         if risk_rule == "deny":
             return True, "critical", f"Bloqueada por tool_risk.json: {tool_name}"
+
+        # ── 0.5) ZONA (diseño §6): fail-safe, gana al "safe"/"allow" del dueño. ──
+        #    SO / datos personales / red de casa → SIEMPRE pide OK. Un 'deny'
+        #    explícito ya salió arriba; una excepción se agrega en
+        #    config/zone_policy.json (regla `libre`), no acá.
+        zona = _zona_desc(tool_name, params)
+        if zona:
+            return True, "high", zona
+
         if risk_rule == "ask":
             return True, "medium", f"Confirmación requerida por tool_risk.json: {tool_name}"
         if risk_rule in ("safe", "allow"):
@@ -332,6 +371,23 @@ class PermissionGate:
         Check if a tool call needs permission.
         Returns PermissionResult with allowed=True/False.
         """
+        # Zona protegida (F4, diseño §6): SIEMPRE pide OK, ni la sesión de
+        # confianza la evade. Sin UI → fail-closed.
+        zona = _zona_desc(tool_name, params)
+        if zona:
+            if self._ui_callback:
+                try:
+                    allowed = self._ui_callback(
+                        f"[ZONA PROTEGIDA] {zona}\n\nTool: {tool_name}\n¿Ejecutar?")
+                    self._log_decision(tool_name, params, allowed,
+                                       "zona_protegida_user" if allowed else "zona_protegida_denied")
+                    return PermissionResult(allowed, "user" if allowed else "denied_by_user")
+                except Exception:
+                    self._log_decision(tool_name, params, False, "zona_protegida_callback_error")
+                    return PermissionResult(False, "callback_error")
+            self._log_decision(tool_name, params, False, "zona_protegida_no_ui")
+            return PermissionResult(False, f"deny_no_ui: {zona}")
+
         needs_confirm, risk, desc = self.assess_risk(tool_name, params)
 
         if not needs_confirm:

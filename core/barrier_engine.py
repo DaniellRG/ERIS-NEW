@@ -491,6 +491,12 @@ def planificar(barrier_id: str, usar_llm: bool = False) -> dict:
     if not b:
         return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
     opciones = _opciones_plan(b.get("paquete") or {}, b.get("diagnostico") or {})
+    # Rechazo = "otro enfoque" (§5.3): no volver a proponer lo ya rechazado.
+    vetados = {r.get("enfoque") for r in b.get("rechazados", []) if r.get("enfoque")}
+    if vetados:
+        filtradas = [o for o in opciones if o.get("enfoque") not in vetados]
+        if filtradas:
+            opciones = filtradas
     elegido, motivo = _elegir_plan(opciones, usar_llm)
     plan = {"opciones": opciones, "elegido": (elegido or {}).get("id"),
             "enfoque": (elegido or {}).get("enfoque", ""), "motivo": motivo,
@@ -510,6 +516,112 @@ def _buscar(barrier_id: str) -> dict | None:
         if b.get("id") == barrier_id:
             return b
     return None
+
+
+# ── F4: zonas y decisión (§5.3, §6) ─────────────────────────────────────────
+
+# Acciones que el motor puede hacer SOLA aunque el riesgo nominal sea medio:
+# todo dentro de su propio proyecto / entorno aislado (§5.3 allowlist).
+_ALLOWLIST_MEDIA = (
+    "libraries/", "actions/custom/", "skills/user_created/", "data/",
+    "eris-new", ".venv-linux", "venv", "code_sandbox", "pip install",
+    "pip uninstall", "reutilizar receta", "estudiar", "investigar",
+)
+
+
+def _zona_de_paso(paso: str) -> dict:
+    """Evalúa un paso del plan con LA MISMA política que usa el árbitro (§6)."""
+    try:
+        from core.zone_policy import evaluar_zona
+        return evaluar_zona(paso)
+    except Exception:
+        return {"zona": "desconocida", "motivo": "", "regla": "", "match": ""}
+
+
+def _paso_en_allowlist(paso: str) -> bool:
+    p = (paso or "").lower()
+    return any(a in p for a in _ALLOWLIST_MEDIA)
+
+
+# Enfoques del plan que caen enteros en el margen propio del motor (§5.3):
+# reutilizar/estudiar/crear capacidad/instalar en el venv. Los otros (incorporar
+# de fuente externa, pedir credencial) son riesgo alto → cortan solos.
+_ENFOQUES_PROPIOS = {
+    "reutilizar receta", "estudiar / investigar", "crear la capacidad",
+    "instalar dependencia",
+}
+
+
+def decidir(barrier_id: str) -> dict:
+    """Decide si el plan elegido puede seguir sola o corta en `esperando_ok`.
+
+    Pre-chequeo del motor (§5.3/§6): corre el MISMO módulo de zonas que el
+    árbitro (`core/zone_policy.py`) sobre cada paso del plan elegido, más el
+    riesgo nominal. Si algo cae en zona protegida o el riesgo es alto/crítico —
+    o medio fuera del margen propio — deja la barrera en `esperando_ok`, con el
+    paso pendiente guardado para reanudar sin reiniciar (`aprobar`/`rechazar`).
+    """
+    state = _load()
+    b = _find(state, barrier_id)
+    if not b:
+        return {"ok": False, "error": f"No existe la barrera {barrier_id}."}
+    plan = b.get("plan") or {}
+    opciones = plan.get("opciones") or []
+    elegido = next((o for o in opciones if o.get("id") == plan.get("elegido")), None)
+    if not elegido:
+        return {"ok": False, "error": "Primero `planificar`: todavía no hay plan elegido."}
+
+    pasos = [str(p) for p in (elegido.get("pasos") or [])]
+    riesgo = str(elegido.get("riesgo") or plan.get("riesgo_nominal") or "medio").lower()
+    enfoque = str(elegido.get("enfoque") or plan.get("enfoque") or "").strip().lower()
+
+    protegidos = []
+    for p in pasos:
+        z = _zona_de_paso(p)
+        if z.get("zona") == "protegida":
+            protegidos.append({"paso": p, "motivo": z.get("motivo"), "match": z.get("match")})
+
+    en_allowlist = (enfoque in _ENFOQUES_PROPIOS
+                    or (bool(pasos) and all(_paso_en_allowlist(p) for p in pasos)))
+    motivo_corte = ""
+    if protegidos:
+        motivo_corte = (f"toca zona protegida ({protegidos[0]['motivo']}: "
+                        f"'{protegidos[0]['match']}')")
+    elif riesgo in ("alto", "crítico", "critico", "critical", "high"):
+        motivo_corte = f"riesgo {riesgo} según el plan"
+    elif riesgo == "medio" and not en_allowlist:
+        motivo_corte = ("riesgo medio fuera del margen propio (no todo el plan cae en "
+                        "su workspace/venv/sandbox)")
+
+    decision = {
+        "pasos": pasos,
+        "enfoque": enfoque,
+        "riesgo_nominal": riesgo,
+        "protegidos": protegidos,
+        "en_allowlist": en_allowlist,
+        "corte": motivo_corte or None,
+        "resultado": "esperando_ok" if motivo_corte else "procede",
+        "ts": _now(),
+    }
+    if motivo_corte:
+        b["estado"] = "esperando_ok"
+        b["paso_pendiente"] = {"pasos": pasos, "riesgo": riesgo, "motivo": motivo_corte}
+    else:
+        b["estado"] = "planificada"
+        b.pop("paso_pendiente", None)
+    b["decision"] = decision
+    _log(b, "decidida", decision["resultado"] + (f" — {motivo_corte}" if motivo_corte else ""))
+    _save(state)
+    return {"ok": True, "barrera_id": barrier_id, "decision": decision, "estado": b["estado"]}
+
+
+def evaluar_zona_texto(texto: str) -> dict:
+    """Consulta aislada de la política de zonas (para la tool `barreras action=zona`)."""
+    try:
+        from core.zone_policy import evaluar_zona
+        return evaluar_zona(texto)
+    except Exception as e:
+        return {"zona": "desconocida", "error": str(e)[:200]}
 
 
 def aprobar(barrier_id: str) -> dict:
@@ -541,7 +653,14 @@ def rechazar(barrier_id: str, motivo: str = "") -> dict:
         b.setdefault("intentos", []).append(
             {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "resultado": "rechazada", "motivo": motivo}
         )
+        plan = b.get("plan") or {}
+        if plan.get("enfoque"):
+            b.setdefault("rechazados", []).append(
+                {"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "motivo": motivo,
+                 "opcion": plan.get("elegido"), "enfoque": plan.get("enfoque")}
+            )
         b["estado"] = "diagnosticada"
+        b.pop("paso_pendiente", None)
         _log(b, "rechazada", motivo)
         _save(state)
         return {"ok": True, "barrera": b}
@@ -633,6 +752,25 @@ def barrier_tool(parameters: dict = None, player=None) -> str:
         return (f"🧭 Plan de {r['barrera_id']}: {len(pl['opciones'])} opción/es; "
                 f"elegida **{pl.get('elegido')} · {pl.get('enfoque')}** ({pl.get('motivo')}). "
                 f"Pasos: {'; '.join(pl.get('pasos', []))}")
+
+    if action in ("decidir", "decision"):
+        r = decidir(params.get("id") or params.get("barrera_id") or "")
+        if not r.get("ok"):
+            return f"⚠️ {r.get('error')}"
+        d = r["decision"]
+        if d["resultado"] == "esperando_ok":
+            return (f"⏸️ Barrera {r['barrera_id']} corta en **esperando_ok**: {d['corte']}. "
+                    f"(aprobá con `action=aprobar` o pedí otro enfoque con `action=rechazar`).")
+        return (f"▶️ Barrera {r['barrera_id']} puede seguir (riesgo {d['riesgo_nominal']}, "
+                f"en margen propio={d['en_allowlist']}).")
+
+    if action in ("zona", "zona?"):
+        texto = params.get("texto") or params.get("text") or params.get("consulta") or ""
+        if not texto:
+            return "Pasá `texto=...` para consultar la zona (ej: un comando o una ruta)."
+        z = evaluar_zona_texto(texto)
+        extra = f" ({z.get('motivo')}: '{z.get('match')}')" if z.get("zona") == "protegida" else ""
+        return f"🧭 Zona de «{texto[:80]}»: **{z.get('zona')}**{extra}"
 
     if action in ("aprobar", "ok"):
         r = aprobar(params.get("id") or params.get("barrera_id") or "")
