@@ -921,6 +921,25 @@ class ErisLive:
             print("[ERIS] 🧗 Motor de barreras activo (tick cada 20 min)")
         except Exception as _be:
             print(f"[ERIS] Barreras init: {_be}")
+        # ── Tablas de crecimiento: reconstruye las tablas desde escalada +
+        #    barreras resueltas y las espeja en Obsidian Crecimiento/. 1/día. ──
+        try:
+            def _crecimiento_loop():
+                time.sleep(900)  # diferir: no pelear por CPU al arrancar
+                while True:
+                    try:
+                        from core.crecimiento import actualizar
+                        _res = actualizar(reindexar=True)
+                        print(f"[ERIS] 🌳 Crecimiento: +{_res.get('agregadas')} filas, "
+                              f"tabla {_res.get('maestra')}")
+                    except Exception as _ce:
+                        print(f"[ERIS] Crecimiento tick error: {_ce}")
+                    time.sleep(86400)  # 1 vez por día
+            threading.Thread(target=_crecimiento_loop, daemon=True,
+                             name="eris-crecimiento-tick").start()
+            print("[ERIS] 🌳 Tablas de crecimiento activas (actualización diaria)")
+        except Exception as _ce:
+            print(f"[ERIS] Crecimiento init: {_ce}")
         # ── A/B automático de prompts: el daemon prueba variantes de estilo con
         #    el modelo local según ab_interval_hours y aplica la ganadora como
         #    [ESTILO ACTIVO]. Chequea cada hora si toca ronda. ──

@@ -1453,6 +1453,16 @@ def cerrar(barrier_id: str, estado: str = "resuelta", motivo: str = "") -> dict:
         logros["todo_yo"] = _novedad(
             f"Resolví una barrera con evidencia: «{b.get('titulo')}»"
             + (f" (capacidad: {cap.get('capacidad')})." if cap else "."))
+        # Tabla de crecimiento: la fila más fuerte (evidencia dura + ruta abrible).
+        try:
+            from core import crecimiento as cr
+            checks = ev.get("checks") or []
+            ev_txt = "; ".join(c.get("nombre", "") for c in checks if c.get("ok"))
+            logros["crecimiento"] = cr.registrar(
+                dom, f"[barrera] {b.get('titulo')}", evidencia=ev_txt,
+                ruta=cap.get("path", ""), fuente="barrier", espejar_escalada=False)
+        except Exception as e:
+            logros["crecimiento"] = {"error": str(e)[:140]}
     else:
         b["abandono"] = {"ts": _now(), "motivo": motivo or "la meta dejó de aplicar"}
 

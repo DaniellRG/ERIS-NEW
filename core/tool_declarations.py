@@ -4635,6 +4635,23 @@ TOOL_DECLARATIONS = [
     },
 
     {
+        "name": "crecimiento",
+        "description": "TABLAS DE CRECIMIENTO: muestra, con evidencia verificable, cómo creció Eris dominio por dominio (12 dominios × 8 niveles). Es una VISTA sobre `escalada` (niveles/logros) y el motor de barreras (capacidades con evidencia dura): no duplica la verdad. Cada fila lleva fecha, nivel, logro, EVIDENCIA y la RUTA concreta para que el dueño la abra. Una fila sin evidencia se marca como tal (nunca se disfraza de logro comprobado). Acciones: estado (resumen + ruta de la tabla maestra), maestra (regenera Tabla-Maestra.md y devuelve la ruta), tabla (dominio — regenera Crecimiento/Tabla-<dominio>.md y devuelve la ruta), dominio (dominio — muestra la tabla en texto), registrar (dominio, logro, evidencia, ruta, dificultad — agrega una fila y espeja el nivel en escalada), actualizar (reconstruye las filas desde escalada + barreras resueltas), ruta (dominio opcional — devuelve la ruta a abrir).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "estado (default), maestra, tabla, dominio, registrar, actualizar, ruta"},
+                "dominio": {"type": "STRING", "description": "Dominio de la vida: comunicacion, codigo, sistema, archivos, memoria, web, aprender, organizar, social, creatividad, pentest, fabrica"},
+                "logro": {"type": "STRING", "description": "Para registrar: qué logró/dominó Eris"},
+                "evidencia": {"type": "STRING", "description": "Para registrar: evidencia verificable (test verde, archivo, /health, exit code…)"},
+                "ruta": {"type": "STRING", "description": "Para registrar: ruta concreta del artefacto que el dueño puede abrir"},
+                "dificultad": {"type": "STRING", "description": "Para registrar: 1..8 (empuja el nivel del dominio)"},
+            },
+            "required": ["action"],
+        }
+    },
+
+    {
         "name": "server_forge",
         "description": "FORJA DE SERVIDORES: crea y levanta un servidor/API HTTP local propio (solo stdlib), con /health como evidencia dura. Escucha en 127.0.0.1 por defecto (otra interfaz es zona protegida y pide OK). Ciclo de vida: crear (name, rutas, host, port, descripcion), levantar (name), estado (name opcional), parar, borrar, health. Rutas = lista JSON de {path, metodo, body, content_type}.",
         "parameters": {
@@ -7971,8 +7988,8 @@ _LIVE_NAMES = {
     "diagnostico", "auto_salud",
     # La Fábrica — Eris crea sus propias capacidades
     "fabrica",
-    # Aprendizaje procedural + Auto-fábrica + Motor de barreras
-    "procedimientos", "auto_fabrica", "barreras", "server_forge",
+    # Aprendizaje procedural + Auto-fábrica + Motor de barreras + Crecimiento
+    "procedimientos", "auto_fabrica", "barreras", "server_forge", "crecimiento",
     # Puente MCP externo
     "mcp_bridge",
     # Contexto proactivo, A/B testing, token saver
