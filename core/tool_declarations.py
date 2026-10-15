@@ -1507,7 +1507,7 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "file_editor",
-        "description": "Edición quirúrgica y búsqueda avanzada de archivos. Acciones: read (leer archivo/directorio con 'path', 'offset', 'limit', 'base_path'), write (escribir con 'path'+'content', backup y diff), edit (reemplazo UNICO de 'old_text'→'new_text' con verificación de ambigüedad, falla si no es único), grep (regex 'pattern' en 'base_path' con 'ignore_case' y 'max_files'), glob (recursivo 'glob_pattern' en 'base_path').",
+        "description": "Edición quirúrgica y búsqueda avanzada de archivos. Acciones: read (leer archivo/directorio con 'path', 'offset', 'limit', 'base_path'), write (escribir con 'path'+'content', backup y diff), edit (reemplazo UNICO de 'old_text'→'new_text' con verificación de ambigüedad, falla si no es único), grep (regex 'pattern' en 'base_path' — puede ser un ARCHIVO concreto o una carpeta, con 'ignore_case' y 'max_files'), glob (recursivo 'glob_pattern' en 'base_path', también acepta archivo).",
         "parameters": {
             "type": "OBJECT",
             "properties": {
@@ -3212,7 +3212,7 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "file_manager",
-        "description": "Operaciones con archivos: mover, copiar, renombrar, borrar, listar, buscar, crear directorio, abrir archivo/carpeta. Acciones: move, copy, rename, delete, list, search, info, create_dir, open, open_folder.",
+        "description": "Operaciones con archivos: mover, copiar, renombrar, borrar, listar, buscar, crear directorio, abrir archivo/carpeta. Acciones: move, copy, rename, delete, list, search (busca por nombre en 'source'; 'source' puede ser carpeta, archivo o ruta inexistente — con ruta mala busca en la home), info, create_dir, open, open_folder.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
