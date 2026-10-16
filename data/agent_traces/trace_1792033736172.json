@@ -1,0 +1,11 @@
+{
+  "ts": 1792033736.1729326,
+  "agent": "barrier_engine",
+  "action": "escalar",
+  "request": "bar_dc32cb1067c6",
+  "tools": [
+    "barreras"
+  ],
+  "result": "me falta una credencial que no tengo",
+  "ok": false
+}

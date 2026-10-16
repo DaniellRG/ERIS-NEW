@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el alcance, límites y objetivo terminal de la misión mediante consulta directa con el usuario o entidad solicitante.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila restricciones operativas, dependencias y recursos disponibles utilizando la base de conocimiento del sistema.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identifica vulnerabilidades y cuellos de botella mediante una matriz de análisis de riesgos. [RIESGO: Supuestos no verificados pueden comprometer la viabilidad de la misión]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estructura la secuencia de ejecución en fases lógicas e hitos medibles usando un diagrama de flujo táctico.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseña protocolos de contingencia y criterios de aborto para cada punto crítico del trayecto.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Valida la coherencia técnica y temporal del plan mediante simulación o revisión cruzada con los agentes ejecutores. [RIESGO: Desalineación entre módulos puede generar fallas de sincronización en caliente]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792092028.3694677
+}

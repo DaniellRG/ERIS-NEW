@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo operativo y los criterios de éxito con la matriz de requerimientos de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá los recursos disponibles, dependencias y restricciones temporales con el monitor de telemetría.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Mapeá los puntos únicos de falla y vectores de amenaza con la matriz de análisis de riesgo. [RIESGO: Supuestos no verificados pueden invalidar la ruta crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estructurá la secuencia lógica de acciones tácticas con el gestor de dependencias.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná agentes ejecutores y protocolos de contingencia a cada nodo de acción. [RIESGO: Saturación o bloqueo por falta de herramientas redundantes].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Compilá y autorizá la versión final del plan para su ejecución con el núcleo de control de ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792092229.8855104
+}

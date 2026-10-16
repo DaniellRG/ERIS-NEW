@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo estratégico y el alcance del proyecto mediante un acta de constitución (Project Charter).",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Releva restricciones, recursos disponibles y dependencias críticas usando una matriz de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosa el trabajo en fases, hitos y tareas procesables mediante una Estructura de Desglose del Trabajo (EDT/WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Evalúa amenazas operativas y planes de contingencia utilizando una matriz de probabilidad e impacto. [RIESGO: Omitir dependencias externas que bloqueen la ejecución].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Calendariza las actividades y asigna responsables directos con un diagrama de Gantt o tablero Kanban.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Valida y aprueba el plan final con las partes interesadas mediante una sesión formal de revisión. [RIESGO: Falta de alineación temprana que provoque desvíos de alcance].",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791853243.1715443
+}

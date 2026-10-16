@@ -2,4 +2,4 @@
 
 Nivel: 2/8
 
-- Descubrí que Python 3.14 eliminó crypt → usar openssl passwd
+- Receta nueva: No sé calcular la mediana de una lista

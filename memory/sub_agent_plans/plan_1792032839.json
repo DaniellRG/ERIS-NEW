@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central, el alcance y las restricciones temporales con una ficha de misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá los recursos disponibles y las dependencias críticas mediante una matriz de capacidades.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá el objetivo en fases secuenciales y tareas atómicas usando una estructura de desglose de trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Mapeá los puntos únicos de falla y diseñá contingencias operativas [RIESGO: sesgo de optimismo en la estimación de tiempos].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecé métricas de avance y criterios de éxito con indicadores clave de rendimiento (KPIs).",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Asigná responsables directos y canales de reporte mediante una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validá y aprobá la línea base del plan con los tomadores de decisión antes del despliegue.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792032839.7609074
+}

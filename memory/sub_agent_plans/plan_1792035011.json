@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo principal, alcance y restricciones mediante una plantilla SMART.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá el estado actual de los recursos y dependencias operativas consultando los registros del sistema.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá posibles fallas y cuellos de botella con una matriz de impacto y probabilidad [RIESGO: supuestos no validados pueden quebrar la viabilidad de la ruta crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá las metas en fases, hitos y tareas atómicas usando una Estructura de Desglose del Trabajo (EDT/WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná plazos, responsables y herramientas de ejecución a cada tarea con un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas de éxito (KPIs) y protocolos de mitigación en un panel de control y seguimiento [RIESGO: ausencia de monitoreo continuo deriva en desviaciones irreversibles].",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792035011.958675
+}

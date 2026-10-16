@@ -482,7 +482,7 @@ def crear_skill(name: str, description: str, pasos: str = "") -> dict:
     )
     (skill_dir / "SKILL.md").write_text(content, encoding="utf-8")
     try:
-        from core.skill_registry import _scan_all_skills
+        from skills.skill_registry import _scan_all_skills
         _scan_all_skills()
     except Exception:
         pass

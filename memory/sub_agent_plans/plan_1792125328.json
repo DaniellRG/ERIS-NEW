@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y los criterios de éxito mediante una sesión de alineación con los stakeholders.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá los requisitos, restricciones operativas y dependencias críticas usando la base de conocimiento de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Evaluá las vulnerabilidades y puntos de fallo potencial elaborando una matriz de mitigación [RIESGO: Requisitos ambiguos pueden invalidar las estimaciones].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá la ejecución en fases secuenciales y entregables accionables mediante una Estructura de Desglose del Trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná los recursos técnicos, herramientas y responsables directos para cada tarea usando una matriz RACI [RIESGO: Sobreasignación o indisponibilidad de recursos críticos].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas de rendimiento (KPIs) y puntos de control periódico mediante un tablero de seguimiento operativo.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792125328.777618
+}

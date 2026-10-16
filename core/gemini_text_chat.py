@@ -327,7 +327,9 @@ def _get_xkairo_config() -> dict:
         resolved = resolve_key(provider="xkiro", purpose="chat-fallback")
         api_key = resolved.get("key", "") if resolved and not resolved.get("need_user_input") else ""
         if resolved and resolved.get("need_user_input"):
-            print(f"[ERIS] KeyManager: {resolved.get('message', '')[:120]}", file=sys.stderr)
+            from core.key_manager import should_announce
+            if should_announce("xkiro"):
+                print(f"[ERIS] KeyManager: {resolved.get('message', '')[:120]}", file=sys.stderr)
     except Exception:
         api_key = ""
     # Fallback: si el key_manager no resolvió, usar la guardada en config

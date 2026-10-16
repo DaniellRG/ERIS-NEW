@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Delimita el objetivo final y los criterios de éxito con la documentación del proyecto o stakeholder.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila los requerimientos técnicos, dependencias y restricciones operativas mediante análisis de contexto.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identifica los puntos críticos de fallo y amenazas operativas con una matriz de riesgos. [RIESGO: Supuestos no validados que distorsionen el alcance]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosa el objetivo en fases secuenciales y entregables accionables con una estructura de descomposición del trabajo (EDT/WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigna recursos, roles de ejecución y herramientas específicas a cada tarea planificada.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establece indicadores de avance (KPIs) y puntos de control temporal mediante un cronograma de hitos.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Valida la viabilidad técnica y temporal del plan consolidado antes de autorizar su ejecución. [RIESGO: Sobreasignación de recursos o tiempos no realistas]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791840909.5019069
+}

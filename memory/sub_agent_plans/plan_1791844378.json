@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y los criterios de éxito mediante una plantilla de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá restricciones, recursos y dependencias críticas consultando la matriz de stakeholders. [RIESGO: Información incompleta o desalineación de expectativas]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá el objetivo general en fases, hitos y tareas con una Estructura de Desglose del Trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigná tiempos, costos y responsables a cada entregable utilizando software de gestión de proyectos. [RIESGO: Subestimación de plazos o sobrecarga operativa]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Analizá contingencias y planes de respuesta mediante una matriz de riesgos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validá y aprobá el cronograma final con los líderes de la misión. [RIESGO: Bloqueos por falta de consenso previo a la ejecución]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791844378.1163409
+}

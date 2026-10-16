@@ -1212,10 +1212,6 @@ try:
 except Exception:
     hermes_page_summarizer = None
 try:
-    from core.hermes_tools import hermes_feed_monitor as hermes_feed_monitor
-except Exception:
-    hermes_feed_monitor = None
-try:
     from core.hermes_tools import hermes_csv_processor as hermes_csv_processor
 except Exception:
     hermes_csv_processor = None
@@ -1224,18 +1220,6 @@ try:
 except Exception:
     hermes_data_analyzer = None
 try:
-    from core.hermes_tools import hermes_writer_articles as hermes_writer_articles
-except Exception:
-    hermes_writer_articles = None
-try:
-    from core.hermes_tools import hermes_email_writer as hermes_email_writer
-except Exception:
-    hermes_email_writer = None
-try:
-    from core.hermes_tools import hermes_test_generator as hermes_test_generator
-except Exception:
-    hermes_test_generator = None
-try:
     from core.hermes_tools import hermes_code_review as hermes_code_review
 except Exception:
     hermes_code_review = None
@@ -1243,14 +1227,6 @@ try:
     from core.hermes_tools import hermes_security_audit as hermes_security_audit
 except Exception:
     hermes_security_audit = None
-try:
-    from core.hermes_tools import hermes_github_sync as hermes_github_sync
-except Exception:
-    hermes_github_sync = None
-try:
-    from core.hermes_tools import hermes_tools as hermes_tools
-except Exception:
-    hermes_tools = None
 
 # ── Hermes: Wireado pase 2 — herramientas existentes restantes ──
 try:

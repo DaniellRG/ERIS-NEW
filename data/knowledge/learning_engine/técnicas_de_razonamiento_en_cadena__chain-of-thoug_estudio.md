@@ -1,8 +1,22 @@
 # técnicas de razonamiento en cadena (chain-of-thought) modernas
 
-Aprendido: 2026-10-03 06:10:11
+Aprendido: 2026-10-15 13:23:20
 
 # técnicas de razonamiento en cadena (chain-of-thought) modernas
 
 Material estudiado (sin síntesis LLM disponible):
-No se encontraron resultados para 'técnicas de razonamiento en cadena (chain-of-thought) modernas'.
+═══ INVESTIGACION: 'TÉCNICAS DE RAZONAMIENTO EN CADENA (CHAIN-OF-THOUGHT) MODERNAS' ═══
+
+1. **Chain of Thought: optimice sus indicaciones de IA**  [5.5/10]
+   [#####     ] https://www.innovatiana.com/es/post/chain-of-thought
+   Score: 7.0  Relevancia: 10  Completitud: 4
+   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
+   Mejor para: informacion general
+
+2. **Técnicas de prompting avanzadas: Chain-of-Thought, Self-Consistency y ...**  [5.5/10]
+   [#####     ] https://www.contextologia.com/articulos/tecnicas-prompting-avanzadas
+   Score: 7.0  Relevancia: 10  Completitud: 4
+   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
+   Mejor para: informacion general
+
+3. **Razonamiento de Cadena de Pensamiento en Modelos d

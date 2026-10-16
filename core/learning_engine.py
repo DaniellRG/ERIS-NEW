@@ -109,12 +109,38 @@ def _llm(prompt: str, system: str = "") -> str:
 
 # ── 1. INVESTIGAR ─────────────────────────────────────────────────────────────
 
+def _formatear_fuentes(items: list, titulo: str) -> str:
+    """Formatea papers/repos de core.research_channels a texto plano."""
+    lineas = []
+    for it in (items or [])[:6]:
+        t = str(it.get("titulo") or "").strip()
+        u = str(it.get("url") or "").strip()
+        if t:
+            lineas.append(f"• {t} — {u}")
+    if not lineas:
+        return ""
+    return titulo + "\n" + "\n".join(lineas)
+
+
 def _investigar(tema: str) -> str:
-    """Radar del tema: papers + repos. Usa tools propias, fallback web_search."""
+    """Radar del tema: papers + repos (core.research_channels) + deep_research, fallback web_search.
+
+    FIX 2026-10-15 (auditoría M2): antes usaba las tools `paper_search`/
+    `repo_discovery`, que NO existen (sus imports caían a `None`) → el paso
+    quedaba mudo. Ahora usa `core.research_channels`, que es su reemplazo real.
+    """
     partes = []
+    try:
+        from core import research_channels as rc
+        fp = _formatear_fuentes(rc.buscar_papers(tema, limite=4), "📄 PAPERS (arXiv):")
+        fr = _formatear_fuentes(rc.descubrir_repos(tema, limite=4), "📦 REPOS (GitHub):")
+        if fp:
+            partes.append(fp[:1400])
+        if fr:
+            partes.append(fr[:1400])
+    except Exception:
+        pass
     for tname, params in (
-        ("paper_search", {"action": "search", "query": tema, "num_results": 4}),
-        ("repo_discovery", {"action": "search", "query": tema, "num_results": 4}),
         ("deep_research", {"action": "research", "topic": tema, "query": tema}),
     ):
         r = _tool(tname, params)

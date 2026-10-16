@@ -1,0 +1,11 @@
+{
+  "ts": 1792034165.5853367,
+  "agent": "barrier_engine",
+  "action": "cerrar",
+  "request": "bar_d420e8789960",
+  "tools": [
+    "barreras"
+  ],
+  "result": "abandonada: el dueño cambió de plan",
+  "ok": false
+}

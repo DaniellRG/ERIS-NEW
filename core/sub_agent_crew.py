@@ -808,7 +808,7 @@ class InvestigadorExterno(SubAgentBase):
             role="Investigadora del Ecosistema AGI",
             goal="Descubrir papers + repos open-source con ideas de agentes que ERIS pueda absorber para auto-evolucionar",
             backstory="Soy los ojos de ERIS en el mundo. Leo arXiv y GitHub como los agentes aprenden del código abierto: encuentro la mejora, la destilo y la propongo para el core de ERIS.",
-            tools=["paper_search", "repo_discovery", "web_search", "webfetch"],
+            tools=["web_search", "webfetch"],
         )
 
     def execute(self, task: SubAgentTask, context: dict = None) -> Any:
@@ -816,18 +816,28 @@ class InvestigadorExterno(SubAgentBase):
         query = str(task.params.get("query") or task.description or "").strip()
         topic = query or str(task.params.get("topic") or "agentic AI self-improvement").strip()
         limit = int(task.params.get("limit", 3))
-        papers = _dispatch_tool("paper_search", {"action": "search", "query": topic, "limit": limit})
-        repos = _dispatch_tool("repo_discovery", {"action": "search", "query": topic, "limit": limit})
+        # FIX 2026-10-15 (MEDIA M2): paper_search/repo_discovery NO existen como
+        # tools → se usan directamente los canales reales de core.research_channels.
+        try:
+            from core import research_channels as rc
+            _papers = rc.buscar_papers(topic, limite=limit)
+            _repos = rc.descubrir_repos(topic, limite=limit)
+        except Exception:
+            _papers, _repos = [], []
+        papers = "\n".join(f"• {p.get('titulo', '')} — {p.get('url', '')}"
+                           for p in _papers if p.get("titulo"))
+        repos = "\n".join(f"• {r.get('titulo', '')} — {r.get('url', '')}"
+                          for r in _repos if r.get("titulo"))
         parts = ["🔭 INVESTIGACIÓN DEL ECOSISTEMA AGENTIC-IA:", f"  Tema: {topic}", ""]
-        if isinstance(papers, str) and papers.strip() and "no disponible" not in papers:
+        if papers.strip():
             parts.append("📄 PAPERS (arXiv/Semantic Scholar):")
             parts.append(papers[:2200])
             parts.append("")
-        if isinstance(repos, str) and repos.strip() and "no disponible" not in repos:
+        if repos.strip():
             parts.append("📦 REPOS OPEN-SOURCE (GitHub):")
             parts.append(repos[:2200])
         else:
-            parts.append("⚠️ GitHub API sin respuesta (rate limit).")
+            parts.append("⚠️ Sin repos (red/rate limit).")
         return "\n".join(parts)
 
 

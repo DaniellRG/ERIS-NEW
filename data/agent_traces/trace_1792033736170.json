@@ -1,0 +1,11 @@
+{
+  "ts": 1792033736.1705146,
+  "agent": "barrier_engine",
+  "action": "escalar",
+  "request": "bar_5b1e1a8c4a6e",
+  "tools": [
+    "barreras"
+  ],
+  "result": "tope diario de 3 capacidades nuevas alcanzado",
+  "ok": false
+}

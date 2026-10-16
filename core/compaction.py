@@ -137,9 +137,11 @@ def _summarize_with_gemini(messages: list[dict], previous_summary: str | None = 
     """Summarize messages using Gemini API directly (cheap model)."""
     try:
         import google.genai as genai
-        from core.config_loader import load_config
 
-        config = load_config()
+        # FIX 2026-10-15 (MEDIA M2): `core.config_loader` no existe; leemos la
+        # config real (config/api_keys.json) directamente.
+        _ak = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
+        config = json.loads(_ak.read_text(encoding="utf-8-sig"))
         api_key = config.get("gemini_api_key", "")
         if not api_key:
             return None

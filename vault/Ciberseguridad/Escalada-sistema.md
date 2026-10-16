@@ -1,7 +1,6 @@
 # Escalada — sistema
 
-Nivel: 4/8
+Nivel: 3/8
 
-- Diagnosticar y reiniciar VM lab (VBoxManage), validar servicios, y portabilizar codigo Windows/Linux
-- Capturar el exploit vsftpd a nivel de red (tshark/dumpcap en vboxnet0, newgrp wireshark) y ver el backdoor completo
-- Explotar el segundo vector (usermap_script CVE-2007-2447) y capturarlo en vivo a nivel de red: dumpcap en vboxnet0 puerto 445, payload en Session Setup AndX NTLMSSP_AUTH smb.uname, LOGON_FAILURE tras ejecutar
+- Auditoria completa de Eris: verifique codigo+estado+runtime y detecte 5 fallas ALTAS (2 agentes muertos deploy/system_monitor, 2 imports rotos session_search/project_manager, 2 tools fantasma screen_vision/calc_test, docs desactualizadas) + 8 MEDIAS (huerfanos, imports rotos, Hermes a medio terminar, opencode_bridge duplicado, features off, eris_workspace abandonado, loop de key, conteo None) + bajas
+- Arregle las 5 fallas ALTAS de la auditoria de Eris (con OK del dueno): (A1) quite los agentes muertos deploy/system_monitor; (A2) cree core/session_search.py; (A3) cree actions/project_manager.py; (A4) guarde el import de mss en screen_vision y borre la tool fantasma calc_test; (A5) actualice AGENTS.md con los numeros reales

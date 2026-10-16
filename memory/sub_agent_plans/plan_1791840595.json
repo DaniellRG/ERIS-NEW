@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Delimitá el objetivo principal, alcance y restricciones temporales mediante el módulo de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá el estado actual de los recursos y dependencias críticas con herramientas de diagnóstico de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá puntos únicos de fallo y cuellos de botella con una matriz de riesgos. [RIESGO: Supuestos no validados pueden invalidar la ruta crítica]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Descomponé la meta general en hitos secuenciales y tareas atómicas con diagramas de dependencias (PERT/GANTT).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná herramientas de ejecución, responsables y tiempos estimados a cada subtarea del flujo.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas de verificación (KPIs) y criterios de éxito para cada fase operativa.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Diseñá protocolos de contingencia y criterios de aborto para cada fase crítica. [RIESGO: Ausencia de buffers operativos ante eventos imprevistos]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791840595.3034708
+}

@@ -1,0 +1,11 @@
+{
+  "ts": 1792034165.5919468,
+  "agent": "barrier_engine",
+  "action": "escalar",
+  "request": "bar_eeabd2125b80",
+  "tools": [
+    "barreras"
+  ],
+  "result": "presupuesto de tiempo (24 h)",
+  "ok": false
+}

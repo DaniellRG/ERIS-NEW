@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo final y el alcance operativo usando el marco SMART.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila los requisitos, restricciones y supuestos del entorno mediante análisis documental o entrevistas. [RIESGO: Información incompleta o desactualizada]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosa el objetivo en fases cronológicas y entregables concretos con una Estructura de Desglose del Trabajo (EDT).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigna recursos, responsables y dependencias críticas entre tareas usando un diagrama de Gantt. [RIESGO: Cuellos de botella por dependencias secuenciales no detectadas]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseña medidas de contingencia para las vulnerabilidades del plan mediante una matriz de riesgos y probabilidad de impacto.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establece indicadores de éxito (KPIs) y puntos de control mediante un tablero de seguimiento tipo Kanban.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791950432.6404505
+}

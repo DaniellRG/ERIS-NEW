@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el alcance, objetivos específicos y restricciones del proyecto mediante relevamiento de requerimientos. [RIESGO: Ambigüedad en el resultado esperado]",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilar la información de contexto y los recursos disponibles mediante herramientas de análisis de datos.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar dependencias críticas y puntos de falla mediante una matriz de riesgos. [RIESGO: Subestimación de bloqueantes externos]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estructurar la secuencia cronológica de hitos y entregables con un diagrama de Gantt o flujo de trabajo.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsables, herramientas operativas y métricas de éxito (KPIs) a cada tarea.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validar y ajustar la viabilidad del plan consolidado mediante una revisión final con el usuario. [RIESGO: Desalineación entre expectativas y capacidad de ejecución]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792034179.191588
+}

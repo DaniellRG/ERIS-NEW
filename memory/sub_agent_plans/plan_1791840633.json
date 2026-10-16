@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el alcance específico y los criterios de éxito con un documento de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá los recursos disponibles, restricciones y dependencias críticas con una matriz de diagnóstico. [RIESGO: Información incompleta o desactualizada]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá los puntos de falla y planes de mitigación con una matriz de riesgos.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estructurá los hitos cronológicos y tareas secuenciales con un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná responsables directos y métricas de control (KPIs) con un tablero de gestión. [RIESGO: Ambigüedad en la asignación de roles]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validá la viabilidad y aprobación del plan con los involucrados clave antes de la ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791840633.2683034
+}

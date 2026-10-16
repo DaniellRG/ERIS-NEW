@@ -49,8 +49,10 @@ def get_api_key() -> str:
         resolved = resolve_key(provider="openrouter", purpose="chat")
         if resolved.get("need_user_input"):
             # No hay key válida → Eris debería preguntar al usuario.
-            msg = resolved.get("message", "")
-            print(f"[ERIS] KeyManager: {msg}", file=sys.stderr)
+            from core.key_manager import should_announce
+            if should_announce("openrouter"):
+                msg = resolved.get("message", "")
+                print(f"[ERIS] KeyManager: {msg}", file=sys.stderr)
         elif resolved.get("key"):
             key = resolved["key"]
             # Si la key fue auto-creada (scoped), registrar en config para reuso

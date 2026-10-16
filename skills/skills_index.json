@@ -452,6 +452,14 @@
     "source": "user_created"
   },
   {
+    "name": "reverse-engineer-anything",
+    "description": "Reverse engineer native, managed, Electron/JavaScript, packaged, firmware, and browser targets with REA. Use shipped-artifact or requested runtime evidence to explain features, compare versions, decompile code, or guide a reconstruction. Skip REA for ordinary source-repository architecture analysis.",
+    "category": "general",
+    "tags": [],
+    "version": "42",
+    "source": "user_created"
+  },
+  {
     "name": "review",
     "description": "Code review como Staff Engineer (metodología gstack). Encontrar bugs que pasan CI, auto-corregir los obvios, marcar gaps de completitud, no tocar el estilo del autor salvo que sea bloqueante. Usar ante CUALQUIER diff/cambio de código propio o ajeno antes de darlo por terminado.",
     "category": "development",

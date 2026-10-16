@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo principal y los límites del alcance con una plantilla de Project Charter.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificá restricciones técnicas, recursos disponibles y dependencias críticas con una matriz de riesgos. ⚠️ [RIESGO: Omisión de dependencias bloqueantes externas]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá el objetivo en entregables menores y tareas atómicas con una Estructura de Desglose del Trabajo (EDT/WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Secuenciá las tareas y calculá los plazos críticos con un diagrama de Gantt. ⚠️ [RIESGO: Subestimación de tiempos por falta de margen de contingencia]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná responsables, roles y herramientas a cada actividad con una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé puntos de control (milestones) y métricas de éxito (KPIs) con un tablero de seguimiento en Jira o Trello.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validá la viabilidad del plan con las partes interesadas mediante una sesión de revisión técnica.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791845513.8455753
+}

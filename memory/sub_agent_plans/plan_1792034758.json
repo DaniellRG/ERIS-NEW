@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central y el alcance del proyecto con un Project Charter.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá requisitos y restricciones clave mediante entrevistas a stakeholders.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá las actividades en tareas atómicas con una Estructura de Desglose del Trabajo (EDT).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Secuenciá tareas y estimá tiempos de entrega con un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Identificá amenazas y planes de contingencia con una matriz de riesgos. [RIESGO: Dependencias críticas no detectadas o plazos irreales]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Asigná recursos y responsables para cada entregable con una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validá la línea base del plan con el equipo directivo. [RIESGO: Desalineación de expectativas que derive en cambios de alcance no controlados]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792034758.6205356
+}

@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo principal y su alcance con un documento de especificación técnica.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila restricciones, recursos y dependencias críticas usando una matriz de viabilidad. [RIESGO: Omitir dependencias externas ocultas]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosa el trabajo en hitos cronológicos y entregables mediante una estructura WBS (Work Breakdown Structure).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigna responsables, plazos y herramientas requeridas para cada tarea en una matriz RACI. [RIESGO: Sobreasignación de recursos clave y cuellos de botella]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Identifica amenazas potenciales y formula planes de contingencia mediante una matriz de riesgos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Valida y aprueba la ruta crítica con los involucrados directos mediante una sesión de kickoff. [RIESGO: Falta de alineación con expectativas de stakeholders]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791950034.1334257
+}

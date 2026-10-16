@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y el alcance del proyecto utilizando una matriz de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá los recursos disponibles, restricciones y dependencias mediante un análisis de contexto. [RIESGO: Asumir disponibilidad de recursos inexistentes]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá el objetivo principal en tareas críticas secuenciales utilizando una estructura de desglose del trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigná plazos, responsables y herramientas a cada tarea mediante un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Identificá los puntos críticos de falla y contingencias mediante una matriz de riesgos. [RIESGO: Subestimar cuellos de botella y dependencias bloqueantes]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé indicadores clave de rendimiento (KPIs) y puntos de control mediante un tablero de monitoreo.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791845013.5996335
+}

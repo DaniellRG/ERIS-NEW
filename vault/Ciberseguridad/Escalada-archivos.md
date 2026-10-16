@@ -2,4 +2,4 @@
 
 Nivel: 2/8
 
-- Crear la libreria eris_metasploitable (archivo .py real en libraries/) con la fabrica y usarla
+- Ve y lee la casa entera: encuentra y lee cualquier ARCHIVO de la PC (no solo carpetas), resuelve atajos reales (escritorio/descargas/documentos/casa/proyectos) y mantiene un mapa vivo de la maquina

@@ -1,7 +1,7 @@
 """Evolución continua de ERIS.
 
 Autoconocimiento vivo (inventario real de herramientas), auditoría de salud
-(447 tools importan y se resuelven), persistencia de TODO en Obsidian, y un
+(las 514 tools importan y se resuelven), persistencia de TODO en Obsidian, y un
 bucle antir-estancamiento: cada tick aplica una micro-mejora real sobre su
 propio código (con backup + validación + rollback) o consolida conocimiento.
 """

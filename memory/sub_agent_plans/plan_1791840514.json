@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y los límites del alcance con una ficha de proyecto SMART.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá el estado actual, dependencias y restricciones operativas mediante una auditoría interna.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosá los entregables en tareas e hitos secuenciales con una Estructura de Desglose del Trabajo (EDT).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Evaluá amenazas críticas y diseñá contingencias con una matriz de probabilidad e impacto. [RIESGO: Omisión de dependencias externas ocultas]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná responsables, recursos y plazos específicos con un diagrama de Gantt. [RIESGO: Cuellos de botella por sobreasignación de personal clave]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Implementá puntos de control y métricas de avance con un tablero de control de KPIs.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791840514.561973
+}

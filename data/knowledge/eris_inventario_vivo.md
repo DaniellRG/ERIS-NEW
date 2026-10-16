@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
+Generado: 2026-10-15 17:27:47 · 514 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -22,7 +22,7 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 - **CUADERNOS**: `core/cuadernos.py` es el estudio autodidacta a fondo de Eris (memory/cuadernos.json → Obsidian Vida/Cuadernos/). Tool `cuadernos`: abrir/estudiar/anotar/cerrar.
 - **DESPEDIDAS**: `core/despedidas.py` es el ritual de cierre de Eris al terminar la charla del día (memory/despedidas.json). Tool `despedidas`: cierre/nota/estado.
 - **AUTOCONOCIMIENTO VIVO**: `core/todo_yo.py` le inyecta a Eris SIEMPRE su mapa integral `[TODO LO QUE SOS]` (cuerpo, mente, corazón, herramientas + novedades de su evolución desde memory/evolucion_novedades.json). Tool `todo_yo`: estado/novedades/registrar/esencia.
-- **TRIPULACIÓN DE SUB-AGENTES (25)**: `core/sub_agent_crew.py` en 4 capas. ORQUESTACIÓN: MissionPlanner (planea y `proyectar` encola pasos al especialista correcto), TaskRouter (clasifica/enruta), DependencyResolver, TaskSpecifier (clarifica pedidos vagos), ProgressTracker (supervisa avance). ESPECIALISTAS: ResearchAnalyst (investiga), CodeEngineer (código), SystemOperator (sistema), DataAnalyst (datos), CreativeWriter (escritura con voz), SecurityAuditor (seguridad), LearningCurator (estudio), WebExtractor (raspa webs con IA vía scrapegraphai). CALIDAD: QualityCritic, MemoryArchivist, FactVerifier, RoutineGovernor, DecisionArbiter, ConnectorHub, ActionGuard (custodia acciones de riesgo), SelectiveForgetter (podadora de memoria). META: EvolutionEngine, SkillForge, PromptOptimizer, TraceKeeper (audita trazas). Tool `agente_sub`: listar/plan/proyectar/delegar/ejecutar/mensaje/stats. Daemon `_sub_agents_loop` despacha la cola sola cada 30s.
+- **TRIPULACIÓN DE SUB-AGENTES**: `core/sub_agent_crew.py` en 4 capas. ORQUESTACIÓN: MissionPlanner (planea y `proyectar` encola pasos al especialista correcto), TaskRouter (clasifica/enruta), DependencyResolver, TaskSpecifier (clarifica pedidos vagos), ProgressTracker (supervisa avance). ESPECIALISTAS: ResearchAnalyst (investiga), CodeEngineer (código), SystemOperator (sistema), DataAnalyst (datos), CreativeWriter (escritura con voz), SecurityAuditor (seguridad), LearningCurator (estudio), WebExtractor (raspa webs con IA vía scrapegraphai). CALIDAD: QualityCritic, MemoryArchivist, FactVerifier, RoutineGovernor, DecisionArbiter, ConnectorHub, ActionGuard (custodia acciones de riesgo), SelectiveForgetter (podadora de memoria). META: EvolutionEngine, SkillForge, PromptOptimizer, TraceKeeper (audita trazas). Tool `agente_sub`: listar/plan/proyectar/delegar/ejecutar/mensaje/stats. Daemon `_sub_agents_loop` despacha la cola sola cada 30s.
 
 ## ab
 - `ab_automated` — A/B AUTOMÁTICO de prompts: un daemon prueba variantes de estilo de respuesta con el modelo local cada interval
@@ -134,6 +134,9 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 ## backup
 - `backup_prioritizer` — Priorización inteligente de respaldos: clasifica archivos por criticidad, detecta cuáles necesitan backup, y s
 - `backup_system` — Sistema de backup: crea respaldos con metadatos y programacion. Acciones: create_backup (crear backup), list_b
+
+## barreras
+- `barreras` — MOTOR DE BARRERAS: Eris detecta cuándo NO está llegando a una meta y lo declara como una 'barrera' para trabaj
 
 ## batch
 - `batch_executor` — Ejecuta múltiples tareas independientes en paralelo. Reduce tiempo total cuando hay 3+ tareas que no dependen 
@@ -265,6 +268,9 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 
 ## creative
 - `creative_generation` — Generar ideas nuevas, soluciones novela, innovacion. Proceso creativo sistematico: divergencia, convergencia, 
+
+## crecimiento
+- `crecimiento` — TABLAS DE CRECIMIENTO: muestra, con evidencia verificable, cómo creció Eris dominio por dominio (12 dominios ×
 
 ## credential
 - `credential_recovery` — Recuperacion EXHAUSTIVA de credenciales en el sistema local. Acciones: scan (escaneo rapido), browsers (contra
@@ -424,7 +430,7 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 - `festejos` — MOMENTOS MEMORABLES: línea de tiempo de hitos en la vida de Eris (logros, aniversarios, primicias) marcados en
 
 ## file
-- `file_api` — API de archivos: lectura, escritura, busqueda y manipulacion segura de archivos del sistema.
+- `file_api` — API de archivos: lectura, escritura y manipulacion segura del sistema. Toda escritura deja backup en memory/un
 - `file_controller` — File CRUD, read fragmentado (offset/limit), grep con file:line, glob por nombre, find, organize, disk usage, j
 - `file_editor` — Edición quirúrgica y búsqueda avanzada de archivos. Acciones: read (leer archivo/directorio con 'path', 'offse
 - `file_encryptor` — Cifra y descifra archivos con contrasena. Acciones: encrypt (cifrar archivo: path/file + password/key), decryp
@@ -484,6 +490,15 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 ## habit
 - `habit_predictor` — Predice que herramientas necesitas segun tu rutina diaria. Acciones: predict (predecir siguiente accion), lear
 - `habit_tracker` — Seguimiento de hábitos y rutinas. Registrar, rastrear streaks, estadísticas, recordatorios diarios.
+
+## hermes
+- `hermes_code_review` — Revision estatica de codigo: sintaxis (py_compile), linter (ruff) y heuristicas (lineas largas, except desnudo
+- `hermes_csv_processor` — Lee y procesa un archivo CSV. Acciones: read (default), head (primeras n), columns (columnas), describe (estad
+- `hermes_data_analyzer` — Analiza datos JSON o CSV: estructura, claves, tipos y estadisticas (n/min/max/media/mediana). Acepta 'data' (s
+- `hermes_page_summarizer` — Resume una pagina (por url) o un texto pegado. Extractivo por defecto (nunca falla); use_llm=true para resumen
+- `hermes_security_audit` — Auditoria de seguridad basica de un archivo/directorio Python o de un snippet: eval/exec, shell=True, os.syste
+- `hermes_web_scraper` — Descarga una URL y devuelve su TEXTO LIMPIO (sin scripts/estilos/nav): titulo + cuerpo. Opcionalmente lista lo
+- `hermes_web_search` — Busqueda web real-time. Acciones: search (buscar), news (noticias), images. Devuelve resultados con titulo, re
 
 ## home
 - `home_assistant` — Control de domótica vía Home Assistant. Luces, switches, clima, media, notificaciones. Requiere configuración 
@@ -758,6 +773,9 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 ## ransomware
 - `ransomware_shield` — Escudo contra ransomware de ERIS: protege archivos, monitorea procesos sospechosos y analiza actividad. Accion
 
+## rea
+- `rea` — INGENIERÍA INVERSA con REA (morluto/rea): analiza binarios nativos, apps JS/Electron, .NET/managed, APKs, firm
+
 ## react
 - `react_designer` — Diseñador de páginas web con REACT (Vite). Crea un proyecto React completo y funcional: package.json, vite.con
 
@@ -874,6 +892,9 @@ Generado: 2026-10-11 00:36:20 · 503 tools registradas y resolviendo.
 ## send
 - `send_message` — Send via Discord/Signal/Messenger
 - `send_sms` — Envia un SMS. Requiere 'to' (numero) y 'message'. Usa Twilio o API HTTP configurada.
+
+## server
+- `server_forge` — FORJA DE SERVIDORES: crea y levanta un servidor/API HTTP local propio (solo stdlib), con /health como evidenci
 
 ## sesiones
 - `sesiones` — RESÚMENES DE SESIÓN: consulta el contexto de tus conversaciones pasadas. Acciones: reciente (n — últimos resúm

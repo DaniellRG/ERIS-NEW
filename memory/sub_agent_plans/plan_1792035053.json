@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y los límites del alcance mediante una ficha de proyecto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Relevá los recursos disponibles, restricciones temporales y dependencias con una matriz de capacidades.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Mapeá los riesgos potenciales y puntos críticos de falla usando una matriz de probabilidad e impacto. [RIESGO: Subestimar dependencias externas no controladas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá la meta en hitos secuenciales y entregables concretos con una estructura de desglose del trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná responsables, herramientas operativas y plazos límite a cada tarea mediante un tablero Kanban.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validá la viabilidad operativa del cronograma con los líderes de ejecución. [RIESGO: Desalineación de expectativas entre partes interesadas]",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Establecé puntos de control y métricas de avance mediante un panel de seguimiento de KPIs.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792035053.0471637
+}

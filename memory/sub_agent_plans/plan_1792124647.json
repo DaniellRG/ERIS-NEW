@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo final y el alcance específico mediante una sesión de relevamiento con los interesados.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Releva restricciones operativas, técnicas y presupuestarias usando una matriz de viabilidad. [RIESGO: Ocultamiento o desconocimiento de límites operativos críticos]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosa el objetivo general en tareas atómicas y dependencias mediante una Estructura de Desglose del Trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigna tiempos estimados, recursos y responsables a cada tarea utilizando un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Evalúa amenazas potenciales y diseña planes de contingencia con una matriz de riesgos. [RIESGO: Subestimación de tiempos de resolución de bloqueos]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establece métricas clave de éxito (KPIs) e hitos de control a través de un tablero de seguimiento.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Valida la viabilidad integral y aprueba el cronograma definitivo mediante una sesión de alineación estratégica.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792124647.9954865
+}

@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central, el alcance y las restricciones temporales con la plantilla de especificación de misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá los datos del entorno operativo y los recursos disponibles con el escáner de telemetría de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá posibles puntos únicos de fallo y dependencias críticas con la matriz de amenazas. [RIESGO: Suposiciones operativas no verificadas que comprometan la ejecución]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Secuenciá los hitos intermedios y rutas alternativas en orden cronológico con el motor de diagramación lógica.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná herramientas, cargas de trabajo y responsables a cada subfase con la tabla de distribución de recursos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas cuantitativas de éxito y criterios de aborto inmediato con el módulo de monitoreo en tiempo real. [RIESGO: Falta de umbrales claros de parada que provoque sobrecostos o fallas en cascada]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792100610.5710046
+}

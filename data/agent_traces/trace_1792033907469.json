@@ -1,0 +1,11 @@
+{
+  "ts": 1792033907.4696867,
+  "agent": "barrier_engine",
+  "action": "escalar",
+  "request": "bar_de7b30710872",
+  "tools": [
+    "barreras"
+  ],
+  "result": "no tengo el dato",
+  "ok": false
+}

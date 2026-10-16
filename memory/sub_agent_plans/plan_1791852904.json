@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central y los criterios de éxito mediante una ficha de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá restricciones operativas, plazos y recursos disponibles usando el repositorio de contexto de ERIS. [RIESGO: Información incompleta o desactualizada]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá dependencias críticas y cuellos de botella potenciales mediante una matriz de riesgos. [RIESGO: Subestimar dependencias externas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá el objetivo en hitos secuenciales y entregables con un diagrama de flujo de trabajo.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná responsables, herramientas específicas y tiempos límite a cada tarea usando una matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validá la viabilidad técnica y operativa del plan con los líderes de equipo antes de la ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791852904.7677295
+}

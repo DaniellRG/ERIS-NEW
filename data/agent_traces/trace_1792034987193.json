@@ -1,0 +1,11 @@
+{
+  "ts": 1792034987.1939657,
+  "agent": "barrier_engine",
+  "action": "cerrar",
+  "request": "bar_d60310186d96",
+  "tools": [
+    "barreras"
+  ],
+  "result": "resuelta: ",
+  "ok": true
+}

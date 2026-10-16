@@ -1,0 +1,11 @@
+{
+  "ts": 1792033732.955353,
+  "agent": "barrier_engine",
+  "action": "verificar",
+  "request": "bar_449ceb11e2e3",
+  "tools": [
+    "barreras"
+  ],
+  "result": "sin evidencia (falso_positivo=True)",
+  "ok": false
+}

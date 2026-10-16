@@ -1,0 +1,11 @@
+{
+  "ts": 1792033736.1715744,
+  "agent": "barrier_engine",
+  "action": "escalar",
+  "request": "bar_e15322be8049",
+  "tools": [
+    "barreras"
+  ],
+  "result": "presupuesto de 3 enfoques agotado",
+  "ok": false
+}

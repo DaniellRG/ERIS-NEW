@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo terminal y las restricciones operativas mediante una matriz de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopilá la información de contexto y dependencias críticas usando el módulo de diagnóstico del sistema.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá vulnerabilidades y cuellos de botella mediante un análisis de impacto. [RIESGO: Supuestos iniciales no validados pueden desviar la ejecución]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Secuenciá los hitos y tareas tácticas en orden de precedencia lógica usando un diagrama de ruta crítica.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná recursos específicos y herramientas a cada tarea según disponibilidad operativa. [RIESGO: Subestimación de capacidad de procesamiento o cuotas de API]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas de éxito (KPIs) y puntos de control usando un protocolo de verificación periódica.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validá y registrá el plan maestro en el registro de operaciones para habilitar su ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791859850.7340505
+}

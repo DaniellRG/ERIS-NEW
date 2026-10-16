@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo final, alcance y criterios de éxito del proyecto.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila restricciones operativas, requisitos técnicos y recursos disponibles mediante análisis de contexto.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identifica amenazas críticas y puntos de fallo potencial con una matriz de riesgos. [RIESGO: Subestimar dependencias externas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosa el trabajo en fases cronológicas e hitos clave usando una estructura WBS (Work Breakdown Structure).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigna tareas concretas, plazos y responsables con una herramienta de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establece métricas de rendimiento (KPIs) y puntos de control periódicos con un tablero de seguimiento.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792036354.5829604
+}

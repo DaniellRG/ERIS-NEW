@@ -281,6 +281,24 @@ def request_key_from_user(purpose: str, provider: str = "openrouter",
     return msg
 
 
+# Anti-spam (auditoría 2026-10-15, MEDIA M7): los llamadores resolvían la key en
+# CADA turno al armar la config de chat y volvían a imprimir el pedido → el log
+# se llenaba de repetidos. `should_announce()` deja avisar UNA vez por proveedor
+# cada cooldown (y vuelve a avisar recién si sigue faltando la key).
+_LAST_ANNOUNCE: dict[str, float] = {}
+_ANNOUNCE_COOLDOWN = 6 * 3600  # 6 h
+
+
+def should_announce(provider: str) -> bool:
+    """True si corresponde anunciar el pedido de key de `provider` (throttle)."""
+    import time as _t
+    now = _t.time()
+    if now - _LAST_ANNOUNCE.get(provider, 0.0) >= _ANNOUNCE_COOLDOWN:
+        _LAST_ANNOUNCE[provider] = now
+        return True
+    return False
+
+
 def rotate_on_401(provider: str, old_key: str) -> Optional[dict]:
     """Reacciona a un 401: invalida la key (si se puede) y busca reemplazo."""
     prov = _PROVIDERS.get(provider, {})

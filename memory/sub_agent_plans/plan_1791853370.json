@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y los límites del alcance usando la metodología SMART.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Mapeá el estado actual y los recursos disponibles mediante una auditoría inicial en hojas de cálculo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificá dependencias críticas y posibles cuellos de botella [RIESGO: supuestos no validados pueden quebrar la ruta crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá la meta principal en hitos secuenciales y entregables usando una estructura de desglose del trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná plazos, responsables y herramientas a cada tarea mediante un tablero Kanban o diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé puntos de control y métricas clave (KPIs) para evaluar el progreso semanal [RIESGO: falta de monitoreo periódico provoca desvíos irrecuperables en tiempo y costo].",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1791853370.423394
+}
