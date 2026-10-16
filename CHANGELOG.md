@@ -4,11 +4,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y
 [Versionado Semántico](https://semver.org/lang/es/). La versión viva está en
 `core/version.py` (`ERIS_VERSION` / `ERIS_STAGE`).
 
-## [3.0.0] — 2026-10-16 — "Constellation Prime"
+## [4.0.0] — 2026-10-16 — "Constellation Prime"
 
 Primer salto **mayor** desde la etapa 2.x. No es solo un número: consolida y
 **verifica** todo lo que el proyecto venía acumulando, y cierra la primera
 auditoría completa (código + estado + runtime) con evidencia real.
+
+> Numerado **4.0.0** (y no 3.x) porque el repo ya tenía los tags `v3.0` y `v3.1`
+> del 2026-06-06 sobre el mismo commit antiguo ("Add files via upload", sin
+> `version.py`); empezar en 4.0.0 evita ambigüedad y deja una versión limpia.
 
 ### Agregado
 - **Auditoría completa de Eris** con evidencia verificable (informe en
