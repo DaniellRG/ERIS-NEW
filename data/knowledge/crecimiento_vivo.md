@@ -1,12 +1,12 @@
 # 🌳 Tabla Maestra de Crecimiento — ERIS
 
-**2026-10-16T08:41:07** · Eris crece en 12 dominios.
+**2026-10-16T09:55:14** · Eris crece en 12 dominios.
 
 | Dominio | Nivel | Logros | Con evidencia | Último logro | Ver |
 |---|---|---|---|---|---|
 | 🔓 comunicacion | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-comunicacion.md` |
 | 🔓 codigo | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-codigo.md` |
-| ✅ sistema | 4/8 | 4 | 4 | Ascendí a ERIS v4.0.0 «Constellation Prime» — primera audito | `Crecimiento/Tabla-sistema.md` |
+| ✅ sistema | 4/8 | 5 | 5 | Optimice mi propio ARRANQUE: core/action_imports.py paso a s | `Crecimiento/Tabla-sistema.md` |
 | ✅ archivos | 2/8 | 1 | 1 | Ve y lee la casa entera: encuentra y lee cualquier ARCHIVO d | `Crecimiento/Tabla-archivos.md` |
 | 🔓 memoria | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-memoria.md` |
 | 🔓 web | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-web.md` |
@@ -17,7 +17,7 @@
 | 🔓 pentest | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-pentest.md` |
 | ✅ fabrica | 3/8 | 2 | 2 | Absorbe REA: 207 herramientas de ingeniería inversa como cap | `Crecimiento/Tabla-fabrica.md` |
 
-**Filas totales:** 9 · **Dominios activos:** 4
+**Filas totales:** 10 · **Dominios activos:** 4
 
 # 🌱 Tabla de crecimiento — comunicacion
 
@@ -43,7 +43,7 @@ _Programar, arreglar errores, tool que crea, refactor_
 
 _Linux, terminal, procesos, red, automatizar el PC_
 
-**Nivel:** 4/8 · **Logros:** 4 · **Actualizado:** 2026-10-16T08:41:07
+**Nivel:** 4/8 · **Logros:** 5 · **Actualizado:** 2026-10-16T09:55:14
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -51,6 +51,7 @@ _Linux, terminal, procesos, red, automatizar el PC_
 | 2026-10-15 | 3 | Arregle las 5 fallas ALTAS de la auditoria de Eris (con OK del dueno): (A1) quite los agentes muertos deploy/system_monitor; (A2) cree core/session_search.py; (A3) cree actions/project_manager.py; (A4) guarde el import de mss en screen_vision y borre la tool fantasma calc_test; (A5) actualice AGENTS.md con los numeros reales | Verificado: py_compile OK de los 6 archivos; sync tools 514/514 con 0 duplicados; 0 declaradas sin implementacion (antes screen_vision+calc_test); test_all 177 PASS/0 FAIL/3 WARN; search_agent y productivity_agent ya responden sin error de import; AGENT_DEFINITIONS=14 y el router purgo solo [deploy,system_monitor]. Commits locales. · `/home/soul/Eris_NEW/BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` | manual | ✅ |
 | 2026-10-15 | 3 | Auditoria MEDIAS: arregle los imports rotos (research_channels en learning_engine/sub_agent_crew/autonomia/evolution_campaigns; compaction lee api_keys.json; eris_fabrica usa skills.skill_registry), saque los 6 imports Hermes muertos y paper_search/repo_discovery de action_imports, puse throttle al loop del pedido de API key, mande huerfanos y residuos Windows a cuarentena, y baje los None de 15 a 7 | test_all 177 PASS/0 FAIL/3 WARN; sync 514/514 0 duplicados; 514/514 resuelven; funcional con red real (papers+repos) · `BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` | auditoria-2026-10-15 | ✅ |
 | 2026-10-16 | 4 | Ascendí a ERIS v4.0.0 «Constellation Prime» — primera auditoría completa del proyecto + release público en GitHub | release v4.0.0 publicado (tag + GitHub Release); 514 tools en sync 514/514; test_all 177 PASS / 0 FAIL · `CHANGELOG.md` | manual | ✅ |
+| 2026-10-16 | 4 | Optimice mi propio ARRANQUE: core/action_imports.py paso a ser un registro lazy (PEP 562) y el arranque ya no importa todo — release v4.0.1 | import core.action_imports: 461 ms -> 1.2 ms; primer 'from core.action_imports import X': 461 -> ~15 ms (ya no carga ~296 action modules); import main mediana 3150 -> 2948 ms (-6.4%); equivalencia 616/616 nombres; test_all 177 PASS/0 FAIL/3 WARN; sync tools 514/514, 0 duplicados; 514/514 resuelven; release v4.0.1 publicado (tag + GitHub Release) · `CHANGELOG.md` | manual | ✅ |
 
 # 🌱 Tabla de crecimiento — archivos
 
