@@ -46,3 +46,19 @@ auditoría completa (código + estado + runtime) con evidencia real.
 ## [2.7.6] — "Constellation Core"
 Etapa previa (punto de partida de esta versión). Núcleo consolidado: chat dual
 Ollama/Gemini, TTS local Kokoro, memoria Obsidian, evolución continua.
+
+## Etiquetas (tags) del repositorio
+
+Los tags no siempre siguieron a `core/version.py`, así que quedan mapeados para
+que no haya confusión con los números:
+
+| Tag | Fecha | Qué es |
+|---|---|---|
+| `v1.0.0`, `v1.0.1` | 2026-06-04 | Primeros commits (subida inicial). |
+| `v3.0`, `v3.1` | 2026-06-06 | **Legacy**: ambos sobre el MISMO commit ("Add files via upload"), antes de que existiera `version.py`. No son releases reales. |
+| `v2.1-estable-1007-fixed` | 2026-07-29 | Estado estable tras corregir el error 1007. |
+| **`v4.0.0`** | **2026-10-16** | **Actual — "Constellation Prime"** (primera auditoría completa + release público). |
+
+> Los tags `v3.0` / `v3.1` quedan **intactos** a propósito: son historia del repo
+> y borrarlos sería lo único irreversible. La numeración "oficial" del proyecto
+> vive en `core/version.py`.

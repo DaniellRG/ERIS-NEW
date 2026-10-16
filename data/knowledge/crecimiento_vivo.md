@@ -1,12 +1,12 @@
 # 🌳 Tabla Maestra de Crecimiento — ERIS
 
-**2026-10-16T00:07:24** · Eris crece en 12 dominios.
+**2026-10-16T08:41:07** · Eris crece en 12 dominios.
 
 | Dominio | Nivel | Logros | Con evidencia | Último logro | Ver |
 |---|---|---|---|---|---|
 | 🔓 comunicacion | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-comunicacion.md` |
 | 🔓 codigo | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-codigo.md` |
-| ✅ sistema | 3/8 | 3 | 3 | Auditoria MEDIAS: arregle los imports rotos (research_channe | `Crecimiento/Tabla-sistema.md` |
+| ✅ sistema | 4/8 | 4 | 4 | Ascendí a ERIS v4.0.0 «Constellation Prime» — primera audito | `Crecimiento/Tabla-sistema.md` |
 | ✅ archivos | 2/8 | 1 | 1 | Ve y lee la casa entera: encuentra y lee cualquier ARCHIVO d | `Crecimiento/Tabla-archivos.md` |
 | 🔓 memoria | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-memoria.md` |
 | 🔓 web | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-web.md` |
@@ -17,7 +17,7 @@
 | 🔓 pentest | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-pentest.md` |
 | ✅ fabrica | 3/8 | 2 | 2 | Absorbe REA: 207 herramientas de ingeniería inversa como cap | `Crecimiento/Tabla-fabrica.md` |
 
-**Filas totales:** 8 · **Dominios activos:** 4
+**Filas totales:** 9 · **Dominios activos:** 4
 
 # 🌱 Tabla de crecimiento — comunicacion
 
@@ -43,13 +43,14 @@ _Programar, arreglar errores, tool que crea, refactor_
 
 _Linux, terminal, procesos, red, automatizar el PC_
 
-**Nivel:** 3/8 · **Logros:** 3 · **Actualizado:** 2026-10-16T00:07:24
+**Nivel:** 4/8 · **Logros:** 4 · **Actualizado:** 2026-10-16T08:41:07
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
 | 2026-10-15 | 2 | Auditoria completa de Eris: verifique codigo+estado+runtime y detecte 5 fallas ALTAS (2 agentes muertos deploy/system_monitor, 2 imports rotos session_search/project_manager, 2 tools fantasma screen_vision/calc_test, docs desactualizadas) + 8 MEDIAS (huerfanos, imports rotos, Hermes a medio terminar, opencode_bridge duplicado, features off, eris_workspace abandonado, loop de key, conteo None) + bajas | Verificado con comandos: sync 514/514 0 duplicados; tool evolucion health=514/514 resuelven; test_all 177 PASS/0 FAIL/3 WARN; auto_salud SALUD OK; 44 skills validas; registry-14 handlers vs agent_definitions-16 keys (faltan deploy/system_monitor, modulos inexistentes, agent_router.py:101-113 los salta); get_tool(screen_vision) is None (unico en base 514); load_custom_tools sube declaraciones a 517 y calc_test no resuelve; agents/search_agent.py:21 import core.session_search inexistente; agents/productivity_agent.py:56 import actions.project_manager inexistente; huerfanos res_manager/training_full/orb_overlay/_chrome_launch/test_win_audio/watchdog.py; core/hermes_tools.py 13 defs y ninguna de las 6 que importa action_imports; action_imports 18 None; Eris NO crasheo: journalctl poweroff.target 17:34:51. · `/home/soul/Eris_NEW/BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` | manual | ✅ |
 | 2026-10-15 | 3 | Arregle las 5 fallas ALTAS de la auditoria de Eris (con OK del dueno): (A1) quite los agentes muertos deploy/system_monitor; (A2) cree core/session_search.py; (A3) cree actions/project_manager.py; (A4) guarde el import de mss en screen_vision y borre la tool fantasma calc_test; (A5) actualice AGENTS.md con los numeros reales | Verificado: py_compile OK de los 6 archivos; sync tools 514/514 con 0 duplicados; 0 declaradas sin implementacion (antes screen_vision+calc_test); test_all 177 PASS/0 FAIL/3 WARN; search_agent y productivity_agent ya responden sin error de import; AGENT_DEFINITIONS=14 y el router purgo solo [deploy,system_monitor]. Commits locales. · `/home/soul/Eris_NEW/BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` | manual | ✅ |
 | 2026-10-15 | 3 | Auditoria MEDIAS: arregle los imports rotos (research_channels en learning_engine/sub_agent_crew/autonomia/evolution_campaigns; compaction lee api_keys.json; eris_fabrica usa skills.skill_registry), saque los 6 imports Hermes muertos y paper_search/repo_discovery de action_imports, puse throttle al loop del pedido de API key, mande huerfanos y residuos Windows a cuarentena, y baje los None de 15 a 7 | test_all 177 PASS/0 FAIL/3 WARN; sync 514/514 0 duplicados; 514/514 resuelven; funcional con red real (papers+repos) · `BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` | auditoria-2026-10-15 | ✅ |
+| 2026-10-16 | 4 | Ascendí a ERIS v4.0.0 «Constellation Prime» — primera auditoría completa del proyecto + release público en GitHub | release v4.0.0 publicado (tag + GitHub Release); 514 tools en sync 514/514; test_all 177 PASS / 0 FAIL · `CHANGELOG.md` | manual | ✅ |
 
 # 🌱 Tabla de crecimiento — archivos
 
