@@ -67,4 +67,28 @@ Decisión del dueño: solo las ALTAS; los agentes muertos, quitarlos.
 
 Verificado: py_compile OK; sync **514/514, 0 duplicados**; **0 declaradas sin
 implementación**; `test_all.py` **177 PASS / 0 FAIL / 3 WARN**; las 2 ramas rotas ya
-responden. Pendiente (sin OK): M1–M8 + bajas.
+responden.
+
+## ✅ EJECUTADO — MEDIAS + bajas arregladas (2026-10-15, OK del dueño)
+
+- **M1** huérfanos (`res_manager`, `training_full`, `orb_overlay`, `_chrome_launch`,
+  `core/test_win_audio.py`, `watchdog.py`) → **cuarentena** en `_quarantine_2026-10-15/`
+  (0 referencias verificadas; nada se borró).
+- **M2** imports rotos → enrutados a **`core/research_channels.py`** en `learning_engine`,
+  `sub_agent_crew` (InvestigadorExterno), `autonomia`, `evolution_campaigns`; `compaction`
+  lee `config/api_keys.json` directo; `eris_fabrica` usa `skills.skill_registry`.
+- **M3** los **6** imports Hermes a funciones inexistentes → eliminados de `action_imports`.
+- **M4** `opencode_bridge`: NO era duplicado (`agents/…` da `opencode_task`/`recall_lessons`
+  usados; `core/…` es el puente MCP) → se conserva.
+- **M5** features off (telegram/ollama/offline_voice/opencode) → sin cambios (decisión de config).
+- **M6** `eris_workspace/` → cuarentena.
+- **M7** loop de key → `key_manager.should_announce()` (1 aviso/6 h); en un arranque aparece 1 vez.
+- **M8** `action_imports` 15 → **7 `None`**; AGENTS.md corregido.
+- **Bajas**: residuos Windows (`ERIS.exe`/`nul`/`watchdog_start.vbs.disabled`) → cuarentena;
+  `self_evolution.py` “447→514 tools”. Lo intencional del dueño (faulthandler, `pass` WIP, `if False:`)
+  queda igual.
+- **Hallazgo nuevo**: Eris tiene **auto-commit** (`git_autonomo auto` = `git add -A`), corrió durante
+  la sesión (`3b9c181`). No filtra la key (`api_keys.json` gitignoreado), pero versiona estado runtime.
+
+Verificado: py_compile OK; sync **514/514, 0 duplicados**, 514/514 resuelven; funcional con red real
+(papers+repos); `test_all.py` **177 PASS / 0 FAIL / 3 WARN**; Eris relanzada sin tracebacks.

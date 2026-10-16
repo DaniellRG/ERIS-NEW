@@ -132,3 +132,187 @@
  create mode 100644 tools/opencode_helper.py
  create mode 100644 "vault/Logs/Evoluci\303\263n - 2026-09-18.md"
 → docs(actions): AGENTS.md (+75)`
+
+## 2026-10-15 23:44 — ERIS-NEW
+- `[main 3b9c181] test(actions): Desktop (+208)
+ 209 files changed, 6156 insertions(+), 114 deletions(-)
+ create mode 100644 Desktop/hakin_learning_guide.md
+ rename ERIS.exe => _quarantine_2026-10-15/ERIS.exe (100%)
+ create mode 100644 _quarantine_2026-10-15/README.md
+ rename {actions => _quarantine_2026-10-15/actions}/_chrome_launch.py (100%)
+ rename {actions => _quarantine_2026-10-15/actions}/orb_overlay.py (100%)
+ rename {actions => _quarantine_2026-10-15/actions}/res_manager.py (100%)
+ rename {actions => _quarantine_2026-10-15/actions}/training_full.py (100%)
+ rename {core => _quarantine_2026-10-15/core}/test_win_audio.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/brain_3d.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/config.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/core/__init__.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/core/data_loader.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/core/graph_engine.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/core/state.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/data_models.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/launcher.bat (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/main.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/requirements.txt (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/__init__.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/file_explorer.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/graph_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/menu_bar.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/panels/__init__.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/panels/detail_panel.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/panels/memory_panel.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/popup.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/status_bar.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/terminal_panel.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui/theme.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/ui_panels.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/__init__.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/chat_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/emotion_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/goals_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/logs_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/memory_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/neuro_view.py (100%)
+ rename {eris_workspace => _quarantine_2026-10-15/eris_workspace}/views/system_view.py (100%)
+ rename nul => _quarantine_2026-10-15/nul (100%)
+ rename watchdog.py => _quarantine_2026-10-15/watchdog.py (100%)
+ rename watchdog_start.vbs.disabled => _quarantine_2026-10-15/watchdog_start.vbs.disabled (100%)
+ create mode 100644 data/.purge_b11_learned_state
+ create mode 100644 data/agent_traces/trace_1791840417.json
+ create mode 100644 data/agent_traces/trace_1791840514.json
+ create mode 100644 data/agent_traces/trace_1791840596.json
+ create mode 100644 data/agent_traces/trace_1791840634.json
+ create mode 100644 data/agent_traces/trace_1791840910.json
+ create mode 100644 data/agent_traces/trace_1791844379.json
+ create mode 100644 data/agent_traces/trace_1791844522.json
+ create mode 100644 data/agent_traces/trace_1791845014.json
+ create mode 100644 data/agent_traces/trace_1791845514.json
+ create mode 100644 data/agent_traces/trace_1791852601.json
+ create mode 100644 data/agent_traces/trace_1791852905.json
+ create mode 100644 data/agent_traces/trace_1791853244.json
+ create mode 100644 data/agent_traces/trace_1791853371.json
+ create mode 100644 data/agent_traces/trace_1791854018.json
+ create mode 100644 data/agent_traces/trace_1791855453.json
+ create mode 100644 data/agent_traces/trace_1791855936.json
+ create mode 100644 data/agent_traces/trace_1791856456.json
+ create mode 100644 data/agent_traces/trace_1791856964.json
+ create mode 100644 data/agent_traces/trace_1791858269.json
+ create mode 100644 data/agent_traces/trace_1791858714.json
+ create mode 100644 data/agent_traces/trace_1791947018.json
+ create mode 100644 data/agent_traces/trace_1791949926.json
+ create mode 100644 data/agent_traces/trace_1791950034.json
+ create mode 100644 data/agent_traces/trace_1791950433.json
+ create mode 100644 data/agent_traces/trace_1791950716.json
+ create mode 100644 data/agent_traces/trace_1791986709.json
+ create mode 100644 data/agent_traces/trace_1791986919.json
+ create mode 100644 data/agent_traces/trace_1791987465.json
+ create mode 100644 data/agent_traces/trace_1792032840.json
+ create mode 100644 data/agent_traces/trace_1792033431.json
+ create mode 100644 data/agent_traces/trace_1792033732954.json
+ create mode 100644 data/agent_traces/trace_1792033732955.json
+ create mode 100644 data/agent_traces/trace_1792033736168.json
+ create mode 100644 data/agent_traces/trace_1792033736169.json
+ create mode 100644 data/agent_traces/trace_1792033736170.json
+ create mode 100644 data/agent_traces/trace_1792033736171.json
+ create mode 100644 data/agent_traces/trace_1792033736172.json
+ create mode 100644 data/agent_traces/trace_1792033736206.json
+ create mode 100644 data/agent_traces/trace_1792033752.json
+ create mode 100644 data/agent_traces/trace_1792033907465.json
+ create mode 100644 data/agent_traces/trace_1792033907469.json
+ create mode 100644 data/agent_traces/trace_1792033918.json
+ create mode 100644 data/agent_traces/trace_1792034165584.json
+ create mode 100644 data/agent_traces/trace_1792034165585.json
+ create mode 100644 data/agent_traces/trace_1792034165591.json
+ create mode 100644 data/agent_traces/trace_1792034180.json
+ create mode 100644 data/agent_traces/trace_1792034712821.json
+ create mode 100644 data/agent_traces/trace_1792034745779.json
+ create mode 100644 data/agent_traces/trace_1792034745780.json
+ create mode 100644 data/agent_traces/trace_1792034759.json
+ create mode 100644 data/agent_traces/trace_1792034841103.json
+ create mode 100644 data/agent_traces/trace_1792034841106.json
+ create mode 100644 data/agent_traces/trace_1792034882640.json
+ create mode 100644 data/agent_traces/trace_1792034882641.json
+ create mode 100644 data/agent_traces/trace_1792034987193.json
+ create mode 100644 data/agent_traces/trace_1792035012.json
+ create mode 100644 data/agent_traces/trace_1792035053.json
+ create mode 100644 data/agent_traces/trace_1792036355.json
+ create mode 100644 data/agent_traces/trace_1792083348.json
+ create mode 100644 data/agent_traces/trace_1792091808.json
+ create mode 100644 data/agent_traces/trace_1792092029.json
+ create mode 100644 data/agent_traces/trace_1792092231.json
+ create mode 100644 data/agent_traces/trace_1792092459.json
+ create mode 100644 data/agent_traces/trace_1792100612.json
+ create mode 100644 data/agent_traces/trace_1792124650.json
+ create mode 100644 data/agent_traces/trace_1792125330.json
+ create mode 100644 data/daily_reports/2026-10-12.md
+ create mode 100644 data/daily_reports/2026-10-13.md
+ create mode 100644 data/daily_reports/2026-10-14.md
+ create mode 100644 data/daily_reports/2026-10-15.md
+ create mode 100644 "data/knowledge/idle_Necromancia_digital__r\303\251plicas_de_IA_y_el_duelo_alg.md"
+ create mode 100644 data/knowledge/learning_engine/aprendizaje_por_refuerzo_aplicado_a_agentes_estudio.md
+ create mode 100644 "data/knowledge/learning_engine/evaluaci\303\263n_de_agentes__benchmarks_y_m\303\251tricas_estudio.md"
+ create mode 100644 "data/knowledge/learning_engine/optimizaci\303\263n_de_contexto_y_ventana_de_tokens_estudio.md"
+ create mode 100644 "data/knowledge/learning_engine/seguridad_y_sandboxing_en_ejecuci\303\263n_de_c\303\263digo_por_estudio.md"
+ create mode 100644 "data/knowledge/learning_engine/sistemas_RAG_h\303\255bridos__vector___keyword___grafo_estudio.md"
+ create mode 100644 "data/knowledge/recetario/no-s\303\251-calcular-la-mediana-de-una-lista.md"
+ create mode 100644 data/rea_evidence/20261014-225933_analyze-javascript-application.json
+ create mode 100644 data/rea_evidence/20261014-225944_capabilities.json
+ create mode 100644 data/rea_evidence/20261014-225951_capabilities.json
+ create mode 100644 docs/superpowers/specs/2026-10-14-eris-absorbe-rea-design.md
+ create mode 100644 memory/sub_agent_plans/plan_1791840417.json
+ create mode 100644 memory/sub_agent_plans/plan_1791840514.json
+ create mode 100644 memory/sub_agent_plans/plan_1791840595.json
+ create mode 100644 memory/sub_agent_plans/plan_1791840633.json
+ create mode 100644 memory/sub_agent_plans/plan_1791840909.json
+ create mode 100644 memory/sub_agent_plans/plan_1791844378.json
+ create mode 100644 memory/sub_agent_plans/plan_1791844521.json
+ create mode 100644 memory/sub_agent_plans/plan_1791845013.json
+ create mode 100644 memory/sub_agent_plans/plan_1791845513.json
+ create mode 100644 memory/sub_agent_plans/plan_1791852600.json
+ create mode 100644 memory/sub_agent_plans/plan_1791852904.json
+ create mode 100644 memory/sub_agent_plans/plan_1791853243.json
+ create mode 100644 memory/sub_agent_plans/plan_1791853370.json
+ create mode 100644 memory/sub_agent_plans/plan_1791854017.json
+ create mode 100644 memory/sub_agent_plans/plan_1791855451.json
+ create mode 100644 memory/sub_agent_plans/plan_1791855934.json
+ create mode 100644 memory/sub_agent_plans/plan_1791856454.json
+ create mode 100644 memory/sub_agent_plans/plan_1791856962.json
+ create mode 100644 memory/sub_agent_plans/plan_1791858267.json
+ create mode 100644 memory/sub_agent_plans/plan_1791858712.json
+ create mode 100644 memory/sub_agent_plans/plan_1791859850.json
+ create mode 100644 memory/sub_agent_plans/plan_1791947017.json
+ create mode 100644 memory/sub_agent_plans/plan_1791949924.json
+ create mode 100644 memory/sub_agent_plans/plan_1791950034.json
+ create mode 100644 memory/sub_agent_plans/plan_1791950432.json
+ create mode 100644 memory/sub_agent_plans/plan_1791950715.json
+ create mode 100644 memory/sub_agent_plans/plan_1791986707.json
+ create mode 100644 memory/sub_agent_plans/plan_1791986918.json
+ create mode 100644 memory/sub_agent_plans/plan_1791987464.json
+ create mode 100644 memory/sub_agent_plans/plan_1792032839.json
+ create mode 100644 memory/sub_agent_plans/plan_1792033430.json
+ create mode 100644 memory/sub_agent_plans/plan_1792033751.json
+ create mode 100644 memory/sub_agent_plans/plan_1792033917.json
+ create mode 100644 memory/sub_agent_plans/plan_1792034179.json
+ create mode 100644 memory/sub_agent_plans/plan_1792034758.json
+ create mode 100644 memory/sub_agent_plans/plan_1792035011.json
+ create mode 100644 memory/sub_agent_plans/plan_1792035053.json
+ create mode 100644 memory/sub_agent_plans/plan_1792036354.json
+ create mode 100644 memory/sub_agent_plans/plan_1792083346.json
+ create mode 100644 memory/sub_agent_plans/plan_1792091806.json
+ create mode 100644 memory/sub_agent_plans/plan_1792092028.json
+ create mode 100644 memory/sub_agent_plans/plan_1792092229.json
+ create mode 100644 memory/sub_agent_plans/plan_1792092457.json
+ create mode 100644 memory/sub_agent_plans/plan_1792100610.json
+ create mode 100644 memory/sub_agent_plans/plan_1792124647.json
+ create mode 100644 memory/sub_agent_plans/plan_1792125328.json
+ create mode 100644 mysql_workbench
+ create mode 100644 skills/evolution_learning/aprendizaje_por_refuerzo_aplicado_a_agentes_SKILL.md
+ create mode 100644 "skills/evolution_learning/evaluaci\303\263n_de_agentes__benchmarks_y_m\303\251tricas_SKILL.md"
+ create mode 100644 "skills/evolution_learning/optimizaci\303\263n_de_contexto_y_ventana_de_tokens_SKILL.md"
+ create mode 100644 "skills/evolution_learning/seguridad_y_sandboxing_en_ejecuci\303\263n_de_c\303\263digo_por_SKILL.md"
+ create mode 100644 "skills/evolution_learning/sistemas_RAG_h\303\255bridos__vector___keyword___grafo_SKILL.md"
+ create mode 100644 "vault/Logs/Evoluci\303\263n - 2026-10-15.md"
+ create mode 100644 vault/outputs/emocional/2026-10-12.md
+ create mode 100644 vault/outputs/emocional/2026-10-13.md
+ create mode 100644 vault/outputs/emocional/2026-10-14.md
+→ test(actions): Desktop (+208)`

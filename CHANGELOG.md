@@ -1,205 +1,44 @@
-# Changelog
+# Changelog — ERIS
 
-Formato: [Keep a Changelog](https://keepachangelog.com/) (no released de
-versiones formales; ERIS es un proyecto vivo que evoluciona por sesiones).
+Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y
+[Versionado Semántico](https://semver.org/lang/es/). La versión viva está en
+`core/version.py` (`ERIS_VERSION` / `ERIS_STAGE`).
 
-## [2026-10-03] — Fix de 3 bugs detectados en tareas reales (dispatcher + Linux)
+## [3.0.0] — 2026-10-16 — "Constellation Prime"
 
-Detectados al someter a ERIS a una batería de tareas reales (sistema, archivos,
-código, web). ERIS las resolvió igual porque se auto-recupera probando tools
-alternativas, pero cada bug quedó corregido de raíz:
+Primer salto **mayor** desde la etapa 2.x. No es solo un número: consolida y
+**verifica** todo lo que el proyecto venía acumulando, y cierra la primera
+auditoría completa (código + estado + runtime) con evidencia real.
 
-- **`file_api` roto (`got an unexpected keyword argument 'parameters'`)**:
-  `core/tool_dispatcher._generic_dispatch` llamaba a TODAS las tools con
-  `parameters=`, pero 7 tools (file_api, file_system, mission, network_manager,
-  terminal_commands, hermes_consult, opencode_bridge) reciben `params=`.
-  Nuevo helper `_build_kwargs()` adapta el nombre del primer argumento a la
-  firma REAL de cada tool (+ player/speak solo si los declara). Arregla las 7.
-- **`web_search` sin backend**: faltaba el paquete `ddgs` en el venv. Instalado
-  (`ddgs==9.16.0`). Ahora devuelve resultados reales.
-- **Tools Windows-céntricas crasheaban en Linux**: `system_monitor._disk_info`,
-  `file_controller` (largest/disk_usage), `res_monitor`, `dashboard`,
-  `hud_terminal`, `proactive_comms`, `resource_manager` y `system_health` tenían
-  `"C:\\"` hardcodeado (y la declaración de `system_monitor` le decía al LLM
-  "default C:\\"). Ahora el default depende del SO (`/` en Linux, `C:\\` en
-  Windows) y la descripción es neutral. `system_monitor` reporta "Disco /: 16.4%"
-  en Linux en vez de intentar leer `C:\`.
+### Agregado
+- **Auditoría completa de Eris** con evidencia verificable (informe en
+  `BaseDatosObsidian/BaseObsiEris/Logs/Auditoria-completa-2026-10-15.md` +
+  espejo indexado en `data/knowledge/`).
+- **Cuarentena reversible** `_quarantine_2026-10-15/` con README (huérfanos y
+  residuos Windows apartados **sin borrar**).
+- `CHANGELOG.md` (este archivo).
 
-Verificado: sync 507/507 intacto, los 3 arreglos corren end-to-end, y ERIS
-resuelve las mismas tareas sin necesidad de auto-recuperación.
+### Arreglado
+- **ALTAS**: agentes muertos `deploy`/`system_monitor` fuera; creados
+  `core/session_search.py` y `actions/project_manager.py` (imports rotos);
+  tools fantasma `screen_vision` (guard de `mss`, usa grim en Wayland) y
+  `calc_test` resueltas; `AGENTS.md` con los números reales.
+- **MEDIAS**: imports rotos enrutados a `core/research_channels.py`
+  (`learning_engine`, `sub_agent_crew`, `autonomia`, `evolution_campaigns`);
+  `compaction` lee `config/api_keys.json`; `eris_fabrica` usa
+  `skills.skill_registry`; fuera los 6 imports Hermes a funciones inexistentes;
+  `paper_search`/`repo_discovery` eliminados de `action_imports` (de 15 → 7 `None`).
+- **Ruido**: el pedido de API key ya no se repite cada turno
+  (`key_manager.should_announce`, 1 aviso por proveedor cada 6 h).
 
-## [2026-10-03] — Reconstrucción del motor de evolución continua (4 módulos perdidos)
+### Estado verificado en esta versión
+- **514 tools** con sync `514/514` y **0 duplicados**; **514/514** resuelven.
+- `test_all.py` → **177 PASS / 0 FAIL / 3 WARN**.
+- **14 agentes** especializados · **26 sub-agentes** en 4 capas · **304** módulos de
+  acción · **44 skills** (21 builtin + 23 creadas por Eris).
+- Memoria total RAG multi-fuente, evolución/auto-salud/auto-defensa propias,
+  laboratorio de pentest aislado, NeuroSpheres.
 
-Los 4 módulos que `run_evolution_tick` y la "iniciativa plena" necesitaban
-estaban **borrados del disco** (sin `.pyc` de respaldo). Ambos call sites en
-`main.py` estaban envueltos en `try/except`, así que ERIS no crasheaba — pero
-el motor autónomo quedaba degradado a "consolidar inventario": sin estudiar,
-sin campañas, sin auto-defensa, sin iniciativa.
-
-- **`core/evolution_campaigns.py`** (NUEVO): `run_campaign()` + tool
-  `evolution_campaigns` (`evolve_campaigns`). Radar AGI (papers+repos) → ideas
-  → doble revisión → puntuación ELO → `data/evolution_campaigns.json` + `.log`.
-- **`core/learning_engine.py`** (NUEVO): `study_cycle()` + tool
-  `learning_engine`. Investigar→estudiar→cristalizar en
-  `skills/evolution_learning/*_SKILL.md` + RAG + novedad en `todo_yo`. Estado en
-  `memory/learning_engine.json`.
-- **`core/auto_defensa.py`** (NUEVO): `defensa_tick()` + tool `auto_defensa`.
-  Audita la propia máquina (puertos loopback vs expuestos, sudo NOPASSWD,
-  permisos, updates, sshd, CVEs del lab). Bitácora `data/self_defense_log.jsonl`.
-- **`core/autonomia.py`** (NUEVO): `turno_de_iniciativa()` — iniciativa plena
-  (investigar/estudiar/campaña/defensa) con cooldown. Nota: `core/autonomy.py`
-  (sin la 'i') es OTRO módulo y sigue igual.
-- **`core/self_evolution.py`** (FIX): el tick evaluaba `%3`→`%6`→`%9` con
-  `return` en cada rama; como 6 y 9 son múltiplos de 3, la campaña tapaba al
-  estudio y a la defensa (nunca corrían). Reordenado a **9→6→3** (el intervalo
-  más específico primero).
-- **`core/gpu_config.py`** (FIX): `UnboundLocalError` cuando
-  `config/api_keys.json` existe pero sin clave `gpu_acceleration` (manual=None
-  no asignaba `gpu_enabled`). Ahora hay default seguro al inicio. Crash latente
-  de boot en Linux.
-- **`core/gemini_text_chat.py`** (FIX): el path OpenAI-compatible
-  (OpenRouter/Nous Portal) no enviaba `tool_call_id` en las respuestas `role=tool`
-  → el proveedor devolvía 500 en la 2ª ronda de tool-calling. Ahora empareja
-  cada resultado con su `tool_call.id` (+ `name`).
-- **`eris_cli.py`** (FIX): el CLI exigía `gemini_api_key`; ahora acepta también
-  un backend OpenAI-compatible vía `openrouter_api_key` (OpenRouter / Nous
-  Portal), mostrando el modelo y base_url.
-- **Verificado**: sync 507/507, `py_compile` de los 4 módulos OK, cada uno corre
-  end-to-end, tick 3/6/9 disparan campaña/estudio/defensa respectivamente, y
-  ERIS conversa por CLI (usó `show_expression`, `curar_memoria`, `evolucion`,
-  `pentest_lab`). test_all: los FAIL ambientales bajan (api_keys ya no falta).
-
-## [2026-09-07] — Fix Live 1011 crónico + modelo estable
-
-- `LIVE_TOOL_DECLARATIONS` excluye los **nombres reservados** de Gemini Live
-  (prefijo `google`/`_`, `reset`/`default`): `google_calendar` violaba la regla
-  y podía cerrar la sesión con **1011** en la fase de function-calling. Live:
-  86 → 85 declaraciones; global 459 intacta. Blindado también en el fallback.
-- `LIVE_MODEL` primario → `models/gemini-2.5-flash-native-audio-latest`
-  (alias GA estable); fallbacks reordenados: `gemini-3.1-flash-live-preview`
-  y `gemini-2.5-flash-native-audio-preview-12-2025`.
-- README.md reescrito como fuente de contexto única con bitácora de mejoras.
-- Verificado: los 3 candidatos conectan con audio en probe aislado (g-genai 2.22,
-  v1beta); test_all 56 PASS / 1 FAIL (eris.bat ambiental) / 3 WARN.
-
-## [2026-09-06] — Agentes, refactor del router y performance
-
-- **Guardiana-Agent** (`2e34cb8`): `agents/guardiana_agent.py`, supervisor de
-  autocuidado continuo de ERIS (`_run_guardian_supervision` en main.py).
-- **MentoraAgent** (`0e15c68` + `d6252e1`): maestra de aprendizaje continuo;
-  `config/fuentes_aprendizaje.json` (dominios + `exploracion_libre`),
-  acciones import/explorar/fuentes, lecciones en `memory/mentora_lecciones.json`.
-- **Refactor agent-router** (`d1d621d`): `core/agent_definitions.py` = fuente
-  única de verdad de 12 agentes; `agent_router.py` la importa; registro
-  regenerado (se purgan 6 stale); herramientas rotas corregidas
-  (`game_updater` fuera, `semantic_memory→memory_unified`); clasificación 100%.
-- **Performance** (`70fe0af`): caché central de config (mtime); `_gemini_tools()`
-  cacheado; TTS fish en paralelo (`gather` + `to_thread`); prompt cacheado;
-  latencia offline 4x menor; timeouts de red bajados.
-
-## [2026-09-06] — Instalador one-liner + wizard de arranque (Linux)
-
-- `install.sh`: `curl | bash` instala ERIS en `~/.eris/ERIS-NEW` (copia
-  separada del workspace de desarrollo), crea venv, instala
-  `requirements-linux.txt`, deja el comando `eris` y abre el configurador.
-  Por diseño instala siempre el último commit de `main`.
-- `setup_wizard.py`: ventana de bienvenida (ERIS en grande) con API keys
-  **REQUERIDAS** (Gemini) y **OPCIONALES** (Fish/Telegram/Spotify/OpenWeather/
-  ElevenLabs/OpenRouter/Groq/Cerebras/Context7/HIBP) que pueden quedar vacías.
-  Guarda en `config/api_keys.json` (UTF-8 sin BOM, merge conserva lo existente).
-  Modos: GUI, `--check` (headless) y `--save k=v`.
-- `eris` (launcher Linux): GUI por defecto (primer arranque abre el wizard),
-  `--cli`, `--wizard`, `--check`, `--update` (git pull + deps).
-- `main.py`: guard Windows-only de boot en Linux — single-instance mutex y
-  global hotkey Win32 protegidos tras `os.name == "nt"`; primer arranque en
-  Linux abre el wizard portable (`launch_after=False` evita doble instancia).
-- README_LINUX.md: sección de instalación one-liner + comandos del launcher.
-
-## [2026-09-05] — Sesión de saneamiento integral (Fases 1–4)
-
-### Fase 1 — Bugs críticos
-
-- Seguridad: `mobile/eris_mobile.config.json` — token de Telegram real
-  reemplazado por placeholders.
-- `actions/file_encryptor.py` — cifrado XOR inseguro → PBKDF2-HMAC-SHA256
-  (200k iteraciones) + salt aleatorio de 16 bytes; excepciones tipadas.
-  **Nota de compatibilidad**: los `.enc` viejos (XOR, sin salt) no se
-  descifran con el nuevo código.
-- `actions/disk_wiper.py` — contador `written` no se reseteaba entre pasadas;
-  eliminado dead code (`random_path`) y un `pass` no-op.
-- ~66 de 85 `except:` desnudos tipados según contexto en todo el repo
-  (los restantes son strings de ejemplo/diagnóstico intencionales).
-- `core/observer.py` — `ctypes.windll`/`user32` ahora guardados tras
-  `os.name == "nt"` (no crashea en Linux).
-- Rutas Windows hardcodeadas (`D:\Eris_Source`, `D:\Eris_NEW`, `C:\Users\...`)
-  reemplazadas por `Path(__file__).resolve().parent.parent` + env vars
-  `ERIS_WORKSPACE` / `ERIS_OBSIDIAN_VAULT` en: `core/self_evolution.py`,
-  `core/auto_healer.py`, `core/codebase_explorer.py`,
-  `core/devops_pipeline.py`, `core/refactoring_engine.py`,
-  `core/multi_ai_hub.py`, `core/rag_engine.py`, `core/test_generator.py`,
-  `core/voice_cloning.py`, `core/knowledge_graph.py`,
-  `core/logging_setup.py` y `main.py` (3 lugares).
-- `actions/cybersecurity.py` — `import random` movido al tope del archivo.
-- `actions/credential_recovery.py` — whitelist `VALID_TABLES` para evitar
-  SQL por f-string contra tablas no conocidas.
-
-### Fase 2 — Rendimiento
-
-- `core/tool_dispatcher.py` — los post-dispatch hooks ya no crean un hilo por
-  llamada: se ejecutan en `_HOOK_EXECUTOR` (ThreadPoolExecutor, 2 workers).
-- `actions/eris_db.py` — conexión SQLite compartida (`check_same_thread=False`)
-  serializada con lock (en vez de abrir/cerrar por query); `busy_timeout=5000`,
-  `synchronous=NORMAL`; búsquedas FTS5 (trigger-indexadas) para
-  conversations/knowledge/episodic con fallback a `LIKE`; `episodic` agregado
-  a `db_stats`. Verificado con test de concurrencia (8 hilos × 30 ops, 0
-  errores).
-- `memory/memory_manager.py` — saves a disco atómicas (`.tmp` + `os.replace`)
-  y debounce: flush asíncrono serializado que coalesce writes; `load_memory()`
-  fuerza flush si hay pendiente (nunca devuelve estado viejo).
-- `core/audio_config.py` — cache TTL (5 s) para `sd.query_devices()` (1
-  enumeración sirve para resolver device + UI + scoring).
-- `core/plugin_manager.py` — `POLL_INTERVAL` 5→15 s.
-- `core/connectivity.py` — `check_interval` 5→15 s (cada chequeo dispara hasta
-  4 requests HTTP).
-
-### Fase 3 — Testing y verificación
-
-- `actions/accessibility_overlay.py` — `class _Magnifier(QWidget)` crasheaba
-  al importar sin PyQt6 (rompía `core/action_imports.py` entero); base
-  condicional (`QWidget if HAS_PYQT6 else object`).
-- `actions/spreadsheet_generator.py` — constantes de estilo definidas a nivel
-  de módulo aunque openpyxl faltara → `NameError`; ahora solo se definen si
-  `_OPENPYXL_OK`.
-- `test_all.py` — `BASE = Path(r"D:\Eris_Source")` hardcodeado → `BASE =
-  Path(__file__).resolve().parent` (idéntico resultado en Windows, y ahora
-  la suite se puede correr en Linux).
-- `tests/generated/test_weather_report.py` — docstring con `\w` inválido
-  (SyntaxWarning) corregido.
-- Verificación: `test_all.py` en Linux sin PyQt6 → 48 PASS / 3 FAIL / 6 WARN
-  (FAILs ambientales: PyQt6, `eris.bat`, `api_keys.json`; en Windows → 0 FAIL
-  esperado). Compilación global: **590 `.py`, 0 errores**.
-
-### Fase 4 — Documentación
-
-- `AGENTS.md` — conteos reales (448/448 tools sincronizadas, 296 action
-  modules, 69 knowledge files, líneas de main/ui/prompt) + constraints nuevos
-  (rutas portables, guard de deps opcionales, `test_all.BASE` portable).
-- `README.md` — claims stale corregidos (NeuroSpheres sin número fijo,
-  counts de modules/knowledge, gate de tests).
-- Este changelog + `CONTRIBUTING.md` nuevos.
-
----
-
-## Historial previo (resumen de hitos del proyecto)
-
-- Cerebro NeuroSpheres (esferas visuales, nodos auto-generados por sesión).
-- `mission_agent` — protocolo operativo estilo opencode con cuaderno
-  persistido y espejo Obsidian.
-- `code_guard` — ojo guardián que detecta/corrige errores en vivo con backup +
-  validación + rollback.
-- `self_evolution` — loop antir-estancamiento cada 30 min (inventario vivo,
-  auditoría, micro-mejoras reales sobre `core/`).
-- `observer` — sentidos de Eris (ventana en foco, eventos de actividad,
-  posible mirada-mirar con permiso).
-- Portabilidad Linux Fase 1: arranque y chat por texto en CachyOS.
-- Lote "Section 14M" y batches 3–6 de imports (16 + ~26 herramientas nuevas).
+## [2.7.6] — "Constellation Core"
+Etapa previa (punto de partida de esta versión). Núcleo consolidado: chat dual
+Ollama/Gemini, TTS local Kokoro, memoria Obsidian, evolución continua.

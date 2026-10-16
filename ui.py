@@ -2126,7 +2126,7 @@ class SettingsDialog(QDialog):
             from core.version import ERIS_VERSION, ERIS_STAGE
             ver_lbl = QLabel(f"ERIS v{ERIS_VERSION}  —  {ERIS_STAGE}")
         except Exception:
-            ver_lbl = QLabel(f"ERIS v2.7.6  —  Constellation Core")
+            ver_lbl = QLabel(f"ERIS v3.0.0  —  Constellation Prime")
         ver_lbl.setStyleSheet(f"color: {C.PRI}; font-size: 16px; font-weight: bold; letter-spacing: 2px;")
         stats_layout.addWidget(ver_lbl)
 
@@ -3719,8 +3719,8 @@ class ErisUI:
             _ver = ERIS_VERSION
             _stage = ERIS_STAGE
         except Exception:
-            _ver = "2.7.6"
-            _stage = "Constellation Core"
+            _ver = "3.0.0"
+            _stage = "Constellation Prime"
         self._splash.showMessage(f"ERIS v{_ver} — {_stage}", Qt.AlignmentFlag.AlignCenter, QColor(C.PRI))
         self._app.processEvents()
 

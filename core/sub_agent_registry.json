@@ -171,8 +171,6 @@
       "goal": "Descubrir papers + repos open-source con ideas de agentes que ERIS pueda absorber para auto-evolucionar",
       "backstory": "Soy los ojos de ERIS en el mundo. Leo arXiv y GitHub como los agentes aprenden del código abierto: encuentro la mejora, la destilo y la propongo para el core de ERIS.",
       "tools": [
-        "paper_search",
-        "repo_discovery",
         "web_search",
         "webfetch"
       ]
