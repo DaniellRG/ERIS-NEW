@@ -14,19 +14,26 @@ sin cambios de comportamiento ni de la sync de tools (**514/514**).
   (era el único import eager de `google.genai` del proyecto; los otros 13 sitios ya
   eran lazy). Ahora se importa dentro de `execute()` (~430 ms menos de arranque,
   aunque Eris use Ollama por defecto y Gemini sea el fallback).
-- **`main.py` + `core/tool_dispatcher.py`**: el arranque **ya no carga
-  `core.action_imports`**, que importaba ~296 action modules de golpe. `main.py`
-  importa nombre por nombre solo los ~12 módulos que usa de verdad (con fallback a
-  `None`, igual que antes), y `tool_dispatcher` importa `_eg_on_tool_result`
-  directo de `actions.emotional_growth`. El resto de los 616 nombres sigue
-  disponible igual vía `from core.action_imports import X` **cuando se usa**
-  (los `action_imports.py`/`self_extend` quedan intactos).
+- **`main.py`**: importa nombre por nombre solo los ~12 módulos que usa de verdad
+  (con fallback a `None`, igual que antes), así el arranque ni siquiera carga
+  `core.action_imports`.
+- **`core/action_imports.py` ahora es un registro lazy** (`_LAZY` + `__getattr__`,
+  PEP 562): resuelve cada uno de los 616 nombres **on-demand** desde su módulo real.
+  Antes, el primer `from core.action_imports import X` —en el arranque o en runtime
+  (los ~20 sitios de `tool_dispatcher`, `agent_architecture`, `self_regression`)—
+  importaba de golpe ~296 action modules. El contrato se mantiene: si un módulo
+  falla al importar, el nombre queda en `None` (`except Exception:`, no `ImportError`).
+  `actions/self_extend.py` agrega tools nuevas como entrada en `_LAZY`.
 
 ### Verificado
-- `import main`: mediana **3150 ms → 2948 ms** (−~200 ms, −6.4 %; 10 muestras).
+- `import core.action_imports`: **461 ms → 1.2 ms**; primer
+  `from core.action_imports import X`: **~461 ms → ~15 ms** (ya no carga los 296).
+- `import main`: mediana **3150 ms → 2948 ms** (−~200 ms, −6.4 %).
+- Equivalencia del registro lazy: **616/616 nombres** idénticos al registro eager
+  (0 faltantes, 0 extra, 0 discrepancias; los 7 `None` del venv Linux intactos).
 - `core.action_imports` ya **no** aparece en `sys.modules` tras `import main`.
 - `test_all.py` → **177 PASS / 0 FAIL / 3 WARN**; sync de tools **514/514**,
-  0 duplicados; `symtable` confirma **0 nombres huérfanos** en `main.py`.
+  0 duplicados; 514/514 resuelven; `star-import` sigue ligando los 616.
 
 ## [4.0.0] — 2026-10-16 — "Constellation Prime"
 

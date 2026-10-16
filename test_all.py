@@ -150,19 +150,16 @@ print("[9] ACTION IMPORTS")
 try:
     ai_content = (BASE / "core" / "action_imports.py").read_text("utf-8")
     lines = ai_content.splitlines()
-    import_lines = [l for l in lines if "from actions." in l and "import" in l and "(" not in l]
+    # action_imports.py es un registro lazy: entradas del tipo
+    #     "nombre": ("modulo", "atributo"),
+    # (dentro del dict _LAZY). Cuenta los bindings a modulos 'actions.*'.
+    import re as _re
+    entry_re = _re.compile(r'^\s*"([^"]+)"\s*:\s*\(\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\)\s*,?\s*$')
     action_names = []
-    for l in import_lines:
-        parts = l.split()
-        for i, p in enumerate(parts):
-            if p == "import" and i + 1 < len(parts):
-                # 'from X import f'      -> cuenta 'f'
-                # 'from X import f as g' -> cuenta 'g' (el alias es el binding real;
-                #   reimportar el mismo módulo bajo otro nombre NO es un duplicado)
-                name = parts[i + 1].strip()
-                if i + 3 < len(parts) and parts[i + 2] == "as":
-                    name = parts[i + 3].strip()
-                action_names.append(name)
+    for l in lines:
+        m = entry_re.match(l)
+        if m and m.group(2).startswith("actions."):
+            action_names.append(m.group(1))
     dupes = [n for n in action_names if action_names.count(n) > 1]
     if not dupes:
         ok("imports", f"{len(action_names)} imports, 0 duplicates")

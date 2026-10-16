@@ -100,20 +100,19 @@ def _register(tool_name: str, module: str, func: str, decl: dict) -> tuple[bool,
     except Exception as e:
         errors.append(f"tool_registry: {e}")
 
-    # 2) action_imports.py — insertar try/except block tras el bloque de data_visualize
+    # 2) action_imports.py — registrar la tool en el registro lazy `_LAZY`
+    # (antes se insertaba un bloque try/except; ahora action_imports es un dict
+    #  con carga diferida y self_extend agrega una entrada antes del marcador).
     try:
         src = _IMPORTS.read_text(encoding="utf-8")
-        block = (f"try:\n"
-                 f"    from actions.{tool_name} import {tool_name}\n"
-                 f"except ImportError:\n"
-                 f"    {tool_name} = None\n")
-        if f"from actions.{tool_name}" not in src:
-            anchor = "except ImportError:\n    data_visualize = None\n"
-            if anchor in src:
-                src = src.replace(anchor, anchor + block, 1)
+        if f'"{tool_name}":' not in src:
+            marker = "    # <<< self_extend: nuevas tools >>>"
+            entry = f'    "{tool_name}": ("{module}", "{func}"),\n'
+            if marker in src:
+                src = src.replace(marker, entry + marker, 1)
+                _IMPORTS.write_text(src, encoding="utf-8")
             else:
-                src = src.rstrip("\n") + "\n" + block
-            _IMPORTS.write_text(src, encoding="utf-8")
+                errors.append("action_imports: falta el marcador self_extend en _LAZY")
     except Exception as e:
         errors.append(f"action_imports: {e}")
 

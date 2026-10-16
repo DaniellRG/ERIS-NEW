@@ -1,2178 +1,669 @@
 """
-Action Imports Registry
------------------------
-Centralized try/except import blocks for all action modules.
-Importing this module sets every action name to its real object or None
-if the action module is not installed.
+Action Imports Registry (lazy)
+------------------------------
+Registro central de los nombres de los action modules, con CARGA DIFERIDA.
+
+Acceder a un nombre (por ejemplo `from core.action_imports import open_app`)
+importa SOLO el modulo real de ese nombre, en vez de importar los ~300 action
+modules al arrancar. Compatible con:
+    from core.action_imports import X
+    import core.action_imports as ai; ai.X
+    dir(core.action_imports)
+
+Si un modulo falla al importar (dep opcional o de plataforma ausente), el nombre
+queda en None: mismo contrato resiliente de siempre (cualquier excepcion, NO
+solo ImportError). Los nombres sin modulo real quedan siempre en None.
+
+`actions/self_extend.py` agrega tools nuevas insertando una entrada en `_LAZY`
+(antes del marcador). Generado desde el registro eager previo; equivalencia
+verificada nombre por nombre sobre los 616 nombres.
 """
 
-from memory.memory_manager import (
-    load_memory, update_memory, format_memory_for_prompt,
-)
+import importlib
 
-try:
-    from actions.file_processor import file_processor
-except Exception:
-    file_processor = None
-try:
-    from actions.open_app          import open_app
-except Exception:
-    open_app = None
-try:
-    from actions.weather_report    import weather_action
-except Exception:
-    weather_action = None
-try:
-    from actions.send_message      import send_message
-except Exception:
-    send_message = None
-try:
-    from actions.reminder          import reminder
-except Exception:
-    reminder = None
-try:
-    from actions.computer_settings import computer_settings
-except Exception:
-    computer_settings = None
-try:
-    from actions.screen_vision import screen_vision
-except Exception:
-    screen_vision = None
-try:
-    from actions.youtube_video     import youtube_video
-except Exception:
-    youtube_video = None
-try:
-    from actions.desktop           import desktop_control
-except Exception:
-    desktop_control = None
-try:
-    from actions.browser_control   import browser_control
-except Exception:
-    browser_control = None
-try:
-    from actions.visual_click import visual_click
-except Exception:
-    visual_click = None
-try:
-    from actions.file_controller   import file_controller
-except Exception:
-    file_controller = None
-try:
-    from actions.code_helper       import code_helper
-except Exception:
-    code_helper = None
-try:
-    from actions.dev_agent         import dev_agent
-except Exception:
-    dev_agent = None
-try:
-    from actions.web_search        import web_search as web_search_action, web_search
-except Exception:
-    web_search_action = None; web_search = None
-try:
-    from actions.computer_control  import computer_control
-except Exception:
-    computer_control = None
-try:
-    from actions.google_calendar   import google_calendar
-except Exception:
-    google_calendar = None
-# Nuevos modulos ERIS
-try:
-    from actions.emo_core import emo_core, emo_tick, emo_task_done, emo_task_failed
-except Exception:
-    emo_core = emo_tick = emo_task_done = emo_task_failed = None
+# nombre -> (modulo, atributo)   ·   carga diferida on-demand
+_LAZY = {
+    "_eg_on_tool_result": ("actions.emotional_growth", "on_tool_result"),
+    "_eg_on_user_msg": ("actions.emotional_growth", "on_user_message"),
+    "_mobile_broadcast": ("actions.mobile_server", "broadcast"),
+    "_mobile_start": ("actions.mobile_server", "start"),
+    "_ollama_chat": ("actions.ollama_provider", "chat"),
+    "_ollama_check": ("actions.ollama_provider", "is_available"),
+    "_rules_run_action": ("actions.rules_engine", "_run_action"),
+    "_start_vision_guardian": ("actions.vision_guardian", "start"),
+    "ab_automated": ("core.ab_automated", "ab_automated"),
+    "abstraction": ("core.cognitive_modules", "abstraction"),
+    "accent_personality": ("core.accent_personality", "accent_personality_tool"),
+    "accessibility": ("actions.accessibility", "accessibility"),
+    "accessibility_overlay": ("actions.accessibility_overlay", "accessibility_overlay"),
+    "action_history": ("actions.flow_recorder", "flow_recorder"),
+    "active_firewall": ("actions.active_firewall", "active_firewall"),
+    "adaptive_temperature": ("core.superinteligencia", "adaptive_temperature"),
+    "add": ("actions.quick_actions", "add"),
+    "add_signature": ("actions.pdf_editor", "add_signature"),
+    "adjust_emotion": ("core.emotional_state", "adjust_emotion"),
+    "advanced_rag": ("core.advanced_rag", "advanced_rag_tool"),
+    "agelix": ("agents.agenlix_agent", "agelix"),
+    "agent_as_tool": ("core.agent_as_tool", "create_sub_agent"),
+    "agent_bus": ("core.agent_bus", "get_agent_bus"),
+    "agent_loop": ("core.agent_architecture", "agent_loop"),
+    "agent_task": ("actions.agent_task", "agent_task"),
+    "agente_sub": ("actions.sub_agent_manager", "sub_agent_manager"),
+    "agi_agent": ("core.agi_tools", "agi_agent"),
+    "agi_memory": ("core.agi_tools", "agi_memory"),
+    "agi_reasoning": ("core.agi_tools", "agi_reasoning"),
+    "agi_self_improve": ("core.agi_tools", "agi_self_improve"),
+    "agi_world_model": ("core.agi_tools", "agi_world_model"),
+    "alarm_manager": ("actions.alarm_manager", "alarm_manager"),
+    "alert_rules": ("core.alert_rules", "alert_rules_tool"),
+    "already_briefed_today": ("actions.morning_brief", "already_briefed_today"),
+    "ambiente": ("core.ambiente", "ambiente_tool"),
+    "analogical_reasoning": ("core.cognitive_modules", "analogical_reasoning"),
+    "angular_designer": ("actions.angular_designer", "angular_designer"),
+    "anomaly_detector": ("core.superinteligencia", "anomaly_detector"),
+    "api_doc_generator": ("core.api_doc_generator", "api_doc_generator_tool"),
+    "api_server": ("actions.api_server", "api_server"),
+    "api_tester": ("core.api_tester", "api_tester_tool"),
+    "app_discovery": ("actions.app_discovery", "app_discovery"),
+    "app_installer": ("actions.app_installer", "app_installer"),
+    "aprendizaje_videos": ("actions.aprendizaje_videos", "aprendizaje_videos"),
+    "ask_opencode": ("actions.ask_opencode", "ask_opencode"),
+    "ask_user": ("actions.ask_user", "ask_user"),
+    "assumption_detection": ("core.cognitive_modules", "assumption_detection"),
+    "ast_analyze": ("core.ast_editor", "analyze_file"),
+    "ast_edit": ("core.ast_editor", "safe_edit"),
+    "attention_management": ("core.cognitive_modules", "attention_management"),
+    "audio_diagnostic": ("actions.audio_diagnostic", "audio_diagnostic"),
+    "audio_transcriber": ("actions.audio_transcriber", "audio_transcriber"),
+    "auto_agent": ("actions.auto_agent", "auto_agent"),
+    "auto_backup": ("actions.auto_backup", "auto_backup"),
+    "auto_defensa": ("core.auto_defensa", "auto_defensa"),
+    "auto_documenter": ("core.superinteligencia", "auto_documenter"),
+    "auto_fabrica": ("core.auto_fabrica", "auto_fabrica"),
+    "auto_healer": ("core.auto_healer", "auto_healer"),
+    "auto_mejora": ("core.self_improvement", "auto_mejora"),
+    "auto_programmer": ("actions.auto_programmer", "auto_programmer"),
+    "auto_salud": ("core.self_health", "self_health_tool"),
+    "autoimagen": ("core.autoimagen", "autoimagen_tool"),
+    "autonomous_learner": ("core.autonomous_learner", "autonomous_learner"),
+    "autonomy": ("core.autonomy", "autonomy_tool"),
+    "backup_prioritizer": ("core.superinteligencia", "backup_prioritizer"),
+    "backup_system": ("actions.backup_system", "backup_system"),
+    "batch_executor": ("core.batch_executor", "as_completed"),
+    "bias_detection": ("core.cognitive_modules", "bias_detection"),
+    "bienestar": ("core.bienestar", "bienestar_tool"),
+    "browser_auto": ("actions.browser_auto", "browser_auto"),
+    "browser_control": ("actions.browser_control", "browser_control"),
+    "browser_extension": ("actions.browser_extension", "browser_extension"),
+    "browser_history": ("actions.browser_history", "browser_history"),
+    "browser_unified": ("actions.browser_unified", "browser_unified"),
+    "calculator": ("actions.calculator", "calculator"),
+    "calendar_manager": ("actions.calendar_manager", "calendar_manager"),
+    "camera_bus": ("actions.camera_bus", "camera_bus"),
+    "cancion_generator": ("actions.cancion_generator", "cancion_generator"),
+    "capability_assessor": ("core.superinteligencia", "capability_assessor"),
+    "caprichos": ("core.caprichos", "caprichos_tool"),
+    "cerebro": ("core.cerebro", "cerebro_tool"),
+    "chain_of_thought": ("core.cognitive_modules", "chain_of_thought"),
+    "changelog_generator": ("core.changelog_generator", "changelog_generator_tool"),
+    "chart_generator": ("actions.chart_generator", "chart_generator"),
+    "check_phrase_triggers": ("actions.rules_engine", "check_phrase_triggers"),
+    "ci_cd": ("actions.ci_cd", "ci_cd"),
+    "cicd_builder": ("core.cicd_builder", "cicd_builder_tool"),
+    "clipboard_history": ("actions.clipboard_history", "clipboard_history"),
+    "clipboard_manager": ("actions.clipboard_manager", "clipboard_manager"),
+    "code_analyzer": ("actions.code_analyzer", "code_analyzer"),
+    "code_assistant": ("actions.code_assistant", "full_scan"),
+    "code_copilot": ("actions.code_copilot", "code_copilot"),
+    "code_engineer": ("core.code_engineer", "code_engineer"),
+    "code_generator": ("actions.code_generator", "code_generator"),
+    "code_guard": ("core.code_guard", "code_guard_tool"),
+    "code_helper": ("actions.code_helper", "code_helper"),
+    "code_review": ("actions.code_review", "code_review"),
+    "code_sandbox": ("core.code_sandbox", "code_sandbox"),
+    "code_validator": ("actions.code_validator", "code_validator"),
+    "codebase": ("actions.codebase", "codebase"),
+    "codebase_explorer": ("core.codebase_explorer", "codebase_explorer"),
+    "cognitive_modules": ("core.cognitive_modules", "cognitive_modules"),
+    "compaction": ("core.compaction", "compaction_tool"),
+    "computer_control": ("actions.computer_control", "computer_control"),
+    "computer_settings": ("actions.computer_settings", "computer_settings"),
+    "confidence_calibration": ("core.cognitive_modules", "confidence_calibration"),
+    "confidence_scorer": ("core.superinteligencia", "confidence_scorer"),
+    "config_export": ("actions.config_export", "config_export"),
+    "connectivity": ("core.connectivity", "connectivity_tool"),
+    "connectivity_tool": ("core.connectivity", "connectivity_tool"),
+    "console_log": ("actions.console_log", "console_log"),
+    "context7": ("actions.context7", "handle_context7"),
+    "context_bridge": ("core.context_bridge", "answer_question"),
+    "context_engine": ("actions.context_engine", "context_engine"),
+    "context_menu": ("actions.context_menu", "context_menu"),
+    "context_optimizer": ("core.superinteligencia", "context_optimizer"),
+    "context_read": ("actions.context_files", "context_read"),
+    "context_update": ("actions.context_files", "context_update"),
+    "contextual_awareness": ("core.contextual_awareness", "contextual_awareness_tool"),
+    "contextual_control": ("actions.contextual_control", "contextual_control"),
+    "contradiction_detection": ("core.cognitive_modules", "contradiction_detection"),
+    "conversation_brancher": ("core.superinteligencia", "conversation_brancher"),
+    "conversation_replayer": ("core.superinteligencia", "conversation_replayer"),
+    "conversation_search": ("actions.conversation_search", "conversation_search"),
+    "convo_log": ("actions.eris_db", "convo_log"),
+    "convo_recent": ("actions.eris_db", "convo_recent"),
+    "convo_search": ("actions.eris_db", "convo_search"),
+    "cost_tracker": ("core.superinteligencia", "cost_tracker"),
+    "coverage_reporter": ("core.coverage_reporter", "coverage_reporter_tool"),
+    "crash_recovery": ("core.crash_recovery", "crash_recovery_tool"),
+    "creative_generation": ("core.cognitive_modules", "creative_generation"),
+    "credential_recovery": ("actions.credential_recovery", "credential_recovery"),
+    "cron_scheduler": ("core.cron_scheduler", "cron_scheduler_tool"),
+    "ctx_install": ("actions.context_menu", "install"),
+    "ctx_status": ("actions.context_menu", "status"),
+    "ctx_uninstall": ("actions.context_menu", "uninstall"),
+    "cuadernos": ("core.cuadernos", "cuadernos_tool"),
+    "curar_memoria": ("core.memory_curation", "curar_memoria"),
+    "curiosity_engine": ("actions.curiosity_engine", "curiosity_tell_fact"),
+    "curiosity_fact": ("actions.curiosity_fact", "curiosity_fact"),
+    "curiosity_fun": ("actions.curiosity_fun", "curiosity_fun"),
+    "curiosity_greeting": ("actions.curiosity_engine", "curiosity_greeting"),
+    "curiosity_joke": ("actions.curiosity_joke", "curiosity_joke"),
+    "curiosity_laugh": ("actions.curiosity_engine", "curiosity_laugh"),
+    "curiosity_suggest_fun": ("actions.curiosity_engine", "curiosity_suggest_fun"),
+    "curiosity_tell_fact": ("actions.curiosity_engine", "curiosity_tell_fact"),
+    "curiosity_tell_joke": ("actions.curiosity_engine", "curiosity_tell_joke"),
+    "curiosity_trending": ("actions.curiosity_trending", "curiosity_trending"),
+    "cybersecurity": ("actions.cybersecurity", "cybersecurity"),
+    "daily_digest": ("core.daily_digest", "daily_digest_tool"),
+    "daily_health_report": ("actions.daily_health_report", "daily_health_report"),
+    "darkweb_monitor": ("actions.darkweb_monitor", "darkweb_monitor"),
+    "dashboard": ("actions.dashboard", "dashboard"),
+    "dashboard_status": ("actions.dashboard_server", "dashboard_status"),
+    "dashboard_web": ("actions.dashboard_web", "dashboard_web"),
+    "data_analyst": ("actions.data_analyst", "data_analyst"),
+    "data_connectors": ("actions.data_connectors", "data_connectors"),
+    "data_encryption": ("actions.data_encryption", "data_encryption"),
+    "data_visualize": ("actions.data_visualize", "data_visualize"),
+    "data_viz": ("actions.data_viz", "data_viz"),
+    "db_knowledge": ("actions.db_knowledge", "db_knowledge"),
+    "db_memory": ("actions.db_memory", "db_memory"),
+    "db_schema_visualizer": ("core.db_schema_visualizer", "db_schema_visualizer_tool"),
+    "db_stats": ("actions.eris_db", "db_stats"),
+    "db_tasks": ("actions.db_tasks", "db_tasks"),
+    "db_tool_log": ("actions.eris_db", "tool_log"),
+    "debate_engine": ("core.cognitive_modules", "debate_engine"),
+    "deep_research": ("actions.deep_research", "deep_research"),
+    "dep_vuln_scanner": ("core.dep_vulnerability_scanner", "dep_vulnerability_scanner_tool"),
+    "dependency_manager": ("actions.dependency_manager", "dependency_manager"),
+    "desktop_control": ("actions.desktop", "desktop_control"),
+    "desktop_notifications": ("actions.desktop_notifications", "desktop_notifications"),
+    "despedidas": ("core.despedidas", "despedidas_tool"),
+    "detect_user_mood": ("core.emotional_state", "detect_user_mood"),
+    "dev_agent": ("actions.dev_agent", "dev_agent"),
+    "devops_pipeline": ("core.devops_pipeline", "devops_pipeline"),
+    "diagnostico": ("actions.diagnostico", "diagnostico"),
+    "disk_wiper": ("actions.disk_wiper", "disk_wiper"),
+    "docker_deploy": ("actions.docker_deploy", "docker_deploy"),
+    "docker_manager": ("core.docker_manager", "docker_manager_tool"),
+    "docstring_generator": ("core.docstring_generator", "docstring_generator_tool"),
+    "document_creator": ("actions.document_creator", "document_creator"),
+    "document_generator": ("actions.document_generator", "document_generator"),
+    "document_handler": ("actions.document_handler", "document_handler"),
+    "document_manager": ("actions.document_manager", "document_manager"),
+    "document_rag": ("actions.document_rag", "document_rag"),
+    "document_tool": ("actions.document_tool", "document_tool"),
+    "dream_consolidator": ("core.superinteligencia", "dream_consolidator"),
+    "driver_manager": ("actions.driver_manager", "driver_manager"),
+    "edit_journal": ("core.edit_journal", "edit_journal"),
+    "email_calendar_deep": ("core.email_calendar_deep", "email_calendar_deep"),
+    "email_manager": ("actions.email_manager", "email_manager"),
+    "emo_core": ("actions.emo_core", "emo_core"),
+    "emo_task_done": ("actions.emo_core", "emo_task_done"),
+    "emo_task_failed": ("actions.emo_core", "emo_task_failed"),
+    "emo_tick": ("actions.emo_core", "emo_tick"),
+    "emotional_core": ("core.emotional_core", "emotional_core_tool"),
+    "emotional_growth": ("actions.emotional_growth", "emotional_growth"),
+    "emotional_memory": ("core.emotional_memory", "emotional_memory_tool"),
+    "emotional_rl": ("core.emotional_rl", "emotional_rl_tool"),
+    "emotional_state": ("core.emotional_state", "emotional_state_tool"),
+    "emotional_state_tool": ("core.emotional_state", "emotional_state_tool"),
+    "emotional_tone": ("core.emotional_tone", "emotional_tone_tool"),
+    "english_teacher": ("actions.english_teacher", "english_teacher"),
+    "episodic_add": ("actions.eris_db", "episodic_add"),
+    "episodic_count": ("actions.eris_db", "episodic_count"),
+    "episodic_log": ("actions.episodic_log", "episodic_log"),
+    "episodic_recent": ("actions.eris_db", "episodic_recent"),
+    "episodic_search": ("actions.eris_db", "episodic_search"),
+    "eris_guardian": ("actions.eris_guardian", "eris_guardian"),
+    "eris_style": ("core.style_engine", "eris_style"),
+    "eris_ui_control": ("actions.eris_ui_control", "eris_ui_control"),
+    "eris_update": ("core.updater", "check_for_update"),
+    "eris_updater": ("core.updater", "eris_updater"),
+    "error_log": ("actions.eris_db", "error_log"),
+    "error_pattern_db": ("core.superinteligencia", "error_pattern_db"),
+    "error_recovery": ("core.superinteligencia", "error_recovery"),
+    "escalada": ("core.escalada", "escalada_tool"),
+    "ethical_reasoning": ("core.cognitive_modules", "ethical_reasoning"),
+    "evolucion": ("core.self_evolution", "self_evolution_tool"),
+    "evolution_campaigns": ("core.evolution_campaigns", "evolve_campaigns"),
+    "expresion_eris": ("core.expression_engine", "expression_tool"),
+    "fabrica": ("core.eris_fabrica", "eris_fabrica"),
+    "federated_learning": ("actions.federated_learning", "federated_learning"),
+    "feedback_learner": ("core.superinteligencia", "feedback_learner"),
+    "festejos": ("core.festejos", "festejos_tool"),
+    "file_api": ("core.file_api", "file_api"),
+    "file_controller": ("actions.file_controller", "file_controller"),
+    "file_editor": ("actions.file_editor", "file_editor"),
+    "file_encryptor": ("actions.file_encryptor", "file_encryptor"),
+    "file_manager": ("actions.file_manager", "file_manager"),
+    "file_monitor": ("actions.file_monitor", "file_monitor"),
+    "file_organizer": ("actions.smart_file_organizer", "get_file_md5"),
+    "file_processor": ("actions.file_processor", "file_processor"),
+    "file_profiler": ("core.superinteligencia", "file_profiler"),
+    "fill_form": ("actions.pdf_editor", "fill_form"),
+    "finance_tracker": ("actions.finance_tracker", "finance_tracker"),
+    "flow_recorder": ("actions.flow_recorder", "flow_recorder"),
+    "format_memory_for_prompt": ("memory.memory_manager", "format_memory_for_prompt"),
+    "full_training": ("actions.full_training", "full_training"),
+    "fun_mode": ("actions.fun_mode", "fun_mode"),
+    "game_agent": ("actions.game_agent", "game_agent"),
+    "game_companion": ("actions.game_companion", "game_companion"),
+    "game_launcher": ("actions.game_launcher", "game_launcher"),
+    "get_capabilities": ("core.self_map", "get_capabilities"),
+    "get_emotional_state": ("core.emotional_state", "get_emotional_state"),
+    "get_face_expression": ("core.emotional_state", "get_face_expression"),
+    "get_file_tree": ("core.self_map", "get_file_tree"),
+    "get_full_map": ("core.self_map", "get_full_map"),
+    "get_guardian_status": ("actions.eris_guardian", "get_guardian_status"),
+    "get_mood_description": ("core.emotional_state", "get_mood_description"),
+    "get_plugin_manager": ("core.plugin_manager", "get_plugin_manager"),
+    "get_recent_changes": ("core.self_map", "get_recent_changes"),
+    "get_tone_instruction": ("core.emotional_state", "get_tone_instruction"),
+    "git_autonomo": ("actions.git_autonomo", "git_autonomo"),
+    "git_control": ("actions.git_control", "git_control"),
+    "git_daily": ("actions.git_daily", "git_daily"),
+    "git_smart": ("actions.git_smart", "git_smart"),
+    "github_pr": ("actions.github_pr", "github_pr"),
+    "gmail_control": ("actions.gmail_control", "gmail_control"),
+    "goal_management": ("core.cognitive_modules", "goal_management"),
+    "goal_setting": ("core.goal_setting", "goal_setting_tool"),
+    "goal_tracker": ("core.superinteligencia", "goal_tracker"),
+    "goals": ("actions.goals", "goals"),
+    "google_calendar": ("actions.google_calendar", "google_calendar"),
+    "guard": ("core.code_guard", "code_guard_tool"),
+    "guardiana": ("agents.guardiana_agent", "guardiana"),
+    "gustos": ("actions.gustos", "gustos"),
+    "habit_predictor": ("actions.habit_predictor", "habit_predictor"),
+    "habit_tracker": ("actions.habit_tracker", "habit_tracker"),
+    "hermes_code_review": ("core.hermes_tools", "hermes_code_review"),
+    "hermes_csv_processor": ("core.hermes_tools", "hermes_csv_processor"),
+    "hermes_data_analyzer": ("core.hermes_tools", "hermes_data_analyzer"),
+    "hermes_page_summarizer": ("core.hermes_tools", "hermes_page_summarizer"),
+    "hermes_security_audit": ("core.hermes_tools", "hermes_security_audit"),
+    "hermes_web_scraper": ("core.hermes_tools", "hermes_web_scraper"),
+    "hermes_web_search": ("core.hermes_tools", "hermes_web_search"),
+    "home_assistant": ("actions.home_assistant", "home_assistant"),
+    "hud_terminal": ("core.hud_terminal", "hud_terminal"),
+    "huggingface": ("actions.huggingface", "huggingface"),
+    "human_mouse": ("actions.human_mouse", "human_mouse"),
+    "hypothesis_generator": ("core.cognitive_modules", "hypothesis_generator"),
+    "i18n": ("actions.i18n", "i18n"),
+    "i18n_ui": ("actions.i18n_ui", "i18n_ui"),
+    "ide_integration": ("actions.ide_integration", "ide_integration"),
+    "identity_persistence": ("core.identity_persistence", "identity_persistence_tool"),
+    "image_analyzer": ("actions.image_analyzer", "image_analyzer"),
+    "image_generation": ("actions.image_generation", "image_generation"),
+    "image_generator": ("actions.image_generator", "image_generator"),
+    "informe_semanal": ("core.informe_semanal", "informe_semanal"),
+    "intellectual_humility": ("core.cognitive_modules", "intellectual_humility"),
+    "intent_classifier": ("core.superinteligencia", "intent_classifier"),
+    "intereses": ("core.intereses", "intereses_tool"),
+    "kde_connect": ("actions.kde_connect", "kde_connect"),
+    "keylogger_detector": ("actions.keylogger_detector", "keylogger_detector"),
+    "know_add": ("actions.eris_db", "know_add"),
+    "know_by_topic": ("actions.eris_db", "know_by_topic"),
+    "know_search": ("actions.eris_db", "know_search"),
+    "knowledge_base": ("actions.knowledge_base", "knowledge_base"),
+    "knowledge_distiller": ("core.superinteligencia", "knowledge_distiller"),
+    "knowledge_graph": ("actions.knowledge_graph", "knowledge_graph"),
+    "knowledge_graph_adv": ("core.knowledge_graph_advanced", "knowledge_graph_tool"),
+    "knowledge_ingestor": ("actions.knowledge_ingestor", "knowledge_ingestor"),
+    "knowledge_verifier": ("core.superinteligencia", "knowledge_verifier"),
+    "learn_from_mistake": ("actions.learn_from_mistake", "learn_from_mistake"),
+    "learn_session": ("actions.learn_session", "learn_session"),
+    "learning_curriculum": ("core.learning_curriculum", "complete_exercise"),
+    "learning_engine": ("core.learning_engine", "learning_engine"),
+    "learning_pipeline": ("core.learning_pipeline", "learning_pipeline_tool"),
+    "list_actions": ("actions.quick_actions", "list_actions"),
+    "llm_router": ("core.llm_router", "llm_router_tool"),
+    "load_memory": ("memory.memory_manager", "load_memory"),
+    "lsp_manager": ("core.lsp_manager", "lsp_tool"),
+    "maintenance": ("core.maintenance_scheduler", "maintenance"),
+    "mark_briefed": ("actions.morning_brief", "mark_briefed"),
+    "mcp_bridge": ("core.mcp_bridge", "mcp_bridge"),
+    "mcp_manager": ("core.mcp_manager", "mcp_tool"),
+    "mcp_server": ("core.mcp_server", "mcp_server_tool"),
+    "mcp_tool": ("actions.mcp_tool", "mcp_tool"),
+    "media_lab": ("actions.media_lab", "media_lab"),
+    "meeting_transcriber": ("actions.meeting_transcriber", "meeting_transcriber"),
+    "memoria": ("agents.memoria_agent", "memoria"),
+    "memory_all": ("actions.eris_db", "memory_all"),
+    "memory_consolidate": ("actions.memory_consolidation", "memory_consolidate"),
+    "memory_consolidation": ("core.memory_consolidation", "memory_consolidation_tool"),
+    "memory_consolidator": ("core.memory_consolidator", "memory_consolidator"),
+    "memory_delete": ("actions.eris_db", "memory_delete"),
+    "memory_get": ("actions.eris_db", "memory_get"),
+    "memory_nudge": ("actions.memory_nudge", "memory_nudge"),
+    "memory_rag": ("actions.memory_rag", "memory_rag"),
+    "memory_search": ("core.memory_consolidation", "memory_consolidation_tool"),
+    "memory_set": ("actions.eris_db", "memory_set"),
+    "memory_unified": ("core.memory_unified", "get_memory"),
+    "mentora": ("agents.mentora_agent", "mentora"),
+    "merge_pdfs": ("actions.pdf_editor", "merge_pdfs"),
+    "meta_cognition": ("core.cognitive_modules", "meta_cognition"),
+    "meta_communication": ("core.cognitive_modules", "meta_communication"),
+    "meta_reasoner": ("core.superinteligencia", "meta_reasoner"),
+    "metrics_dashboard": ("core.superinteligencia", "metrics_dashboard"),
+    "mission": ("core.mission_agent", "mission_tool"),
+    "mistake_learner": ("core.superinteligencia", "mistake_learner"),
+    "model_evaluator": ("core.model_evaluator", "model_evaluator_tool"),
+    "morning_brief": ("actions.morning_brief", "morning_brief"),
+    "multi_agent": ("core.superinteligencia", "multi_agent"),
+    "multi_ai_hub": ("core.multi_ai_hub", "tool_multi_ai_hub"),
+    "multi_perspective": ("core.cognitive_modules", "multi_perspective"),
+    "multi_search": ("actions.multi_search", "multi_search"),
+    "multi_user": ("actions.multi_user", "multi_user"),
+    "multi_user_profiles": ("core.multi_user_profiles", "multi_user_tool"),
+    "multilang_learning": ("core.multilang_learning", "multilang_learning_tool"),
+    "music_player": ("actions.music_player", "music_player"),
+    "native_ui": ("actions.native_ui", "native_ui"),
+    "natural_pauses": ("core.natural_pauses", "natural_pauses_tool"),
+    "network_monitor": ("actions.network_monitor", "network_monitor"),
+    "neural_bridge": ("core.neural_bridge", "neural_bridge_tool"),
+    "neuro_spheres": ("core.neuro_spheres", "neuro_spheres"),
+    "next_designer": ("actions.next_designer", "next_designer"),
+    "notification_center": ("actions.notification_center", "notification_center"),
+    "notifications": ("actions.notifications", "notify"),
+    "observer": ("core.observer", "observer_tool"),
+    "obsidian_note": ("actions.obsidian_brain", "obsidian_note"),
+    "ocr_reader": ("actions.ocr_reader", "ocr_reader"),
+    "ocr_tool": ("actions.ocr_tool", "ocr_tool"),
+    "office_docs": ("actions.office_tools", "office_docs"),
+    "ollama_status": ("core.model_router", "status"),
+    "open_app": ("actions.open_app", "open_app"),
+    "opencode_bridge": ("core.opencode_bridge", "bridge_tool"),
+    "opencode_task": ("agents.opencode_bridge", "opencode_task"),
+    "openrouter_agent": ("actions.openrouter_agent", "openrouter_agent"),
+    "osint_agent": ("actions.osint_agent", "osint_agent"),
+    "page_summarizer": ("actions.page_summarizer", "page_summarizer"),
+    "parallel_agents": ("actions.parallel_agents", "parallel_agents"),
+    "pc_control": ("actions.pc_control", "pc_control"),
+    "pdf_editor": ("actions.pdf_editor", "pdf_editor"),
+    "pdf_generator": ("actions.pdf_generator", "pdf_generator"),
+    "pdf_info": ("actions.pdf_editor", "pdf_info"),
+    "pdf_manager": ("actions.pdf_manager", "pdf_manager"),
+    "pentest_lab": ("core.pentest_lab", "pentest_lab"),
+    "permission_gate": ("core.permission_gate", "get_permission_gate"),
+    "permission_policy": ("core.permission_gate", "permission_policy_tool"),
+    "personality": ("actions.personality", "personality_engine"),
+    "phone_control": ("actions.phone_control", "phone_control"),
+    "plan_adaptation": ("core.superinteligencia", "plan_adaptation"),
+    "play_direct": ("actions.play_direct", "play_direct"),
+    "plugin_loader": ("actions.plugin_loader", "plugin_loader"),
+    "plugin_manage": ("actions.plugin_manage", "plugin_manage"),
+    "plugin_marketplace": ("actions.plugin_marketplace", "plugin_marketplace"),
+    "predict_analyze": ("actions.predict_analyze", "predict_analyze"),
+    "presentation_generator": ("actions.presentation_generator", "presentation_generator"),
+    "principled_reasoning": ("core.cognitive_modules", "principled_reasoning"),
+    "pro_contexto": ("core.proactive_context", "pro_contexto"),
+    "proactive_automation": ("actions.proactive_automation", "proactive_automation"),
+    "proactive_comms": ("core.proactive_comms", "proactive_comms_tool"),
+    "proactive_ia": ("actions.proactive_ia", "proactive_ia"),
+    "proactive_learn": ("actions.curiosity_engine", "proactive_learn"),
+    "proactive_monitor": ("core.proactive_monitor", "monitoring_tool"),
+    "proactive_suggest": ("actions.curiosity_engine", "proactive_suggest"),
+    "proactive_suggester": ("core.superinteligencia", "proactive_suggester"),
+    "procedimientos": ("core.procedimientos", "procedimientos"),
+    "process_manager": ("actions.process_manager", "process_manager"),
+    "profile_get": ("actions.eris_db", "profile_get"),
+    "profile_set": ("actions.eris_db", "profile_set"),
+    "program_manager": ("actions.program_manager", "program_manager"),
+    "progressive_context": ("core.progressive_context", "build_progressive_context"),
+    "project_builder": ("actions.project_builder", "project_builder"),
+    "prompt_ab": ("core.prompt_ab_testing", "prompt_ab"),
+    "prompt_compressor": ("core.prompt_compressor", "compress_history"),
+    "prompt_optimizer": ("core.prompt_optimizer", "prompt_optimizer_tool"),
+    "qa_execute": ("actions.quick_actions", "execute"),
+    "quick_actions": ("actions.quick_actions", "run"),
+    "rag_engine": ("core.rag_engine", "rag_engine"),
+    "ransomware_shield": ("actions.ransomware_shield", "ransomware_shield"),
+    "react_designer": ("actions.react_designer", "react_designer"),
+    "react_to_failure": ("core.emotional_state", "react_to_failure"),
+    "react_to_success": ("core.emotional_state", "react_to_success"),
+    "react_to_user_interaction": ("core.emotional_state", "react_to_user_interaction"),
+    "react_to_user_text": ("core.emotional_state", "react_to_user_text"),
+    "read_pdf": ("actions.pdf_editor", "read_pdf"),
+    "real_time_tts": ("actions.real_time_tts", "real_time_tts"),
+    "recall_lessons": ("agents.opencode_bridge", "recall_lessons"),
+    "record_action": ("actions.user_profile", "record_action"),
+    "recording_status": ("actions.screen_recorder", "recording_status"),
+    "refactoring_engine": ("core.refactoring_engine", "refactoring_engine"),
+    "reflection": ("core.superinteligencia", "reflection"),
+    "relaciones": ("core.relaciones", "relaciones_tool"),
+    "relationship": ("actions.relationship", "relationship"),
+    "reminder": ("actions.reminder", "reminder"),
+    "reminders": ("actions.reminders", "reminders"),
+    "remove": ("actions.quick_actions", "remove"),
+    "res_monitor": ("actions.res_monitor", "res_monitor"),
+    "res_protect": ("actions.res_protect", "res_protect"),
+    "research": ("actions.research_agent", "research"),
+    "resource_manager": ("core.resource_manager", "resource_manager_tool"),
+    "resource_optimizer": ("core.superinteligencia", "resource_optimizer"),
+    "retrospectiva": ("core.retrospectiva", "retrospectiva_tool"),
+    "reverse_engineering": ("actions.reverse_engineering", "reverse_engineering"),
+    "rgb_control": ("actions.rgb_control", "rgb_control"),
+    "roadmap": ("actions.roadmap", "roadmap"),
+    "role_orchestrator": ("actions.role_orchestrator", "role_orchestrator"),
+    "rss_reader": ("actions.rss_reader", "rss_reader"),
+    "rules_engine": ("actions.rules_engine", "rules_engine"),
+    "rutinas_diarias": ("actions.rutinas_diarias", "rutinas_diarias"),
+    "sandbox_execution": ("actions.sandbox_execution", "sandbox_execution"),
+    "save_everywhere": ("actions.eris_db", "save_everywhere"),
+    "save_memory": ("actions.save_memory", "save_memory"),
+    "scheduler": ("actions.scheduler", "scheduler"),
+    "screen_context": ("actions.screen_context", "screen_context"),
+    "screen_reader": ("actions.screen_reader", "screen_reader"),
+    "screen_recorder": ("actions.screen_recorder", "start_recording"),
+    "screen_see": ("actions.autonomous_agent", "screen_see"),
+    "screen_vision": ("actions.screen_vision", "screen_vision"),
+    "screen_whats_there": ("actions.autonomous_agent", "screen_whats_there"),
+    "screen_where_to_click": ("actions.autonomous_agent", "screen_where_to_click"),
+    "screenshot_history": ("actions.screenshot_history", "screenshot_history"),
+    "search_background": ("actions.search_background", "search_background"),
+    "search_info": ("actions.search_info", "search_info"),
+    "search_my_code": ("core.self_map", "search_my_code"),
+    "secret_scanner": ("core.secret_scanner", "secret_scanner_tool"),
+    "security_scanner": ("actions.security_scanner", "security_scanner"),
+    "security_shield": ("actions.security_shield", "security_shield"),
+    "self_awareness": ("actions.self_awareness", "self_awareness"),
+    "self_edit": ("actions.self_edit", "self_edit"),
+    "self_evolution": ("actions.self_evolution", "self_evolution"),
+    "self_evolving_prompts": ("core.self_evolving_prompts", "add_rule"),
+    "self_explainer": ("core.self_explainer", "explain_decision"),
+    "self_extend": ("actions.self_extend", "self_extend"),
+    "self_heal": ("actions.self_heal", "self_heal"),
+    "self_healing": ("core.self_healing", "self_healing_tool"),
+    "self_healing_loop": ("actions.self_healing_loop", "self_healing_loop"),
+    "self_improve": ("core.self_modify", "self_improve"),
+    "self_improvement_loop": ("actions.self_improvement_loop", "self_improvement_loop"),
+    "self_map": ("core.self_map", "get_capabilities"),
+    "self_model": ("core.cognitive_modules", "self_model"),
+    "self_modify": ("actions.self_edit", "self_modify"),
+    "self_protection": ("actions.self_protection", "self_protection"),
+    "self_regression": ("actions.self_regression", "self_regression"),
+    "semantic_deduplicator": ("core.superinteligencia", "semantic_deduplicator"),
+    "send_message": ("actions.send_message", "send_message"),
+    "send_sms": ("actions.sms_manager", "send_sms"),
+    "sesiones": ("core.session_summaries", "sesiones"),
+    "session_analytics": ("core.superinteligencia", "session_analytics"),
+    "session_debugger": ("core.superinteligencia", "session_debugger"),
+    "shell_executor": ("actions.terminal_agent", "terminal_agent"),
+    "shell_session": ("core.shell_session", "run_shell_tool"),
+    "show_expression": ("actions.show_expression", "show_expression"),
+    "shutdown_eris": ("actions.shutdown_eris", "shutdown_eris"),
+    "skill_creator": ("core.superinteligencia", "skill_creator"),
+    "skill_manage": ("skills.skill_registry", "skill_manage"),
+    "skill_marketplace": ("actions.skill_marketplace", "skill_marketplace"),
+    "skill_recommender": ("core.superinteligencia", "skill_recommender"),
+    "sleep_mode": ("actions.sleep_mode", "sleep_mode"),
+    "smart_browser": ("actions.smart_browser", "smart_browser"),
+    "smart_cache": ("actions.smart_cache", "smart_cache"),
+    "smart_file_organizer": ("actions.smart_file_organizer", "smart_file_organizer"),
+    "smart_home": ("actions.smart_home", "smart_home"),
+    "smart_notifications": ("actions.smart_notifications", "smart_notifications"),
+    "smart_retry": ("core.superinteligencia", "smart_retry"),
+    "sms": ("actions.sms", "sms"),
+    "sms_history": ("actions.sms_manager", "history"),
+    "sms_status": ("actions.sms_manager", "sms_status"),
+    "social_dynamics": ("core.cognitive_modules", "social_dynamics"),
+    "speaker_recognition": ("actions.speaker_recognition", "speaker_recognition"),
+    "split_pdf": ("actions.pdf_editor", "split_pdf"),
+    "spotify_control": ("actions.spotify_control", "spotify_control"),
+    "spreadsheet_generator": ("actions.spreadsheet_generator", "spreadsheet_generator"),
+    "sql_executor": ("core.sql_executor", "sql_executor_tool"),
+    "sql_manager": ("actions.sql_manager", "sql_manager"),
+    "ssh_remote": ("actions.ssh_remote", "ssh_remote"),
+    "start_dashboard": ("actions.dashboard_server", "start_dashboard"),
+    "start_monitor": ("actions.eris_guardian", "start_monitor"),
+    "start_recording": ("actions.screen_recorder", "start_recording"),
+    "start_rules_runner": ("actions.rules_engine", "start_rules_runner"),
+    "start_runner": ("actions.scheduler", "start_runner"),
+    "start_server": ("actions.web_jobs", "start_server"),
+    "stop_dashboard": ("actions.dashboard_server", "stop_dashboard"),
+    "stop_monitor": ("actions.eris_guardian", "stop_monitor"),
+    "stop_recording": ("actions.screen_recorder", "stop_recording"),
+    "storytelling_engine": ("core.cognitive_modules", "storytelling_engine"),
+    "subagent_task": ("actions.subagent_task", "subagent_task"),
+    "suenos": ("core.suenos", "sueno_tool"),
+    "super_search": ("actions.super_search", "super_search"),
+    "superpowers_activate": ("actions.superpowers_activate", "superpowers_activate"),
+    "superpowers_list": ("skills.superpowers", "superpowers_list"),
+    "superpowers_skill": ("actions.superpowers_skill", "superpowers_skill"),
+    "superpowers_tool_declaration": ("skills.superpowers", "superpowers_tool_declaration"),
+    "system_health": ("core.system_health", "system_health_tool"),
+    "system_monitor": ("actions.system_monitor", "system_monitor"),
+    "system_reader": ("actions.system_reader", "system_reader"),
+    "system_status": ("actions.system_status", "system_status"),
+    "system_volume": ("actions.system_volume", "system_volume"),
+    "task_add": ("actions.eris_db", "task_add"),
+    "task_delete": ("actions.eris_db", "task_delete"),
+    "task_engine": ("core.task_engine", "TaskEngine"),
+    "task_list": ("actions.eris_db", "task_list"),
+    "task_manager": ("actions.task_manager", "task_manager"),
+    "task_planner": ("core.task_planner", "task_planner_tool"),
+    "task_queue": ("actions.task_queue", "task_queue"),
+    "task_scheduler": ("actions.task_scheduler", "task_scheduler"),
+    "task_tree": ("core.superinteligencia", "task_tree"),
+    "task_update": ("actions.eris_db", "task_update"),
+    "teaching_optimizer": ("core.cognitive_modules", "teaching_optimizer"),
+    "telegram_bot": ("actions.telegram_bot", "telegram_bot"),
+    "template_engine": ("actions.template_engine", "template_engine"),
+    "temporal_reasoning": ("core.cognitive_modules", "temporal_reasoning"),
+    "terminal_agent": ("actions.terminal_agent", "terminal_agent"),
+    "test_generator": ("core.test_generator", "test_generator"),
+    "test_runner": ("core.test_runner", "test_runner_tool"),
+    "text_summarizer": ("actions.text_summarizer", "text_summarizer"),
+    "theme_manager": ("actions.theme_manager", "theme_manager"),
+    "tiempo_interno": ("core.tiempo_interno", "tiempo_interno_tool"),
+    "tiktok_analyzer": ("actions.tiktok_analyzer", "tiktok_analyzer"),
+    "todo_yo": ("core.todo_yo", "todo_yo_tool"),
+    "todowrite": ("actions.todowrite", "todowrite"),
+    "token_saver": ("core.token_saver", "token_saver"),
+    "tool_benchmark": ("actions.tool_benchmark", "tool_benchmark"),
+    "tool_cache": ("core.superinteligencia", "tool_cache"),
+    "tool_creation": ("core.tool_creation", "tool_creation_tool"),
+    "tool_creator": ("actions.tool_creator", "tool_creator"),
+    "tool_dep_graph": ("core.superinteligencia", "tool_dep_graph"),
+    "training_pipeline": ("core.training_pipeline", "training_pipeline_tool"),
+    "transfer_learning": ("core.cognitive_modules", "transfer_learning"),
+    "translator": ("actions.translator", "translator"),
+    "tts_set_voice": ("core.tts_engine", "tts_set_voice"),
+    "undo": ("core.file_undo", "tool_undo"),
+    "unified_communications": ("actions.unified_communications", "unified_communications"),
+    "update": ("actions.quick_actions", "update"),
+    "update_memory": ("memory.memory_manager", "update_memory"),
+    "usage_analytics": ("actions.usage_analytics", "usage_analytics"),
+    "usb_monitor": ("actions.usb_monitor", "usb_monitor"),
+    "user_profile": ("actions.user_profile", "user_profile"),
+    "vault_passwords": ("actions.vault_passwords", "vault_passwords"),
+    "verification_layer": ("core.superinteligencia", "verification_layer"),
+    "vida_interna": ("core.vida_interna", "vida_interna_tool"),
+    "video_analyzer": ("actions.video_analyzer", "video_analyzer"),
+    "vision_guardian": ("actions.vision_guardian", "vision_guardian"),
+    "visual_click": ("actions.visual_click", "visual_click"),
+    "visual_expressions": ("actions.visual_expressions", "visual_expressions"),
+    "voice_biometrics": ("core.voice_biometrics", "voice_biometrics"),
+    "voice_clone": ("actions.voice_clone", "voice_clone"),
+    "voice_cloning": ("core.voice_cloning", "voice_cloning"),
+    "voice_cloning_new": ("actions.voice_cloning", "voice_cloning"),
+    "voice_cloning_real": ("actions.voice_cloning_real", "voice_cloning_real"),
+    "voice_enhanced": ("actions.voice_enhanced", "voice_enhanced"),
+    "voice_memory": ("core.voice_memory", "voice_memory_tool"),
+    "voice_profile": ("core.voice_profile", "voice_profile_tool"),
+    "voice_recognition": ("core.voice_recognition", "voice_recognition"),
+    "voice_translator": ("core.voice_translator", "voice_translator"),
+    "vscode_controller": ("actions.vscode_controller", "vscode_controller"),
+    "vue_designer": ("actions.vue_designer", "vue_designer"),
+    "wayland_input": ("actions.wayland_input", "wayland_input"),
+    "weather_action": ("actions.weather_report", "weather_action"),
+    "weather_report": ("actions.weather_report", "weather_action"),
+    "web_designer": ("actions.web_designer", "web_designer"),
+    "web_generator": ("actions.web_generator", "web_generator"),
+    "web_jobs": ("actions.web_jobs", "web_jobs"),
+    "web_navigation": ("actions.web_navigation", "web_navigation"),
+    "web_scraper": ("actions.web_scraper", "web_scraper"),
+    "web_search": ("actions.web_search", "web_search"),
+    "web_search_action": ("actions.web_search", "web_search"),
+    "webfetch": ("actions.webfetch", "webfetch"),
+    "whatsapp": ("actions.whatsapp", "whatsapp"),
+    "whatsapp_web": ("actions.whatsapp_web", "whatsapp_web"),
+    "window_manager": ("actions.window_manager", "window_manager"),
+    "windows_service": ("core.windows_service", "create_startup_script"),
+    "windows_settings": ("actions.windows_settings", "windows_settings"),
+    "wolfram_alpha": ("actions.wolfram_alpha", "wolfram_alpha"),
+    "workflow_builder": ("core.workflow_builder", "workflow_builder_tool"),
+    "workflow_engine": ("core.workflow_engine", "workflow_engine_tool"),
+    "workflow_runner": ("actions.workflow_runner", "workflow_runner"),
+    "world_model": ("core.world_model", "get_world_model"),
+    "world_simulation": ("core.world_simulation", "world_simulation_tool"),
+    "youtube_video": ("actions.youtube_video", "youtube_video"),
+    # <<< self_extend: nuevas tools >>>
+}
 
-try:
-    from actions.web_jobs import web_jobs, start_server
-except Exception:
-    web_jobs = start_server = None
-try:
-    from actions.obsidian_brain import obsidian_note
-except Exception:
-    obsidian_note = None
-try:
-    from actions.spotify_control   import spotify_control
-except Exception:
-    spotify_control = None
-try:
-    from actions.rgb_control       import rgb_control
-except Exception:
-    rgb_control = None
-try:
-    from actions.scheduler         import scheduler, start_runner
-except Exception:
-    scheduler = None; start_runner = None
-try:
-    from actions.gmail_control     import gmail_control
-except Exception:
-    gmail_control = None
-try:
-    from actions.rules_engine      import rules_engine, start_rules_runner, check_phrase_triggers, _run_action as _rules_run_action
-except Exception:
-    rules_engine = None; start_rules_runner = None; check_phrase_triggers = None; _rules_run_action = None
-try:
-    from actions.whatsapp          import whatsapp
-except Exception:
-    whatsapp = None
-try:
-    from actions.user_profile      import user_profile, record_action
-except Exception:
-    user_profile = None; record_action = None
-try:
-    from actions.goals             import goals
-except Exception:
-    goals = None
-try:
-    from actions.git_control       import git_control
-except Exception:
-    git_control = None
-try:
-    from actions.codebase          import codebase
-except Exception:
-    codebase = None
-try:
-    from actions.vscode_controller import vscode_controller
-except Exception:
-    vscode_controller = None
-try:
-    from actions.web_generator import web_generator
-except Exception:
-    web_generator = None
-try:
-    from actions.web_designer import web_designer
-except Exception:
-    web_designer = None
-try:
-    from actions.react_designer import react_designer
-except Exception:
-    react_designer = None
-try:
-    from actions.angular_designer import angular_designer
-except Exception:
-    angular_designer = None
-try:
-    from actions.vue_designer import vue_designer
-except Exception:
-    vue_designer = None
-try:
-    from actions.next_designer import next_designer
-except Exception:
-    next_designer = None
-try:
-    from actions.todowrite         import todowrite
-except Exception:
-    todowrite = None
-try:
-    from actions.knowledge_base    import knowledge_base
-except Exception:
-    knowledge_base = None
-try:
-    from actions.screen_recorder   import start_recording, stop_recording, recording_status
-except Exception:
-    start_recording = stop_recording = recording_status = None
-try:
-    from actions.translator  import translator
-except Exception:
-    translator = None
-try:
-    from actions.meeting_transcriber  import meeting_transcriber
-except Exception:
-    meeting_transcriber = None
-try:
-    from actions.network_monitor  import network_monitor
-except Exception:
-    network_monitor = None
-try:
-    from actions.quick_actions  import add, update, remove, list_actions, execute as qa_execute
-except Exception:
-    add = update = remove = list_actions = qa_execute = None
-try:
-    from actions.pdf_editor  import read_pdf, merge_pdfs, split_pdf, pdf_info, fill_form, add_signature
-except Exception:
-    read_pdf = merge_pdfs = split_pdf = pdf_info = fill_form = add_signature = None
-try:
-    from actions.context_menu  import install as ctx_install, uninstall as ctx_uninstall, status as ctx_status
-except Exception:
-    ctx_install = ctx_uninstall = ctx_status = None
-try:
-    from actions.sms_manager  import send_sms, history as sms_history, sms_status
-except Exception:
-    send_sms = sms_history = sms_status = None
-try:
-    from actions.dashboard_server  import start_dashboard, stop_dashboard, dashboard_status
-except Exception:
-    start_dashboard = stop_dashboard = dashboard_status = None
-try:
-    from actions.diagnostico import diagnostico
-except Exception:
-    diagnostico = None
-try:
-    from actions.windows_settings import windows_settings
-except Exception:
-    windows_settings = None
-try:
-    from actions.document_creator  import document_creator
-except Exception:
-    document_creator = None
-try:
-    from actions.document_handler  import document_handler
-except Exception:
-    document_handler = None
-try:
-    from actions.document_manager  import document_manager
-except Exception:
-    document_manager = None
-try:
-    from actions.web_navigation    import web_navigation
-except Exception:
-    web_navigation = None
-try:
-    from actions.image_generation  import image_generation
-except Exception:
-    image_generation = None
-try:
-    from actions.smart_home        import smart_home
-except Exception:
-    smart_home = None
-try:
-    from actions.camera_bus        import camera_bus
-except Exception:
-    camera_bus = None
-# ── Section 14N: System Health & DevOps (integrar subsystem activo) ──
-try:
-    from core.system_health          import system_health_tool as system_health
-except Exception:
-    system_health = None
-try:
-    from actions.daily_health_report import daily_health_report
-except Exception:
-    daily_health_report = None
-try:
-    from core.devops_pipeline        import devops_pipeline
-except Exception:
-    devops_pipeline = None
-try:
-    from actions.self_evolution      import self_evolution
-except Exception:
-    self_evolution = None
-try:
-    from actions.security_scanner   import security_scanner
-except Exception:
-    security_scanner = None
-try:
-    from actions.reverse_engineering import reverse_engineering
-except Exception:
-    reverse_engineering = None
-try:
-    from actions.document_tool        import document_tool
-except Exception:
-    document_tool = None
-try:
-    from actions.huggingface          import huggingface
-except Exception:
-    huggingface = None
-try:
-    from actions.system_monitor    import system_monitor
-except Exception:
-    system_monitor = None
-try:
-    from actions.audio_diagnostic import audio_diagnostic
-except Exception:
-    audio_diagnostic = None
-try:
-    from actions.system_status import system_status
-except Exception:
-    system_status = None
-try:
-    from actions.tiktok_analyzer   import tiktok_analyzer
-except Exception:
-    tiktok_analyzer = None
-try:
-    from actions.terminal_agent    import terminal_agent
-except Exception:
-    terminal_agent = None
-try:
-    from actions.native_ui         import native_ui
-except Exception:
-    native_ui = None
-try:
-    from actions.accessibility          import accessibility
-except Exception:
-    accessibility = None
-# Nombres legacy sin implementación (main.py los usa con `if X:` — dejarlos definidos en None).
-eye_tracking = None
-micro_movement = None
-task_simplify = None
-routine_gamify = None
-try:
-    from actions.screen_reader          import screen_reader
-except Exception:
-    screen_reader = None
-try:
-    from actions.accessibility_overlay  import accessibility_overlay
-except Exception:
-    accessibility_overlay = None
-try:
-    from actions.morning_brief     import morning_brief, already_briefed_today, mark_briefed
-except Exception:
-    morning_brief = None; already_briefed_today = None; mark_briefed = None
-try:
-    from actions.vision_guardian   import vision_guardian, start as _start_vision_guardian
-except Exception:
-    vision_guardian = None; _start_vision_guardian = None
-try:
-    from actions.eris_guardian import eris_guardian, start_monitor, stop_monitor, get_guardian_status
-except Exception:
-    eris_guardian = None; start_monitor = None; stop_monitor = None; get_guardian_status = None
-try:
-    from actions.openrouter_agent  import openrouter_agent
-except Exception:
-    openrouter_agent = None
-try:
-    from actions.eris_db import (
-        convo_log, tool_log as db_tool_log, memory_set, memory_get, memory_all, memory_delete,
-        know_add, know_search, know_by_topic,
-        task_add, task_list, task_update, task_delete,
-        profile_set, profile_get, error_log, db_stats, save_everywhere,
-        episodic_add, episodic_recent, episodic_search, episodic_count,
-        convo_search, convo_recent
-    )
-except Exception:
-    convo_log = None; db_tool_log = None; memory_set = None; memory_get = None; memory_all = None; memory_delete = None
-    know_add = None; know_search = None; know_by_topic = None
-    task_add = None; task_list = None; task_update = None; task_delete = None
-    profile_set = None; profile_get = None; error_log = None; db_stats = None
-    save_everywhere = None
-    episodic_add = None; episodic_recent = None; episodic_search = None; episodic_count = None
-    convo_search = None; convo_recent = None
-try:
-    from actions.curiosity_engine import (
-        curiosity_tell_joke, curiosity_tell_fact, curiosity_suggest_fun,
-        curiosity_greeting, curiosity_laugh
-    )
-except Exception:
-    curiosity_tell_joke = None; curiosity_tell_fact = None; curiosity_suggest_fun = None
-    curiosity_greeting = None; curiosity_laugh = None
-try:
-    from actions.curiosity_engine import proactive_suggest, proactive_learn
-except Exception:
-    proactive_suggest = None; proactive_learn = None
-try:
-    from actions.auto_programmer import auto_programmer
-except Exception:
-    auto_programmer = None
-try:
-    from actions.self_edit import self_edit, self_modify
-except Exception:
-    self_edit = None
-    self_modify = None
-try:
-    from actions.self_improvement_loop import self_improvement_loop
-except Exception:
-    self_improvement_loop = None
-try:
-    from actions.self_awareness import self_awareness
-except Exception:
-    self_awareness = None
-try:
-    from core.self_map import get_full_map, get_file_tree, get_recent_changes, get_capabilities, search_my_code
-except Exception:
-    get_full_map = None; get_file_tree = None; get_recent_changes = None; get_capabilities = None; search_my_code = None
-try:
-    from skills.skill_registry import skill_manage
-except Exception:
-    skill_manage = None
-try:
-    from skills.superpowers import superpowers_list, superpowers_tool_declaration
-except Exception:
-    superpowers_list = None; superpowers_tool_declaration = None
-try:
-    from core.plugin_manager import get_plugin_manager
-except Exception:
-    get_plugin_manager = None
-try:
-    from actions.app_installer import app_installer
-except Exception:
-    app_installer = None
-try:
-    from core.emotional_state import (
-        get_emotional_state, adjust_emotion, react_to_success,
-        react_to_failure, react_to_user_interaction, get_mood_description,
-        get_tone_instruction, emotional_state_tool,
-        detect_user_mood, react_to_user_text, get_face_expression,
-    )
-except Exception:
-    get_emotional_state = None; adjust_emotion = None; react_to_success = None
-    react_to_failure = None; react_to_user_interaction = None; get_mood_description = None
-    get_tone_instruction = None; emotional_state_tool = None
-    detect_user_mood = None; react_to_user_text = None; get_face_expression = None
-try:
-    from agents.opencode_bridge import opencode_task, recall_lessons
-except Exception:
-    opencode_task = None; recall_lessons = None
-try:
-    from actions.game_companion import game_companion
-except Exception:
-    game_companion = None
-try:
-    from actions.game_launcher import game_launcher
-except Exception:
-    game_launcher = None
-try:
-    from actions.search_background import search_background
-except Exception:
-    search_background = None
-try:
-    from actions.backup_system import backup_system
-except Exception:
-    backup_system = None
-try:
-    from actions.alarm_manager import alarm_manager
-except Exception:
-    alarm_manager = None
-try:
-    from actions.habit_predictor import habit_predictor
-except Exception:
-    habit_predictor = None
-try:
-    from actions.window_manager import window_manager
-except Exception:
-    window_manager = None
-try:
-    from actions.contextual_control import contextual_control
-except Exception:
-    contextual_control = None
-try:
-    from actions.proactive_automation import proactive_automation
-except Exception:
-    proactive_automation = None
-try:
-    from actions.smart_file_organizer import smart_file_organizer
-except Exception:
-    smart_file_organizer = None
-try:
-    from actions.tool_creator import tool_creator
-except Exception:
-    tool_creator = None
-try:
-    from actions.unified_communications import unified_communications
-except Exception:
-    unified_communications = None
-try:
-    from actions.file_monitor import file_monitor
-except Exception:
-    file_monitor = None
-try:
-    from actions.task_manager import task_manager
-except Exception:
-    task_manager = None
-try:
-    from actions.system_reader import system_reader
-except Exception:
-    system_reader = None
-try:
-    from actions.webfetch import webfetch
-except Exception:
-    webfetch = None
-try:
-    from actions.document_generator import document_generator
-except Exception:
-    document_generator = None
-try:
-    from actions.presentation_generator import presentation_generator
-except Exception:
-    presentation_generator = None
-try:
-    from actions.spreadsheet_generator import spreadsheet_generator
-except Exception:
-    spreadsheet_generator = None
-try:
-    from actions.ask_user import ask_user
-except Exception:
-    ask_user = None
-try:
-    from actions.subagent_task import subagent_task
-except Exception:
-    subagent_task = None
+# Nombres que SIEMPRE son None (no tienen modulo real).
+_NONE_NAMES = {
+    "eye_tracking",
+    "micro_movement",
+    "routine_gamify",
+    "task_simplify",
+}
 
-try:
-    from actions.emotional_growth import emotional_growth, on_user_message as _eg_on_user_msg, on_tool_result as _eg_on_tool_result
-except Exception:
-    emotional_growth = None; _eg_on_user_msg = None; _eg_on_tool_result = None
-try:
-    from actions.mobile_server import start as _mobile_start, broadcast as _mobile_broadcast
-except Exception:
-    _mobile_start = None; _mobile_broadcast = None
-try:
-    from actions.ollama_provider import is_available as _ollama_check, chat as _ollama_chat
-except Exception:
-    _ollama_check = None; _ollama_chat = None
-try:
-    from actions.research_agent import research
-except Exception:
-    research = None
-try:
-    from actions.autonomous_agent import screen_see, screen_where_to_click, screen_whats_there
-except Exception:
-    screen_see = None; screen_where_to_click = None; screen_whats_there = None
-try:
-    from actions.english_teacher import english_teacher
-except Exception:
-    english_teacher = None
-try:
-    from actions.cybersecurity import cybersecurity
-except Exception:
-    cybersecurity = None
-try:
-    from actions.credential_recovery import credential_recovery
-except Exception:
-    credential_recovery = None
-try:
-    from actions.osint_agent import osint_agent
-except Exception:
-    osint_agent = None
-try:
-    from actions.security_shield import security_shield
-except Exception:
-    security_shield = None
-try:
-    from actions.self_protection import self_protection
-except Exception:
-    self_protection = None
-try:
-    from actions.video_analyzer import video_analyzer
-except Exception:
-    video_analyzer = None
-try:
-    from actions.pc_control import pc_control
-except Exception:
-    pc_control = None
-try:
-    from actions.reminders import reminders
-except Exception:
-    reminders = None
-try:
-    from actions.calculator import calculator
-except Exception:
-    calculator = None
-try:
-    from actions.file_manager import file_manager
-except Exception:
-    file_manager = None
-try:
-    from actions.music_player import music_player
-except Exception:
-    music_player = None
-try:
-    from actions.fun_mode import fun_mode
-except Exception:
-    fun_mode = None
-try:
-    from actions.email_manager import email_manager
-except Exception:
-    email_manager = None
-try:
-    from actions.calendar_manager import calendar_manager
-except Exception:
-    calendar_manager = None
-try:
-    from actions.clipboard_manager import clipboard_manager
-except Exception:
-    clipboard_manager = None
-try:
-    from actions.active_firewall import active_firewall
-except Exception:
-    active_firewall = None
-try:
-    from actions.file_encryptor import file_encryptor
-except Exception:
-    file_encryptor = None
-try:
-    from actions.task_scheduler import task_scheduler
-except Exception:
-    task_scheduler = None
-try:
-    from actions.auto_agent import auto_agent
-except Exception:
-    auto_agent = None
-try:
-    from actions.code_generator import code_generator
-except Exception:
-    code_generator = None
-try:
-    from actions.memory_rag import memory_rag
-except Exception:
-    memory_rag = None
-try:
-    from actions.context_engine import context_engine
-except Exception:
-    context_engine = None
-try:
-    from actions.smart_browser import smart_browser
-except Exception:
-    smart_browser = None
-try:
-    from actions.text_summarizer import text_summarizer
-except Exception:
-    text_summarizer = None
-try:
-    from actions.ocr_reader import ocr_reader
-except Exception:
-    ocr_reader = None
-try:
-    from actions.image_analyzer import image_analyzer
-except Exception:
-    image_analyzer = None
-try:
-    from actions.audio_transcriber import audio_transcriber
-except Exception:
-    audio_transcriber = None
-try:
-    from actions.data_analyst import data_analyst
-except Exception:
-    data_analyst = None
-try:
-    from actions.pdf_manager import pdf_manager
-except Exception:
-    pdf_manager = None
-try:
-    from actions.template_engine import template_engine
-except Exception:
-    template_engine = None
-try:
-    from actions.browser_history import browser_history
-except Exception:
-    browser_history = None
-try:
-    from actions.process_manager import process_manager
-except Exception:
-    process_manager = None
-try:
-    from actions.driver_manager import driver_manager
-except Exception:
-    driver_manager = None
-try:
-    from actions.whatsapp_web import whatsapp_web
-except Exception:
-    whatsapp_web = None
-try:
-    from actions.telegram_bot import telegram_bot
-except Exception:
-    telegram_bot = None
-try:
-    from actions.phone_control import phone_control
-except Exception:
-    phone_control = None
-try:
-    from actions.notification_center import notification_center
-except Exception:
-    notification_center = None
-try:
-    from actions.voice_clone import voice_clone
-except Exception:
-    voice_clone = None
-try:
-    from actions.real_time_tts import real_time_tts
-except Exception:
-    real_time_tts = None
-try:
-    from actions.keylogger_detector import keylogger_detector
-except Exception:
-    keylogger_detector = None
-try:
-    from actions.usb_monitor import usb_monitor
-except Exception:
-    usb_monitor = None
-try:
-    from actions.ransomware_shield import ransomware_shield
-except Exception:
-    ransomware_shield = None
-try:
-    from actions.darkweb_monitor import darkweb_monitor
-except Exception:
-    darkweb_monitor = None
-try:
-    from actions.disk_wiper import disk_wiper
-except Exception:
-    disk_wiper = None
-
-# ── Section 14M: New 16 Features (Jul 2026) ──
-try:
-    from actions.memory_consolidation import memory_consolidate
-except Exception:
-    memory_consolidation = None
-try:
-    from actions.flow_recorder import flow_recorder
-except Exception:
-    flow_recorder = None
-try:
-    from actions.screenshot_history import screenshot_history
-except Exception:
-    screenshot_history = None
-try:
-    from actions.multi_user import multi_user
-except Exception:
-    multi_user = None
-try:
-    from actions.voice_cloning import voice_cloning as voice_cloning_new
-except Exception:
-    voice_cloning_new = None
-try:
-    from actions.browser_extension import browser_extension
-except Exception:
-    browser_extension = None
-try:
-    from actions.smart_notifications import smart_notifications
-except Exception:
-    smart_notifications = None
-try:
-    from actions.usage_analytics import usage_analytics
-except Exception:
-    usage_analytics = None
-try:
-    from actions.skill_marketplace import skill_marketplace
-except Exception:
-    skill_marketplace = None
-try:
-    from actions.api_server import api_server
-except Exception:
-    api_server = None
-try:
-    from actions.federated_learning import federated_learning
-except Exception:
-    federated_learning = None
-try:
-    from actions.data_encryption import data_encryption
-except Exception:
-    data_encryption = None
-try:
-    from actions.auto_backup import auto_backup
-except Exception:
-    auto_backup = None
-try:
-    from actions.plugin_marketplace import plugin_marketplace
-except Exception:
-    plugin_marketplace = None
-try:
-    from actions.proactive_ia import proactive_ia
-except Exception:
-    proactive_ia = None
-try:
-    from actions.voice_enhanced import voice_enhanced
-except Exception:
-    voice_enhanced = None
-try:
-    from actions.data_viz import data_viz
-except Exception:
-    data_viz = None
-try:
-    from actions.i18n import i18n
-except Exception:
-    i18n = None
-try:
-    from actions.code_review import code_review
-except Exception:
-    code_review = None
-try:
-    from actions.code_analyzer import code_analyzer
-except Exception:
-    code_analyzer = None
-try:
-    from actions.web_scraper import web_scraper
-except Exception:
-    web_scraper = None
-try:
-    from actions.dashboard_web import dashboard_web
-except Exception:
-    dashboard_web = None
-try:
-    from actions.docker_deploy import docker_deploy
-except Exception:
-    docker_deploy = None
-try:
-    from actions.ci_cd import ci_cd
-except Exception:
-    ci_cd = None
-try:
-    from actions.i18n_ui import i18n_ui
-except Exception:
-    i18n_ui = None
-try:
-    from actions.voice_cloning_real import voice_cloning_real
-except Exception:
-    voice_cloning_real = None
-# ── Batch 3 ──
-try:
-    from actions.sandbox_execution import sandbox_execution
-except Exception:
-    sandbox_execution = None
-try:
-    from actions.knowledge_graph import knowledge_graph
-except Exception:
-    knowledge_graph = None
-try:
-    from actions.theme_manager import theme_manager
-except Exception:
-    theme_manager = None
-try:
-    from actions.plugin_loader import plugin_loader
-except Exception:
-    plugin_loader = None
-try:
-    from actions.smart_cache import smart_cache
-except Exception:
-    smart_cache = None
-try:
-    from actions.config_export import config_export
-except Exception:
-    config_export = None
-try:
-    from actions.desktop_notifications import desktop_notifications
-except Exception:
-    desktop_notifications = None
-# ── Batch 4: Complete Training ──
-try:
-    from actions.self_heal import self_heal
-except Exception:
-    self_heal = None
-try:
-    from actions.self_healing_loop import self_healing_loop
-except Exception:
-    self_healing_loop = None
-try:
-    from actions.role_orchestrator import role_orchestrator
-except Exception:
-    role_orchestrator = None
-try:
-    from actions.speaker_recognition import speaker_recognition
-except Exception:
-    speaker_recognition = None
-try:
-    from actions.data_visualize import data_visualize
-except Exception:
-    data_visualize = None
-try:
-    from actions.workflow_runner import workflow_runner
-except Exception:
-    workflow_runner = None
-try:
-    from actions.self_extend import self_extend
-except Exception:
-    self_extend = None
-try:
-    from actions.agent_task import agent_task
-except Exception:
-    agent_task = None
-try:
-    from actions.ask_opencode import ask_opencode
-except Exception:
-    ask_opencode = None
-try:
-    from actions.conversation_search import conversation_search
-except Exception:
-    conversation_search = None
-try:
-    from actions.curiosity_fact import curiosity_fact
-except Exception:
-    curiosity_fact = None
-try:
-    from actions.curiosity_fun import curiosity_fun
-except Exception:
-    curiosity_fun = None
-try:
-    from actions.curiosity_joke import curiosity_joke
-except Exception:
-    curiosity_joke = None
-try:
-    from actions.curiosity_trending import curiosity_trending
-except Exception:
-    curiosity_trending = None
-try:
-    from actions.dashboard import dashboard
-except Exception:
-    dashboard = None
-try:
-    from actions.db_knowledge import db_knowledge
-except Exception:
-    db_knowledge = None
-try:
-    from actions.db_memory import db_memory
-except Exception:
-    db_memory = None
-try:
-    from actions.db_tasks import db_tasks
-except Exception:
-    db_tasks = None
-try:
-    from actions.episodic_log import episodic_log
-except Exception:
-    episodic_log = None
-try:
-    from actions.eris_ui_control import eris_ui_control
-except Exception:
-    eris_ui_control = None
-try:
-    from actions.full_training import full_training
-except Exception:
-    full_training = None
-try:
-    from actions.learn_from_mistake import learn_from_mistake
-except Exception:
-    learn_from_mistake = None
-try:
-    from actions.learn_session import learn_session
-except Exception:
-    learn_session = None
-try:
-    from actions.play_direct import play_direct
-except Exception:
-    play_direct = None
-try:
-    from actions.plugin_manage import plugin_manage
-except Exception:
-    plugin_manage = None
-try:
-    from actions.predict_analyze import predict_analyze
-except Exception:
-    predict_analyze = None
-try:
-    from actions.res_monitor import res_monitor
-except Exception:
-    res_monitor = None
-try:
-    from actions.res_protect import res_protect
-except Exception:
-    res_protect = None
-try:
-    from actions.save_memory import save_memory
-except Exception:
-    save_memory = None
-try:
-    from actions.search_info import search_info
-except Exception:
-    search_info = None
-try:
-    from actions.shutdown_eris import shutdown_eris
-except Exception:
-    shutdown_eris = None
-try:
-    from actions.sleep_mode import sleep_mode
-except Exception:
-    sleep_mode = None
-try:
-    from actions.sms import sms
-except Exception:
-    sms = None
-try:
-    from actions.superpowers_activate import superpowers_activate
-except Exception:
-    superpowers_activate = None
-try:
-    from actions.task_queue import task_queue
-except Exception:
-    task_queue = None
-try:
-    from actions.roadmap import roadmap
-except Exception:
-    roadmap = None
-try:
-    from core.emotional_core import emotional_core_tool as emotional_core
-except Exception:
-    emotional_core = None
-try:
-    from core.observer import observer_tool as observer
-except Exception:
-    observer = None
-try:
-    from core.code_guard import code_guard_tool as guard
-except Exception:
-    guard = None
-try:
-    from core.mission_agent import mission_tool as mission
-except Exception:
-    mission = None
-try:
-    from core.self_evolution import self_evolution_tool as evolucion
-except Exception:
-    evolucion = None
-try:
-    from core.evolution_campaigns import evolve_campaigns as evolution_campaigns
-except Exception:
-    evolution_campaigns = None
-try:
-    from core.learning_engine import learning_engine
-except Exception:
-    learning_engine = None
-try:
-    from actions.aprendizaje_videos import aprendizaje_videos
-except Exception:
-    aprendizaje_videos = None
-try:
-    from core.auto_defensa import auto_defensa
-except Exception:
-    auto_defensa = None
-# ── Batch 5: Connectivity + Self-Healing ──
-try:
-    from core.connectivity import connectivity_tool
-except Exception:
-    connectivity_tool = None
-try:
-    from core.self_healing import self_healing_tool as self_healing
-except Exception:
-    self_healing = None
-try:
-    from core.superinteligencia import error_recovery
-except Exception:
-    error_recovery = None
-try:
-    from core.mcp_server import mcp_server_tool as mcp_server
-except Exception:
-    mcp_server = None
-# ── Batch 6: Page/Video Summarizer ──
-try:
-    from actions.page_summarizer import page_summarizer
-except Exception:
-    page_summarizer = None
+__all__ = sorted(set(_LAZY) | set(_NONE_NAMES))
 
 
-# ── Hermes: Herramientas de Seguridad P0 (wirear) ──
-try:
-    from core.code_guard import code_guard_tool as code_guard
-except Exception:
-    code_guard = None
-try:
-    from core.pentest_lab import pentest_lab
-except Exception:
-    pentest_lab = None
-try:
-    from core.permission_gate import get_permission_gate as permission_gate
-except Exception:
-    permission_gate = None
-try:
-    from core.permission_gate import permission_policy_tool as permission_policy
-except Exception:
-    permission_policy = None
-try:
-    from core.secret_scanner import secret_scanner_tool as secret_scanner
-except Exception:
-    secret_scanner = None
-try:
-    from core.dep_vulnerability_scanner import dep_vulnerability_scanner_tool as dep_vuln_scanner
-except Exception:
-    dep_vuln_scanner = None
-try:
-    from agents.guardiana_agent import guardiana
-except Exception:
-    guardiana = None
-
-# ── Hermes: AI/LLM/Memory/Learning — Wireado automático ──
-try:
-    from core.memory_unified import get_memory as memory_unified
-except Exception:
-    memory_unified = None
-try:
-    from core.memory_consolidation import memory_consolidation_tool as memory_consolidation
-except Exception:
-    memory_consolidation = None
-try:
-    from core.model_evaluator import model_evaluator_tool as model_evaluator
-except Exception:
-    model_evaluator = None
-try:
-    from core.prompt_optimizer import prompt_optimizer_tool as prompt_optimizer
-except Exception:
-    prompt_optimizer = None
-try:
-    from core.llm_router import llm_router_tool as llm_router
-except Exception:
-    llm_router = None
-try:
-    from core.advanced_rag import advanced_rag_tool as advanced_rag
-except Exception:
-    advanced_rag = None
-try:
-    from core.rag_engine import rag_engine as rag_engine
-except Exception:
-    rag_engine = None
-try:
-    from core.context_bridge import answer_question as context_bridge
-except Exception:
-    context_bridge = None
-try:
-    from core.contextual_awareness import contextual_awareness_tool as contextual_awareness
-except Exception:
-    contextual_awareness = None
-try:
-    from core.agent_as_tool import create_sub_agent as agent_as_tool
-except Exception:
-    agent_as_tool = None
-try:
-    from core.agent_bus import get_agent_bus as agent_bus
-except Exception:
-    agent_bus = None
-try:
-    from core.multi_ai_hub import tool_multi_ai_hub as multi_ai_hub
-except Exception:
-    multi_ai_hub = None
-try:
-    from core.self_evolving_prompts import add_rule as self_evolving_prompts
-except Exception:
-    self_evolving_prompts = None
-try:
-    from core.self_explainer import explain_decision as self_explainer
-except Exception:
-    self_explainer = None
-try:
-    from core.self_map import get_capabilities as self_map
-except Exception:
-    self_map = None
-try:
-    from core.task_engine import TaskEngine as task_engine
-except Exception:
-    task_engine = None
-try:
-    from core.task_planner import task_planner_tool as task_planner
-except Exception:
-    task_planner = None
-try:
-    from core.workflow_builder import workflow_builder_tool as workflow_builder
-except Exception:
-    workflow_builder = None
-try:
-    from core.workflow_engine import workflow_engine_tool as workflow_engine
-except Exception:
-    workflow_engine = None
-try:
-    from core.world_model import get_world_model as world_model
-except Exception:
-    world_model = None
-try:
-    from core.progressive_context import build_progressive_context as progressive_context
-except Exception:
-    progressive_context = None
-try:
-    from core.prompt_compressor import compress_history as prompt_compressor
-except Exception:
-    prompt_compressor = None
-try:
-    from core.learning_curriculum import complete_exercise as learning_curriculum
-except Exception:
-    learning_curriculum = None
-try:
-    from core.emotional_memory import emotional_memory_tool as emotional_memory
-except Exception:
-    emotional_memory = None
-try:
-    from core.voice_biometrics import voice_biometrics as voice_biometrics
-except Exception:
-    voice_biometrics = None
-try:
-    from core.voice_memory import voice_memory_tool as voice_memory
-except Exception:
-    voice_memory = None
-try:
-    from core.voice_profile import voice_profile_tool as voice_profile
-except Exception:
-    voice_profile = None
-try:
-    from core.voice_recognition import voice_recognition as voice_recognition
-except Exception:
-    voice_recognition = None
-try:
-    from core.voice_translator import voice_translator as voice_translator
-except Exception:
-    voice_translator = None
-try:
-    from core.batch_executor import as_completed as batch_executor
-except Exception:
-    batch_executor = None
+def __getattr__(name):
+    """Importa on-demand solo el modulo del nombre pedido (PEP 562)."""
+    if name in _NONE_NAMES:
+        return None
+    entry = _LAZY.get(name)
+    if entry is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module_path, attr = entry
+    try:
+        value = getattr(importlib.import_module(module_path), attr, None)
+    except Exception:
+        value = None
+    globals()[name] = value  # cachear (objeto o None) para accesos siguientes
+    return value
 
 
-# ── Hermes: Herramientas Hermes ──
-try:
-    from core.hermes_tools import hermes_web_search as hermes_web_search
-except Exception:
-    hermes_web_search = None
-try:
-    from core.hermes_tools import hermes_web_scraper as hermes_web_scraper
-except Exception:
-    hermes_web_scraper = None
-try:
-    from core.hermes_tools import hermes_page_summarizer as hermes_page_summarizer
-except Exception:
-    hermes_page_summarizer = None
-try:
-    from core.hermes_tools import hermes_csv_processor as hermes_csv_processor
-except Exception:
-    hermes_csv_processor = None
-try:
-    from core.hermes_tools import hermes_data_analyzer as hermes_data_analyzer
-except Exception:
-    hermes_data_analyzer = None
-try:
-    from core.hermes_tools import hermes_code_review as hermes_code_review
-except Exception:
-    hermes_code_review = None
-try:
-    from core.hermes_tools import hermes_security_audit as hermes_security_audit
-except Exception:
-    hermes_security_audit = None
-
-# ── Hermes: Wireado pase 2 — herramientas existentes restantes ──
-try:
-    from actions.app_discovery import app_discovery as app_discovery
-except Exception:
-    app_discovery = None
-try:
-    from actions.github_pr import github_pr as github_pr
-except Exception:
-    github_pr = None
-try:
-    from actions.gustos import gustos as gustos
-except Exception:
-    gustos = None
-try:
-    from actions.relationship import relationship as relationship
-except Exception:
-    relationship = None
-try:
-    from actions.cancion_generator import cancion_generator as cancion_generator
-except Exception:
-    cancion_generator = None
-try:
-    from actions.code_copilot import code_copilot as code_copilot
-except Exception:
-    code_copilot = None
-try:
-    from actions.ide_integration import ide_integration as ide_integration
-except Exception:
-    ide_integration = None
-try:
-    from actions.code_assistant import full_scan as code_assistant
-except Exception:
-    code_assistant = None
-try:
-    from actions.human_mouse import human_mouse as human_mouse
-except Exception:
-    human_mouse = None
-try:
-    from actions.super_search import super_search as super_search
-except Exception:
-    super_search = None
-try:
-    from actions.deep_research import deep_research as deep_research
-except Exception:
-    deep_research = None
-try:
-    from core.file_undo import tool_undo as undo
-except Exception:
-    undo = None
-try:
-    from actions.knowledge_ingestor import knowledge_ingestor as knowledge_ingestor
-except Exception:
-    knowledge_ingestor = None
-try:
-    from actions.data_connectors import data_connectors as data_connectors
-except Exception:
-    data_connectors = None
-try:
-    from actions.document_rag import document_rag as document_rag
-except Exception:
-    document_rag = None
-try:
-    from actions.personality import personality_engine as personality
-except Exception:
-    personality = None
-try:
-    from core.emotional_state import emotional_state_tool as emotional_state
-except Exception:
-    emotional_state = None
-try:
-    from core.style_engine import eris_style as eris_style
-except Exception:
-    eris_style = None
-try:
-    from core.daily_digest import daily_digest_tool as daily_digest
-except Exception:
-    daily_digest = None
-try:
-    from actions.file_editor import file_editor as file_editor
-except Exception:
-    file_editor = None
-try:
-    from actions.context_files import context_read as context_read
-except Exception:
-    context_read = None
-try:
-    from actions.context_files import context_update as context_update
-except Exception:
-    context_update = None
-try:
-    from actions.memory_nudge import memory_nudge as memory_nudge
-except Exception:
-    memory_nudge = None
-try:
-    from actions.game_agent import game_agent as game_agent
-except Exception:
-    game_agent = None
-try:
-    from actions.terminal_agent import terminal_agent as shell_executor
-except Exception:
-    shell_executor = None
-try:
-    from actions.git_daily import git_daily as git_daily
-except Exception:
-    git_daily = None
-try:
-    from actions.self_regression import self_regression as self_regression
-except Exception:
-    self_regression = None
-try:
-    from actions.dependency_manager import dependency_manager as dependency_manager
-except Exception:
-    dependency_manager = None
-try:
-    from actions.tool_benchmark import tool_benchmark as tool_benchmark
-except Exception:
-    tool_benchmark = None
-try:
-    from actions.multi_search import multi_search as multi_search
-except Exception:
-    multi_search = None
-try:
-    from actions.code_validator import code_validator as code_validator
-except Exception:
-    code_validator = None
-try:
-    from actions.parallel_agents import parallel_agents as parallel_agents
-except Exception:
-    parallel_agents = None
-try:
-    from actions.program_manager import program_manager as program_manager
-except Exception:
-    program_manager = None
-try:
-    from actions.mcp_tool import mcp_tool as mcp_tool
-except Exception:
-    mcp_tool = None
-try:
-    from core.autonomous_learner import autonomous_learner as autonomous_learner
-except Exception:
-    autonomous_learner = None
-try:
-    from actions.curiosity_engine import curiosity_tell_fact as curiosity_engine
-except Exception:
-    curiosity_engine = None
-try:
-    from core.agi_tools import agi_memory as agi_memory
-except Exception:
-    agi_memory = None
-try:
-    from core.agi_tools import agi_self_improve as agi_self_improve
-except Exception:
-    agi_self_improve = None
-try:
-    from core.agi_tools import agi_reasoning as agi_reasoning
-except Exception:
-    agi_reasoning = None
-try:
-    from core.agi_tools import agi_world_model as agi_world_model
-except Exception:
-    agi_world_model = None
-try:
-    from core.agi_tools import agi_agent as agi_agent
-except Exception:
-    agi_agent = None
-try:
-    from core.agent_architecture import agent_loop as agent_loop
-except Exception:
-    agent_loop = None
-try:
-    from core.updater import check_for_update as eris_update
-except Exception:
-    eris_update = None
-try:
-    from core.model_router import status as ollama_status
-except Exception:
-    ollama_status = None
-try:
-    from core.tts_engine import tts_set_voice as tts_set_voice
-except Exception:
-    tts_set_voice = None
-try:
-    from actions.show_expression import show_expression as show_expression
-except Exception:
-    show_expression = None
-try:
-    from core.superinteligencia import reflection as reflection
-except Exception:
-    reflection = None
-try:
-    from core.superinteligencia import skill_recommender as skill_recommender
-except Exception:
-    skill_recommender = None
-try:
-    from core.superinteligencia import tool_cache as tool_cache
-except Exception:
-    tool_cache = None
-try:
-    from core.superinteligencia import verification_layer as verification_layer
-except Exception:
-    verification_layer = None
-try:
-    from core.superinteligencia import plan_adaptation as plan_adaptation
-except Exception:
-    plan_adaptation = None
-try:
-    from core.superinteligencia import knowledge_distiller as knowledge_distiller
-except Exception:
-    knowledge_distiller = None
-try:
-    from core.superinteligencia import cost_tracker as cost_tracker
-except Exception:
-    cost_tracker = None
-try:
-    from core.superinteligencia import intent_classifier as intent_classifier
-except Exception:
-    intent_classifier = None
-try:
-    from core.superinteligencia import conversation_brancher as conversation_brancher
-except Exception:
-    conversation_brancher = None
-try:
-    from core.superinteligencia import auto_documenter as auto_documenter
-except Exception:
-    auto_documenter = None
-try:
-    from core.superinteligencia import tool_dep_graph as tool_dep_graph
-except Exception:
-    tool_dep_graph = None
-try:
-    from core.superinteligencia import smart_retry as smart_retry
-except Exception:
-    smart_retry = None
-try:
-    from core.superinteligencia import semantic_deduplicator as semantic_deduplicator
-except Exception:
-    semantic_deduplicator = None
-try:
-    from core.superinteligencia import adaptive_temperature as adaptive_temperature
-except Exception:
-    adaptive_temperature = None
-try:
-    from core.superinteligencia import task_tree as task_tree
-except Exception:
-    task_tree = None
-try:
-    from core.superinteligencia import proactive_suggester as proactive_suggester
-except Exception:
-    proactive_suggester = None
-try:
-    from core.superinteligencia import conversation_replayer as conversation_replayer
-except Exception:
-    conversation_replayer = None
-try:
-    from core.superinteligencia import context_optimizer as context_optimizer
-except Exception:
-    context_optimizer = None
-try:
-    from core.superinteligencia import skill_creator as skill_creator
-except Exception:
-    skill_creator = None
-try:
-    from core.superinteligencia import session_debugger as session_debugger
-except Exception:
-    session_debugger = None
-try:
-    from core.superinteligencia import capability_assessor as capability_assessor
-except Exception:
-    capability_assessor = None
-try:
-    from core.superinteligencia import feedback_learner as feedback_learner
-except Exception:
-    feedback_learner = None
-try:
-    from core.superinteligencia import meta_reasoner as meta_reasoner
-except Exception:
-    meta_reasoner = None
-try:
-    from core.superinteligencia import multi_agent as multi_agent
-except Exception:
-    multi_agent = None
-try:
-    from core.superinteligencia import session_analytics as session_analytics
-except Exception:
-    session_analytics = None
-try:
-    from core.superinteligencia import knowledge_verifier as knowledge_verifier
-except Exception:
-    knowledge_verifier = None
-try:
-    from core.superinteligencia import dream_consolidator as dream_consolidator
-except Exception:
-    dream_consolidator = None
-try:
-    from core.superinteligencia import goal_tracker as goal_tracker
-except Exception:
-    goal_tracker = None
-try:
-    from core.superinteligencia import anomaly_detector as anomaly_detector
-except Exception:
-    anomaly_detector = None
-try:
-    from core.superinteligencia import confidence_scorer as confidence_scorer
-except Exception:
-    confidence_scorer = None
-try:
-    from core.superinteligencia import mistake_learner as mistake_learner
-except Exception:
-    mistake_learner = None
-try:
-    from core.superinteligencia import file_profiler as file_profiler
-except Exception:
-    file_profiler = None
-try:
-    from actions.pdf_editor import pdf_editor as pdf_editor
-except Exception:
-    pdf_editor = None
-try:
-    from actions.context_menu import context_menu as context_menu
-except Exception:
-    context_menu = None
-try:
-    from core.ast_editor import analyze_file as ast_analyze
-except Exception:
-    ast_analyze = None
-try:
-    from core.ast_editor import safe_edit as ast_edit
-except Exception:
-    ast_edit = None
-try:
-    from core.shell_session import run_shell_tool as shell_session
-except Exception:
-    shell_session = None
-try:
-    from actions.wayland_input import wayland_input as wayland_input
-except Exception:
-    wayland_input = None
-try:
-    from actions.kde_connect import kde_connect as kde_connect
-except Exception:
-    kde_connect = None
-try:
-    from actions.ocr_tool import ocr_tool as ocr_tool
-except Exception:
-    ocr_tool = None
-try:
-    from actions.git_autonomo import git_autonomo as git_autonomo
-except Exception:
-    git_autonomo = None
-try:
-    from agents.agenlix_agent import agelix as agelix
-except Exception:
-    agelix = None
-try:
-    from agents.mentora_agent import mentora as mentora
-except Exception:
-    mentora = None
-try:
-    from actions.context7 import handle_context7 as context7
-except Exception:
-    context7 = None
-try:
-    from core.lsp_manager import lsp_tool as lsp_manager
-except Exception:
-    lsp_manager = None
-try:
-    from core.mcp_manager import mcp_tool as mcp_manager
-except Exception:
-    mcp_manager = None
-try:
-    from core.compaction import compaction_tool as compaction
-except Exception:
-    compaction = None
-try:
-    from core.neural_bridge import neural_bridge_tool as neural_bridge
-except Exception:
-    neural_bridge = None
-try:
-    from core.world_simulation import world_simulation_tool as world_simulation
-except Exception:
-    world_simulation = None
-try:
-    from core.emotional_rl import emotional_rl_tool as emotional_rl
-except Exception:
-    emotional_rl = None
-try:
-    from core.neuro_spheres import neuro_spheres as neuro_spheres
-except Exception:
-    neuro_spheres = None
-try:
-    from core.cognitive_modules import chain_of_thought as chain_of_thought
-except Exception:
-    chain_of_thought = None
-try:
-    from core.cognitive_modules import multi_perspective as multi_perspective
-except Exception:
-    multi_perspective = None
-try:
-    from core.cognitive_modules import analogical_reasoning as analogical_reasoning
-except Exception:
-    analogical_reasoning = None
-try:
-    from core.cognitive_modules import hypothesis_generator as hypothesis_generator
-except Exception:
-    hypothesis_generator = None
-try:
-    from core.cognitive_modules import social_dynamics as social_dynamics
-except Exception:
-    social_dynamics = None
-try:
-    from core.cognitive_modules import ethical_reasoning as ethical_reasoning
-except Exception:
-    ethical_reasoning = None
-try:
-    from core.cognitive_modules import storytelling_engine as storytelling_engine
-except Exception:
-    storytelling_engine = None
-try:
-    from core.cognitive_modules import teaching_optimizer as teaching_optimizer
-except Exception:
-    teaching_optimizer = None
-try:
-    from core.cognitive_modules import debate_engine as debate_engine
-except Exception:
-    debate_engine = None
-try:
-    from core.cognitive_modules import temporal_reasoning as temporal_reasoning
-except Exception:
-    temporal_reasoning = None
-try:
-    from core.cognitive_modules import cognitive_modules as cognitive_modules
-except Exception:
-    cognitive_modules = None
-try:
-    from core.cognitive_modules import meta_cognition as meta_cognition
-except Exception:
-    meta_cognition = None
-try:
-    from core.cognitive_modules import self_model as self_model
-except Exception:
-    self_model = None
-try:
-    from core.cognitive_modules import confidence_calibration as confidence_calibration
-except Exception:
-    confidence_calibration = None
-try:
-    from core.cognitive_modules import contradiction_detection as contradiction_detection
-except Exception:
-    contradiction_detection = None
-try:
-    from core.cognitive_modules import assumption_detection as assumption_detection
-except Exception:
-    assumption_detection = None
-try:
-    from core.cognitive_modules import goal_management as goal_management
-except Exception:
-    goal_management = None
-try:
-    from core.cognitive_modules import attention_management as attention_management
-except Exception:
-    attention_management = None
-try:
-    from core.cognitive_modules import transfer_learning as transfer_learning
-except Exception:
-    transfer_learning = None
-try:
-    from core.cognitive_modules import abstraction as abstraction
-except Exception:
-    abstraction = None
-try:
-    from core.cognitive_modules import principled_reasoning as principled_reasoning
-except Exception:
-    principled_reasoning = None
-try:
-    from core.cognitive_modules import intellectual_humility as intellectual_humility
-except Exception:
-    intellectual_humility = None
-try:
-    from core.cognitive_modules import creative_generation as creative_generation
-except Exception:
-    creative_generation = None
-try:
-    from core.cognitive_modules import meta_communication as meta_communication
-except Exception:
-    meta_communication = None
-try:
-    from core.cognitive_modules import bias_detection as bias_detection
-except Exception:
-    bias_detection = None
-try:
-    from actions.superpowers_skill import superpowers_skill as superpowers_skill
-except Exception:
-    superpowers_skill = None
-try:
-    from core.self_health import self_health_tool as auto_salud
-except Exception:
-    auto_salud = None
-try:
-    from core.eris_fabrica import eris_fabrica as fabrica
-except Exception:
-    fabrica = None
-try:
-    from core.procedimientos import procedimientos as procedimientos
-except Exception:
-    procedimientos = None
-try:
-    from core.auto_fabrica import auto_fabrica as auto_fabrica
-except Exception:
-    auto_fabrica = None
-try:
-    from core.mcp_bridge import mcp_bridge as mcp_bridge
-except Exception:
-    mcp_bridge = None
-try:
-    from core.proactive_context import pro_contexto as pro_contexto
-except Exception:
-    pro_contexto = None
-try:
-    from core.prompt_ab_testing import prompt_ab as prompt_ab
-except Exception:
-    prompt_ab = None
-try:
-    from core.edit_journal import edit_journal as edit_journal
-except Exception:
-    edit_journal = None
-try:
-    from core.token_saver import token_saver as token_saver
-except Exception:
-    token_saver = None
-try:
-    from core.self_improvement import auto_mejora as auto_mejora
-except Exception:
-    auto_mejora = None
-try:
-    from core.session_summaries import sesiones as sesiones
-except Exception:
-    sesiones = None
-try:
-    from core.ab_automated import ab_automated as ab_automated
-except Exception:
-    ab_automated = None
-try:
-    from core.informe_semanal import informe_semanal as informe_semanal
-except Exception:
-    informe_semanal = None
-try:
-    from agents.memoria_agent import memoria as memoria
-except Exception:
-    memoria = None
-try:
-    from core.escalada import escalada_tool as escalada
-except Exception:
-    escalada = None
-try:
-    from core.autonomy import autonomy_tool as autonomy
-except Exception:
-    autonomy = None
-try:
-    from core.goal_setting import goal_setting_tool as goal_setting
-except Exception:
-    goal_setting = None
-try:
-    from core.identity_persistence import identity_persistence_tool as identity_persistence
-except Exception:
-    identity_persistence = None
-try:
-    from core.multilang_learning import multilang_learning_tool as multilang_learning
-except Exception:
-    multilang_learning = None
-try:
-    from core.tool_creation import tool_creation_tool as tool_creation
-except Exception:
-    tool_creation = None
-try:
-    from core.emotional_tone import emotional_tone_tool as emotional_tone
-except Exception:
-    emotional_tone = None
-try:
-    from core.natural_pauses import natural_pauses_tool as natural_pauses
-except Exception:
-    natural_pauses = None
-try:
-    from core.accent_personality import accent_personality_tool as accent_personality
-except Exception:
-    accent_personality = None
-try:
-    from core.sql_executor import sql_executor_tool as sql_executor
-except Exception:
-    sql_executor = None
-try:
-    from core.db_schema_visualizer import db_schema_visualizer_tool as db_schema_visualizer
-except Exception:
-    db_schema_visualizer = None
-try:
-    from core.test_runner import test_runner_tool as test_runner
-except Exception:
-    test_runner = None
-try:
-    from core.alert_rules import alert_rules_tool as alert_rules
-except Exception:
-    alert_rules = None
-try:
-    from core.docstring_generator import docstring_generator_tool as docstring_generator
-except Exception:
-    docstring_generator = None
-try:
-    from core.changelog_generator import changelog_generator_tool as changelog_generator
-except Exception:
-    changelog_generator = None
-try:
-    from actions.office_tools import office_docs as office_docs
-except Exception:
-    office_docs = None
-try:
-    from actions.wolfram_alpha import wolfram_alpha as wolfram_alpha
-except Exception:
-    wolfram_alpha = None
-try:
-    from core.hud_terminal import hud_terminal as hud_terminal
-except Exception:
-    hud_terminal = None
-try:
-    from actions.rutinas_diarias import rutinas_diarias as rutinas_diarias
-except Exception:
-    rutinas_diarias = None
-try:
-    from actions.browser_auto import browser_auto as browser_auto
-except Exception:
-    browser_auto = None
-try:
-    from actions.browser_unified import browser_unified as browser_unified
-except Exception:
-    browser_unified = None
-try:
-    from core.code_sandbox import code_sandbox as code_sandbox
-except Exception:
-    code_sandbox = None
-try:
-    from core.email_calendar_deep import email_calendar_deep as email_calendar_deep
-except Exception:
-    email_calendar_deep = None
-try:
-    from core.knowledge_graph_advanced import knowledge_graph_tool as knowledge_graph_adv
-except Exception:
-    knowledge_graph_adv = None
-try:
-    from core.multi_user_profiles import multi_user_tool as multi_user_profiles
-except Exception:
-    multi_user_profiles = None
-try:
-    from core.code_engineer import code_engineer as code_engineer
-except Exception:
-    code_engineer = None
-try:
-    from core.codebase_explorer import codebase_explorer as codebase_explorer
-except Exception:
-    codebase_explorer = None
-try:
-    from core.refactoring_engine import refactoring_engine as refactoring_engine
-except Exception:
-    refactoring_engine = None
-try:
-    from actions.home_assistant import home_assistant as home_assistant
-except Exception:
-    home_assistant = None
-try:
-    from core.memory_curation import curar_memoria as curar_memoria
-except Exception:
-    curar_memoria = None
-try:
-    from actions.pdf_generator import pdf_generator as pdf_generator
-except Exception:
-    pdf_generator = None
-try:
-    from actions.rss_reader import rss_reader as rss_reader
-except Exception:
-    rss_reader = None
-try:
-    from actions.vault_passwords import vault_passwords as vault_passwords
-except Exception:
-    vault_passwords = None
-try:
-    from actions.ssh_remote import ssh_remote as ssh_remote
-except Exception:
-    ssh_remote = None
-try:
-    from actions.git_smart import git_smart as git_smart
-except Exception:
-    git_smart = None
-try:
-    from actions.sql_manager import sql_manager as sql_manager
-except Exception:
-    sql_manager = None
-try:
-    from core.updater import eris_updater as eris_updater
-except Exception:
-    eris_updater = None
-try:
-    from core.memory_consolidator import memory_consolidator as memory_consolidator
-except Exception:
-    memory_consolidator = None
-try:
-    from actions.habit_tracker import habit_tracker as habit_tracker
-except Exception:
-    habit_tracker = None
-try:
-    from actions.chart_generator import chart_generator as chart_generator
-except Exception:
-    chart_generator = None
-try:
-    from actions.clipboard_history import clipboard_history as clipboard_history
-except Exception:
-    clipboard_history = None
-try:
-    from actions.finance_tracker import finance_tracker as finance_tracker
-except Exception:
-    finance_tracker = None
-try:
-    from core.test_generator import test_generator as test_generator
-except Exception:
-    test_generator = None
-try:
-    from core.self_modify import self_improve as self_improve
-except Exception:
-    self_improve = None
-try:
-    from core.cerebro import cerebro_tool as cerebro
-except Exception:
-    cerebro = None
-try:
-    from core.expression_engine import expression_tool as expresion_eris
-except Exception:
-    expresion_eris = None
-try:
-    from core.vida_interna import vida_interna_tool as vida_interna
-except Exception:
-    vida_interna = None
-try:
-    from core.relaciones import relaciones_tool as relaciones
-except Exception:
-    relaciones = None
-try:
-    from core.autoimagen import autoimagen_tool as autoimagen
-except Exception:
-    autoimagen = None
-try:
-    from core.intereses import intereses_tool as intereses
-except Exception:
-    intereses = None
-try:
-    from core.retrospectiva import retrospectiva_tool as retrospectiva
-except Exception:
-    retrospectiva = None
-try:
-    from core.ambiente import ambiente_tool as ambiente
-except Exception:
-    ambiente = None
-try:
-    from core.suenos import sueno_tool as suenos
-except Exception:
-    suenos = None
-try:
-    from core.caprichos import caprichos_tool as caprichos
-except Exception:
-    caprichos = None
-try:
-    from core.tiempo_interno import tiempo_interno_tool as tiempo_interno
-except Exception:
-    tiempo_interno = None
-try:
-    from core.festejos import festejos_tool as festejos
-except Exception:
-    festejos = None
-try:
-    from core.bienestar import bienestar_tool as bienestar
-except Exception:
-    bienestar = None
-try:
-    from core.cuadernos import cuadernos_tool as cuadernos
-except Exception:
-    cuadernos = None
-try:
-    from core.despedidas import despedidas_tool as despedidas
-except Exception:
-    despedidas = None
-try:
-    from core.todo_yo import todo_yo_tool as todo_yo
-except Exception:
-    todo_yo = None
-try:
-    from core.opencode_bridge import bridge_tool as opencode_bridge
-except Exception:
-    opencode_bridge = None
-try:
-    from actions.sub_agent_manager import sub_agent_manager as agente_sub
-except Exception:
-    agente_sub = None
-
-
-# ── Hermes: Wireado final — herramientas existentes restantes ──
-try:
-    from actions.flow_recorder import flow_recorder as action_history
-except Exception:
-    action_history = None
-try:
-    from core.agi_tools import agi_reasoning as agi_reasoning
-except Exception:
-    agi_reasoning = None
-try:
-    from core.api_doc_generator import api_doc_generator_tool as api_doc_generator
-except Exception:
-    api_doc_generator = None
-try:
-    from core.api_tester import api_tester_tool as api_tester
-except Exception:
-    api_tester = None
-try:
-    from core.auto_healer import auto_healer as auto_healer
-except Exception:
-    auto_healer = None
-try:
-    from core.superinteligencia import backup_prioritizer as backup_prioritizer
-except Exception:
-    backup_prioritizer = None
-try:
-    from core.cicd_builder import cicd_builder_tool as cicd_builder
-except Exception:
-    cicd_builder = None
-try:
-    from core.connectivity import connectivity_tool as connectivity
-except Exception:
-    connectivity = None
-try:
-    from actions.console_log import console_log as console_log
-except Exception:
-    console_log = None
-try:
-    from core.coverage_reporter import coverage_reporter_tool as coverage_reporter
-except Exception:
-    coverage_reporter = None
-try:
-    from core.crash_recovery import crash_recovery_tool as crash_recovery
-except Exception:
-    crash_recovery = None
-try:
-    from core.cron_scheduler import cron_scheduler_tool as cron_scheduler
-except Exception:
-    cron_scheduler = None
-try:
-    from core.docker_manager import docker_manager_tool as docker_manager
-except Exception:
-    docker_manager = None
-try:
-    from core.superinteligencia import error_pattern_db as error_pattern_db
-except Exception:
-    error_pattern_db = None
-try:
-    from core.file_api import file_api as file_api
-except Exception:
-    file_api = None
-try:
-    from actions.smart_file_organizer import get_file_md5 as file_organizer
-except Exception:
-    file_organizer = None
-try:
-    from actions.image_generator import image_generator as image_generator
-except Exception:
-    image_generator = None
-try:
-    from core.learning_pipeline import learning_pipeline_tool as learning_pipeline
-except Exception:
-    learning_pipeline = None
-try:
-    from core.maintenance_scheduler import maintenance as maintenance
-except Exception:
-    maintenance = None
-try:
-    from actions.media_lab import media_lab as media_lab
-except Exception:
-    media_lab = None
-try:
-    from core.memory_consolidator import memory_consolidator as memory_consolidator
-except Exception:
-    memory_consolidator = None
-try:
-    from core.memory_consolidation import memory_consolidation_tool as memory_search
-except Exception:
-    memory_search = None
-try:
-    from core.superinteligencia import metrics_dashboard as metrics_dashboard
-except Exception:
-    metrics_dashboard = None
-try:
-    from actions.notifications import notify as notifications
-except Exception:
-    notifications = None
-try:
-    from core.proactive_comms import proactive_comms_tool as proactive_comms
-except Exception:
-    proactive_comms = None
-try:
-    from core.proactive_monitor import monitoring_tool as proactive_monitor
-except Exception:
-    proactive_monitor = None
-try:
-    from actions.project_builder import project_builder as project_builder
-except Exception:
-    project_builder = None
-try:
-    from actions.quick_actions import run as quick_actions
-except Exception:
-    quick_actions = None
-try:
-    from core.resource_manager import resource_manager_tool as resource_manager
-except Exception:
-    resource_manager = None
-try:
-    from core.superinteligencia import resource_optimizer as resource_optimizer
-except Exception:
-    resource_optimizer = None
-try:
-    from actions.screen_context import screen_context as screen_context
-except Exception:
-    screen_context = None
-try:
-    from actions.screen_recorder import start_recording as screen_recorder
-except Exception:
-    screen_recorder = None
-try:
-    from core.self_modify import self_improve as self_improve
-except Exception:
-    self_improve = None
-try:
-    from actions.system_volume import system_volume as system_volume
-except Exception:
-    system_volume = None
-try:
-    from core.training_pipeline import training_pipeline_tool as training_pipeline
-except Exception:
-    training_pipeline = None
-try:
-    from actions.visual_expressions import visual_expressions as visual_expressions
-except Exception:
-    visual_expressions = None
-try:
-    from core.voice_cloning import voice_cloning as voice_cloning
-except Exception:
-    voice_cloning = None
-try:
-    from actions.weather_report import weather_action as weather_report
-except Exception:
-    weather_report = None
-try:
-    from core.windows_service import create_startup_script as windows_service
-except Exception:
-    windows_service = None
+def __dir__():
+    return sorted(set(globals()) | set(_LAZY) | set(_NONE_NAMES))
