@@ -1,28 +1,5 @@
 [
   {
-    "name": "calc_test",
-    "description": "Calculadora de prueba",
-    "parameters": {
-      "type": "OBJECT",
-      "properties": {
-        "a": {
-          "type": "NUMBER"
-        },
-        "b": {
-          "type": "NUMBER"
-        },
-        "action": {
-          "type": "STRING"
-        }
-      },
-      "required": [
-        "a",
-        "b",
-        "action"
-      ]
-    }
-  },
-  {
     "name": "lab_pulse",
     "description": "Pulso del Pentest Lab: estado del aprendizaje, escalada global e inventario de tools en un vistazo.",
     "parameters": {

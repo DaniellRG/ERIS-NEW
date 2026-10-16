@@ -3,9 +3,16 @@ import base64
 import urllib.request
 import urllib.error
 from pathlib import Path
-from mss import mss
-from PIL import Image
 import io
+
+# mss es dependencia OPCIONAL (captura X11). En Wayland/Linux la captura usa grim,
+# así que su ausencia NO debe romper el import del módulo (antes: ModuleNotFoundError
+# tumbaba get_tool('screen_vision') -> tool declarada pero None).
+try:
+    from mss import mss
+except Exception:
+    mss = None
+from PIL import Image
 
 # Resolve config relative to this script's location
 API_FILE = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
@@ -73,12 +80,14 @@ def _capture_screen_base64() -> str:
                     img = Image.open(io.BytesIO(r.stdout))
             except Exception:
                 img = None
-    if img is None:
+    if img is None and mss is not None:
         with mss() as sct:
-            monitor = sct.monitors[0]  # All monitors combined
+            monitor = sct.monitors[1] if len(sct.monitors) > 1 else sct.monitors[0]
             screenshot = sct.grab(monitor)
             img = Image.frombytes("RGB", screenshot.size, screenshot.bgra,
                                   "raw", "BGRX")
+    if img is None:
+        return ""
     # Redimensionar si es muy grande para ahorrar tokens/ancho de banda
     img.thumbnail((1280, 720), Image.Resampling.BILINEAR)
     buffer = io.BytesIO()

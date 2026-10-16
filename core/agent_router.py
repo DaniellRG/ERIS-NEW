@@ -101,8 +101,8 @@ class AgentRouter:
         # B12 [FIX 2026-10-12]: un agente sin handler registrado no puede
         # ejecutar nada — si gana la clasificación, el turno muere con "no hay
         # handler". Si el router ya tiene handlers cargados (main.py registra
-        # los vivos) saltamos los huérfanos (hoy: deploy, system_monitor) para
-        # que no le roben el turno a uno que sí puede responder. Con el set
+        # los vivos) saltamos los agentes sin handler real para que no le roben
+        # el turno a uno que sí puede responder. Con el set
         # vacío (CLI/tests sin registrar) no filtramos, para no vaciar todo.
         _have_handlers = bool(self._handlers)
 

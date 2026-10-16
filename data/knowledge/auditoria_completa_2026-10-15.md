@@ -50,3 +50,21 @@ las 17:34:51 (journalctl `poweroff.target`), sin coredump de Python.
   (`main.py:36`); conteos viejos en `core/self_evolution.py:4` ("447 tools").
 
 Plan de arreglo propuesto en el informe del vault, por severidad.
+
+## ✅ EJECUTADO — 5 ALTAS arregladas (2026-10-15)
+
+Decisión del dueño: solo las ALTAS; los agentes muertos, quitarlos.
+
+- **A1**: quitados `deploy` + `system_monitor` de `core/agent_definitions.py` (quedan 14),
+  borrados sus imports muertos en `core/action_imports.py`. El router purga solo.
+- **A2**: creado `core/session_search.py` (búsqueda en sesiones: índice + RAG). Antes el
+  import apuntaba a un módulo inexistente.
+- **A3**: creado `actions/project_manager.py` (delega en `task_manager`).
+- **A4**: `actions/screen_vision.py` con el import opcional `mss` guardado (en Wayland usa
+  grim) → ya resuelve; borrada la tool fantasma `calc_test` de `actions/custom_tools.json`.
+- **A5**: AGENTS.md con números reales (514 tools, 14 agentes, 304 actions, 44 skills,
+  87 knowledge, 15 None).
+
+Verificado: py_compile OK; sync **514/514, 0 duplicados**; **0 declaradas sin
+implementación**; `test_all.py` **177 PASS / 0 FAIL / 3 WARN**; las 2 ramas rotas ya
+responden. Pendiente (sin OK): M1–M8 + bajas.
