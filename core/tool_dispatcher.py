@@ -31,7 +31,8 @@ else:
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
-from google.genai import types
+# PERF (2026-10-16): google.genai se importa LAZY dentro de execute() — antes se
+# pagaban ~430 ms en CADA arranque aunque Eris use Ollama (Gemini es fallback).
 
 from core.action_imports import _eg_on_tool_result
 from core.logging_setup import BASE_DIR
@@ -211,7 +212,8 @@ class ToolDispatcher:
     def ui(self):
         return self._eris.ui
 
-    async def execute(self, fc) -> types.FunctionResponse:
+    async def execute(self, fc) -> "types.FunctionResponse":
+        from google.genai import types  # lazy: evita ~430 ms de arranque del SDK
         name = fc.name
         args = dict(fc.args or {})
         task_id = generate_task_id(name, args)
