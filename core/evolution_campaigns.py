@@ -127,27 +127,25 @@ def _llm(prompt: str, system: str = "") -> str:
 # ── Radar: papers + repos ─────────────────────────────────────────────────────
 
 def _radar_tema(tema: str) -> dict:
-    """Busca papers y repos sobre el tema. Usa las tools de Eris si existen;
-    si no, cae a web_search; si no hay red, devuelve vacío (degrada elegante).
+    """Busca papers y repos sobre el tema vía core.research_channels (canales
+    reales: arXiv + GitHub por DDGS); si no hay red, cae a web_search; si no,
+    devuelve vacío (degrada elegante).
     """
     papers, repos, fuentes = [], [], []
 
-    # 1. paper_search / repo_discovery (tools propias de Eris, si existen)
-    for tname, key, params in (
-        ("paper_search", "papers", {"action": "search", "query": tema, "num_results": 5}),
-        ("repo_discovery", "repos", {"action": "search", "query": tema, "num_results": 5}),
-    ):
-        try:
-            from core.tool_registry import get_tool
-            r = str(get_tool(tname)(params) or "")
-            if r and "Error" not in r[:30] and len(r.strip()) > 20:
-                if key == "papers":
-                    papers.append(r[:1500])
-                else:
-                    repos.append(r[:1500])
-                fuentes.append(tname)
-        except Exception:
-            continue
+    # 1. Canales reales de investigación (auditoría 2026-10-15, M2: antes
+    #    despachaba las tools paper_search/repo_discovery, que NO existen).
+    try:
+        from core import research_channels as rc
+        for key, items in (("papers", rc.buscar_papers(tema, limite=5)),
+                           ("repos", rc.descubrir_repos(tema, limite=5))):
+            txt = "\n".join(f"• {x.get('titulo', '')} — {x.get('url', '')}"
+                            for x in (items or []) if x.get("titulo"))
+            if len(txt.strip()) > 20:
+                (papers if key == "papers" else repos).append(txt[:1500])
+                fuentes.append(key)
+    except Exception:
+        pass
 
     # 2. Fallback: web_search directo
     if not papers and not repos:

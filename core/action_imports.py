@@ -71,14 +71,6 @@ try:
 except Exception:
     web_search_action = None; web_search = None
 try:
-    from actions.paper_search      import paper_search
-except Exception:
-    paper_search = None
-try:
-    from actions.repo_discovery    import repo_discovery
-except Exception:
-    repo_discovery = None
-try:
     from actions.computer_control  import computer_control
 except Exception:
     computer_control = None

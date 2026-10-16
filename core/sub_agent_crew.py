@@ -209,7 +209,7 @@ class TaskRouter(SubAgentBase):
         "SecurityAuditor": ["security_scanner", "active_firewall", "osint_agent", "cybersecurity", "pentest_lab", "file_encryptor"],
         "LearningCurator": ["cuadernos", "intereses", "retrospectiva", "skill_manage", "study_planner", "quiz_generator"],
         "WebExtractor": ["web_scraper", "web_search", "webfetch", "page_summarizer"],
-        "InvestigadorExterno": ["paper_search", "repo_discovery", "web_search", "webfetch"],
+        "InvestigadorExterno": ["web_search", "webfetch"],
         "QualityCritic": ["code_review", "text_review", "readiness_check"],
         "ActionGuard": ["git_control", "terminal_agent", "shell_session", "email_sender", "file_api", "api_invoke"],
         "SelectiveForgetter": ["memoria", "rag_engine", "sqlite_query", "memory"],

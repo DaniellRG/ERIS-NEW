@@ -76,18 +76,19 @@ def _notify(texto: str):
 def _investigar() -> str:
     """Radar del ecosistema: papers + repos sobre un tema rotatorio."""
     try:
-        from core.tool_registry import get_tool
         tema = "agentes autónomos y auto-mejora de IA"
         r = ""
-        for tname in ("paper_search", "repo_discovery"):
-            try:
-                out = str(get_tool(tname)({"action": "search", "query": tema,
-                                           "num_results": 3}) or "")
-                if out and "Error" not in out[:30]:
-                    r += out[:500] + "\n"
-            except Exception:
-                continue
+        # Canales reales (core.research_channels). Antes despachaba las tools
+        # `paper_search`/`repo_discovery`, que NO existen (auditoría 2026-10-15, M2).
+        try:
+            from core import research_channels as rc
+            items = rc.buscar_papers(tema, limite=3) + rc.descubrir_repos(tema, limite=3)
+            r = "\n".join(f"• {x.get('titulo', '')} — {x.get('url', '')}"
+                          for x in items if x.get("titulo"))[:500]
+        except Exception:
+            r = ""
         if not r:
+            from core.tool_registry import get_tool
             out = str(get_tool("web_search")({"action": "search",
                                               "query": tema, "num_results": 3}) or "")
             r = out[:500]
