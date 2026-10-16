@@ -4,6 +4,30 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y
 [Versionado Semántico](https://semver.org/lang/es/). La versión viva está en
 `core/version.py` (`ERIS_VERSION` / `ERIS_STAGE`).
 
+## [4.0.1] — 2026-10-16 — Rendimiento de arranque
+
+Parche posterior al release `v4.0.0` (tag + GitHub Release). Solo rendimiento:
+sin cambios de comportamiento ni de la sync de tools (**514/514**).
+
+### Rendimiento
+- **`core/tool_dispatcher.py`**: `google.genai` ya no se importa a nivel de módulo
+  (era el único import eager de `google.genai` del proyecto; los otros 13 sitios ya
+  eran lazy). Ahora se importa dentro de `execute()` (~430 ms menos de arranque,
+  aunque Eris use Ollama por defecto y Gemini sea el fallback).
+- **`main.py` + `core/tool_dispatcher.py`**: el arranque **ya no carga
+  `core.action_imports`**, que importaba ~296 action modules de golpe. `main.py`
+  importa nombre por nombre solo los ~12 módulos que usa de verdad (con fallback a
+  `None`, igual que antes), y `tool_dispatcher` importa `_eg_on_tool_result`
+  directo de `actions.emotional_growth`. El resto de los 616 nombres sigue
+  disponible igual vía `from core.action_imports import X` **cuando se usa**
+  (los `action_imports.py`/`self_extend` quedan intactos).
+
+### Verificado
+- `import main`: mediana **3150 ms → 2948 ms** (−~200 ms, −6.4 %; 10 muestras).
+- `core.action_imports` ya **no** aparece en `sys.modules` tras `import main`.
+- `test_all.py` → **177 PASS / 0 FAIL / 3 WARN**; sync de tools **514/514**,
+  0 duplicados; `symtable` confirma **0 nombres huérfanos** en `main.py`.
+
 ## [4.0.0] — 2026-10-16 — "Constellation Prime"
 
 Primer salto **mayor** desde la etapa 2.x. No es solo un número: consolida y

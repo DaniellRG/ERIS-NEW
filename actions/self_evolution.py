@@ -18,7 +18,7 @@ try:
     from core.version import ERIS_VERSION, ERIS_STAGE
     _BIRTH_STAGE = f"ERIS v{ERIS_VERSION} - {ERIS_STAGE}"
 except Exception:
-    _BIRTH_STAGE = "ERIS v4.0.0 - Constellation Prime"
+    _BIRTH_STAGE = "ERIS v4.0.1 - Constellation Prime"
 
 
 def _load():

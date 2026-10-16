@@ -65,12 +65,59 @@ from google.genai import types
 from ui import ErisUI
 
 
-from core.action_imports import *
-from core.action_imports import (
-    _mobile_start, _mobile_broadcast, _ollama_check, _ollama_chat,
-    _eg_on_user_msg, _eg_on_tool_result, _start_vision_guardian,
-    _rules_run_action,
-)
+# PERF (2026-10-16): antes había `from core.action_imports import *` + un bloque
+# explícito. El registro central importa ~296 action modules en el arranque
+# (~460 ms de más); acá importamos SOLO los módulos que main.py usa de verdad
+# (~70 ms). Si un módulo no está disponible, el nombre queda en None (mismo
+# comportamiento resiliente que el registro central). Los nombres usados son
+# exactamente los que main.py referencia en ámbito global (verificado con symtable).
+try:
+    from actions.eris_db import convo_log
+except Exception:
+    convo_log = None
+try:
+    from actions.morning_brief import already_briefed_today
+except Exception:
+    already_briefed_today = None
+try:
+    from actions.rules_engine import (
+        check_phrase_triggers, start_rules_runner, _run_action as _rules_run_action,
+    )
+except Exception:
+    check_phrase_triggers = None; start_rules_runner = None; _rules_run_action = None
+try:
+    from actions.scheduler import start_runner
+except Exception:
+    start_runner = None
+try:
+    from core.emotional_state import react_to_user_interaction
+except Exception:
+    react_to_user_interaction = None
+try:
+    from core.plugin_manager import get_plugin_manager
+except Exception:
+    get_plugin_manager = None
+try:
+    from actions.mobile_server import start as _mobile_start, broadcast as _mobile_broadcast
+except Exception:
+    _mobile_start = None; _mobile_broadcast = None
+try:
+    from actions.ollama_provider import is_available as _ollama_check, chat as _ollama_chat
+except Exception:
+    _ollama_check = None; _ollama_chat = None
+try:
+    from actions.emotional_growth import on_user_message as _eg_on_user_msg, on_tool_result as _eg_on_tool_result
+except Exception:
+    _eg_on_user_msg = None; _eg_on_tool_result = None
+try:
+    from actions.vision_guardian import start as _start_vision_guardian
+except Exception:
+    _start_vision_guardian = None
+# Nombres que el registro central solo define como None (no tienen módulo real).
+eye_tracking = None
+micro_movement = None
+task_simplify = None
+routine_gamify = None
 
 
 

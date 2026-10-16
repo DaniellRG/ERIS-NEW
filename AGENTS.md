@@ -1,6 +1,6 @@
 ﻿# AGENTS.md — ERIS AI
 
-**Versión: 4.0.0 "Constellation Prime"** (2026-10-16) · fuente de verdad: `core/version.py`.
+**Versión: 4.0.1 "Constellation Prime"** (2026-10-16) · fuente de verdad: `core/version.py`.
 
 Windows desktop assistant (Python 3.14, PyQt6). **514 tools**,
 NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS

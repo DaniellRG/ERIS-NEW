@@ -34,8 +34,16 @@ from PyQt6.QtWidgets import QApplication
 # PERF (2026-10-16): google.genai se importa LAZY dentro de execute() — antes se
 # pagaban ~430 ms en CADA arranque aunque Eris use Ollama (Gemini es fallback).
 
-from core.action_imports import _eg_on_tool_result
+# PERF (2026-10-16): importar directo de actions.emotional_growth en vez de
+# core.action_imports — así el arranque NO carga los ~296 action modules del
+# registro central (se ahorran ~460 ms). Si falla, queda None (igual que antes).
+try:
+    from actions.emotional_growth import on_tool_result as _eg_on_tool_result
+except Exception:
+    _eg_on_tool_result = None
+
 from core.logging_setup import BASE_DIR
+
 from core.tool_registry import get_tool
 from core.resilient import get_manager, generate_task_id
 
