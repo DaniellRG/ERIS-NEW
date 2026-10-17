@@ -36,6 +36,25 @@ _BTN = {"left": "0xC0", "right": "0xC1", "middle": "0xC2"}
 
 _is_win = os.name == "nt"
 
+# ydotoold corre como SERVICIO DE USUARIO (systemctl --user ydotool), no en el
+# systemctl del sistema. Su socket queda en $XDG_RUNTIME_DIR/.ydotool_socket.
+_SOCKET = os.path.join(os.environ.get("XDG_RUNTIME_DIR",
+                                      f"/run/user/{os.getuid()}"), ".ydotool_socket")
+
+
+def _daemon_active() -> str:
+    """Estado del daemon ydotoold, con la señal más fiable: su socket."""
+    if os.path.exists(_SOCKET):
+        return "active"
+    try:
+        r = subprocess.run(["systemctl", "--user", "is-active", "ydotool"],
+                           capture_output=True, text=True, timeout=3)
+        if r.stdout.strip() == "active":
+            return "active (servicio, sin socket)"
+    except Exception:
+        pass
+    return "inactive"
+
 
 def _ydo(args, timeout=10):
     bin_ = shutil.which("ydotool")
@@ -165,10 +184,8 @@ def wayland_input(parameters: dict | None = None, player=None) -> str:
 
     if action in ("status", "estado"):
         bin_ = shutil.which("ydotool")
-        daemon = subprocess.run(["systemctl", "is-active", "ydotool"],
-                                capture_output=True, text=True)
         return (f"ydotool: {'instalado' if bin_ else 'NO instalado'}\n"
-                f"Daemon ydotoold: {daemon.stdout.strip() or daemon.stderr.strip()}")
+                f"Daemon ydotoold: {_daemon_active()}")
 
     if action in ("move", "mover"):
         x, y = int(parameters.get("x", 0)), int(parameters.get("y", 0))
