@@ -228,16 +228,22 @@ def quick_chat(
     *,
     system: str = "",
     task: str = "agent",
+    _depth: int = 0,
 ) -> str:
     """
     Fire a one-shot text completion using the best available provider.
     Follows the fallback chain on failure.
     Raises on total failure (no provider available).
     """
+    # Anti-recursión: si todos los providers fallan, `get_model_for` devuelve el
+    # provider configurado (gemini) como último recurso → sin este tope la cadena
+    # gemini→(falla)→gemini entraba en bucle infinito (max recursion depth).
+    if _depth >= 4:
+        raise RuntimeError(f"All model providers failed for task '{task}'.")
     provider = get_model_for(task)
 
     if provider == "gemini":
-        return _quick_gemini(prompt, system=system)
+        return _quick_gemini(prompt, system=system, _depth=_depth)
 
     if provider == "groq":
         try:
@@ -246,7 +252,7 @@ def quick_chat(
         except Exception as e:
             if report_provider_error("groq", str(e)):
                 print(f"[ModelRouter] Groq quota error, falling back: {e}")
-                return quick_chat(prompt, system=system, task=task)
+                return quick_chat(prompt, system=system, task=task, _depth=_depth + 1)
             raise
 
     if provider == "cerebras":
@@ -256,7 +262,7 @@ def quick_chat(
         except Exception as e:
             if report_provider_error("cerebras", str(e)):
                 print(f"[ModelRouter] Cerebras quota error, falling back: {e}")
-                return quick_chat(prompt, system=system, task=task)
+                return quick_chat(prompt, system=system, task=task, _depth=_depth + 1)
             raise
 
     if provider == "openrouter":
@@ -266,7 +272,7 @@ def quick_chat(
         except Exception as e:
             if report_provider_error("openrouter", str(e)):
                 print(f"[ModelRouter] OpenRouter quota error, falling back: {e}")
-                return quick_chat(prompt, system=system, task=task)
+                return quick_chat(prompt, system=system, task=task, _depth=_depth + 1)
             raise
 
     if provider == "ollama":
@@ -279,31 +285,51 @@ def quick_chat(
     raise RuntimeError(f"No provider available for task '{task}'.")
 
 
-def _quick_gemini(prompt: str, system: str = "") -> str:
-    """One-shot Gemini text completion with fallback to chain on quota error."""
+def _quick_gemini(prompt: str, system: str = "", _depth: int = 0) -> str:
+    """One-shot Gemini text completion.
+
+    Itera la cadena de modelos Gemini (preferido → fallbacks) ANTES de rendirse:
+    si el preferido está en cuota agotada (429) o retirado (404), prueba el
+    siguiente (los modelos *-lite tienen cuota SEPARADA y siguen funcionando
+    aunque el Flash completo esté agotado — verificado 2026-10-17). Solo si
+    NINGÚN modelo Gemini sirve, cae al siguiente provider de la cadena global.
+    """
     cfg     = _cfg()
     api_key = cfg.get("gemini_api_key", "")
     if not api_key:
         raise RuntimeError("No Gemini API key configured.")
 
-    try:
-        from google import genai as _genai
-        client = _genai.Client(api_key=api_key)
-        parts  = []
-        if system:
-            parts.append(system + "\n\n")
-        parts.append(prompt)
-        from core.model_config import get_model
-        resp = client.models.generate_content(
-            model=get_model("agent"),
-            contents=[{"role": "user", "parts": [{"text": "".join(parts)}]}],
-        )
-        return resp.text or ""
-    except Exception as e:
-        if report_gemini_error(str(e)):
-            # Recurse — get_model_for will pick next provider
-            return quick_chat(prompt, system=system, task="agent")
-        raise
+    # Si Gemini ya falló antes en este proceso, no reintentar la cadena entera
+    # (evita N llamadas API fallidas por turno): caer directo al siguiente provider.
+    if not gemini_ok():
+        return quick_chat(prompt, system=system, task="agent", _depth=_depth + 1)
+
+    from google import genai as _genai
+    from core.model_config import chain as _model_chain
+    client = _genai.Client(api_key=api_key)
+
+    parts = []
+    if system:
+        parts.append(system + "\n\n")
+    parts.append(prompt)
+    contents = [{"role": "user", "parts": [{"text": "".join(parts)}]}]
+
+    last_err: Exception | None = None
+    for model in _model_chain("agent"):
+        try:
+            resp = client.models.generate_content(model=model, contents=contents)
+            if resp.text:
+                return resp.text
+            last_err = RuntimeError(f"'{model}' devolvió respuesta vacía.")
+        except Exception as e:
+            last_err = e
+            print(f"[ModelRouter] Gemini '{model}' no sirve, pruebo el siguiente: "
+                  f"{str(e)[:120]}")
+
+    # Ningún modelo Gemini sirvió → caer al siguiente provider (o error claro).
+    if report_gemini_error(str(last_err)):
+        return quick_chat(prompt, system=system, task="agent", _depth=_depth + 1)
+    raise last_err if last_err else RuntimeError("Gemini: sin respuesta.")
 
 
 def status(parameters: dict = None, player=None) -> dict:

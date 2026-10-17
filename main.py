@@ -1321,6 +1321,33 @@ class ErisLive:
         try:
             if not self._auto_cont_on:
                 return
+            # ⛔ Anti-bucle: si esta respuesta es idéntica a una reciente ya
+            #    registrada (≥2 copias = Eris repite lo mismo), es un bucle
+            #    típico de LLM degradado (cuota agotada / sin fallback) →
+            #    cortar la auto-continuación en vez de empujarla a seguir
+            #    repitiendo el mismo texto indefinidamente. (remember_reply
+            #    corre ANTES que este chequeo, por eso el umbral ≥2: en el
+            #    turno 1 la respuesta recién guardada cuenta 1 = ella misma.)
+            try:
+                from core import repetition_guard as _rg
+                _cur = (last_response or "").strip()
+                if len(_cur) >= 20:
+                    _dupes = sum(
+                        1 for r in _rg.recent_replies()
+                        if (r or "").strip() == _cur
+                    )
+                    if _dupes >= 2:
+                        self._auto_cont_on = False
+                        self._auto_cont_steps = 0
+                        self.ui.write_log(
+                            "SYS: ⛔ Misma respuesta repetida — auto-continuación "
+                            "detenida (posible LLM degradado/cuota agotada)."
+                        )
+                        print("[ERIS] ⛔ Auto-continuación detenida: misma respuesta "
+                              f"repetida {_dupes}x (bucle anti-repetición)")
+                        return
+            except Exception:
+                pass
             # Si ya declaró que terminó toda la tarea → apagar el modo.
             if _AUTO_CONT_DONE_MARKER in last_response.upper():
                 self._auto_cont_on = False
