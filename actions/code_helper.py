@@ -58,6 +58,20 @@ def code_helper(parameters: dict, player=None) -> str:
             return f"Error: '{file_path}' no existe."
         return _build_file(file_path, language, args, timeout)
 
+    elif action in ("verify", "verify_project"):
+        # (c) Gate end-to-end: import + pytest + servidor real. PASS 3/3 para
+        # poder declarar la tarea terminada. Ver _verify_project.
+        project_dir = (parameters.get("project_dir", "") or file_path
+                       or output_path or "").strip()
+        return _verify_project(
+            project_dir=project_dir,
+            app_module=str(parameters.get("app_module", "") or "main").strip(),
+            endpoint=str(parameters.get("endpoint", "") or "/").strip() or "/",
+            port=parameters.get("port", 0),
+            test_path=str(parameters.get("test_path", "") or "").strip(),
+            python=str(parameters.get("python", "") or "").strip(),
+        )
+
     elif action == "help":
         return (
             "Puedo ayudarte con programación:\n"
@@ -66,12 +80,13 @@ def code_helper(parameters: dict, player=None) -> str:
             "- explain: explicar código existente\n"
             "- run: ejecutar scripts\n"
             "- build: compilar proyectos\n"
+            "- verify_project: verificar un proyecto REAL (import + tests + servidor) — SIEMPRE antes de darlo por terminado\n"
             "- auto: decidir automáticamente\n\n"
             "Lenguajes soportados: Python, JavaScript, TypeScript, C#, Java, C, C++, Go, Rust, HTML, CSS, SQL.\n"
             "Pedime directamente lo que necesites."
         )
 
-    return f"Acción '{action}' no reconocida. Usa: write, edit, explain, run, build, auto, help"
+    return f"Acción '{action}' no reconocida. Usa: write, edit, explain, run, build, verify_project, auto, help"
 
 
 def _generate_and_save(description: str, language: str, output_path: str) -> str:
@@ -103,11 +118,108 @@ def _generate_and_save(description: str, language: str, output_path: str) -> str
 
     os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
 
-    template = _get_template(language, description)
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(template)
+    # (b) Generación REAL con el router de modelos (Gemini/Groq/Ollama), no una
+    #     plantilla estática. (Antes devolvía un stub "TODO: Implementar".)
+    code = _generate_code_llm(description, language)
+    if code is None:
+        return (
+            "❌ No pude generar código real: el modelo de código no respondió "
+            "(cuota agotada o sin conexión). NO guardé ningún archivo para no "
+            "dejarte un placeholder. Probá de nuevo en unos segundos o pedime "
+            "que escriba el código directamente."
+        )
 
-    return f"Código generado y guardado en: {output_path}\n\nDescripción: {description}\nLenguaje: {language}"
+    # (c) Gate de verificación: no declarar "listo" con un placeholder o código
+    #     que no compila.
+    problem = _verificar_codigo(code, language)
+    if problem:
+        return (
+            f"❌ El código generado NO pasó la verificación ({problem}). No lo "
+            "guardé como listo. Revisá la descripción o pedime que reintente."
+        )
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(code if code.endswith("\n") else code + "\n")
+
+    return (
+        f"✅ Código real generado y guardado en: {output_path}\n"
+        f"Lenguaje: {language} · {len(code.splitlines())} líneas.\n"
+        f"Verificación: {_verificacion_ok(language)}\n"
+        f"Descripción: {description}"
+    )
+
+
+def _generate_code_llm(description: str, language: str) -> str | None:
+    """Genera código real vía el router de modelos. Devuelve el código (ya sin
+    fences markdown) o None si el modelo no respondió."""
+    system = (
+        f"Eres un programador experto en {language}. Escribes código REAL, "
+        "completo y funcional, listo para ejecutarse. NUNCA uses placeholders, "
+        "'TODO: Implementar', 'Your code here' ni 'pass' como cuerpo vacío. "
+        "Devuelve SOLO el código puro, sin explicaciones y sin fences de "
+        "markdown (sin ```)."
+    )
+    prompt = (
+        f"Escribe el código {language} completo y funcional que cumpla esto:\n\n"
+        f"{description}\n\n"
+        "Requisitos: implementación real y corriente (no un esqueleto), lista "
+        "para correr. Sin 'TODO'. Devuelve únicamente el código."
+    )
+    try:
+        from core.model_router import quick_chat
+        raw = quick_chat(prompt, system=system, task="agent")
+    except Exception:
+        return None
+    return _strip_fences(raw or "")
+
+
+def _strip_fences(raw: str) -> str:
+    """Quita fences de markdown (```python ... ```) si el modelo los añadió."""
+    text = (raw or "").strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        if lines and lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+    return text
+
+
+def _verificar_codigo(code: str, language: str) -> str:
+    """Devuelve '' si el código es real y válido; si no, el motivo del rechazo."""
+    if not code or not code.strip():
+        return "código vacío"
+    low = code.lower()
+    if "todo: implementar" in low or "your code here" in low:
+        return "sigue siendo un placeholder (TODO)"
+    meaningful = [l for l in code.split("\n")
+                  if l.strip() and not l.strip().startswith(("#", "//"))]
+    if len(meaningful) < 3:
+        return "demasiado corto para ser una implementación real"
+    if language in ("python", "py"):
+        try:
+            import py_compile
+            import tempfile
+            with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False,
+                                             encoding="utf-8") as tf:
+                tf.write(code)
+                tmp = tf.name
+            try:
+                py_compile.compile(tmp, doraise=True)
+            finally:
+                os.unlink(tmp)
+        except py_compile.PyCompileError as e:
+            return f"no compila: {str(e)[:140]}"
+        except Exception as e:
+            return f"error de verificación: {str(e)[:140]}"
+    return ""
+
+
+def _verificacion_ok(language: str) -> str:
+    if language in ("python", "py"):
+        return "compila (py_compile OK), sin placeholders"
+    return "sin placeholders"
 
 
 def _get_template(language: str, description: str) -> str:
@@ -507,43 +619,257 @@ def _edit_file_with_ai(file_path: str, description: str, language: str) -> str:
     try:
         with open(file_path, "r", encoding="utf-8", errors="replace") as f:
             content = f.read()
+    except Exception as e:
+        return f"Error leyendo archivo: {e}"
 
-        backup_path = file_path + ".bak"
+    # (b) Edición REAL con el modelo: devuelve el archivo COMPLETO ya editado.
+    #     (Antes hacía matcheo por palabras clave y agregaba stubs TODO.)
+    system = (
+        f"Eres un programador experto en {language}. Aplicás un cambio a un "
+        "archivo devolviendo el archivo COMPLETO ya modificado. NUNCA insertes "
+        "'TODO: Implementar'. Devuelve SOLO el código completo, sin explicaciones "
+        "y sin fences markdown (sin ```)."
+    )
+    prompt = (
+        f"Archivo actual ({language}):\n\n{content}\n\n"
+        f"Aplicá este cambio y devolvé el archivo COMPLETO ya editado:\n{description}"
+    )
+    try:
+        from core.model_router import quick_chat
+        new_content = _strip_fences(quick_chat(prompt, system=system, task="agent"))
+    except Exception:
+        new_content = ""
+
+    if not new_content or "todo: implementar" in new_content.lower():
+        return (
+            "❌ No pude aplicar el cambio con el modelo (no respondió o generó "
+            "un placeholder). NO modifiqué el archivo. Probá de nuevo."
+        )
+
+    # (c) Verificación: si es Python, debe compilar antes de sobreescribir.
+    if language in ("python", "py"):
+        problem = _verificar_codigo(new_content, language)
+        if problem:
+            return f"❌ El archivo editado NO compila ({problem}). NO lo sobreescribí."
+
+    # Backup + rollback si algo falla al escribir.
+    backup_path = file_path + ".bak"
+    try:
         with open(backup_path, "w", encoding="utf-8") as f:
             f.write(content)
-
-        lines = content.split("\n")
-        new_lines = []
-        i = 0
-        desc_lower = description.lower()
-
-        while i < len(lines):
-            line = lines[i]
-            stripped = line.strip()
-
-            if any(kw in desc_lower for kw in ["agregar función", "add function", "agregar funcion"]):
-                new_lines.append(line)
-                i += 1
-                if i >= len(lines) or (lines[i].strip() and not lines[i].strip().startswith("#")):
-                    func_name = description.split("function")[-1].strip().split()[0] if "function" in desc_lower else "new_function"
-                    indent = len(line) - len(line.lstrip()) if line.strip() else 0
-                    new_lines.append(" " * indent + f"\ndef {func_name}():")
-                    new_lines.append(" " * (indent + 4) + '"""TODO: Implementar"""')
-                    new_lines.append(" " * (indent + 4) + "pass")
-                    new_lines.append("")
-            else:
-                new_lines.append(line)
-                i += 1
-
-        if new_lines == content.split("\n"):
-            new_lines.append(f"\n# {description}\n# TODO: Implementar este cambio\n")
-
         with open(file_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(new_lines))
-
-        return f"Archivo editado: {file_path}\nBackup guardado en: {backup_path}\nCambio: {description}"
+            f.write(new_content if new_content.endswith("\n") else new_content + "\n")
     except Exception as e:
-        return f"Error editando archivo: {e}"
+        try:
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(content)
+        except Exception:
+            pass
+        return f"Error escribiendo archivo (rollback hecho): {e}"
+
+    verif = "compila (py_compile OK)" if language in ("python", "py") else "sin placeholders"
+    return (
+        f"Archivo editado: {file_path}\n"
+        f"Backup guardado en: {backup_path}\n"
+        f"Cambio aplicado: {description}\n"
+        f"Verificación: {verif}"
+    )
+
+
+def _find_python(project_dir: str) -> str:
+    """Busca el intérprete del proyecto: .venv o venv (uno solo), si no, el sistema."""
+    import shutil as _shutil
+    for venv_name in (".venv", "venv"):
+        for sub in (("bin", "python"), ("Scripts", "python.exe")):
+            cand = os.path.join(project_dir, venv_name, *sub)
+            if os.path.isfile(cand):
+                return cand
+    return _shutil.which("python3") or _shutil.which("python") or "python3"
+
+
+def _verify_project(project_dir: str, app_module: str = "main",
+                    endpoint: str = "/", port=0, test_path: str = "",
+                    python: str = "", timeout: int = 60) -> str:
+    """(c) Verificación end-to-end de un proyecto: import + pytest + servidor.
+
+    Tres checks, todos obligatorios:
+      1. import  — el módulo de la app importa sin excepción.
+      2. tests   — pytest termina con returncode 0 (si no hay tests: FAIL).
+      3. endpoint — uvicorn levanta y el endpoint RESPONDE HTTP de verdad.
+
+    Veredicto: PASS 3/3 (se puede declarar listo) o FAIL x/3 (NO declarar).
+    Correr SIEMPRE antes de decir que la tarea está terminada.
+    """
+    import re as _re
+    import shutil as _shutil
+    import signal as _signal
+    import socket as _socket
+    import time as _time
+    import urllib.request as _urlreq
+    import urllib.error as _urlerr
+
+    if not project_dir:
+        return ("Error: verify_project requiere 'project_dir' (la carpeta del "
+                "proyecto a verificar).")
+    project_dir = os.path.expanduser(str(project_dir))
+    if not os.path.isdir(project_dir):
+        return f"Error: no existe el directorio '{project_dir}'."
+
+    py = python or _find_python(project_dir)
+    if not os.path.isfile(py):
+        py = _shutil.which(py) or py
+    # Módulo: aceptar "main", "main.py" o "paquete.main"
+    app_module = str(app_module).strip().strip("'\"")
+    if app_module.endswith(".py"):
+        app_module = app_module[:-3]
+
+    checks: list[tuple[str, bool, str]] = []  # (nombre, ok, detalle)
+
+    # ── 1) IMPORT: el módulo de la app debe importar sin excepción ──
+    #    Se corre EXACTAMENTE como lo pide la consigna: desde la raíz del
+    #    proyecto (uvicorn main:app). Si main.py está escondido en src/ y eso
+    #    rompe el import, el check FALLA y se explica el motivo.
+    try:
+        env = dict(os.environ)
+        env["PYTHONPATH"] = project_dir + os.pathsep + env.get("PYTHONPATH", "")
+        r = subprocess.run(
+            [py, "-c", f"import {app_module}; print('IMPORT_OK')"],
+            capture_output=True, text=True, timeout=timeout,
+            cwd=project_dir, env=env,
+        )
+        if r.returncode == 0 and "IMPORT_OK" in (r.stdout or ""):
+            checks.append(("import", True, f"'{app_module}' importa OK con {py}"))
+        else:
+            err = (r.stderr or r.stdout or "").strip().splitlines()
+            tail = " | ".join(err[-3:]) if err else "sin salida"
+            hint = ""
+            if not os.path.isfile(os.path.join(project_dir, app_module + ".py")):
+                for sub in ("src", "app"):
+                    if os.path.isfile(os.path.join(project_dir, sub, app_module + ".py")):
+                        hint = (f" — NOTA: {app_module}.py está en {sub}/; la consigna "
+                                f"pide servir con 'uvicorn {app_module}:app' desde la raíz. "
+                                f"Elegí UN layout coherente y que raíz, tests y servidor "
+                                f"matcheen.")
+                        break
+            checks.append(("import", False,
+                           f"'{app_module}' NO importa (rc={r.returncode}): {tail[:400]}{hint}"))
+    except subprocess.TimeoutExpired:
+        checks.append(("import", False, f"import de '{app_module}' tardó >{timeout}s (posible loop/crash)"))
+    except Exception as e:
+        checks.append(("import", False, f"no se pudo ejecutar el import: {e}"))
+
+    # ── 2) TESTS: pytest debe terminar en 0. Sin tests = FAIL (no se puede
+    #       declarar 'listo sin verificar' si nadie corrió las pruebas) ──
+    if not test_path:
+        for cand in ("tests", "test"):
+            if os.path.isdir(os.path.join(project_dir, cand)):
+                test_path = cand
+                break
+        else:
+            if os.path.isfile(os.path.join(project_dir, "test_main.py")):
+                test_path = "test_main.py"
+    if not test_path:
+        checks.append(("tests", False,
+                       "no hay carpeta tests/ ni archivos de test — no se puede verificar nada"))
+    else:
+        try:
+            r = subprocess.run(
+                [py, "-m", "pytest", test_path, "-q", "--no-header", "-x"],
+                capture_output=True, text=True, timeout=max(timeout, 120),
+                cwd=project_dir,
+            )
+            out = ((r.stdout or "") + "\n" + (r.stderr or "")).strip()
+            if r.returncode == 0:
+                m = _re.search(r"\d+ passed", out)
+                resumen = m.group(0) if m else "todos pasaron"
+                checks.append(("tests", True, f"pytest OK ({resumen})"))
+            else:
+                tail = [ln for ln in out.splitlines() if ln.strip()][-4:]
+                checks.append(("tests", False,
+                               f"pytest FALLA (rc={r.returncode}): {' | '.join(tail)[:400]}"))
+        except subprocess.TimeoutExpired:
+            checks.append(("tests", False, "pytest tardó demasiado (>120s)"))
+        except Exception as e:
+            checks.append(("tests", False, f"no se pudo correr pytest: {e}"))
+
+    # ── 3) ENDPOINT: uvicorn real y golpe HTTP real al endpoint ──
+    try:
+        port = int(port or 0)
+    except (TypeError, ValueError):
+        port = 0
+    if not port:
+        with _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM) as s:
+            s.bind(("127.0.0.1", 0))
+            port = s.getsockname()[1]
+    url = f"http://127.0.0.1:{port}{endpoint if endpoint.startswith('/') else '/' + endpoint}"
+
+    proc = None
+    try:
+        proc = subprocess.Popen(
+            [py, "-m", "uvicorn", f"{app_module}:app",
+             "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning"],
+            cwd=project_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,  # grupo propio: killpg no mata a mi proceso
+        )
+        status = None
+        last_err = ""
+        deadline = _time.time() + 25
+        while _time.time() < deadline:
+            if proc.poll() is not None:
+                last_err = f"uvicorn murió solo (rc={proc.poll()})"
+                break
+            try:
+                with _urlreq.urlopen(url, timeout=3) as resp:
+                    status = resp.status
+                    break
+            except _urlerr.HTTPError as he:
+                status = he.code  # responder 4xx/5xx igualmente es RESPONDER
+                break
+            except Exception as e:
+                last_err = str(e)[:120]
+                _time.sleep(0.7)
+        if status is not None and 200 <= status < 400:
+            checks.append(("endpoint", True,
+                           f"{url} RESPONDE (HTTP {status})"))
+        elif status is not None:
+            checks.append(("endpoint", False,
+                           f"{url} contesta pero con HTTP {status} — el servidor "
+                           f"levanta, pero ese endpoint no funciona (revisá la ruta)"))
+        else:
+            checks.append(("endpoint", False,
+                           f"{url} SIN RESPUESTA en 25s ({last_err or 'nadie contesta'})"))
+    except Exception as e:
+        checks.append(("endpoint", False, f"no pude levantar uvicorn: {e}"))
+    finally:
+        if proc is not None and proc.poll() is None:
+            try:
+                os.killpg(os.getpgid(proc.pid), _signal.SIGTERM)
+            except Exception:
+                try:
+                    proc.terminate()
+                except Exception:
+                    pass
+            try:
+                proc.wait(timeout=8)
+            except Exception:
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
+
+    # ── Veredicto ──
+    n_ok = sum(1 for _, ok, _ in checks if ok)
+    total = 3
+    veredicto = f"VERIFICACIÓN DE PROYECTO — {os.path.basename(project_dir.rstrip('/'))}: "
+    lines = [veredicto + (f"PASS {n_ok}/{total} ✅" if n_ok == total else f"FAIL {n_ok}/{total} ❌")]
+    for name, ok, detalle in checks:
+        lines.append(f"  {'✅' if ok else '❌'} {name}: {detalle}")
+    if n_ok == total:
+        lines.append("  → Todo verde. Puedes declarar la tarea COMPLETA.")
+    else:
+        lines.append("  → NO declares la tarea lista. Arreglá los puntos ❌ y volvé a "
+                     "correr verify_project hasta PASS 3/3.")
+    return "\n".join(lines)
 
 
 def _run_file(file_path: str, language: str, args: str, timeout: int) -> str:

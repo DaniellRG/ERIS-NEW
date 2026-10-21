@@ -110,6 +110,13 @@ DANGEROUS_COMMANDS = [
     (re.compile(r">\s*/dev/(sd|nvme|hd|mmcblk)", re.I), "Redirigir a dispositivo de bloque"),
     (re.compile(r"(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?(ba|z|da|k)?sh\b", re.I), "Pipe de descarga a shell"),
     (re.compile(r"\brm\s+(-[rf]+\s+)+(~|/home|\$HOME)(/|\s|$)", re.I), "Borrar home del usuario"),
+    # Borrado genérico (2026-10-20): CUALQUIER rm/rmdir/del pide OK, para que
+    # "no se borra sin OK explícito" se sostenga aunque el riesgo medio se
+    # auto-permita. Los de arriba (rm -rf /, rm -rf ~) siguen ganando por orden.
+    (re.compile(r"\brm\b", re.I), "Borrar archivos (rm)"),
+    (re.compile(r"\brmdir\b", re.I), "Borrar directorio (rmdir)"),
+    (re.compile(r"\bdel\b", re.I), "Borrar archivo (del)"),
+    (re.compile(r"\bRemove-Item\b", re.I), "Borrar con PowerShell"),
 ]
 
 # Risky tools (tool_name -> risk description)
@@ -160,6 +167,20 @@ def _is_safe_command(cmd: str) -> bool:
         if c == pref or c.startswith(pref + " "):
             return True
     return False
+
+
+def _coerce_allowed(resp) -> bool:
+    """Convierte la respuesta del diálogo de permiso en un bool real.
+
+    Fail-closed: un timeout/cancelación ('skip') o una respuesta vacía cuentan
+    como NO permitido. (Antes 'skip' era un string truthy y una operación de
+    riesgo alta podía pasar sola si nadie respondía a tiempo.)
+    """
+    if isinstance(resp, bool):
+        return resp
+    s = str(resp or "").strip().lower()
+    return s not in ("", "skip", "no", "n", "false", "0", "cancel", "cancelar",
+                     "denied", "deny", "rechazado", "rechazar")
 
 
 def _zona_desc(tool_name: str, params: dict) -> str | None:
@@ -349,7 +370,13 @@ class PermissionGate:
                 return True, "medium", f"Git {action}"
             return False, "safe", ""
 
-        # Check tool-level risk (delete/write/elevated/shell_execute/force_push/clean)
+        # Tools destructivas (borran/fuerzan) → SIEMPRE alto: siguen pidiendo OK
+        # aunque el riesgo medio se auto-permita, sosteniendo "no se borra sin
+        # OK explícito". (elevated/shell_execute/shutdown_eris ya salen arriba
+        # en ALWAYS_CONFIRM.)
+        if tool_name in ("delete", "clean", "force_push"):
+            return True, "high", DANGEROUS_TOOLS.get(tool_name, f"Tool destructiva: {tool_name}")
+        # El resto de tools de riesgo (write/overwrite, con snapshot de undo) → medio.
         if tool_name in DANGEROUS_TOOLS:
             return True, "medium", DANGEROUS_TOOLS[tool_name]
 
@@ -403,26 +430,32 @@ class PermissionGate:
             self._log_decision(tool_name, params, True, "trusted_session")
             return PermissionResult(True, "trusted_session")
 
-        # Request permission via UI callback
-        if self._ui_callback:
+        # ── Autonomía (fix 2026-10-20): el diálogo SOLO para riesgo alto/crítico.
+        # Riesgo medio/bajo (operaciones normales de trabajo: shell, escribir
+        # archivos, git commit) se permite solo, sin bloquearse en un diálogo por
+        # cada comando. Antes cada medium abría un modal y, si nadie clickeaba,
+        # devolvía "skip" truthy → fail-open tras 90s (lento Y poco confiable).
+        # Zonas protegidas y alto/crítico SIGUEN pidiendo OK (más arriba), y los
+        # borrados ya suben a alto en assess_risk/DANGEROUS_COMMANDS.
+        if self._ui_callback and risk in ("high", "critical"):
             try:
                 question = f"[RIESGO {risk.upper()}] {desc}\n\nTool: {tool_name}\n¿Ejecutar?"
-                allowed = self._ui_callback(question)
-                self._log_decision(tool_name, params, allowed, "user")
-                return PermissionResult(allowed, "user" if allowed else "denied_by_user")
+                resp = self._ui_callback(question)
+                ok = _coerce_allowed(resp)
+                self._log_decision(tool_name, params, ok, "user" if ok else "user_no")
+                return PermissionResult(ok, "user" if ok else "denied_by_user")
             except Exception:
                 self._log_decision(tool_name, params, False, "callback_error")
                 return PermissionResult(False, "callback_error")
 
-        # P3 FIX: fail-closed para riesgo high/critical SIN UI.
-        # Herramientas comunes (safe/low/medium) siguen permitidas para no
-        # romper el flujo normal, pero riesgo elevado sin UI se niega.
+        # Riesgo alto/crítico SIN UI → fail-closed (nunca se ejecuta solo).
         if risk in ("high", "critical"):
             self._log_decision(tool_name, params, False, "no_ui_high_risk")
             return PermissionResult(False, f"deny_no_ui: {desc}")
-        # No UI available — allow by default para riesgo low
-        self._log_decision(tool_name, params, True, "no_ui")
-        return PermissionResult(True, "no_ui_available")
+
+        # Medio/bajo: permitir autónomamente (flujo normal de trabajo de Eris).
+        self._log_decision(tool_name, params, True, "auto_low_medium")
+        return PermissionResult(True, "auto_allow_low_medium")
 
     def _log_decision(self, tool_name: str, params: dict, allowed: bool, reason: str):
         try:

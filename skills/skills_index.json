@@ -326,6 +326,22 @@
     "source": "user_created"
   },
   {
+    "name": "estructura-proyecto-python",
+    "description": "Reglas CONCRETAS de organización para proyectos Python (FastAPI u otros): UN solo venv, UN layout coherente con los tests, dependencias mínimas, y verify_project PASS 3/3 antes de declarar listo. Usar SIEMPRE al crear o terminar un proyecto Python.",
+    "category": "development",
+    "tags": [
+      "python",
+      "estructura",
+      "organizacion",
+      "venv",
+      "dependencias",
+      "verify",
+      "proyecto"
+    ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
     "name": "exploracion-paralela",
     "description": "Patrón de exploración con subagentes en paralelo: cuando una tarea tiene varias partes desconocidas independientes, lanzar subagentes simultáneos (uno por zona) en vez de explorar secuencialmente, y fusionar resultados. Usar en investigaciones, diagnósticos grandes o tareas con múltiples áreas.",
     "category": "development",
@@ -390,6 +406,14 @@
       "verificacion",
       "codigo"
     ],
+    "version": "1.0.0",
+    "source": "user_created"
+  },
+  {
+    "name": "modern-python",
+    "description": "Configures Python projects with modern tooling (uv, ruff, ty). Use when creating projects, writing standalone scripts, or migrating from pip/Poetry/mypy/black.",
+    "category": "general",
+    "tags": [],
     "version": "1.0.0",
     "source": "user_created"
   },

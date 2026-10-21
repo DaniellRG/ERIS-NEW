@@ -200,11 +200,11 @@ TOOL_DECLARATIONS = [
     },
     {
         "name": "code_helper",
-        "description": "Write, edit, explain, run, build, help — code in any language. Use help for programming questions and guidance. Saves to Desktop/ERIS_Codigo by default.",
+        "description": "Write, edit, explain, run, build, verify_project, help — code in any language. ALWAYS run action='verify_project' (with project_dir) before declaring any project/task DONE: it imports the app, runs pytest and hits the live endpoint — only PASS 3/3 means it's really finished. Use help for programming questions and guidance. Saves to Desktop/ERIS_Codigo by default.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "action": {"type": "STRING", "description": "write, edit, explain, run, build, auto, help"},
+                "action": {"type": "STRING", "description": "write, edit, explain, run, build, verify_project, auto, help"},
                 "language": {"type": "STRING", "description": "python, javascript, html, css, etc"},
                 "code": {"type": "STRING", "description": "Code to write/explain/run"},
                 "description": {"type": "STRING", "description": "What to build (for auto/write)"},
@@ -212,6 +212,12 @@ TOOL_DECLARATIONS = [
                 "output_path": {"type": "STRING", "description": "Alias de file_path (ruta de salida)"},
                 "args": {"type": "STRING", "description": "Argumentos para ejecutar el codigo (para run)"},
                 "timeout": {"type": "INTEGER", "description": "Timeout en segundos para ejecucion (default 30)"},
+                "project_dir": {"type": "STRING", "description": "Carpeta raíz del proyecto a verificar (verify_project). Obligatoria para verify_project."},
+                "app_module": {"type": "STRING", "description": "Módulo de la app para import/uvicorn (verify_project, default 'main')"},
+                "endpoint": {"type": "STRING", "description": "Endpoint HTTP a golpear (verify_project, default '/')"},
+                "port": {"type": "INTEGER", "description": "Puerto 127.0.0.1 para el servidor de prueba (verify_project, default aleatorio libre)"},
+                "test_path": {"type": "STRING", "description": "Ruta de tests para pytest (verify_project, default auto: tests/)"},
+                "python": {"type": "STRING", "description": "Intérprete a usar (verify_project, default: .venv/venv del proyecto o sistema)"},
             },
             "required": ["action"],
         }
