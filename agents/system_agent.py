@@ -28,13 +28,45 @@ def handle_file(text: str, player=None, **kwargs) -> str:
         elif any(kw in text_lower for kw in ["escribir archivo", "write file", "crear archivo"]):
             import re, os
             from core.file_api import write_file
+            # FIX 2026-10-21 (mismo patrón que dev_agent): ruta absoluta
+            # explícita obligatoria (antes hardcodeaba D:\PruebaEris, que en
+            # Linux creaba basura con nombre inválido) y verificación real en
+            # disco antes de declarar el archivo creado.
+            def _explicit_dir():
+                """Ruta absoluta explícita en el pedido (Linux /… o Windows
+                C:\\…). None si no hay: nunca se inventa una ubicación."""
+                m = re.search(
+                    r'((?:[A-Za-z]:\\|(?<![\w:/])/)[\w.\-~/]+(?:/[\w.\-~]+)+)',
+                    text)
+                if not m:
+                    return None
+                cand = m.group(1).strip().rstrip('/.,;:')
+                if cand.startswith('//') or len(cand) < 2:
+                    return None
+                return cand
+
             fname = re.search(r'(\w+\.\w+)', text)
             content_match = re.search(r'con\s+(.+)', text)
-            fname_str = fname.group(1) if fname else "output.txt"
+            fname_str = fname.group(1) if fname else None
             content_str = content_match.group(1) if content_match else "Created by ERIS"
-            fpath = os.path.join("D:\\PruebaEris", fname_str)
-            write_file(fpath, content_str)
-            result = f"Archivo {fname_str} creado en D:\\PruebaEris"
+            target_dir = _explicit_dir()
+
+            if not fname_str:
+                result = "¿Qué archivo? Decime nombre (ej: notas.txt)."
+            elif not target_dir:
+                result = (f"Para crear {fname_str} necesito la ruta absoluta exacta "
+                          f"(ej: /home/soul/Documents/{fname_str}). "
+                          "No invento ubicaciones.")
+            else:
+                os.makedirs(target_dir, exist_ok=True)
+                fpath = os.path.join(target_dir, fname_str)
+                write_file(fpath, content_str)
+                if os.path.isfile(fpath) and os.path.getsize(fpath) > 0:
+                    result = (f"Listo: {fpath} escrito y verificado en disco "
+                              f"({os.path.getsize(fpath)} bytes).")
+                else:
+                    result = (f"⚠️ {fpath} NO quedó escrito. No declares la tarea "
+                              f"hecha: revisá la ruta y los permisos.")
 
         elif any(kw in text_lower for kw in ["buscar archivo", "find file", "encontrar archivo"]):
             from core.file_api import file_api
