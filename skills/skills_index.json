@@ -559,5 +559,61 @@
     ],
     "version": "1.0.0",
     "source": "user_created"
+  },
+  {
+    "name": "build-error-resolver",
+    "description": "Resolución de errores de build y tipos con cambios mínimos, sin refactors ni cambios de arquitectura. Usala cuando el build falla o hay errores de compilación/tipos y hay que dejarlo verde rápido.",
+    "category": "engineering",
+    "tags": [
+      "build",
+      "errors",
+      "types",
+      "debugging",
+      "minimal-diff"
+    ],
+    "version": "1.0.0",
+    "source": "synced"
+  },
+  {
+    "name": "code-reviewer",
+    "description": "Revisión de código con gate de confianza (>80%), prueba obligatoria para hallazgos HIGH/CRITICAL y formato de informe. Usala después de escribir o modificar código, o cuando haya que revisar un diff con criterio fresco.",
+    "category": "quality",
+    "tags": [
+      "code-review",
+      "quality",
+      "security",
+      "diff",
+      "confidence"
+    ],
+    "version": "1.0.0",
+    "source": "synced"
+  },
+  {
+    "name": "security-reviewer",
+    "description": "Detección y remediación de vulnerabilidades (OWASP Top 10, secretos, SSRF, inyección, cripto insegura) con evidencia y severidad. Usala al tocar endpoints, auth, input de usuario, base de datos o configuración sensible.",
+    "category": "security",
+    "tags": [
+      "security",
+      "owasp",
+      "secrets",
+      "vulnerabilities",
+      "review"
+    ],
+    "version": "1.0.0",
+    "source": "synced"
+  },
+  {
+    "name": "verification-loop",
+    "description": "Verificación en 6 fases (build, tipos, lint, tests, seguridad y diff) con informe PASS/FAIL. Usala antes de declarar una tarea terminada, antes de commitear o cuando haga falta una puerta de calidad real.",
+    "category": "quality",
+    "tags": [
+      "verification",
+      "testing",
+      "build",
+      "security",
+      "quality-gate"
+    ],
+    "version": "1.0.0",
+    "source": "synced"
   }
 ]
