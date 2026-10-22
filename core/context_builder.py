@@ -52,6 +52,29 @@ def _set(host, name: str, value) -> None:
         pass
 
 
+def _instincts_block(host=None) -> str:
+    """Bloque `[INSTINTOS APRENDIDOS]` (Fase B). Aislado: nunca lanza.
+
+    Usa el proyecto real del host (`_shared.project_root`) y la última línea
+    `Usuario: ...` para priorizar instintos parecidos al pedido actual.
+    """
+    try:
+        from core.instincts import instinct_block
+        user_text = ""
+        convo = _g(host, "_convo_ctx", None)
+        if convo:
+            last = str(convo[-1])
+            if last.startswith("Usuario: "):
+                user_text = last[len("Usuario: "):]
+        project = None
+        shared = _g(host, "_shared", None)
+        if shared is not None:
+            project = getattr(shared, "project_root", None)
+        return instinct_block(project=project, user_text=user_text) or ""
+    except Exception:
+        return ""
+
+
 def build_system_prompt(host=None) -> str:
     """Arma el *system instruction* completo (bloques + sys_prompt + trim).
 
@@ -409,6 +432,10 @@ def build_system_prompt(host=None) -> str:
             parts.append(learning_context)
     except Exception:
         pass
+    # ── Instintos aprendidos (Fase B): reglas trigger→acción con confianza ──
+    _instincts = _instincts_block(host)
+    if _instincts:
+        parts.append(_instincts)
     # ── Contexto de conversación reciente (sobrevive a reconexiones) ──
     _convo_ctx = _g(host, "_convo_ctx", None)
     if _convo_ctx:

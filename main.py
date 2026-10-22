@@ -1552,6 +1552,22 @@ class ErisLive:
             text = str(text).strip()
             if not text:
                 return
+            # Fase B: aprender de correcciones del usuario (instintos con
+            # confianza). Es aditivo, no toca personalidad ni audio.
+            if text.startswith("Usuario: "):
+                try:
+                    from core.instincts import observe_user_message
+                    _last_eris = ""
+                    for _it in reversed(self._convo_ctx):
+                        if str(_it).startswith("ERIS: "):
+                            _last_eris = str(_it)
+                            break
+                    _project = getattr(self._shared, "project_root", None)
+                    observe_user_message(
+                        text, last_response=_last_eris, project=_project
+                    )
+                except Exception:
+                    pass
             if len(text) > max_len:
                 text = text[:max_len] + "…"
             self._convo_ctx.append(text)
@@ -2751,6 +2767,12 @@ class ErisLive:
                             target=_generate_daily_digest,
                             daemon=True
                         ).start()
+            except Exception:
+                pass
+            # ── Instintos (Fase B): minar el deck 1 vez/día ──
+            try:
+                from core.instincts import mine_if_due
+                mine_if_due()
             except Exception:
                 pass
             idle_seconds = _shared_idle_seconds(time.time() - self._last_user_interaction)
