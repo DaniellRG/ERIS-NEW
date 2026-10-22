@@ -131,6 +131,28 @@ def setup_logging():
 
     _MAX_LOG_MB = 2
     _rotate_msg = None
+
+    # ── Dueño del log (fix 2026-10-21) ─────────────────────────────────────
+    # Si ya hay una instancia Eris VIVA, este proceso es un import
+    # secundario (test_all, pytest, eris_cli de prueba, segunda instancia).
+    # Antes ejecutaba open(LOG_PATH, "w") y TRUNCABA el log vivo de la
+    # instancia real (historial perdido cada vez que algo importaba main).
+    # Ahora el secundario no toca el archivo ni el tee: la viva es dueña.
+    # En Windows no hay /proc → se comporta como primario (como siempre).
+    _pid_file = BASE_DIR / "data" / "eris.pid"
+    try:
+        _owner = int(_pid_file.read_text().strip() or "0") if _pid_file.exists() else 0
+    except Exception:
+        _owner = 0
+    if _owner and _owner != os.getpid() and os.path.exists("/proc/{}".format(_owner)):
+        if _ALSA_STDERR_RESTORED is not None:
+            try:
+                os.dup2(_ALSA_STDERR_RESTORED, 2)
+                os.close(_ALSA_STDERR_RESTORED)
+            except Exception:
+                pass
+        return
+
     try:
         # Purge any stale backup files beyond eris.log.2
         _log_dir = LOG_PATH.parent
@@ -228,6 +250,11 @@ def setup_logging():
 
         sys.stdout = _TeeStream(sys.stdout, _log_fh, tag="stdout")
         sys.stderr = _TeeStream(sys.stderr, _log_fh, tag="stderr")
+        try:
+            _pid_file.parent.mkdir(parents=True, exist_ok=True)
+            _pid_file.write_text(str(os.getpid()), encoding="utf-8")
+        except Exception:
+            pass
         if _rotate_msg:
             print(_rotate_msg)
     except Exception:
