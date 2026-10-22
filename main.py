@@ -1765,11 +1765,17 @@ class ErisLive:
                             return
                     if agent_key and agent_key == "dev":
                         # Only intercept dev agent for FILE CREATION specifically
+                        # FIX 2026-10-21: gate por largo — el agente keyword solo
+                        # atiende pedidos CORTOS. Una instrucción larga (consigna,
+                        # seguimiento con pasos) va al cerebro principal, que tiene
+                        # las tools y verifica antes de declarar; el agente fabricaba
+                        # "Listo, creado" en una carpeta hardcodeada.
                         import unicodedata as _ucd
                         _tn = ''.join(_ucd.normalize('NFKD', c) for c in text.lower() if not _ucd.combining(c))
                         _is_file_create = any(kw in _tn for kw in ["crea", "escribi", "hace", "build", "downloader"])
                         _is_open = any(kw in _tn for kw in ["abri", "abrir", "mostra", "abre", "explora", "carpeta", "directorio", "show", "open", "explore"])
-                        if _is_file_create and not _is_open:
+                        _is_short_request = len(text.strip()) <= 200
+                        if _is_file_create and not _is_open and _is_short_request:
                             handler = self._agent_router._handlers.get(agent_key)
                             if handler:
                                 if self.ui:

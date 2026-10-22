@@ -24,38 +24,66 @@ def handle_dev(text: str, player=None, **kwargs) -> str:
 
     try:
         # File creation / project creation
+        # FIX 2026-10-21: sin paths Windows hardcodeados (D:\PruebaEris creaba
+        # basura con nombre inválido en Linux) y SIN declarar "Listo" sin
+        # verificar el archivo real en disco. Solo se escribe si el pedido trae
+        # ruta absoluta explícita; si falta, se pide en vez de inventarla.
         file_kw = ["crear archivo", "escribir archivo", "create file", "write file",
                      "main.py", "requirements", "readme", "script", "downloader",
                      "hacer un programa", "make a", "build", "crear python",
                      "instalar dependencias", "pip install", "archivo", "hello.py"]
         if any(_norm(kw) in text_norm for kw in file_kw):
-            from core.file_api import file_api, write_file, create_dir
             import os
+            import re
+            from core.file_api import write_file as _wf
 
-            result_lines = []
+            def _explicit_dir():
+                """Ruta absoluta explícita en el pedido (Linux /… o Windows
+                C:\\…). None si no hay: nunca se inventa una ubicación."""
+                m = re.search(
+                    r'((?:[A-Za-z]:\\|(?<![\w:/])/)[\w.\-~/]+(?:/[\w.\-~]+)+)',
+                    text)
+                if not m:
+                    return None
+                cand = m.group(1).strip().rstrip('/.,;:')
+                if cand.startswith('//') or len(cand) < 2:
+                    return None
+                return cand
 
-            # Detect if user wants a specific project structure
+            def _verify_on_disk(fpath):
+                """Reporte basado en el disco real, no en la intención."""
+                if os.path.isfile(fpath) and os.path.getsize(fpath) > 0:
+                    return (f"Listo: {fpath} escrito y verificado en disco "
+                            f"({os.path.getsize(fpath)} bytes).")
+                return (f"⚠️ {fpath} NO quedó escrito. No declares la tarea "
+                        f"hecha: revisá la ruta y los permisos.")
+
+            _fname_match = re.search(r'(\w+\.\w+)', text)
+            _fname = _fname_match.group(1) if _fname_match else None
+            _target_dir = _explicit_dir()
+
             if "downloader" in text_lower and "youtube" in text_lower:
-                # Create YouTube downloader project
-                project_dir = "D:\\PruebaEris"
-                os.makedirs(project_dir, exist_ok=True)
+                # Proyecto downloader — requiere ruta explícita del usuario
+                if not _target_dir:
+                    result = ("Para armar el proyecto downloader necesito la ruta "
+                              "absoluta exacta (ej: /home/soul/Documents/PYTHON/"
+                              "downloader). No invento ubicaciones.")
+                else:
+                    os.makedirs(_target_dir, exist_ok=True)
 
-                main_py = '''"""
+                    main_py = '''"""
 YouTube Downloader - Created by ERIS
 Usage: python main.py <youtube_url>
 """
+import shutil
 import subprocess
 import sys
 import os
 
-YT_DLP = r"D:\\Eris_Source\\.venv\\Scripts\\yt-dlp.exe"
+YT_DLP = shutil.which("yt-dlp") or "yt-dlp"
 
 def download(url: str, output_dir: str = "."):
     """Download a YouTube video in best quality."""
-    if not os.path.exists(YT_DLP):
-        print("Error: yt-dlp not found at", YT_DLP)
-        return False
-    
     cmd = [
         YT_DLP,
         "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
@@ -63,10 +91,10 @@ def download(url: str, output_dir: str = "."):
         "-o", os.path.join(output_dir, "%(title)s.%(ext)s"),
         url
     ]
-    
+
     print(f"Downloading: {url}")
     result = subprocess.run(cmd, capture_output=True, text=True)
-    
+
     if result.returncode == 0:
         print("Download complete!")
         return True
@@ -81,9 +109,9 @@ if __name__ == "__main__":
     download(sys.argv[1])
 '''
 
-                requirements = "yt-dlp>=2024.1.1\n"
+                    requirements = "yt-dlp>=2024.1.1\n"
 
-                readme = """# YouTube Downloader
+                    readme = """# YouTube Downloader
 
 Simple YouTube video downloader using yt-dlp.
 
@@ -105,46 +133,43 @@ pip install -r requirements.txt
 ```
 """
 
-                write_file(os.path.join(project_dir, "main.py"), main_py)
-                write_file(os.path.join(project_dir, "requirements.txt"), requirements)
-                write_file(os.path.join(project_dir, "README.md"), readme)
+                    _written = []
+                    for _fn, _ct in (("main.py", main_py),
+                                     ("requirements.txt", requirements),
+                                     ("README.md", readme)):
+                        _fp = os.path.join(_target_dir, _fn)
+                        _wf(_fp, _ct)
+                        _written.append(
+                            f"- {_fn}: "
+                            f"{'OK' if os.path.isfile(_fp) else 'FALLÓ'}")
+                    result = (f"Proyecto downloader en {_target_dir} "
+                              f"(archivos verificados en disco):\n"
+                              + "\n".join(_written))
 
-                result = f"Proyecto YouTube Downloader creado en {project_dir}:\n- main.py (descargador)\n- requirements.txt\n- README.md"
-
+            elif not _fname:
+                result = "¿Qué archivo necesitás que cree? Decime nombre y contenido."
+            elif not _target_dir:
+                result = (f"Para crear {_fname} necesito la ruta absoluta exacta "
+                          f"(ej: /home/soul/Documents/archivo/{_fname}). "
+                          "No invento ubicaciones.")
             else:
-                # Generic file creation — detect filename and content from request
-                import re
-                from core.file_api import write_file as _wf, create_dir as _cd
-
-                # Extract filename from text
-                fname_match = re.search(r'(\w+\.\w+)', text)
-                fname = fname_match.group(1) if fname_match else None
-
-                # Extract target directory
-                dir_match = re.search(r'([A-Z]:\\[^\s"]+|D:\\\w+)', text)
-                target_dir = dir_match.group(1) if dir_match else "D:\\PruebaEris"
-                os.makedirs(target_dir, exist_ok=True)
-
-                if fname:
-                    fpath = os.path.join(target_dir, fname)
-                    # Detect content hints
-                    content = ""
-                    if "print" in text_norm and "hola" in text_norm:
-                        content = 'print("Hola Mundo")\n'
-                    elif "print" in text_norm:
-                        # Extract what to print
-                        print_match = re.search(r'print\s*\(\s*["\'](.+?)["\']', text)
-                        if print_match:
-                            content = f'print("{print_match.group(1)}")\n'
-                        else:
-                            content = 'print("Hello World")\n'
+                os.makedirs(_target_dir, exist_ok=True)
+                fpath = os.path.join(_target_dir, _fname)
+                # Detect content hints
+                if "print" in text_norm and "hola" in text_norm:
+                    content = 'print("Hola Mundo")\n'
+                elif "print" in text_norm:
+                    # Extract what to print
+                    print_match = re.search(r'print\s*\(\s*["\'](.+?)["\']', text)
+                    if print_match:
+                        content = f'print("{print_match.group(1)}")\n'
                     else:
-                        content = f'# {fname} - Created by ERIS\n'
-
-                    _wf(fpath, content)
-                    result = f"Listo, {fname} creado en {target_dir}"
+                        content = 'print("Hello World")\n'
                 else:
-                    result = "¿Qué archivo necesitás que cree? Nombre y contenido."
+                    content = f'# {_fname} - Created by ERIS\n'
+
+                _wf(fpath, content)
+                result = _verify_on_disk(fpath)
 
         # Code helper
         elif any(kw in text_lower for kw in ["codigo", "code", "funcion", "function", "clase", "class", "programar"]):
