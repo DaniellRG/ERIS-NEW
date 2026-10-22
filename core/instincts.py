@@ -911,18 +911,27 @@ def _parse_args(args: str) -> dict[str, str]:
 
 
 def _family(command: str, tool: str) -> str:
+    """Familia = ejecutable real del primer comando útil (no una palabra suelta).
+
+    Antes se buscaba cualquier token de la whitelist dentro del comando, así que
+    `pkill dotnet` se clasificaba como familia `dotnet`. Eso producía instintos
+    destructivos sin relación con build/test.
+    """
     if not command:
-        return tool or "?"
-    low = command.lower()
-    for name in _WHITELIST:
-        if re.search(rf"(?:^|[\s/;&|]){re.escape(name)}(?:\s|$)", low):
-            return name
+        return ""
     for part in re.split(r"&&|;|\|", command):
-        token = part.strip().split()[0] if part.strip() else ""
-        token = token.strip("'\"")
-        if token and token not in ("cd", "export", "sudo"):
+        tokens = part.strip().split()
+        while tokens and (
+            tokens[0] in ("sudo", "env")
+            or re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", tokens[0])
+        ):
+            tokens.pop(0)
+        if not tokens or tokens[0] in ("cd", "export", "source"):
+            continue
+        token = tokens[0].strip("'\"")
+        if token:
             return _safe_filename(Path(token).name)
-    return tool or "?"
+    return ""
 
 
 def _mine_candidates(deck_path: Path, now: float) -> list[dict]:
@@ -946,14 +955,23 @@ def _mine_candidates(deck_path: Path, now: float) -> list[dict]:
         if status not in ("done", "error"):
             continue
         kv = _parse_args(str(item.get("args", "")))
-        command = kv.get("command", "")
+        command = str(kv.get("command", "") or "").strip()
+        # Sin comando real no hay nada ejecutable que aprender; y un comando
+        # truncado por el deck ("...") produce familias basura tipo "sou...".
+        if not command or "..." in command or "…" in command:
+            continue
         tool = str(item.get("tool", ""))
+        family = _family(command, tool)
+        # Solo familias de build/test/verificación. Evita aprender `pkill`,
+        # `mv`, `echo` u otras acciones puntuales como si fueran patrones.
+        if family not in _WHITELIST:
+            continue
         parsed.append(
             {
                 "ts": ts,
                 "tool": tool,
                 "status": status,
-                "family": _family(command, tool),
+                "family": family,
                 "project": _project_from_command(command),
                 "snippet": _clean_text(command or str(item.get("args", "")), 160),
             }

@@ -289,6 +289,62 @@ def test_mine_from_deck_fix_and_repeat(isolated, project, tmp_path):
     assert again["confidence"] == 0.4
 
 
+def test_mine_skips_tool_calls_without_command(isolated, tmp_path):
+    now = time.time()
+    deck = tmp_path / "deck.json"
+    deck.write_text(json.dumps([
+        {"ts": str(now - 30), "tool": "code_engineer",
+         "args": "file=Program.cs, action=write", "status": "done"},
+        {"ts": str(now - 20), "tool": "code_engineer",
+         "args": "file=Program.cs, action=write", "status": "done"},
+        {"ts": str(now - 10), "tool": "code_engineer",
+         "args": "file=Program.cs, action=write", "status": "done"},
+        {"ts": str(now - 9), "tool": "file_editor",
+         "args": "path=Program.cs, action=edit", "status": "done"},
+        {"ts": str(now - 8), "tool": "file_editor",
+         "args": "path=Program.cs, action=edit", "status": "done"},
+        {"ts": str(now - 7), "tool": "file_editor",
+         "args": "path=Program.cs, action=edit", "status": "done"},
+    ]), encoding="utf-8")
+
+    assert inst.mine_from_deck(deck_path=deck, now=now, dry_run=True) == []
+
+
+def test_mine_skips_truncated_commands(isolated, project, tmp_path):
+    now = time.time()
+    truncated = f"command=cd {project} && /home/sou..., action=run"
+    deck = tmp_path / "deck.json"
+    deck.write_text(json.dumps([
+        {"ts": str(now - 30), "tool": "shell_session",
+         "args": truncated, "status": "error"},
+        {"ts": str(now - 20), "tool": "shell_session",
+         "args": truncated, "status": "done"},
+        {"ts": str(now - 10), "tool": "terminal_agent",
+         "args": truncated, "status": "done"},
+        {"ts": str(now - 9), "tool": "terminal_agent",
+         "args": truncated, "status": "done"},
+        {"ts": str(now - 8), "tool": "terminal_agent",
+         "args": truncated, "status": "done"},
+    ]), encoding="utf-8")
+
+    assert inst.mine_from_deck(deck_path=deck, now=now, dry_run=True) == []
+
+
+def test_mine_skips_non_whitelisted_repeated_commands(isolated, tmp_path):
+    now = time.time()
+    deck = tmp_path / "deck.json"
+    deck.write_text(json.dumps([
+        {"ts": str(now - 30), "tool": "terminal_agent",
+         "args": "command=pkill dotnet, action=run", "status": "done"},
+        {"ts": str(now - 20), "tool": "terminal_agent",
+         "args": "command=pkill dotnet, action=run", "status": "done"},
+        {"ts": str(now - 10), "tool": "terminal_agent",
+         "args": "command=pkill dotnet, action=run", "status": "done"},
+    ]), encoding="utf-8")
+
+    assert inst.mine_from_deck(deck_path=deck, now=now, dry_run=True) == []
+
+
 def test_mine_if_due_runs_once(isolated, project, tmp_path, monkeypatch):
     now = time.time()
     deck = tmp_path / "deck.json"
