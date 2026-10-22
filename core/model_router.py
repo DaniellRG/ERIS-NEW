@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 
 # ── Config keys ───────────────────────────────────────────────────────────────
@@ -316,15 +317,28 @@ def _quick_gemini(prompt: str, system: str = "", _depth: int = 0) -> str:
 
     last_err: Exception | None = None
     for model in _model_chain("agent"):
-        try:
-            resp = client.models.generate_content(model=model, contents=contents)
-            if resp.text:
-                return resp.text
-            last_err = RuntimeError(f"'{model}' devolvió respuesta vacía.")
-        except Exception as e:
-            last_err = e
-            print(f"[ModelRouter] Gemini '{model}' no sirve, pruebo el siguiente: "
-                  f"{str(e)[:120]}")
+        for _attempt in range(3):
+            try:
+                resp = client.models.generate_content(model=model, contents=contents)
+                if resp.text:
+                    return resp.text
+                last_err = RuntimeError(f"'{model}' devolvió respuesta vacía.")
+                break
+            except Exception as e:
+                last_err = e
+                transient = any(
+                    kw in str(e).lower()
+                    for kw in ("503", "unavailable", "high demand", "overloaded")
+                )
+                if transient and _attempt < 2:
+                    # 503 UNAVAILABLE = saturación temporal del modelo. Reintentar
+                    # con backoff antes de pasar al siguiente: sin esto, una
+                    # ráfaga de 503 en TODA la cadena mataba el turno entero.
+                    time.sleep(1.5 * (_attempt + 1))
+                    continue
+                print(f"[ModelRouter] Gemini '{model}' no sirve, pruebo el siguiente: "
+                      f"{str(e)[:120]}")
+                break
 
     # Ningún modelo Gemini sirvió → caer al siguiente provider (o error claro).
     if report_gemini_error(str(last_err)):
