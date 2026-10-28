@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y definir los parámetros de éxito.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones operativas y recursos disponibles mediante matriz FODA.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar fases secuenciales del plan con hitos y entregables claros usando diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades específicas y roles operativos por cada fase. [RIESGO: Sobrecarga de personal en nodos críticos]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer protocolos de contingencia y planes de mitigación para los riesgos detectados. [RIESGO: Falta de presupuesto para escenarios alternativos]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Implementar sistema de indicadores (KPIs) para el monitoreo de avance en tiempo real usando software de gestión.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validar el plan integral con el mando superior y ajustar según feedback recibido.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792268025.1517785
+}

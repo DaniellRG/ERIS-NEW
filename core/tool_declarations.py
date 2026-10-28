@@ -5306,6 +5306,39 @@ TOOL_DECLARATIONS = [
         }, "required": ["action"]}
     },
 
+    # ── Essence ──
+    {
+        "name": "essence",
+        "description": "Núcleo inalterable de Eris. Valores que no cambian. Acciones: status, report_status, check_action, values.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, report_status, check_action, values"},
+        }, "required": ["action"]}
+    },
+
+    # ── Lesson Applier ──
+    {
+        "name": "lesson_applier",
+        "description": "Aplica lecciones cristalizadas por aprendizaje autónomo. Acciones: status, list, read, mark_applied, inject.",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, list, read, mark_applied, inject"},
+            "name": {"type": "STRING", "description": "Nombre de la lección"},
+        }, "required": ["action"]}
+    },
+
+    # ── Aprendizaje de errores reales ──
+    {
+        "name": "aprendizaje_errores",
+        "description": "Memoria de problemas reales → soluciones que funcionaron. Cuando una tool falla y luego se arregla, guarda la receta y la reutiliza en pedidos parecidos. Acciones: status, list, search (query), inject (query), record (problema, solucion, tool), clear (confirm).",
+        "parameters": {"type": "OBJECT", "properties": {
+            "action": {"type": "STRING", "description": "status, list, search, inject, record, clear"},
+            "query": {"type": "STRING", "description": "Pedido o error a buscar"},
+            "problema": {"type": "STRING", "description": "Descripción del problema (record)"},
+            "solucion": {"type": "STRING", "description": "Solución que funcionó (record)"},
+            "tool": {"type": "STRING", "description": "Tool que resolvió (record)"},
+            "confirm": {"type": "BOOLEAN", "description": "Confirmar borrado en clear"},
+        }, "required": ["action"]}
+    },
+
     # ── Cron Scheduler ──
     {
         "name": "cron_scheduler",

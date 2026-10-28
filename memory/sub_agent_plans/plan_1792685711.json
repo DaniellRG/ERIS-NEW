@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo estratégico y sus límites operacionales mediante una ficha de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analiza el estado actual y las restricciones técnicas utilizando un mapa de situación.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Descompón el objetivo general en hitos y tareas clave mediante un diagrama de desglose del trabajo (WBS). [RIESGO: Omitir dependencias críticas entre tareas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asigna tiempos, recursos y responsables a cada acción usando un diagrama de Gantt o software de gestión.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Evalúa puntos vulnerables y establece medidas de mitigación mediante una matriz de riesgos. [RIESGO: Ignorar escenarios de falla de alto impacto]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Valida la viabilidad del plan con las partes interesadas utilizando un checklist de aprobación estratégica.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792685711.7458847
+}

@@ -1,0 +1,105 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Dict, Optional
+import datetime
+
+app = FastAPI()
+
+# Modelos de datos
+class Vuelo(BaseModel):
+    id: int
+    origen: str
+    destino: str
+    fecha: datetime.date
+    capacidad: int
+    asientos_disponibles: int
+
+class Reserva(BaseModel):
+    id: int
+    vuelo_id: int
+    pasajero: str
+    estado: str # confirmada | cancelada
+
+# Datos en memoria
+vuelos: Dict[int, Vuelo] = {}
+reservas: Dict[int, List[Reserva]] = {}
+next_vuelo_id = 101
+next_reserva_id = 1
+
+# Precarga de datos
+def precargar_datos():
+    global next_vuelo_id, vuelos, reservas, next_reserva_id
+    vuelos = {}
+    reservas = {}
+    next_reserva_id = 1
+    vuelos[101] = Vuelo(id=101, origen="EZE", destino="MIA", fecha=datetime.date(2026, 11, 5), capacidad=100, asientos_disponibles=100)
+    vuelos[102] = Vuelo(id=102, origen="AEP", destino="SCL", fecha=datetime.date(2026, 11, 6), capacidad=50, asientos_disponibles=50)
+    vuelos[103] = Vuelo(id=103, origen="EZE", destino="MAD", fecha=datetime.date(2026, 11, 7), capacidad=200, asientos_disponibles=200)
+    next_vuelo_id = 104
+
+precargar_datos()
+
+@app.get("/")
+def read_root():
+    return {"status": "ok"}
+
+@app.get("/vuelos", response_model=List[Vuelo])
+def get_vuelos():
+    return list(vuelos.values())
+
+@app.get("/vuelos/{vuelo_id}", response_model=Vuelo)
+def get_vuelo(vuelo_id: int):
+    if vuelo_id not in vuelos:
+        raise HTTPException(status_code=404, detail="Vuelo no encontrado")
+    return vuelos[vuelo_id]
+
+@app.post("/reservas", response_model=Reserva)
+def crear_reserva(vuelo_id: int, pasajero: str):
+    global next_reserva_id
+    if vuelo_id not in vuelos:
+        raise HTTPException(status_code=404, detail="Vuelo no encontrado")
+    
+    vuelo = vuelos[vuelo_id]
+    if vuelo.asientos_disponibles == 0:
+        raise HTTPException(status_code=400, detail="Vuelo lleno")
+    
+    if vuelo_id in reservas:
+        for res in reservas[vuelo_id]:
+            if res.pasajero == pasajero and res.estado == "confirmada":
+                raise HTTPException(status_code=400, detail="El pasajero ya tiene una reserva confirmada en este vuelo")
+
+    reserva = Reserva(id=next_reserva_id, vuelo_id=vuelo_id, pasajero=pasajero, estado="confirmada")
+    next_reserva_id += 1
+    vuelo.asientos_disponibles -= 1
+
+    if vuelo_id not in reservas:
+        reservas[vuelo_id] = []
+    reservas[vuelo_id].append(reserva)
+    return reserva
+
+@app.get("/vuelos/{vuelo_id}/reservas", response_model=List[Reserva])
+def get_reservas_vuelo(vuelo_id: int):
+    if vuelo_id not in vuelos:
+        raise HTTPException(status_code=404, detail="Vuelo no encontrado")
+    return reservas.get(vuelo_id, [])
+
+@app.get("/reservas/{reserva_id}", response_model=Reserva)
+def get_reserva(reserva_id: int):
+    for vuelo_id in reservas:
+        for res in reservas[vuelo_id]:
+            if res.id == reserva_id:
+                return res
+    raise HTTPException(status_code=404, detail="Reserva no encontrada")
+
+@app.put("/reservas/{reserva_id}/cancelar", response_model=Reserva)
+def cancelar_reserva(reserva_id: int):
+    for vuelo_id in reservas:
+        for i, res in enumerate(reservas[vuelo_id]):
+            if res.id == reserva_id:
+                if res.estado == "cancelada":
+                    return res
+                
+                res.estado = "cancelada"
+                vuelos[vuelo_id].asientos_disponibles += 1
+                return res
+    raise HTTPException(status_code=404, detail="Reserva no encontrada")

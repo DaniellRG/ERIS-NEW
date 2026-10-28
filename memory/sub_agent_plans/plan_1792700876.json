@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance del plan con la herramienta de Mapeo de Misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones operativas mediante el análisis de inventario.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Secuenciar las fases tácticas críticas y establecer hitos temporales en el cronograma de ERIS. [Riesgo: Desviación de plazos]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades a los agentes o equipos operativos según sus capacidades.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar protocolos de contingencia y rutas alternativas para mitigar fallos críticos. [Riesgo: Fallo en la redundancia]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento maestro de planificación y distribuirlo a través de la red segura.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792700876.7460594
+}

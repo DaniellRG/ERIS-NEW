@@ -1,7 +1,7 @@
 # Escalada GLOBAL de ERIS — nivel por nivel (fácil → difícil)
 
-Actualizado: 2026-10-16 09:55
-Dominios activos: 5 — Total de logros: 11
+Actualizado: 2026-10-24 07:13
+Dominios activos: 5 — Total de logros: 13
 
 ## 🔒 comunicacion (Hablar, responder claro, expresar ideas, conversar gente)
 
@@ -23,6 +23,8 @@ Dominios activos: 5 — Total de logros: 11
 
 ## 📈 aprender — nivel 2/8 — Estudiar sola, cuadernos, temas propios, auto-mejora
 - Receta nueva: No sé calcular la mediana de una lista
+- Receta nueva: Dependencia dotnet-sdk no instalada para verificar C#
+- Receta nueva: Contexto de tarea desconocido por mensaje truncado
 
 ## 📈 organizar — nivel 3/8 — Rutinas, cron, planes, agenda, follow-up
 - Auditoria de la casa: clasifica el ruido del disco (papelera, ISOs, caches, repo ajeno, restos de instalacion) e identifica de que app viene cada carpeta antes de proponer limpieza

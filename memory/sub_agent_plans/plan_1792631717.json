@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y definir los parámetros operativos con la interfaz de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones logísticas mediante el módulo de inventario.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desarrollar la secuencia cronológica de acciones y establecer hitos de control. [Riesgo: Desviación temporal por falta de datos].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades operativas y canales de comunicación para cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular escenarios alternativos de contingencia utilizando el motor de análisis predictivo. [Riesgo: Fallo en la simulación por variables imprevistas].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento maestro del plan y emitir la directiva de ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792631717.3930078
+}

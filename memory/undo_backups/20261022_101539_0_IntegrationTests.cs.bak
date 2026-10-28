@@ -1,0 +1,13 @@
+using Xunit;
+
+namespace api_vuelos_cs.Tests;
+
+public class IntegrationTests
+{
+    [Fact]
+    public void Test1()
+    {
+        // Placeholder test to satisfy dotnet test requirement
+        Assert.True(true);
+    }
+}

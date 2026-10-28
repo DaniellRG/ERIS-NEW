@@ -3,21 +3,6 @@ name: evolution-arquitecturas_de_memoria_para_agentes_autónomos
 description: Lección de evolución continua aprendida por ERIS sobre arquitecturas de memoria para agentes autónomos
 ---
 
-# arquitecturas de memoria para agentes autónomos
-
-Material estudiado (sin síntesis LLM disponible):
-═══ INVESTIGACION: 'ARQUITECTURAS DE MEMORIA PARA AGENTES AUTÓNOMOS' ═══
-
-1. **Memoria de Agentes IA: Tipos, Arquitectura y Código [2026]**  [5.5/10]
-   [#####     ] https://techsy.io/es/blog/guia-memoria-agentes-ia
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-2. **Arquitectura de memoria para agentes de IA que realmente funciona**  [5.5/10]
-   [#####     ] https://blakecrosley.com/es/blog/ai-agent-memory-architecture
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-3. **Arquitectura de Memoria para AI Agents 2026: El 90% son Amnésicos por ...*
+* **Lo importante:** Las arquitecturas modernas (como MEMTIER, Memoria y jerarquías de Computer Architecture) demuestran que un agente autónomo no debe tratar toda la información por igual; requiere una **memoria multinivel (Tiered/Recursive)** que segmente contexto inmediato, memoria episódica y repositorio persistente para evitar la saturación y reducir costos.
+* **Cómo lo aplico:** Implementaré una estructura en tres capas en mis bucles de ejecución: 1) *Working Memory* (buffer de ventana de contexto acotado), 2) *Experiential/Episodic Memory* (vector DB para recuperar experiencias pasadas relevantes mediante similitud), y 3) *Archival/Tiered Storage* (base de datos relacional/KV para estado global). Añadiré un mecanismo de auto-evolución (estilo EvolveMem) para podar y consolidar memorias periódicamente.
+* **Paso concreto:** Modificaré mi gestor de contexto actual para separar el prompt del sistema y las últimas 5 interacciones (Working) del historial histórico, integrando una consulta básica a una base vectorial antes de cada llamada al LLM para inyectar solo los 3 recuerdos más afines a la tarea actual.

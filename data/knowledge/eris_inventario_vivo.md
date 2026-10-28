@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-10-16 00:02:24 · 514 tools registradas y resolviendo.
+Generado: 2026-10-24 10:30:00 · 517 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -94,6 +94,9 @@ Generado: 2026-10-16 00:02:24 · 514 tools registradas y resolviendo.
 ## app
 - `app_discovery` — Descubre aplicaciones instaladas en el sistema: buscar por nombre, listar apps instaladas y obtener su ruta. A
 - `app_installer` — Install/uninstall apps via winget
+
+## aprendizaje
+- `aprendizaje_errores` — Memoria de problemas reales → soluciones que funcionaron. Cuando una tool falla y luego se arregla, guarda la 
 
 ## ask
 - `ask_opencode` — Pregunta a opencode una duda de programacion y devuelve su respuesta. Acciones: ask (preguntar con question/te
@@ -201,7 +204,7 @@ Generado: 2026-10-16 00:02:24 · 514 tools registradas y resolviendo.
 - `code_engineer` — Ingeniero de código con reasoning loop completo: leer archivo → buscar patrón → editar con contexto → verifica
 - `code_generator` — Generate code files in any programming language — always saves to Desktop/ERIS_Scripts by default.
 - `code_guard` — El ojo guardián de ERIS sobre el código del usuario: detecta en tiempo real errores (rojo: rompe) y advertenci
-- `code_helper` — Write, edit, explain, run, build, help — code in any language. Use help for programming questions and guidance
+- `code_helper` — Write, edit, explain, run, build, verify_project, help — code in any language. ALWAYS run action='verify_proje
 - `code_patcher` — Aplica parches de código para modificar archivos existentes.
 - `code_review` — Code review: review, security, style, history, stats, quick, review_diff (revisa git diff sin commitear; use_l
 - `code_sandbox` — Ejecución segura de código Python en sandbox. Escribí y ejecutá código en tiempo real con timeout y restriccio
@@ -408,6 +411,9 @@ Generado: 2026-10-16 00:02:24 · 514 tools registradas y resolviendo.
 ## escalada
 - `escalada` — ESCALADA GLOBAL de ERIS en TODO su aprendizaje (no solo pentest): cada skill que domina en cualquier dominio d
 
+## essence
+- `essence` — Núcleo inalterable de Eris. Valores que no cambian. Acciones: status, report_status, check_action, values.
+
 ## ethical
 - `ethical_reasoning` — Evalua implicaciones morales de acciones usando multiples marcos eticos: deontologia, consecuencialismo, virtu
 
@@ -563,6 +569,9 @@ Generado: 2026-10-16 00:02:24 · 514 tools registradas y resolviendo.
 ## learning
 - `learning_curriculum` — Currículum de auto-mejora estructurado: identifica debilidades, crea ejercicios, rastrea progreso.
 - `learning_pipeline` — Pipeline de aprendizaje autonomo: investiga topics en web, sintetiza conocimiento, y lo guarda en Obsidian aut
+
+## lesson
+- `lesson_applier` — Aplica lecciones cristalizadas por aprendizaje autónomo. Acciones: status, list, read, mark_applied, inject.
 
 ## llm
 - `llm_router` — Router inteligente de LLMs. Selecciona el mejor modelo (Gemini/Ollama/OpenRouter) según calidad, costo, latenc

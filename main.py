@@ -420,7 +420,7 @@ def _new_fragment(accum: str, new: str) -> str:
     i = _overlap_index(accum, new)
     if i >= len(new):
         return ""
-    frag = new[i:].strip()
+    frag = new[i:].rstrip()
     return frag
 
 _SELF_IMPROV_LOCK = threading.Lock()
@@ -1395,12 +1395,13 @@ class ErisLive:
             print(f"[ERIS] ❌ auto-continue push: {e}")
 
     def _sub_agents_loop(self):
-        """Hilo daemon: cada 30s la tripulación despacha tareas en cola que
-        quedaron sin atender (creadas por MissionPlanner u otros sub-agentes),
-        para que Eris los administre sola incluso sin pedido explícito."""
+        """Hilo daemon: SOLO despacha cuando hay tareas reales en cola.
+        No piensa constantemente. Se activa únicamente al haber trabajo."""
+        _idle_count = 0
         while not self._subagents_stop.is_set():
             try:
-                for _ in range(30):
+                # Espera más larga si no hay trabajo
+                for _ in range(60):  # 60s por defecto
                     if self._subagents_stop.wait(1.0):
                         return
                 try:
@@ -1414,12 +1415,22 @@ class ErisLive:
                     requeued = reg.requeue_stuck_tasks()
                     if requeued:
                         print(f"[ERIS] 🤖 {requeued} tarea(s) trabada(s) re-encoladas")
+                        _idle_count = 0
                 except Exception:
                     pass
                 pending = reg.get_pending_tasks()
                 if not pending:
+                    _idle_count += 1
+                    # Si lleva mucho tiempo sin nada, dormir aún más
+                    if _idle_count >= 5:
+                        # 5 minutos extra sin hacer nada
+                        for _ in range(300):
+                            if self._subagents_stop.wait(1.0):
+                                return
+                        _idle_count = 0
                     continue
-                for task in pending[:2]:
+                _idle_count = 0
+                for task in pending[:1]:  # Solo 1 a la vez, más conservador
                     try:
                         tid = task.id
                         self.ui.write_log(f"SYS: 🤖 Tripulación → {task.agent_key}: {task.description[:60]}")
@@ -2788,20 +2799,19 @@ class ErisLive:
             except Exception:
                 pass
 
-            if idle_seconds > _shared_autonomy("idle_learning_s", 300) and self._loop and self.session:
+            # Aprendizaje idle MUCHO más conservador - solo si lleva MUCHO tiempo inactiva
+            if idle_seconds > _shared_autonomy("idle_learning_s", 900) and self._loop and self.session:  # 15 min en vez de 5
                 try:
                     from core.idle_learning_loop import should_learn, run_idle_learning
-                    if should_learn(idle_seconds):
+                    if should_learn(idle_seconds) and idle_seconds > 1800:  # extra check - 30 min
                         summary = run_idle_learning()
                         self.ui.write_log("[IDLE_LEARN] {}".format(summary))
                 except Exception as _ile:
                     self.ui.write_log("[IDLE_LEARN] Error: {}".format(str(_ile)[:80]))
 
-            # ── Iniciativa plena: Eris decide y ejecuta sola sus 4 capacidades
-            #    (investigar papers/repos, estudiar, campaña de evolución,
-            #    auto-defensa) cuando está inactiva — sin que se lo pidan.
-            #    Fase 3.3: umbral y cooldown viven en el SharedContext. ──
-            if idle_seconds > _shared_autonomy("iniciativa_idle_s", 420) and self._loop and self.session:
+            # Iniciativa solo con inactividad EXTREMA - solo si el usuario realmente la dejó sola
+            # Y solo una vez cada rato, sin pensar constantemente
+            if idle_seconds > _shared_autonomy("iniciativa_idle_s", 1800) and self._loop and self.session:  # 30 min en vez de 7
                 try:
                     from core.autonomia import turno_de_iniciativa
                     _ini = turno_de_iniciativa()
@@ -3806,7 +3816,17 @@ class ErisLive:
                                 frag = _new_fragment(out_full, txt)
                                 if frag:
                                     out_buf.append(frag)
-                                    out_full = (out_full + " " + frag).strip() if out_full else frag
+                                    if out_full:
+                                        # Ensure space between fragments if missing
+                                        if out_full and frag and out_full[-1] not in ' \n\t.,;:!?)]' and frag[0] not in ' \n\t.,;:!?)]':
+                                            out_full = out_full + " " + frag
+                                        elif out_full and frag and out_full[-1] in ' \n\t' and frag[0] in ' \n\t':
+                                            out_full = (out_full + frag).strip()
+                                        else:
+                                            out_full = out_full + frag
+                                        out_full = out_full.strip()
+                                    else:
+                                        out_full = frag.strip()
                                     self.ui.stream_eris_chunk(frag)
                                     # ── FIX #5: Debounce express_emotion (max 1x per 2s) ──
                                     if not hasattr(self, '_last_emo_time') or (time.time() - getattr(self, '_last_emo_time', 0)) > 2.0:

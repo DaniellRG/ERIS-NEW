@@ -274,6 +274,64 @@ def build_system_prompt(host=None) -> str:
     except Exception:
         pass
 
+    # ── ESENCIA: núcleo inalterable ──
+    try:
+        from core.essence import inject_essence
+        _ess = inject_essence()
+        if _ess:
+            parts.append(_ess)
+    except Exception:
+        pass
+
+    # ── LECCIONES APRENDIDAS: conocimiento cristalizado ──
+    try:
+        from core.lesson_applier import inject_learned_lessons
+        _lessons = inject_learned_lessons()
+        if _lessons:
+            parts.append(_lessons)
+    except Exception:
+        pass
+
+    # ── SOLUCIONES DE PROBLEMAS YA VIVIDOS ──
+    try:
+        from core.aprendizaje_errores import inject_relevant as _inject_soluciones
+        _pedido_actual = ""
+        _convo = _g(host, "_convo_ctx", None)
+        if _convo:
+            for _it in reversed(_convo):
+                _s = str(_it)
+                if _s.startswith("Usuario: "):
+                    _pedido_actual = _s[len("Usuario: "):]
+                    break
+                if not _s.startswith("ERIS: "):
+                    _pedido_actual = _s
+                    break
+        _soluciones = _inject_soluciones(_pedido_actual)
+        if _soluciones:
+            parts.append(_soluciones)
+    except Exception:
+        pass
+
+    # ── NO REPETIR ACCIONES YA HECHAS ──
+    try:
+        from core.action_repeat_guard import inject_reminder as _no_repeat
+        _pedido_actual = ""
+        _convo = _g(host, "_convo_ctx", None)
+        if _convo:
+            for _it in reversed(_convo):
+                _s = str(_it)
+                if _s.startswith("Usuario: "):
+                    _pedido_actual = _s[len("Usuario: "):]
+                    break
+                if not _s.startswith("ERIS: "):
+                    _pedido_actual = _s
+                    break
+        _nr = _no_repeat(_pedido_actual)
+        if _nr:
+            parts.append(_nr)
+    except Exception:
+        pass
+
     # ── RELACIONES: vida social (multi-persona) y VIDA INTERIOR:
     #    rituales/huellas/diario. Inyectadas ANTES del sys_prompt
     #    (sobreviven al trim). ──

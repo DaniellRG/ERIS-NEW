@@ -1,0 +1,22 @@
+version: 1
+instincts:
+- id: inst_20261022_9da5f9
+  trigger: antes de declarar algo resuelto, terminado o funcionando
+  action: correr el test/comando/curl real y mostrar la salida exacta; si no hay evidencia,
+    no declararlo
+  confidence: 0.5
+  hits: 1
+  misses: 0
+  mature: false
+  scope: global
+  project: null
+  status: active
+  source: manual
+  created: '2026-10-22T15:41:17'
+  updated: '2026-10-22T15:41:17'
+  last_seen: '2026-10-22T15:41:17'
+  evidence:
+  - ts: '2026-10-22T15:41:17'
+    kind: manual
+    ref: manual:1792701677064992230
+    note: antes de declarar algo resuelto, terminado o funcionando

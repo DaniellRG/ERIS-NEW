@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones operativas y posibles puntos de fallo [RIESGO: Falta de información crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar la secuencia cronológica de acciones en el Módulo de Planificación.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y activos tácticos mediante la Matriz de Asignación.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular escenarios adversos y establecer rutas de contingencia [RIESGO: Colapso logístico].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final y autorizar su ejecución a través del Protocolo de Mando.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792699277.4267511
+}

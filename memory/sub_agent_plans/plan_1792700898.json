@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar las restricciones operativas y posibles cuellos de botella con el simulador predictivo.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar la secuencia lógica de fases y hitos críticos en el Módulo de Planificación.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar los roles operativos y las herramientas específicas para cada fase mediante el panel de asignaciones. [RIESGO: Sobrecarga de recursos críticos]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer los indicadores de rendimiento (KPIs) y los protocolos de control en el sistema de monitorización.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Simular escenarios de contingencia y definir planes de mitigación con la matriz de riesgos ERIS. [RIESGO: Fallo en la respuesta ante imprevistos]",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final del plan estratégico y exportarlo a los командных terminales.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792700898.9311385
+}

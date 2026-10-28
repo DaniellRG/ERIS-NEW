@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo final y el alcance operativo con una ficha de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificá los recursos disponibles, restricciones y dependencias críticas del entorno.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Mapeá los riesgos potenciales y puntos únicos de fallo [RIESGO: Falta de contingencias ante bloqueos imprevistos].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosá la misión en hitos cronológicos y tareas concretas con un diagrama de flujo de trabajo.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigná herramientas, ejecutores y plazos estrictos a cada fase de acción.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecé métricas de validación y puntos de control para monitorear el progreso del sistema.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792160679.6053653
+}

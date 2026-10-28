@@ -1,0 +1,70 @@
+from src.main import app, FighterResponse as Fighter, CombatResponse as Combat, fighters_db, matches_db, MatchStatus
+from fastapi.testclient import TestClient
+import pytest
+
+client = TestClient(app)
+
+@pytest.fixture(autouse=True)
+def clean_dbs():
+    # Limpiar las bases de datos en memoria antes de cada test
+    fighters_db.clear()
+    matches_db.clear()
+    # Recargar datos iniciales (Goku, Vegeta, Gohan, Piccolo) adaptados a los modelos de main.py
+    from main import initial_fighters
+    fighters_db.update(initial_fighters)
+    yield
+
+def test_list_fighters():
+    response = client.get("/fighters/")
+    assert response.status_code == 200
+    assert len(response.json()) == 4
+
+def test_create_fighter():
+    response = client.post("/fighters/", json={"name": "Krillin", "nickname": "Calvo", "weight_class": "Ligero"})
+    assert response.status_code == 201
+    data = response.json()
+    assert data["name"] == "Krillin"
+    assert data["id"] == 5
+
+def test_create_combat_self_fight():
+    # Goku (ID 1) vs Goku (ID 1)
+    response = client.post("/combats/", json={"fighter1_id": 1, "fighter2_id": 1})
+    assert response.status_code == 400
+    assert "no puede combatir contra sí mismo" in response.json()["detail"]
+
+def test_create_combat_eliminated_fighter():
+    # Eliminar a Goku (ID 1) primero (simulación)
+    fighters_db[1] = fighters_db[1].model_copy(update={"eliminated": True})
+    response = client.post("/combats/", json={"fighter1_id": 1, "fighter2_id": 2})
+    assert response.status_code == 400
+    assert "eliminado del torneo" in response.json()["detail"]
+
+def test_register_winner():
+    # Crear combate valido (Vegeta=2 vs Gohan=3)
+    response = client.post("/combats/", json={"fighter1_id": 2, "fighter2_id": 3})
+    assert response.status_code == 201
+    combate_id = response.json()["id"]
+
+    # Registrar ganador (Vegeta=2)
+    response = client.put(f"/combates/{combate_id}/winner/", json={"winner_id": 2})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == MatchStatus.COMPLETED.value
+    assert data["winner_id"] == 2
+
+    # Verificar estado de luchadores
+    veg = fighters_db[2]
+    gohan = fighters_db[3]
+    assert veg.wins == 1
+    assert gohan.eliminated == True
+
+def test_register_winner_completed_match():
+    # Crear y completar un combate
+    response = client.post("/combats/", json={"fighter1_id": 2, "fighter2_id": 3})
+    combate_id = response.json()["id"]
+    client.put(f"/combates/{combate_id}/winner/", json={"winner_id": 2})
+
+    # Intentar registrar ganador de nuevo
+    response = client.put(f"/combates/{combate_id}/winner/", json={"winner_id": 3})
+    assert response.status_code == 400
+    assert "ya ha finalizado" in response.json()["detail"]

@@ -40,6 +40,29 @@ def _get_manager():
     return get_browser_manager()
 
 
+def _open_with_system_browser(url: str) -> str:
+    import subprocess
+    import shutil
+    # Try common browsers/openers
+    for cmd in [
+        ["xdg-open", url],
+        ["gio", "open", url],
+        ["gvfs-open", url],
+        ["firefox", url],
+        ["chromium", url],
+        ["google-chrome", url],
+        ["brave", url],
+        ["vivaldi", url],
+    ]:
+        try:
+            if shutil.which(cmd[0]):
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return f"Abierto con {cmd[0]}: {url}"
+        except Exception:
+            continue
+    return f"Error: No se pudo abrir el navegador del sistema para {url}"
+
+
 def browser_unified(parameters: dict = None, player=None) -> str:
     params = parameters or {}
     action = params.get("action", "status").lower()
@@ -50,6 +73,13 @@ def browser_unified(parameters: dict = None, player=None) -> str:
         if not mgr._ensure():
             # Try starting with default settings
             if not mgr.start(headless=False):
+                # Fallback: open with system browser for simple navigation
+                if action == "navigate":
+                    url = params.get("url", "")
+                    if url:
+                        if not url.startswith(("http://", "https://")):
+                            url = "https://" + url
+                        return _open_with_system_browser(url)
                 return "Error: No se pudo iniciar el navegador."
 
     try:

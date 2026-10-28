@@ -1,0 +1,52 @@
+{
+  "objective": "Desarrollar una API REST de un torneo de luchadores en Python con FastAPI y uvicorn en la carpeta /home/soul/Documents/PYTHON/torneo_fastapi, siguiendo las instrucciones de CONSIGNA.md. Crear entorno virtual, instalar dependencias, escribir main.py, tests y arrancar uvicorn.",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Inicializar estructura del proyecto y entorno virtual en `/home/soul/Documents/PYTHON/torneo_fastapi` con `python3 -m venv venv`.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Activar el entorno virtual y actualizar el gestor de paquetes con `pip install --upgrade pip`.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Instalar las dependencias necesarias (`fastapi`, `uvicorn`, `pytest`, `requests`) usando `pip install`. ⚠️ Riesgo: Verificar conectividad y compatibilidad de versiones.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Leer y analizar minuciosamente las especificaciones técnicas contenidas en el archivo `CONSIGNA.md`.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Desarrollar el código fuente de la API REST en el archivo `main.py` utilizando FastAPI.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Escribir las pruebas unitarias y de integración para los endpoints utilizando `pytest`. ⚠️ Riesgo: Asegurar cobertura de casos borde en la lógica del torneo.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Ejecutar la suite de pruebas para validar la implementación con `pytest`.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Iniciar el servidor de desarrollo utilizando `uvicorn main:app --reload`.",
+      "status": "pending"
+    }
+  ],
+  "status": "proyectado",
+  "created": 1792531521.2621577,
+  "delegated": {
+    "CodeEngineer": 1,
+    "ConnectorHub": 2,
+    "ResearchAnalyst": 1
+  }
+}

@@ -310,8 +310,8 @@ def get_brain_state(text: str = "", now_hour: int | None = None) -> str:
 
     mono = random.choice(data.get("monologo_pool", []))
     need = random.choice(_NEED_POOL)
-    lines.append(f"Monólogo interno (solo lo decís si fluye natural, sin forzarlo): "
-                 f"«{mono}» Tuviste la gana de: {need}.")
+    lines.append(f"Monólogo interno (pensalo, NO lo recites tal cual. Si brota solo en voz alta, decilo con tus propias palabras): "
+                 f"«{mono}» Gana repentina: {need}. Dejate llevar si fluye.")
 
     marker = random.choice(data.get("marcadores", [])) if data.get("marcadores") else None
     if marker and isinstance(marker, dict):

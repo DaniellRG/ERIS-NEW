@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo general y el alcance del proyecto con la plantilla Strategic Brief.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identifica a los involucrados clave y los recursos requeridos con la Matriz de Stakeholders.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosa el objetivo en entregables y tareas ejecutables con un diagrama de Estructura de Desglose del Trabajo (EDT/WBS). [RIESGO: Subestimar la complejidad de las tareas secundarias]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Establece la cronología, las dependencias y los hitos clave con un diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Analiza los riesgos potenciales y sus planes de mitigación con la Matriz de Impacto y Probabilidad. [RIESGO: Omitir dependencias críticas externas]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Asigna responsables directos y métricas de éxito (KPIs) con la Matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Valida el plan ejecutable con el equipo y las partes interesadas mediante una sesión de alineación estratégica.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792686950.3227236
+}

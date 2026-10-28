@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definí el objetivo central, alcance y restricciones mediante una ficha de requerimientos.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Desglosá el proyecto en tareas atómicas y secuenciales utilizando una Estructura de Desglose del Trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Mapeá los riesgos potenciales y planes de contingencia con una Matriz de Impacto y Probabilidad. [RIESGO: Omisión de factores externos críticos no controlables]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Estimá tiempos, dependencias y recursos necesarios utilizando un Diagrama de Gantt.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecé métricas de éxito (KPIs) y puntos de control mediante un tablero de seguimiento.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validá la viabilidad del plan final con los interesados clave a través de una sesión de revisión. [RIESGO: Falta de alineación en expectativas o desaprobación de recursos]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792263690.2533593
+}

@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Define el objetivo central y el alcance del proyecto mediante un documento de alcance.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Recopila requisitos, restricciones y recursos disponibles usando entrevistas estructuradas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identifica riesgos críticos y dependencias del sistema con una matriz de riesgos. [RIESGO: Ambigüedad en dependencias clave]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosa el objetivo en tareas secuenciales y medibles con una estructura de desglose del trabajo (WBS).",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asigna plazos, responsables e hitos a cada tarea mediante un diagrama de Gantt. [RIESGO: Subestimación de tiempos de ejecución]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Valida el plan operativo con las partes interesadas a través de una sesión de revisión y aprobación.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792264234.611216
+}

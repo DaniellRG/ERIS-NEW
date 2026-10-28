@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Recopilar los requisitos y restricciones del objetivo con el usuario mediante interrogatorio estructurado.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar el alcance y los recursos disponibles usando la matriz de viabilidad interna.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar la secuencia lógica de tareas y establecer hitos críticos con la herramienta de cronograma. [Riesgo: Dependencias ocultas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y plazos estimados para cada fase del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Definir los indicadores clave de desempeño (KPIs) y los protocolos de contingencia. [Riesgo: Métricas inalcanzables]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Presentar la estrategia completa al usuario para su validación y ajuste final.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792628451.6730306
+}

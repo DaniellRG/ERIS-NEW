@@ -563,6 +563,38 @@ class ToolDispatcher:
             _ok = _result_status(result) in ("ok",)
             _HOOKS = []
 
+            # ── Pedido REAL del usuario: contexto honesto para aprender ──
+            _pedido = ""
+            try:
+                for _it in reversed(getattr(self._eris, "_convo_ctx", None) or []):
+                    _s = str(_it)
+                    if _s.startswith("Usuario: "):
+                        _pedido = _s[len("Usuario: "):]
+                        break
+                    if not _s.startswith("ERIS: "):
+                        _pedido = _s
+                        break
+            except Exception:
+                pass
+
+            # ── Evitar repetir acciones innecesarias ──
+            try:
+                from core.action_repeat_guard import record_action as _rag_record
+                if _ok:
+                    _rag_record(name, args, query=_pedido, result_summary=str(result)[:200])
+            except Exception:
+                pass
+
+            # ── Aprendizaje problema → solución ──
+            try:
+                from core.aprendizaje_errores import record_failure, record_success
+                if _ok:
+                    record_success(name, args, str(result)[:500], contexto=_pedido)
+                else:
+                    record_failure(name, args, str(result)[:500], contexto=_pedido)
+            except Exception:
+                pass
+
             if record_action:
                 _HOOKS.append(lambda: record_action(name, args))
 
@@ -602,7 +634,8 @@ class ToolDispatcher:
             if _ok:
                 try:
                     from core.procedimientos import registrar_paso
-                    _HOOKS.append(lambda: registrar_paso(name, intencion=str(intent or "")))
+                    _HOOKS.append(lambda: registrar_paso(
+                        name, intencion=str(_pedido or intent or "")))
                 except Exception:
                     pass
                 # ── Patrón repetitivo (auto-fábrica): secuencias 2/3 de tools ──

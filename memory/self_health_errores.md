@@ -38,3 +38,9 @@
 [2026-10-03 15:53:08] ✅ Resuelto: logs — Nuevo error en eris_gui.log: [ERIS] 🩺 logs: Nuevo error en eris_bateria2.log: [ERIS] 📤 shell_executor → Traceback (most recent call last):
 [2026-10-15 13:44:03] 🚨 WARN [logs] Nuevo error en eris_main.log: Traceback (most recent call last):
 [2026-10-15 17:18:46] ✅ Resuelto: logs — Nuevo error en eris_main.log: Traceback (most recent call last):
+[2026-10-17 11:24:33] 🚨 WARN [logs] Nuevo error en eris_run_2026-10-15_2352.log: Traceback (most recent call last):
+[2026-10-17 11:29:33] ✅ Resuelto: logs — Nuevo error en eris_run_2026-10-15_2352.log: Traceback (most recent call last):
+[2026-10-24 06:48:34] 🚨 WARN [logs] Nuevo error en eris_new.log: Traceback (most recent call last):
+[2026-10-24 06:58:34] ✅ Resuelto: logs — Nuevo error en eris_new.log: Traceback (most recent call last):
+[2026-10-24 10:30:59] 🚨 WARN [logs] Nuevo error en eris_new.log: Traceback (most recent call last):
+[2026-10-24 10:45:59] ✅ Resuelto: logs — Nuevo error en eris_new.log: Traceback (most recent call last):

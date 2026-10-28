@@ -54,5 +54,225 @@
       },
       "required": []
     }
+  },
+  {
+    "name": "shell_session_code_engineer",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida shell_session|code_engineer (x7) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "code_engineer_shell_session",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida code_engineer|shell_session (x7) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "file_editor_shell_session",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida file_editor|shell_session (x6) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "shell_session_file_editor",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida shell_session|file_editor (x5) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "shell_session_code_engineer_shell_session",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida shell_session|code_engineer|shell_session (x5) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "code_engineer_shell_session_code_engineer",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida code_engineer|shell_session|code_engineer (x5) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "shell_session_file_editor_shell_session",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida shell_session|file_editor|shell_session (x7) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "file_editor_shell_session_file_editor",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida file_editor|shell_session|file_editor (x6) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "shell_session_terminal_agent",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida shell_session|terminal_agent (x5) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "code_engineer_file_editor",
+    "description": "Auto-fábrica ERIS: ejecuta la secuencia repetida code_engineer|file_editor (x5) y reporta el resultado de cada paso.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "action": {
+          "type": "STRING",
+          "description": "Acción a ejecutar: status u otra definida."
+        },
+        "run": {
+          "type": "STRING",
+          "description": "Ejecuta la secuencia completa"
+        },
+        "params": {
+          "type": "STRING",
+          "description": "JSON opcional con parámetros de la acción."
+        }
+      },
+      "required": []
+    }
   }
 ]

@@ -1,22 +1,9 @@
 # sistemas RAG híbridos (vector + keyword + grafo)
 
-Aprendido: 2026-10-13 22:37:10
+Aprendido: 2026-10-23 17:36:01
 
-# sistemas RAG híbridos (vector + keyword + grafo)
+**Lección ERIS: RAG Híbrido (Vector + Keyword + Grafo)**
 
-Material estudiado (sin síntesis LLM disponible):
-═══ INVESTIGACION: 'SISTEMAS RAG HÍBRIDOS (VECTOR + KEYWORD + GRAFO)' ═══
-
-1. **Hybrid Search in RAG: Combining Keyword and Vector Retrieval**  [5.5/10]
-   [#####     ] https://teachmeidea.com/hybrid-search-bm25-vector-rag/
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-2. **Hybrid Search: Vector + Keyword Techniques for better RAG retrieval**  [5.5/10]
-   [#####     ] https://machinelearningplus.com/gen-ai/hybrid-search-vector-keyword-techniques-for-better-rag/
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-3. **How to Build Hybrid Search RAG 
+*   **Lo importante:** Unificar similitud semántica (Vectores), coincidencia exacta de términos (BM25/Keyword) y relaciones estructuradas (Grafos) elimina puntos ciegos. El vector capta el *significado*, el keyword rescata *datos precisos* (códigos, nombres) y el grafo mapea *conexiones complejas*.
+*   **En mi código:** Implementa un recuperador tripartito donde el usuario lanza la query en paralelo a Chroma/Milvus (Vectores), Elasticsearch/BM25 (Keyword) y Neo4j (Grafo). Usa *Reciprocal Rank Fusion (RRF)* para mezclar los resultados y alimenta al LLM solo con el top $K$ unificado.
+*   **Paso concreto:** Crea una función en Python que reciba una query, ejecute una búsqueda vectorial y una por BM25, y fusione sus IDs usando RRF ponderado.

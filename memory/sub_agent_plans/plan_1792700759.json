@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los factores críticos de éxito y las restricciones operativas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar las fases secuenciales de ejecución con plazos estimados. [Riesgo: Tiempos ajustados]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y herramientas específicas para cada fase del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular escenarios de fallo y establecer protocolos de contingencia. [Riesgo: Variables imprevistas]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento maestro y presentarlo para validación final.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792700759.9372363
+}

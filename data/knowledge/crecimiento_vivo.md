@@ -1,6 +1,6 @@
 # 🌳 Tabla Maestra de Crecimiento — ERIS
 
-**2026-10-16T09:55:14** · Eris crece en 12 dominios.
+**2026-10-24T09:38:56** · Eris crece en 12 dominios.
 
 | Dominio | Nivel | Logros | Con evidencia | Último logro | Ver |
 |---|---|---|---|---|---|
@@ -10,14 +10,14 @@
 | ✅ archivos | 2/8 | 1 | 1 | Ve y lee la casa entera: encuentra y lee cualquier ARCHIVO d | `Crecimiento/Tabla-archivos.md` |
 | 🔓 memoria | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-memoria.md` |
 | 🔓 web | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-web.md` |
-| 🔓 aprender | 2/8 | 0 | 0 | — | `Crecimiento/Tabla-aprender.md` |
+| ✅ aprender | 2/8 | 2 | 0 | Receta nueva: Contexto de tarea desconocido por mensaje trun | `Crecimiento/Tabla-aprender.md` |
 | ✅ organizar | 3/8 | 2 | 2 | Limpieza ejecutada: libero ~29 GB (papelera 6.3 GB, caches ~ | `Crecimiento/Tabla-organizar.md` |
 | 🔓 social | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-social.md` |
 | 🔓 creatividad | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-creatividad.md` |
 | 🔓 pentest | 0/8 | 0 | 0 | — | `Crecimiento/Tabla-pentest.md` |
 | ✅ fabrica | 3/8 | 2 | 2 | Absorbe REA: 207 herramientas de ingeniería inversa como cap | `Crecimiento/Tabla-fabrica.md` |
 
-**Filas totales:** 10 · **Dominios activos:** 4
+**Filas totales:** 12 · **Dominios activos:** 5
 
 # 🌱 Tabla de crecimiento — comunicacion
 
@@ -43,7 +43,7 @@ _Programar, arreglar errores, tool que crea, refactor_
 
 _Linux, terminal, procesos, red, automatizar el PC_
 
-**Nivel:** 4/8 · **Logros:** 5 · **Actualizado:** 2026-10-16T09:55:14
+**Nivel:** 4/8 · **Logros:** 5 · **Actualizado:** 2026-10-24T09:38:56
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -57,7 +57,7 @@ _Linux, terminal, procesos, red, automatizar el PC_
 
 _Crear, ordenar, buscar y transformar archivos/documentos_
 
-**Nivel:** 2/8 · **Logros:** 1 · **Actualizado:** 2026-10-16T00:07:24
+**Nivel:** 2/8 · **Logros:** 1 · **Actualizado:** 2026-10-24T09:38:56
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -87,17 +87,18 @@ _Buscar, investigar y traer info del mundo_
 
 _Estudiar sola, cuadernos, temas propios, auto-mejora_
 
-**Nivel:** 2/8 · **Logros:** 0 · **Actualizado:** —
+**Nivel:** 2/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
-| — | — | _(todavía sin logros en este dominio)_ | — | — | — |
+| 2026-10-21 | 2 | Receta nueva: Dependencia dotnet-sdk no instalada para verificar C# | — | escalada | ⚠️ |
+| 2026-10-24 | 2 | Receta nueva: Contexto de tarea desconocido por mensaje truncado | — | escalada | ⚠️ |
 
 # 🌱 Tabla de crecimiento — organizar
 
 _Rutinas, cron, planes, agenda, follow-up_
 
-**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-16T00:07:24
+**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -138,7 +139,7 @@ _Seguridad ofensiva en el lab aislado (VirtualBox)_
 
 _Crear sus PROPIAS capacidades (librerías, tools, skills)_
 
-**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-16T00:07:24
+**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|

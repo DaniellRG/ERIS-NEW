@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones temporales y operativas mediante la Matriz de Riesgo. [Riesgo: Información incompleta o desactualizada]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Definir hitos críticos y entregables del plan con el módulo de Cronograma.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar roles y responsabilidades al equipo operativo usando el Panel de Asignaciones. [Riesgo: Sobrecarga de recursos clave]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar protocolos de contingencia para los puntos de fallo detectados con el simulador de escenarios.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar la estrategia en un documento maestro mediante la interfaz de Reportes ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1792268094.1289425
+}

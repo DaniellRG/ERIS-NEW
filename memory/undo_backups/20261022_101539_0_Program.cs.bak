@@ -1,0 +1,20 @@
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Definición de un modelo de vuelo simple
+var vuelos = new List<object>
+{
+    new { codigo = "AV101", origen = "BOG", destino = "MDE", salida = DateTime.Now.AddHours(1) },
+    new { codigo = "LA234", origen = "LIM", destino = "SCL", salida = DateTime.Now.AddHours(2) },
+    new { codigo = "IB567", origen = "MAD", destino = "BOG", salida = DateTime.Now.AddHours(8) }
+};
+
+app.MapGet("/", () => "api_vuelos_cs — API minimal en ASP.NET Core con tests xunit.");
+
+// Nuevo endpoint que devuelve la lista de vuelos como JSON
+app.MapGet("/vuelos", () => Results.Json(vuelos));
+
+app.Run();
+
+// Necesario para WebApplicationFactory en tests
+public partial class Program { }

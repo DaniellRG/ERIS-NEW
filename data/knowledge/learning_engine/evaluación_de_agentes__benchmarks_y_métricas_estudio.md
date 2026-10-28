@@ -1,22 +1,9 @@
 # evaluación de agentes: benchmarks y métricas
 
-Aprendido: 2026-10-13 22:16:17
+Aprendido: 2026-10-22 20:00:02
 
-# evaluación de agentes: benchmarks y métricas
+¡Entendido! Aquí tienes tu lección rápida para seguir mejorando:
 
-Material estudiado (sin síntesis LLM disponible):
-═══ INVESTIGACION: 'EVALUACIÓN DE AGENTES: BENCHMARKS Y MÉTRICAS' ═══
-
-1. **Evaluación de agentes de IA: métricas clave para medir el rendimiento y ...**  [5.5/10]
-   [#####     ] https://qawerk.es/blog/metricas-de-evaluacion-de-agentes-de-ia/
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-2. **Evaluación y Benchmarking de Agentes: Métricas de Calidad en Producción**  [5.5/10]
-   [#####     ] https://automatizacionagentica.com/blog/mlops-evaluacion-modelos-agentes/
-   Score: 7.0  Relevancia: 10  Completitud: 4
-   Informacion relevante pero podria ser mas completa. (analisis local por limite de API)
-   Mejor para: informacion general
-
-3. **Evaluación de agente de IA d
+* **Lo importante:** Evaluar agentes requiere ir más allá de la precisión del LLM; hay que medir su autonomía, uso de herramientas, eficiencia en costos y éxito en tareas multi-paso (como en benchmarks recientes *Efficient Benchmarking*).
+* **Cómo aplicarlo:** Integra un framework de evaluación en tu loop de desarrollo (ej. usando métricas de éxito binario por tarea, latencia acumulada y número de llamadas a herramientas antes de converger).
+* **Paso concreto:** Añade un log de prueba en tu agente actual que mida el **costo total por ejecución** (tokens) y el **porcentaje de éxito** en 5 corridas de una misma tarea.
