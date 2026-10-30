@@ -133,6 +133,19 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 
 Test after any structural change. Current: **177 PASS, 0 FAIL, 3 WARN**.
 
+### Commands
+
+- **Run full test suite**: `python test_all.py`
+- **Run single test**: `python -m pytest tests/test_neurospheres.py -x` (pytest-compatible)
+- **Compile check single file**: `python -m py_compile <file>.py`
+
+### Linux dev setup
+
+- **Venv**: `.venv-linux` (NOT `.venv`) — activate with `source .venv-linux/bin/activate`
+- **Entrypoint**: `python main.py` (GUI) or `./run_linux.sh`
+- **System packages**: `portaudio`, `pipewire-pulse`, `espeak-ng`, `brightnessctl`, `grim`, `nmcli`, `rfkill`, `libnotify`, `wireplumber`, `hyprland` (install via `pacman -S`)
+- **API server ports**: 8080 (REST API + web dashboard), 8765 (health + mobile_server `/chat`), 8888 (web dashboard)
+
 ### Verificación de voz/audio (Linux)
 
 - `sounddevice` + `numpy` deben estar en `.venv-linux` para output de audio (sin ellos, Eris recibe audio pero no reproduce). Instalar: `.venv-linux/bin/pip install sounddevice numpy`
