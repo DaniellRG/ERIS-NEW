@@ -249,11 +249,11 @@ def get_face_expression() -> tuple[str, str]:
     emo = perfil["emotion"]
     cara = {
         "alegria": "happy", "entusiasmo": "grinning", "orgullo": "grinning",
-        "curiosidad": "thinking", "tranquilidad": "rest", "amor": "in_love",
+        "curiosidad": "pondering", "tranquilidad": "rest", "amor": "in_love",
         "gratitud": "blush_smile", "apoyo": "hug", "aburrimiento": "hmm",
         "cansancio": "sleepy", "tristeza": "pouting", "soledad": "pouting",
         "nerviosismo": "wry", "amor_desde_el_pasado": "smile_tear",
-        "escucha": "listening",
+        "escucha": "listening", "pensando": "pondering",
     }.get(emo, "neutral")
     colores = {
         "alegria": "#ffd54f", "entusiasmo": "#ff7043", "orgullo": "#b39ddb",
