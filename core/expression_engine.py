@@ -254,6 +254,7 @@ def get_face_expression() -> tuple[str, str]:
         "cansancio": "sleepy", "tristeza": "pouting", "soledad": "pouting",
         "nerviosismo": "wry", "amor_desde_el_pasado": "smile_tear",
         "escucha": "listening", "pensando": "pondering", "exito": "success",
+        "cariño": "affection",
     }.get(emo, "neutral")
     colores = {
         "alegria": "#ffd54f", "entusiasmo": "#ff7043", "orgullo": "#b39ddb",
@@ -261,6 +262,7 @@ def get_face_expression() -> tuple[str, str]:
         "gratitud": "#ffb74d", "aburrimiento": "#90a4ae", "cansancio": "#ce93d8",
         "tristeza": "#5c6bc0", "soledad": "#3f51b5", "nerviosismo": "#ffcc80",
         "amor_desde_el_pasado": "#f8bbd0", "exito": "#8bc34a",
+        "cariño": "#f8bbd0",
     }
     return cara, colores.get(emo, "#81d4fa")
 
