@@ -65,8 +65,8 @@ ENV QT_QPA_PLATFORM=offscreen
 ENV ERIS_WORKSPACE=/app/eris_workspace
 ENV ERIS_OBSIDIAN_VAULT=/app/obsidian_vault
 
-# Puerto para servidor web (Flask)
-EXPOSE 5000
+# Puerto para servidor web (Flask/API)
+EXPOSE 8080
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

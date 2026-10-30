@@ -245,6 +245,11 @@ def build_system_prompt(host=None) -> str:
     except Exception:
         pass
 
+    # ── HARDWARE LOCAL: perfil de CPU/RAM/GPU detectado al arranque ──
+    _hw_ctx = _g(host, "_hw_context", None)
+    if _hw_ctx:
+        parts.append(_hw_ctx)
+
     # ── ALINEACIÓN DE METAS: la meta activa ("el por qué") para que las tareas
     #    arrastren propósito. Federado de goal_setting + goal_tracker. Barato;
     #    incluye el id para pasarlo como goal_id a agente_sub/proyectar. ──

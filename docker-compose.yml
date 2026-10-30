@@ -16,7 +16,7 @@ services:
     environment:
       - ERIS_ENV=production
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://daniel:Dsoul76123267890@192.168.1.45:5432/proyectos_db
+      - DATABASE_URL=postgresql://daniel:${DB_PASSWORD:-changeme}@192.168.1.45:5432/proyectos_db
       - OLLAMA_HOST=http://192.168.1.45:11434
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]

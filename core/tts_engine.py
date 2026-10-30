@@ -464,13 +464,19 @@ async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = Non
 
     # Timeout: si Edge TTS tarda mas de 15 segundos, cortar
     _edge_timeout = 15.0
-    _start_time = __import__("time").time()
-    async for chunk in communicate.stream():
-        if __import__("time").time() - _start_time > _edge_timeout:
-            print(f"[TTS] Edge TTS timeout ({_edge_timeout}s) — cortando")
-            break
-        if chunk["type"] == "audio":
-            audio_chunks.append(chunk["data"])
+
+    async def _collect_edge_audio():
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_chunks.append(chunk["data"])
+
+    try:
+        # wait_for also covers connection setup before the first audio chunk;
+        # checking elapsed time only inside the loop misses that stalled phase.
+        await asyncio.wait_for(_collect_edge_audio(), timeout=_edge_timeout)
+    except asyncio.TimeoutError:
+        safe_print(f"[TTS] Edge TTS timeout ({_edge_timeout}s) antes de completar la síntesis")
+        return b""
 
     if not audio_chunks:
         return b""

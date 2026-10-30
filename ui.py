@@ -1066,6 +1066,7 @@ class _NeonField(QWidget):
 
 class SettingsDialog(QDialog):
     saved = pyqtSignal(dict)
+    _voice_test_finished = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1076,6 +1077,49 @@ class SettingsDialog(QDialog):
         self._build_ui()
         self._apply_styles()
         self._switch_section(0)
+        self._voice_test_finished.connect(self._on_voice_test_finished)
+
+    def _on_voice_test_finished(self, message: str):
+        self._status_bar.setText(message)
+        self._voice_test_btn.setEnabled(True)
+
+    def _test_voice(self):
+        """Synthesize and play a real sample through the system's default sink."""
+        backend = self._tts.currentText().strip().lower()
+        voice = self._voice.currentData() or self._voice.currentText()
+        self._voice_test_btn.setEnabled(False)
+        self._status_bar.setText("◆  VOICE TEST: synthesizing sample...  ◆")
+
+        def worker():
+            try:
+                import asyncio
+                import subprocess
+                from core.tts_engine import synthesize
+
+                if backend == "gemini":
+                    raise RuntimeError("Gemini Live speaks during a conversation; choose Edge to test TTS here.")
+                pcm = asyncio.run(asyncio.wait_for(
+                    synthesize("Hola, soy Eris. Esta es una prueba de mi voz.",
+                               backend=backend, voice=str(voice)),
+                    timeout=25.0,
+                ))
+                if not pcm or len(pcm) < 100:
+                    raise RuntimeError("El motor no generó audio. Revisa la conexión y el backend elegido.")
+
+                proc = subprocess.run(
+                    ["pacat", "--rate=24000", "--format=S16LE", "--channels=1"],
+                    input=pcm, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+                    timeout=20.0, check=False,
+                )
+                if proc.returncode:
+                    detail = proc.stderr.decode("utf-8", errors="replace").strip()[:180]
+                    raise RuntimeError(f"pacat terminó con código {proc.returncode}: {detail}")
+                result = "◆  VOICE TEST: sample played through default audio output  ◆"
+            except Exception as exc:
+                result = f"◆  VOICE TEST ERROR: {type(exc).__name__}: {str(exc)[:180]}  ◆"
+            self._voice_test_finished.emit(result)
+
+        threading.Thread(target=worker, name="eris-voice-test", daemon=True).start()
 
     # ── UI Sections ─────────────────────────────────────────────────────────
     SECTIONS = [
@@ -1480,15 +1524,15 @@ class SettingsDialog(QDialog):
         gb_layout.addLayout(hl_fish2)
 
         # TTS test button
-        test_tts = QPushButton("▶  TEST VOICE")
-        test_tts.setCursor(Qt.CursorShape.PointingHandCursor)
-        test_tts.setStyleSheet(f"""
+        self._voice_test_btn = QPushButton("▶  TEST VOICE")
+        self._voice_test_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._voice_test_btn.setStyleSheet(f"""
             QPushButton {{ background: {C.SUCCESS}; color: {C.BG}; border: none;
             border-radius: 4px; padding: 6px 14px; font-size: 9px; font-weight: bold; }}
             QPushButton:hover {{ background: {C.SUCCESS}; opacity: 0.8; }}
         """)
-        test_tts.clicked.connect(lambda: self._status_bar.setText("◆  VOICE TEST: Playing sample...  ◆"))
-        gb_layout.addWidget(test_tts)
+        self._voice_test_btn.clicked.connect(self._test_voice)
+        gb_layout.addWidget(self._voice_test_btn)
         form.addWidget(gb)
 
         gb2 = QGroupBox("🎧  AUDIO DEVICES — ENTRADA Y SALIDA")
