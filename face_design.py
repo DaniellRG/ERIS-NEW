@@ -138,17 +138,8 @@ def _params_for(expr):
 
 
 def _speech_osc(t):
-    """Envoltura tipo habla con ritmo natural: sílabas, consonantes,
-    frases (más fuerte / más suave) y micro-pausas donde la boca se cierra."""
-    syl = 0.5 + 0.5 * math.sin(t * 19.0 + math.sin(t * 3.0) * 1.4)
-    con = 0.5 + 0.5 * math.sin(t * 43.0 + 1.3)
-    v = 0.66 * syl + 0.34 * con
-    phr = 0.55 + 0.45 * math.sin(t * 2.35 + 0.6)
-    v = v * (0.55 + 0.45 * phr)
-    g = math.sin(t * 6.98 + 2.0)
-    if g > 0.90:
-        v = max(v * 0.3, 0.10)
-    return max(0.08, min(1.0, v))
+    # DESHABILITADO — la boca fue removida (expresiones solo con ojos).
+    return 0.0
 
 
 # ── Emociones del texto que habla ERIS ───────────────────────────────────
@@ -256,9 +247,9 @@ def _draw_eye(p, x, prm, sign, off, blink):
 
 
 def _draw_mouth(p, prm):
-    cx, base = 100.0, _MOUTH_Y
-    curve = prm["mouth_curve"]
-    open_ = prm["mouth_open"]
+    # Boca deshabilitada — expresiones solo con ojos (decisión de usuario).
+    # El lip-sync se neutraliza en _effective() y el VRM en viewer.html.
+    return
     hw = 20.0 + 6.0 * min(1.0, open_)
     if prm["money"]:
         p.setBrush(QBrush(_BLUE))
@@ -687,12 +678,13 @@ class FaceWidget(QWidget):
         for k in _SNAP:
             prm[k] = self.cur[k]
         prm["mouth_open"] = max(0.0, min(1.0, prm["mouth_open"]))
-        if self.speaking and self.audio > 0.03:
-            amp = min(1.0, self.audio * 1.25)
-            talk = _speech_osc(self.clock) * amp
-            prm["mouth_open"] = prm["mouth_open"] * 0.25 + 0.95 * talk
-            prm["mouth_curve"] = prm["mouth_curve"] * 0.8
-            prm["round_mouth"] = False
+        # ── lip-sync de boca DESHABILITADO (expresiones solo con ojos) ──
+        # if self.speaking and self.audio > 0.03:
+        #     amp = min(1.0, self.audio * 1.25)
+        #     talk = _speech_osc(self.clock) * amp
+        #     prm["mouth_open"] = prm["mouth_open"] * 0.25 + 0.95 * talk
+        #     prm["mouth_curve"] = prm["mouth_curve"] * 0.8
+        #     prm["round_mouth"] = False
         if self.reaction:
             env = math.sin(math.pi * min(1.0, self.reaction_t / self.reaction_dur))
             if self.reaction == "flinch":
@@ -701,24 +693,21 @@ class FaceWidget(QWidget):
                 prm["brow_l"] += 0.5 * env
                 prm["brow_r"] += 0.5 * env
             elif self.reaction == "sigh":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.15 + 0.35 * env)
-                prm["mouth_curve"] = -0.15 * env
-                prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.7 * env)
-                prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.7 * env)
+                prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.6 * env)
+                prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.6 * env)
+                prm["brow_l"] += 0.3 * env
+                prm["brow_r"] += 0.3 * env
             elif self.reaction == "yawn":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.95 * env)
-                prm["mouth_curve"] = -0.25 * env
-                prm["round_mouth"] = False
                 prm["eye_open_l"] = min(prm["eye_open_l"], 1 - env)
                 prm["eye_open_r"] = min(prm["eye_open_r"], 1 - env)
+                prm["brow_l"] += 0.5 * env
+                prm["brow_r"] += 0.5 * env
             elif self.reaction == "laugh":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.5 + 0.45 * env)
-                prm["mouth_curve"] = max(prm["mouth_curve"], 0.8 * env)
                 prm["eye_arc"] = max(prm["eye_arc"], env)
                 prm["tear"] = max(prm["tear"], 0.3 * env)
+                prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.3 * env)
+                prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.3 * env)
             elif self.reaction == "cry":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.5 + 0.3 * env)
-                prm["mouth_curve"] = min(prm["mouth_curve"], -0.6 * env)
                 prm["tear"] = max(prm["tear"], 1.2 * env)
                 prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.4 * env)
                 prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.4 * env)
@@ -727,25 +716,23 @@ class FaceWidget(QWidget):
             elif self.reaction == "sneeze":
                 prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 1.2 * env)
                 prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 1.2 * env)
-                prm["mouth_open"] = max(prm["mouth_open"], 0.95 * env)
                 prm["brow_l"] += 0.6 * env
                 prm["brow_r"] += 0.6 * env
             elif self.reaction == "hiccup":
                 pulse = 0.5 + 0.5 * math.sin(self.clock * 30)
-                prm["eye_open_l"] = max(prm["eye_open_l"], 0.6 + 0.5 * pulse * env)
-                prm["eye_open_r"] = max(prm["eye_open_r"], 0.6 + 0.5 * pulse * env)
-                prm["mouth_open"] = max(prm["mouth_open"], 0.3 + 0.3 * pulse * env)
+                prm["eye_open_l"] = max(prm["eye_open_l"], 0.5 + 0.4 * pulse * env)
+                prm["eye_open_r"] = max(prm["eye_open_r"], 0.5 + 0.4 * pulse * env)
+                prm["brow_l"] += 0.3 * env
             elif self.reaction == "cough":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.4 + 0.45 * abs(math.sin(self.clock * 30)) * env)
                 prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.5 * env)
                 prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.5 * env)
                 prm["brow_l"] += 0.5 * env
                 prm["brow_r"] += 0.5 * env
             elif self.reaction == "deep_sigh":
-                prm["mouth_open"] = max(prm["mouth_open"], 0.3 + 0.5 * env)
-                prm["mouth_curve"] = min(prm["mouth_curve"], -0.2 * env)
                 prm["eye_open_l"] = min(prm["eye_open_l"], 1 - 0.6 * env)
                 prm["eye_open_r"] = min(prm["eye_open_r"], 1 - 0.6 * env)
+                prm["brow_l"] += 0.4 * env
+                prm["brow_r"] += 0.4 * env
         if self.gesture:
             ge = math.sin(math.pi * min(1.0, self.gesture_t / self.gesture_dur))
             if self.gesture == "brow":

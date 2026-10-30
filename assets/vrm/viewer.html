@@ -377,7 +377,7 @@ function tickAnim() {
         const t = clock.elapsedTime;
 
         naturalPose(t);
-        applyMouth(dt);
+        // applyMouth(dt); mouth removed — expressions via eyes only
         tickBlink(dt);
         if (vrm.update) vrm.update(dt);
     }
