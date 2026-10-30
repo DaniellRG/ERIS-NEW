@@ -111,6 +111,8 @@ _EXPRESSIONS = {
                             mouth_curve=0.35, mouth_open=0.35),
     "happy":           dict(mouth_open=0.7, mouth_curve=0.8, eye_open=0.7, eye_arc=0.9,
                             brow=-0.05, blush=0.2),
+    "rest":            dict(eye_open=0.7, eye_arc=-0.1, eye_slant=0.0, brow=0.0,
+                            mouth_open=0.05, mouth_curve=0.0, blush=0.0),
     "sleepy":          dict(eye_open=0.12, mouth_curve=-0.05, mouth_open=0.08, brow=0.2),
     "music":           dict(eye_open=0.32, eye_arc=0.7, mouth_open=0.22, mouth_curve=0.6,
                             blush=0.35, notes=0.9, brow=-0.1),
