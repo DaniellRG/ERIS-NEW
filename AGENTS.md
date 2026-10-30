@@ -21,7 +21,7 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 - **Gemini limita a 128 function_declarations**: con las 517 tools directas, el chat Gemini crashea con `400 INVALID_ARGUMENT` (`tools[0].function_de...`). `core/gemini_text_chat.py` ya envía un subconjunto priorizado <=120 vía `_gemini_tools()` (ver `_GEMINI_PRIORITY_TOOLS`: imprescindibles garantizadas + resto en orden de dominio). No revertir a `TOOL_DECLARATIONS` completo en el payload de Gemini.
 - **ARRAY type rejected by Gemini**: use `STRING` with JSON-encoded content in declarations (see `actions/office_tools.py` for pattern).
 - **Ollama tool_calls**: `arguments` arrives as `dict` (not string) — check `isinstance(raw_args, dict)` before `json.loads`.
-- **edge-tts `synthesize()` is async**: call with `asyncio.run(...)`.
+- **edge-tts `synthesize()` is async**: call with `asyncio.run(...)` — Y también en Linux puede fallar con 403 Forbidden (Microsoft bloquea `speech.platform.bing.com` desde IPs LATAM). Ver línea de fallback en el sección de TTS.
 - **Vosk**: `KaldiRecognizer` takes a `Model` object, not a string path.
 - **pycaw**: use `AudioUtilities.GetSpeakers()` → `.EndpointVolume`. No `Activate()` or `MMDeviceEnumerator`.
 - **weather_report**: requires User-Agent `curl/8.0` (Mozilla returns HTML from wttr.in).
@@ -115,6 +115,7 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 - **Default**: Ollama local (`qwen3:8b`) — no rate limits
 - **Fallback**: Gemini API (`gemini-3.1-flash-lite`) — low free-tier quota
 - **TTS**: Kokoro-82M local (`pykokoro`, backend `kokoro`) — voz femenina `ef_dora`, Apache-2.0, ilimitada, ~3x realtime en CPU (usa espeak+spacy `es_core_news_sm`). El backend acepta `kokoro` o `pykokoro` (alias en `tts_engine.synthesize`); `from_pretrained` con string `"cpu"` (NO `torch.device`); guardar wav con `soundfile` (no torchaudio). Alternativa nube sin costo: `edge` (`es-AR-TomasNeural`, MS cloud). `ui.py` combo lista `kokoro`/`pykokoro` con Dora/Alex/Santa (ES). NUNCA usar `pykokoro` sin alias — la UI vieja guardaba `"PyKokoro not installed"` como voz y rompía el config.
+- **Linux voice/audio**: `tts_backend: "gemini"` reproduce audio nativo de Gemini Live directamente (response.data → pacat). Requiere `sounddevice` + `numpy` en `.venv-linux`. `edge` backend falla con 403 Forbidden desde Microsoft para IPs LATAM. `kokoro` funciona offline pero pykokoro 0.10.9 cambió la API (usa `SynthesisConfig`/`SynthesisRequest`, necesita modelos ONNX). Ver sección "Verificación de voz/audio".
 - **Voz resiliente (auto-reparación)**: en el clasificador de errores del reconnect de main.py, si la cuota de voz en nube se agota (429 / RESOURCE_EXHAUSTED / E006), `_voice_resilient_fallback()` persiste sola `tts_backend` → `kokoro` (si pykokoro importa) o `edge`, avisa por UI y lo guarda como recuerdo — Eris nunca se queda muda. `_announce` ya caía a edge si backend==gemini.
 - **TTS local en streaming**: kokoro/edge/pykokoro sintetizan la respuesta final por frases, pero con **prefetch solapado** (`_do_kokoro` en main.py): mientras suena la frase actual, la siguiente ya se está sintetizando → cero huecos entre frases (voz continua, no entrecortada).
 - **Config**: `config/api_keys.json`
@@ -128,9 +129,21 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 
 ## Testing
 
-`test_all.py` verifies: tool registry (517), declarations (517), sync, no duplicates, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, routines, auto-continuation, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Current baseline: **177 PASS / 0 FAIL / 3 WARN (neuro nodes, chromadb no instalado, ctypes.windll)**.
+`test_all.py` verifica: tool registry (517), declarations (517), sync, sin duplicados, core modules, agents, NeuroSpheres, CLI, action imports, data files, knowledge, Python env, compile check, BOM check, GUI window, sesión summaries, rutinas, auto-continuación, cerebro, vida interior, relaciones, mundo nuevo (autoimagen/intereses/retro/ambiente/sueños/voz/cara), mundo nuevo II (caprichos/tiempo/festejos/bienestar/cuadernos/cierre). Baseline actual: **177 PASS / 0 FAIL / 3 WARN (neuro nodes, chromadb no instalado, ctypes.windll)**.
 
 Test after any structural change. Current: **177 PASS, 0 FAIL, 3 WARN**.
+
+### Verificación de voz/audio (Linux)
+
+- `sounddevice` + `numpy` deben estar en `.venv-linux` para output de audio (sin ellos, Eris recibe audio pero no reproduce). Instalar: `.venv-linux/bin/pip install sounddevice numpy`
+- Reproduce audio vía `pacat` (PulseAudio): `ps aux | grep pacat` → debe ver `pacat --rate=24000 --format=S16LE --channels=1`
+- Para testear la voz sin GUI: envía un mensaje vía mobile_server y revisa logs:
+  ```bash
+  curl -X POST http://127.0.0.1:8765/chat -H "Content-Type: application/json" -d '{"text":"Hola Eris, habla algo"}'
+  grep -E "DEBUG-AUDIO|response.data|pacat|TTS.*fall" eris.log | tail -10
+  ```
+- El audio sale de `response.data` (paquetes de 1920 bytes con `tts_backend: "gemini"`). Si ves `response.data recibido` pero no audio, el problema es `sounddevice`/`pacat`.
+- Para probar TTS local aislado: `.venv-linux/bin/python -c "from core.tts_engine import synthesize; import asyncio; pcm=asyncio.run(synthesize('Hola', backend='kokoro')); print(len(pcm) if pcm else 'empty')" `
 
 ## Avatar VRM 3D (flotante, Eris.vrm)
 
