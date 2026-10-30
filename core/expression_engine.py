@@ -248,21 +248,29 @@ def get_face_expression() -> tuple[str, str]:
     perfil = get_profile()
     emo = perfil["emotion"]
     cara = {
-        "alegria": "happy", "entusiasmo": "grinning", "orgullo": "grinning",
+        "alegria": "happy", "entusiasmo": "grinning", "orgullo": "cool",
         "curiosidad": "pondering", "tranquilidad": "rest", "amor": "in_love",
         "gratitud": "blush_smile", "apoyo": "hug", "aburrimiento": "hmm",
         "cansancio": "sleepy", "tristeza": "pouting", "soledad": "pouting",
         "nerviosismo": "wry", "amor_desde_el_pasado": "smile_tear",
-         "escucha": "listening", "pensando": "pondering", "exito": "success",
-        "cariño": "affection", "orgullo": "cool",
+        "escucha": "listening", "pensando": "pondering", "exito": "success",
+        "cariño": "affection", "feliz": "happy", "risa": "grinning",
+        "risa_de_ojos": "squint", "complicidad": "wink", "seguro": "cool",
+        "oops": "surprised", "verguenza": "embarrassed", "risa_apenada": "awkward_laugh",
+        "sorpresa": "astonished", "shock": "shocked", "enfado": "angry",
+        "triste": "pouting", "distraido": "focus",
     }.get(emo, "neutral")
     colores = {
-        "alegria": "#ffd54f", "entusiasmo": "#ff7043", "orgullo": "#b39ddb",
+        "alegria": "#ffd54f", "entusiasmo": "#ff7043", "orgullo": "#2979ff",
         "curiosidad": "#4dd0e1", "tranquilidad": "#81c784", "amor": "#f48fb1",
         "gratitud": "#ffb74d", "aburrimiento": "#90a4ae", "cansancio": "#ce93d8",
         "tristeza": "#5c6bc0", "soledad": "#3f51b5", "nerviosismo": "#ffcc80",
         "amor_desde_el_pasado": "#f8bbd0", "exito": "#8bc34a",
-        "cariño": "#f8bbd0", "orgullo": "#2979ff",
+        "cariño": "#f8bbd0", "feliz": "#ffd54f", "risa": "#ffd54f",
+        "risa_de_ojos": "#fff176", "complicidad": "#ce93d8", "seguro": "#2979ff",
+        "oops": "#ffa726", "verguenza": "#f48fb1", "risa_apenada": "#ce93d8",
+        "sorpresa": "#ff7043", "shock": "#ef5350", "enfado": "#f44336",
+        "triste": "#5c6bc0", "distraido": "#90a4ae",
     }
     return cara, colores.get(emo, "#81d4fa")
 
