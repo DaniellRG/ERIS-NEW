@@ -3725,10 +3725,38 @@ class _MarshalBridge(QObject):
             print(f"[MarshalBridge] error: {e}", flush=True)
 
 
+class _NullWindow:
+    """Stub window para server mode: accepta todos los llamados sin error."""
+    _muted = False
+    on_text_command = None
+    on_stop_command = None
+    on_config_saved = None
+    on_mute_command = None
+
+    def set_state(self, *a, **kw): pass
+    def write_log(self, *a, **kw): pass
+    def _append_thought(self, *a, **kw): pass
+    def show_plan(self, *a, **kw): pass
+    def _ask_dialog(self, *a, **kw): return ""
+    def set_audio_level(self, *a, **kw): pass
+    def set_orb_audio_level(self, *a, **kw): pass
+    def set_emotional_color(self, *a, **kw): pass
+    def set_face_speaking(self, *a, **kw): pass
+    def set_music(self, *a, **kw): pass
+    def express_emotion(self, *a, **kw): pass
+    def show_expression(self, *a, **kw): pass
+    def visual_mode(self): return "orb"
+    def show_main(self): pass
+    def stream_eris_chunk(self, *a, **kw): pass
+    def clear_eris_response(self): pass
+    def _toggle_terminal(self): pass
+    def raise_(self): pass
+
+
 class ErisUI:
     """Public API for main.py integration."""
 
-    def __init__(self, face_png: str = ""):
+    def __init__(self, face_png: str = "", server_mode: bool = False):
         # QtWebEngineWidgets exige importarse (o setear AA_ShareOpenGLContexts)
         # ANTES de crear la primera QApplication; si no, el import lazy dentro de
         # VrmAvatar lanza ImportError. Solo se carga si existe el modelo 3D.
@@ -3771,29 +3799,42 @@ class ErisUI:
         self._float_orb = FloatingOrb()
         self._vrm_avatar = VrmAvatar() if self._vrm_ok else None
         self._last_vol = 0.0
-        try:
-            self._win = MainWindow(float_orb=self._float_orb, vrm_avatar=self._vrm_avatar)
-        except Exception as _mw_err:
-            self._splash.close()
-            from core.platform import show_messagebox
-            show_messagebox(
-                "ERIS — Error de interfaz",
-                f"No se pudo crear la ventana principal.\n\n{_mw_err}\n\nRevisá drivers de video o recursos faltantes.",
-                "error",
-            )
-            raise
+        if server_mode:
+            # Headless: use null window stub so ErisLive/Eris motor works without GUI
+            self._win = _NullWindow()
+            print("[ERIS-UI] Server mode: MainWindow omitted (headless)")
+        else:
+            try:
+                self._win = MainWindow(float_orb=self._float_orb, vrm_avatar=self._vrm_avatar)
+            except Exception as _mw_err:
+                self._splash.close()
+                from core.platform import show_messagebox
+                show_messagebox(
+                    "ERIS — Error de interfaz",
+                    f"No se pudo crear la ventana principal.\n\n{_mw_err}\n\nRevisá drivers de video o recursos faltantes.",
+                    "error",
+                )
+                raise
         self._float_orb.show_main_callback = self._orb_clicked
         if self._vrm_avatar:
             self._vrm_avatar.show_main_callback = self._orb_clicked
         self._app.processEvents()
-        self._splash.finish(self._win)
-        self._win.show()
-        self._win.raise_()
-        self._win.activateWindow()
+        if not server_mode:
+            self._splash.finish(self._win)
+            self._win.show()
+            self._win.raise_()
+            self._win.activateWindow()
 
         class _RootShim:
             def mainloop(self):
-                QApplication.instance().exec()
+                if server_mode:
+                    # Headless: process events in a polling loop
+                    import time
+                    while True:
+                        QApplication.instance().processEvents()
+                        time.sleep(0.05)
+                else:
+                    QApplication.instance().exec()
             def protocol(self, *a): pass
         self.root = _RootShim()
         self._ready = False
