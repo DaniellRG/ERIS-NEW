@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones temporales, logísticas y de seguridad [Riesgo: Falta de información crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar las fases operativas secuenciales utilizando el generador de diagramas de flujo.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsables y herramientas específicas para cada fase del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer indicadores de rendimiento (KPIs) y puntos de control [Riesgo: Desviación de objetivos].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Simular escenarios de contingencia y planes de mitigación con el simulador de crisis ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final y distribuirlo a los mandos operativos mediante el canal seguro.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793312781.2745934
+}

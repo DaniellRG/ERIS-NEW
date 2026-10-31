@@ -1,0 +1,41 @@
+{
+  "objective": "Recuperar proceso brainstorming de la sesión anterior y materializarlo en tareas para continuar el desarrollo.",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Extraer el resumen y las ideas clave de la sesión anterior con el historial de chat.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Filtrar y priorizar las propuestas del brainstorming según viabilidad e impacto con la matriz de decisión.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Traducir las ideas seleccionadas en épicas e historias de usuario con Jira.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Desglosar las historias de usuario en tareas técnicas concretas con la herramienta de gestión de proyectos.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar dependencias, estimaciones de tiempo y responsables para cada tarea en el tablero Kanban.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Programar la sesión de sincronización para presentar el plan de desarrollo al equipo con Google Calendar.",
+      "status": "pending"
+    }
+  ],
+  "status": "proyectado",
+  "created": 1793294690.5435567,
+  "delegated": {
+    "CreativeWriter": 3,
+    "MissionPlanner": 1
+  }
+}

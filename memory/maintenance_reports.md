@@ -47,3 +47,10 @@ Mem:            12Gi       6.0Gi       2.8Gi        74Mi       4.2Gi       6.7Gi
 Activa desde: up 2 hours, 9 minutes
 CPU: 12 núcleos
 Tareas de mantenimiento: 4 activas
+
+## 2026-10-29 12:25
+Disco: 162G usados de 509G (31%), libre 346G
+Mem:            12Gi       8.0Gi       1.1Gi        80Mi       4.1Gi       4.7Gi
+Activa desde: up 4 hours, 38 minutes
+CPU: 12 núcleos
+Tareas de mantenimiento: 4 activas

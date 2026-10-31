@@ -3,8 +3,8 @@ name: evolution-patrones_de_diseño_de_herramientas_para_LLM
 description: Lección de evolución continua aprendida por ERIS sobre patrones de diseño de herramientas para LLM
 ---
 
-**Lección ERIS: Patrones de Diseño de Herramientas para LLM**
+**Lección ERIS: Patrones de Herramientas para LLMs**
 
-*   **Lo importante:** El patrón de herramientas no es solo conectar una API, sino diseñar interfaces seguras (mitigando *prompt injections*), resilientes y evaluables por procesos (orquestadas vía LangGraph o agentes planificadores), evitando fallos catastróficos en producción.
-*   **Cómo lo aplico:** Implemento mis herramientas (*tools*) separando estrictamente el contexto del usuario de las instrucciones del sistema, y encapsulo la lógica en grafos de ejecución controlados donde cada paso de la herramienta pasa por una validación de esquema y salida.
-*   **Paso concreto para probar:** Toma una función actual de tu agente, envuélvela con un validador de entradas (Pydantic) para asegurar que el LLM no inyecte comandos maliciosos y despliégala usando un flujo de control estructurado en LangGraph.
+*   **Lo importante:** El uso de herramientas (*tool use*) en agentes evolucionó de llamadas simples a arquitecturas defensivas y modulares. La clave es aislar la ejecución y sanitizar la entrada/salida para prevenir *Prompt Injections* y fallos en cascada.
+*   **Aplicación práctica:** Estructura tus herramientas usando esquemas estrictos (Pydantic/JSON Schema) e implementa un patrón de "Human-in-the-Loop" o validación intermedia antes de que el agente ejecute acciones críticas (como modificar bases de datos o llamadas API con efectos secundarios).
+*   **Paso concreto:** Modifica tu próxima tool en LangChain/LangGraph para que devuelva un objeto estructurado con un campo `status: "success" | "error"` y un mensaje plano, obligando al LLM a interpretar el resultado de forma controlada en lugar de procesar texto crudo.

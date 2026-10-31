@@ -1,6 +1,6 @@
 # 🌳 Tabla Maestra de Crecimiento — ERIS
 
-**2026-10-24T09:38:56** · Eris crece en 12 dominios.
+**2026-10-30T22:31:46** · Eris crece en 12 dominios.
 
 | Dominio | Nivel | Logros | Con evidencia | Último logro | Ver |
 |---|---|---|---|---|---|
@@ -43,7 +43,7 @@ _Programar, arreglar errores, tool que crea, refactor_
 
 _Linux, terminal, procesos, red, automatizar el PC_
 
-**Nivel:** 4/8 · **Logros:** 5 · **Actualizado:** 2026-10-24T09:38:56
+**Nivel:** 4/8 · **Logros:** 5 · **Actualizado:** 2026-10-30T22:31:46
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -57,7 +57,7 @@ _Linux, terminal, procesos, red, automatizar el PC_
 
 _Crear, ordenar, buscar y transformar archivos/documentos_
 
-**Nivel:** 2/8 · **Logros:** 1 · **Actualizado:** 2026-10-24T09:38:56
+**Nivel:** 2/8 · **Logros:** 1 · **Actualizado:** 2026-10-30T22:31:46
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -87,7 +87,7 @@ _Buscar, investigar y traer info del mundo_
 
 _Estudiar sola, cuadernos, temas propios, auto-mejora_
 
-**Nivel:** 2/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
+**Nivel:** 2/8 · **Logros:** 2 · **Actualizado:** 2026-10-30T22:31:46
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -98,7 +98,7 @@ _Estudiar sola, cuadernos, temas propios, auto-mejora_
 
 _Rutinas, cron, planes, agenda, follow-up_
 
-**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
+**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-30T22:31:46
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|
@@ -139,7 +139,7 @@ _Seguridad ofensiva en el lab aislado (VirtualBox)_
 
 _Crear sus PROPIAS capacidades (librerías, tools, skills)_
 
-**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-24T09:38:56
+**Nivel:** 3/8 · **Logros:** 2 · **Actualizado:** 2026-10-30T22:31:46
 
 | Fecha | Nivel | Logro | Evidencia | Fuente | ✓ |
 |---|---|---|---|---|---|

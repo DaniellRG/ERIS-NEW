@@ -7,7 +7,7 @@ from actions.ide_integration import (
     edit_line, edit_lines, ide_integration
 )
 
-FILE = r"C:\Users\danie\source\repos\Ahorcado\Ahorcado\TestErrores.cs"
+FILE = r"/home/soul/ERIS-NEW/TestErrores.cs"
 
 print("=" * 60)
 print("TEST COMPLETO DE IDE_INTEGRATION")

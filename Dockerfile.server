@@ -2,30 +2,35 @@ FROM python:3.14-slim
 
 WORKDIR /opt/eris
 
-# System deps for audio + GUI (headless)
+# System deps: audio, GUI (headless), build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     portaudio19-dev \
     pulseaudio-utils \
     alsa-utils \
     libglib2.0-0 \
+    libgl1 \
+    libegl1 \
+    libxkbcommon0 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Python deps (copy from linux requirements)
+# Python deps
 COPY requirements-linux.txt .
-RUN pip install --no-cache-dir -r requirements-linux.txt
+RUN pip install --no-cache-dir -r requirements-linux.txt && \
+    pip install --no-cache-dir websockets
 
-# Copy Eris source
+# Copy source
 COPY . .
 
-# Expose all Eris ports
-EXPOSE 8080 8765 8888
+# Server mode env vars
+ENV ERIS_ROLE=server
+ENV QT_QPA_PLATFORM=offscreen
+ENV PYTHONUNBUFFERED=1
 
-# Health check
+# Ports: API(8080) Health(8765) Dashboard(8888) WS(8766)
+EXPOSE 8080 8765 8766 8888
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8765/ || exit 1
 
-# Auto-fix config for server mode
-ENV ERIS_ROLE=server
-ENV QT_QPA_PLATFORM=offscreen
-
-CMD ["python", "main.py"]
+CMD ["python", "main_server.py"]

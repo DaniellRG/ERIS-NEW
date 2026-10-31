@@ -11,7 +11,12 @@ import threading
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-import platform as _plat
+
+try:
+    import sys_platform as _plat
+except ImportError:
+    import platform as _plat
+
 _IS_WIN = _plat.system() == "Windows"
 if not _IS_WIN:
     class _Noop:

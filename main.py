@@ -12,6 +12,21 @@ from pathlib import Path
 from core.gpu_config import configure_gpu
 configure_gpu()
 
+from core.hardware_profiler import HardwareProfiler, build_hardware_context
+HW_PROFILE = HardwareProfiler.inspect_system()
+
+_gpu_info = HW_PROFILE["gpu"]
+if not _gpu_info["has_dedicated"] or _gpu_info["brand"] != "NVIDIA":
+    os.environ["LIBGL_ALWAYS_SOFTWARE"] = "1"
+    os.environ["MESA_NO_ERROR"] = "1"
+    os.environ["QT_XCB_GL_INTEGRATION"] = "none"
+
+print(f"[ERIS Hardware Awareness] Tier: {HW_PROFILE['performance_profile']['tier']}")
+print(f"[ERIS Hardware Awareness] GPU: {_gpu_info['brand']} ({_gpu_info['model']})")
+print(f"[ERIS Hardware Awareness] RAM: {HW_PROFILE['ram']['total_gb']} GB | CPU Cores: {HW_PROFILE['cpu']['cores_logical']}")
+
+HW_CONTEXT_TEXT = build_hardware_context(HW_PROFILE)
+
 import asyncio
 from beta_config import is_pro_tool, check_daily_limit, increment_calls, pro_tool_message, daily_limit_message
 import re
@@ -101,6 +116,14 @@ try:
     from actions.mobile_server import start as _mobile_start, broadcast as _mobile_broadcast
 except Exception:
     _mobile_start = None; _mobile_broadcast = None
+try:
+    from actions.api_server import api_server as _api_server
+except Exception:
+    _api_server = None
+try:
+    from actions.dashboard_web import dashboard_web as _dashboard_web
+except Exception:
+    _dashboard_web = None
 try:
     from actions.ollama_provider import is_available as _ollama_check, chat as _ollama_chat
 except Exception:
@@ -1076,6 +1099,22 @@ class ErisLive:
                 print(f"[MAIN] Endpoint de salud: {_health_url}")
             except Exception as _me:
                 print(f"[MAIN] Error iniciando endpoint de salud: {_me}")
+
+        # API REST server (puerto 8080) — accesible externamente en 0.0.0.0
+        if _api_server:
+            try:
+                _api_server({"action": "start", "host": "0.0.0.0", "port": 8080})
+                print("[MAIN] API REST server iniciado en http://0.0.0.0:8080")
+            except Exception as _ae:
+                print(f"[MAIN] Error iniciando API REST: {_ae}")
+
+        # Web dashboard (puerto 8888) — frontend con chat y quick actions
+        if _dashboard_web:
+            try:
+                _dashboard_web({"action": "start", "port": 8888})
+                print("[MAIN] Web dashboard iniciado en http://0.0.0.0:8888")
+            except Exception as _de:
+                print(f"[MAIN] Error iniciando web dashboard: {_de}")
 
     # ── Online/Offline mode switching ────────────────────────────────────
     def _on_mode_change(self, is_online: bool):
@@ -3299,6 +3338,7 @@ class ErisLive:
         # (GUI/CLI/subagentes comparten la misma construcción). Acá solo queda
         # lo específico de Gemini Live: voz, tools y LiveConnectConfig.
         from core.context_builder import build_system_prompt
+        self._hw_context = HW_CONTEXT_TEXT
         system_text = build_system_prompt(self)
         # Build SpeechConfig — try to set speaking rate for faster delivery
         _voice_name = get_eris_voice()
@@ -3775,9 +3815,11 @@ class ErisLive:
 
                     if response.data:
                         if not self._stop_requested.is_set():
+                            print(f"[DEBUG-AUDIO] response.data recibido: {len(response.data)} bytes, backend={_cached_tts_backend}")
                             if _cached_tts_backend not in ("elevenlabs", "fish", "kokoro", "pykokoro", "edge"):
                                 self.audio_in_queue.put_nowait(response.data)
                                 self._last_audio_ts = time.time()
+                                print(f"[DEBUG-AUDIO] ✅ Encolado en audio_in_queue (size={self.audio_in_queue.qsize()})")
                             # When a TTS backend, skip Gemini audio; TTS engine will be used
 
                     if response.server_content:
@@ -4115,7 +4157,8 @@ class ErisLive:
                                                 async def _synth(_s, _tb=_tb):
                                                     try:
                                                         return await synthesize(_s.strip(), backend=_tb)
-                                                    except Exception:
+                                                    except Exception as _tts_error:
+                                                        print(f"[ERIS] TTS {_tb} falló: {type(_tts_error).__name__}: {_tts_error}")
                                                         return None
                                                 _pend = _k_as.create_task(_synth(_chunks[0]))
                                                 for _j, _s2 in enumerate(_chunks[1:], start=1):
@@ -4294,7 +4337,7 @@ class ErisLive:
                             _pa_proc.stdin.write(data)
                             _pa_proc.stdin.flush()
                         except (BrokenPipeError, OSError):
-                            pass
+                            print(f"[ERIS] ⚠️ pacat dejó de aceptar audio (exit={_pa_proc.poll()})")
                 finally:
                     _pa_lock.release()
             except Exception:
@@ -4329,7 +4372,7 @@ class ErisLive:
             _pa_proc = _sp.Popen(
                 ["pacat", "--rate=24000",
                  "--format=S16LE", "--channels=1"],
-                stdin=_sp.PIPE, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL,
+                stdin=_sp.PIPE, stdout=_sp.DEVNULL,
             )
             print("[ERIS] 🎧 Audio: pacat iniciado (PulseAudio)")
         except Exception as e:

@@ -52,5 +52,9 @@ PARENT_DIR="$(dirname "$REPO_DIR")"
 export ERIS_OBSIDIAN_VAULT="${ERIS_OBSIDIAN_VAULT:-$PARENT_DIR/Eris_NEW/BaseDatosObsidian/BaseObsiEris}"
 export PYTHONIOENCODING="utf-8"
 
+export LIBGL_ALWAYS_SOFTWARE=1
+export MESA_NO_ERROR=1
+export QT_XCB_GL_INTEGRATION=none
+
 echo "==> Lanzando ERIS en Linux..."
 python main.py
