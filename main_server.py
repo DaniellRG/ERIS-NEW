@@ -10,7 +10,7 @@ Usage:
   python main_server.py      # server mode (headless)
 """
 
-import sys, os, asyncio, threading, signal
+import sys, os, asyncio, threading, signal, time, json
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 # ── Hardware profiling (antes de QApplication) ──
@@ -72,11 +72,12 @@ def main():
     from actions.api_server import api_server
     from actions.mobile_server import start as mobile_start
 
-    # API REST server (port 8080)
+    # API REST server (port 8081 on server to avoid ZimaOS conflict on 8080)
     if api_server:
+        server_port = int(os.environ.get("ERIS_API_PORT", "8081"))
         try:
-            api_server({"action": "start", "host": "0.0.0.0", "port": 8080})
-            print("[MAIN] API REST server iniciado en http://0.0.0.0:8080")
+            api_server({"action": "start", "host": "0.0.0.0", "port": server_port})
+            print(f"[MAIN] API REST server iniciado en http://0.0.0.0:{server_port}")
         except Exception as e:
             print(f"[MAIN] API server error: {e}")
 
@@ -152,50 +153,61 @@ def main():
             _ws_clients.discard(ws)
 
     # Arranque del loop principal de Eris + WebSocket server
-    def runner():
-        global _ws_loop
-        _ws_loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(_ws_loop)
+    def ws_server_runner():
+        """WebSocket server en thread separado con su propio loop."""
+        import asyncio as _aio
+        import websockets as _ws_lib
 
-        # Start WebSocket server
-        ws_server = None
-        ws_task = None
+        _loop = _aio.new_event_loop()
+        _aio.set_event_loop(_loop)
+
+        # websockets 16+/17+ uses async context manager pattern
+        # (serve() returns a context manager; server doesn't bind until entered)
+        async def _ws_serve():
+            async with _ws_lib.serve(
+                handle_client, "0.0.0.0", 8766,
+                ping_interval=20, ping_timeout=10
+            ):
+                print("[MAIN-SERVER] WebSocket server en :8766 (ws://0.0.0.0:8766)")
+                await _aio.Future()  # run forever
+
         try:
-            import websockets
-            ws_server = _ws_loop.run_until_complete(
-                websockets.serve(handle_client, "0.0.0.0", 8766,
-                                 ping_interval=20, ping_timeout=10)
-            )
-            print("[MAIN-SERVER] WebSocket server en :8766 (ws://0.0.0.0:8766)")
+            _loop.run_until_complete(_ws_serve())
         except ImportError:
             print("[MAIN-SERVER] websockets not installed — WS server disabled")
         except Exception as e:
             print(f"[MAIN-SERVER] WS server error: {e}")
+        finally:
+            _loop.close()
 
-        # Start ErisLive motor
-        ui.wait_for_api_key()
-        eris = ErisLive(ui)
-        globals()["_current_eris"] = eris
+    # Start WS server in background thread FIRST
+    ws_thread = threading.Thread(target=ws_server_runner, daemon=True, name="ws-server")
+    ws_thread.start()
+    time.sleep(1.5)  # Give WS server time to start
+
+    # Start ErisLive in main process (own event loop)
+    def runner():
+        def _run():
+            pass
+
+        async def _start_eris():
+            ui.wait_for_api_key()
+            eris = ErisLive(ui)
+            globals()["_current_eris"] = eris
+            try:
+                await eris.run()
+            except KeyboardInterrupt:
+                print("\n[MAIN-SERVER] Apagando...")
+            except Exception as e:
+                print(f"[MAIN-SERVER] ErisLive error: {e}")
+            finally:
+                print("[MAIN-SERVER] ErisLive shutdown complete.")
 
         try:
-            # Run both Eris motor and WS server concurrently
-            if ws_server:
-                _ws_loop.run_until_complete(asyncio.gather(
-                    eris.run(),
-                    ws_server.serve_forever(),
-                ))
-            else:
-                _ws_loop.run_until_complete(eris.run())
+            asyncio.run(_start_eris())
         except KeyboardInterrupt:
             print("\n[MAIN-SERVER] Apagando...")
         finally:
-            try:
-                if ws_server:
-                    ws_server.close()
-                    _ws_loop.run_until_complete(ws_server.wait_closed())
-            except Exception:
-                pass
-            _ws_loop.close()
             print("[MAIN-SERVER] Shutdown complete.")
 
     t = threading.Thread(target=runner, daemon=True)
@@ -206,7 +218,6 @@ def main():
     try:
         while t.is_alive():
             app.processEvents()
-            import time
             time.sleep(0.01)
     except KeyboardInterrupt:
         print("\n[MAIN-SERVER] Shutdown signal received.")

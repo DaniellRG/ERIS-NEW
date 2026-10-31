@@ -12,7 +12,7 @@ Usage:
   python eris_agent.py --host 100.69.172.124  (auto-detect device-id)
 """
 
-import sys, os, argparse, json, time, socket, threading
+import sys, os, argparse, json, time, socket, threading, asyncio
 import struct, subprocess
 
 # ── Optional deps ──
@@ -115,7 +115,11 @@ class ErisAgent:
                 # Convert float32 to S16LE PCM
                 pcm = (indata * 32767).astype('<i2').tobytes()
                 # Send via WebSocket
-                if self.ws and self.ws.open:
+                if self.ws:
+                    try:
+                        self.ws.send(pcm, binary=True)
+                    except Exception:
+                        pass
                     try:
                         self.ws.send(pcm, binary=True)
                     except Exception:
