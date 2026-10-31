@@ -133,7 +133,9 @@ def main():
                     except json.JSONDecodeError:
                         pass
 
-        except websockets.exceptions.ConnectionClosed:
+        except Exception:
+            # Catch-all for ConnectionClosed and other WS errors
+            # (websockets.exceptions.ConnectionClosed varies by version)
             pass
         finally:
             _ws_clients.discard(ws)
