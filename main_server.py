@@ -33,11 +33,18 @@ def main():
 
     # 2) Timezone
     try:
-        from actions.api_server import load_tz
-        from pathlib import Path
-        load_tz(Path(__file__).resolve().parent / "config" / "api_server.json")
-    except Exception as e:
-        print(f"[MAIN-SERVER] tz skip: {e}")
+        from core.timezome import load_tz
+    except ImportError:
+        try:
+            from core.timezone import load_tz
+        except ImportError:
+            load_tz = None
+    if load_tz:
+        try:
+            from pathlib import Path
+            load_tz(Path(__file__).resolve().parent / "config" / "api_server.json")
+        except Exception as e:
+            print(f"[MAIN-SERVER] tz skip: {e}")
 
     # 3) Console log
     try:
@@ -75,7 +82,7 @@ def main():
 
     # Mobile server (port 8765, chat + health)
     try:
-        mobile_start(host="0.0.0.0", port=8765)
+        mobile_start(port=8765)
         print("[MAIN] Health/Chat endpoint in http://0.0.0.0:8765")
     except Exception as e:
         print(f"[MAIN] Mobile server error: {e}")
@@ -87,16 +94,108 @@ def main():
     print("[MAIN-SERVER] Creating ErisUI (headless)...")
     ui = ErisUI("face.png", server_mode=True)
 
-    # Arrancar el loop principal sin app.exec() — usa QTimer para no bloquear
+    # WebSocket server for remote agent clients
+    _ws_clients = set()
+    _ws_loop = None
+
+    async def handle_client(ws, path=None):
+        """Handle WebSocket connection from eris_agent.py clients."""
+        _ws_clients.add(ws)
+        device_id = path or "unknown"
+        print(f"[WS] Agent connected: {device_id} (total: {len(_ws_clients)})")
+        try:
+            async for msg in ws:
+                if isinstance(msg, bytes):
+                    # Audio data from client mic → forward to ErisLive
+                    _current_eris = globals().get("_current_eris")
+                    if _current_eris:
+                        try:
+                            _current_eris._recv_mic_chunk(msg)
+                        except Exception:
+                            pass
+
+                elif isinstance(msg, str):
+                    try:
+                        data = json.loads(msg)
+                        msg_type = data.get("type", "")
+                        if msg_type == "register":
+                            dev_id = data.get("device_id", "unknown")
+                            print(f"[WS] Registered: {dev_id} (ws={ws.remote_address})")
+                        elif msg_type == "command_result":
+                            # Result from agent execution
+                            _current_eris = globals().get("_current_eris")
+                            if _current_eris:
+                                try:
+                                    _current_eris._handle_agent_result(data)
+                                except Exception:
+                                    pass
+                    except json.JSONDecodeError:
+                        pass
+
+        except websockets.exceptions.ConnectionClosed:
+            pass
+        finally:
+            _ws_clients.discard(ws)
+            print(f"[WS] Agent disconnected (total: {len(_ws_clients)})")
+
+    async def ws_broadcast_audio(data: bytes):
+        """Broadcast audio PCM to all connected agents."""
+        if not _ws_clients:
+            return
+        dead = set()
+        for ws in _ws_clients:
+            try:
+                await ws.send(data)
+            except Exception:
+                dead.add(ws)
+        for ws in dead:
+            _ws_clients.discard(ws)
+
+    # Arranque del loop principal de Eris + WebSocket server
     def runner():
+        global _ws_loop
+        _ws_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(_ws_loop)
+
+        # Start WebSocket server
+        ws_server = None
+        ws_task = None
+        try:
+            import websockets
+            ws_server = _ws_loop.run_until_complete(
+                websockets.serve(handle_client, "0.0.0.0", 8766,
+                                 ping_interval=20, ping_timeout=10)
+            )
+            print("[MAIN-SERVER] WebSocket server en :8766 (ws://0.0.0.0:8766)")
+        except ImportError:
+            print("[MAIN-SERVER] websockets not installed — WS server disabled")
+        except Exception as e:
+            print(f"[MAIN-SERVER] WS server error: {e}")
+
+        # Start ErisLive motor
         ui.wait_for_api_key()
         eris = ErisLive(ui)
         globals()["_current_eris"] = eris
+
         try:
-            asyncio.run(eris.run())
+            # Run both Eris motor and WS server concurrently
+            if ws_server:
+                _ws_loop.run_until_complete(asyncio.gather(
+                    eris.run(),
+                    ws_server.serve_forever(),
+                ))
+            else:
+                _ws_loop.run_until_complete(eris.run())
         except KeyboardInterrupt:
             print("\n[MAIN-SERVER] Apagando...")
         finally:
+            try:
+                if ws_server:
+                    ws_server.close()
+                    _ws_loop.run_until_complete(ws_server.wait_closed())
+            except Exception:
+                pass
+            _ws_loop.close()
             print("[MAIN-SERVER] Shutdown complete.")
 
     t = threading.Thread(target=runner, daemon=True)
