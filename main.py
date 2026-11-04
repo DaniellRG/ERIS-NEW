@@ -3826,11 +3826,10 @@ class ErisLive:
 
                     if response.data:
                         if not self._stop_requested.is_set():
-                            print(f"[DEBUG-AUDIO] response.data recibido: {len(response.data)} bytes, backend={_cached_tts_backend}")
                             if _cached_tts_backend not in ("elevenlabs", "fish", "kokoro", "pykokoro", "edge"):
                                 self.audio_in_queue.put_nowait(response.data)
                                 self._last_audio_ts = time.time()
-                                print(f"[DEBUG-AUDIO] ✅ Encolado en audio_in_queue (size={self.audio_in_queue.qsize()})")
+
                             # When a TTS backend, skip Gemini audio; TTS engine will be used
 
                     if response.server_content:

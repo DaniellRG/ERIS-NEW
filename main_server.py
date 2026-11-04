@@ -146,9 +146,7 @@ def main():
     async def ws_broadcast_audio(data: bytes):
         """Broadcast audio PCM to all connected agents."""
         if not _ws_clients:
-            print(f'[WS-BCAST] no clients ({len(_ws_clients)})', flush=True)
             return
-        print(f'[WS-BCAST] broadcasting {len(data)} bytes to {len(_ws_clients)} clients', flush=True)
         dead = set()
         for ws in _ws_clients:
             try:
@@ -168,7 +166,6 @@ def main():
 
     import main as _main_mod
     _main_mod._ws_broadcast_audio = _broadcast_audio_sync
-    print("[MAIN-SERVER] _ws_broadcast_audio wired up", flush=True)
 
     # Arranque del loop principal de Eris + WebSocket server
     def ws_server_runner():
