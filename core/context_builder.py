@@ -81,6 +81,7 @@ def build_system_prompt(host=None) -> str:
     Es el cuerpo extraído de `main.py:_build_config`. Devuelve el texto listo
     para `system_instruction`. Nunca lanza.
     """
+
     from core.time_utils import get_time_context
     from core.prompt_loader import load_system_prompt
     from memory.memory_manager import load_memory, format_memory_for_prompt
@@ -366,6 +367,7 @@ def build_system_prompt(host=None) -> str:
             parts.append(_autoimg)
     except Exception:
         pass
+
     try:
         from core.intereses import inyect_intereses
         _interes = inyect_intereses()
@@ -373,6 +375,7 @@ def build_system_prompt(host=None) -> str:
             parts.append(_interes)
     except Exception:
         pass
+
     try:
         from core.ambiente import inyect_ambiente
         _amb = inyect_ambiente()
@@ -380,6 +383,7 @@ def build_system_prompt(host=None) -> str:
             parts.append(_amb)
     except Exception:
         pass
+
     try:
         from core.suenos import ilustrar_si_hay_sueno_nuevo, inyect_suenos
         try:
@@ -391,6 +395,7 @@ def build_system_prompt(host=None) -> str:
             parts.append(_sueno)
     except Exception:
         pass
+
     try:
         from core.expression_engine import get_voz_propia
         _vozb = get_voz_propia()
@@ -452,6 +457,7 @@ def build_system_prompt(host=None) -> str:
             parts.append(_gustos)
     except Exception:
         pass
+
 
     if memory_context:
         parts.append(memory_context)
@@ -563,7 +569,6 @@ def build_system_prompt(host=None) -> str:
             parts.append(_tuyo)
     except Exception:
         pass
-    parts.append(sys_prompt)
 
     # ── RECUERDOS RELEVANTES: búsqueda semántica en la memoria total
     #    (vault + memory + knowledge) sobre lo último que dijo el usuario.

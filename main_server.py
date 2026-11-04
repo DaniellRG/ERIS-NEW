@@ -98,6 +98,8 @@ def main():
     # WebSocket server for remote agent clients
     _ws_clients = set()
     _ws_loop = None
+    import queue as _q_mod
+    _audio_queue = _q_mod.Queue()
 
     async def handle_client(ws, path=None):
         """Handle WebSocket connection from eris_agent.py clients."""
@@ -144,7 +146,9 @@ def main():
     async def ws_broadcast_audio(data: bytes):
         """Broadcast audio PCM to all connected agents."""
         if not _ws_clients:
+            print(f'[WS-BCAST] no clients ({len(_ws_clients)})', flush=True)
             return
+        print(f'[WS-BCAST] broadcasting {len(data)} bytes to {len(_ws_clients)} clients', flush=True)
         dead = set()
         for ws in _ws_clients:
             try:
@@ -154,14 +158,28 @@ def main():
         for ws in dead:
             _ws_clients.discard(ws)
 
+    # Wire up broadcast function for main.py (server mode)
+    def _broadcast_audio_sync(data: bytes):
+        """Synchronous wrapper for ws_broadcast_audio (called from main.py)."""
+        try:
+            _audio_queue.put_nowait(data)
+        except Exception:
+            pass
+
+    import main as _main_mod
+    _main_mod._ws_broadcast_audio = _broadcast_audio_sync
+    print("[MAIN-SERVER] _ws_broadcast_audio wired up", flush=True)
+
     # Arranque del loop principal de Eris + WebSocket server
     def ws_server_runner():
         """WebSocket server en thread separado con su propio loop."""
         import asyncio as _aio
         import websockets as _ws_lib
+        global _ws_loop
 
         _loop = _aio.new_event_loop()
         _aio.set_event_loop(_loop)
+        _ws_loop = _loop
 
         # websockets 16+/17+ uses async context manager pattern
         # (serve() returns a context manager; server doesn't bind until entered)
@@ -171,6 +189,23 @@ def main():
                 ping_interval=20, ping_timeout=10
             ):
                 print("[MAIN-SERVER] WebSocket server en :8766 (ws://0.0.0.0:8766)")
+                async def _audio_broadcaster():
+                    while True:
+                        try:
+                            data = _audio_queue.get_nowait()
+                            if data is not None and _ws_clients:
+                                dead = set()
+                                for ws in _ws_clients:
+                                    try:
+                                        await ws.send(data)
+                                    except Exception:
+                                        dead.add(ws)
+                                for ws in dead:
+                                    _ws_clients.discard(ws)
+                        except Exception:
+                            pass
+                        await _aio.sleep(0.005)
+                _aio.ensure_future(_audio_broadcaster())
                 await _aio.Future()  # run forever
 
         try:

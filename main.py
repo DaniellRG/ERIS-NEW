@@ -74,7 +74,11 @@ def _warnings_watchdog():
         time.sleep(1.0)
 
 
-import sounddevice as sd
+try:
+    import sounddevice as sd
+except (ImportError, OSError):
+    sd = None
+    print("[AUDIO] sounddevice disabled (no PortAudio): PortAudio library not found")
 from google import genai
 from google.genai import types
 from ui import ErisUI
@@ -156,6 +160,9 @@ try:
         print(f"[ERIS] Estado aprendido corrompido por B11 purgado: {', '.join(_purged)}")
 except Exception:
     pass
+
+# Global WebSocket audio broadcast (set by main_server.py when running in server mode)
+_ws_broadcast_audio = None
 
 from core.audio_config import (
     LIVE_MODEL, CHANNELS, SEND_SAMPLE_RATE, RECEIVE_SAMPLE_RATE,
@@ -3368,8 +3375,8 @@ class ErisLive:
                 automatic_activity_detection=types.AutomaticActivityDetection(
                     start_of_speech_sensitivity="START_SENSITIVITY_HIGH",
                     end_of_speech_sensitivity="END_SENSITIVITY_HIGH",
-                    prefix_padding_ms=100,      # FIX #5: was 40ms, now 100ms (keep initial consonants)
-                    silence_duration_ms=400,    # FIX #5: was 280ms, now 400ms (allow natural pauses)
+                    prefix_padding_ms=100,
+                    silence_duration_ms=400,
                 )
             )
         except Exception:
@@ -3388,6 +3395,7 @@ class ErisLive:
             pass
 
         return types.LiveConnectConfig(**cfg_kwargs)
+
 
 
     async def _execute_tool(self, fc) -> types.FunctionResponse:
@@ -3437,6 +3445,9 @@ class ErisLive:
 
     async def _listen_audio(self):
         print("[ERIS] 🎤 Mic iniciado")
+        if sd is None:
+            print("[ERIS] 🎤 sounddevice no disponible (sin PortAudio) — mic deshabilitado")
+            return
         _ready = getattr(self, '_session_ready', None)
         if _ready is not None:
             try:
@@ -4313,7 +4324,11 @@ class ErisLive:
     samples_played = 0
 
     # sounddevice para salida de audio en Linux (sd.play crashea, sd.RawOutputStream funciona)
-    import sounddevice as sd  # noqa: E402
+    try:
+        import sounddevice as sd  # noqa: E402
+    except (ImportError, OSError):
+        sd = None
+        print("[AUDIO] sounddevice disabled (no PortAudio)")
 
     async def _play_audio(self):
         """Reproduccion de audio usando paplay (PulseAudio)."""
@@ -4380,6 +4395,7 @@ class ErisLive:
             _pa_proc = None
 
         def _write_audio(data):
+
             if _pa_proc is not None:
                 _paplayer_write(data)
                 try:
@@ -4460,6 +4476,12 @@ class ErisLive:
                     _last_ts = _now
 
                 _write_audio(_pcm)
+                # Broadcast audio to connected WebSocket agents (server mode)
+                if _ws_broadcast_audio is not None:
+                    try:
+                        _ws_broadcast_audio(_pcm)
+                    except Exception:
+                        pass
 
                 # Detección de voz: rms del paquete recién jugado
                 try:

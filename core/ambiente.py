@@ -17,7 +17,7 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent.parent
 _MEM = _BASE / "memory"
 _STATE_FILE = _MEM / "ambiente.json"
-_lock = threading.Lock()
+_lock = threading.RLock()
 
 # emoción -> ambiente musical
 AMBIENTES = {
