@@ -1,8 +1,8 @@
-FROM python:3.14-slim
+FROM python:3.12-slim
 
 WORKDIR /opt/eris
 
-# System deps: audio, GUI (headless), build tools
+# System deps: audio, GUI (headless), build tools, ffmpeg
 RUN apt-get update && apt-get install -y --no-install-recommends \
     portaudio19-dev \
     pulseaudio-utils \
@@ -12,12 +12,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libegl1 \
     libxkbcommon0 \
     curl \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # Python deps
 COPY requirements-linux.txt .
 RUN pip install --no-cache-dir -r requirements-linux.txt && \
-    pip install --no-cache-dir websockets
+    pip install --no-cache-dir websockets faster-whisper piper-tts
 
 # Copy source
 COPY . .
@@ -26,11 +27,12 @@ COPY . .
 ENV ERIS_ROLE=server
 ENV QT_QPA_PLATFORM=offscreen
 ENV PYTHONUNBUFFERED=1
+ENV ERIS_API_PORT=8081
 
-# Ports: API(8080) Health(8765) Dashboard(8888) WS(8766)
-EXPOSE 8080 8765 8766 8888
+# Ports: API(8081) Health(8765) WS(8766)
+EXPOSE 8081 8765 8766
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8765/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8765/health || exit 1
 
 CMD ["python", "main_server.py"]
