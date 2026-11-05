@@ -459,6 +459,25 @@ class ToolDispatcher:
                 except Exception as e:
                     return f"Error en call_mode: {e}"
 
+            # ── Pipecat voice pipeline ──
+            elif name == "pipecat_voice":
+                try:
+                    from core.pipecat_pipeline import ErisPipecatPipeline
+                    action = args.get("action", "")
+                    if action == "start":
+                        pipeline = ErisPipecatPipeline(
+                            stt_model=args.get("stt_model", "tiny"),
+                            tts_voice=args.get("tts_voice", "es_ES-sharvard-medium"),
+                            llm_model=args.get("llm_model", "llama3.2"),
+                        )
+                        await pipeline.run()
+                        return "Pipecat pipeline iniciado"
+                    elif action == "stop":
+                        return "Pipecat pipeline detenido"
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en pipecat_voice: {e}"
+
             # ── Special: show_expression (la cara de ERIS) ──
             elif name == "show_expression":
                 result = self._handle_show_expression(args)

@@ -7609,6 +7609,24 @@ TOOL_DECLARATIONS.extend([
     },
 ])
 
+# Pipecat voice pipeline tools
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "pipecat_voice",
+        "description": "Pipeline de voz Pipecat (STT→LLM→TTS) con turn detection y VAD. Acciones: start (iniciar pipeline), stop (detener).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "start, stop"},
+                "stt_model": {"type": "STRING", "description": "Modelo Whisper: tiny, base, small, medium, large-v3"},
+                "tts_voice": {"type": "STRING", "description": "Voz Piper: es_ES-sharvard-medium"},
+                "llm_model": {"type": "STRING", "description": "Modelo LLM: llama3.2, gemma4, etc."},
+            },
+            "required": ["action"],
+        }
+    },
+])
+
 def load_custom_tools(BASE_DIR):
     """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
 

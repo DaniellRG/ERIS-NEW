@@ -553,6 +553,7 @@ _TOOLS = {
     "web_search":            ("actions.web_search", "web_search"),
     "browser_auto":          ("actions.browser_auto", "browser_auto"),
     "browser_unified":       ("actions.browser_unified", "browser_unified"),
+    "pipecat_voice":         ("core.pipecat_pipeline", "ErisPipecatPipeline"),
     "desktop_companion":     ("actions.desktop_companion", "hologram_toggle"),
     "live_reactions":       ("actions.live_reactions", "show_reaction"),
     "call_mode":            ("actions.call_mode", "call_mode_status"),
