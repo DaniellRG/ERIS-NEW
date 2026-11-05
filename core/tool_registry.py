@@ -553,6 +553,8 @@ _TOOLS = {
     "web_search":            ("actions.web_search", "web_search"),
     "browser_auto":          ("actions.browser_auto", "browser_auto"),
     "browser_unified":       ("actions.browser_unified", "browser_unified"),
+    "desktop_companion":     ("actions.desktop_companion", "hologram_toggle"),
+    "stt_transcribe":       ("core.stt_engine", "transcribe_file"),
     "browser_navigate":      ("actions.browser_tools", "browse_url_sync"),
     "browser_search":        ("actions.browser_tools", "search_web_sync"),
     "code_sandbox":          ("core.code_sandbox", "code_sandbox"),

@@ -7538,6 +7538,44 @@ TOOL_DECLARATIONS.extend([
     },
 ])
 
+# Speech-to-Text tools (faster-whisper)
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "stt_transcribe",
+        "description": "Transcribe audio a texto usando Whisper (STT local). Acciones: transcribe (audio bytes), transcribe_file (archivo de audio).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "transcribe, transcribe_file"},
+                "audio_path": {"type": "STRING", "description": "Ruta al archivo de audio a transcribir"},
+                "language": {"type": "STRING", "description": "Idioma (es, en, etc.)"},
+            },
+            "required": ["action"],
+        }
+    },
+])
+
+# Desktop companion tools (inspired by capri-desktop)
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "desktop_companion",
+        "description": "Control de Eris como companion de escritorio. Acciones: hologram (click-through), keep_awake (evitar suspensión), auto_start (inicio automático), draw (dibujar en pantalla), head_pat (caricia), save_file (procesar archivo arrastrado).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "hologram, keep_awake, auto_start, draw, head_pat, save_file"},
+                "enable": {"type": "BOOLEAN", "description": "Activar/desactivar (para hologram, keep_awake, auto_start)"},
+                "text": {"type": "STRING", "description": "Texto a dibujar (para draw)"},
+                "x": {"type": "INTEGER", "description": "Posición X (para draw)"},
+                "y": {"type": "INTEGER", "description": "Posición Y (para draw)"},
+                "color": {"type": "STRING", "description": "Color del texto (para draw)"},
+                "file_path": {"type": "STRING", "description": "Ruta al archivo (para save_file)"},
+            },
+            "required": ["action"],
+        }
+    },
+])
+
 def load_custom_tools(BASE_DIR):
     """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
 

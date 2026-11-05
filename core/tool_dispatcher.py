@@ -393,6 +393,41 @@ class ToolDispatcher:
                 except Exception as e:
                     return f"Error en browser_search: {e}"
 
+            # ── STT (Speech-to-Text via faster-whisper) ──
+            elif name == "stt_transcribe":
+                try:
+                    from core.stt_engine import transcribe_file
+                    action = args.get("action", "transcribe_file")
+                    lang = args.get("language", "es")
+                    if action == "transcribe_file":
+                        path = args.get("audio_path", "")
+                        r = await transcribe_file(path, language=lang)
+                        return r if r else "No se pudo transcribir el audio"
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en stt_transcribe: {e}"
+
+            # ── Desktop companion (inspired by capri-desktop) ──
+            elif name == "desktop_companion":
+                try:
+                    from actions.desktop_companion import hologram_toggle, keep_awake, auto_start, draw_on_screen, head_pat, save_file_drop
+                    action = args.get("action", "")
+                    if action == "hologram":
+                        return hologram_toggle(args.get("enable", True))
+                    elif action == "keep_awake":
+                        return keep_awake(args.get("enable", True))
+                    elif action == "auto_start":
+                        return auto_start(args.get("enable", True))
+                    elif action == "draw":
+                        return draw_on_screen(args.get("text", ""), args.get("x", 100), args.get("y", 100), args.get("color", "red"))
+                    elif action == "head_pat":
+                        return head_pat()
+                    elif action == "save_file":
+                        return save_file_drop(args.get("file_path", ""))
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en desktop_companion: {e}"
+
             # ── Special: show_expression (la cara de ERIS) ──
             elif name == "show_expression":
                 result = self._handle_show_expression(args)
