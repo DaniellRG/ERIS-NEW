@@ -86,7 +86,7 @@ def tts_set_voice(parameters: dict, player=None) -> str:
         return f"Velocidad de voz configurada: {cfg['tts_speed']}"
     if action == "set_backend":
         backend = (parameters.get("backend") or "edge").lower().strip()
-        if backend not in ("edge", "gemini", "kokoro", "pykokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish"):
+        if backend not in ("edge", "gemini", "kokoro", "pykokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish", "piper"):
             return f"Backend no soportado: {backend}. Opciones: edge, gemini, kokoro, bark, sapi, elevenlabs, fish."
         cfg = _load_cfg()
         cfg["tts_backend"] = backend
@@ -172,6 +172,9 @@ async def synthesize(text: str, backend: str | None = None, voice: str | None = 
 
     if backend in ("kokoro", "pykokoro"):
         return await _synthesize_kokoro(text, voice)
+
+    if backend == "piper":
+        return await _synthesize_piper(text, voice)
 
     return b""
 
@@ -623,6 +626,61 @@ async def _synthesize_kokoro(text: str, voice: str = "") -> bytes:
         return b""
 
 
+async def _synthesize_piper(text: str, voice: str = "") -> bytes:
+    """Synthesize with Piper TTS, return PCM bytes (24kHz, mono, int16)."""
+    import io
+    import wave
+    import struct
+    import subprocess
+
+    voice_path = voice or str(BASE_DIR / "voices" / "es_ES-sharvard-medium.onnx")
+    if not os.path.exists(voice_path):
+        # Try to find any piper voice
+        voices_dir = BASE_DIR / "voices"
+        onnx_files = list(voices_dir.glob("*.onnx"))
+        if onnx_files:
+            voice_path = str(onnx_files[0])
+        else:
+            safe_print("[TTS] ⚠️ No piper voice model found in voices/")
+            return b""
+
+    try:
+        from piper import PiperVoice
+        pv = PiperVoice.load(voice_path)
+    except Exception as e:
+        safe_print(f"[TTS] ⚠️ Piper load error: {e}")
+        return b""
+
+    # Synthesize to WAV buffer
+    wav_buf = io.BytesIO()
+    try:
+        with wave.open(wav_buf, "wb") as wav:
+            wav.setnchannels(1)
+            wav.setsampwidth(2)
+            wav.setframerate(22050)
+            pv.synthesize_wav(text, wav)
+    except Exception as e:
+        safe_print(f"[TTS] ⚠️ Piper synthesize error: {e}")
+        return b""
+
+    wav_data = wav_buf.getvalue()
+    if len(wav_data) < 100:
+        return b""
+
+    # Convert WAV to PCM 24kHz via ffmpeg
+    _flags = 0x08000000 if sys.platform == "win32" else 0
+    proc = await asyncio.create_subprocess_exec(
+        _FFMPEG, "-y", "-i", "pipe:0",
+        "-f", "s16le", "-acodec", "pcm_s16le",
+        "-ar", "24000", "-ac", "1",
+        "pipe:1",
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        creationflags=_flags,
+    )
+    pcm, _ = await proc.communicate(input=wav_data)
+    return pcm if pcm else b""
+
+
 async def warmup_kokoro():
     """Precarga el pipeline Kokoro para evitar delay en primera síntesis."""
     if _KOKORO_PIPELINE is not None:
@@ -644,6 +702,12 @@ async def list_voices() -> list[dict]:
 
     for vname, vlabel in _KOKORO_VOICES.items():
         result.append({"backend": "kokoro", "name": vlabel, "type": "local", "voice": vname})
+
+    # Piper voices
+    import glob as _glob
+    for vf in _glob.glob(str(VOICES_DIR / "*.onnx")):
+        vname = os.path.basename(vf).replace(".onnx", "")
+        result.append({"backend": "piper", "name": f"Piper: {vname}", "type": "local", "voice": vf})
 
     for v_file in VOICES_DIR.glob("*.npz"):
         voice_name = v_file.stem

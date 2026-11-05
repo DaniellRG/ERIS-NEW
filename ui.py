@@ -1455,7 +1455,7 @@ class SettingsDialog(QDialog):
         lbl_eng.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl.addWidget(lbl_eng)
         self._tts = QComboBox()
-        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "kokoro", "pykokoro"])
+        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "kokoro", "pykokoro", "piper"])
         self._tts.setCurrentText(self._cfg.get("tts_backend", "edge"))
         hl.addWidget(self._tts)
         hl.addStretch()
@@ -1705,14 +1705,26 @@ class SettingsDialog(QDialog):
         elif engine in ("pykokoro", "kokoro"):
             try:
                 _voices = [
+                    ("af_heart", "Heart (Fem EN)"),
+                    ("af_bella", "Bella (Fem EN)"),
+                    ("am_adam", "Adam (Masc EN)"),
                     ("ef_dora", "Dora (Fem ES)"),
-                    ("em_alex", "Alex (Masc ES)"),
-                    ("em_santa", "Santa (Masc ES)"),
                 ]
                 for v_id, v_label in _voices:
                     self._voice.addItem(v_label, v_id)
             except ImportError:
                 self._voice.addItem("Kokoro no cargado", "")
+        elif engine == "piper":
+            import glob as _glob
+            _voices = []
+            for vf in _glob.glob(str(__import__("pathlib").Path(__file__).parent / "voices" / "*.onnx")):
+                vname = __import__("os").path.basename(vf).replace(".onnx", "")
+                _voices.append((vf, vname))
+            if _voices:
+                for v_id, v_label in _voices:
+                    self._voice.addItem(v_label, v_id)
+            else:
+                self._voice.addItem("No hay voces Piper", "")
         elif engine == "gemini":
             from core.audio_config import ERIS_VOICES as _av
             for _vk, (_vg, _vd) in _av.items():
