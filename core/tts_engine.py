@@ -586,9 +586,13 @@ async def _synthesize_bark(text: str, voice: str = "") -> bytes:
 _KOKORO_PIPELINE = None
 _KOKORO_PIPELINE_LOCK = None
 _KOKORO_VOICES = {
-    "ef_dora": "Kokoro español (mujer, Dora)",
-    "em_alex": "Kokoro español (hombre, Alex)",
-    "em_santa": "Kokoro español (hombre, Santa)",
+    "af_heart": "Kokoro (mujer, Heart)",
+    "af_bella": "Kokoro (mujer, Bella)",
+    "af_sarah": "Kokoro (mujer, Sarah)",
+    "am_adam": "Kokoro (hombre, Adam)",
+    "am_michael": "Kokoro (hombre, Michael)",
+    "ef_dora": "Kokoro (mujer, Dora ES)",
+    "em_alex": "Kokoro (hombre, Alex ES)",
 }
 
 
@@ -598,32 +602,12 @@ async def _synthesize_kokoro(text: str, voice: str = "") -> bytes:
     if not voice or voice not in _KOKORO_VOICES:
         voice = "ef_dora"
 
-    if _KOKORO_PIPELINE is None:
-        if _KOKORO_PIPELINE_LOCK is None:
-            import asyncio
-            _KOKORO_PIPELINE_LOCK = asyncio.Lock()
-        async with _KOKORO_PIPELINE_LOCK:
-            if _KOKORO_PIPELINE is None:
-                try:
-                    from pykokoro import KokoroPipeline, PipelineConfig
-                    from pykokoro.pipeline_config import TokenizerConfig
-                    from espeakng_loader import load_library
-                    load_library()
-                    t0 = time.perf_counter()
-                    tk_cfg = TokenizerConfig(backend="espeak", use_spacy=True)
-                    cfg = PipelineConfig(
-                        voice=voice,
-                        provider="cpu",
-                        tokenizer_config=tk_cfg,
-                    )
-                    _KOKORO_PIPELINE = KokoroPipeline(cfg)
-                    print(f"[TTS] Kokoro pipeline cargado en {time.perf_counter()-t0:.2f}s")
-                except Exception as e:
-                    safe_print(f"[TTS] ⚠️ Kokoro pipeline init error: {e}")
-                    return b""
-
     try:
-        result = _KOKORO_PIPELINE.run(text, lang="es")
+        from pykokoro import KokoroSynthesizer, SynthesisConfig, GenerationConfig
+        t0 = time.perf_counter()
+        cfg = SynthesisConfig(voice=voice, generation=GenerationConfig(speed=1.0, lang="es"))
+        synth = KokoroSynthesizer(cfg)
+        result = synth.synthesize_text(text, language="es")
         audio = result.audio
         if audio is None or len(audio) == 0:
             return b""
@@ -632,6 +616,7 @@ async def _synthesize_kokoro(text: str, voice: str = "") -> bytes:
             audio = (np.clip(audio, -1, 1) * 32767).astype(np.int16)
         else:
             audio = audio.astype(np.int16)
+        print(f"[TTS] Kokoro sintetizado en {time.perf_counter()-t0:.2f}s ({len(audio)} samples)")
         return audio.tobytes()
     except Exception as e:
         safe_print(f"[TTS] ⚠️ Kokoro error: {e}")

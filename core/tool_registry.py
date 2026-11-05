@@ -553,6 +553,8 @@ _TOOLS = {
     "web_search":            ("actions.web_search", "web_search"),
     "browser_auto":          ("actions.browser_auto", "browser_auto"),
     "browser_unified":       ("actions.browser_unified", "browser_unified"),
+    "browser_navigate":      ("actions.browser_tools", "browse_url_sync"),
+    "browser_search":        ("actions.browser_tools", "search_web_sync"),
     "code_sandbox":          ("core.code_sandbox", "code_sandbox"),
     "advanced_rag":          ("core.advanced_rag", "advanced_rag_tool"),
     "voice_biometrics":      ("core.voice_biometrics", "voice_biometrics"),

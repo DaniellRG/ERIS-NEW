@@ -374,6 +374,25 @@ class ToolDispatcher:
             if name == "eris_ui_control":
                 result = self._handle_ui_control(args)
 
+            # ── Browser automation (browser-use) ──
+            elif name == "browser_navigate":
+                try:
+                    from actions.browser_tools import browse_url_sync
+                    url = args.get("url", "")
+                    task = args.get("task", "")
+                    r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: browse_url_sync(url, task))
+                    return r if r else f"Navegación completada: {url}"
+                except Exception as e:
+                    return f"Error en browser_navigate: {e}"
+            elif name == "browser_search":
+                try:
+                    from actions.browser_tools import search_web_sync
+                    query = args.get("query", "")
+                    r = await loop.run_in_executor(TOOL_EXECUTOR, lambda: search_web_sync(query))
+                    return r if r else f"Búsqueda completada: {query}"
+                except Exception as e:
+                    return f"Error en browser_search: {e}"
+
             # ── Special: show_expression (la cara de ERIS) ──
             elif name == "show_expression":
                 result = self._handle_show_expression(args)

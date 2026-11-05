@@ -202,7 +202,8 @@ def _device_name(idx: int | None) -> str:
 _VIRTUAL_HINT = ("virtual", "sonar", "monitor", "stereo mix", "what u hear",
                  "loopback", "mapper", "primario", "primary", "asignador",
                  "wave out", "wave in", "pipewire", "pulse", "default", "jack",
-                 "equalizer", "easyeffects", "omarchy", "spectrum", "meter")
+                 "equalizer", "easyeffects", "easy effects", "omarchy", "spectrum", "meter",
+                 "ryzen", "hd audio controller")
 _OUTPUT_BAD = _VIRTUAL_HINT + ("spdif", "digital", "hdmi", "nvidia", "microphone")
 _INPUT_HINT = ("mic", "micro", "micrófono", "headset", "headphone", "auricular",
                "handsfree", "hands-free", "earbud", "buds", "capture", "entrada")
