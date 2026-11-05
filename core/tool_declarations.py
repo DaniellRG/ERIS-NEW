@@ -7511,6 +7511,33 @@ TOOL_DECLARATIONS.extend([
 ])
 
 
+# Browser automation tools (browser-use)
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "browser_navigate",
+        "description": "Navegar a una URL y extraer contenido. Usa browser-use para automatización web autónoma (click, fill forms, scroll, CAPTCHA solving).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "url": {"type": "STRING", "description": "URL a visitar"},
+                "task": {"type": "STRING", "description": "Tarea a realizar en la página (opcional, por defecto resume el contenido)"},
+            },
+            "required": ["url"],
+        }
+    },
+    {
+        "name": "browser_search",
+        "description": "Buscar en la web y retornar resultados. Usa browser-use para búsqueda autónoma.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "query": {"type": "STRING", "description": "Consulta de búsqueda"},
+            },
+            "required": ["query"],
+        }
+    },
+])
+
 def load_custom_tools(BASE_DIR):
     """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
 
