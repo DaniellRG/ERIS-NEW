@@ -1455,7 +1455,7 @@ class SettingsDialog(QDialog):
         lbl_eng.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 10px;")
         hl.addWidget(lbl_eng)
         self._tts = QComboBox()
-        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "kokoro", "pykokoro", "piper"])
+        self._tts.addItems(["fish", "edge", "elevenlabs", "gemini", "system", "kokoro", "pykokoro", "piper", "gtts"])
         self._tts.setCurrentText(self._cfg.get("tts_backend", "edge"))
         hl.addWidget(self._tts)
         hl.addStretch()
@@ -1725,6 +1725,8 @@ class SettingsDialog(QDialog):
                     self._voice.addItem(v_label, v_id)
             else:
                 self._voice.addItem("No hay voces Piper", "")
+        elif engine == "gtts":
+            self._voice.addItem("Google TTS español", "es")
         elif engine == "gemini":
             from core.audio_config import ERIS_VOICES as _av
             for _vk, (_vg, _vd) in _av.items():

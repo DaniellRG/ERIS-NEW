@@ -86,7 +86,7 @@ def tts_set_voice(parameters: dict, player=None) -> str:
         return f"Velocidad de voz configurada: {cfg['tts_speed']}"
     if action == "set_backend":
         backend = (parameters.get("backend") or "edge").lower().strip()
-        if backend not in ("edge", "gemini", "kokoro", "pykokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish", "piper"):
+        if backend not in ("edge", "gemini", "kokoro", "pykokoro", "bark", "sapi", "windows", "local", "elevenlabs", "fish", "piper", "gtts"):
             return f"Backend no soportado: {backend}. Opciones: edge, gemini, kokoro, bark, sapi, elevenlabs, fish."
         cfg = _load_cfg()
         cfg["tts_backend"] = backend
@@ -175,6 +175,9 @@ async def synthesize(text: str, backend: str | None = None, voice: str | None = 
 
     if backend == "piper":
         return await _synthesize_piper(text, voice)
+
+    if backend == "gtts":
+        return await _synthesize_gtts(text, voice)
 
     return b""
 
@@ -681,6 +684,38 @@ async def _synthesize_piper(text: str, voice: str = "") -> bytes:
     return pcm if pcm else b""
 
 
+async def _synthesize_gtts(text: str, voice: str = "") -> bytes:
+    """Synthesize with Google TTS (gTTS), return PCM bytes (24kHz, mono, int16)."""
+    import io
+    import subprocess
+
+    try:
+        from gtts import gTTS
+        tts = gTTS(text, lang="es")
+        buf = io.BytesIO()
+        tts.write_to_fp(buf)
+        mp3_data = buf.getvalue()
+    except Exception as e:
+        safe_print(f"[TTS] ⚠️ gTTS error: {e}")
+        return b""
+
+    if not mp3_data or len(mp3_data) < 100:
+        return b""
+
+    # Convert MP3 to PCM via ffmpeg
+    _flags = 0x08000000 if sys.platform == "win32" else 0
+    proc = await asyncio.create_subprocess_exec(
+        _FFMPEG, "-y", "-i", "pipe:0",
+        "-f", "s16le", "-acodec", "pcm_s16le",
+        "-ar", "24000", "-ac", "1",
+        "pipe:1",
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        creationflags=_flags,
+    )
+    pcm, _ = await proc.communicate(input=mp3_data)
+    return pcm if pcm else b""
+
+
 async def warmup_kokoro():
     """Precarga el pipeline Kokoro para evitar delay en primera síntesis."""
     if _KOKORO_PIPELINE is not None:
@@ -694,6 +729,7 @@ async def list_voices() -> list[dict]:
     result = []
 
     result.append({"backend": "gemini", "name": "Gemini (voz por defecto)", "type": "cloud"})
+    result.append({"backend": "gtts", "name": "Google TTS (español)", "type": "cloud"})
 
     result.append({"backend": "edge", "name": "Edge-TTS español", "type": "local", "voice": "es-AR-ElenaNeural"})
     result.append({"backend": "edge", "name": "Edge-TTS español España", "type": "local", "voice": "es-ES-AlvaroNeural"})
