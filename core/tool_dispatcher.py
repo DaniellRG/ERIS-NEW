@@ -428,6 +428,37 @@ class ToolDispatcher:
                 except Exception as e:
                     return f"Error en desktop_companion: {e}"
 
+            # ── Live reactions (capri-desktop inspired) ──
+            elif name == "live_reactions":
+                try:
+                    from actions.live_reactions import show_reaction, live_reactions_toggle, watch_along_toggle, watch_along_react
+                    action = args.get("action", "")
+                    if action == "toggle":
+                        return live_reactions_toggle(args.get("enable", True))
+                    elif action == "react":
+                        return show_reaction(args.get("text", ""), args.get("context", "game"))
+                    elif action == "watch_along":
+                        return watch_along_toggle(args.get("enable", True))
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en live_reactions: {e}"
+            # ── Call mode (capri-desktop inspired) ──
+            elif name == "call_mode":
+                try:
+                    from actions.call_mode import call_mode_status, call_cover, call_join, call_mode_toggle
+                    action = args.get("action", "")
+                    if action == "status":
+                        return call_mode_status()
+                    elif action == "cover":
+                        return call_cover(args.get("excuse", ""), args.get("game", ""))
+                    elif action == "join":
+                        return call_join(args.get("app", "auto"))
+                    elif action == "toggle":
+                        return call_mode_toggle(args.get("enable", True))
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en call_mode: {e}"
+
             # ── Special: show_expression (la cara de ERIS) ──
             elif name == "show_expression":
                 result = self._handle_show_expression(args)

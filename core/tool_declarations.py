@@ -7576,6 +7576,39 @@ TOOL_DECLARATIONS.extend([
     },
 ])
 
+# Desktop companion + live reactions (from capri-desktop)
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "live_reactions",
+        "description": "Reacciones en vivo sobre juegos/apps en pantalla completa. Acciones: toggle (activar/desactivar), react (mostrar reacción), watch_along (reaccionar a video en pantalla).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "toggle, react, watch_along"},
+                "enable": {"type": "BOOLEAN", "description": "Activar/desactivar (para toggle)"},
+                "text": {"type": "STRING", "description": "Texto de reacción (opcional, aleatorio si vacío)"},
+                "context": {"type": "STRING", "description": "game o video"},
+            },
+            "required": ["action"],
+        }
+    },
+    {
+        "name": "call_mode",
+        "description": "Modo llamada: Eris se une a tus llamadas (Discord, Zoom, Teams, etc.), te cubre, lanza juegos. Acciones: status (detectar apps), cover (mensaje de cobertura), join (unirse a llamada), toggle (activar/desactivar).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "status, cover, join, toggle"},
+                "excuse": {"type": "STRING", "description": "Excusa personalizada (para cover)"},
+                "game": {"type": "STRING", "description": "Juego a lanzar (para cover)"},
+                "app": {"type": "STRING", "description": "App de llamada (para join): discord, zoom, teams, auto"},
+                "enable": {"type": "BOOLEAN", "description": "Activar/desactivar (para toggle)"},
+            },
+            "required": ["action"],
+        }
+    },
+])
+
 def load_custom_tools(BASE_DIR):
     """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
 
