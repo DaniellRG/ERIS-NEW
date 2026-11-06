@@ -129,3 +129,4 @@ __pycache__/
 .env
 memory/undo_backups/
 data/eris_server.pid
+_quarantine_*/
