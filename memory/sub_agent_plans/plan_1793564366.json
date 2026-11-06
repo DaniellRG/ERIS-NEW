@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y el alcance de la misión actual.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones operativas. [Riesgo: Información desactualizada o insuficiente]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar la secuencia cronológica de acciones y puntos de control.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y herramientas específicas para cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular escenarios de contingencia y definir planes de mitigación. [Riesgo: Fallas imprevistas en la ejecución]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el plan maestro en el sistema de gestión de ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793564366.8953247
+}

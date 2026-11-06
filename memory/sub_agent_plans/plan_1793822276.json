@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones operativas y posibles cuellos de botella con la matriz de riesgo. ⚠️ *Riesgo crítico: Subestimar variables externas.*",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Secuenciar las fases críticas del plan según prioridades estratégicas mediante el módulo de cronograma.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y roles operativos utilizando el registro de personal. ⚠️ *Riesgo moderado: Solapamiento de funciones.*",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer indicadores de rendimiento (KPIs) y puntos de control con la herramienta de métricas.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Simular escenarios de contingencia y planes de respaldo mediante el simulador de crisis ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final y autorizar su ejecución a través del panel de mando central.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793822276.5251265
+}

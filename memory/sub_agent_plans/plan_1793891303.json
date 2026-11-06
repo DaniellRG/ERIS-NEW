@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar posibles amenazas y puntos críticos de falla [Riesgo: Alta incertidumbre].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Secuenciar las fases operativas priorizando la eficiencia y la seguridad del sistema.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y herramientas específicas para cada fase del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular el escenario operativo para detectar cuellos de botella [Riesgo: Falla en la ejecución].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Redactar el documento final del plan estratégico con protocolos de contingencia [Riesgo: Información incompleta].",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793891303.1230302
+}

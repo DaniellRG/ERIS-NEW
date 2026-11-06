@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance operativo con el usuario.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones de tiempo, recursos y variables críticas del entorno.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Estructurar las fases secuenciales del plan y los hitos de control principales.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y recursos específicos a cada tarea crítica. [Riesgo: Sobrecarga operativa o cuello de botella en recursos]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar protocolos de contingencia y rutas de escape para escenarios adversos. [Riesgo: Fallo en la mitigación ante imprevistos mayores]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final y desplegar el plan utilizando el módulo de ejecución de ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793891244.3562508
+}

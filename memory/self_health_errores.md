@@ -44,3 +44,7 @@
 [2026-10-24 06:58:34] ✅ Resuelto: logs — Nuevo error en eris_new.log: Traceback (most recent call last):
 [2026-10-24 10:30:59] 🚨 WARN [logs] Nuevo error en eris_new.log: Traceback (most recent call last):
 [2026-10-24 10:45:59] ✅ Resuelto: logs — Nuevo error en eris_new.log: Traceback (most recent call last):
+[2026-11-05 20:08:28] 🚨 WARN [logs] Nuevo error en eris_voice.log: Traceback (most recent call last):
+[2026-11-05 20:12:06] ✅ Resuelto: logs — Nuevo error en eris_voice.log: Traceback (most recent call last):
+[2026-11-06 16:19:14] 🚨 WARN [logs] Nuevo error en eris_timing.log: LLVM ERROR: inconsistency in registered CommandLine options
+[2026-11-06 16:27:08] ✅ Resuelto: logs — Nuevo error en eris_timing.log: LLVM ERROR: inconsistency in registered CommandLine options

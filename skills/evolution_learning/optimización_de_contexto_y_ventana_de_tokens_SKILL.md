@@ -5,6 +5,6 @@ description: Lección de evolución continua aprendida por ERIS sobre optimizaci
 
 **Lección ERIS: Optimización de Contexto y Ventana de Tokens**
 
-*   **Lo importante:** La ventana de contexto es limitada y costosa. Investigaciones como *LongRoPE* y *YaRN* muestran que expandirla requiere ajustar las posiciones (RoPE), mientras que la compresión (ej. *MemoSight*) evita procesar ruido innecesario mediante resúmenes dinámicos.
-*   **Aplicación en código/agentes:** Implementa *token trimming* en tus agentes: trunca historiales largos de chat, descarta prompts del sistema redundantes y usa embeddings locales para recuperar solo los fragmentos de documentos estrictamente necesarios (RAG) antes de llamar al LLM.
-*   **Paso concreto para probarlo:** Cuenta los tokens exactos de tu prompt actual usando la librería `tiktoken` en Python y recorta un 30% del contenido irrelevante antes de enviarlo a la API.
+*   **Lo importante:** La ventana de contexto es finita y costosa. Las técnicas modernas (como *LongRoPE* para expandir tokens y *MemoSight* para compresión) evitan el desbordamiento en agentes mediante la gestión inteligente del historial y la poda de información irrelevante.
+*   **Aplicación en código:** Implementa un sistema de memoria deslizante (*sliding window*) o compresión de contexto en tus agentes. En lugar de pasar todo el historial de chat, resume los turnos anteriores y conserva solo los artefactos críticos y las instrucciones recientes.
+*   **Paso concreto:** Configura un límite estricto de tokens de entrada en tu agente actual e integra un middleware básico que detecte cuando el prompt supere el 70% de la capacidad, recortando automáticamente los mensajes intermedios más antiguos.

@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance operativo de la misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar y analizar los riesgos críticos asociados al entorno y los recursos [RIESGO: Falta de información previa].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar la operación en fases tácticas secuenciales.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar los recursos humanos, tecnológicos y logísticos necesarios mediante la matriz de asignación.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer los indicadores clave de rendimiento (KPIs) y los hitos de control temporal.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Diseñar protocolos de contingencia y planes de respuesta rápida para desvíos imprevistos [RIESGO: Fallo en la ejecución del plan primario].",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final del plan estratégico utilizando el módulo de reportes de ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793891228.242287
+}

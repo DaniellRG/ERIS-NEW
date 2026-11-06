@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance de la misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones operativas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Analizar los riesgos potenciales y establecer planes de contingencia [Riesgo: Falta de información crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar la secuencia cronológica de tareas y los hitos clave.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsabilidades y herramientas operativas para cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Simular el plan en entornos virtuales para validar su viabilidad [Riesgo: Fallo en la ejecución técnica].",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final y desplegar el plan operativo.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793924577.033874
+}

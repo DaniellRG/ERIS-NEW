@@ -1,0 +1,47 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y definir los parámetros de éxito.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones operativas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar la misión en fases secuenciales y establecer hitos de control.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y plazos estimados para cada tarea. [RIESGO: Sobrecarga de recursos]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Diseñar protocolos de contingencia para mitigar posibles fallos críticos. [RIESGO: Incertidumbre en escenarios externos]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar la estrategia en una interfaz visual usando la herramienta de diagramación.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Simular la ejecución del plan para validar la viabilidad y los tiempos de respuesta.",
+      "status": "pending"
+    },
+    {
+      "order": 8,
+      "action": "Emitir la orden de operaciones final y activar el monitoreo en tiempo real.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793893119.214075
+}

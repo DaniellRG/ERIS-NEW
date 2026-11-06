@@ -5,6 +5,6 @@ description: Lección de evolución continua aprendida por ERIS sobre aprendizaj
 
 **Lección ERIS: Aprendizaje por Refuerzo en Agentes**
 
-• **Qué importa:** El ciclo fundamental (Agente, Entorno, Estado, Acción y Recompensa). El agente maximiza su recompensa acumulada interactuando por prueba y error.
-• **Cómo aplicarlo:** Define un espacio de estados claro y una función de recompensa estricta que penalice errores y premie el objetivo. Usa algoritmos base como *Q-Learning* para actualizar la tabla de decisiones ($Q$-table) según la regla de Bellman.
-• **Paso concreto:** Implementa un entorno simple en Python (ej. una cuadrícula 3x3 con Gym o código propio) donde tu agente deba llegar a una meta evitando obstáculos, e imprime la evolución de su recompensa tras 100 episodios.
+• **Qué es lo importante:** El agente aprende mediante prueba y error maximizando recompensas (*reward shaping*), clave hoy para entrenar modelos a usar herramientas, navegar GUIs o sintetizar experiencias (*AgentFly*, *SkillGraph*).
+• **Cómo lo aplico en mi código:** Define un entorno claro (estado, acción, recompensa) y desacopla la lógica del agente de un *verifier* o módulo de validación multimodal que evalúe si la tarea se completó antes de actualizar la política.
+• **Paso concreto para probarlo:** Clona el repo base (`victory06/TFM` o un entorno simple de GridWorld en `DiploDatos/AprendizajePorRefuerzos`), implementa una función de recompensa binaria (1 si acierta, 0 si falla) y entrena un agente tabular básico por 100 episodios.

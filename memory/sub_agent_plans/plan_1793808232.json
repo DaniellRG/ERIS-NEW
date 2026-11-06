@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones operativas y posibles cuellos de botella con la matriz de riesgo [Riesgo: Fallas logísticas].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Secuenciar las fases críticas del proyecto utilizando el generador de cronogramas.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y KPIs a cada unidad operativa mediante la plataforma de gestión.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular el escenario de ejecución para detectar vulnerabilidades imprevistas [Riesgo: Desviación del plan].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final y distribuirlo a los mandos operativos mediante el canal seguro.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793808232.262681
+}

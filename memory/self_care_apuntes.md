@@ -678,3 +678,57 @@
 
 ## 2026-10-31 07:02:47 · config
 - no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-31 07:09:40 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-31 07:10:47 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-10-31 07:23:30 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-11-01 14:55:47 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-11-01 16:10:49 · config
+- no puedo inventar estas claves: ['fish_api_key']
+
+## 2026-11-05 19:54:14 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:02:15 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:05:20 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:15:20 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:23:20 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:28:00 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-05 20:31:07 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 15:34:35 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 15:39:50 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 15:45:32 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 15:53:32 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 16:20:14 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']
+
+## 2026-11-06 16:28:08 · config
+- no puedo inventar estas claves: ['fish_api_key', 'speaker_device']

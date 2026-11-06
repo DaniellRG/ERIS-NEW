@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance de la misión [Riesgo: Ambigüedad en los requerimientos]",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los recursos disponibles y las restricciones operativas con la matriz de capacidades de ERIS",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar los factores críticos de éxito y los posibles puntos de fallo [Riesgo: Suposiciones erróneas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Secuenciar las fases operativas en hitos temporales utilizando el diagrama de Gantt táctico",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsabilidades y roles operativos a cada agente o subsistema",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecer protocolos de contingencia y rutas de escape ante imprevistos [Riesgo: Respuesta tardía]",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final y desplegar el plan operativo en la interfaz de comando",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793822482.9885924
+}

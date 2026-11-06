@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Recopilar los requisitos y restricciones del objetivo con el usuario mediante interrogatorio estructurado.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Definir los hitos clave y los plazos de ejecución con la herramienta de cronograma [Riesgo: Estimación de tiempo imprecisa].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Asignar los recursos necesarios y responsabilidades usando la matriz RACI.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar el plan de contingencia para los puntos críticos de fallo con el protocolo de análisis de riesgos [Riesgo: Ignorar variables externas].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Consolidar el plan maestro en un documento único de ruta operativa mediante el generador de reportes.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Presentar la estrategia final al usuario para su validación y aprobación final.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793891382.718966
+}

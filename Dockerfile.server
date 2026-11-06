@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 WORKDIR /opt/eris
 
-# System deps: audio, GUI (headless), build tools, ffmpeg
+# System deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     portaudio19-dev \
     pulseaudio-utils \
@@ -15,10 +15,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Python deps
-COPY requirements-linux.txt .
-RUN pip install --no-cache-dir -r requirements-linux.txt && \
-    pip install --no-cache-dir websockets faster-whisper piper-tts
+# Minimal Python deps (core only)
+RUN pip install --no-cache-dir \
+    google-genai \
+    websockets \
+    piper-tts \
+    sounddevice \
+    numpy \
+    PyQt6 \
+    requests \
+    flask \
+    flask-cors \
+    python-dotenv \
+    edge-tts \
+    gtts \
+    faster-whisper
 
 # Copy source
 COPY . .
@@ -29,7 +40,7 @@ ENV QT_QPA_PLATFORM=offscreen
 ENV PYTHONUNBUFFERED=1
 ENV ERIS_API_PORT=8081
 
-# Ports: API(8081) Health(8765) WS(8766)
+# Ports
 EXPOSE 8081 8765 8766
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \

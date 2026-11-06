@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance de la misión.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los recursos y restricciones disponibles en ERIS [RIESGO: Falta de datos críticos].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar el objetivo principal en metas secundarias e hitos temporales.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y plazos de ejecución para cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Desarrollar protocolos de contingencia para los puntos críticos [RIESGO: Fallo en la ejecución].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el plan maestro en el sistema de gestión y notificar a los operadores.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793896562.388531
+}

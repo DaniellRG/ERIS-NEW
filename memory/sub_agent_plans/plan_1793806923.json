@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones críticas, dependencias temporales y posibles puntos de fallo. [Riesgo: Alcance indefinido o plazos irreales]",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Estructurar las fases operativas y los hitos de control utilizando el Módulo de Planificación.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y protocolos de contingencia por cada fase del plan. [Riesgo: Falta de redundancia en recursos clave]",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular escenarios de ejecución para validar la viabilidad estratégica con el Simulador ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final del plan y distribuirlo a los mandos operativos mediante la Red Segura. [Riesgo: Filtración de información táctica]",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793806923.16506
+}

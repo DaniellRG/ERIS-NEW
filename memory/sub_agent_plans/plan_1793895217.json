@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance del plan con la interfaz de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los recursos disponibles y las restricciones actuales usando la base de datos táctica.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar la meta en hitos y subtareas secuenciales mediante el generador de cronogramas.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsables y plazos estimados a cada fase utilizando el gestor de asignaciones [RIESGO: Sobrecarga de recursos].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Identificar posibles amenazas operativas y establecer planes de contingencia con el simulador de riesgos [RIESGO: Variables imprevistas].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecer los indicadores clave de rendimiento (KPIs) para medir el progreso en el panel de control.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Consolidar el documento final y distribuirlo a los equipos involucrados a través del canal seguro de ERIS.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793895217.8691506
+}

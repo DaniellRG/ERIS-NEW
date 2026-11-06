@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y definir los parámetros de éxito con el usuario.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y las restricciones operativas del sistema.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Estructurar la secuencia lógica de acciones dividiéndola en fases críticas [Riesgo: Dependencia de variables externas].",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsables, plazos y métricas de rendimiento para cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular posibles escenarios de fallo y establecer planes de contingencia [Riesgo: Mitigación insuficiente ante imprevistos].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final y desplegar el plan operativo mediante la interfaz de comandos.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793894506.7162654
+}

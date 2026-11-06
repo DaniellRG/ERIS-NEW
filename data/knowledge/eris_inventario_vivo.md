@@ -1,5 +1,5 @@
 # ERIS — INVENTARIO VIVO DE CAPACIDADES
-Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
+Generado: 2026-11-06 15:53:32 · 525 tools registradas y resolviendo.
 
 ## CAPACIDADES DEL SISTEMA (no tools, siempre activas)
 - **EJECUCIÓN AUTÓNOMA**: cuando el usuario pide una tarea multi-paso, ERIS la trabaja sola de punta a punta (mecanismo `[AUTO-CONTINUACIÓN]`) narrando su avance y cerrando con `TAREA COMPLETA` solo tras verificar (`mission action=verify` en código).
@@ -155,6 +155,8 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 - `browser_control` — Automatizacion de navegador: navegar, buscar, hacer clic, leer paginas, hacer scroll, resultados de busqueda, 
 - `browser_extension` — Conexion con el navegador via extension: lista pestanas, navega, obtiene contenido, ejecuta JS, busca historia
 - `browser_history` — Historial de navegacion: consulta historial y marcadores de Chrome/Edge, busca por texto y exporta. Acciones: 
+- `browser_navigate` — Navegar a una URL y extraer contenido. Usa browser-use para automatización web autónoma (click, fill forms, sc
+- `browser_search` — Buscar en la web y retornar resultados. Usa browser-use para búsqueda autónoma.
 - `browser_unified` — Browser automation completo con Playwright. Navegar, forms, scraping, screenshots, PDFs, multi-tab, cookies pe
 
 ## calculator
@@ -162,6 +164,9 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 
 ## calendar
 - `calendar_manager` — Gestiona calendario y eventos: crear, ver, modificar eventos. Soporta Google Calendar. Acciones: list (ver eve
+
+## call
+- `call_mode` — Modo llamada: Eris se une a tus llamadas (Discord, Zoom, Teams, etc.), te cubre, lanza juegos. Acciones: statu
 
 ## camera
 - `camera_bus` — Camaras del equipo: detecta camaras conectadas, captura instantaneas y analiza lo que ve con vision. Acciones:
@@ -334,6 +339,7 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 - `dependency_manager` — Gestión de dependencias. Acciones: scan (detecta imports rotos en el proyecto), install (instala 'packages', l
 
 ## desktop
+- `desktop_companion` — Control de Eris como companion de escritorio. Acciones: hologram (click-through), keep_awake (evitar suspensió
 - `desktop_control` — Control de ventanas y escritorio: listar, minimizar, maximizar, restaurar, cerrar, enfocar, buscar, cascada, m
 - `desktop_notifications` — Notificaciones de escritorio nativas (Windows Toast / Linux notify-send) con prioridades y configuracion. Acci
 
@@ -573,6 +579,9 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 ## lesson
 - `lesson_applier` — Aplica lecciones cristalizadas por aprendizaje autónomo. Acciones: status, list, read, mark_applied, inject.
 
+## live
+- `live_reactions` — Reacciones en vivo sobre juegos/apps en pantalla completa. Acciones: toggle (activar/desactivar), react (mostr
+
 ## llm
 - `llm_router` — Router inteligente de LLMs. Selecciona el mejor modelo (Gemini/Ollama/OpenRouter) según calidad, costo, latenc
 
@@ -723,6 +732,9 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 ## phone
 - `phone_control` — Controla el celular Android del dueno desde la PC (via adb/scrcpy, requiere el celular conectado por USB con d
 
+## pipecat
+- `pipecat_voice` — Pipeline de voz Pipecat (STT→LLM→TTS) con turn detection y VAD. Acciones: start (iniciar pipeline), stop (dete
+
 ## plan
 - `plan_adaptation` — Adapta un plan existente cuando algo falla o cambian las condiciones. Sugiere cómo modificar los pasos sin emp
 
@@ -856,6 +868,7 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 - `scheduler` — Schedule and manage timed tasks and events
 
 ## screen
+- `screen_companion` — Companion de pantalla: captura y analiza pantalla, enseña controles de juegos, modo stealth, clips de pantalla
 - `screen_context` — Captura de pantalla + OCR + descripción visual. Sacar screenshots, extraer texto de la pantalla (OCR), analiza
 - `screen_control` — Control de la pantalla. Acciones: brightness_get (brillo actual), brightness_set (level 0-100 para fijar brill
 - `screen_reader` — OCR real de pantalla (Windows OCR API). Acciones: read_screen (OCR de toda la pantalla), read_region (OCR de u
@@ -965,6 +978,9 @@ Generado: 2026-10-30 22:26:46 · 517 tools registradas y resolviendo.
 
 ## storytelling
 - `storytelling_engine` — Crea narrativas, historias, metaforas y analogias explicativas. Estructura narrativa completa: gancho, context
+
+## stt
+- `stt_transcribe` — Transcribe audio a texto usando Whisper (STT local). Acciones: transcribe (audio bytes), transcribe_file (arch
 
 ## subagent
 - `subagent_task` — Lanza un subagente autonomo via OpenRouter para tareas complejas en segundo plano o sincrono

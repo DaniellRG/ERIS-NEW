@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance del plan utilizando la base de datos táctica de ERIS. [Riesgo: Ambigüedad en la meta]",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar recursos disponibles, restricciones operativas y plazos mediante la matriz de inventario.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar la meta principal en fases secuenciales y hitos críticos con el módulo de planificación de proyectos. [Riesgo: Dependencias cruzadas complejas]",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades operativas y canales de comunicación para cada fase usando el directorio de agentes.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer indicadores de rendimiento (KPIs) y protocolos de contingencia con el simulador de escenarios. [Riesgo: Métricas desalineadas]",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final del plan y desplegarlo en el sistema central para su ejecución.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793811304.356773
+}

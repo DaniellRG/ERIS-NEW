@@ -1242,6 +1242,9 @@ class ErisLive:
 
     def _inject_text(self, text: str):
         """Thread-safe injection of a text message into the current live session."""
+        import time as _t
+        self._response_start_ts = _t.time()
+        print(f"[TIMING] Input received at {self._response_start_ts:.3f}", flush=True)
         if self._loop and self.session:
             if text and len(text) > 3000:
                 text = text[:3000] + "...\n[Texto truncado por tamaño]"
@@ -1665,6 +1668,9 @@ class ErisLive:
         self._on_text_command(text)
 
     def _on_text_command(self, text: str):
+        import time as _t
+        self._response_start_ts = _t.time()
+        print(f"[TIMING] Input received at {self._response_start_ts:.3f}: {text[:50]}", flush=True)
         self._last_user_interaction = time.time()  # Reset idle timer
         _shared_touch_activity()
 
@@ -2569,7 +2575,7 @@ class ErisLive:
                 self.ui.write_log("SYS: Voz ya en modo local (resiliente).")
             return
         _new = None
-        for _cand in ("kokoro", "edge"):
+        for _cand in ("kokoro", "piper", "edge", "gtts"):
             if self._tts_backend_works(_cand):
                 _new = _cand
                 break
@@ -4149,6 +4155,9 @@ class ErisLive:
                                 print(f"[ERIS] Fish Audio: {out_full[:60]}...")
                             # ── Kokoro/edge local: sentence-chunked synthesis (low latency, in order) ──
                             elif _cached_tts_backend in ("kokoro", "pykokoro", "edge") and out_full.strip():
+                                import time as _t
+                                if hasattr(self, '_response_start_ts'):
+                                    print(f"[TIMING] TTS synthesis starting at {_t.time():.3f} (latency so far: {_t.time() - self._response_start_ts:.2f}s)", flush=True)
                                 def _kokoro_play(_txt=out_full, _tb=_cached_tts_backend):
                                     try:
                                         import re as _kk_re
@@ -4185,6 +4194,10 @@ class ErisLive:
                                                 if _pcm and len(_pcm) > 100:
                                                     try:
                                                         self.audio_in_queue.put_nowait(_pcm)
+                                                        import time as _t
+                                                        if hasattr(self, '_response_start_ts'):
+                                                            print(f"[TIMING] First audio enqueued at {_t.time():.3f} (total latency: {_t.time() - self._response_start_ts:.2f}s)", flush=True)
+                                                            del self._response_start_ts
                                                     except Exception:
                                                         pass
                                             _lf.run_until_complete(_do_kokoro())

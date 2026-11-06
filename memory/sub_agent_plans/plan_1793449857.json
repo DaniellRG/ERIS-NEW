@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Recopilar los requerimientos tácticos y restricciones operativas del cliente mediante la interfaz de comunicación.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los datos de entrada y definir el objetivo estratégico principal con la base de datos de ERIS. ⚠️ Riesgo: Ambigüedad en los requerimientos iniciales.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar el objetivo global en fases operativas y submetas secuenciales usando el módulo de planificación.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar recursos, plazos y responsables a cada submeta mediante el panel de asignación logística.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Simular la ejecución del plan para detectar posibles cuellos de botella con el simulador predictivo. ⚠️ Riesgo: Fallos imprevistos en la cadena logística.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el documento final del plan estratégico y exportarlo en el formato requerido para su despliegue.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793449857.0485048
+}

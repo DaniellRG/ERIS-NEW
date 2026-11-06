@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance operativo con el usuario.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones de tiempo, recursos y variables críticas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar la meta principal en fases secuenciales y dependencias críticas.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar KPIs y métricas de éxito para cada fase del proceso.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Evaluar vulnerabilidades y puntos de fallo potencial [Riesgo: Estimación de recursos insuficiente].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Consolidar el plan maestro en el panel de control central utilizando ERIS Planner.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Establecer protocolos de contingencia y revisión continua.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793822337.3953083
+}

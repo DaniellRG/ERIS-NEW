@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los requerimientos operacionales de ERIS mediante la base de datos central.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Definir los recursos disponibles y las restricciones temporales utilizando la matriz de asignación.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "[RIESGO: Fuga de datos] Codificar los parámetros de la misión aplicando el protocolo de encriptación interna.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar la secuencia cronológica de ejecución utilizando el módulo de simulación predictiva.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar los roles operativos y canales de comunicación seguros para cada fase del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "[RIESGO: Fallo en la redundancia] Establecer un protocolo de contingencia y ruta de evacuación digital.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validar el plan estratégico completo mediante la interfaz de supervisión de ERIS y emitir la orden de inicio.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793894317.6395082
+}

@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Definir el objetivo estratégico y el alcance de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar los recursos disponibles y las restricciones operativas.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Identificar los riesgos potenciales y establecer planes de contingencia (Riesgo: Falta de recursos o imprevistos técnicos).",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Diseñar la secuencia cronológica de tareas con hitos clave.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Asignar responsabilidades y herramientas de ejecución a cada fase.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Establecer métricas de rendimiento y puntos de control.",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validar el plan integral con el mando central de ERIS (Riesgo: Rechazo o desalineación táctica).",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793895677.9149418
+}

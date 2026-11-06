@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Recopilar los requerimientos tácticos del objetivo mediante entrevista directa al usuario.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Analizar las restricciones operativas y recursos disponibles usando la base de datos de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar la estrategia general de ejecución estructurando las fases críticas del plan.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Identificar posibles puntos de fallo y asignar contramedidas preventivas [RIESGO ALTO].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Redactar el documento final del plan detallando cronograma y asignación de tareas.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Validar la viabilidad del plan mediante simulación virtual antes de la autorización.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793896640.2248898
+}

@@ -21,8 +21,10 @@ VOICES_DIR.mkdir(exist_ok=True)
 
 _EDGE_VOICES = {
     "es-ar": "es-AR-ElenaNeural",
-    "es-es": "es-ES-AlvaroNeural",
+    "es-es": "es-ES-ElviraNeural",
     "es-mx": "es-MX-DaliaNeural",
+    "es-co": "es-CO-SalomeNeural",
+    "es-cl": "es-CL-CatalinaNeural",
     "en-us": "en-US-JennyNeural",
     "en-gb": "en-GB-SoniaNeural",
 }

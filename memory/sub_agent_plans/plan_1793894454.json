@@ -1,0 +1,37 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y definir el alcance operativo utilizando la base de datos de ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar los recursos disponibles y asignar roles mediante el módulo de asignación de personal.",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Desglosar las fases críticas de ejecución y establecer hitos de control temporal.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Evaluar los riesgos operativos y establecer protocolos de contingencia [Riesgo: Fallo logístico / Mitigación: Activar proveedores alternativos].",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Redactar el documento final del plan estratégico utilizando el procesador de datos de la misión.",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Presentar la planificación al comandante a cargo para su validación final y aprobación.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793894454.097683
+}

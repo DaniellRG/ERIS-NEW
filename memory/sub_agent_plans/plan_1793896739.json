@@ -1,0 +1,42 @@
+{
+  "objective": "hacer un plan",
+  "steps": [
+    {
+      "order": 1,
+      "action": "Analizar el objetivo táctico y los recursos disponibles usando la Base de Datos ERIS.",
+      "status": "pending"
+    },
+    {
+      "order": 2,
+      "action": "Identificar restricciones operativas y posibles puntos de fallo [RIESGO: Falta de información crítica].",
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "action": "Diseñar las fases secuenciales del plan mediante el módulo de Modelado Estratégico.",
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "action": "Asignar responsabilidades y plazos de ejecución con la herramienta de Gestión de Tareas.",
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "action": "Establecer protocolos de contingencia y rutas de escape [RIESGO: Resistencia o imprevistos en el terreno].",
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "action": "Simular escenarios de ejecución mediante el Simulador Táctico ERIS [RIESGO: Margen de error superior al aceptable].",
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "action": "Validar y aprobar el plan final para su despliegue operativo.",
+      "status": "pending"
+    }
+  ],
+  "status": "active",
+  "created": 1793896739.012702
+}
