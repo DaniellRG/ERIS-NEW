@@ -7627,6 +7627,27 @@ TOOL_DECLARATIONS.extend([
     },
 ])
 
+# Screen companion tools (inspired by capri-desktop)
+TOOL_DECLARATIONS.extend([
+    {
+        "name": "screen_companion",
+        "description": "Companion de pantalla: captura y analiza pantalla, enseña controles de juegos, modo stealth, clips de pantalla. Acciones: analyze (capturar y analizar pantalla), teach_controls (enseñar controles de juego), get_controls (ver controles), stealth (activar/desactivar stealth mode), start_clip (iniciar grabación), stop_clip (detener), save_clip (guardar clip).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "action": {"type": "STRING", "description": "analyze, teach_controls, get_controls, stealth, start_clip, stop_clip, save_clip"},
+                "prompt": {"type": "STRING", "description": "Prompt para análisis de pantalla (para analyze)"},
+                "game_name": {"type": "STRING", "description": "Nombre del juego (para teach_controls/get_controls)"},
+                "controls": {"type": "STRING", "description": "Descripción de controles (para teach_controls)"},
+                "enable": {"type": "BOOLEAN", "description": "Activar/desactivar (para stealth)"},
+                "duration": {"type": "INTEGER", "description": "Duración del clip en segundos (para start_clip)"},
+                "output_path": {"type": "STRING", "description": "Ruta de salida (para save_clip)"},
+            },
+            "required": ["action"],
+        }
+    },
+])
+
 def load_custom_tools(BASE_DIR):
     """Load custom tools from custom_tools.json and append to TOOL_DECLARATIONS.
 

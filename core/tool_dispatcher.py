@@ -478,6 +478,29 @@ class ToolDispatcher:
                 except Exception as e:
                     return f"Error en pipecat_voice: {e}"
 
+            # ── Screen companion (capri-desktop inspired) ──
+            elif name == "screen_companion":
+                try:
+                    from actions.screen_companion import screenshot_analyze, teach_game_controls, get_game_controls, stealth_mode, start_clip, stop_clip, save_clip
+                    action = args.get("action", "")
+                    if action == "analyze":
+                        return screenshot_analyze(args.get("prompt", "Describe what you see on screen"))
+                    elif action == "teach_controls":
+                        return teach_game_controls(args.get("game_name", ""), args.get("controls", ""))
+                    elif action == "get_controls":
+                        return get_game_controls(args.get("game_name", ""))
+                    elif action == "stealth":
+                        return stealth_mode(args.get("enable", True))
+                    elif action == "start_clip":
+                        return start_clip(args.get("duration", 30))
+                    elif action == "stop_clip":
+                        return stop_clip()
+                    elif action == "save_clip":
+                        return save_clip(args.get("output_path", ""))
+                    return "Acción no soportada: " + action
+                except Exception as e:
+                    return f"Error en screen_companion: {e}"
+
             # ── Special: show_expression (la cara de ERIS) ──
             elif name == "show_expression":
                 result = self._handle_show_expression(args)
