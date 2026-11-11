@@ -4,22 +4,41 @@ vbox_controller.py — Wrapper de VBoxManage para controlar VMs de VirtualBox.
 Proporciona una API pythonica para gestionar máquinas virtuales:
 listar, levantar, apagar, snapshots,-red, execute commands dentro de la VM.
 """
-import subprocess
+import os
 import re
 import json
+import subprocess
 from typing import Optional, Dict, List
+import shutil as _shutil
+
+
+def _find_vboxmanage() -> str:
+    """Encuentra el ejecutable VBoxManage (Windows: ruta completa; Linux: PATH)."""
+    found = _shutil.which("VBoxManage") or _shutil.which("vboxmanage")
+    if found:
+        return found
+    for p in (
+        r"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe",
+        r"C:\Program Files (x86)\Oracle\VirtualBox\VBoxManage.exe",
+    ):
+        if os.path.exists(p):
+            return p
+    return "VBoxManage"
+
+_VBOXMANAGE = _find_vboxmanage()
 
 
 def _run(cmd: list, timeout: int = 60) -> dict:
     """Ejecuta un comando VBoxManage y devuelve stdout/stderr/returncode."""
     try:
         r = subprocess.run(
-            ["VBoxManage"] + cmd,
-            capture_output=True, text=True, timeout=timeout
+            [_VBOXMANAGE] + cmd,
+            capture_output=True, text=True, timeout=timeout,
+            encoding="utf-8", errors="replace"
         )
         return {"ok": r.returncode == 0, "stdout": r.stdout.strip(), "stderr": r.stderr.strip(), "code": r.returncode}
     except FileNotFoundError:
-        return {"ok": False, "stdout": "", "stderr": "VBoxManage no encontrado. Instalá VirtualBox.", "code": -1}
+        return {"ok": False, "stdout": "", "stderr": "VBoxManage no encontrado. Instala VirtualBox.", "code": -1}
     except subprocess.TimeoutExpired:
         return {"ok": False, "stdout": "", "stderr": f"Timeout tras {timeout}s", "code": -2}
 

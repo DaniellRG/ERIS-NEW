@@ -37,7 +37,16 @@ def _load_cfg():
 
 
 def get_backend() -> str:
-    return _load_cfg().get("tts_backend", "gemini")
+    cfg = _load_cfg()
+    backend = cfg.get("tts_backend", "")
+    if backend:
+        return backend
+    # Auto-detect: if no Gemini key, use SAPI on Windows (offline, no internet)
+    if not cfg.get("gemini_api_key", "").strip():
+        if sys.platform == "win32":
+            return "sapi"
+        return "edge"
+    return "gemini"
 
 
 def get_voice() -> str:
@@ -508,26 +517,44 @@ async def _synthesize_edge(text: str, voice: str = "", emotion: str | None = Non
 
 
 async def _synthesize_sapi(text: str) -> bytes:
-    """Synthesize with Windows SAPI (pyttsx3) — 100% offline, no internet needed.
+    """Synthesize with Windows SAPI (win32com) — 100% offline, no internet needed.
 
     Genera el audio a un WAV temporal y lo re-codifica a PCM 24kHz mono int16
     para que suene consistente con el resto de backends.
     """
-    import pyttsx3
-
     tmp_wav = str(BASE_DIR / "data" / "_eris_sapi_tmp.wav")
     try:
-        engine = pyttsx3.init()
-        engine.setProperty("rate", 175)
-        try:
-            engine.setProperty("volume", 1.0)
-        except Exception:
-            pass
-        engine.save_to_file(text, tmp_wav)
-        engine.runAndWait()
+        import win32com.client as _w32
+        speaker = _w32.Dispatch("SAPI.SpVoice")
+        # Find a female voice if available
+        voices = speaker.GetVoices()
+        for i in range(voices.Count):
+            v = voices.Item(i)
+            if "female" in v.GetDescription().lower() or "zira" in v.GetDescription().lower() or "helena" in v.GetDescription().lower():
+                speaker.Voice = v
+                break
+        # Use SAPI file stream to save to WAV
+        import win32com.client as _w32b
+        stream = _w32b.Dispatch("SAPI.SpFileStream")
+        stream.Open(tmp_wav, 3)  # 3 = SSFMCreateForWrite
+        speaker.AudioOutputStream = stream
+        speaker.Speak(text)
+        stream.Close()
     except Exception as e:
-        safe_print(f"[TTS] ⚠️ SAPI error: {e}")
-        return b""
+        # Fallback: try pyttsx3 if available
+        try:
+            import pyttsx3
+            engine = pyttsx3.init()
+            engine.setProperty("rate", 175)
+            try:
+                engine.setProperty("volume", 1.0)
+            except Exception:
+                pass
+            engine.save_to_file(text, tmp_wav)
+            engine.runAndWait()
+        except Exception as e2:
+            safe_print(f"[TTS] ⚠️ SAPI error: {e} / pyttsx3: {e2}")
+            return b""
 
     import asyncio
     import subprocess

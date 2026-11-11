@@ -1347,8 +1347,10 @@ class ErisLive:
     # ── Auto-continuación: Eris avanza sola por tareas largas ───────────────
 
     def _arm_auto_continue(self, prompt: str):
-        """Activa el modo de avance automático si el pedido parece una tarea
+        """Activa el modo de avance automÃ¡tico si el pedido parece una tarea
         multi-paso (crear/instalar/investigar/hacer algo con tools)."""
+        # DESHABILITADO: El usuario quiere control manual, no auto-continuación
+        return
         if not prompt:
             return
         low = prompt.lower()
@@ -2575,7 +2577,7 @@ class ErisLive:
                 self.ui.write_log("SYS: Voz ya en modo local (resiliente).")
             return
         _new = None
-        for _cand in ("kokoro", "piper", "edge", "gtts"):
+        for _cand in ("sapi", "kokoro", "piper", "edge", "gtts"):
             if self._tts_backend_works(_cand):
                 _new = _cand
                 break
@@ -3832,7 +3834,7 @@ class ErisLive:
 
                     if response.data:
                         if not self._stop_requested.is_set():
-                            if _cached_tts_backend not in ("elevenlabs", "fish", "kokoro", "pykokoro", "edge"):
+                            if _cached_tts_backend not in ("elevenlabs", "fish", "kokoro", "pykokoro", "edge", "sapi"):
                                 self.audio_in_queue.put_nowait(response.data)
                                 self._last_audio_ts = time.time()
 
@@ -4208,8 +4210,32 @@ class ErisLive:
                                     finally:
                                         if self._turn_done_event:
                                             self._turn_done_event.set()
-                                threading.Thread(target=_kokoro_play, daemon=True).start()
-                                print(f"[ERIS] 🎙️ {_cached_tts_backend}: {out_full[:60]}...")
+                                    threading.Thread(target=_kokoro_play, daemon=True).start()
+                                    print(f"[ERIS] 🎙️ {_cached_tts_backend}: {out_full[:60]}...")
+                            # ── SAPI local (Windows, 100% offline): sintetizar con Windows SAPI ──
+                            elif _cached_tts_backend == "sapi" and out_full.strip():
+                                def _sapi_play(_txt=out_full):
+                                    try:
+                                        _lf = asyncio.new_event_loop()
+                                        try:
+                                            from core.tts_engine import synthesize
+                                            async def _do_sapi():
+                                                pcm = await synthesize(_txt, backend="sapi")
+                                                if pcm and len(pcm) > 100:
+                                                    try:
+                                                        self.audio_in_queue.put_nowait(pcm)
+                                                    except Exception:
+                                                        pass
+                                            _lf.run_until_complete(_do_sapi())
+                                        finally:
+                                            _lf.close()
+                                    except Exception as _esi:
+                                        print(f"[ERIS] SAPI error: {_esi}")
+                                    finally:
+                                        if self._turn_done_event:
+                                            self._turn_done_event.set()
+                                threading.Thread(target=_sapi_play, daemon=True).start()
+                                print(f"[ERIS] 🎙️ SAPI: {out_full[:60]}...")
                             else:
                                 if self._turn_done_event:
                                     self._turn_done_event.set()
@@ -4333,93 +4359,128 @@ class ErisLive:
 
     print("[ERIS] 🔊 Play iniciado")
 
-    samples_played = 0
-
-    # sounddevice para salida de audio en Linux (sd.play crashea, sd.RawOutputStream funciona)
-    try:
-        import sounddevice as sd  # noqa: E402
-    except (ImportError, OSError):
-        sd = None
-        print("[AUDIO] sounddevice disabled (no PortAudio)")
-
     async def _play_audio(self):
-        """Reproduccion de audio usando paplay (PulseAudio)."""
-        import subprocess as _sp
-        import os as _os
-        import threading as _thr
-        import base64
-        import numpy as _np
+        samples_played = 0
 
-        print("[ERIS] 🔊 Play iniciado")
-
-        _pa_proc = None
-        _pa_lock = _thr.Lock()
-
-        def _paplayer_write(data):
+        # ── Audio playback: pacat en Linux, sounddevice en Windows ──
+        _IS_WIN = sys.platform == "win32"
+        _sd = None
+        if _IS_WIN:
             try:
-                _pa_lock.acquire(timeout=2)
-                try:
-                    if _pa_proc and _pa_proc.stdin and not _pa_proc.stdin.closed:
-                        try:
-                            _pa_proc.stdin.write(data)
-                            _pa_proc.stdin.flush()
-                        except (BrokenPipeError, OSError):
-                            print(f"[ERIS] ⚠️ pacat dejó de aceptar audio (exit={_pa_proc.poll()})")
-                finally:
-                    _pa_lock.release()
+                import sounddevice as _sd_mod
+                _sd = _sd_mod
             except Exception:
-                pass
+                _sd = None
 
-        def _paplayer_stop():
-            nonlocal _pa_proc
+        if _IS_WIN and _sd is not None:
+            # Windows: usar sounddevice RawOutputStream (pacat no existe)
+            import numpy as _np  # noqa: E402
+            import json as _json_cfg
+            _sd_stream = None
+            _sd_device = None
             try:
-                _pa_lock.acquire(timeout=2)
-                try:
-                    if _pa_proc:
-                        try:
-                            _pa_proc.stdin.close()
-                        except Exception:
-                            pass
-                        try:
-                            _pa_proc.terminate()
-                            _pa_proc.wait(timeout=2)
-                        except Exception:
-                            _pa_proc.kill()
-                finally:
-                    _pa_lock.release()
-                    _pa_proc = None
+                _cfg = _json_cfg.loads((Path(__file__).resolve().parent / "config" / "api_keys.json").read_text(encoding="utf-8"))
+                _sd_device = _cfg.get("speaker_device", None)
+                if _sd_device is not None:
+                    _sd_device = int(_sd_device)
             except Exception:
-                pass
+                _sd_device = None
+            try:
+                _sd_stream = _sd.RawOutputStream(
+                    device=_sd_device,
+                    samplerate=24000, channels=1, dtype="int16",
+                    blocksize=2400,
+                )
+                _sd_stream.start()
+                print(f"[ERIS] 🎧 Audio: sounddevice RawOutputStream iniciado (Windows, device={_sd_device})")
+            except Exception as _e:
+                print(f"[ERIS] ⚠️ sounddevice no disponible: {_e}")
+                _sd_stream = None
 
-        try:
-            # El audio que se escribe acá es PCM int16 mono a 24 kHz (Gemini Live
-            # nativo y todos los TTS locales sintetizan a 24k; ver _synthesize_edge
-            # `-ar 24000`). Declarar 16000 lo estiraba 1.5x → voz grave y lenta.
-            # PipeWire/PulseAudio remuestrea 24k→tasa del sink (48k) solo.
-            _pa_proc = _sp.Popen(
-                ["pacat", "--rate=24000",
-                 "--format=S16LE", "--channels=1"],
-                stdin=_sp.PIPE, stdout=_sp.DEVNULL,
-            )
-            print("[ERIS] 🎧 Audio: pacat iniciado (PulseAudio)")
-        except Exception as e:
-            print(f"[ERIS] ⚠️ pacat no disponible ({e})")
+            def _write_audio(data):
+                if _sd_stream is not None:
+                    try:
+                        arr = _np.frombuffer(data, dtype=_np.int16)
+                        if arr.size:
+                            _sd_stream.write(arr.tobytes())
+                            rms = float(_np.sqrt(_np.mean(arr.astype(_np.float32) ** 2))) / 32768.0
+                            self.ui.set_audio_level(min(1.0, rms * 12))
+                    except Exception:
+                        pass
+                else:
+                    self.ui.set_audio_level(0)
+
+            def _paplayer_stop():
+                if _sd_stream is not None:
+                    try:
+                        _sd_stream.stop()
+                        _sd_stream.close()
+                    except Exception:
+                        pass
+        else:
+            # Linux: pacat (PulseAudio/PipeWire)
             _pa_proc = None
+            _pa_lock = _thr.Lock()
 
-        def _write_audio(data):
-
-            if _pa_proc is not None:
-                _paplayer_write(data)
+            def _paplayer_write(data):
                 try:
-                    import numpy as _np
-                    arr = _np.frombuffer(data, dtype=_np.int16)
-                    if arr.size:
-                        rms = float(_np.sqrt(_np.mean(arr.astype(_np.float32) ** 2))) / 32768.0
-                        self.ui.set_audio_level(min(1.0, rms * 12))
+                    _pa_lock.acquire(timeout=2)
+                    try:
+                        if _pa_proc and _pa_proc.stdin and not _pa_proc.stdin.closed:
+                            try:
+                                _pa_proc.stdin.write(data)
+                                _pa_proc.stdin.flush()
+                            except (BrokenPipeError, OSError):
+                                print(f"[ERIS] ⚠️ pacat dejó de aceptar audio (exit={_pa_proc.poll()})")
+                    finally:
+                        _pa_lock.release()
                 except Exception:
                     pass
-            else:
-                self.ui.set_audio_level(0)
+
+            def _paplayer_stop():
+                nonlocal _pa_proc
+                try:
+                    _pa_lock.acquire(timeout=2)
+                    try:
+                        if _pa_proc:
+                            try:
+                                _pa_proc.stdin.close()
+                            except Exception:
+                                pass
+                            try:
+                                _pa_proc.terminate()
+                                _pa_proc.wait(timeout=2)
+                            except Exception:
+                                _pa_proc.kill()
+                    finally:
+                        _pa_lock.release()
+                        _pa_proc = None
+                except Exception:
+                    pass
+
+            try:
+                _pa_proc = _sp.Popen(
+                    ["pacat", "--rate=24000",
+                     "--format=S16LE", "--channels=1"],
+                    stdin=_sp.PIPE, stdout=_sp.DEVNULL,
+                )
+                print("[ERIS] 🎧 Audio: pacat iniciado (PulseAudio)")
+            except Exception as e:
+                print(f"[ERIS] ⚠️ pacat no disponible ({e})")
+                _pa_proc = None
+
+            def _write_audio(data):
+                if _pa_proc is not None:
+                    _paplayer_write(data)
+                    try:
+                        arr = _np.frombuffer(data, dtype=_np.int16)
+                        if arr.size:
+                            rms = float(_np.sqrt(_np.mean(arr.astype(_np.float32) ** 2))) / 32768.0
+                            self.ui.set_audio_level(min(1.0, rms * 12))
+                    except Exception:
+                        pass
+                else:
+                    self.ui.set_audio_level(0)
 
         async def _audio_loop():
             import collections
@@ -4449,12 +4510,11 @@ class ErisLive:
 
             print(f"[ERIS] ⏱ Reproduciendo audio desde cola (paplay)...")
 
-            while not _session_ready.is_set():
-                try:
-                    await asyncio.wait_for(_session_ready.wait(), timeout=0.1)
-                    break
-                except asyncio.TimeoutError:
-                    pass
+            try:
+                _session_ready.set()
+            except Exception:
+                pass
+
 
             while True:
                 if _stop_req and _stop_req.is_set():
@@ -4779,7 +4839,17 @@ class ErisLive:
                             print(f"[ERIS] Modelo del mundo: {_wme}")
 
                     tg.create_task(self._send_realtime())
-                    tg.create_task(self._listen_audio())
+                    # Deshabilitar mic si voice_mode es disabled
+                    _voice_enabled = True
+                    try:
+                        _vcfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
+                        _voice_enabled = _vcfg.get("voice_mode", "local") != "disabled"
+                    except Exception:
+                        pass
+                    if _voice_enabled:
+                        tg.create_task(self._listen_audio())
+                    else:
+                        print("[ERIS] 🎤 Mic deshabilitado (voice_mode=disabled)")
                     tg.create_task(self._receive_audio())
                     # Skip Gemini audio playback when ElevenLabs is the TTS backend
                     _tts_be = "gemini"
