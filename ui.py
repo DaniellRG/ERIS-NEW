@@ -89,6 +89,7 @@ def _user_cfg_dir() -> Path:
 # Durante la transición, ui.py re-exporta desde gui/styles para no romper
 # las importaciones de main.py y de otros modulos.
 from gui.styles import THEMES, THEME_LIST, C, _base_dir as _styles_base_dir, _user_cfg_dir as _styles_user_cfg_dir, _load_saved_theme  # noqa: F401
+from gui.widgets.orb import _OrbBridge, WebGLOrb, Particle, _ORB_ACCENTS  # noqa: F401
 
 # Aliases locales para que el resto de ui.py siga funcionando sin cambios:
 _base_dir = _styles_base_dir
