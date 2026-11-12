@@ -7,7 +7,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y
 ## [4.0.1] — 2026-10-16 — Rendimiento de arranque
 
 Parche posterior al release `v4.0.0` (tag + GitHub Release). Solo rendimiento:
-sin cambios de comportamiento ni de la sync de tools (**514/514**).
+sin cambios de comportamiento ni de la sync de tools (**525/525**).
 
 ### Rendimiento
 - **`core/tool_dispatcher.py`**: `google.genai` ya no se importa a nivel de módulo
@@ -67,10 +67,10 @@ auditoría completa (código + estado + runtime) con evidencia real.
   (`key_manager.should_announce`, 1 aviso por proveedor cada 6 h).
 
 ### Estado verificado en esta versión
-- **514 tools** con sync `514/514` y **0 duplicados**; **514/514** resuelven.
-- `test_all.py` → **177 PASS / 0 FAIL / 3 WARN**.
-- **14 agentes** especializados · **26 sub-agentes** en 4 capas · **304** módulos de
-  acción · **44 skills** (21 builtin + 23 creadas por Eris).
+- **525 tools** con sync `525/525` y **0 duplicados**; **525/525** resuelven.
+- `test_all.py` → ejecutar `python scripts/metrics_ssot.py` para métricas SSOT (baseline no hardcodeado; en clon fresco usar `python scripts/ci_seed.py` primero).
+- **14 agentes** especializados · **15 sub-agentes** en 4 capas · **309** módulos de
+  acción · **52 skills** (SKILL.md).
 - Memoria total RAG multi-fuente, evolución/auto-salud/auto-defensa propias,
   laboratorio de pentest aislado, NeuroSpheres.
 

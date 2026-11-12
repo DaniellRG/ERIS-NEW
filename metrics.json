@@ -1,0 +1,29 @@
+{
+  "project": "ERIS 4.0.1 Constellation Prime",
+  "tools": {
+    "registry": 525,
+    "declarations": 525,
+    "synced": 525,
+    "only_in_registry": [],
+    "only_in_declarations": [],
+    "duplicates_registry": [],
+    "duplicates_declarations": [],
+    "in_sync": true
+  },
+  "actions": {
+    "modules": 309
+  },
+  "agents": {
+    "specialist": 14,
+    "sub_agents": 15
+  },
+  "skills": {
+    "skyll_md": 52
+  },
+  "tests": {
+    "baseline": null,
+    "pytest_files": 37,
+    "test_all_exists": true
+  },
+  "files_tracked": null
+}

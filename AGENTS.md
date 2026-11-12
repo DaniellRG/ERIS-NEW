@@ -10,7 +10,7 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 
 ## Commands
 
-- **Run full test suite**: `python test_all.py` (baseline: 170 PASS / 6 FAIL / 2 WARN — fallas por archivos de datos ausentes en clon fresco y scrapegraphai no instalado)
+- **Run full test suite**: `python test_all.py` (baseline: ejecutar `python scripts/metrics_ssot.py` para métricas SSOT; en clon fresco fallan pruebas por archivos de datos ausentes — usar `python scripts/ci_seed.py` primero)
 - **Run single test**: `python -m pytest tests/test_neurospheres.py -x` (pytest-compatible)
 - **Compile check single file**: `python -m py_compile <file>.py`
 - **Linux setup**: `./run_linux.sh` (crea .venv-linux, instala deps, arranca)
@@ -20,22 +20,22 @@ NeuroSpheres brain, dual Ollama/Gemini chat, Kokoro-82M local Spanish TTS
 
 | File | Role |
 |------|------|
-| `main.py` | GUI entry point (PyQt6, 5361 lines) |
-| `eris_cli.py` | CLI entry point (terminal, Ollama/Gemini chat, 872 lines) |
-| `ui.py` | PyQt6 UI (4037 lines, ErisUI class) |
+| `main.py` | GUI entry point (PyQt6, ~5380 lines) |
+| `eris_cli.py` | CLI entry point (terminal, Ollama/Gemini chat, ~872 lines) |
+| `ui.py` | PyQt6 UI (~1186 lines, ErisUI class; widgets en gui/widgets/) |
 | `core/tool_registry.py` | 525 tool callables |
 | `core/tool_declarations.py` | 525 LLM-facing declarations (0 dupes, sync verificado) |
 | `core/tool_dispatcher.py` | Executes tools by name |
-| `core/action_imports.py` | Lazy registry of ~300 action modules (`_LAZY` + `__getattr__`, PEP 562) |
+| `core/action_imports.py` | Lazy registry of action modules (`_LAZY` + `__getattr__`, PEP 562) |
 | `core/gemini_text_chat.py` | Dual Ollama (default) / Gemini (fallback) chat |
 | `core/neuro_spheres.py` | Visual brain (self-growing), `learn_from_sessions()` |
 | `core/prompt.txt` | System prompt (~2142 lines) |
 | `core/emotional_core.py` | 12-emotion nucleus, learns daily |
 | `core/agent_definitions.py` | 14 specialist agents |
 | `core/agent_router.py` | Intent classification (`classify_intent()`, threshold ≥3) |
-| `actions/` | 308 action modules (one tool per file) |
-| `agents/` | 14 specialist agents |
-| `skills/` | Builtin + user_created skills (SKILL.md format) |
+| `actions/` | 309 action modules (one tool per file) |
+| `agents/` | 14 specialist agents + 15 sub-agents |
+| `skills/` | Builtin + user_created skills (52 SKILL.md) |
 | `config/api_keys.json` | All API keys and settings (UTF-8 without BOM) |
 | `data/knowledge/` | 78 knowledge .md files |
 | `memory/` | Semantic, episodic, working memory + NeuroSpheres state |
