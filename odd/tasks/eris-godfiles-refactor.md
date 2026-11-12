@@ -25,7 +25,7 @@ S7. Tests de caracterización antes de cada bloque movido; suite completa verde 
 |---|---|---|---|---|
 | T0 | S1-S7 | inline | in_progress | — |
 | T1 | S1 | inline | completed | 78743f6 |
-| T2 | S2 | inline | pending | — |
+| T2 | S2 | inline | completed | — |
 | T3 | S3 | inline | pending | — |
 | T4 | S4 | delegated | pending | — |
 | T5 | S5 | inline | pending | — |
@@ -38,4 +38,5 @@ L1. Usuario ordenó ejecutar Paso 0 (leer ErisLive y ErisUI + mapa de dependenci
 L2. Creado documento de tracking. (2026-11-12)
 L3. Paso 0 completado: mapa de dependencias dibujado. main→ui unidireccional; ErisLive expone interfaz UI estrecha (write_log, set_state, inject_text, show_expression, express_emotion, muted, set_face_speaking, set_audio_level, set_orb_audio_level, clear_eris_response, show_thought, stream_eris_chunk, tray_icon, show_and_activate, callbacks on_text_command/on_stop_command/on_config_saved). (2026-11-12)
 L4. Paso 1 (S1) completado y commiteado (78743f6): quitados wrappers _shared_* redundantes de main.py; call sites apuntan a core.shared_context.get_shared_context(). main.py compila; shared_context pasa prueba de humo. (2026-11-12)
-L5. Siguiente: T2 (S2) — extraer lógica de negocio de ErisLive a core/controller.py (router de agentes, chat, episodios, autonomía, habla). Requiere leer métodos de negocio de ErisLive en main.py L1127–L5067. (2026-11-12)
+L5. Paso 2 (S2) completado parcialmente y commiteado (este commit): creado core/controller.py con lógica de negocio sin Qt ni sesión Live (observer_line, tts_backend_works, run_cognitive_cycle, run_autonomy_cycle, proactive_reminders, voice_resilient_fallback). ErisLive instancia self._controller y delega en él _observer_line y _tts_backend_works. main.py y controller.py compilan; controller pasa prueba de humo (observer_line puro, tts_backend_works no falla en backend inexistente). Queda pendiente delegar en el controller los ciclos (cognitivo/autonomía), proactive_reminders y voice_resilient_fallback en una próxima pasada. (2026-11-12)
+L6. Siguiente: T3 (S3) — crear core/events.py (event bus pub/sub) para desacoplar GUI↔núcleo. (2026-11-12)

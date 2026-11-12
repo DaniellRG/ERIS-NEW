@@ -687,6 +687,8 @@ class ErisLive:
         self._online_logged = False             # para no spamear "ERIS en línea" en cada reconexión
         self._convo_ctx = []                    # últimas interacciones, sobreviven a reconexiones
         self._shared = get_shared_context()     # Fase 1.2: contexto único (GUI/CLI/subagentes)
+        from core.controller import Controller
+        self._controller = Controller(state=self._shared)   # Fase 3 T2: lógica de negocio fuera de la UI
         self._turn_mode = ""                     # Fase 3.1b: modo del turno (INVESTIGAR/EDITAR/AUTONOMO)
         self._turn_prefix = ""                   # prefijo interno a anteponer al texto del turno
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
@@ -2492,27 +2494,11 @@ class ErisLive:
             except Exception as e:
                 print(f"[ERIS] Aviso por voz falló: {e}")
         threading.Thread(target=_job, daemon=True).start()
-
     def _tts_backend_works(self, backend: str) -> bool:
         """True solo si el backend local sintetiza de verdad (no alcanza con que
         importe: edge puede dar 403 y quedar mudo). Corre en un hilo propio para
         ser seguro desde un contexto async (el loop del Live)."""
-        import threading as _th
-        _res = {"ok": False}
-
-        def _job():
-            try:
-                import asyncio as _a
-                from core.tts_engine import synthesize
-                _pcm = _a.run(_a.wait_for(synthesize("hola", backend=backend), timeout=8))
-                _res["ok"] = bool(_pcm and len(_pcm) > 100)
-            except Exception:
-                _res["ok"] = False
-
-        _t = _th.Thread(target=_job, daemon=True)
-        _t.start()
-        _t.join(timeout=10)
-        return _res["ok"]
+        return self._controller.tts_backend_works(backend)
 
     def _voice_resilient_fallback(self):
         """Auto-reparación de voz: si la cuota de TTS en nube (Gemini/elevens/fish)
@@ -2656,7 +2642,7 @@ class ErisLive:
             pass
         _announced_tick = False
         for ev in events:
-            line = self._observer_line(ev, _emo)
+            line = self._controller.observer_line(ev, _emo)
             if not line:
                 continue
             significant = ev.get("type") in ("start_coding", "long_coding",
