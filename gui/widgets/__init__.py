@@ -28,3 +28,18 @@ from gui.widgets.chat import (  # noqa: F401
 from gui.widgets.settings import (  # noqa: F401
     SettingsDialog,
 )
+from gui.widgets.transcript import (  # noqa: F401
+    TranscriptArea,
+)
+from gui.widgets.floating import (  # noqa: F401
+    FloatingOrb,
+)
+from gui.widgets.vrm import (  # noqa: F401
+    _VrmBridge,
+    VrmAvatar,
+    VrmAnimStudio,
+)
+from gui.widgets.options import (  # noqa: F401
+    _OptionCard,
+    OptionDialog,
+)
