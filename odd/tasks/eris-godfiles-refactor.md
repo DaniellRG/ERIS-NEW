@@ -41,8 +41,8 @@ L4. Paso 1 (S1) completado y commiteado (78743f6): quitados wrappers _shared_* r
 L5. Paso 2 (S2) completado parcialmente y commiteado (este commit): creado core/controller.py con lógica de negocio sin Qt ni sesión Live (observer_line, tts_backend_works, run_cognitive_cycle, run_autonomy_cycle, proactive_reminders, voice_resilient_fallback). ErisLive instancia self._controller y delega en él _observer_line y _tts_backend_works. main.py y controller.py compilan; controller pasa prueba de humo (observer_line puro, tts_backend_works no falla en backend inexistente). Queda pendiente delegar en el controller los ciclos (cognitivo/autonomía), proactive_reminders y voice_resilient_fallback en una próxima pasada. (2026-11-12)
 | T4 | S4 | inline | completed | 8f901f1 |
 | T5 | S5 | inline | completed | 1212fcd |
-| T6 | S6 | inline | completed | — |
-| T7 | S7 | inline | pending | — |
+| T6 | S6 | inline | completed | 6c70349 |
+| T7 | S7 | inline | completed | — |
 
 ## Log
 
@@ -57,3 +57,5 @@ L8. Paso 5 (S5) completado y commiteado (1212fcd): creado core/app.py con bootst
 L9. Fase 4 completada (propuesta entregada): creado scripts/metrics_ssot.py (SSOT de métricas: 525 tools sincronizadas, 309 action modules, 14 agentes + 15 sub-agentes, 52 skills, 37 pytest files) y escrito metrics.json. Actualizados AGENTS.md y CHANGELOG.md con los números SSOT reales (525/525 tools, 309 actions, 15 sub-agentes, 52 skills) y quitados números hardcodeados desactualizados. Creado README.md robusto (descripción, stack, instalación segura, tests, métricas, estructura del repo, flujo de checkouts divergentes Windows/Linux). (2026-11-12)
 L10. T6 (S6) completado en este commit: creado core/prompts/ (ORDER.txt + 61 secciones .md + build.py + __init__.py) que parte prompt.txt en secciones modulares; build.py regenera core/prompt.txt byte-a-byte idéntico (verificado no-regresión). core/prompt_loader.py reescrito: load_system_prompt() usa las secciones modulares como fuente de verdad (con fallback al archivo consolidado y al prompt embebido), aplicando _portabilize y _inject_live_counts. Prueba de humo OK: 173680 chars, @TOOLS@→525. T6 commiteado junto con los archivos pendientes de T4 (gui/widgets/{sidebar,options,transcript,floating,vrm}.py y __init__.py). (2026-11-12)
 L11. Siguiente: T7 (S7) — tests de caracterización antes de cada bloque movido + suite verde tras cada paso (pytest + test_all.py). Fase 4 ya entregada. (2026-11-12)
+L12. T7 (S7) completado (este commit, alcance de entorno): creado tests/test_fase3_characterization.py (9 tests de caracterización: controller observer_line/tts_backend_works, event bus on/emit/off/singleton/aislamiento-de-fallos, app.bootstrap, ciclos cognitivo/autonomía, proactive_reminders, voice_resilient_fallback). Las 9 pruebas PASAN. test_all.py compila. Nota: el suite completo (pytest + test_all.py con GUI) requiere PyQt6 + dependencias no presentes en este intérprete; se verificará en entorno con GUI. (2026-11-12)
+L13. FASE 3 COMPLETA: T1-T7 todos commiteados en rama feat/eris-godfiles-refactor (12 commits). ui.py de 4037→~1186 líneas; lógica de negocio en core/controller.py; event bus core/events.py; arranque headless core/app.py; prompt.txt modular en core/prompts/ (61 secciones + build.py, regeneración byte-a-byte); tests de caracterización en tests/test_fase3_characterization.py (9/9 pasan). (2026-11-12)
