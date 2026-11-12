@@ -7,15 +7,23 @@ forma programática (sin keystrokes sintéticos, que en Wayland son frágiles).
 El texto inyectado entra por el mismo camino que si el usuario lo escribiera:
 `inject_callback(text)` → `_on_text_command`.
 
+Seguridad:
+  - Bind por defecto 127.0.0.1 (solo localhost). Nunca expuesto a la LAN.
+  - POST /chat exige `Authorization: Bearer <token>`.
+  - El token se lee de ERIS_MOBILE_TOKEN (entorno) o se genera y se muestra
+    una sola vez en consola al arrancar.
+
 Rutas:
   GET  /            → {"status": "ok", "service": "eris", "pid": N}
   GET  /health      → idem
-  POST /chat        → {"text": "..."} inyecta el texto en Eris
-  POST /            → idem que /chat si el body trae "text"
+  POST /chat        → {"text": "..."} inyecta el texto en Eris (Bearer)
+  POST /            → idem que /chat si el body trae "text" (Bearer)
 """
 
+import hashlib
 import json
 import os
+import secrets
 import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -25,6 +33,9 @@ MOBILE_PORT = 8765
 # Callback que inyecta texto en la GUI (lo setea main.py al arrancar).
 _inject_callback = None
 _inject_lock = threading.Lock()
+
+# Token Bearer para /chat. Se lee de ERIS_MOBILE_TOKEN o se genera una vez.
+_MOBILE_TOKEN = None
 
 
 def _get_local_ip() -> str:
@@ -38,6 +49,35 @@ def _get_local_ip() -> str:
         return ip
     except Exception:
         return "127.0.0.1"
+
+
+def _load_mobile_token() -> str:
+    """Devuelve el token Bearer para /chat.
+
+    Orden: ERIS_MOBILE_TOKEN (entorno) → generar uno nuevo y mostrarlo por
+    consola una sola vez.
+    """
+    global _MOBILE_TOKEN
+    if _MOBILE_TOKEN is not None:
+        return _MOBILE_TOKEN
+    env_token = os.environ.get("ERIS_MOBILE_TOKEN", "").strip()
+    if env_token:
+        _MOBILE_TOKEN = env_token
+        return _MOBILE_TOKEN
+    _MOBILE_TOKEN = secrets.token_urlsafe(32)
+    print(f"[SECURITY] Token mobile generado (ERIS_MOBILE_TOKEN): {_MOBILE_TOKEN}")
+    return _MOBILE_TOKEN
+
+
+def _check_bearer(authorization_header: str | None) -> bool:
+    """True solo si el header trae 'Bearer <token>' válido."""
+    expected = _load_mobile_token()
+    raw = (authorization_header or "").strip()
+    if raw.lower().startswith("bearer "):
+        raw = raw[7:].strip()
+    if not raw:
+        return False
+    return secrets.compare_digest(raw, expected)
 
 
 class _HealthHandler(BaseHTTPRequestHandler):
@@ -74,6 +114,11 @@ class _HealthHandler(BaseHTTPRequestHandler):
             self._health()
             return
 
+        # Con body → exige Bearer token (fail-closed)
+        if not _check_bearer(self.headers.get("Authorization", "")):
+            self._json({"error": "No autorizado: falta Bearer token"}, 401)
+            return
+
         try:
             data = json.loads(raw.decode("utf-8", "replace"))
         except Exception:
@@ -98,16 +143,25 @@ class _HealthHandler(BaseHTTPRequestHandler):
 
 
 def start(port: int = 8765, inject_callback=None) -> str:
-    """Start the health server in a daemon thread. Returns the HTTP URL."""
+    """Start the health server in a daemon thread. Returns the HTTP URL.
+
+    Por defecto bindea a 127.0.0.1 (solo localhost). Nunca se expone a la red
+    local a menos que se fuerce explícitamente con ERIS_MOBILE_BIND=0.0.0.0
+    (no recomendado).
+    """
     global _inject_callback
     if inject_callback is not None:
         _inject_callback = inject_callback
-    server = ThreadingHTTPServer(("0.0.0.0", port), _HealthHandler)
+
+    host = os.environ.get("ERIS_MOBILE_BIND", "127.0.0.1").strip() or "127.0.0.1"
+    _load_mobile_token()  # genera/muestra el token si no existe
+
+    server = ThreadingHTTPServer((host, port), _HealthHandler)
     t = threading.Thread(target=server.serve_forever, daemon=True)
     t.start()
-    print(f"[HEALTH] Endpoint de salud iniciado en puerto {port}"
-          + (" (+ /chat)" if _inject_callback else ""))
-    return f"http://{_get_local_ip()}:{port}"
+    print(f"[HEALTH] Endpoint de salud iniciado en {host}:{port}"
+          + (" (+ /chat con Bearer)" if _inject_callback else ""))
+    return f"http://{host}:{port}"
 
 
 def broadcast(text: str):

@@ -76,8 +76,8 @@ def main():
     if api_server:
         server_port = int(os.environ.get("ERIS_API_PORT", "8081"))
         try:
-            api_server({"action": "start", "host": "0.0.0.0", "port": server_port})
-            print(f"[MAIN] API REST server iniciado en http://0.0.0.0:{server_port}")
+            api_server({"action": "start", "host": "127.0.0.1", "port": server_port})
+            print(f"[MAIN] API REST server iniciado en http://127.0.0.1:{server_port}")
         except Exception as e:
             print(f"[MAIN] API server error: {e}")
 
@@ -182,7 +182,7 @@ def main():
         # (serve() returns a context manager; server doesn't bind until entered)
         async def _ws_serve():
             async with _ws_lib.serve(
-                handle_client, "0.0.0.0", 8766,
+                handle_client, "127.0.0.1", 8766,
                 ping_interval=20, ping_timeout=10
             ):
                 print("[MAIN-SERVER] WebSocket server en :8766 (ws://0.0.0.0:8766)")
