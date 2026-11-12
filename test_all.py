@@ -17,6 +17,14 @@ def fail(section, msg):
 def warn(section, msg):
     global WARN; WARN += 1; RESULTS.append(("WARN", section, msg))
 
+def _safe_print(msg):
+    """Imprime manejando caracteres no soportados por la consola (ej. emojis en Windows cp1252)."""
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        enc = sys.stdout.encoding or "utf-8"
+        print(msg.encode(enc, errors="replace").decode(enc))
+
 print("=" * 70)
 print("  TEST COMPLETO DE ERIS — 26/08/2026")
 print("=" * 70)
@@ -1105,13 +1113,13 @@ if FAIL > 0:
     print("\n  FALLOS:")
     for status, section, msg in RESULTS:
         if status == "FAIL":
-            print(f"    [FAIL] {section}: {msg}")
+            _safe_print(f"    [FAIL] {section}: {msg}")
 
 if WARN > 0:
     print("\n  ADVERTENCIAS:")
     for status, section, msg in RESULTS:
         if status == "WARN":
-            print(f"    [WARN] {section}: {msg}")
+            _safe_print(f"    [WARN] {section}: {msg}")
 
 print("\n" + "=" * 70)
 if FAIL == 0:

@@ -1312,10 +1312,8 @@ class ErisLive:
     # ── Auto-continuación: Eris avanza sola por tareas largas ───────────────
 
     def _arm_auto_continue(self, prompt: str):
-        """Activa el modo de avance automÃ¡tico si el pedido parece una tarea
+        """Activa el modo de avance automático si el pedido parece una tarea
         multi-paso (crear/instalar/investigar/hacer algo con tools)."""
-        # DESHABILITADO: El usuario quiere control manual, no auto-continuación
-        return
         if not prompt:
             return
         low = prompt.lower()

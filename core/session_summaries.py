@@ -10,6 +10,8 @@ resúmenes como contexto para retomar el hilo sin seguir hablando.
 from __future__ import annotations
 
 import json
+import os
+import sys
 import threading
 from datetime import datetime
 from pathlib import Path
@@ -112,7 +114,12 @@ def finalize_session_summary() -> str | None:
                     "path": str(path), "tail": blob[-400:]})
     _save_index(entries)
     total = _fold_and_clear()
-    print(f"[ERIS] 💾 Resumen de sesión guardado: {path} ({len(note)}b, total {total})")
+    try:
+        print(f"[ERIS] 💾 Resumen de sesión guardado: {path} ({len(note)}b, total {total})")
+    except UnicodeEncodeError:
+        enc = sys.stdout.encoding or "utf-8"
+        msg = f"[ERIS] Resumen de sesion guardado: {path} ({len(note)}b, total {total})"
+        print(msg.encode(enc, errors="replace").decode(enc))
     return str(path)
 
 
