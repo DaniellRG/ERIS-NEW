@@ -689,6 +689,8 @@ class ErisLive:
         self._shared = get_shared_context()     # Fase 1.2: contexto único (GUI/CLI/subagentes)
         from core.controller import Controller
         self._controller = Controller(state=self._shared)   # Fase 3 T2: lógica de negocio fuera de la UI
+        from core.events import get_event_bus
+        self.bus = get_event_bus()                          # Fase 3 T3: bus de eventos para desacoplar GUI↔núcleo
         self._turn_mode = ""                     # Fase 3.1b: modo del turno (INVESTIGAR/EDITAR/AUTONOMO)
         self._turn_prefix = ""                   # prefijo interno a anteponer al texto del turno
         self._active_task = ""                   # tarea en curso (para reconexión sin olvido)
