@@ -21,8 +21,8 @@ import random
 from collections import deque
 from pathlib import Path
 
-from PyQt6.QtCore import QObject, pyqtSlot, Qt, QUrl, QTimer
-from PyQt6.QtGui import QColor, QPainter, QBrush, QPen, QRadialGradient, QPointF, QPolygonF
+from PyQt6.QtCore import QObject, pyqtSlot, Qt, QUrl, QTimer, QPointF, QRectF
+from PyQt6.QtGui import QColor, QPainter, QBrush, QPen, QRadialGradient, QPolygonF
 from PyQt6.QtWidgets import QWidget
 
 from gui.styles import C, _base_dir
