@@ -17,3 +17,11 @@ from gui.widgets.glass import (  # noqa: F401
     SpotifyWidget,
     NotesWidget,
 )
+from gui.widgets.sidebar import (  # noqa: F401
+    _SidebarBtn,
+    _NeonField,
+)
+from gui.widgets.chat import (  # noqa: F401
+    _ChatInput,
+    FileDropZone,
+)

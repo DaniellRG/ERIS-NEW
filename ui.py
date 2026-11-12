@@ -90,6 +90,8 @@ def _user_cfg_dir() -> Path:
 # las importaciones de main.py y de otros modulos.
 from gui.styles import THEMES, THEME_LIST, C, _base_dir as _styles_base_dir, _user_cfg_dir as _styles_user_cfg_dir, _load_saved_theme  # noqa: F401
 from gui.widgets.glass import GlassWidget, SystemWidget, WeatherWidget, TodoWidget, SpotifyWidget, NotesWidget  # noqa: F401
+from gui.widgets.sidebar import _SidebarBtn, _NeonField  # noqa: F401
+from gui.widgets.chat import _ChatInput, FileDropZone  # noqa: F401
 from gui.widgets.orb import _OrbBridge, WebGLOrb, Particle, ParticleOrb, _ORB_ACCENTS  # noqa: F401
 
 # Aliases locales para que el resto de ui.py siga funcionando sin cambios:
@@ -219,154 +221,8 @@ _ORB_ACCENTS = {
 # mantener `from ui import GlassWidget` etc.
 
 
-# ── File Drop Zone ──────────────────────────────────────────────────────────────
-_IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif")
-
-_DOC_EXTS = (
-    ".pdf", ".docx", ".docm", ".xlsx", ".xlsm", ".xlsb", ".xltx",
-    ".pptx", ".pptm", ".potx", ".txt", ".text", ".md", ".markdown",
-    ".rst", ".log", ".csv", ".tsv", ".json", ".jsonl", ".xml", ".html",
-    ".htm", ".css", ".js", ".jsx", ".ts", ".tsx", ".py", ".pyw", ".java",
-    ".c", ".h", ".cpp", ".hpp", ".cs", ".go", ".rs", ".rb", ".php",
-    ".sql", ".sh", ".bat", ".cmd", ".ps1", ".ini", ".cfg", ".yaml",
-    ".yml", ".toml", ".env", ".gitignore",
-)
-
-
-class _ChatInput(QLineEdit):
-    """Chat input with image & document drag & drop support."""
-    image_dropped = pyqtSignal(str)
-    doc_dropped = pyqtSignal(str)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setAcceptDrops(True)
-
-    def dragEnterEvent(self, e: QDragEnterEvent):
-        if e.mimeData().hasUrls():
-            for url in e.mimeData().urls():
-                low = url.toLocalFile().lower()
-                if low.endswith(_IMAGE_EXTS) or low.endswith(_DOC_EXTS):
-                    e.acceptProposedAction()
-                    return
-        e.ignore()
-
-    def dropEvent(self, e: QDropEvent):
-        for url in e.mimeData().urls():
-            path = url.toLocalFile()
-            if not path:
-                continue
-            low = path.lower()
-            if low.endswith(_IMAGE_EXTS):
-                self.image_dropped.emit(path)
-            elif low.endswith(_DOC_EXTS):
-                self.doc_dropped.emit(path)
-        e.acceptProposedAction()
-
-
-class FileDropZone(QWidget):
-    file_selected = pyqtSignal(str)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setAcceptDrops(True)
-        self.setMinimumHeight(60)
-        self._hover = False
-
-    def paintEvent(self, e):
-        p = QPainter(self)
-        p.setRenderHint(QPainter.RenderHint.Antialiasing)
-        color = QColor(C.PRI) if self._hover else QColor(C.TEXT_DIM)
-        color.setAlpha(60 if self._hover else 30)
-        pen = QPen(QColor(C.PRI) if self._hover else QColor(C.TEXT_DIM), 1, Qt.PenStyle.DashLine)
-        p.setPen(pen)
-        p.setBrush(QBrush(color))
-        rect = self.rect().adjusted(2, 2, -2, -2)
-        p.drawRoundedRect(rect, 8, 8)
-        p.setPen(QColor(C.TEXT_DIM))
-        p.setFont(QFont("Consolas", 10))
-        p.drawText(rect, Qt.AlignmentFlag.AlignCenter, "DROP FILES HERE")
-        p.end()
-
-    def dragEnterEvent(self, e: QDragEnterEvent):
-        if e.mimeData().hasUrls():
-            self._hover = True
-            self.update()
-            e.acceptProposedAction()
-
-    def dragLeaveEvent(self, e):
-        self._hover = False
-        self.update()
-
-    def dropEvent(self, e: QDropEvent):
-        self._hover = False
-        for url in e.mimeData().urls():
-            path = url.toLocalFile()
-            if path:
-                self.file_selected.emit(path)
-        self.update()
-
-
 # ── Futuristic Settings Dialog ─────────────────────────────────────────────────
-class _SidebarBtn(QPushButton):
-    """Animated sidebar button with neon glow."""
-    def __init__(self, icon, text, parent=None):
-        super().__init__(text, parent)
-        self._icon = icon
-        self._active = False
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setFixedHeight(48)
-        self.setCheckable(True)
-
-    def set_active(self, active: bool):
-        self._active = active
-        self.setChecked(active)
-        self.update()
-
-    def paintEvent(self, e):
-        p = QPainter(self)
-        p.setRenderHint(QPainter.RenderHint.Antialiasing)
-        r = self.rect()
-        if self._active:
-            glow = QColor(C.PRI)
-            glow.setAlpha(30)
-            p.fillRect(r, glow)
-            p.setPen(QPen(QColor(C.PRI), 2))
-            p.drawLine(r.left(), r.top() + 4, r.left(), r.bottom() - 4)
-        elif self.underMouse():
-            glow = QColor(C.PRI)
-            glow.setAlpha(15)
-            p.fillRect(r, glow)
-        p.setPen(QColor(C.PRI_LIGHT if self._active else C.TEXT_DIM))
-        font = QFont("Segoe UI", 10, QFont.Weight.Bold if self._active else QFont.Weight.Normal)
-        p.setFont(font)
-        p.drawText(r.adjusted(16, 0, 0, 0), Qt.AlignmentFlag.AlignVCenter, f"{self._icon}  {self.text()}")
-
-
-class _NeonField(QWidget):
-    """Futuristic input field with neon underline."""
-    def __init__(self, label: str, placeholder: str = "", password: bool = False, default: str = ""):
-        super().__init__()
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(3)
-        lbl = QLabel(label)
-        lbl.setStyleSheet(f"color: {C.TEXT_DIM}; font-size: 9px; letter-spacing: 1px; font-weight: bold;")
-        self.entry = QLineEdit()
-        self.entry.setText(str(default))
-        self.entry.setPlaceholderText(placeholder)
-        if password:
-            self.entry.setEchoMode(QLineEdit.EchoMode.Password)
-        self.entry.setStyleSheet(f"""
-            QLineEdit {{
-                background: {C.BG3}; color: {C.PRI_LIGHT}; border: none;
-                border-bottom: 1px solid {C.BORDER}; border-radius: 0;
-                padding: 6px 4px; font-size: 12px; font-family: 'Consolas', monospace;
-            }}
-            QLineEdit:focus {{ border-bottom: 2px solid {C.PRI}; }}
-        """)
-        layout.addWidget(lbl)
-        layout.addWidget(self.entry)
+# _SidebarBtn y _NeonField movidos a gui/widgets/sidebar.py (refactor T4).
 
 
 class SettingsDialog(QDialog):
