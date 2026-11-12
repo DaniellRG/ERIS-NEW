@@ -24,7 +24,7 @@ S7. Tests de caracterización antes de cada bloque movido; suite completa verde 
 | ID | Spec | Route | Status | Commit |
 |---|---|---|---|---|
 | T0 | S1-S7 | inline | in_progress | — |
-| T1 | S1 | inline | pending | — |
+| T1 | S1 | inline | completed | 78743f6 |
 | T2 | S2 | inline | pending | — |
 | T3 | S3 | inline | pending | — |
 | T4 | S4 | delegated | pending | — |
@@ -37,4 +37,5 @@ S7. Tests de caracterización antes de cada bloque movido; suite completa verde 
 L1. Usuario ordenó ejecutar Paso 0 (leer ErisLive y ErisUI + mapa de dependencias) y luego ejecutar todos los pasos de Fase 3, continuar Fase 4. (2026-11-12)
 L2. Creado documento de tracking. (2026-11-12)
 L3. Paso 0 completado: mapa de dependencias dibujado. main→ui unidireccional; ErisLive expone interfaz UI estrecha (write_log, set_state, inject_text, show_expression, express_emotion, muted, set_face_speaking, set_audio_level, set_orb_audio_level, clear_eris_response, show_thought, stream_eris_chunk, tray_icon, show_and_activate, callbacks on_text_command/on_stop_command/on_config_saved). (2026-11-12)
-L4. Iniciando Paso 1: estado compartido → core/state.py. Verificando blast radius de _shared_*. (2026-11-12)
+L4. Paso 1 (S1) completado y commiteado (78743f6): quitados wrappers _shared_* redundantes de main.py; call sites apuntan a core.shared_context.get_shared_context(). main.py compila; shared_context pasa prueba de humo. (2026-11-12)
+L5. Siguiente: T2 (S2) — extraer lógica de negocio de ErisLive a core/controller.py (router de agentes, chat, episodios, autonomía, habla). Requiere leer métodos de negocio de ErisLive en main.py L1127–L5067. (2026-11-12)
