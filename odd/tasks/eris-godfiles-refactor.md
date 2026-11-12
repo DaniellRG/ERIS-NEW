@@ -27,8 +27,8 @@ S7. Tests de caracterización antes de cada bloque movido; suite completa verde 
 | T1 | S1 | inline | completed | 78743f6 |
 | T2 | S2 | inline | completed | — |
 | T3 | S3 | inline | completed | — |
-| T4 | S4 | inline | in_progress | — |
-| T5 | S5 | inline | pending | — |
+| T4 | S4 | inline | completed | 8f901f1 |
+| T5 | S5 | inline | completed | — |
 | T6 | S6 | inline | pending | — |
 | T7 | S7 | inline | pending | — |
 

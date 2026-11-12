@@ -5070,58 +5070,9 @@ def main():
         except Exception as _lock_e:
             print(f"[ERIS] single-instance skip: {_lock_e}")
 
-    # ── License check ─────────────────────────────────────────────────────────
-    # ──────────────────────────────────────────────────────────────────────────
-
-    # Load timezone from config
-    load_tz(API_CONFIG_PATH)
-
-    # ── Console.log: init centralized error/performance logging ──
-    try:
-        from core.console_log import log_system
-        log_system("ERIS started", {"version": "2.0", "python": sys.version[:6]})
-    except Exception:
-        pass
-
-    # ── Identity Restore: restaurar estado al iniciar ──
-    try:
-        from core.identity_persistence import restore_latest
-        restore_result = restore_latest()
-        if restore_result.get("files_restored", 0) > 0:
-            print("[ERIS] Identity restaurada: {} archivos".format(restore_result.get("files_restored")))
-    except Exception as _ir:
-        print("[ERIS] Identity restore skip: {}".format(str(_ir)[:60]))
-
-    # ── Goals: auto-generar metas si estan vacias ──
-    try:
-        from core.goal_setting import goal_setting_tool
-        import json as _cjson
-        status = _cjson.loads(goal_setting_tool({"action": "status"}))
-        if status.get("active", 0) == 0:
-            goal_setting_tool({"action": "auto_generate"})
-            print("[ERIS] Metas auto-generadas (estaban vacias)")
-    except Exception as _gg:
-        pass
-
-    # ── Autonomía: arrancar Ollama (cerebro local de respaldo) si está habilitado ──
-    try:
-        _boot_cfg = {}
-        if API_CONFIG_PATH.exists():
-            try:
-                _boot_cfg = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8"))
-            except Exception:
-                _boot_cfg = {}
-        if _boot_cfg.get("ollama_enabled", False):
-            from core.ollama_autostart import ensure_ollama_running, apply_autostart
-            # Sincronizar el autostart de Windows con la preferencia guardada
-            try:
-                apply_autostart(bool(_boot_cfg.get("ollama_autostart", False)))
-            except Exception:
-                pass
-            # Arrancar Ollama en segundo plano (no bloqueante: hilo daemon)
-            threading.Thread(target=ensure_ollama_running, kwargs={"wait_secs": 10.0}, daemon=True).start()
-    except Exception as _e:
-        print(f"[ERIS] ollama boot skip: {_e}")
+    # -- Arranque headless (Fase 3 T5) --
+    from core.app import bootstrap
+    bootstrap()
 
     def _ensure_both_api_keys():
         cfg = {}
