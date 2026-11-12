@@ -458,53 +458,14 @@ _SELF_IMPROV_LAST = 0.0
 _SELF_IMPROV_INTERVAL = 300.0  # 5 min: evita evaluar con Ollama en cada turno
 
 
-# ── Fase 3.3: la autonomía lee del SharedContext (un solo cerebro) ───────────
 
-def _shared_ctx():
-    """El contexto compartido, o None si no está disponible. Nunca lanza."""
-    try:
-        from core.shared_context import get_shared_context
-        return get_shared_context()
-    except Exception:
-        return None
-
-
-def _shared_touch_activity():
-    """Marca actividad del usuario en el reloj compartido (GUI+CLI+daemons)."""
-    _c = _shared_ctx()
-    if _c is not None:
-        try:
-            _c.touch_activity()
-        except Exception:
-            pass
-
-
-def _shared_idle_seconds(fallback: float) -> float:
-    """Idle desde el SharedContext; si no hay, el reloj local de la GUI."""
-    _c = _shared_ctx()
-    if _c is not None:
-        try:
-            return _c.idle_seconds()
-        except Exception:
-            pass
-    return fallback
-
-
-def _shared_autonomy(key: str, default):
-    _c = _shared_ctx()
-    if _c is not None:
-        try:
-            return _c.get_autonomy(key, default)
-        except Exception:
-            pass
-    return default
 
 
 def _run_self_improvement(user_input: str, response: str, context: dict = None):
     """Run self-improvement cycle in background thread (throttled)."""
     global _SELF_IMPROV_LAST
     now = time.time()
-    interval = float(_shared_autonomy("self_improvement_interval_s", _SELF_IMPROV_INTERVAL))
+    interval = float(get_shared_context().get_autonomy("self_improvement_interval_s", _SELF_IMPROV_INTERVAL))
     with _SELF_IMPROV_LOCK:
         if now - _SELF_IMPROV_LAST < interval:
             return
@@ -1074,7 +1035,7 @@ class ErisLive:
                 pass
         # Idle timer para modo proactivo (y reloj compartido con CLI/daemons)
         self._last_user_interaction = time.time()
-        _shared_touch_activity()
+        get_shared_context().touch_activity()
         self._proactive_thread = threading.Thread(target=self._proactive_loop, daemon=True)
         self._proactive_thread.start()
 
@@ -1411,8 +1372,8 @@ class ErisLive:
             if not self._auto_cont_turn_used_tools and not any(
                     m in last_response.lower() for m in _AUTO_CONT_INTENT_MARKERS):
                 return
-            _max_steps = int(_shared_autonomy("auto_cont_max_steps", _AUTO_CONT_MAX_STEPS))
-            _cooldown = float(_shared_autonomy("auto_cont_cooldown_s", _AUTO_CONT_COOLDOWN_S))
+            _max_steps = int(get_shared_context().get_autonomy("auto_cont_max_steps", _AUTO_CONT_MAX_STEPS))
+            _cooldown = float(get_shared_context().get_autonomy("auto_cont_cooldown_s", _AUTO_CONT_COOLDOWN_S))
             if self._auto_cont_steps >= _max_steps:
                 self._auto_cont_on = False
                 self.ui.write_log(f"SYS: ⚠️ Tope de {_max_steps} avances — freno a pedirte.")
@@ -1674,7 +1635,7 @@ class ErisLive:
         self._response_start_ts = _t.time()
         print(f"[TIMING] Input received at {self._response_start_ts:.3f}: {text[:50]}", flush=True)
         self._last_user_interaction = time.time()  # Reset idle timer
-        _shared_touch_activity()
+        get_shared_context().touch_activity()
 
         # ── Fase 3.1b (GUI): leer la intención del turno ──
         # Gemini Live no tiene system por turno, así que el modo viaja como
@@ -2840,7 +2801,7 @@ class ErisLive:
                 mine_if_due()
             except Exception:
                 pass
-            idle_seconds = _shared_idle_seconds(time.time() - self._last_user_interaction)
+            idle_seconds = get_shared_context().idle_seconds()
 
             # ── Núcleo emocional sentiente: el paso del tiempo sin hablar ──
             try:
@@ -2854,7 +2815,7 @@ class ErisLive:
                 pass
 
             # Aprendizaje idle MUCHO más conservador - solo si lleva MUCHO tiempo inactiva
-            if idle_seconds > _shared_autonomy("idle_learning_s", 900) and self._loop and self.session:  # 15 min en vez de 5
+            if idle_seconds > get_shared_context().get_autonomy("idle_learning_s", 900) and self._loop and self.session:  # 15 min en vez de 5
                 try:
                     from core.idle_learning_loop import should_learn, run_idle_learning
                     if should_learn(idle_seconds) and idle_seconds > 1800:  # extra check - 30 min
@@ -2865,7 +2826,7 @@ class ErisLive:
 
             # Iniciativa solo con inactividad EXTREMA - solo si el usuario realmente la dejó sola
             # Y solo una vez cada rato, sin pensar constantemente
-            if idle_seconds > _shared_autonomy("iniciativa_idle_s", 1800) and self._loop and self.session:  # 30 min en vez de 7
+            if idle_seconds > get_shared_context().get_autonomy("iniciativa_idle_s", 1800) and self._loop and self.session:  # 30 min en vez de 7
                 try:
                     from core.autonomia import turno_de_iniciativa
                     _ini = turno_de_iniciativa()
