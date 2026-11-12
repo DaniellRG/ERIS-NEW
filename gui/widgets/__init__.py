@@ -9,3 +9,11 @@ from gui.widgets.orb import (  # noqa: F401
     ParticleOrb,
     _ORB_ACCENTS,
 )
+from gui.widgets.glass import (  # noqa: F401
+    GlassWidget,
+    SystemWidget,
+    WeatherWidget,
+    TodoWidget,
+    SpotifyWidget,
+    NotesWidget,
+)
