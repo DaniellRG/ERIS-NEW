@@ -6,5 +6,6 @@ from gui.widgets.orb import (  # noqa: F401
     _OrbBridge,
     WebGLOrb,
     Particle,
+    ParticleOrb,
     _ORB_ACCENTS,
 )
