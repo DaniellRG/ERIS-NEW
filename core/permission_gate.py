@@ -430,14 +430,10 @@ class PermissionGate:
             self._log_decision(tool_name, params, True, "trusted_session")
             return PermissionResult(True, "trusted_session")
 
-        # ── Autonomía (fix 2026-10-20): el diálogo SOLO para riesgo alto/crítico.
-        # Riesgo medio/bajo (operaciones normales de trabajo: shell, escribir
-        # archivos, git commit) se permite solo, sin bloquearse en un diálogo por
-        # cada comando. Antes cada medium abría un modal y, si nadie clickeaba,
-        # devolvía "skip" truthy → fail-open tras 90s (lento Y poco confiable).
-        # Zonas protegidas y alto/crítico SIGUEN pidiendo OK (más arriba), y los
-        # borrados ya suben a alto en assess_risk/DANGEROUS_COMMANDS.
-        if self._ui_callback and risk in ("high", "critical"):
+        # ── Autonomía segura (fix 2026-11-12): medio/crítico SIEMPRE piden
+        # confirmación al usuario cuando hay UI. Sin UI → fail-closed.
+        # Solo bajo (safe) se auto-aprueba sin diálogo.
+        if self._ui_callback and risk in ("medium", "high", "critical"):
             try:
                 question = f"[RIESGO {risk.upper()}] {desc}\n\nTool: {tool_name}\n¿Ejecutar?"
                 resp = self._ui_callback(question)
@@ -448,14 +444,14 @@ class PermissionGate:
                 self._log_decision(tool_name, params, False, "callback_error")
                 return PermissionResult(False, "callback_error")
 
-        # Riesgo alto/crítico SIN UI → fail-closed (nunca se ejecuta solo).
-        if risk in ("high", "critical"):
+        # Sin UI: medio/alto/crítico → fail-closed (nunca se ejecuta solo).
+        if risk in ("medium", "high", "critical"):
             self._log_decision(tool_name, params, False, "no_ui_high_risk")
             return PermissionResult(False, f"deny_no_ui: {desc}")
 
-        # Medio/bajo: permitir autónomamente (flujo normal de trabajo de Eris).
-        self._log_decision(tool_name, params, True, "auto_low_medium")
-        return PermissionResult(True, "auto_allow_low_medium")
+        # Bajo/safe: permitir autónomamente.
+        self._log_decision(tool_name, params, True, "auto_allow_low")
+        return PermissionResult(True, "auto_allow_low")
 
     def _log_decision(self, tool_name: str, params: dict, allowed: bool, reason: str):
         try:

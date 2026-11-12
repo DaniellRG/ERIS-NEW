@@ -12,9 +12,10 @@ packages  – List installed packages via ``pip list``.
 
 import subprocess
 import sys
-import textwrap
 import tempfile
+import textwrap
 import os
+import ast
 
 _BLOCKED_PATTERNS = [
     "os.system",
@@ -37,6 +38,36 @@ def _sanitize(code: str) -> tuple[bool, str]:
         if pat in lower:
             return False, f"Blocked pattern detected: {pat}"
     return True, ""
+
+
+def _safe_eval(code: str):
+    """
+    Evalúa solo expresiones literales seguras (números, strings, tuplas,
+    listas, diccionarios, booleanos, None y operaciones aritméticas básicas).
+    Rechaza cualquier nodo de AST que no sea explícitamente permitido.
+    """
+    try:
+        tree = ast.parse(code, mode="eval")
+    except SyntaxError as exc:
+        raise ValueError(f"Expresión inválida: {exc}")
+
+    _ALLOWED_NODES = (
+        ast.Expression, ast.Constant, ast.List, ast.Tuple, ast.Dict,
+        ast.Set, ast.NameConstant, ast.UnaryOp, ast.BinOp, ast.BoolOp,
+        ast.Compare, ast.Attribute, ast.Subscript, ast.Slice,
+        ast.USub, ast.UAdd, ast.Not,
+        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.Pow,
+        ast.LShift, ast.RShift, ast.BitOr, ast.BitAnd, ast.BitXor,
+        ast.Invert,
+        ast.Eq, ast.NotEq, ast.Lt, ast.LtE, ast.Gt, ast.GtE,
+        ast.Is, ast.IsNot, ast.In, ast.NotIn,
+    )
+
+    for node in ast.walk(tree):
+        if not isinstance(node, _ALLOWED_NODES):
+            raise ValueError(f"Nodo no permitido en expresión: {type(node).__name__}")
+
+    return eval(compile(tree, "<string>", "eval"), {"__builtins__": {}}, {})
 
 
 def _run_subprocess(code: str, timeout: int) -> tuple[str, str, int]:
@@ -93,7 +124,7 @@ def code_sandbox(parameters: dict = None, player=None) -> str:  # noqa: C901
         if not safe:
             return f"Error: Expression rejected — {reason}"
         try:
-            result = eval(code)  # noqa: S307  – intentionally limited eval
+            result = _safe_eval(code)
             return repr(result)
         except Exception as exc:
             return f"Evaluation error: {exc}"

@@ -1,5 +1,6 @@
 import math
 import re
+import ast
 from datetime import datetime, timedelta
 
 def calculator(parameters: dict, player=None) -> str:
@@ -19,6 +20,33 @@ def calculator(parameters: dict, player=None) -> str:
         return _random_number(expression)
     else:
         return _calculate(expression)
+
+def _safe_eval_math(expr: str):
+    """
+    Evalúa solo expresiones matemáticas seguras usando AST.
+    Permite: números, operadores aritméticos, funciones de math (sqrt, sin, cos, etc.),
+    abs, pow, y paréntesis. Rechaza cualquier cosa que no sea matemática pura.
+    """
+    try:
+        tree = ast.parse(expr, mode="eval")
+    except SyntaxError as exc:
+        raise ValueError(f"Expresión inválida: {exc}")
+
+    _ALLOWED_NODES = (
+        ast.Expression, ast.Constant, ast.BinOp, ast.UnaryOp,
+        ast.Call, ast.Attribute, ast.Name, ast.Load,
+        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.Pow, ast.FloorDiv,
+        ast.USub, ast.UAdd,
+    )
+
+    for node in ast.walk(tree):
+        if not isinstance(node, _ALLOWED_NODES):
+            raise ValueError(f"Nodo no permitido: {type(node).__name__}")
+
+    # Solo permitir nombres de math y funciones builtin seguras
+    safe_names = {"math": math, "abs": abs, "round": round, "min": min, "max": max}
+    return eval(compile(tree, "<string>", "eval"), {"__builtins__": {}}, safe_names)
+
 
 def _calculate(expr):
     if not expr:
@@ -63,16 +91,8 @@ def _calculate(expr):
     processed = re.sub(r"math\.(sqrt|sin|cos|tan|log10|log|factorial)\s+(\d+(?:\.\d+)?)", r"math.\1(\2)", processed)
     processed = re.sub(r"\babs\s+(\d+(?:\.\d+)?)", r"abs(\1)", processed)
 
-    safe_chars = set("0123456789+-*/()., math.sqrtabsfloorceilroundlogsincoantPIE,")
-    if not all(c in safe_chars for c in processed.replace("math.sqrt", "").replace("math.sin", "")):
-        try:
-            result = eval(processed, {"math": math, "__builtins__": {}}, {})
-            return f"{expr} = {result}"
-        except Exception:
-            pass
-
     try:
-        result = eval(processed, {"math": math, "__builtins__": {}}, {})
+        result = _safe_eval_math(processed)
         if isinstance(result, float) and result == int(result) and abs(result) < 1e15:
             result = int(result)
         return f"{expr} = {result}"

@@ -8,6 +8,7 @@ Soporta PowerShell/CMD (Windows) y /bin/bash (Linux) automáticamente.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import threading
 import time
@@ -17,6 +18,66 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 MAX_OUTPUT = 50_000
 _IS_WIN = os.name == "nt"
+
+# ── Lista blanca de comandos seguros (solo lectura / sin efectos destructivos) ──
+_SAFE_COMMANDS = {
+    "pwd", "ls", "dir", "cd", "echo", "cat", "type", "whoami", "date", "uptime",
+    "uname", "df", "du", "free", "grep", "head", "tail", "wc", "which", "whereis",
+    "file", "stat", "tree", "ps", "top", "env", "printenv", "hostname", "id",
+    "groups", "locale", "cal", "less", "more", "man", "clear",
+    "git status", "git log", "git diff", "git show", "git branch",
+    "git remote -v", "git rev-parse",
+    "python", "python3", "pip", "npm", "node",
+}
+
+# ── Patrones peligrosos que NUNCA se ejecutan ──
+_DANGEROUS_PATTERNS = [
+    (re.compile(r"\brm\s+(-[rf]+\s+)?/", re.I), "Eliminar archivos/directorios críticos (rm)"),
+    (re.compile(r"\bdel\s+(/[sfq]\s+)?[A-Z]:\\", re.I), "Eliminar archivos en Windows (del)"),
+    (re.compile(r"\bformat\s+[A-Z]:", re.I), "Formatear disco (format)"),
+    (re.compile(r"\brmdir\s+(/s\s+)?[A-Z]:\\", re.I), "Eliminar directorio en Windows (rmdir)"),
+    (re.compile(r"\bRemove-Item\s+(-Recurse)?\s+\"", re.I), "Eliminar con PowerShell (Remove-Item)"),
+    (re.compile(r"\bgit\s+push\s+--force", re.I), "Git force push"),
+    (re.compile(r"\bgit\s+push", re.I), "Git push"),
+    (re.compile(r"\bgit\s+reset\s+--hard", re.I), "Git reset hard"),
+    (re.compile(r"\bshutdown\b", re.I), "Apagar/reiniciar sistema"),
+    (re.compile(r"\bsudo\s+reboot\b", re.I), "Reiniciar con sudo"),
+    (re.compile(r"\breboot\b", re.I), "Reiniciar sistema"),
+    (re.compile(r"\bhalt\b", re.I), "Detener sistema"),
+    (re.compile(r"\bpoweroff\b", re.I), "Apagar sistema"),
+    (re.compile(r"\bsystemctl\s+(stop|disable|restart)", re.I), "Detener servicio"),
+    (re.compile(r"\bnet\s+user", re.I), "Modificar usuarios"),
+    (re.compile(r"\bmkfs\b", re.I), "Formatear sistema de archivos"),
+    (re.compile(r"\bdd\s+if=", re.I), "Sobreescribir disco con dd"),
+    (re.compile(r">\s*/dev/(sd|nvme|hd|mmcblk)", re.I), "Redirigir a dispositivo de bloque"),
+    (re.compile(r"(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?(ba|z|da|k)?sh\b", re.I), "Pipe de descarga a shell"),
+    (re.compile(r"\brm\s+(-[rf]+\s+)+(~|/home|\$HOME)(/|\s|$)", re.I), "Borrar home del usuario"),
+    (re.compile(r"\brm\b", re.I), "Borrar archivos (rm)"),
+    (re.compile(r"\brmdir\b", re.I), "Borrar directorio (rmdir)"),
+    (re.compile(r"\bdel\b", re.I), "Borrar archivo (del)"),
+    (re.compile(r"\bRemove-Item\b", re.I), "Borrar con PowerShell"),
+]
+
+def _is_command_allowed(command: str) -> tuple[bool, str]:
+    """Devuelve (permitido, motivo). Si no está permitido, explica por qué."""
+    cmd = (command or "").strip()
+    if not cmd:
+        return False, "Comando vacío"
+
+    first_token = cmd.split()[0].lower() if cmd.split() else ""
+
+    # Comandos explícitamente en lista blanca → permitido
+    if first_token in _SAFE_COMMANDS:
+        return True, ""
+
+    # Patrones peligrosos → denegado
+    for pattern, desc in _DANGEROUS_PATTERNS:
+        if pattern.search(cmd):
+            return False, f"Comando bloqueado ({desc}): {cmd[:80]}"
+
+    # Cualquier otro comando no en lista blanca → denegado por defecto
+    return False, f"Comando no en lista blanca: {cmd[:80]}"
+
 
 
 def _default_shell() -> str:
@@ -107,6 +168,12 @@ class ShellSession:
         cmd = (command or "").strip()
         if not cmd:
             return "(comando vacío)"
+
+        # ── Validación de seguridad: lista blanca ──
+        allowed, reason = _is_command_allowed(cmd)
+        if not allowed:
+            return f"Comando denegado por seguridad: {reason}"
+
         sep = ";" if self.shell != "cmd" else "&"
         with self._lock:
             try:
