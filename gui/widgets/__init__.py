@@ -25,3 +25,6 @@ from gui.widgets.chat import (  # noqa: F401
     _ChatInput,
     FileDropZone,
 )
+from gui.widgets.settings import (  # noqa: F401
+    SettingsDialog,
+)
